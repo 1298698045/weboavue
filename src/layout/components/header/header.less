@@ -1,0 +1,156 @@
+.header {
+    height: 55px;
+    background: #fff;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    color: #1055BC;
+    font-size: 12px;
+    .header-top-menu{
+        display: flex;
+        align-items: center;
+        height: 100%;
+        cursor: pointer;
+        .icon {
+            width: 18px;
+            height: 18px;
+            margin: 0 5px 0 10px;
+        }
+        .text {
+            color: #1055BC;
+            font-size: 14px;
+            width: 75px;
+            margin: 0 5px;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            display: inline-block;
+        }
+    }
+    .header-top-menu:hover .text{
+        color: #333;
+    }
+    .header-search{
+        height: 35px;
+        line-height: 35px;
+        margin: 10px 0;
+        background: rgba(0,0,0,.08);
+        -webkit-transition: background .6s;
+        -o-transition: background .6s;
+        transition: background .6s;
+        background: rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        color: #1055BC;
+        .search-type{
+            width: 60px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            .search-type-name{
+                display: inline-block;
+                width: 40px;
+                padding-left: 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                -o-text-overflow: ellipsis;
+                text-overflow: ellipsis;
+                text-align: center;
+            }
+            .search-type-icon{
+                display: inline-block;
+            }
+        }
+        .search-split{
+            width: 1px;
+            height: 15px;
+            margin: 11px 8px;
+            background-color: #fff;
+            opacity: .3;
+        }
+        .search-content{
+            width: 190px;
+            height: 35px;
+            .inp{
+                width: 190px;
+                height: 30px;
+                line-height: 30px;
+                padding: 0;
+                background: transparent;
+                border: 0;
+                outline: none;
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                color: #1055BC;
+                font-size: 12px;
+            }
+            .inp::-webkit-input-placeholder{
+                color: #1055BC;
+                opacity: .5;
+            }
+        }
+        .search-searchIcon{
+            width: 14px;
+            height: 35px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+    }
+    .app_popup{
+        width: 560px;
+        height: 340px;
+        background: #fff;
+        position: absolute;
+        top: 100%;
+        z-index: 999;
+        left: 0;
+        box-sizing: 0 2px 2px 0 rgba(0,0,0,.6);
+        border: 1px solid #d9d9d9;
+        color: #333;
+        overflow: auto;
+        .appList{
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px 0 0 0;
+            box-sizing: border-box;
+            .app_item{
+                width: 100px;
+                height: 100px;
+                margin-left: 10px;
+                margin-bottom: 10px;
+                cursor: pointer;
+                background: #3399ff;
+                box-sizing: border-box;
+            }
+        }
+    }
+    .header-end{
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .header-info{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 10px;
+            cursor: pointer;
+            .avatar{
+                margin: 7px 10px;
+                width: 41px;
+                height: 41px;
+                .img{
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                }
+            }
+            .info-name{
+                margin-right: 5px;
+            }
+        }
+    }
+}
