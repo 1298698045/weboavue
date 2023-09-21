@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-container">
+  <div class="menuContainer">
     <!-- <a-button type="primary" style="margin-bottom: 16px" @click="toggleCollapsed">
             <MenuUnfoldOutlined v-if="state.collapsed" />
             <MenuFoldOutlined v-else />

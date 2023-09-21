@@ -71,6 +71,7 @@
                 :auto-expand-parent="autoExpandParent"
                 :tree-data="gData"
                 block-node
+                :fieldNames="fieldNames"
                 @expand="onExpand"
               >
                 <template #switcherIcon="{ switcherCls }">
@@ -79,17 +80,17 @@
                     style="color: rgb(163, 163, 163); font-size: 14px"
                   ></CaretDownOutlined>
                 </template>
-                <template #title="{ title }">
-                  <span v-if="title.indexOf(searchValue) > -1">
-                    {{ title.substr(0, title.indexOf(searchValue)) }}
+                <template #title="{ name }">
+                  <span v-if="name.indexOf(searchValue) > -1">
+                    {{ name.substr(0, name.indexOf(searchValue)) }}
                     <span style="color: #f50">{{ searchValue }}</span>
                     {{
-                      title.substr(
-                        title.indexOf(searchValue) + searchValue.length
+                      name.substr(
+                        name.indexOf(searchValue) + searchValue.length
                       )
                     }}
                   </span>
-                  <span v-else>{{ title }}</span>
+                  <span v-else>{{ name }}</span>
                 </template>
               </a-tree>
             </div>
@@ -107,14 +108,50 @@
           <div style="height: 100%">
             <div class="wea-tab">
               <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="1" tab="全部"></a-tab-pane>
-                <a-tab-pane key="2" tab="待处理" force-render></a-tab-pane>
-                <a-tab-pane key="3" tab="待阅"></a-tab-pane>
+                <a-tab-pane v-for="(item,index) in tabs" :key="item.name">
+                  <template #tab>
+                    <span>
+                      {{item.lable}} ({{item.count}})
+                    </span>
+                  </template>
+                </a-tab-pane>
+                <!-- <a-tab-pane key="2" tab="待处理" force-render></a-tab-pane>
+                <a-tab-pane key="3" tab="待阅"></a-tab-pane> -->
               </a-tabs>
             </div>
-            <div class="wea-tabContent">
+            <list-form-search></list-form-search>
+            <!-- <div class="formSearch">
+              <a-form
+                :model="formState"
+                name="basic"
+                :label-col="{ span: 8 }"
+                :wrapper-col="{ span: 16 }"
+                autocomplete="off"
+                @finish="onFinish"
+                @finishFailed="onFinishFailed"
+              >
+                <a-form-item
+                  label="标题"
+                  name="username"
+                  :rules="[{ required: true, message: 'Please input your username!' }]"
+                >
+                  <a-input v-model:value="formState.username" />
+                </a-form-item>
+                <a-form-item
+                  label="发起人"
+                  name="username"
+                  :rules="[{ required: true, message: 'Please input your username!' }]"
+                >
+                <a-input v-model:value="formState.username" />
+              </a-form-item>
+                <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+                  <a-button type="primary" html-type="submit">搜索</a-button>
+                </a-form-item>
+              </a-form>
+            </div> -->
+            <div class="wea-tabContent" ref="tabContent">
               <!-- <a-table :dataSource="dataSource" :columns="columns"></a-table> -->
-              <Dtable></Dtable>
+              <Dtable :tableHeight="tableHeight"></Dtable>
             </div>
           </div>
         </a-col>
@@ -128,11 +165,14 @@ import {
   DownOutlined,
   CaretDownOutlined,
 } from "@ant-design/icons-vue";
-import { ref, watch, reactive, toRefs } from "vue";
+import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance  } from "vue";
+import Interface from "@/utils/Interface.js";
 import Dtable from "@/components/Dtable.vue";
+import ListFormSearch from "@/components/ListFormSearch.vue";
 const x = 3;
 const y = 2;
 const z = 1;
+const { proxy } = getCurrentInstance();
 const genData = [];
 const generateData = (_level, _preKey, _tns) => {
   const preKey = _preKey || "0";
@@ -190,7 +230,13 @@ const getParentKey = (key, tree) => {
 const expandedKeys = ref([]);
 const searchValue = ref("");
 const autoExpandParent = ref(true);
-const gData = ref(genData);
+const res = require("@/localData/treedata.json");
+proxy.$get('/localData/datalist.json',{}).then((response)=>{
+  console.log("res",response)
+})
+const treeList = res.data;
+console.log("genData",genData,treeList)
+const gData = ref(treeList);
 const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
@@ -242,11 +288,48 @@ const columns = reactive([
 
 let data = reactive({
   isCollapsed: false,
+  tableHeight: '',
+  fieldNames:{
+    children:'children', title:'name', key:'id'
+  },
+  tabs:[]
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
 };
-const { isCollapsed } = toRefs(data);
+const { isCollapsed, tableHeight, fieldNames, tabs} = toRefs(data);
+const tabContent = ref(null);
+onMounted(()=>{
+  data.tableHeight = tabContent.value.clientHeight;
+  console.log(data.tableHeight)
+  window.addEventListener('resize',function(e){
+    data.tableHeight = tabContent.value.clientHeight;
+  })
+})
+
+
+// const formState = reactive({
+//   username: '',
+//   password: '',
+//   remember: true,
+// })
+// const onFinish = (values) => {
+//   console.log('Success:', values);
+// };
+
+// const onFinishFailed = (errorInfo) => {
+//   console.log('Failed:', errorInfo);
+// };
+
+const getTabs = () => {
+  proxy.$get(Interface.todoList.tabs,{
+    a: 1
+  }).then(res=>{
+    console.log("tabs",res)
+    data.tabs = res.list;
+  })
+}
+getTabs();
 </script>
 <style lang="less">
 .todoList {
@@ -299,7 +382,7 @@ const { isCollapsed } = toRefs(data);
   }
   .todo-content {
     width: 100%;
-    height: calc(100% - 52px);
+    height: calc(~"100% - 52px");
     .ant-row {
       height: 100%;
       .wea-left-right-layout-left {
@@ -330,7 +413,7 @@ const { isCollapsed } = toRefs(data);
           .wea-left-tree-scroll {
             margin-top: 10px;
             width: 100%;
-            height: calc(100% - 56px);
+            height: calc(~"100% - 56px");
             overflow: auto;
           }
         }
@@ -367,12 +450,22 @@ const { isCollapsed } = toRefs(data);
           background: url(https://enterprise.e-cology.com.cn/cloudstore/resource/pc/com/images/leftTree-hide-hover.png)
             no-repeat -2px 0;
         }
+        .formSearch{
+          padding: 10px;
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          .ant-form {
+            display: flex;
+            /* align-items: center; */
+          }
+        }
       }
       .wea-tab {
         height: 46px;
       }
       .wea-tabContent {
-        height: calc(100% - 46px);
+        height: calc(~"100% - 122px");
       }
     }
   }

@@ -1,0 +1,825 @@
+{
+  "status": 1,
+  "msg": "成功",
+  "data": [
+    {
+      "id": "6e095e6e-bb8d-4c54-8495-e1ed1fd7b8de",
+      "name": "通用",
+      "text": "通用",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "29666c1a-a65c-4956-8460-88ce9588ba08",
+          "name": "01 请示报告",
+          "text": "6",
+          "quantity": 0,
+          "parent": {
+            "id": "6e095e6e-bb8d-4c54-8495-e1ed1fd7b8de",
+            "name": "通用",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+      "name": "办公室",
+      "text": "办公室",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "2134b046-24f9-4e87-88e0-7d8946306f79",
+          "name": "02 上级通知转办",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+            "name": "办公室",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "00f53700-78e5-404f-b860-0e46279871d0",
+          "name": "03 发文流程",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+            "name": "办公室",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "c13ed09d-74b9-4812-97ef-130309206bec",
+          "name": "04 院内下发文",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+            "name": "办公室",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "ab81fcf3-54cc-46c7-a8fd-f7dec5f25d05",
+          "name": "08 政务信息",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+            "name": "办公室",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "7726a9e2-40dc-4b04-a358-0269a35e3901",
+          "name": "09 院长办公会决议实施登记表",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+            "name": "办公室",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "fe7d683b-0554-434e-a909-db77614ddc46",
+          "name": "工作餐申请",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+            "name": "办公室",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "bae13105-4284-4da8-80c9-8b4c24b4b89b",
+          "name": "合同变更流程12",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+            "name": "办公室",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "a8829c37-733c-4f82-bf57-73b8c69b05bf",
+          "name": "上级来文办理",
+          "text": "1",
+          "quantity": 0,
+          "parent": {
+            "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+            "name": "办公室",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "712d438f-ac5e-4573-8b70-e1776a13d028",
+          "name": "用章申请",
+          "text": "1",
+          "quantity": 0,
+          "parent": {
+            "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+            "name": "办公室",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "b5478cd3-22a6-47e9-a121-3e106e65286e",
+          "name": "院议题申请流程",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+            "name": "办公室",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+      "name": "财务科",
+      "text": "财务科",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+          "name": "02 差旅费报销流程",
+          "text": "7",
+          "quantity": 0,
+          "parent": {
+            "id": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+            "name": "财务科",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "83977c93-14a8-4fed-a664-5bc3ae3a4583",
+          "name": "03 医院费用报销流程",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+            "name": "财务科",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+      "name": "人事科",
+      "text": "人事科",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "2442350c-257f-446d-9a44-28a31bfb6ccb",
+          "name": "01 请假单",
+          "text": "3",
+          "quantity": 0,
+          "parent": {
+            "id": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+            "name": "人事科",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "78760cdc-81dd-41e5-85a3-9cb70dbf7d7b",
+          "name": "10 加班登记",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+            "name": "人事科",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "015230e9-1d58-4276-b733-11e572dbcd0f",
+          "name": "出国申请",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+            "name": "人事科",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "4dcc01bf-27ed-4032-bcc1-6bb528f2d393",
+          "name": "合同人员续签考评表",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+            "name": "人事科",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "816faef4-9a3b-409b-9a14-eab0a30a1ab9",
+          "name": "人事合同签订",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+            "name": "人事科",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "3cd81295-6018-4f5b-81b8-eee43ec1b5f7",
+          "name": "退休人员返聘流程",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+            "name": "人事科",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "7915948e-1f4e-40e5-a173-e7d57b570f1b",
+          "name": "员工退休申请表",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+            "name": "人事科",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "1b93af89-e680-4b03-810e-dc7a67a4e6a0",
+      "name": "人事考核",
+      "text": "人事考核",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "f7339e9e-ae04-4376-a88f-8765aba66e82",
+          "name": "人员年度考评表（管理）",
+          "text": "2",
+          "quantity": 0,
+          "parent": {
+            "id": "1b93af89-e680-4b03-810e-dc7a67a4e6a0",
+            "name": "人事考核",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "71894ced-8dd1-45fb-884f-4adf7af91e3f",
+          "name": "人员年度考评表（专业技术）",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "1b93af89-e680-4b03-810e-dc7a67a4e6a0",
+            "name": "人事考核",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+      "name": "合同管理",
+      "text": "合同管理",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "e494b32b-5a2a-4f02-8b3f-c9471e0a900a",
+          "name": "合同付款单",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+            "name": "合同管理",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "a39549b4-6f8f-44fd-93c1-6455b845f765",
+          "name": "合同会签单",
+          "text": "1",
+          "quantity": 0,
+          "parent": {
+            "id": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+            "name": "合同管理",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "d387bec8-5068-44c6-a57a-e5990ee5af1f",
+          "name": "合同执行审计流程",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+            "name": "合同管理",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "b2ba4400-490c-49b9-8e2d-936e7487afba",
+      "name": "党委办公室",
+      "text": "党委办公室",
+      "quantity": 0,
+      "parent": null,
+      "children": []
+    },
+    {
+      "id": "e196041e-6fc5-480d-9532-efa6557b0470",
+      "name": "纪检监察办",
+      "text": "纪检监察办",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "67048108-16ac-469d-b8bd-c03930aa80a4",
+          "name": "01 纪检文件制定",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "e196041e-6fc5-480d-9532-efa6557b0470",
+            "name": "纪检监察办",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "d0a7d693-dbbc-4e63-a45d-e2a9cf407d9c",
+          "name": "02 纪检文件传阅",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "e196041e-6fc5-480d-9532-efa6557b0470",
+            "name": "纪检监察办",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "63795d62-4324-4aa4-b34e-fcd8d7b5415e",
+          "name": "03 纪检工作办理",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "e196041e-6fc5-480d-9532-efa6557b0470",
+            "name": "纪检监察办",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "47531785-d73b-4127-82b8-3c6a3c10afe2",
+      "name": "信息中心",
+      "text": "信息中心",
+      "quantity": 0,
+      "parent": null,
+      "children": []
+    },
+    {
+      "id": "44db8c73-9672-4004-b260-1c55649b53fa",
+      "name": "护理部",
+      "text": "护理部",
+      "quantity": 0,
+      "parent": null,
+      "children": []
+    },
+    {
+      "id": "8b4510b2-55f9-461e-9db7-d7af943bc404",
+      "name": "宣传",
+      "text": "宣传",
+      "quantity": 0,
+      "parent": null,
+      "children": []
+    },
+    {
+      "id": "6f96de03-f04b-47f8-a41a-ed5ef8f85973",
+      "name": "质管办",
+      "text": "质管办",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "aa236dc9-cfa6-49be-a36d-fe6538ac1cd6",
+          "name": "行政管理质量问题报告",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "6f96de03-f04b-47f8-a41a-ed5ef8f85973",
+            "name": "质管办",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "f4445382-3a1e-4a12-ab3a-2f4b5d51e393",
+      "name": "医务科",
+      "text": "医务科",
+      "quantity": 0,
+      "parent": null,
+      "children": []
+    },
+    {
+      "id": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+      "name": "资产管理",
+      "text": "资产管理",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "4452ad33-c804-48fd-abb8-e58ca084df2f",
+          "name": "02 资产报废申请",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+            "name": "资产管理",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "9188a8a7-bee5-404c-a7de-8bfc800c0908",
+          "name": "一般固定资产购置申请",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+            "name": "资产管理",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "de999486-3e39-4d66-9f6a-661884a05041",
+          "name": "资产调拨申请",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+            "name": "资产管理",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "724baaa4-04d1-470c-a42d-14958edd189b",
+      "name": "档案管理",
+      "text": "档案管理",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "64990187-61d8-47b2-8484-463bfa41be90",
+          "name": "档案借阅",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "724baaa4-04d1-470c-a42d-14958edd189b",
+            "name": "档案管理",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "1237ce7c-7018-4dd4-a096-46411188acdf",
+      "name": "医学工程处",
+      "text": "医学工程处",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "398dcd2b-885d-4941-b6d1-d84511935021",
+          "name": "01 物品采购申请",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "1237ce7c-7018-4dd4-a096-46411188acdf",
+            "name": "医学工程处",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "c7d1fa63-5031-4407-a513-924e1f41157c",
+      "name": "科教科",
+      "text": "科教科",
+      "quantity": 0,
+      "parent": null,
+      "children": []
+    },
+    {
+      "id": "27d89091-5b36-4399-93a1-6c16b2d0dba9",
+      "name": "规划建设处",
+      "text": "规划建设处",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "0d3a3056-1c9e-4a75-8ce0-a63c85472dd2",
+          "name": "01 住宿申请审批（学生、进修）",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "27d89091-5b36-4399-93a1-6c16b2d0dba9",
+            "name": "规划建设处",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "3d3b9a46-f1d2-495b-9944-b3e5536bd9b7",
+          "name": "02 住宿申请审批（外包人员）",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "27d89091-5b36-4399-93a1-6c16b2d0dba9",
+            "name": "规划建设处",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "36c32504-9cae-4af6-b2cc-26a13392b270",
+      "name": "工作报表",
+      "text": "工作报表",
+      "quantity": 0,
+      "parent": null,
+      "children": [
+        {
+          "id": "4bdcadab-ee10-48c1-9576-db3f3ab25a4e",
+          "name": "01 京医通",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "36c32504-9cae-4af6-b2cc-26a13392b270",
+            "name": "工作报表",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "aab32389-22bc-c25a-6f60-6eb525ffdc56",
+          "name": "02 统计日报流程",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "36c32504-9cae-4af6-b2cc-26a13392b270",
+            "name": "工作报表",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "4e732ced-3463-d06d-e0ca-9a15b6153677",
+          "name": "03 统计分析",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "36c32504-9cae-4af6-b2cc-26a13392b270",
+            "name": "工作报表",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "d645920e-395f-edad-7bbb-ed0eca3fe2e0",
+          "name": "04 医务处下属科室工作月报表",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "36c32504-9cae-4af6-b2cc-26a13392b270",
+            "name": "工作报表",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "c51ce410-c124-a10e-0db5-e4b97fc2af39",
+          "name": "05 工娱科医疗月报",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "36c32504-9cae-4af6-b2cc-26a13392b270",
+            "name": "工作报表",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        },
+        {
+          "id": "9d296f6a-a8f6-400f-a0a1-6197b3292421",
+          "name": "06 功能检查科月报表",
+          "text": "0",
+          "quantity": 0,
+          "parent": {
+            "id": "36c32504-9cae-4af6-b2cc-26a13392b270",
+            "name": "工作报表",
+            "text": null,
+            "quantity": 0,
+            "parent": null,
+            "children": []
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "8be4d3bb-95a2-4fa1-acdb-4b8dd7c5c9bb",
+      "name": "采购中心",
+      "text": "采购中心",
+      "quantity": 0,
+      "parent": null,
+      "children": []
+    },
+    {
+      "id": "9aa02e03-a0a5-4405-b03c-5d59f0265362",
+      "name": "考勤",
+      "text": "考勤",
+      "quantity": 0,
+      "parent": null,
+      "children": []
+    },
+    {
+      "id": "458e3f41-35c5-4c02-b417-d1813bd28c11",
+      "name": "院感管理科",
+      "text": "院感管理科",
+      "quantity": 0,
+      "parent": null,
+      "children": []
+    }
+  ]
+}

@@ -59,3 +59,8 @@
     color: #484848 !important;
     font-size: 12px !important;
 }
+
+/* easyui datagrid */
+.panel-header, .panel-body{
+    border-color: transparent !important;
+}
