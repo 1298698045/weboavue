@@ -6,12 +6,19 @@ const routes = [
     path: "/",
     name: "Layout",
     component: Layout,
+    redirect: "/flow/todoList",
   },
   {
-    path: "/home",
-    name: "Home",
+    path: "/flow",
+    name: "流程管理",
     component: Layout,
+    redirect: "/flow/todoList",
     children: [
+      {
+        path: "/flow/todoList",
+        component: () => import("../views/flow/todoList/index.vue"),
+        name: "待办事务",
+      },
       {
         path: "/about",
         component: () => import("../views/About.vue"),

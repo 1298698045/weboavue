@@ -1,8 +1,14 @@
 import { createStore } from "vuex";
 
 export default createStore({
-  state: {},
-  mutations: {},
+  state: {
+    collapsed: false,
+  },
+  mutations: {
+    setCollapsed(state, val) {
+      state.collapsed = val;
+    },
+  },
   actions: {},
   modules: {},
 });

@@ -19,3 +19,43 @@
 [v-cloak]{
     display: none;
 }
+
+
+/* antd css */
+/* a-tree */
+.ant-tree-treenode{
+    line-height: 30px;
+    padding: 0 !important;
+}
+.ant-tree-treenode:hover{
+    background: #def0ff;
+}
+.ant-tree-treenode.ant-tree-treenode-selected{
+    background: #def0ff;
+}
+.ant-tree-treenode{
+    line-height: 30px;
+}
+.ant-tree-treenode .ant-tree-node-content-wrapper{
+    line-height: 30px;
+    height: 30px;
+}
+.ant-tree-treenode .ant-tree-node-content-wrapper:hover{
+    background: transparent !important;
+    color: #018efb;
+}
+.ant-tree-treenode.ant-tree-treenode-selected .ant-tree-node-content-wrapper{
+    background: transparent !important;
+}
+.ant-tree-switcher {
+    line-height: 30px !important;
+}
+
+
+/* a-tab */
+.ant-tabs-tab{
+    padding: 12px 20px !important;
+    margin: 0 !important;
+    color: #484848 !important;
+    font-size: 12px !important;
+}

@@ -1,16 +1,21 @@
 <template>
   <div class="header-logo">
-    {{ title }}
+    {{ collapsed ? title.slice(0, 2) : title }}
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useStore } from "vuex";
 import setting from "/src/utils/setting.js";
 const title = ref(setting.title);
+const store = useStore();
+const collapsed = computed(() => {
+  return store.state.collapsed;
+});
 </script>
 <style>
 .header-logo {
-  width: 197px;
+  width: 100%;
   height: 55px;
   line-height: 55px;
   background: #1c69db;

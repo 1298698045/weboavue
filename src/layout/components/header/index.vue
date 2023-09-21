@@ -19,7 +19,7 @@
           class=""
         ></path>
       </svg>
-      <span class="text">信息门户</span>
+      <span class="text">流程管理</span>
     </div>
     <div class="header-search">
       <div class="search-type">

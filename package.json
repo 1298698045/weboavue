@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.0",
+    "@surely-vue/table": "^4.1.9",
     "ant-design-vue": "4.x",
     "core-js": "^3.6.5",
     "element-plus": "^2.3.14",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "vx-easyui": "^1.2.57"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.11",
