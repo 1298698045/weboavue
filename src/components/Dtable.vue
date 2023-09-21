@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <DataGrid :data="tableList" :pagination="true" :total="total"
+  <div class="dtable" :style="{height:tableHeight+'px'}">
+    <div id="datagrid"></div>
+    <!-- <DataGrid :data="tableList" :pagination="true" :total="total"
         :pageSize="pageSize" :resizable="true"
         :pagePosition="pagePosition" :style="{'height':gridHeight+'px'}">
         <GridColumn :draggable="true" field="IsRead" title="已读" :sortable="true">
@@ -21,7 +22,7 @@
         <GridColumn field="BusinessUnitIdName" :sortable="true" title="发起人部门" align="center"></GridColumn>
         <GridColumn field="Deadline" title="办理期限" :sortable="true" align="center"></GridColumn>
         <GridColumn field="ProcessIdName" title="流程" :sortable="true" align="center"></GridColumn>
-    </DataGrid>
+    </DataGrid> -->
     <!-- <s-table :columns="columns" :data-source="dataSource" :height="tableHeight" :pagination="{ position: [bottom] }"></s-table> -->
   </div>
 </template>
@@ -171,7 +172,7 @@ var dataSource = reactive(data)
   var tableList = res.rows;
   console.log("tableList",tableList)
   export default {
-      props:['tableHeight'],
+      props:['tableHeight','isCollapsed'],
       data() {
           return {
               data: [
@@ -277,6 +278,44 @@ var dataSource = reactive(data)
         gridHeight(){
           return this.tableHeight
         }
+      },
+      watch:{
+        isCollapsed(newval,oldval){
+          $("#datagrid").datagrid("reload");
+        }
+      },
+      mounted(){
+        var columns = [
+            { field: 'IsRead', title: '已读', sortable: true, formatter:function(value, row ,index){
+              return row.IsRead ? '1' : '2';
+            }},
+            { field: 'Name', title: '标题', sortable: true },
+            { field: 'PriorityName', title: '紧急程度', sortable: true },
+            { field: 'ToActivityName', title: '当前环节', sortable: true },
+            { field: 'FromActivityName', title: '来源环节', sortable: true },
+            { field: 'CreatedByName', title: '来源提交人', sortable: true },
+            { field: 'CreatedOn', title: '来源提交', sortable: true },
+            { field: 'StartByName', title: '发起人姓名', sortable: true },
+            { field: 'StartedOn', title: '发起时间', sortable: true },
+            { field: 'BusinessUnitIdName', title: '发起人部门', sortable: true },
+            { field: 'Deadline', title: '办理期限', sortable: true },
+            { field: 'ProcessIdName', title: '流程', sortable: true },
+        ]
+        this.$nextTick(()=>{
+          var height = this.tableHeight;
+          $('#datagrid').datagrid({
+            url: '/localData/datalist.json',
+            method:"get",
+            columns: [columns],
+            // data: tableList,
+            pagination: true,
+            pageNumber: 1,
+            pageSize: 10,
+            onLoadSuccess:function(){
+              $('#datagrid').datagrid('resize', { height: height });
+            }
+          });
+        })
       }
   }
 </script>

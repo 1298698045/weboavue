@@ -108,7 +108,7 @@
           <div style="height: 100%">
             <div class="wea-tab">
               <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane v-for="(item,index) in tabs" :key="item.name">
+                <a-tab-pane v-for="(item,index) in tabs" :key="index">
                   <template #tab>
                     <span>
                       {{item.lable}} ({{item.count}})
@@ -151,7 +151,7 @@
             </div> -->
             <div class="wea-tabContent" ref="tabContent">
               <!-- <a-table :dataSource="dataSource" :columns="columns"></a-table> -->
-              <Dtable :tableHeight="tableHeight"></Dtable>
+              <Dtable :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable>
             </div>
           </div>
         </a-col>

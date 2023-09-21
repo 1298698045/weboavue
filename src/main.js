@@ -3,10 +3,10 @@ import { createApp } from "vue";
 // import '@surely-vue/table/dist/index.less';
 import ElementPlus from "element-plus";
 
-import 'v3-easyui/dist/themes/default/easyui.css';
-import 'v3-easyui/dist/themes/icon.css';
-import 'v3-easyui/dist/themes/vue.css';
-import EasyUI from 'v3-easyui';
+// import 'v3-easyui/dist/themes/default/easyui.css';
+// import 'v3-easyui/dist/themes/icon.css';
+// import 'v3-easyui/dist/themes/vue.css';
+// import EasyUI from 'v3-easyui';
 
 import '@surely-vue/table/dist/index.less';
 import STable from '@surely-vue/table';
@@ -25,7 +25,7 @@ const app = createApp(App);
 app.use(store);
 app.use(router);
 app.use(Axios);
-app.use(EasyUI);
+// app.use(EasyUI);
 app.use(Antd);
 app.use(ElementPlus);
 app.use(STable);
