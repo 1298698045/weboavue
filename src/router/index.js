@@ -15,6 +15,11 @@ const routes = [
     redirect: "/flow/todoList",
     children: [
       {
+        path:"/flow/add",
+        component: () => import("../views/flow/add/index.vue"),
+        name: "新建事务"
+      },
+      {
         path: "/flow/todoList",
         component: () => import("../views/flow/todoList/index.vue"),
         name: "待办事务",

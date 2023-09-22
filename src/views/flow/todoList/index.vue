@@ -54,7 +54,7 @@
         <a-col
           span="5"
           class="wea-left-right-layout-left"
-          v-show="!isCollapsed"
+          v-if="!isCollapsed"
         >
           <div class="wea-left-tree">
             <div class="wea-left-tree-search">
@@ -67,6 +67,7 @@
             </div>
             <div class="wea-left-tree-scroll">
               <a-tree
+                :style="{height: tableHeight+'px'}"
                 :expanded-keys="expandedKeys"
                 :auto-expand-parent="autoExpandParent"
                 :tree-data="gData"
@@ -80,15 +81,16 @@
                     style="color: rgb(163, 163, 163); font-size: 14px"
                   ></CaretDownOutlined>
                 </template>
-                <template #title="{ name }">
+                <template  v-slot:title="{ name, data, isLeaf, text, quantity }">
                   <span v-if="name.indexOf(searchValue) > -1">
                     {{ name.substr(0, name.indexOf(searchValue)) }}
-                    <span style="color: #f50">{{ searchValue }}</span>
+                    <!-- <span style="color: #f50">{{ searchValue }}</span> -->
                     {{
                       name.substr(
                         name.indexOf(searchValue) + searchValue.length
                       )
                     }}
+                    <span class="tree-num">{{ quantity }}</span>
                   </span>
                   <span v-else>{{ name }}</span>
                 </template>
@@ -105,7 +107,7 @@
             :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }"
             @click="handleCollapsed"
           ></div>
-          <div style="height: 100%">
+          <div style="height: 100%" ref="contentRef">
             <div class="wea-tab">
               <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane v-for="(item,index) in tabs" :key="index">
@@ -119,7 +121,7 @@
                 <a-tab-pane key="3" tab="待阅"></a-tab-pane> -->
               </a-tabs>
             </div>
-            <list-form-search></list-form-search>
+            <list-form-search ref="searchRef" @update-height="changeHeight" ></list-form-search>
             <!-- <div class="formSearch">
               <a-form
                 :model="formState"
@@ -149,9 +151,9 @@
                 </a-form-item>
               </a-form>
             </div> -->
-            <div class="wea-tabContent" ref="tabContent">
+            <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
               <!-- <a-table :dataSource="dataSource" :columns="columns"></a-table> -->
-              <Dtable :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable>
+              <Dtable ref="gridRef" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable>
             </div>
           </div>
         </a-col>
@@ -165,7 +167,7 @@ import {
   DownOutlined,
   CaretDownOutlined,
 } from "@ant-design/icons-vue";
-import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance  } from "vue";
+import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated  } from "vue";
 import Interface from "@/utils/Interface.js";
 import Dtable from "@/components/Dtable.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
@@ -231,12 +233,13 @@ const expandedKeys = ref([]);
 const searchValue = ref("");
 const autoExpandParent = ref(true);
 const res = require("@/localData/treedata.json");
-proxy.$get('/localData/datalist.json',{}).then((response)=>{
+const gData = ref([]);
+proxy.$get('/localData/treedata.json',{}).then((response)=>{
   console.log("res",response)
+  gData.value = response.data;
 })
-const treeList = res.data;
-console.log("genData",genData,treeList)
-const gData = ref(treeList);
+// console.log("genData",genData,treeList)
+
 const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
@@ -299,28 +302,31 @@ const handleCollapsed = () => {
 };
 const { isCollapsed, tableHeight, fieldNames, tabs} = toRefs(data);
 const tabContent = ref(null);
+const contentRef = ref(null);
+let formSearchHeight = ref(null);
+const gridRef = ref(null);
 onMounted(()=>{
-  data.tableHeight = tabContent.value.clientHeight;
-  console.log(data.tableHeight)
-  window.addEventListener('resize',function(e){
-    data.tableHeight = tabContent.value.clientHeight;
-  })
+  // console.log("contentRef",contentRef.value.clientHeight)
+  // var contentHeight = contentRef.value.clientHeight;
+  // var tabsHeight = 46;
+  // var height = contentHeight - tabsHeight;
+  // data.tableHeight = height;
+  // console.log(data.tableHeight)
+  window.addEventListener('resize',changeHeight)
 })
+function changeHeight(h){
+  if(typeof h == 'number'){
+    formSearchHeight.value = h;
+  }
+  let contentHeight = contentRef.value.clientHeight;
+  let tabsHeight = 46;
+  let height = contentHeight - tabsHeight - formSearchHeight.value;
+  data.tableHeight = height;
+  console.log('data',data.tableHeight);
+  console.log("gridRef",gridRef.value.loadGrid())
+}
 
-
-// const formState = reactive({
-//   username: '',
-//   password: '',
-//   remember: true,
-// })
-// const onFinish = (values) => {
-//   console.log('Success:', values);
-// };
-
-// const onFinishFailed = (errorInfo) => {
-//   console.log('Failed:', errorInfo);
-// };
-
+// 获取tabs
 const getTabs = () => {
   proxy.$get(Interface.todoList.tabs,{
     a: 1
@@ -330,6 +336,10 @@ const getTabs = () => {
   })
 }
 getTabs();
+
+const handleMenuClick = ()=>{
+
+}
 </script>
 <style lang="less">
 .todoList {
@@ -415,6 +425,18 @@ getTabs();
             width: 100%;
             height: calc(~"100% - 56px");
             overflow: auto;
+            .ant-tree-title{
+              display: inline-block;
+              width: 100%;
+            }
+            .ant-tree-title>span{
+              width: 100%;
+              display: flex;
+              justify-content: space-between;
+              .tree-num{
+                padding-right: 10px;
+              }
+            }
           }
         }
       }
@@ -450,22 +472,12 @@ getTabs();
           background: url(https://enterprise.e-cology.com.cn/cloudstore/resource/pc/com/images/leftTree-hide-hover.png)
             no-repeat -2px 0;
         }
-        .formSearch{
-          padding: 10px;
-          box-sizing: border-box;
-          display: flex;
-          align-items: center;
-          .ant-form {
-            display: flex;
-            /* align-items: center; */
-          }
-        }
       }
       .wea-tab {
         height: 46px;
       }
       .wea-tabContent {
-        height: calc(~"100% - 122px");
+        /* height: calc(~"100% - 98px"); */
       }
     }
   }

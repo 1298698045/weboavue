@@ -20,8 +20,11 @@ import router from "./router";
 import store from "./store";
 import Antd from "ant-design-vue";
 import Axios from "@/utils/request.js";
+import moment from "moment/moment";
 import "@/style/public.css";
 const app = createApp(App);
+moment.locale('zh-cn');
+app.config.globalProperties.$moment = moment
 app.use(store);
 app.use(router);
 app.use(Axios);

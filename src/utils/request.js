@@ -1,7 +1,7 @@
 import axios from "axios";
 import QS from 'qs';
 
-axios.defaults.baseURL = 'http://localhost:8080/';
+axios.defaults.baseURL = 'http://localhost:8081/';
 
 axios.interceptors.request.use( //响应拦截
     async config => {

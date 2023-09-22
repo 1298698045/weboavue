@@ -60,7 +60,7 @@ import {
 } from "@ant-design/icons-vue";
 const state = reactive({
   collapsed: false,
-  selectedKeys: ["1"],
+  selectedKeys: [ route.path ],
   openKeys: ["sub1"],
   preOpenKeys: ["sub1"],
 });

@@ -58,14 +58,22 @@
     </div>
     <div class="app_popup" v-if="isShow" @click.stop>
       <div class="appList">
-        <div class="app_item" v-for="item in 15"></div>
+        <div class="app_item" v-for="(item,index) in appList" :style="{background:item.BgColor}" :key="index">
+          <div class="appBox">
+            <div class="iconBox">
+            </div>
+            <div class="app-item-label">{{item.Label}}</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, onMounted, createApp, watch } from "vue";
+import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance } from "vue";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons-vue";
+import Interface from "@/utils/Interface.js";
+const { proxy } = getCurrentInstance();
 const searchVal = ref("");
 const isShow = ref(false);
 const handleShowApp = () => {
@@ -74,6 +82,14 @@ const handleShowApp = () => {
 watch(searchVal, (newVal, oldVal) => {
   console.log(newVal, oldVal);
 });
+const data = reactive({
+  appList: []
+})
+const { appList } = toRefs(data);
+proxy.$get(Interface.applist,{}).then((res)=>{
+  console.log("res",res)
+  data.appList = res.rows;
+})
 onMounted(() => {
   window.addEventListener("click", function (e) {
     isShow.value = false;
