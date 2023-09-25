@@ -25,7 +25,7 @@
                     <a-select-option value="Yiminghe">yiminghe</a-select-option>
                 </a-select>
             </a-form-item>
-            <a-form-item>
+            <a-form-item class="formitembtn">
                 <a-button type="primary" html-type="submit">搜索</a-button>
                 <a-button style="margin-left: 10px" @click="resetForm">重置</a-button>
             </a-form-item>
@@ -95,10 +95,13 @@
             .ant-form-item{
                 width: 200px;
                 margin-right: 10px;
-                margin-bottom: 0 !important;
+                margin-bottom: 10px !important;
                 .ant-form-item-control-input-content{
                     display: flex;
                 }
+            }
+            .ant-form-item.formitembtn{
+                width: auto;
             }
         }
     }

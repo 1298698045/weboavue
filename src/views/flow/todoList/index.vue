@@ -153,7 +153,7 @@
             </div> -->
             <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
               <!-- <a-table :dataSource="dataSource" :columns="columns"></a-table> -->
-              <Dtable ref="gridRef" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable>
+              <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable>
             </div>
           </div>
         </a-col>
@@ -257,37 +257,37 @@ watch(searchValue, (value) => {
   searchValue.value = value;
   autoExpandParent.value = true;
 });
-const dataSource = reactive([
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-]);
-const columns = reactive([
-  {
-    title: "姓名",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "年龄",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "住址",
-    dataIndex: "address",
-    key: "address",
-  },
-]);
+// const dataSource = reactive([
+//   {
+//     key: "1",
+//     name: "胡彦斌",
+//     age: 32,
+//     address: "西湖区湖底公园1号",
+//   },
+//   {
+//     key: "2",
+//     name: "胡彦祖",
+//     age: 42,
+//     address: "西湖区湖底公园1号",
+//   },
+// ]);
+// const columns = reactive([
+//   {
+//     title: "姓名",
+//     dataIndex: "name",
+//     key: "name",
+//   },
+//   {
+//     title: "年龄",
+//     dataIndex: "age",
+//     key: "age",
+//   },
+//   {
+//     title: "住址",
+//     dataIndex: "address",
+//     key: "address",
+//   },
+// ]);
 
 let data = reactive({
   isCollapsed: false,
@@ -340,6 +340,55 @@ getTabs();
 const handleMenuClick = ()=>{
 
 }
+
+const imgUrl = require("@/assets/flow/checkbox_checked.gif");
+  const gridUrl = ref("/localData/datalist.json");
+  const columns = ref(
+    [
+      {
+        field: 'ids',
+        checkbox: true
+      },
+      {
+          field: "Action",
+          title: "操作",
+          formatter: function formatter(value, row, index) {
+            var str = `
+              <div class="iconBox">
+                <div class="popup">
+                  <div class="option-item">办理</div>
+                  <div class="option-item">委派</div>  
+                  <div class="option-item">传阅</div>  
+                  <div class="option-item">打印</div>
+                </div>
+                <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
+            `
+            return str;
+          }
+      },
+      {
+        field: 'IsRead', title: '已读', sortable: true, formatter: function (value, row, index) {
+          if (value == 'True' || value == 'true' || value == true) {
+            return '<img style=\"height:18px;width:24px;margin-left:7px;\" src="' + imgUrl + '" />';
+          }
+          else {
+            return '';
+          }
+        }
+      },
+      { field: 'Name', title: '标题', sortable: true },
+      { field: 'PriorityName', title: '紧急程度', sortable: true },
+      { field: 'ToActivityName', title: '当前环节', sortable: true },
+      { field: 'FromActivityName', title: '来源环节', sortable: true },
+      { field: 'CreatedByName', title: '来源提交人', sortable: true },
+      { field: 'CreatedOn', title: '来源提交', sortable: true },
+      { field: 'StartByName', title: '发起人姓名', sortable: true },
+      { field: 'StartedOn', title: '发起时间', sortable: true },
+      { field: 'BusinessUnitIdName', title: '发起人部门', sortable: true },
+      { field: 'Deadline', title: '办理期限', sortable: true },
+      { field: 'ProcessIdName', title: '流程', sortable: true },
+    ]
+  )
 </script>
 <style lang="less">
 .todoList {

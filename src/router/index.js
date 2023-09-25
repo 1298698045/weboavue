@@ -25,12 +25,22 @@ const routes = [
         name: "待办事务",
       },
       {
+        path: "/flow/completed",
+        component: () => import("../views/flow/completed/index.vue"),
+        name: "已办事务",
+      },
+      {
         path: "/about",
         component: () => import("../views/About.vue"),
         name: "about",
       },
     ],
   },
+  {
+    path: "/detail",
+    name: "Detail",
+    component: ()=> import("../views/detail/detail.vue")
+  }
   // {
   //   path: "/about",
   //   name: "About",

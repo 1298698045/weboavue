@@ -1,0 +1,142 @@
+.addWorkWrap{
+    height: 100%;
+    overflow: auto;
+}
+.panelRowWrap{
+    width: 100%;
+    display: flex;
+    margin-bottom: 16px;
+    .panel-item{
+        flex: 1;
+        background: #fff;
+        padding: 20px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        overflow: auto;
+        .panel-head{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            .panel-title{
+                font-size: 16px;
+                font-weight: bold;
+                color: #1d2129;
+            }
+        }
+        .panel-tabs{
+            overflow: hidden;
+            .panel-tab{
+                float: left;
+                padding: 6px 16px;
+                border-radius: 16px;
+                background: transparent;
+                font-size: 14px;
+                margin-right: 10px;
+                color: #4e5969;
+                white-space: nowrap;
+                margin-bottom: 5px;
+                
+            }
+            .panel-tab.active{
+                background: #f2f3f5;
+                color: var(--textColor);
+                font-weight: bold;
+            }
+            .panel-tab:hover {
+                background: #f2f3f5;
+                cursor: pointer;
+            }
+        }
+        .panel-bd{
+            .tabcontainer{
+                .processTypeName{
+                    font-weight: bold;
+                    font-size: 14px;
+                }
+                .moduleBoxWrap {
+                    margin-top: 20px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                    .moduleBox{
+                        width: 24%;
+                        border-radius: 4px;
+                        margin-bottom: 16px;
+                        padding: 16px;
+                        box-sizing: border-box;
+                        cursor: pointer;
+                        background-color: #f2f3f5;
+                        border: 1px solid #e5e6eb;
+                        .title {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            .leftTitle {
+                                font-size: 14px;
+                                color: #1d2129;
+                                font-weight: bold;
+                            }
+                        }
+                        .bottomInfo {
+                            padding-top: 6px;
+                            font-size: 12px;
+                            color: #86909c;
+                        }
+                    }
+                    .moduleBox:hover {
+                        box-shadow: 4px 4px 10px 0 rgba(0,0,0,.1);
+                    }
+                    .fake_item{
+                        flex: 0 0 24%;
+                        height: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+.panelRowWrap:last-child{
+    margin-bottom: 0;
+}
+.ant-modal-content{
+    padding: 0 !important;
+    .ant-modal-header{
+        border-bottom: 2px solid #e5e6eb;
+        padding: 12px;
+        font-size: 16px;
+        color: #000;
+        text-align: center;
+    }
+    .ant-modal-footer{
+        border-top: 2px solid #e5e6eb;
+        padding: 16px 20px;
+        box-sizing: border-box;
+    }
+    .modalContainer{
+        .modalCenter{
+            padding: 10px 15px;
+            box-sizing: border-box;
+            height: 368px;
+            overflow-y: auto;
+            .form-tip {
+                font-size: 12px;
+                margin-bottom: 12px;
+                color: #606266;
+            }
+            .ProcessName {
+                color: var(--textColor);
+            }
+            .form-tip1 {
+                font-size: 12px;
+                color: red;
+                line-height: 8px;
+                margin-top: 10px;
+                margin-bottom: 7px;
+            }
+            .processTitle .ant-form-item-required{
+                color: red !important;
+            }
+        }
+    }
+}

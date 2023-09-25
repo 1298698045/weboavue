@@ -19,8 +19,36 @@
 [v-cloak]{
     display: none;
 }
-
-
+.a-split{
+    display: inline-block;
+    width: 10px;
+}
+.fl{
+    float: left;
+}
+.fr{
+    float: right;
+}
+.clearFix{
+    content: '';
+    clear: both;
+    display: block;
+}
+.hidden{
+    overflow: hidden;
+}
+.ml10{
+    margin-left: 10px;
+}
+.mr10{
+    margin-right: 10px;
+}
+.mt10{
+    margin-top: 10px;
+}
+.mb10{
+    margin-bottom: 10px;
+}
 /* antd css */
 /* a-tree */
 .ant-tree-treenode{

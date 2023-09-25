@@ -1,0 +1,924 @@
+{
+  "processLists": [
+    {
+      "folderId": "6e095e6e-bb8d-4c54-8495-e1ed1fd7b8de",
+      "name": "通用",
+      "Processes": [
+        {
+          "entityType": 100119,
+          "folderId": "6e095e6e-bb8d-4c54-8495-e1ed1fd7b8de",
+          "folderName": "通用",
+          "name": "01 请示报告",
+          "processCode": "500000010",
+          "processId": "29666c1a-a65c-4956-8460-88ce9588ba08",
+          "id": null,
+          "favoriteState": "1"
+        }
+      ]
+    },
+    {
+      "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+      "name": "办公室",
+      "Processes": [
+        {
+          "entityType": 20253,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": "办公室",
+          "name": "02 上级通知转办",
+          "processCode": "600000102",
+          "processId": "2134b046-24f9-4e87-88e0-7d8946306f79",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 100109,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": "办公室",
+          "name": "03 发文流程",
+          "processCode": "600000175",
+          "processId": "00f53700-78e5-404f-b860-0e46279871d0",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20161,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": "办公室",
+          "name": "08 政务信息",
+          "processCode": "600000133",
+          "processId": "ab81fcf3-54cc-46c7-a8fd-f7dec5f25d05",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20270,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": "办公室",
+          "name": "09 院长办公会决议实施登记表",
+          "processCode": "600000182",
+          "processId": "7726a9e2-40dc-4b04-a358-0269a35e3901",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20143,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": "办公室",
+          "name": "工作餐申请",
+          "processCode": "600000046",
+          "processId": "fe7d683b-0554-434e-a909-db77614ddc46",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 10189,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": "办公室",
+          "name": "合同变更流程12",
+          "processCode": "600000192",
+          "processId": "bae13105-4284-4da8-80c9-8b4c24b4b89b",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 5001,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": "办公室",
+          "name": "院议题申请流程",
+          "processCode": "600000041",
+          "processId": "b5478cd3-22a6-47e9-a121-3e106e65286e",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 100108,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": "办公室",
+          "name": "上级来文办理",
+          "processCode": "500000009",
+          "processId": "a8829c37-733c-4f82-bf57-73b8c69b05bf",
+          "id": null,
+          "favoriteState": "1"
+        },
+        {
+          "entityType": 20054,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": "办公室",
+          "name": "用章申请",
+          "processCode": "500000017",
+          "processId": "712d438f-ac5e-4573-8b70-e1776a13d028",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 100109,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": "办公室",
+          "name": "04 院内下发文",
+          "processCode": "600000176",
+          "processId": "c13ed09d-74b9-4812-97ef-130309206bec",
+          "id": null,
+          "favoriteState": "1"
+        }
+      ]
+    },
+    {
+      "folderId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+      "name": "财务科",
+      "Processes": [
+        {
+          "entityType": 20172,
+          "folderId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+          "folderName": "财务科",
+          "name": "03 医院费用报销流程",
+          "processCode": "600000047",
+          "processId": "83977c93-14a8-4fed-a664-5bc3ae3a4583",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 7005,
+          "folderId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+          "folderName": "财务科",
+          "name": "02 差旅费报销流程",
+          "processCode": "500000013",
+          "processId": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+          "id": null,
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+      "name": "人事科",
+      "Processes": [
+        {
+          "entityType": 30037,
+          "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+          "folderName": "人事科",
+          "name": "10 加班登记",
+          "processCode": "600000007",
+          "processId": "78760cdc-81dd-41e5-85a3-9cb70dbf7d7b",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20191,
+          "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+          "folderName": "人事科",
+          "name": "出国申请",
+          "processCode": "600000189",
+          "processId": "015230e9-1d58-4276-b733-11e572dbcd0f",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 30062,
+          "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+          "folderName": "人事科",
+          "name": "合同人员续签考评表",
+          "processCode": "600000187",
+          "processId": "4dcc01bf-27ed-4032-bcc1-6bb528f2d393",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 30060,
+          "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+          "folderName": "人事科",
+          "name": "人事合同签订",
+          "processCode": "600000185",
+          "processId": "816faef4-9a3b-409b-9a14-eab0a30a1ab9",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20149,
+          "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+          "folderName": "人事科",
+          "name": "退休人员返聘流程",
+          "processCode": "600000055",
+          "processId": "3cd81295-6018-4f5b-81b8-eee43ec1b5f7",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 30271,
+          "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+          "folderName": "人事科",
+          "name": "员工退休申请表",
+          "processCode": "600000186",
+          "processId": "7915948e-1f4e-40e5-a173-e7d57b570f1b",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 30022,
+          "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+          "folderName": "人事科",
+          "name": "01 请假单",
+          "processCode": "600000181",
+          "processId": "2442350c-257f-446d-9a44-28a31bfb6ccb",
+          "id": null,
+          "favoriteState": "1"
+        }
+      ]
+    },
+    {
+      "folderId": "1b93af89-e680-4b03-810e-dc7a67a4e6a0",
+      "name": "人事考核",
+      "Processes": [
+        {
+          "entityType": 30258,
+          "folderId": "1b93af89-e680-4b03-810e-dc7a67a4e6a0",
+          "folderName": "人事考核",
+          "name": "人员年度考评表（管理）",
+          "processCode": "600000190",
+          "processId": "f7339e9e-ae04-4376-a88f-8765aba66e82",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 30258,
+          "folderId": "1b93af89-e680-4b03-810e-dc7a67a4e6a0",
+          "folderName": "人事考核",
+          "name": "人员年度考评表（专业技术）",
+          "processCode": "600000183",
+          "processId": "71894ced-8dd1-45fb-884f-4adf7af91e3f",
+          "id": null,
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+      "name": "合同管理",
+      "Processes": [
+        {
+          "entityType": 1010,
+          "folderId": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+          "folderName": "合同管理",
+          "name": "合同会签单",
+          "processCode": "600000177",
+          "processId": "a39549b4-6f8f-44fd-93c1-6455b845f765",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 10182,
+          "folderId": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+          "folderName": "合同管理",
+          "name": "合同付款单",
+          "processCode": "600000193",
+          "processId": "e494b32b-5a2a-4f02-8b3f-c9471e0a900a",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 10185,
+          "folderId": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+          "folderName": "合同管理",
+          "name": "合同执行审计流程",
+          "processCode": "500010185",
+          "processId": "d387bec8-5068-44c6-a57a-e5990ee5af1f",
+          "id": null,
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "b2ba4400-490c-49b9-8e2d-936e7487afba",
+      "name": "党委办公室",
+      "Processes": []
+    },
+    {
+      "folderId": "e196041e-6fc5-480d-9532-efa6557b0470",
+      "name": "纪检监察办",
+      "Processes": [
+        {
+          "entityType": 20019,
+          "folderId": "e196041e-6fc5-480d-9532-efa6557b0470",
+          "folderName": "纪检监察办",
+          "name": "01 纪检文件制定",
+          "processCode": "600000172",
+          "processId": "67048108-16ac-469d-b8bd-c03930aa80a4",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20020,
+          "folderId": "e196041e-6fc5-480d-9532-efa6557b0470",
+          "folderName": "纪检监察办",
+          "name": "02 纪检文件传阅",
+          "processCode": "600000171",
+          "processId": "d0a7d693-dbbc-4e63-a45d-e2a9cf407d9c",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20248,
+          "folderId": "e196041e-6fc5-480d-9532-efa6557b0470",
+          "folderName": "纪检监察办",
+          "name": "03 纪检工作办理",
+          "processCode": "600000173",
+          "processId": "63795d62-4324-4aa4-b34e-fcd8d7b5415e",
+          "id": null,
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "47531785-d73b-4127-82b8-3c6a3c10afe2",
+      "name": "信息中心",
+      "Processes": []
+    },
+    {
+      "folderId": "44db8c73-9672-4004-b260-1c55649b53fa",
+      "name": "护理部",
+      "Processes": []
+    },
+    {
+      "folderId": "8b4510b2-55f9-461e-9db7-d7af943bc404",
+      "name": "宣传",
+      "Processes": []
+    },
+    {
+      "folderId": "6f96de03-f04b-47f8-a41a-ed5ef8f85973",
+      "name": "质管办",
+      "Processes": [
+        {
+          "entityType": 20209,
+          "folderId": "6f96de03-f04b-47f8-a41a-ed5ef8f85973",
+          "folderName": "质管办",
+          "name": "行政管理质量问题报告",
+          "processCode": "600000120",
+          "processId": "aa236dc9-cfa6-49be-a36d-fe6538ac1cd6",
+          "id": null,
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "f4445382-3a1e-4a12-ab3a-2f4b5d51e393",
+      "name": "医务科",
+      "Processes": []
+    },
+    {
+      "folderId": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+      "name": "资产管理",
+      "Processes": [
+        {
+          "entityType": 20213,
+          "folderId": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+          "folderName": "资产管理",
+          "name": "02 资产报废申请",
+          "processCode": "600000125",
+          "processId": "4452ad33-c804-48fd-abb8-e58ca084df2f",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20114,
+          "folderId": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+          "folderName": "资产管理",
+          "name": "一般固定资产购置申请",
+          "processCode": "600000003",
+          "processId": "9188a8a7-bee5-404c-a7de-8bfc800c0908",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20137,
+          "folderId": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+          "folderName": "资产管理",
+          "name": "资产调拨申请",
+          "processCode": "600000184",
+          "processId": "de999486-3e39-4d66-9f6a-661884a05041",
+          "id": null,
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "724baaa4-04d1-470c-a42d-14958edd189b",
+      "name": "档案管理",
+      "Processes": [
+        {
+          "entityType": 20083,
+          "folderId": "724baaa4-04d1-470c-a42d-14958edd189b",
+          "folderName": "档案管理",
+          "name": "档案借阅",
+          "processCode": "600000091",
+          "processId": "64990187-61d8-47b2-8484-463bfa41be90",
+          "id": null,
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "1237ce7c-7018-4dd4-a096-46411188acdf",
+      "name": "医学工程处",
+      "Processes": [
+        {
+          "entityType": 20045,
+          "folderId": "1237ce7c-7018-4dd4-a096-46411188acdf",
+          "folderName": "医学工程处",
+          "name": "01 物品采购申请",
+          "processCode": "600000135",
+          "processId": "398dcd2b-885d-4941-b6d1-d84511935021",
+          "id": null,
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "c7d1fa63-5031-4407-a513-924e1f41157c",
+      "name": "科教科",
+      "Processes": []
+    },
+    {
+      "folderId": "27d89091-5b36-4399-93a1-6c16b2d0dba9",
+      "name": "规划建设处",
+      "Processes": [
+        {
+          "entityType": 20210,
+          "folderId": "27d89091-5b36-4399-93a1-6c16b2d0dba9",
+          "folderName": "规划建设处",
+          "name": "01 住宿申请审批（学生、进修）",
+          "processCode": "600000121",
+          "processId": "0d3a3056-1c9e-4a75-8ce0-a63c85472dd2",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20210,
+          "folderId": "27d89091-5b36-4399-93a1-6c16b2d0dba9",
+          "folderName": "规划建设处",
+          "name": "02 住宿申请审批（外包人员）",
+          "processCode": "600000122",
+          "processId": "3d3b9a46-f1d2-495b-9944-b3e5536bd9b7",
+          "id": null,
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "36c32504-9cae-4af6-b2cc-26a13392b270",
+      "name": "工作报表",
+      "Processes": [
+        {
+          "entityType": 20224,
+          "folderId": "36c32504-9cae-4af6-b2cc-26a13392b270",
+          "folderName": "工作报表",
+          "name": "01 京医通",
+          "processCode": "600000146",
+          "processId": "4bdcadab-ee10-48c1-9576-db3f3ab25a4e",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20235,
+          "folderId": "36c32504-9cae-4af6-b2cc-26a13392b270",
+          "folderName": "工作报表",
+          "name": "02 统计日报流程",
+          "processCode": "600000159",
+          "processId": "aab32389-22bc-c25a-6f60-6eb525ffdc56",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20235,
+          "folderId": "36c32504-9cae-4af6-b2cc-26a13392b270",
+          "folderName": "工作报表",
+          "name": "03 统计分析",
+          "processCode": "600000149",
+          "processId": "4e732ced-3463-d06d-e0ca-9a15b6153677",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20242,
+          "folderId": "36c32504-9cae-4af6-b2cc-26a13392b270",
+          "folderName": "工作报表",
+          "name": "04 医务处下属科室工作月报表",
+          "processCode": "600000163",
+          "processId": "d645920e-395f-edad-7bbb-ed0eca3fe2e0",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20234,
+          "folderId": "36c32504-9cae-4af6-b2cc-26a13392b270",
+          "folderName": "工作报表",
+          "name": "05 工娱科医疗月报",
+          "processCode": "600000162",
+          "processId": "c51ce410-c124-a10e-0db5-e4b97fc2af39",
+          "id": null,
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20256,
+          "folderId": "36c32504-9cae-4af6-b2cc-26a13392b270",
+          "folderName": "工作报表",
+          "name": "06 功能检查科月报表",
+          "processCode": "600000180",
+          "processId": "9d296f6a-a8f6-400f-a0a1-6197b3292421",
+          "id": null,
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "8be4d3bb-95a2-4fa1-acdb-4b8dd7c5c9bb",
+      "name": "采购中心",
+      "Processes": []
+    },
+    {
+      "folderId": "9aa02e03-a0a5-4405-b03c-5d59f0265362",
+      "name": "考勤",
+      "Processes": []
+    },
+    {
+      "folderId": "458e3f41-35c5-4c02-b417-d1813bd28c11",
+      "name": "院感管理科",
+      "Processes": []
+    }
+  ],
+  "favorProcessList": [
+    {
+      "folderId": "6e095e6e-bb8d-4c54-8495-e1ed1fd7b8de",
+      "name": "通用",
+      "Processes": [
+        {
+          "entityType": 100119,
+          "folderId": "6e095e6e-bb8d-4c54-8495-e1ed1fd7b8de",
+          "folderName": null,
+          "name": "01 请示报告",
+          "processCode": "500000010",
+          "processId": "29666c1a-a65c-4956-8460-88ce9588ba08",
+          "id": "29666c1a-a65c-4956-8460-88ce9588ba08",
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+      "name": "办公室",
+      "Processes": [
+        {
+          "entityType": 100108,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": null,
+          "name": "上级来文办理",
+          "processCode": "500000009",
+          "processId": "a8829c37-733c-4f82-bf57-73b8c69b05bf",
+          "id": "a8829c37-733c-4f82-bf57-73b8c69b05bf",
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 100109,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": null,
+          "name": "04 院内下发文",
+          "processCode": "600000176",
+          "processId": "c13ed09d-74b9-4812-97ef-130309206bec",
+          "id": "c13ed09d-74b9-4812-97ef-130309206bec",
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+      "name": "财务科",
+      "Processes": []
+    },
+    {
+      "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+      "name": "人事科",
+      "Processes": [
+        {
+          "entityType": 30022,
+          "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+          "folderName": null,
+          "name": "01 请假单",
+          "processCode": "600000181",
+          "processId": "2442350c-257f-446d-9a44-28a31bfb6ccb",
+          "id": "2442350c-257f-446d-9a44-28a31bfb6ccb",
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "1b93af89-e680-4b03-810e-dc7a67a4e6a0",
+      "name": "人事考核",
+      "Processes": []
+    },
+    {
+      "folderId": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+      "name": "合同管理",
+      "Processes": []
+    },
+    {
+      "folderId": "b2ba4400-490c-49b9-8e2d-936e7487afba",
+      "name": "党委办公室",
+      "Processes": []
+    },
+    {
+      "folderId": "e196041e-6fc5-480d-9532-efa6557b0470",
+      "name": "纪检监察办",
+      "Processes": []
+    },
+    {
+      "folderId": "47531785-d73b-4127-82b8-3c6a3c10afe2",
+      "name": "信息中心",
+      "Processes": []
+    },
+    {
+      "folderId": "44db8c73-9672-4004-b260-1c55649b53fa",
+      "name": "护理部",
+      "Processes": []
+    },
+    {
+      "folderId": "8b4510b2-55f9-461e-9db7-d7af943bc404",
+      "name": "宣传",
+      "Processes": []
+    },
+    {
+      "folderId": "6f96de03-f04b-47f8-a41a-ed5ef8f85973",
+      "name": "质管办",
+      "Processes": []
+    },
+    {
+      "folderId": "f4445382-3a1e-4a12-ab3a-2f4b5d51e393",
+      "name": "医务科",
+      "Processes": []
+    },
+    {
+      "folderId": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+      "name": "资产管理",
+      "Processes": []
+    },
+    {
+      "folderId": "724baaa4-04d1-470c-a42d-14958edd189b",
+      "name": "档案管理",
+      "Processes": []
+    },
+    {
+      "folderId": "1237ce7c-7018-4dd4-a096-46411188acdf",
+      "name": "医学工程处",
+      "Processes": []
+    },
+    {
+      "folderId": "c7d1fa63-5031-4407-a513-924e1f41157c",
+      "name": "科教科",
+      "Processes": []
+    },
+    {
+      "folderId": "27d89091-5b36-4399-93a1-6c16b2d0dba9",
+      "name": "规划建设处",
+      "Processes": []
+    },
+    {
+      "folderId": "36c32504-9cae-4af6-b2cc-26a13392b270",
+      "name": "工作报表",
+      "Processes": []
+    },
+    {
+      "folderId": "8be4d3bb-95a2-4fa1-acdb-4b8dd7c5c9bb",
+      "name": "采购中心",
+      "Processes": []
+    },
+    {
+      "folderId": "9aa02e03-a0a5-4405-b03c-5d59f0265362",
+      "name": "考勤",
+      "Processes": []
+    },
+    {
+      "folderId": "458e3f41-35c5-4c02-b417-d1813bd28c11",
+      "name": "院感管理科",
+      "Processes": []
+    }
+  ],
+  "latestProcessList": [
+    {
+      "folderId": "6e095e6e-bb8d-4c54-8495-e1ed1fd7b8de",
+      "name": "通用",
+      "Processes": []
+    },
+    {
+      "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+      "name": "办公室",
+      "Processes": [
+        {
+          "entityType": 20054,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": null,
+          "name": "用章申请",
+          "processCode": "500000017",
+          "processId": "712d438f-ac5e-4573-8b70-e1776a13d028",
+          "id": "712d438f-ac5e-4573-8b70-e1776a13d028",
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 100108,
+          "folderId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+          "folderName": null,
+          "name": "上级来文办理",
+          "processCode": "500000009",
+          "processId": "a8829c37-733c-4f82-bf57-73b8c69b05bf",
+          "id": "a8829c37-733c-4f82-bf57-73b8c69b05bf",
+          "favoriteState": "1"
+        }
+      ]
+    },
+    {
+      "folderId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+      "name": "财务科",
+      "Processes": [
+        {
+          "entityType": 7005,
+          "folderId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+          "folderName": null,
+          "name": "02 差旅费报销流程",
+          "processCode": "500000013",
+          "processId": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+          "id": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 7005,
+          "folderId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+          "folderName": null,
+          "name": "02 差旅费报销流程",
+          "processCode": "500000013",
+          "processId": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+          "id": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 7005,
+          "folderId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+          "folderName": null,
+          "name": "02 差旅费报销流程",
+          "processCode": "500000013",
+          "processId": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+          "id": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 7005,
+          "folderId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+          "folderName": null,
+          "name": "02 差旅费报销流程",
+          "processCode": "500000013",
+          "processId": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+          "id": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+          "favoriteState": "0"
+        },
+        {
+          "entityType": 20172,
+          "folderId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+          "folderName": null,
+          "name": "03 医院费用报销流程",
+          "processCode": "600000047",
+          "processId": "83977c93-14a8-4fed-a664-5bc3ae3a4583",
+          "id": "83977c93-14a8-4fed-a664-5bc3ae3a4583",
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+      "name": "人事科",
+      "Processes": [
+        {
+          "entityType": 30022,
+          "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+          "folderName": null,
+          "name": "01 请假单",
+          "processCode": "600000181",
+          "processId": "2442350c-257f-446d-9a44-28a31bfb6ccb",
+          "id": "2442350c-257f-446d-9a44-28a31bfb6ccb",
+          "favoriteState": "1"
+        },
+        {
+          "entityType": 30060,
+          "folderId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+          "folderName": null,
+          "name": "人事合同签订",
+          "processCode": "600000185",
+          "processId": "816faef4-9a3b-409b-9a14-eab0a30a1ab9",
+          "id": "816faef4-9a3b-409b-9a14-eab0a30a1ab9",
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "1b93af89-e680-4b03-810e-dc7a67a4e6a0",
+      "name": "人事考核",
+      "Processes": []
+    },
+    {
+      "folderId": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+      "name": "合同管理",
+      "Processes": []
+    },
+    {
+      "folderId": "b2ba4400-490c-49b9-8e2d-936e7487afba",
+      "name": "党委办公室",
+      "Processes": []
+    },
+    {
+      "folderId": "e196041e-6fc5-480d-9532-efa6557b0470",
+      "name": "纪检监察办",
+      "Processes": []
+    },
+    {
+      "folderId": "47531785-d73b-4127-82b8-3c6a3c10afe2",
+      "name": "信息中心",
+      "Processes": []
+    },
+    {
+      "folderId": "44db8c73-9672-4004-b260-1c55649b53fa",
+      "name": "护理部",
+      "Processes": []
+    },
+    {
+      "folderId": "8b4510b2-55f9-461e-9db7-d7af943bc404",
+      "name": "宣传",
+      "Processes": []
+    },
+    {
+      "folderId": "6f96de03-f04b-47f8-a41a-ed5ef8f85973",
+      "name": "质管办",
+      "Processes": []
+    },
+    {
+      "folderId": "f4445382-3a1e-4a12-ab3a-2f4b5d51e393",
+      "name": "医务科",
+      "Processes": []
+    },
+    {
+      "folderId": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+      "name": "资产管理",
+      "Processes": []
+    },
+    {
+      "folderId": "724baaa4-04d1-470c-a42d-14958edd189b",
+      "name": "档案管理",
+      "Processes": []
+    },
+    {
+      "folderId": "1237ce7c-7018-4dd4-a096-46411188acdf",
+      "name": "医学工程处",
+      "Processes": [
+        {
+          "entityType": 20045,
+          "folderId": "1237ce7c-7018-4dd4-a096-46411188acdf",
+          "folderName": null,
+          "name": "01 物品采购申请",
+          "processCode": "600000135",
+          "processId": "398dcd2b-885d-4941-b6d1-d84511935021",
+          "id": "398dcd2b-885d-4941-b6d1-d84511935021",
+          "favoriteState": "0"
+        }
+      ]
+    },
+    {
+      "folderId": "c7d1fa63-5031-4407-a513-924e1f41157c",
+      "name": "科教科",
+      "Processes": []
+    },
+    {
+      "folderId": "27d89091-5b36-4399-93a1-6c16b2d0dba9",
+      "name": "规划建设处",
+      "Processes": []
+    },
+    {
+      "folderId": "36c32504-9cae-4af6-b2cc-26a13392b270",
+      "name": "工作报表",
+      "Processes": []
+    },
+    {
+      "folderId": "8be4d3bb-95a2-4fa1-acdb-4b8dd7c5c9bb",
+      "name": "采购中心",
+      "Processes": []
+    },
+    {
+      "folderId": "9aa02e03-a0a5-4405-b03c-5d59f0265362",
+      "name": "考勤",
+      "Processes": []
+    },
+    {
+      "folderId": "458e3f41-35c5-4c02-b417-d1813bd28c11",
+      "name": "院感管理科",
+      "Processes": []
+    }
+  ],
+  "context": {
+    "userId": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "name": "jackliu",
+    "fullName": "jackliu3",
+    "businessUnitName": "信息中心"
+  }
+}

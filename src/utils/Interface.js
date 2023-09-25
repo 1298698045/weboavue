@@ -6,6 +6,11 @@ const Interface = {
         datalist:"/localData/datalist.json"
     },
     formSearch: "/localData/formSearch.json",
-    applist: "/localData/applist.json"
+    applist: "/localData/applist.json",
+    workflow:{
+        processList: "/localData/process.search.json"
+    },
+    businessunitList: "/localData/user.businessunit.getlist.json",
+    userInfo: "/localData/user.info.get.json"
 }
 export default Interface;
