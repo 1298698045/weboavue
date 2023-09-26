@@ -25,7 +25,7 @@ import "@/style/public.css";
 import "@/style/theme.css";
 const app = createApp(App);
 moment.locale('zh-cn');
-app.config.globalProperties.$moment = moment
+app.config.globalProperties.$moment = moment;
 app.use(store);
 app.use(router);
 app.use(Axios);

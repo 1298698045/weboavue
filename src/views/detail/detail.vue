@@ -8,7 +8,7 @@
                     </div>
                 </div>
                 <div class="tabWrap">
-                    <a-tabs v-model:activeKey="activeKey">
+                    <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
                         <a-tab-pane v-for="(item,index) in tabs" :key="index">
                             <template #tab>
                                 <span>
@@ -25,10 +25,10 @@
                 <a-button type="primary" class="ml10">提交流程</a-button>
                 <a-dropdown :trigger="['hover']" class="ml10">
                     <span class="btn-drop">
-                      <UnorderedListOutlined />
+                      <UnorderedListOutlined style="color: #1D2129;" />
                     </span>
                     <template #overlay>
-                      <a-menu @click="handleMenuClick">
+                      <a-menu>
                         <a-menu-item key="1">
                           催办
                         </a-menu-item>
@@ -51,7 +51,7 @@
         </div>
         <div class="detail-scroll">
             <div class="detail-bd">
-                <div class="tabContainer containerForm">
+                <div class="tabContainer containerForm" v-if="activeKey==0">
                     <div class="tableBox">
 
                     </div>
@@ -67,16 +67,49 @@
                             </div>
                             <div class="panel-bd">
                                 <div class="relevantList">
-                                    <div class="empty">
+                                    <div class="empty" v-if="relatedList.length==0">
                                         <div>
-                                            <img src="/img/newImg/empty.png" alt="">
+                                            <img :src="require('@/assets/img/empty.png')" alt="">
                                             <p class="emptyDesc">当前暂无数据</p>
                                         </div>
+                                    </div>
+                                    <div class="relevantItem" v-for="(item,index) in relatedList" :key="index">
+                                        <div class="relevantTitle">{{item.Name}}</div>
+                                        <div class="relevantTimerInfo">{{item.CreatedOn}} {{item.CreatedByName}}</div>
+                                        <a-popconfirm title="是否确定要删除？"
+                                            ok-text="确定"
+                                            cancel-text="取消"
+                                            @confirm="confirm"
+                                            @cancel="cancel">
+                                            <DeleteOutlined />
+                                        </a-popconfirm>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="panel">
+                            <div class="panel-head">
+                                <div class="panel-title">
+                                    附件 (0)
+                                </div>
+                            </div>
+                            <div class="panel-bd">
+                                
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="tabContainer" v-if="activeKey==2">
+                    <Related />
+                </div>
+                <div class="tabContainer" v-if="activeKey==3">
+                    <Info />
+                </div>
+                <div class="tabContainer" v-if="activeKey==4">
+                    <read-record />
+                </div>
+                <div class="tabContainer" v-if="activeKey==5">
+                    <Comment />
                 </div>
             </div>
         </div>
@@ -88,7 +121,7 @@
                     <a-button type="primary" class="ml10">提交流程</a-button>
                     <a-dropdown :trigger="['hover']" class="ml10">
                         <span class="btn-drop">
-                          <UnorderedListOutlined />
+                          <UnorderedListOutlined style="color: #1D2129;" />
                         </span>
                         <template #overlay>
                           <a-menu @click="handleMenuClick">
@@ -116,16 +149,24 @@
     </div>
 </template>
 <script setup>
-    import "./detail.less";
+    import "@/style/detail.less";
     import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw } from "vue";
     import {
         UnorderedListOutlined,
         DownOutlined,
         CaretDownOutlined,
+        DeleteFilled,
+        DeleteOutlined
     } from "@ant-design/icons-vue";
+    import Related from "@/components/detail/Related.vue";
+    import Info from "@/components/detail/Info.vue";
+    import ReadRecord from "@/components/detail/ReadRecord.vue";
+    import Comment from "@/components/detail/Comment.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-    
+    import useWrokDetail from "@/utils/workDetail";
+    const { relatedList, getRelatedWork } = useWrokDetail();
+
     const data = reactive({
         tabs: [
             {
@@ -145,8 +186,13 @@
             },
             {
                 label: "讨论留言"
-            }
-        ]
+            },
+        ],
+        activeKey: 0
     })
-    const { tabs } = toRefs(data);
+    const { tabs, activeKey } = toRefs(data);
+    const changeTabs = (e) => {
+        data.activeKey = e;
+    }
+    getRelatedWork();
 </script>

@@ -57,7 +57,7 @@ axios.interceptors.response.use(
  * @param {String} url [请求的url地址] 
  * @param {Object} params [请求时携带的参数] 
  */
-const $get = (url, params) => {
+export const $get = (url, params) => {
     return new Promise((resolve, reject) => {
         axios.get(url, {
             params: params,
@@ -92,5 +92,7 @@ export default {
         app.config.globalProperties['$get'] = $get;
         app.config.globalProperties['$post'] = $post;
         app.config.globalProperties['$axios'] = axios;
-    }
+    },
+    $get: $get,
+    $post: $post
 }
