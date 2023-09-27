@@ -17,23 +17,89 @@ const routes = [
       {
         path:"/flow/add",
         component: () => import("../views/flow/add/index.vue"),
-        name: "新建事务"
+        name: "新建事务",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian"
+        }
       },
       {
         path: "/flow/todoList",
         component: () => import("../views/flow/todoList/index.vue"),
         name: "待办事务",
+        icon: "daiban1",
+        meta: {
+          icon: "daiban1",
+        }
       },
       {
         path: "/flow/completed",
         component: () => import("../views/flow/completed/index.vue"),
         name: "已办事务",
+        icon: "yiban",
+        meta: {
+          icon: "yiban",
+        }
       },
       {
-        path: "/about",
-        component: () => import("../views/About.vue"),
-        name: "about",
+        path: "/flow/doRecord",
+        component: () => import("../views/flow/doRecord/index.vue"),
+        name: "办理记录",
+        icon: "daiban1",
+        meta: {
+          icon: "daiban1",
+        }
       },
+      {
+        path: "/flow/myStart",
+        component: () => import("../views/flow/myStart/index.vue"),
+        name: "我的发起",
+        icon: "faqi",
+        meta: {
+          icon: "faqi",
+        }
+      },
+      {
+        path: "/flow/returnBox",
+        component: () => import("../views/flow/returnBox/index.vue"),
+        name: "退件箱",
+        icon: "tuijian",
+        meta: {
+          icon: "tuijian",
+        }
+      },
+      {
+        path: "/flow/receivedCirculation",
+        component: () => import("../views/flow/receivedCirculation/index.vue"),
+        name: "收到传阅",
+        icon: "shoudaochuanyue",
+        meta: {
+          icon: "shoudaochuanyue",
+        }
+      },
+      {
+        path: "/flow/myCirculation",
+        component: () => import("../views/flow/myCirculation/index.vue"),
+        name: "我传阅的",
+        icon: "chuanyue",
+        meta: {
+          icon: "chuanyue",
+        }
+      },
+      {
+        path: "/flow/drafts",
+        component: () => import("../views/flow/drafts/index.vue"),
+        name: "草稿箱",
+        icon: "caogaoxiang",
+        meta: {
+          icon: "caogaoxiang",
+        }
+      },
+      // {
+      //   path: "/about",
+      //   component: () => import("../views/About.vue"),
+      //   name: "about",
+      // },
     ],
   },
   {

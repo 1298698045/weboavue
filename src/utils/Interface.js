@@ -18,5 +18,18 @@ const Interface = {
     readlogList: "/localData/process.instance.readlog.getlist.json", // 阅读记录
     commentList: "/localData/chatter.search.json", // 通用评论列表
     sendComment: "/localData/chatter.post.json", // 发送评论
+    // 办理记录
+    doRecordList: "/localData/process.instance.finishedtask.search.json",
+    // 我的发起
+    myStartList: "/localData/process.instance.owner.search.json",
+    // 退件箱
+    returnBoxList: "/localData/process.instance.canceltask.search.json",
+    // 收到的传阅
+    receivedCirculationList: "/localData/process.instance.receive.foward.search.json",
+    // 我传阅的
+    myCirculationList: "/localData/process.instance.foward.search.json",
+    // 草稿箱
+    draftsList: "/localData/wf.instanceowner.search.json"
+
 }
 export default Interface;

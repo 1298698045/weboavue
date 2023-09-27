@@ -229,7 +229,7 @@
 
     }
     const imgUrl = require("@/assets/flow/checkbox_checked.gif");
-    const gridUrl = ref("/localData/datalist.json");
+    const gridUrl = ref(Interface.doRecordList);
     const columns = ref(
         [
             {
@@ -245,6 +245,7 @@
                 <div class="popup">
                   <div class="option-item">传阅</div>  
                   <div class="option-item">打印</div>
+                  <div class="option-item">重办</div>
                 </div>
                 <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
             `
@@ -252,10 +253,6 @@
                 }
             },
             {
-                field: 'ProcessInstanceNumber',
-                title: '编号',
-                sortable: true
-            }, {
                 field: 'Name',
                 title: '标题',
                 sortable: true,
@@ -263,32 +260,40 @@
                     return '<a target="_blank" style=\"color:#015ba7;font-size:13px;cursor:pointer;\" href="/a0M/e?objectTypeCode=123&source=l&id=' + row.ProcessInstanceId + '&retURL=/wfinstance/closedtasklst.aspx?gridid=closedwfrulelog&t=a0M">' + row.Name + '</a>&nbsp;';
                 }
             }, {
-                field: 'BusinessUnitIdName',
-                title: '发起人科室',
-                sortable: false
-            }, {
-                field: 'CreatedByName',
-                title: '发起人',
-                sortable: false
-            }, {
-                field: 'CurrentStepName',
-                title: '当前环节',
-                sortable: true
-            }, {
-                field: 'StateCodeName',
+                field: 'InstanceStateCodeName',
                 title: '流程状态',
-                sortable: true
+                sortable: true,
             }, {
                 field: 'ProcessIdName',
                 title: '流程名称',
-                sortable: true
+                sortable: false
             }, {
                 field: 'PriorityName',
                 title: '紧急程度',
+                sortable: false
+            }, {
+                field: 'ToActivityName',
+                title: '当前环节',
+                sortable: true
+            }, {
+                field: 'FromActivityName',
+                title: '来源环节',
+                sortable: true
+            }, {
+                field: 'CreatedByName',
+                title: '来源提交人',
                 sortable: true
             }, {
                 field: 'CreatedOn',
                 title: '提交时间',
+                sortable: true
+            }, {
+                field: 'BusinessUnitIdName',
+                title: '发起人部门',
+                sortable: true
+            }, {
+                field: 'StartByName',
+                title: '发起人姓名',
                 sortable: true
             }, {
                 field: 'StartedOn',
@@ -298,7 +303,8 @@
                 field: 'Deadline',
                 title: '办理期限',
                 sortable: true
-            }, {
+            },
+            {
                 field: 'UrgeTimes',
                 title: '催办次数',
                 sortable: true

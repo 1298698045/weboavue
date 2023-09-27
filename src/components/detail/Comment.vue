@@ -51,7 +51,7 @@
 <script setup>
     import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw } from "vue";
     import { UserOutlined } from "@ant-design/icons-vue";
-    import { NotificationPlacement, notification } from 'ant-design-vue';
+    import { notification } from 'ant-design-vue';
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({

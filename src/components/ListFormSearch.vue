@@ -33,7 +33,7 @@
     </div>
 </template>
 <script setup>
-    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits } from "vue";
+    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, defineExpose } from "vue";
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
     import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
@@ -44,8 +44,10 @@
     const formRef = ref();
     const formState = reactive({
     })
+    // 搜索
     const onFinish = (values) => {
         console.log('Success:', values);
+        emit("search", values)
     };
     // 重置
     const resetForm = () => {
@@ -59,7 +61,7 @@
     })
     const { searchFields } = toRefs(data);
     const formSearchRef = ref();
-    const emit = defineEmits(['update-height'])
+    const emit = defineEmits(['update-height','search'])
     const getSearchLayout = () => {
         proxy.$get(Interface.formSearch,{}).then(res=>{
             // console.log("SearchFields", res);
@@ -81,6 +83,7 @@
     onMounted(()=>{
         getSearchLayout();
     })
+    defineExpose({resetForm})
 </script>
 <style lang="less">
     .formSearch{

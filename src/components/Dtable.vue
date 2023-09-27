@@ -15,7 +15,8 @@
   watch(()=> props.isCollapsed, (newVal,oldVal) => {
     $("#datagrid").datagrid("reload");
   })
-  const loadGrid = () => {
+  const loadGrid = (queryParams) => {
+    console.log('loadGrid:queryParams', queryParams)
     // const imgUrl = require("@/assets/flow/checkbox_checked.gif");
     var height = props.tableHeight;
     var columns = props.columns;
@@ -78,6 +79,7 @@
       url: url,
       method: "get",
       columns: [columns],
+      queryParams: queryParams,
       // data: tableList,
       singleSelect: false,
       checkOnSelect: false,

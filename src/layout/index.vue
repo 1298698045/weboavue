@@ -36,6 +36,6 @@ const handleMenuSwitch = () => {
   state.collapsed = store.state.collapsed;
 };
 </script>
-<style>
+<style lang="less">
 @import "./layout.less";
 </style>

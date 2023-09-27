@@ -12,7 +12,8 @@
       :inline-collapsed="props.collapsed"
       :items="items"
       @click="handleMenu"
-    ></a-menu>
+    >
+    </a-menu>
   </div>
 </template>
 <script setup>

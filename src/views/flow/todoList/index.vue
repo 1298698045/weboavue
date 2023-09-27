@@ -109,7 +109,7 @@
           ></div>
           <div style="height: 100%" ref="contentRef">
             <div class="wea-tab">
-              <a-tabs v-model:activeKey="activeKey">
+              <a-tabs v-model:activeKey="activeKey" @change="changeTab">
                 <a-tab-pane v-for="(item,index) in tabs" :key="index">
                   <template #tab>
                     <span>
@@ -295,12 +295,14 @@ let data = reactive({
   fieldNames:{
     children:'children', title:'name', key:'id'
   },
-  tabs:[]
+  tabs:[],
+  activeKey: 0,
+  queryParams: {}
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
 };
-const { isCollapsed, tableHeight, fieldNames, tabs} = toRefs(data);
+const { isCollapsed, tableHeight, fieldNames, tabs, activeKey} = toRefs(data);
 const tabContent = ref(null);
 const contentRef = ref(null);
 let formSearchHeight = ref(null);
@@ -389,6 +391,12 @@ const imgUrl = require("@/assets/flow/checkbox_checked.gif");
       { field: 'ProcessIdName', title: '流程', sortable: true },
     ]
   )
+
+  const changeTab = (e) => {
+    data.activeKey = e;
+    data.queryParams.activeKey = e;
+    gridRef.value.loadGrid(data.queryParams);
+  }
 </script>
 <style lang="less">
 .todoList {

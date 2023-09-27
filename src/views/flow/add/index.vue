@@ -156,7 +156,7 @@
                             </a-select>
                         </a-form-item>
                         <a-form-item label="备注：" name="Description">
-                            <a-textarea :rows="4" v-model:value="formState.Description" />
+                            <a-textarea :rows="3" v-model:value="formState.Description" />
                         </a-form-item>
                     </a-form>
                 </div>
