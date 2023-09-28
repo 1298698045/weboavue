@@ -113,7 +113,7 @@
                 <a-tab-pane v-for="(item,index) in tabs" :key="index">
                   <template #tab>
                     <span>
-                      {{item.lable}} ({{item.count}})
+                      {{item.lable}} <span v-if="item.count">({{item.count}})</span>
                     </span>
                   </template>
                 </a-tab-pane>
@@ -159,6 +159,8 @@
         </a-col>
       </a-row>
     </div>
+    <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
+    <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation" :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
   </div>
 </template>
 <script setup>
@@ -166,11 +168,17 @@ import {
   UnorderedListOutlined,
   DownOutlined,
   CaretDownOutlined,
+  UserOutlined
 } from "@ant-design/icons-vue";
 import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated  } from "vue";
 import Interface from "@/utils/Interface.js";
 import Dtable from "@/components/Dtable.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
+import { useRouter, useRoute } from "vue-router";
+const route = useRoute();
+const router = useRouter();
+import Delegate from "@/components/workflow/Delegate.vue";
+import CirculationModal from "@/components/workflow/CirculationModal.vue";
 const x = 3;
 const y = 2;
 const z = 1;
@@ -257,37 +265,6 @@ watch(searchValue, (value) => {
   searchValue.value = value;
   autoExpandParent.value = true;
 });
-// const dataSource = reactive([
-//   {
-//     key: "1",
-//     name: "胡彦斌",
-//     age: 32,
-//     address: "西湖区湖底公园1号",
-//   },
-//   {
-//     key: "2",
-//     name: "胡彦祖",
-//     age: 42,
-//     address: "西湖区湖底公园1号",
-//   },
-// ]);
-// const columns = reactive([
-//   {
-//     title: "姓名",
-//     dataIndex: "name",
-//     key: "name",
-//   },
-//   {
-//     title: "年龄",
-//     dataIndex: "age",
-//     key: "age",
-//   },
-//   {
-//     title: "住址",
-//     dataIndex: "address",
-//     key: "address",
-//   },
-// ]);
 
 let data = reactive({
   isCollapsed: false,
@@ -295,14 +272,41 @@ let data = reactive({
   fieldNames:{
     children:'children', title:'name', key:'id'
   },
-  tabs:[],
+  tabs:[
+    {
+      lable: "全部",
+      count: 18
+    },
+    {
+      lable: "被退回",
+      count: ''
+    },
+    {
+      lable: "已读",
+      count: 16
+    },
+    {
+      lable: "未读",
+      count: 2
+    },
+    {
+      lable: "超时",
+      count: ''
+    },
+    {
+      lable: "待阅",
+      count: ''
+    }
+  ],
   activeKey: 0,
-  queryParams: {}
+  queryParams: {},
+  isModal: false,
+  isCirculation: false
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
 };
-const { isCollapsed, tableHeight, fieldNames, tabs, activeKey} = toRefs(data);
+const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation} = toRefs(data);
 const tabContent = ref(null);
 const contentRef = ref(null);
 let formSearchHeight = ref(null);
@@ -337,12 +341,51 @@ const getTabs = () => {
     data.tabs = res.list;
   })
 }
-getTabs();
+// getTabs();
 
 const handleMenuClick = ()=>{
 
 }
+const DelegateRef = ref();
 
+function handleTo(WFRuleLogId){
+    console.log("WFRuleLogId",WFRuleLogId);
+    router.push({
+      path:"/detail",
+      query: {
+        id: WFRuleLogId
+      }
+    });
+}
+const DelegateData = reactive({
+  params: {}
+})
+const CirculationData = reactive({
+  params: {}
+})
+const updateStatus = (e) => {
+  data.isModal = e;
+  data.isCirculation = e;
+}
+// 委派
+function DelegateFn(InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName){
+  // console.log("RuleLogId",RuleLogId, DelegateRef);
+  DelegateData.params = {
+    InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName
+  }
+  console.log(DelegateData.params)
+  data.isModal = true;
+}
+function CirculationFn(InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName){
+  CirculationData.params = {
+    InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName
+  }
+  data.isCirculation = true;
+}
+window.handleTo = handleTo;
+window.DelegateFn = DelegateFn; // 委派
+window.CirculationFn = CirculationFn; // 传阅
+window.data = data;
 const imgUrl = require("@/assets/flow/checkbox_checked.gif");
   const gridUrl = ref("/localData/datalist.json");
   const columns = ref(
@@ -358,9 +401,9 @@ const imgUrl = require("@/assets/flow/checkbox_checked.gif");
             var str = `
               <div class="iconBox">
                 <div class="popup">
-                  <div class="option-item">办理</div>
-                  <div class="option-item">委派</div>  
-                  <div class="option-item">传阅</div>  
+                  <div class="option-item" id=${row.WFRuleLogId} onclick="handleTo('${row.WFRuleLogId}')">办理</div>
+                  <div class="option-item" onclick="DelegateFn('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">委派</div>  
+                  <div class="option-item" onclick="CirculationFn('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">传阅</div>  
                   <div class="option-item">打印</div>
                 </div>
                 <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
@@ -378,7 +421,13 @@ const imgUrl = require("@/assets/flow/checkbox_checked.gif");
           }
         }
       },
-      { field: 'Name', title: '标题', sortable: true },
+      { field: 'Name', title: '标题', sortable: true,
+      formatter: function formatter(value, row, index) {
+                    var rowId = row.ProcessInstanceId;
+                    var name = row["Name"];
+                    var action = "<a style=\"color:#015ba7;font-size:13px;\" href=\"/a0M/e?source=i&id=" + rowId + "&retURL=%2fwfinstance%2fcancellst.aspx%3fgridid%3dcancelledWfinstances%26t%3da0M\">" + name + "</a>";
+                    return action;
+                } },
       { field: 'PriorityName', title: '紧急程度', sortable: true },
       { field: 'ToActivityName', title: '当前环节', sortable: true },
       { field: 'FromActivityName', title: '来源环节', sortable: true },
@@ -391,7 +440,7 @@ const imgUrl = require("@/assets/flow/checkbox_checked.gif");
       { field: 'ProcessIdName', title: '流程', sortable: true },
     ]
   )
-
+  
   const changeTab = (e) => {
     data.activeKey = e;
     data.queryParams.activeKey = e;

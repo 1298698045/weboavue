@@ -91,7 +91,10 @@ list2.map((item) => {
     key: item.path,
     label: item.name,
     title: item.name,
-    icon: () => h(PieChartOutlined),
+    // icon: () => h(PieChartOutlined),
+    icon: ()=> h("i", {
+      class:["iconfont","icon-"+item.meta.icon]
+    }),
   });
 });
 console.log("menus:", list);
@@ -118,4 +121,5 @@ const handleMenu = (e) => {
 </script>
 <style>
 @import "./menu.less";
+@import "../../../style/icon/iconfont.css";
 </style>

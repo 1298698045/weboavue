@@ -173,7 +173,12 @@
         fieldNames: {
             children: 'children', title: 'name', key: 'id'
         },
-        tabs: [],
+        tabs: [
+            {
+                lable: "全部",
+                count: ''
+            }
+        ],
         activeKey: 0,
         queryParams: {
 
@@ -189,7 +194,7 @@
     const gridRef = ref(null);
     const searchRef = ref(null);
     onMounted(() => {
-        window.addEventListener('resize', changeHeight)
+        window.addEventListener('resize', changeHeight);
     })
     function changeHeight(h) {
         if (typeof h == 'number') {
@@ -223,7 +228,7 @@
             ]
         })
     }
-    getTabs();
+    // getTabs();
 
     const handleMenuClick = () => {
 

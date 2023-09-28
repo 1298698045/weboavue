@@ -22,7 +22,8 @@
             <div class="rightBox">
                 <a-button class="ml10">正文</a-button>
                 <a-button type="primary" class="ml10">保存表单</a-button>
-                <a-button type="primary" class="ml10">提交流程</a-button>
+                <a-button type="primary" danger class="ml10" @click="handleRejection">审批拒绝</a-button>
+                <a-button type="primary" class="ml10" @click="handleSubmitProcess">提交流程</a-button>
                 <a-dropdown :trigger="['hover']" class="ml10">
                     <span class="btn-drop">
                       <UnorderedListOutlined style="color: #1D2129;" />
@@ -146,6 +147,8 @@
                 </div>
             </div>
         </div>
+        <SubmitProcess ref="processRef" v-if="isProcess" :isShow="isProcess" @update-status="updateStatus" :paramsData="ProcessData" />
+        <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" @update-status="updateStatus" :paramsData="RejectionData"  />
     </div>
 </template>
 <script setup>
@@ -166,7 +169,8 @@
     const { proxy } = getCurrentInstance();
     import useWrokDetail from "@/utils/workDetail";
     const { relatedList, getRelatedWork } = useWrokDetail();
-
+    import SubmitProcess from "@/components/workflow/SubmitProcess.vue";
+    import ApprovalRejection from "@/components/workflow/ApprovalRejection.vue";
     const data = reactive({
         tabs: [
             {
@@ -188,11 +192,27 @@
                 label: "讨论留言"
             },
         ],
-        activeKey: 0
+        activeKey: 0,
+        isProcess: false,
+        isRejection: false,
+        ProcessData: {},
+        RejectionData: {}
+
     })
-    const { tabs, activeKey } = toRefs(data);
+    const { tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData } = toRefs(data);
     const changeTabs = (e) => {
         data.activeKey = e;
     }
     getRelatedWork();
+    
+    const handleSubmitProcess = () => {
+        data.isProcess = true;
+    }
+    const handleRejection = () => {
+        data.isRejection = true;
+    }
+    const updateStatus = () => {
+        data.isProcess = false;
+        data.isRejection = false;
+    }
 </script>

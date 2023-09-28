@@ -54,6 +54,7 @@
                                         <span>
                                             {{item.lable}}
                                         </span>
+                                        <span v-if="item.count">({{item.count}})</span>
                                     </template>
                                 </a-tab-pane>
                             </a-tabs>
@@ -67,6 +68,7 @@
                 </a-col>
             </a-row>
         </div>
+        <Urging ref="UrgingRef" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
     </div>
 </template>
 <script setup>
@@ -79,6 +81,8 @@
     import Interface from "@/utils/Interface.js";
     import Dtable from "@/components/Dtable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
+    import Urging from "@/components/workflow/Urging.vue";
+
     const x = 3;
     const y = 2;
     const z = 1;
@@ -173,16 +177,46 @@
         fieldNames: {
             children: 'children', title: 'name', key: 'id'
         },
-        tabs: [],
+        tabs: [
+            {
+                lable: "全部",
+                count: 72
+            },
+            {
+                lable: "已完成",
+                count: ''
+            },
+            {
+                lable: "流转中",
+                count: 21
+            },
+            {
+                lable: "被退回/撤销",
+                count: ''
+            },
+            {
+                lable: "督办",
+                count: ''
+            },
+            {
+                lable: "收藏",
+                count: ''
+            },
+            {
+                lable: "草稿",
+                count: 37
+            }
+        ],
         activeKey: 0,
         queryParams: {
 
-        }
+        },
+        isUrging: false
     });
     const handleCollapsed = () => {
         data.isCollapsed = !data.isCollapsed;
     };
-    const { isCollapsed, tableHeight, fieldNames, tabs } = toRefs(data);
+    const { isCollapsed, tableHeight, fieldNames, tabs, isUrging } = toRefs(data);
     const tabContent = ref(null);
     const contentRef = ref(null);
     let formSearchHeight = ref(null);
@@ -223,11 +257,25 @@
             ]
         })
     }
-    getTabs();
+    // getTabs();
 
     const handleMenuClick = () => {
 
     }
+    const UrgingData = reactive({
+        params: {}
+    })
+    const updateStatus = (e) => {
+        data.isUrging = false;
+    }
+    function UrgingFn(InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName){
+        UrgingData.params = {
+            InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName
+        }
+        data.isUrging = true;
+    }
+    window.UrgingFn = UrgingFn;
+    window.data = data;
     const imgUrl = require("@/assets/flow/checkbox_checked.gif");
     const gridUrl = ref(Interface.myStartList);
     const columns = ref(
@@ -243,8 +291,10 @@
                     var str = `
               <div class="iconBox">
                 <div class="popup">
-                  <div class="option-item">传阅</div>  
-                  <div class="option-item">打印</div>
+                    <div class="option-item">打印</div>
+                    <div class="option-item">撤销</div>
+                    <div class="option-item">传阅</div>  
+                    <div class="option-item" onclick="UrgingFn('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">催办</div>
                 </div>
                 <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
             `

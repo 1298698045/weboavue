@@ -90,5 +90,9 @@
 
 /* easyui datagrid */
 .panel-header, .panel-body{
-    border-color: transparent !important;
+    border-color: #e6e6e6 !important;
+}
+/*设置点击行后背景色变化，默认黄色*/
+.datagrid-row-selected {
+    background: #ffffff;
 }

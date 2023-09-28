@@ -83,6 +83,7 @@
       // data: tableList,
       singleSelect: false,
       checkOnSelect: false,
+      selectOnCheck: false,
       pagination: true,
       pageNumber: 1,
       pageSize: 10,

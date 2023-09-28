@@ -173,7 +173,16 @@
         fieldNames: {
             children: 'children', title: 'name', key: 'id'
         },
-        tabs: [],
+        tabs: [
+            {
+                lable: "未读",
+                count: 72
+            },
+            {
+                lable: "全部",
+                count: ''
+            }
+        ],
         activeKey: 0,
         queryParams: {
 
@@ -223,7 +232,7 @@
             ]
         })
     }
-    getTabs();
+    // getTabs();
 
     const handleMenuClick = () => {
 
