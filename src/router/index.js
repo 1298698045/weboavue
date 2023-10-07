@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory  } from "vue-router";
 // import Home from "../views/Home.vue";
 const Layout = () => import("@/layout");
 const routes = [
@@ -103,6 +103,41 @@ const routes = [
     ],
   },
   {
+    path: "/workplan",
+    name: "日程管理",
+    component: Layout,
+    redirect: "/workplan/calendar",
+    children: [
+      {
+        path:"/workplan/calendar",
+        component: () => import("../views/scheduleAdmin/calendar/index.vue"),
+        name: "日历",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian"
+        }
+      },
+      {
+        path:"/workplan/schedule",
+        component: () => import("../views/scheduleAdmin/schedule/index.vue"),
+        name: "日程一览表",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian"
+        }
+      },
+      {
+        path: "/workplan/talent",
+        component: () => import("../views/scheduleAdmin/talent/index.vue"),
+        name: "人才管理",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian"
+        }
+      }
+    ]
+  },
+  {
     path: "/detail",
     name: "Detail",
     component: ()=> import("../views/detail/detail.vue")
@@ -119,8 +154,10 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  // history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
   routes,
+  mode: 'hash'
 });
 
 export default router;

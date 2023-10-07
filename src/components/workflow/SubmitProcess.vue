@@ -28,10 +28,25 @@
                                 <a-radio value="1">部门领导</a-radio>
                               </a-radio-group>
                         </a-form-item>
-                        <a-form-item name="BusinessUnitId" label="办理人员：" :rules="[{ required: true, message: '请选择发起部门' }]">
-                            <a-select v-model:value="formState.BusinessUnitId">
-                                <a-select-option v-for="(item,index) in formState.BusinessUnitList" :key="index" :value="item.id">{{item.name}}</a-select-option>
-                            </a-select>
+                        <a-form-item name="BusinessUnitId" label="办理人员：">
+                            <div class="flex">
+                                <a-input placeholder="请输入搜索字符"></a-input>
+                                <a-button type="link">添加人员</a-button>
+                            </div>
+                            <div class="peopleBox">
+                                <a-table :row-selection="rowSelection" size="small" :pagination="{hideOnSinglePage:true}" style="height: 100%;" :dataSource="dataSource" :columns="columns">
+                                    <template #bodyCell="{ column }">
+                                        <template v-if="column.key === 'operation'">
+                                            <span class="iconTop">
+                                                <ArrowUpOutlined />
+                                            </span>
+                                            <span class="iconTop">
+                                                <ArrowDownOutlined />
+                                            </span>
+                                        </template>
+                                    </template>
+                                </a-table>
+                            </div>
                         </a-form-item>
                         <a-form-item name="BusinessUnitId" label="办理工作日：">
                             <a-input></a-input>
@@ -71,9 +86,10 @@
         toRefs,
         getCurrentInstance,
         defineExpose,
-        defineEmits
+        defineEmits,
+        toRaw
     } from "vue";
-    import { PieChartOutlined } from "@ant-design/icons-vue";
+    import { PieChartOutlined, ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const props = defineProps({
@@ -102,6 +118,47 @@
         activeKey: '1'
     })
     const { activeKey } = toRefs(data);
+    const columns = [
+        {
+            title: "姓名",
+            dataIndex: "userName",
+            align: "center"
+        },
+        {
+            title: "部门",
+            dataIndex: "BusinessUnitIdName",
+            align: "center"
+        },
+        {
+            title: '操作',
+            key: 'operation',
+            fixed: 'right',
+            width: 80,
+            align: "center"
+        },
+    ]
+    const dataSource = ref([
+        {
+            key:1,
+            userName: "jackliu",
+            BusinessUnitIdName: "信息科"
+        },
+        {
+            key: 2,
+            userName: "jackliu",
+            BusinessUnitIdName: "信息科"
+        }
+    ]);
+    const columnsList = toRaw(columns);
+    const rowSelection = {
+        onChange: (selectedRowKeys, selectedRows) => {
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        },
+        // getCheckboxProps: record => ({
+        //     disabled: record.name === 'Disabled User',
+        //     name: record.name,
+        // }),
+    };
     onMounted(()=>{
         formState.ProcessName = props.paramsData.InstanceIdName;
     })
@@ -145,6 +202,24 @@
             }
             .processTitle .ant-form-item-required{
                 color: red !important;
+            }
+            .flex{
+                display: flex;
+                align-items: center;
+            }
+            .peopleBox{
+                /* height: 200px; */
+                border: 1px solid #e2e3e5;
+                margin-top: 20px;
+                border-radius: 3px;
+                .iconTop{
+                    color: #3399ff;
+                    margin-left: 10px;
+                    cursor: pointer;
+                }
+            }
+            :where(.css-dev-only-do-not-override-kqecok).ant-form-item{
+                margin-bottom: 10px;
             }
         }
     }

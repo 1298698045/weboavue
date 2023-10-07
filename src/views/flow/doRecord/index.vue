@@ -67,6 +67,7 @@
                 </a-col>
             </a-row>
         </div>
+        <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation" :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
     </div>
 </template>
 <script setup>
@@ -79,6 +80,7 @@
     import Interface from "@/utils/Interface.js";
     import Dtable from "@/components/Dtable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
+    import CirculationModal from "@/components/workflow/CirculationModal.vue";
     const x = 3;
     const y = 2;
     const z = 1;
@@ -177,12 +179,13 @@
         activeKey: 0,
         queryParams: {
 
-        }
+        },
+        isCirculation: false
     });
     const handleCollapsed = () => {
         data.isCollapsed = !data.isCollapsed;
     };
-    const { isCollapsed, tableHeight, fieldNames, tabs } = toRefs(data);
+    const { isCollapsed, tableHeight, fieldNames, tabs, isCirculation } = toRefs(data);
     const tabContent = ref(null);
     const contentRef = ref(null);
     let formSearchHeight = ref(null);
@@ -228,6 +231,20 @@
     const handleMenuClick = () => {
 
     }
+    const CirculationData = reactive({
+        params: {}
+    })
+    const updateStatus = (e) => {
+        data.isModal = e;
+        data.isCirculation = e;
+    }
+    function CirculationFn(InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName){
+        CirculationData.params = {
+            InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName
+        }
+        data.isCirculation = true;
+    }
+    window.CirculationFn = CirculationFn; // 传阅
     const imgUrl = require("@/assets/flow/checkbox_checked.gif");
     const gridUrl = ref(Interface.doRecordList);
     const columns = ref(
@@ -243,7 +260,7 @@
                     var str = `
               <div class="iconBox">
                 <div class="popup">
-                  <div class="option-item">传阅</div>  
+                  <div class="option-item" onclick="CirculationFn('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">传阅</div>  
                   <div class="option-item">打印</div>
                   <div class="option-item">重办</div>
                 </div>

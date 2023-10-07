@@ -27,6 +27,13 @@ import {
   toRefs,
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import {
+  PieChartOutlined,
+  MailOutlined,
+  DesktopOutlined,
+  InboxOutlined,
+  AppstoreOutlined,
+} from "@ant-design/icons-vue";
 const props = defineProps({
   collapsed: Boolean,
 });
@@ -39,26 +46,67 @@ const currentPath = route.path;
 // console.log('route',route.matched)
 // console.log("routes",routes)
 const currentRoutes = route.matched;
-var list2 = [];
-const formTreeData = (arr) => {
-  arr.forEach((item) => {
-    if (item.path == currentPath) {
-      list2 = arr;
-    }
-    if (item.children) {
-      formTreeData(item.children);
-    }
+
+
+// var list = [];
+// list2.map((item) => {
+//   list.push({
+//     key: item.path,
+//     label: item.name,
+//     title: item.name,
+//     // icon: () => h(PieChartOutlined),
+//     icon: ()=> h("i", {
+//       class:["iconfont","icon-"+item.meta.icon]
+//     }),
+//   });
+// });
+// console.log("menus:", list);
+
+const data = reactive({
+  items: []
+});
+const { items } = toRefs(data);
+const loadMenus = (list,path) => {
+  var list2 = [];
+  const formTreeData = (arr) => {
+    arr.forEach((item) => {
+      if (item.path == path) {
+        list2 = arr;
+      }
+      if (item.children) {
+        formTreeData(item.children);
+      }
+    });
+  };
+  formTreeData(list);
+  var temp = [];
+  list2.map((item) => {
+    temp.push({
+      key: item.path,
+      label: item.name,
+      title: item.name,
+      icon: ()=> h("i", {
+        class:["iconfont","icon-"+item.meta.icon]
+      }),
+    });
   });
-};
-formTreeData(routes);
+  data.items = temp;
+}
+loadMenus(routes,currentPath)
+// var list2 = [];
+// const formTreeData = (arr) => {
+//   arr.forEach((item) => {
+//     if (item.path == currentPath) {
+//       list2 = arr;
+//     }
+//     if (item.children) {
+//       formTreeData(item.children);
+//     }
+//   });
+// };
+// formTreeData(routes);
 // console.log("list2",list2);
-import {
-  PieChartOutlined,
-  MailOutlined,
-  DesktopOutlined,
-  InboxOutlined,
-  AppstoreOutlined,
-} from "@ant-design/icons-vue";
+
 const state = reactive({
   collapsed: false,
   selectedKeys: [ route.path ],
@@ -85,20 +133,20 @@ const state = reactive({
 //     title: "Option 3",
 //   },
 // ]);
-var list = [];
-list2.map((item) => {
-  list.push({
-    key: item.path,
-    label: item.name,
-    title: item.name,
-    // icon: () => h(PieChartOutlined),
-    icon: ()=> h("i", {
-      class:["iconfont","icon-"+item.meta.icon]
-    }),
-  });
-});
-console.log("menus:", list);
-const items = reactive(list);
+// var list = [];
+// list2.map((item) => {
+//   list.push({
+//     key: item.path,
+//     label: item.name,
+//     title: item.name,
+//     // icon: () => h(PieChartOutlined),
+//     icon: ()=> h("i", {
+//       class:["iconfont","icon-"+item.meta.icon]
+//     }),
+//   });
+// });
+// console.log("menus:", list);
+// const items = reactive(list);
 // console.log("list",list,items);
 // items = list;
 
@@ -110,6 +158,12 @@ watch(
     state.preOpenKeys = oldVal;
   }
 );
+watch(() => route.path,newRoute=> {
+    console.log(newRoute,router.options.routes);
+    const listData = router.options.routes;
+    state.selectedKeys = [ newRoute ]
+    loadMenus(listData,newRoute);
+})
 const toggleCollapsed = () => {
   state.collapsed = !state.collapsed;
   state.openKeys = state.collapsed ? [] : state.preOpenKeys;

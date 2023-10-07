@@ -30,13 +30,13 @@
                     </span>
                     <template #overlay>
                       <a-menu>
-                        <a-menu-item key="1">
+                        <a-menu-item key="1" @click="handleUrging">
                           催办
                         </a-menu-item>
-                        <a-menu-item key="2">
+                        <a-menu-item key="2" @click="handleCirculation">
                           传阅他人
                         </a-menu-item>
-                        <a-menu-item key="3">
+                        <a-menu-item key="3" @click="handleDelegate">
                           委托
                         </a-menu-item>
                         <a-menu-item key="4">
@@ -126,14 +126,14 @@
                         </span>
                         <template #overlay>
                           <a-menu @click="handleMenuClick">
-                            <a-menu-item key="1">
+                            <a-menu-item key="1" @click="handleUrging">
                               催办
                             </a-menu-item>
-                            <a-menu-item key="2">
-                              传阅他人
+                            <a-menu-item key="2" @click="handleCirculation">
+                                传阅他人
                             </a-menu-item>
-                            <a-menu-item key="3">
-                              委托
+                            <a-menu-item key="3" @click="handleDelegate">
+                                委托
                             </a-menu-item>
                             <a-menu-item key="4">
                                 打印审批单
@@ -149,6 +149,9 @@
         </div>
         <SubmitProcess ref="processRef" v-if="isProcess" :isShow="isProcess" @update-status="updateStatus" :paramsData="ProcessData" />
         <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" @update-status="updateStatus" :paramsData="RejectionData"  />
+        <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation" :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
+        <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
+        <Urging ref="UrgingRef" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
     </div>
 </template>
 <script setup>
@@ -171,6 +174,9 @@
     const { relatedList, getRelatedWork } = useWrokDetail();
     import SubmitProcess from "@/components/workflow/SubmitProcess.vue";
     import ApprovalRejection from "@/components/workflow/ApprovalRejection.vue";
+    import CirculationModal from "@/components/workflow/CirculationModal.vue";
+    import Delegate from "@/components/workflow/Delegate.vue";
+    import Urging from "@/components/workflow/Urging.vue";
     const data = reactive({
         tabs: [
             {
@@ -196,10 +202,12 @@
         isProcess: false,
         isRejection: false,
         ProcessData: {},
-        RejectionData: {}
-
+        RejectionData: {},
+        isCirculation: false,
+        isModal: false,
+        isUrging: false
     })
-    const { tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData } = toRefs(data);
+    const { tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData, isCirculation, isModal, isUrging } = toRefs(data);
     const changeTabs = (e) => {
         data.activeKey = e;
     }
@@ -214,5 +222,32 @@
     const updateStatus = () => {
         data.isProcess = false;
         data.isRejection = false;
+        data.isCirculation = false;
+        data.isModal = false;
+        data.isUrging = false;
+    }
+    const CirculationData = reactive({
+        params: {}
+    })
+    const DelegateData = reactive({
+        params: {}
+    })
+    function CirculationFn(InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName){
+        CirculationData.params = {
+            InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName
+        }
+        data.isCirculation = true;
+    }
+    const handleCirculation = () => {
+        data.isCirculation = true;
+    }
+    const handleDelegate = () => {
+        data.isModal = true;
+    }
+    const UrgingData = reactive({
+        params: {}
+    })
+    const handleUrging = () => {
+        data.isUrging = true;
     }
 </script>

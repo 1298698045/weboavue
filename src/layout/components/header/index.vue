@@ -58,7 +58,7 @@
     </div>
     <div class="app_popup" v-if="isShow" @click.stop>
       <div class="appList">
-        <div class="app_item" v-for="(item,index) in appList" :style="{background:item.BgColor}" :key="index">
+        <div class="app_item" v-for="(item,index) in appList" :style="{background:item.BgColor}" :key="index" @click="handleGoModule(item)">
           <div class="appBox">
             <div class="iconBox">
             </div>
@@ -73,6 +73,9 @@
 import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance } from "vue";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
+import { useRouter, useRoute } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 const { proxy } = getCurrentInstance();
 const searchVal = ref("");
 const isShow = ref(false);
@@ -87,7 +90,7 @@ const data = reactive({
 })
 const { appList } = toRefs(data);
 proxy.$get(Interface.applist,{}).then((res)=>{
-  console.log("res",res)
+  console.log("res",res) 
   data.appList = res.rows;
 })
 onMounted(() => {
@@ -95,7 +98,14 @@ onMounted(() => {
     isShow.value = false;
   });
 });
+const handleGoModule = (item) => {
+  // console.log("item", item);
+  router.push({
+      path:"/"+item.DeveloperName
+  });
+  isShow.value = false;
+}
 </script>
-<style>
+<style lang="less">
 @import "./header.less";
 </style>
