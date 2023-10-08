@@ -29,7 +29,12 @@ const Interface = {
     // 我传阅的
     myCirculationList: "/localData/process.instance.foward.search.json",
     // 草稿箱
-    draftsList: "/localData/wf.instanceowner.search.json"
+    draftsList: "/localData/wf.instanceowner.search.json",
+    listView: {
+        config: "/localData/entitygrid.config.get.json",
+        list: "/localData/entitygrid.list.json",
+        handleActions: "/localData/listview.handle.actions.json"
+    }
 
 }
 export default Interface;

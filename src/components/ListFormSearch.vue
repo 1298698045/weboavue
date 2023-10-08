@@ -1,6 +1,6 @@
 <template>
     <div class="formSearch" ref="formSearchRef">
-        <a-form ref="formRef" :model="formState" name="basic" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" autocomplete="off"
+        <a-form ref="formRef" :model="formState" name="basic" autocomplete="off"
             @finish="onFinish" @finishFailed="onFinishFailed">
             <!-- <a-form-item label="标题" name="username"
                 :rules="[{ required: true, message: 'Please input your username!' }]">

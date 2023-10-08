@@ -1,0 +1,112 @@
+{
+  "Title": "人才",
+  "ID": "",
+  "EntityType": "a1K",
+  "EntityLabel": "人才",
+  "ObjectTypeCode": 30053,
+  "FilterId": "98dc1fa5-77b2-4b8e-a9e1-539b6c8abe5b",
+  "FilterExpression": "",
+  "Toolbar": [],
+  "DataSet": {
+    "SQL": "",
+    "Columns": [
+      {
+        "Name": "Name",
+        "Title": "人才名称",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": true
+      },
+      {
+        "Name": "EmployeeId",
+        "Title": "姓名",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": false
+      },
+      {
+        "Name": "ApprovedOn",
+        "Title": "批准日期",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": false
+      },
+      {
+        "Name": "Organization",
+        "Title": "批准机构",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": false
+      },
+      {
+        "Name": "SourceCode",
+        "Title": "人才级别",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": false
+      },
+      {
+        "Name": "Amount",
+        "Title": "经费",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": false
+      },
+      {
+        "Name": "ModifiedOn",
+        "Title": "上次修改时间",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": false
+      }
+    ],
+    "Sort": {
+      "Field": "",
+      "Dir": ""
+    }
+  },
+  "context": {
+    "globalValueProviders": [
+      {
+        "type": "$SObjectType",
+        "values": {
+          "isChatterEnabled": false,
+          "Email": null,
+          "Id": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6"
+        }
+      },
+      {
+        "type": "$Locale",
+        "values": null
+      },
+      {
+        "type": "$Browser",
+        "values": null
+      },
+      {
+        "type": "$LightningContainer",
+        "values": null
+      },
+      {
+        "type": "$Global",
+        "values": null
+      },
+      {
+        "type": "$Label",
+        "values": null
+      },
+      {
+        "type": "$Record",
+        "values": null
+      }
+    ],
+    "picklistValuesMap": {},
+    "appContextUser": {
+      "userId": null,
+      "name": null,
+      "isAdmin": false,
+      "token": null
+    },
+    "enableAccessChecks": false
+  }
+}

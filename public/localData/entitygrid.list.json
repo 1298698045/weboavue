@@ -1,0 +1,29 @@
+{
+  "total": 4,
+  "rows": [
+    {
+      "Amount": "",
+      "ApprovedOn": "",
+      "EmployeeId": "<a href='/a0V/detail?id=25b96819-5964-4784-ad63-0a3acc8bb68a' >吴黎</a>",
+      "LIST_RECORD_ID": "50d8104d-7bf1-4bb7-96cd-480af0809e4b",
+      "ModifiedOn": "2022-11-24 11:16",
+      "Name": "<a style=\"color:blue;\"  href=\"/a1K/detail?objectTypeCode=30053&id=50d8104d-7bf1-4bb7-96cd-480af0809e4b&retURL=\">A11</a>",
+      "Organization": "",
+      "SourceCode": ""
+    },
+    {
+      "Amount": "",
+      "ApprovedOn": "",
+      "EmployeeId": "<a href='/a0V/detail?id=25b96819-5964-4784-ad63-0a3acc8bb68a' >吴黎</a>",
+      "LIST_RECORD_ID": "50d8104d-7bf1-4bb7-96cd-480af0809e4b",
+      "ModifiedOn": "2022-11-24 11:16",
+      "Name": "<a style=\"color:blue;\"  href=\"/a1K/detail?objectTypeCode=30053&id=50d8104d-7bf1-4bb7-96cd-480af0809e4b&retURL=\">A11</a>",
+      "Organization": "",
+      "SourceCode": ""
+    }
+  ],
+  "context": {
+    "userid": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "name": "jackliu3"
+  }
+}

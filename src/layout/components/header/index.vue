@@ -19,7 +19,7 @@
           class=""
         ></path>
       </svg>
-      <span class="text">流程管理</span>
+      <span class="text">{{moduleName}}</span>
     </div>
     <div class="header-search">
       <div class="search-type">
@@ -74,6 +74,8 @@ import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance 
 import { DownOutlined, SearchOutlined } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
 import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+let store = useStore();
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -85,6 +87,10 @@ const handleShowApp = () => {
 watch(searchVal, (newVal, oldVal) => {
   console.log(newVal, oldVal);
 });
+const moduleName = ref(store.state.moduleName);
+watch(() => route.path,newRoute=> {
+  moduleName.value = store.state.moduleName;
+},{immediate:true,deep:true})
 const data = reactive({
   appList: []
 })
@@ -100,6 +106,7 @@ onMounted(() => {
 });
 const handleGoModule = (item) => {
   // console.log("item", item);
+  store.commit('setModuleName',item.Label)
   router.push({
       path:"/"+item.DeveloperName
   });
