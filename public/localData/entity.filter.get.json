@@ -1,0 +1,1297 @@
+{
+  "entity": {
+    "status": 1,
+    "name": "HREmpRound",
+    "entityCode": "a3C",
+    "objectTypeCode": 30033,
+    "label": "科室轮转",
+    "attributes": [
+      {
+        "name": "Name",
+        "label": "名称",
+        "type": "S",
+        "dType": "Text",
+        "referencedEntityObjectTypeCode": 0,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": 3
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": 3
+          },
+          {
+            "label": "大于",
+            "operator": "gt",
+            "operatorType": 3
+          },
+          {
+            "label": "大于或等于",
+            "operator": "ge",
+            "operatorType": 3
+          },
+          {
+            "label": "小于",
+            "operator": "lt",
+            "operatorType": 3
+          },
+          {
+            "label": "小于或等于",
+            "operator": "le",
+            "operatorType": 3
+          },
+          {
+            "label": "范围",
+            "operator": "in",
+            "operatorType": 3
+          },
+          {
+            "label": "排除范围",
+            "operator": "not-in",
+            "operatorType": 3
+          },
+          {
+            "label": "包含",
+            "operator": "contains",
+            "operatorType": 3
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "OwningUser",
+        "label": "所有人",
+        "type": "U",
+        "dType": "User",
+        "referencedEntityObjectTypeCode": 8,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": 1
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": 1
+          },
+          {
+            "label": "范围",
+            "operator": "in",
+            "operatorType": 3
+          },
+          {
+            "label": "当前用户",
+            "operator": "eq-userid",
+            "operatorType": 0
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "CreatedBy",
+        "label": "创建人",
+        "type": "U",
+        "dType": "User",
+        "referencedEntityObjectTypeCode": 8,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": 1
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": 1
+          },
+          {
+            "label": "范围",
+            "operator": "in",
+            "operatorType": 3
+          },
+          {
+            "label": "当前用户",
+            "operator": "eq-userid",
+            "operatorType": 0
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "CreatedOn",
+        "label": "创建时间",
+        "type": "F",
+        "dType": "DateTime",
+        "referencedEntityObjectTypeCode": 0,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "大于",
+            "operator": "gt",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "大于或等于",
+            "operator": "ge",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "小于",
+            "operator": "lt",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "小于或等于",
+            "operator": "le",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "自定义",
+            "operator": "between",
+            "operatorType": "3",
+            "dataType": "Date"
+          },
+          {
+            "label": "X日",
+            "operator": "in_day",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X月",
+            "operator": "in_month",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X年",
+            "operator": "in_year",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X月X日",
+            "operator": "in_monthday",
+            "operatorType": 1,
+            "dataType": "sTRING"
+          },
+          {
+            "label": "今年",
+            "operator": "this-year",
+            "operatorType": 0
+          },
+          {
+            "label": "去年",
+            "operator": "last-year",
+            "operatorType": 0
+          },
+          {
+            "label": "本月",
+            "operator": "this-month",
+            "operatorType": 0
+          },
+          {
+            "label": "上月",
+            "operator": "last-month",
+            "operatorType": 0
+          },
+          {
+            "label": "下月",
+            "operator": "next-month",
+            "operatorType": 0
+          },
+          {
+            "label": "上周",
+            "operator": "last-week",
+            "operatorType": 0
+          },
+          {
+            "label": "下周",
+            "operator": "next-week",
+            "operatorType": 0
+          },
+          {
+            "label": "今天",
+            "operator": "today",
+            "operatorType": 0
+          },
+          {
+            "label": "昨天",
+            "operator": "yesterday",
+            "operatorType": 0
+          },
+          {
+            "label": "明天",
+            "operator": "tomorrow",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是今年",
+            "operator": "anniversary-this-year",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是本月",
+            "operator": "birthday-this-month",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是本季度",
+            "operator": "birthday-this-quarter",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是今日",
+            "operator": "birthday-today",
+            "operatorType": 0
+          },
+          {
+            "label": "过去7天",
+            "operator": "last-seven-days",
+            "operatorType": 0
+          },
+          {
+            "label": "过去30天",
+            "operator": "LAST_N_DAYS:30",
+            "operatorType": 0
+          },
+          {
+            "label": "过去60天",
+            "operator": "LAST_N_DAYS:60",
+            "operatorType": 0
+          },
+          {
+            "label": "过去90天",
+            "operator": "LAST_N_DAYS:90",
+            "operatorType": 0
+          },
+          {
+            "label": "过去120天",
+            "operator": "LAST_N_DAYS:120",
+            "operatorType": 0
+          },
+          {
+            "label": "过去X天",
+            "operator": "LAST_X_DAYS",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "未来7天",
+            "operator": "next-seven-days",
+            "operatorType": 0
+          },
+          {
+            "label": "未来30天",
+            "operator": "NEXT_N_DAYS:30",
+            "operatorType": 0
+          },
+          {
+            "label": "未来60天",
+            "operator": "NEXT_N_DAYS:60",
+            "operatorType": 0
+          },
+          {
+            "label": "未来90天",
+            "operator": "NEXT_N_DAYS:90",
+            "operatorType": 0
+          },
+          {
+            "label": "未来120天",
+            "operator": "NEXT_N_DAYS:120",
+            "operatorType": 0
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "ModifiedBy",
+        "label": "上次修改人",
+        "type": "U",
+        "dType": "User",
+        "referencedEntityObjectTypeCode": 8,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": 1
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": 1
+          },
+          {
+            "label": "范围",
+            "operator": "in",
+            "operatorType": 3
+          },
+          {
+            "label": "当前用户",
+            "operator": "eq-userid",
+            "operatorType": 0
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "ModifiedOn",
+        "label": "上次修改时间",
+        "type": "F",
+        "dType": "DateTime",
+        "referencedEntityObjectTypeCode": 0,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "大于",
+            "operator": "gt",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "大于或等于",
+            "operator": "ge",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "小于",
+            "operator": "lt",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "小于或等于",
+            "operator": "le",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "自定义",
+            "operator": "between",
+            "operatorType": "3",
+            "dataType": "Date"
+          },
+          {
+            "label": "X日",
+            "operator": "in_day",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X月",
+            "operator": "in_month",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X年",
+            "operator": "in_year",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X月X日",
+            "operator": "in_monthday",
+            "operatorType": 1,
+            "dataType": "sTRING"
+          },
+          {
+            "label": "今年",
+            "operator": "this-year",
+            "operatorType": 0
+          },
+          {
+            "label": "去年",
+            "operator": "last-year",
+            "operatorType": 0
+          },
+          {
+            "label": "本月",
+            "operator": "this-month",
+            "operatorType": 0
+          },
+          {
+            "label": "上月",
+            "operator": "last-month",
+            "operatorType": 0
+          },
+          {
+            "label": "下月",
+            "operator": "next-month",
+            "operatorType": 0
+          },
+          {
+            "label": "上周",
+            "operator": "last-week",
+            "operatorType": 0
+          },
+          {
+            "label": "下周",
+            "operator": "next-week",
+            "operatorType": 0
+          },
+          {
+            "label": "今天",
+            "operator": "today",
+            "operatorType": 0
+          },
+          {
+            "label": "昨天",
+            "operator": "yesterday",
+            "operatorType": 0
+          },
+          {
+            "label": "明天",
+            "operator": "tomorrow",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是今年",
+            "operator": "anniversary-this-year",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是本月",
+            "operator": "birthday-this-month",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是本季度",
+            "operator": "birthday-this-quarter",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是今日",
+            "operator": "birthday-today",
+            "operatorType": 0
+          },
+          {
+            "label": "过去7天",
+            "operator": "last-seven-days",
+            "operatorType": 0
+          },
+          {
+            "label": "过去30天",
+            "operator": "LAST_N_DAYS:30",
+            "operatorType": 0
+          },
+          {
+            "label": "过去60天",
+            "operator": "LAST_N_DAYS:60",
+            "operatorType": 0
+          },
+          {
+            "label": "过去90天",
+            "operator": "LAST_N_DAYS:90",
+            "operatorType": 0
+          },
+          {
+            "label": "过去120天",
+            "operator": "LAST_N_DAYS:120",
+            "operatorType": 0
+          },
+          {
+            "label": "过去X天",
+            "operator": "LAST_X_DAYS",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "未来7天",
+            "operator": "next-seven-days",
+            "operatorType": 0
+          },
+          {
+            "label": "未来30天",
+            "operator": "NEXT_N_DAYS:30",
+            "operatorType": 0
+          },
+          {
+            "label": "未来60天",
+            "operator": "NEXT_N_DAYS:60",
+            "operatorType": 0
+          },
+          {
+            "label": "未来90天",
+            "operator": "NEXT_N_DAYS:90",
+            "operatorType": 0
+          },
+          {
+            "label": "未来120天",
+            "operator": "NEXT_N_DAYS:120",
+            "operatorType": 0
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "EmployeeId",
+        "label": "姓名",
+        "type": "Y_MD",
+        "dType": "MasterDetail",
+        "referencedEntityObjectTypeCode": 30020,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": 3
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": 3
+          },
+          {
+            "label": "大于",
+            "operator": "gt",
+            "operatorType": 3
+          },
+          {
+            "label": "大于或等于",
+            "operator": "ge",
+            "operatorType": 3
+          },
+          {
+            "label": "小于",
+            "operator": "lt",
+            "operatorType": 3
+          },
+          {
+            "label": "小于或等于",
+            "operator": "le",
+            "operatorType": 3
+          },
+          {
+            "label": "范围",
+            "operator": "in",
+            "operatorType": 3
+          },
+          {
+            "label": "排除范围",
+            "operator": "not-in",
+            "operatorType": 3
+          },
+          {
+            "label": "包含",
+            "operator": "contains",
+            "operatorType": 3
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "BusinessUnitId",
+        "label": "部门",
+        "type": "O",
+        "dType": "BusinessUnit",
+        "referencedEntityObjectTypeCode": 10,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": 1
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": 1
+          },
+          {
+            "label": "范围",
+            "operator": "in",
+            "operatorType": 3
+          },
+          {
+            "label": "当前用户所在部门",
+            "operator": "eq-businessunitid",
+            "operatorType": 0
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "TransferType",
+        "label": "类型",
+        "type": "L",
+        "dType": "Picklist",
+        "referencedEntityObjectTypeCode": 0,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": 3
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": 3
+          },
+          {
+            "label": "大于",
+            "operator": "gt",
+            "operatorType": 3
+          },
+          {
+            "label": "大于或等于",
+            "operator": "ge",
+            "operatorType": 3
+          },
+          {
+            "label": "小于",
+            "operator": "lt",
+            "operatorType": 3
+          },
+          {
+            "label": "小于或等于",
+            "operator": "le",
+            "operatorType": 3
+          },
+          {
+            "label": "范围",
+            "operator": "in",
+            "operatorType": 3
+          },
+          {
+            "label": "排除范围",
+            "operator": "not-in",
+            "operatorType": 3
+          }
+        ],
+        "filterValues": [
+          {
+            "label": "轮转",
+            "name": "0"
+          },
+          {
+            "label": "借入",
+            "name": "45"
+          },
+          {
+            "label": "部门调动",
+            "name": "49"
+          }
+        ]
+      },
+      {
+        "name": "StartTime",
+        "label": "开始时间",
+        "type": "D",
+        "dType": "Date",
+        "referencedEntityObjectTypeCode": 0,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "大于",
+            "operator": "gt",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "大于或等于",
+            "operator": "ge",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "小于",
+            "operator": "lt",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "小于或等于",
+            "operator": "le",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "自定义",
+            "operator": "between",
+            "operatorType": "3",
+            "dataType": "Date"
+          },
+          {
+            "label": "X日",
+            "operator": "in_day",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X月",
+            "operator": "in_month",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X年",
+            "operator": "in_year",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X月X日",
+            "operator": "in_monthday",
+            "operatorType": 1,
+            "dataType": "sTRING"
+          },
+          {
+            "label": "今年",
+            "operator": "this-year",
+            "operatorType": 0
+          },
+          {
+            "label": "去年",
+            "operator": "last-year",
+            "operatorType": 0
+          },
+          {
+            "label": "本月",
+            "operator": "this-month",
+            "operatorType": 0
+          },
+          {
+            "label": "上月",
+            "operator": "last-month",
+            "operatorType": 0
+          },
+          {
+            "label": "下月",
+            "operator": "next-month",
+            "operatorType": 0
+          },
+          {
+            "label": "上周",
+            "operator": "last-week",
+            "operatorType": 0
+          },
+          {
+            "label": "下周",
+            "operator": "next-week",
+            "operatorType": 0
+          },
+          {
+            "label": "今天",
+            "operator": "today",
+            "operatorType": 0
+          },
+          {
+            "label": "昨天",
+            "operator": "yesterday",
+            "operatorType": 0
+          },
+          {
+            "label": "明天",
+            "operator": "tomorrow",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是今年",
+            "operator": "anniversary-this-year",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是本月",
+            "operator": "birthday-this-month",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是本季度",
+            "operator": "birthday-this-quarter",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是今日",
+            "operator": "birthday-today",
+            "operatorType": 0
+          },
+          {
+            "label": "过去7天",
+            "operator": "last-seven-days",
+            "operatorType": 0
+          },
+          {
+            "label": "过去30天",
+            "operator": "LAST_N_DAYS:30",
+            "operatorType": 0
+          },
+          {
+            "label": "过去60天",
+            "operator": "LAST_N_DAYS:60",
+            "operatorType": 0
+          },
+          {
+            "label": "过去90天",
+            "operator": "LAST_N_DAYS:90",
+            "operatorType": 0
+          },
+          {
+            "label": "过去120天",
+            "operator": "LAST_N_DAYS:120",
+            "operatorType": 0
+          },
+          {
+            "label": "过去X天",
+            "operator": "LAST_X_DAYS",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "未来7天",
+            "operator": "next-seven-days",
+            "operatorType": 0
+          },
+          {
+            "label": "未来30天",
+            "operator": "NEXT_N_DAYS:30",
+            "operatorType": 0
+          },
+          {
+            "label": "未来60天",
+            "operator": "NEXT_N_DAYS:60",
+            "operatorType": 0
+          },
+          {
+            "label": "未来90天",
+            "operator": "NEXT_N_DAYS:90",
+            "operatorType": 0
+          },
+          {
+            "label": "未来120天",
+            "operator": "NEXT_N_DAYS:120",
+            "operatorType": 0
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "EndTime",
+        "label": "结束日期",
+        "type": "D",
+        "dType": "Date",
+        "referencedEntityObjectTypeCode": 0,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "大于",
+            "operator": "gt",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "大于或等于",
+            "operator": "ge",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "小于",
+            "operator": "lt",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "小于或等于",
+            "operator": "le",
+            "operatorType": "1",
+            "dataType": "Date"
+          },
+          {
+            "label": "自定义",
+            "operator": "between",
+            "operatorType": "3",
+            "dataType": "Date"
+          },
+          {
+            "label": "X日",
+            "operator": "in_day",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X月",
+            "operator": "in_month",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X年",
+            "operator": "in_year",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "X月X日",
+            "operator": "in_monthday",
+            "operatorType": 1,
+            "dataType": "sTRING"
+          },
+          {
+            "label": "今年",
+            "operator": "this-year",
+            "operatorType": 0
+          },
+          {
+            "label": "去年",
+            "operator": "last-year",
+            "operatorType": 0
+          },
+          {
+            "label": "本月",
+            "operator": "this-month",
+            "operatorType": 0
+          },
+          {
+            "label": "上月",
+            "operator": "last-month",
+            "operatorType": 0
+          },
+          {
+            "label": "下月",
+            "operator": "next-month",
+            "operatorType": 0
+          },
+          {
+            "label": "上周",
+            "operator": "last-week",
+            "operatorType": 0
+          },
+          {
+            "label": "下周",
+            "operator": "next-week",
+            "operatorType": 0
+          },
+          {
+            "label": "今天",
+            "operator": "today",
+            "operatorType": 0
+          },
+          {
+            "label": "昨天",
+            "operator": "yesterday",
+            "operatorType": 0
+          },
+          {
+            "label": "明天",
+            "operator": "tomorrow",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是今年",
+            "operator": "anniversary-this-year",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是本月",
+            "operator": "birthday-this-month",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是本季度",
+            "operator": "birthday-this-quarter",
+            "operatorType": 0
+          },
+          {
+            "label": "纪念日是今日",
+            "operator": "birthday-today",
+            "operatorType": 0
+          },
+          {
+            "label": "过去7天",
+            "operator": "last-seven-days",
+            "operatorType": 0
+          },
+          {
+            "label": "过去30天",
+            "operator": "LAST_N_DAYS:30",
+            "operatorType": 0
+          },
+          {
+            "label": "过去60天",
+            "operator": "LAST_N_DAYS:60",
+            "operatorType": 0
+          },
+          {
+            "label": "过去90天",
+            "operator": "LAST_N_DAYS:90",
+            "operatorType": 0
+          },
+          {
+            "label": "过去120天",
+            "operator": "LAST_N_DAYS:120",
+            "operatorType": 0
+          },
+          {
+            "label": "过去X天",
+            "operator": "LAST_X_DAYS",
+            "operatorType": 1,
+            "dataType": "Int"
+          },
+          {
+            "label": "未来7天",
+            "operator": "next-seven-days",
+            "operatorType": 0
+          },
+          {
+            "label": "未来30天",
+            "operator": "NEXT_N_DAYS:30",
+            "operatorType": 0
+          },
+          {
+            "label": "未来60天",
+            "operator": "NEXT_N_DAYS:60",
+            "operatorType": 0
+          },
+          {
+            "label": "未来90天",
+            "operator": "NEXT_N_DAYS:90",
+            "operatorType": 0
+          },
+          {
+            "label": "未来120天",
+            "operator": "NEXT_N_DAYS:120",
+            "operatorType": 0
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "TotalDays",
+        "label": "合计天数",
+        "type": "N",
+        "dType": "Numeric",
+        "referencedEntityObjectTypeCode": 0,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": 3
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": 3
+          },
+          {
+            "label": "大于",
+            "operator": "gt",
+            "operatorType": 3
+          },
+          {
+            "label": "大于或等于",
+            "operator": "ge",
+            "operatorType": 3
+          },
+          {
+            "label": "小于",
+            "operator": "lt",
+            "operatorType": 3
+          },
+          {
+            "label": "小于或等于",
+            "operator": "le",
+            "operatorType": 3
+          },
+          {
+            "label": "范围",
+            "operator": "in",
+            "operatorType": 3
+          },
+          {
+            "label": "排除范围",
+            "operator": "not-in",
+            "operatorType": 3
+          },
+          {
+            "label": "包含",
+            "operator": "contains",
+            "operatorType": 3
+          }
+        ],
+        "filterValues": []
+      },
+      {
+        "name": "StatusCode",
+        "label": "审批状态",
+        "type": "L",
+        "dType": "Picklist",
+        "referencedEntityObjectTypeCode": 0,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": 3
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": 3
+          },
+          {
+            "label": "大于",
+            "operator": "gt",
+            "operatorType": 3
+          },
+          {
+            "label": "大于或等于",
+            "operator": "ge",
+            "operatorType": 3
+          },
+          {
+            "label": "小于",
+            "operator": "lt",
+            "operatorType": 3
+          },
+          {
+            "label": "小于或等于",
+            "operator": "le",
+            "operatorType": 3
+          },
+          {
+            "label": "范围",
+            "operator": "in",
+            "operatorType": 3
+          },
+          {
+            "label": "排除范围",
+            "operator": "not-in",
+            "operatorType": 3
+          }
+        ],
+        "filterValues": [
+          {
+            "label": "未审批",
+            "name": "0"
+          },
+          {
+            "label": "审批通过",
+            "name": "3"
+          }
+        ]
+      },
+      {
+        "name": "Description",
+        "label": "备注",
+        "type": "X",
+        "dType": "TextArea",
+        "referencedEntityObjectTypeCode": 0,
+        "operator": [
+          {
+            "label": "等于",
+            "operator": "eq",
+            "operatorType": 3
+          },
+          {
+            "label": "不等于",
+            "operator": "neq",
+            "operatorType": 3
+          },
+          {
+            "label": "大于",
+            "operator": "gt",
+            "operatorType": 3
+          },
+          {
+            "label": "大于或等于",
+            "operator": "ge",
+            "operatorType": 3
+          },
+          {
+            "label": "小于",
+            "operator": "lt",
+            "operatorType": 3
+          },
+          {
+            "label": "小于或等于",
+            "operator": "le",
+            "operatorType": 3
+          },
+          {
+            "label": "范围",
+            "operator": "in",
+            "operatorType": 3
+          },
+          {
+            "label": "排除范围",
+            "operator": "not-in",
+            "operatorType": 3
+          },
+          {
+            "label": "包含",
+            "operator": "contains",
+            "operatorType": 3
+          }
+        ],
+        "filterValues": []
+      }
+    ]
+  },
+  "filter": [
+    {
+      "SavedQueryId": "1f75f980-7995-4e43-8707-b3834b88fe6f",
+      "Name": "全部",
+      "ReturnedTypeCode": "30033",
+      "IsDefault": "True",
+      "IsCustomizable": "True",
+      "IsUserDefined": "",
+      "ColumnSet": "Name,EmployeeId,BusinessUnitId,StartTime,EndTime,TotalDays,TransferType,StatusCode,ModifiedBy,ModifiedOn",
+      "FilterExpression": "",
+      "Visibility": "",
+      "SortField": "",
+      "SortDir": "",
+      "OrderExpression": "[{\"attributeName\":\"ModifiedOn\",\"SortDir\":\"ASC\",\"sort\":\"DESC\"}]"
+    }
+  ]
+}

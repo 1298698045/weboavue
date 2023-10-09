@@ -52,6 +52,7 @@
     // 重置
     const resetForm = () => {
         formRef.value.resetFields();
+        emit("search", formState)
     }
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);

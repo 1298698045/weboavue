@@ -34,7 +34,9 @@ const Interface = {
         config: "/localData/entitygrid.config.get.json",
         list: "/localData/entitygrid.list.json",
         handleActions: "/localData/listview.handle.actions.json"
-    }
+    },
+    uilook: "/localData/ui.entity.lookup.json",
+    entityFilter: "/localData/entity.filter.get.json"
 
 }
 export default Interface;

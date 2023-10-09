@@ -10,18 +10,19 @@
                     <div class="row">
                         <a-dropdown :trigger="['click']">
                             <a class="ant-dropdown-link" @click.prevent>
-                              {{currentMenu}}
-                              <DownOutlined />
+                                {{currentMenu}}
+                                <DownOutlined />
                             </a>
                             <template #overlay>
-                              <a-menu>
-                                <a-menu-item v-for="(item,index) in menus" :key="index" @click="handleSwitchMenu(item)">
-                                    <span class="iconitem">
-                                        <CheckOutlined v-if="item.name==currentMenu" />
-                                    </span>
-                                    <a href="javascript:;">{{item.name}}</a>
-                                </a-menu-item>
-                              </a-menu>
+                                <a-menu>
+                                    <a-menu-item v-for="(item,index) in menus" :key="index"
+                                        @click="handleSwitchMenu(item)">
+                                        <span class="iconitem">
+                                            <CheckOutlined v-if="item.name==currentMenu" />
+                                        </span>
+                                        <a href="javascript:;">{{item.name}}</a>
+                                    </a-menu-item>
+                                </a-menu>
                             </template>
                         </a-dropdown>
                         <div class="lockBtn" title="固定此列表视图" @click="handleLock">
@@ -32,46 +33,66 @@
                 </div>
             </div>
             <div class="rightBtns">
-                <a-button class="ml10" type="primary" v-for="(item,index) in actionList" :key="index">{{item.label}}</a-button>
+                <div v-for="(item,index) in actionList" :key="index">
+                    <div class="btnGroup ml10" v-if="Array.isArray(item)">
+                        <a-button v-for="(row,idx) in item" :key="idx">{{row.label}}</a-button>
+                    </div>
+                    <a-button type="primary" v-else>{{item.label}}</a-button>
+                </div>
             </div>
         </div>
         <div class="center">
             <div class="bd">
                 <div class="searchWrap">
                     <div class="search-common">
-                        <list-form-search ref="searchRef" @update-height="changeHeight"></list-form-search>
+                        <list-form-search ref="searchRef" @search="handleSearch"></list-form-search>
                     </div>
                     <div class="search-btns">
                         <a-dropdown :trigger="['click']">
-                            <a-button><SettingOutlined /><CaretDownOutlined style="font-size: 10px;" /></a-button>
+                            <a-button>
+                                <SettingOutlined />
+                                <CaretDownOutlined style="font-size: 10px;" />
+                            </a-button>
                             <template #overlay>
-                              <a-menu @click="handleMenuClick">
-                                <a-menu-item key="1">新建</a-menu-item>
-                                <a-menu-item key="2">导出</a-menu-item>
-                                <a-menu-item key="3">复制</a-menu-item>
-                                <a-menu-item key="4">重命名</a-menu-item>
-                                <a-menu-item key="5">共享设置</a-menu-item>
-                                <a-menu-item key="6">选择要显示的字段</a-menu-item>
-                                <a-menu-item key="7">删除</a-menu-item>
-                              </a-menu>
+                                <a-menu @click="handleMenuClick">
+                                    <a-menu-item key="1">新建</a-menu-item>
+                                    <a-menu-item key="2">导出</a-menu-item>
+                                    <a-menu-item key="3">复制</a-menu-item>
+                                    <a-menu-item key="4">重命名</a-menu-item>
+                                    <a-menu-item key="5">共享设置</a-menu-item>
+                                    <a-menu-item key="6">选择要显示的字段</a-menu-item>
+                                    <a-menu-item key="7">删除</a-menu-item>
+                                    <a-menu-item key="8">Kanban设置</a-menu-item>
+                                </a-menu>
                             </template>
                         </a-dropdown>
-                        <a-dropdown  class="ml10" :trigger="['click']">
-                            <a-button><SettingOutlined /><CaretDownOutlined style="font-size: 10px;" /></a-button>
+                        <a-dropdown class="ml10" :trigger="['click']">
+                            <a-button>
+                                <SettingOutlined />
+                                <CaretDownOutlined style="font-size: 10px;" />
+                            </a-button>
                             <template #overlay>
-                              <a-menu @click="handleMenuClick">
-                                <a-menu-item key="1">列表</a-menu-item>
-                                <a-menu-item key="2">卡片</a-menu-item>
-                                <a-menu-item key="3">分屏视图</a-menu-item>
-                              </a-menu>
+                                <a-menu @click="handleMenuClick">
+                                    <a-menu-item key="1">列表</a-menu-item>
+                                    <a-menu-item key="2">卡片</a-menu-item>
+                                    <a-menu-item key="3">分屏视图</a-menu-item>
+                                </a-menu>
                             </template>
                         </a-dropdown>
-                        <a-button class="ml10"><RedoOutlined /></a-button>
-                        <div class="groupBtn ml10">
-                            <a-button><RedoOutlined /></a-button>
-                            <a-button><RedoOutlined /></a-button>
+                        <a-button class="ml10">
+                            <RedoOutlined />
+                        </a-button>
+                        <div class="btnGroup ml10">
+                            <a-button>
+                                <RedoOutlined />
+                            </a-button>
+                            <a-button>
+                                <RedoOutlined />
+                            </a-button>
                         </div>
-                        <a-button class="ml10"><SearchOutlined /></a-button>
+                        <a-button class="ml10">
+                            <SearchOutlined />
+                        </a-button>
                     </div>
                 </div>
                 <div class="gridWrap">
@@ -79,6 +100,14 @@
                 </div>
             </div>
         </div>
+        <!-- 弹窗 -->
+        <New :isShow="isNewModal" v-if="isNewModal" @cancel="handleNewCancel" />
+        <Copy :isShow="isCopyModal" v-if="isCopyModal" @cancel="handleCopyCancel" />
+        <Rename :isShow="isRenameModal" v-if="isRenameModal" @cancel="handleRenameCancel" />
+        <export-field :isShow="isExportModal" v-if="isExportModal" @cancel="handleExportCancel"></export-field>
+        <share-setting :isShow="isShareModal" v-if="isShareModal" @cancel="handleShareCancel"></share-setting>
+        <show-field :isShow="isShowModal" v-if="isShowModal" @cancel="handleShowCancel"></show-field>
+        <Delete :isShow="isDeleteModal" v-if="isDeleteModal" @cancel="handleDeleteCancel" />
     </div>
 </template>
 <script setup>
@@ -94,53 +123,74 @@
     } from "@ant-design/icons-vue";
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated } from "vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
+
+    // 新建列表视图
+    import New from "@/components/listView/New.vue";
+    import Copy from "@/components/listView/Copy.vue";
+    import Rename from "@/components/listView/Rename.vue";
+    import ShareSetting from "@/components/listView/ShareSetting.vue";
+    // 导出字段
+    import ExportField from "@/components/listView/ExportField.vue";
+    import ShowField from "@/components/listView/ShowField.vue";
+    import Delete from "@/components/listView/Delete.vue";
+
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-    // var columns = [
-    //     {
-    //         field: 'Name',
-    //         title: '标题',
-    //         sortable: true,
-    //     },
-    // ]
-
     const data = reactive({
         currentMenu: "全部",
         menus: [
             {
                 id: 1,
-                name:'全部'
+                name: '全部'
             },
             {
                 id: 2,
-                name:'未审批的轮转'
+                name: '未审批的轮转'
             },
             {
                 id: 3,
-                name:'本科轮科人员'
+                name: '本科轮科人员'
             },
             {
                 id: 4,
-                name:'我创建的'
+                name: '我创建的'
             }
         ],
         isLock: true,
         columns: [],
         actionList: [],
         listViewActions: [],
-        entityType: 'a1K'
+        entityType: 'a1K',
+        filterQuery: "",
+        isNewModal: false,
+        isExportModal: false,
+        isCopyModal: false,
+        isRenameModal: false,
+        isShareModal: false,
+        isShowModal: false,
+        isDeleteModal: false
     })
-    const  { currentMenu, menus, isLock, columns, actionList, listViewActions,entityType } = toRefs(data);
-    const handleSwitchMenu = (item)=>{
+    const { currentMenu, menus, isLock, columns, actionList, listViewActions, entityType, filterQuery,
+         isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal, isDeleteModal } = toRefs(data);
+    const handleSwitchMenu = (item) => {
         data.currentMenu = item.name;
         data.isLock = false;
     }
-    const handleLock = ()=> {
+    const handleLock = () => {
         data.isLock = !data.isLock;
     }
-    onMounted(()=>{
-        
+    onMounted(() => {
+
     })
+    const handleSearch = (params) => {
+        var filterQuery = '';
+        for(var key in params){
+            filterQuery += '\n'+key+'\teq\t' + params[key];
+        }
+        console.log(filterQuery,'filterQuery');
+        data.filterQuery = filterQuery;
+        loadGrid(data.columns);
+    }
     const loadGrid = (columns) => {
         if ($.fn.pagination.defaults != undefined) {//分页工具栏处理
             $.fn.pagination.defaults.beforePageText = "";
@@ -148,89 +198,155 @@
             $.fn.pagination.defaults.displayMsg = "从{from} 到 {to} 总计 {total} 条";
         }
         $('#datagrid').datagrid({
-          url: Interface.listView.list,
-          method: "get",
-          columns: [columns],
-          queryParams: {},
-          // data: tableList,
-          singleSelect: false,
-          checkOnSelect: false,
-          selectOnCheck: false,
-          pagination: true,
-          pageNumber: 1,
-          pageSize: 10,
-          fit: true,
-          striped: false,
-          rownumbers: true,
-          onLoadSuccess: function () {
-          }
+            url: Interface.listView.list,
+            method: "get",
+            columns: [columns],
+            queryParams: {
+                filterQuery: data.filterQuery
+            },
+            // data: tableList,
+            singleSelect: false,
+            checkOnSelect: false,
+            selectOnCheck: false,
+            pagination: true,
+            pageNumber: 1,
+            pageSize: 10,
+            fit: true,
+            striped: false,
+            rownumbers: true,
+            onLoadSuccess: function () {
+            }
         });
     }
-    const getConfig = ()=> {
+    const getConfig = () => {
         function formatOper(val, row, index, entityType, listViewActions) {
             var rowId = row["LIST_RECORD_ID"];
             var action = "";
             for (var i = 0; i < listViewActions.length; i++) {
                 var item = listViewActions[i];
                 action +=
-                '<a style="color:#015ba7;font-size:13px;" href="javascript:;" onclick="' +
-                [item.devNameOrId] +
-                "('" +
-                rowId +
-                "','" +
-                entityType +
-                "')\">" +
-                item.title +
-                "</a>&nbsp;&nbsp;";
+                    '<a style="color:#015ba7;font-size:13px;" href="javascript:;" onclick="' +
+                    [item.devNameOrId] +
+                    "('" +
+                    rowId +
+                    "','" +
+                    entityType +
+                    "')\">" +
+                    item.title +
+                    "</a>&nbsp;&nbsp;";
             }
             return action;
         }
-      proxy.$get(Interface.listView.config,{}).then(res=>{
-        console.log(res,'res');
-        
-        var cols = res.DataSet.Columns;
-        var columnsArray = [];
-        var col = {
-            field: "Action",
-            title: "操作",
-            formatter: function formatter(value, row, index) {
-                return formatOper(
-                    value,
-                    row,
-                    index,
-                    data.entityType,
-                    data.listViewActions
-                );
-            }
-        };
-        columnsArray.push(col);
-        for (var i = 0; i < cols.length; i++) {
-            var c = cols[i];
+        proxy.$get(Interface.listView.config, {}).then(res => {
+            console.log(res, 'res');
+
+            var cols = res.DataSet.Columns;
+            var columnsArray = [];
             var col = {
-                field: c.Name,
-                title: c.Title,
-                sortable: true
+                field: "Action",
+                title: "操作",
+                formatter: function formatter(value, row, index) {
+                    return formatOper(
+                        value,
+                        row,
+                        index,
+                        data.entityType,
+                        data.listViewActions
+                    );
+                }
             };
             columnsArray.push(col);
-        }
-        data.columns = columnsArray;
-        loadGrid(data.columns);
-      })  
+            for (var i = 0; i < cols.length; i++) {
+                var c = cols[i];
+                var col = {
+                    field: c.Name,
+                    title: c.Title,
+                    sortable: true
+                };
+                columnsArray.push(col);
+            }
+            data.columns = columnsArray;
+            loadGrid(data.columns);
+        })
     }
-    
-    
+
+
     const getActions = () => {
-        proxy.$get(Interface.listView.handleActions,{
+        proxy.$get(Interface.listView.handleActions, {
             objectTypeCode: 30053,
-        }).then(res=>{
+        }).then(res => {
             var listViewActions = res.actions[0].returnValue.actionsContainers[0].listViewActions;
             var actionList = res.actions[0].returnValue.actionsContainers[0].actionList;
-            data.actionList = actionList;
             data.listViewActions = listViewActions;
+            var temp = [];
+            for (var i = 0; i < actionList.length; i++) {
+                let item = actionList[i];
+                if (item.isSeparator) {
+                    temp.push([item]);
+                } else {
+                    if (Array.isArray(temp[temp.length - 1])) {
+                        temp[temp.length - 1].push(item);
+                    } else {
+                        temp.push(item);
+                    }
+                }
+            }
+            console.log("temp",temp)
+            data.actionList = temp;
             getConfig();
         })
     }
     getActions();
+
+    // 右侧菜单操作
+    const handleMenuClick = (e) => {
+        console.log(e);
+        switch(e.key) {
+            case '1':
+                data.isNewModal = true;
+                break;
+            case '2':
+                data.isExportModal = true;
+                break;
+            case '3':
+                data.isCopyModal = true;
+                break;
+            case '4':
+                data.isRenameModal = true;
+                break;
+            case '5':
+                data.isShareModal = true;
+                break;
+            case '6':
+                data.isShowModal = true;
+                break;
+            case '7':
+                data.isDeleteModal = true;
+                break;
+        }
+    }
+
+    const handleNewCancel = (params) => {
+        data.isNewModal = params;
+    }
+    const handleExportCancel = (params) => {
+        data.isExportModal = params;
+    }
+    const handleCopyCancel = (params) => {
+        data.isCopyModal = params;
+    }
+    const handleRenameCancel = (params) => {
+        data.isRenameModal = params;
+    }
+    const handleShareCancel = (params) =>{
+        data.isShareModal = params;
+    }
+    const handleShowCancel = (params) =>{
+        data.isShowModal = params;
+    }
+    const handleDeleteCancel = (params) => {
+        data.isDeleteModal = params;
+    }
 </script>
 <style lang="less">
     .wrapper {
@@ -240,38 +356,46 @@
         border-radius: 3px;
         padding: 15px;
         box-sizing: border-box;
+
         .headerTop {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #e2e3e5;
             padding-bottom: 10px;
+
             .leftAll {
                 padding-left: 10px;
                 display: flex;
                 align-items: center;
-                .menuImg{
+
+                .menuImg {
                     width: 32px;
                     height: 32px;
                     border-radius: 4px;
                     background: #4BC076;
                     margin-right: 10px;
-                    .img{
+
+                    .img {
                         width: 100%;
                         height: 100%;
                     }
                 }
-                .menu-box{
+
+                .menu-box {
                     min-width: 130px;
-                    .label{
+
+                    .label {
                         font-size: 14px;
                     }
-                    .row{
+
+                    .row {
                         display: flex;
                         align-items: center;
                     }
                 }
-                .lockBtn{
+
+                .lockBtn {
                     width: 24px;
                     height: 24px;
                     background: #fff;
@@ -281,56 +405,70 @@
                     line-height: 24px;
                     cursor: pointer;
                     margin-left: 10px;
-                    .img{
+
+                    .img {
                         width: 14px;
                         height: 14px;
                     }
                 }
             }
         }
-        .searchWrap{
+
+        .searchWrap {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            .search-common{
+
+            .search-common {
                 flex: 1;
             }
-            .search-btns{
+            .search-btns {
                 display: flex;
-                .groupBtn{
-                    .ant-btn:first-child{
-                        border-radius: 0.25rem 0 0 0.25rem;
-                    }
-                    .ant-btn+.ant-btn{
-                        margin-left: -1px;
-                    }
-                    .ant-btn:last-child{
-                        border-radius: 0 0.25rem 0.25rem 0;
-                        border: 1px solid rgb(221, 219, 218);
-                        background: #fff;
-                        color: rgb(112, 110, 107);
-                    }
-                }
             }
         }
-        .center{
+
+        .center {
             height: calc(~"100% - 58px");
-            .bd{
+
+            .bd {
                 height: 100%;
-                .gridWrap{
+
+                .gridWrap {
                     height: calc(~"100% - 60px")
                 }
             }
         }
     }
-    .ant-dropdown-link{
+
+    .ant-dropdown-link {
         min-width: 130px;
         cursor: pointer;
         font-size: 16px;
         font-weight: bold;
     }
-    .iconitem{
+
+    .iconitem {
         display: inline-block;
         width: 20px;
+    }
+    .rightBtns{
+        display: flex;
+    }
+    .ant-btn{
+        border-radius: 4px;
+    }
+    .btnGroup{
+        .ant-btn{
+            border-radius: 0;
+        }
+        .ant-btn:first-child{
+            border-radius: 4px 0 0 4px;
+        }
+        .ant-btn:last-child{
+            border-radius: 0 4px 4px 0;
+        }
+        .ant-btn+.ant-btn{
+            margin-left: -1px;
+        }
     }
 </style>

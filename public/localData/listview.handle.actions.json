@@ -9,10 +9,32 @@
           {
             "actionList": [
               {
-                "devNameOrId": "New",
+                "devNameOrId": "ActiveHREmployeeJobTransfer",
                 "isSelected": false,
                 "requiresSelectionForUsage": false,
                 "isSeparator": false,
+                "reloadOnActivation": false,
+                "isCachable": false,
+                "label": "生效变动",
+                "title": "生效变动",
+                "color": "A094ED",
+                "icon": "",
+                "url": "/a0O/e?sObjectName=HREmployeeJobTransfer &save_new_url =%2Fa0O%2Fe &navigationLocation =LIST_VIEW",
+                "isRenderEntityIcon": true,
+                "isDisabled": false,
+                "isVisible": false,
+                "assertive": false,
+                "section": "Page",
+                "isMassAction": false,
+                "isTargetRecordTypeIdPersonAccountType": false,
+                "actionTypeEnum": "StandardButton",
+                "targetType": "Invoke"
+              },
+              {
+                "devNameOrId": "New",
+                "isSelected": false,
+                "requiresSelectionForUsage": false,
+                "isSeparator": true,
                 "reloadOnActivation": false,
                 "isCachable": false,
                 "label": "新建",
@@ -54,6 +76,28 @@
               }
             ],
             "listViewActions": [
+              {
+                "devNameOrId": "ActiveHREmployeeJobTransfer",
+                "isSelected": false,
+                "requiresSelectionForUsage": false,
+                "isSeparator": false,
+                "reloadOnActivation": false,
+                "isCachable": false,
+                "label": "生效变动",
+                "title": "生效变动",
+                "color": "A094ED",
+                "icon": "",
+                "url": "/a0O/e?sObjectName=HREmployeeJobTransfer &save_new_url =%2Fa0O%2Fe &navigationLocation =LIST_VIEW",
+                "isRenderEntityIcon": true,
+                "isDisabled": false,
+                "isVisible": false,
+                "assertive": false,
+                "section": "Page",
+                "isMassAction": false,
+                "isTargetRecordTypeIdPersonAccountType": false,
+                "actionTypeEnum": "StandardButton",
+                "targetType": "Invoke"
+              },
               {
                 "devNameOrId": "Edit",
                 "isSelected": false,
