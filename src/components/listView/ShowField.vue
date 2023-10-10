@@ -8,23 +8,29 @@
             </template>
             <div class="modalContainer">
                 <div class="modalCenter">
-                    <a-transfer
-                        v-model:target-keys="targetKeys"
-                        v-model:selected-keys="selectedKeys"
-                        :data-source="listData"
-                        :list-style="{
-                            width: '260px',
-                            height: '280px',
-                        }"
-                        :locale="{itemUnit:'',itemsUnit:'',notFoundContent:'列表为空',searchPlaceholder: '请输入搜索内容'}"
-                        show-search
-                        :titles="['可用项目', '所选项目']"
-                        :render="item => item.title"
-                        :disabled="disabled"
-                        @change="handleChange"
-                        @selectChange="handleSelectChange"
-                        @scroll="handleScroll"
-                    />
+                    <div class="selectBox">
+                        <a-transfer
+                            v-model:target-keys="targetKeys"
+                            v-model:selected-keys="selectedKeys"
+                            :data-source="listData"
+                            :list-style="{
+                                width: '260px',
+                                height: '280px',
+                            }"
+                            :locale="{itemUnit:'',itemsUnit:'',notFoundContent:'列表为空',searchPlaceholder: '请输入搜索内容'}"
+                            show-search
+                            :titles="['可用项目', '所选项目']"
+                            :render="item => item.title"
+                            :disabled="disabled"
+                            @change="handleChange"
+                            @selectChange="handleSelectChange"
+                            @scroll="handleScroll"
+                        />
+                        <div class="sortBox">
+                            <a-button size="small" @click="selectedKeys.length && handleMoveUp()" :type="selectedKeys.length > 0 ? 'primary' : 'default' "><UpOutlined /></a-button>
+                            <a-button size="small" @click="selectedKeys.length && handleMoveDown()" :type="selectedKeys.length > 0 ? 'primary' : 'default' "><DownOutlined /></a-button>
+                        </div>
+                    </div>
                     <ul class="filterSearch">
                         <li class="row" v-for="(item,index) in list" :key="index">
                             <div class="fieldCol">
@@ -43,8 +49,8 @@
                                 <span class="required">*</span>
                                 <span class="label">排序方式</span>
                                 <a-radio-group v-model:value="item.sortMethod">
-                                    <a-radio value="1">Sponsor</a-radio>
-                                    <a-radio value="2">Venue</a-radio>
+                                    <a-radio value="ASC">升序</a-radio>
+                                    <a-radio value="DESC">降序</a-radio>
                                 </a-radio-group>
                             </div>
                             <div class="fieldCol">
@@ -69,7 +75,7 @@
 <script setup>
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps,defineExpose,
         defineEmits } from "vue";
-    import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
+    import { SearchOutlined, DeleteOutlined, UpOutlined, DownOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     
     const { proxy } = getCurrentInstance();
@@ -122,6 +128,30 @@
         console.log('direction:', direction);
         console.log('target:', e.target);
     };
+
+    const handleMoveUp = () => {
+        let firstSelectedIndex = data.targetKeys.findIndex(item=>item==data.selectedKeys[0]);
+        if(firstSelectedIndex > 0){
+            const itemsToMove = data.selectedKeys.slice();
+            console.log("itemsToMove", itemsToMove)
+            for(const item of itemsToMove){
+                const currentIndex = data.targetKeys.indexOf(item);
+                data.targetKeys.splice(currentIndex, 1);
+                data.targetKeys.splice(currentIndex - 1, 0, item);
+            }
+        }
+    }
+    const handleMoveDown = () => {
+        const lastSelectedIndex = data.targetKeys.indexOf(data.selectedKeys[data.selectedKeys.length - 1]);
+          if (lastSelectedIndex < data.targetKeys.length - 1) {
+            const itemsToMove = data.selectedKeys.slice().reverse();
+            for (const item of itemsToMove) {
+              const currentIndex = data.targetKeys.indexOf(item);
+              data.targetKeys.splice(currentIndex, 1);
+              data.targetKeys.splice(currentIndex + 1, 0, item);
+            }
+        }
+    }
 
     const getQuery = ()=> {
         proxy.$get(Interface.entityFilter,{}).then(res=>{
@@ -188,5 +218,16 @@
             margin-top: 20px;
             margin-left: 60px;
         }
+    }
+    .selectBox{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .sortBox{
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        gap: 5px;
     }
 </style>

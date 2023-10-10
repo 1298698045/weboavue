@@ -79,24 +79,23 @@
                                 </a-menu>
                             </template>
                         </a-dropdown>
-                        <a-button class="ml10">
-                            <RedoOutlined />
+                        <a-button  :icon="h(RedoOutlined)" class="ml10">
                         </a-button>
                         <div class="btnGroup ml10">
-                            <a-button>
-                                <RedoOutlined />
+                            <a-button :icon="h(RedoOutlined)" title="图标">
                             </a-button>
-                            <a-button>
-                                <RedoOutlined />
+                            <a-button :icon="h(RedoOutlined)" title="筛选器" @click="handleShowFilter">
                             </a-button>
                         </div>
-                        <a-button class="ml10">
-                            <SearchOutlined />
+                        <a-button class="ml10" :icon="h(SearchOutlined)">
                         </a-button>
                     </div>
                 </div>
                 <div class="gridWrap">
                     <div id="datagrid"></div>
+                    <div class="filterModalWrap">
+                        <Filter />
+                    </div>
                 </div>
             </div>
         </div>
@@ -121,7 +120,7 @@
         RedoOutlined,
         SearchOutlined
     } from "@ant-design/icons-vue";
-    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated } from "vue";
+    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, h } from "vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
 
     // 新建列表视图
@@ -133,7 +132,8 @@
     import ExportField from "@/components/listView/ExportField.vue";
     import ShowField from "@/components/listView/ShowField.vue";
     import Delete from "@/components/listView/Delete.vue";
-
+    // 筛选器弹层
+    import Filter from "@/components/listView/Filter.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
@@ -168,10 +168,11 @@
         isRenameModal: false,
         isShareModal: false,
         isShowModal: false,
-        isDeleteModal: false
+        isDeleteModal: false,
+        isFilterModal: true
     })
     const { currentMenu, menus, isLock, columns, actionList, listViewActions, entityType, filterQuery,
-         isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal, isDeleteModal } = toRefs(data);
+         isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal, isDeleteModal, isFilterModal } = toRefs(data);
     const handleSwitchMenu = (item) => {
         data.currentMenu = item.name;
         data.isLock = false;
@@ -347,6 +348,10 @@
     const handleDeleteCancel = (params) => {
         data.isDeleteModal = params;
     }
+    // 显示筛选器
+    const handleShowFilter = () => {
+        data.isFilterModal = true;
+    }
 </script>
 <style lang="less">
     .wrapper {
@@ -434,6 +439,7 @@
                 height: 100%;
 
                 .gridWrap {
+                    position: relative;
                     height: calc(~"100% - 60px")
                 }
             }
@@ -470,5 +476,16 @@
         .ant-btn+.ant-btn{
             margin-left: -1px;
         }
+    }
+    .filterModalWrap{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 321px;
+        height: 100%;
+        background: #fff;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.40);
+        border: 1px solid #dddddd;
+        border-left: none;
     }
 </style>

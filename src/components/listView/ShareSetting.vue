@@ -17,21 +17,39 @@
                               <a-radio value="3">与用户小组共享列表视图</a-radio>
                             </a-radio-group>
                         </a-form-item>
-                        <a-form-item label="搜索角色" name="role" v-if="formState.resource==3">
-                            <a-select
-                                v-model:value="formState.role"
-                                show-search
-                                placeholder="input search text"
-                                :default-active-first-option="false"
-                                :filter-option="false"
-                                :not-found-content="null"
-                                @search="handleSearch"
-                                @change="handleChange"
-                                @dropdownVisibleChange="getPeople"
-                            >
-                                <template #suffixIcon><SearchOutlined class="ant-select-suffix" /></template>
-                                <a-select-option :value="item.ID" v-for="(item,index) in listData" :key="index">{{item.Name}}</a-select-option>
-                            </a-select>
+                        <a-form-item name="role" v-if="formState.resource==3">
+                            <div class="menuRow">
+                                <a-dropdown>
+                                    <template #overlay>
+                                      <a-menu @click="handleMenu">
+                                        <a-menu-item v-for="(item,index) in menus" :key="item.key">
+                                          <UserOutlined />
+                                          {{item.name}}
+                                        </a-menu-item>
+                                      </a-menu>
+                                    </template>
+                                    <a-button>
+                                      <UserOutlined />
+                                      <DownOutlined />
+                                    </a-button>
+                                </a-dropdown>
+                                <a-select
+                                    class="aselect"
+                                    v-model:value="formState.role"
+                                    show-search
+                                    mode="multiple"
+                                    :placeholder="'搜索'+currentMenu"
+                                    :default-active-first-option="false"
+                                    :filter-option="false"
+                                    :not-found-content="null"
+                                    @search="handleSearch"
+                                    @change="handleChange"
+                                    @dropdownVisibleChange="getPeople"
+                                >
+                                    <template #suffixIcon><SearchOutlined class="ant-select-suffix" /></template>
+                                    <a-select-option :value="item.ID" v-for="(item,index) in listData" :key="index">{{item.Name}}</a-select-option>
+                                </a-select>
+                            </div>
                           </a-form-item>
                     </a-form>
                 </div>
@@ -48,7 +66,7 @@
 <script setup>
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps,defineExpose,
         defineEmits } from "vue";
-    import { SearchOutlined } from "@ant-design/icons-vue";
+    import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
 
@@ -64,15 +82,38 @@
 
     }
     const data = reactive({
-        listData: []
+        listData: [],
+        menus: [
+            {
+                key: 1,
+                name: "角色"
+            },
+            {
+                key: 2,
+                name: "小组"
+            },
+            {
+                key: 3,
+                name: "部门"
+            },
+            {
+                key: 4,
+                name: "用户"
+            }
+        ],
+        currentMenu: "角色"
     })
-    const { listData } = toRefs(data);
+    const { listData, menus, currentMenu } = toRefs(data);
     const formState = reactive({
         name: "",
         apiname: "",
         Resources: "",
-        role: ""
+        role: []
     })
+    const handleMenu = (e)=> {
+        console.log("e",e);
+        data.currentMenu = data.menus.find(item=>item.key==e.key).name;
+    }
     const handleSearch = (val) =>{
         console.log('val',val);
         getPeople(val)
@@ -94,5 +135,16 @@
         display: flex;
         align-items: center;
         margin-top: 10px;
+    }
+    .menuRow{
+        display: flex;
+        align-items: center;
+        .ant-btn{
+            border-radius: 4px 0 0 4px;
+        }
+        :deep .ant-select-selector{
+            border-radius: 0 4px 4px 0 !important;
+            margin-left: -1px !important;
+        }
     }
 </style>
