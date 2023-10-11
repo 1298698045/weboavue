@@ -1,0 +1,490 @@
+{
+  "actions": [
+    {
+      "id": "",
+      "state": "SUCCESS",
+      "returnValue": {
+        "componentDef": {
+          "entityLabel": "部门变动",
+          "entityApiName": "HREmployeeJobTransfer",
+          "layoutId": null,
+          "name": null,
+          "objectTypeCode": 30027,
+          "recordNameField": null,
+          "keyPrefix": "a0O",
+          "isInlineEditable": true,
+          "isUserLayout": false,
+          "headerActions": [
+            {
+              "executionComponent": {
+                "descriptor": null,
+                "isEvent": true,
+                "isClientSideCreatable": true,
+                "componentName": null
+              },
+              "devNameOrId": "SaveEdit",
+              "requiresSelectionForUsage": false,
+              "isSelected": true,
+              "label": "保存",
+              "title": "保存",
+              "isRenderEntityIcon": false,
+              "isVisible": false,
+              "assertive": false,
+              "section": "Page",
+              "icon": "/img/icon/t4v35/action/new_custom19_120.png",
+              "url": null,
+              "isMassAction": false,
+              "actionTypeEnum": "StandardButton"
+            },
+            {
+              "executionComponent": {
+                "descriptor": null,
+                "isEvent": true,
+                "isClientSideCreatable": true,
+                "componentName": null
+              },
+              "devNameOrId": "SaveAndNew",
+              "requiresSelectionForUsage": false,
+              "isSelected": false,
+              "label": "保存并新建",
+              "title": "保存并新建",
+              "isRenderEntityIcon": false,
+              "isVisible": false,
+              "assertive": false,
+              "section": "Page",
+              "icon": "/img/icon/t4v35/action/new_custom19_120.png",
+              "url": null,
+              "isMassAction": false,
+              "actionTypeEnum": "StandardButton"
+            },
+            {
+              "executionComponent": {
+                "descriptor": null,
+                "isEvent": true,
+                "isClientSideCreatable": true,
+                "componentName": null
+              },
+              "devNameOrId": "CancelEdit",
+              "requiresSelectionForUsage": false,
+              "isSelected": false,
+              "label": "取消",
+              "title": "取消",
+              "isRenderEntityIcon": false,
+              "isVisible": false,
+              "assertive": false,
+              "section": "Page",
+              "icon": "/img/icon/t4v35/action/new_custom19_120.png",
+              "url": null,
+              "isMassAction": false,
+              "actionTypeEnum": "StandardButton"
+            }
+          ],
+          "inlineEditActions": [],
+          "sections": [
+            {
+              "sectionId": "4dea0a6d-5844-41b1-b28f-a92ac7754428",
+              "labelKey": "Basic",
+              "title": "基本信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "姓名",
+                      "localId": "EmployeeId",
+                      "targetValue": "EmployeeId",
+                      "attributes": {
+                        "maxlength": 36,
+                        "type": "Y_MD",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 30020,
+                        "sObjectType": 30020,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "调动类型",
+                      "localId": "TransferTypeCode",
+                      "targetValue": "TransferTypeCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "调出部门",
+                      "localId": "FromDept",
+                      "targetValue": "FromDept",
+                      "attributes": {
+                        "maxlength": 36,
+                        "type": "O",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 10,
+                        "sObjectType": 10,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "调入部门",
+                      "localId": "ToDept",
+                      "targetValue": "ToDept",
+                      "attributes": {
+                        "maxlength": 36,
+                        "type": "O",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 10,
+                        "sObjectType": 10,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "调入时间",
+                      "localId": "TransferDate",
+                      "targetValue": "TransferDate",
+                      "attributes": {
+                        "maxlength": 12,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "原来职务",
+                      "localId": "FromPost",
+                      "targetValue": "FromPost",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 3
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "调出日期",
+                      "localId": "OutDate",
+                      "targetValue": "OutDate",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "申请时间",
+                      "localId": "ApplyDate",
+                      "targetValue": "ApplyDate",
+                      "attributes": {
+                        "maxlength": 12,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 4
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "调入组",
+                      "localId": "GroupId",
+                      "targetValue": "GroupId",
+                      "attributes": {
+                        "maxlength": 36,
+                        "type": "Y",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 30041,
+                        "sObjectType": 30041,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "名称",
+                      "localId": "Name",
+                      "targetValue": "Name",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 5
+                }
+              ]
+            },
+            {
+              "sectionId": "7f19002c-cb49-4a02-865d-844c0f9db7b4",
+              "labelKey": "Remark",
+              "title": "备注",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "调动原因",
+                      "localId": "Description",
+                      "targetValue": "Description",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "X",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                }
+              ]
+            }
+          ],
+          "localizedTitle": "部门变动",
+          "lookupAttributes": [
+            {
+              "objectTypeCode": 30020,
+              "name": "EmployeeId"
+            },
+            {
+              "objectTypeCode": 10,
+              "name": "FromDept"
+            },
+            {
+              "objectTypeCode": 10,
+              "name": "ToDept"
+            },
+            {
+              "objectTypeCode": 30041,
+              "name": "GroupId"
+            }
+          ]
+        },
+        "record": {
+          "EmpJobTransferId": null,
+          "Name": null,
+          "CreatedBy": {
+            "Icon": null,
+            "Id": null,
+            "Name": null,
+            "objectTypeCode": 8,
+            "sobjectType": "8",
+            "value": null,
+            "displayValue": null
+          },
+          "CreatedOn": null,
+          "ModifiedBy": {
+            "Icon": null,
+            "Id": null,
+            "Name": null,
+            "objectTypeCode": 8,
+            "sobjectType": "8",
+            "value": null,
+            "displayValue": null
+          },
+          "ModifiedOn": null,
+          "EmployeeId": {
+            "Icon": null,
+            "Id": null,
+            "Name": null,
+            "objectTypeCode": 30020,
+            "sobjectType": "30020",
+            "value": null,
+            "displayValue": null
+          },
+          "TransferTypeCode": null,
+          "ApplyDate": null,
+          "FromDept": {
+            "Icon": null,
+            "Id": null,
+            "Name": null,
+            "objectTypeCode": 10,
+            "sobjectType": "10",
+            "value": null,
+            "displayValue": null
+          },
+          "OutDate": null,
+          "FromPost": null,
+          "TransferDate": null,
+          "ToDept": {
+            "Icon": null,
+            "Id": null,
+            "Name": null,
+            "objectTypeCode": 10,
+            "sobjectType": "10",
+            "value": null,
+            "displayValue": null
+          },
+          "ToPost": null,
+          "GroupId": {
+            "Icon": null,
+            "Id": null,
+            "Name": null,
+            "objectTypeCode": 30041,
+            "sobjectType": "30041",
+            "value": null,
+            "displayValue": null
+          },
+          "Description": null,
+          "StatusCode": null,
+          "ApproveOfFromDeptMgr": null,
+          "ApproveOfToDept": null,
+          "ApproveOfHR": null,
+          "ApproveOfSuperiorDept": null,
+          "ApproveOfXzFengguan": null,
+          "ApproveOfIncharge": null,
+          "ApproveOfTop": null,
+          "OwningUser": {
+            "Icon": null,
+            "Id": null,
+            "Name": null,
+            "objectTypeCode": 8,
+            "sobjectType": "8",
+            "value": null,
+            "displayValue": null
+          }
+        },
+        "defaultFieldValues": {}
+      },
+      "error": []
+    }
+  ],
+  "context": {
+    "globalValueProviders": null,
+    "picklistValuesMap": {
+      "StatusCode": [
+        {
+          "label": "未审核",
+          "value": "0"
+        },
+        {
+          "label": "审核中",
+          "value": "1"
+        },
+        {
+          "label": "审核生效",
+          "value": "3"
+        }
+      ],
+      "TransferTypeCode": [
+        {
+          "label": "正常调动",
+          "value": "正常调动"
+        },
+        {
+          "label": "借调",
+          "value": "借调"
+        },
+        {
+          "label": "降职",
+          "value": "降职"
+        },
+        {
+          "label": "转岗",
+          "value": "转岗"
+        },
+        {
+          "label": "其它",
+          "value": "其它"
+        }
+      ]
+    },
+    "appContextUser": {
+      "userId": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "name": "jackliu3",
+      "isAdmin": false,
+      "token": null
+    },
+    "enableAccessChecks": false
+  }
+}

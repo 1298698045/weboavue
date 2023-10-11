@@ -1,0 +1,89 @@
+{
+  "actions": [
+    {
+      "id": "",
+      "state": "SUCCESS",
+      "returnValue": {
+        "picklistFieldValues": {
+          "TransferTypeCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "正常调动",
+                "validFor": null,
+                "value": "正常调动"
+              },
+              {
+                "attributes": null,
+                "label": "借调",
+                "validFor": null,
+                "value": "借调"
+              },
+              {
+                "attributes": null,
+                "label": "降职",
+                "validFor": null,
+                "value": "降职"
+              },
+              {
+                "attributes": null,
+                "label": "转岗",
+                "validFor": null,
+                "value": "转岗"
+              },
+              {
+                "attributes": null,
+                "label": "其它",
+                "validFor": null,
+                "value": "其它"
+              }
+            ]
+          },
+          "StatusCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "未审核",
+                "validFor": null,
+                "value": "0"
+              },
+              {
+                "attributes": null,
+                "label": "审核中",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "审核生效",
+                "validFor": null,
+                "value": "3"
+              }
+            ]
+          }
+        },
+        "picklistFieldMap": []
+      },
+      "error": []
+    }
+  ],
+  "context": {
+    "globalValueProviders": null,
+    "picklistValuesMap": {},
+    "appContextUser": {
+      "userId": null,
+      "name": null,
+      "isAdmin": false,
+      "token": null
+    },
+    "enableAccessChecks": false
+  }
+}

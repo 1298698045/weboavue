@@ -36,7 +36,10 @@ const Interface = {
         handleActions: "/localData/listview.handle.actions.json"
     },
     uilook: "/localData/ui.entity.lookup.json",
-    entityFilter: "/localData/entity.filter.get.json"
+    entityFilter: "/localData/entity.filter.get.json",
+
+    entityConfig: "/localData/entity.config.get.json", // 通用弹窗布局配置
+    picklist: "/localData/layout.picklistvalues.get.json",
 
 }
 export default Interface;

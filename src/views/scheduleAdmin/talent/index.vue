@@ -93,8 +93,8 @@
                 </div>
                 <div class="gridWrap">
                     <div id="datagrid"></div>
-                    <div class="filterModalWrap">
-                        <Filter />
+                    <div class="filterModalWrap" v-if="isFilterModal">
+                        <Filter @close="closeFilterModal" />
                     </div>
                 </div>
             </div>
@@ -107,6 +107,7 @@
         <share-setting :isShow="isShareModal" v-if="isShareModal" @cancel="handleShareCancel"></share-setting>
         <show-field :isShow="isShowModal" v-if="isShowModal" @cancel="handleShowCancel"></show-field>
         <Delete :isShow="isDeleteModal" v-if="isDeleteModal" @cancel="handleDeleteCancel" />
+        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel"></common-form-modal>
     </div>
 </template>
 <script setup>
@@ -132,6 +133,7 @@
     import ExportField from "@/components/listView/ExportField.vue";
     import ShowField from "@/components/listView/ShowField.vue";
     import Delete from "@/components/listView/Delete.vue";
+    import CommonFormModal from "@/components/listView/CommonFormModal.vue";
     // 筛选器弹层
     import Filter from "@/components/listView/Filter.vue";
     import Interface from "@/utils/Interface.js";
@@ -169,10 +171,12 @@
         isShareModal: false,
         isShowModal: false,
         isDeleteModal: false,
-        isFilterModal: true
+        isFilterModal: false,
+        isCommon: true
     })
     const { currentMenu, menus, isLock, columns, actionList, listViewActions, entityType, filterQuery,
-         isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal, isDeleteModal, isFilterModal } = toRefs(data);
+         isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal, isDeleteModal, isFilterModal,
+         isCommon } = toRefs(data);
     const handleSwitchMenu = (item) => {
         data.currentMenu = item.name;
         data.isLock = false;
@@ -351,6 +355,14 @@
     // 显示筛选器
     const handleShowFilter = () => {
         data.isFilterModal = true;
+    }
+    const closeFilterModal = (params) =>{
+        data.isFilterModal = params;
+    }
+
+    // 通用弹窗关闭
+    const handleCommonCancel = (params) =>{
+        data.isCommon = params;
     }
 </script>
 <style lang="less">
