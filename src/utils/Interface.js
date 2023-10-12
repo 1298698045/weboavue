@@ -40,6 +40,7 @@ const Interface = {
 
     entityConfig: "/localData/entity.config.get.json", // 通用弹窗布局配置
     picklist: "/localData/layout.picklistvalues.get.json",
+    treeList: "/localData/tree.get.json"
 
 }
 export default Interface;

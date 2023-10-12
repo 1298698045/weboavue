@@ -7,7 +7,7 @@
                  </div>
             </template>
             <div class="modalContainer">
-                <div class="modalCenter">
+                <div class="modalCenter" :style="{height:height+'px'}">
                     <a-form :model="formState" ref="formRef">
                         <div class="section" v-for="(item,index) in layoutList" :key="index">
                             <div class="sectionTitle">{{item.title}}</div>
@@ -28,12 +28,13 @@
                                         <a-select
                                             allowClear
                                             v-model:value="list[attribute.targetValue]"
-                                            show-search
                                             :default-active-first-option="false"
                                             :filter-option="false"
+                                            showSearch
                                             @search="(e)=>{searchlookup(e,attribute)}"
                                             @dropdownVisibleChange="(e)=>{searchlookup('',attribute)}"
                                             :placeholder="'请选择'+attribute.label">
+                                            <template #suffixIcon><SearchOutlined class="ant-select-suffix" @click.stop /></template>
                                             <a-select-option v-for="(option,optionIdx) in search[attribute.targetValue]"
                                              :key="optionIdx" :value="option.ID">{{option.Name}}</a-select-option>
                                         </a-select>
@@ -51,6 +52,9 @@
                             </div>
                         </div>
                     </a-form>
+                    <radio-dept :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
+                    <multiple-dept :isShow="isMultipleDept"  @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
+                    <radio-user :isShow="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams" ></radio-user>
                 </div>
             </div>
             <template #footer>
@@ -66,9 +70,12 @@
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps,defineExpose,
         defineEmits } from "vue";
     import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
+    import RadioDept from "@/components/commonModal/RadioDept.vue";
+    import MultipleDept from "@/components/commonModal/MultipleDept.vue";
+    import RadioUser from "@/components/commonModal/RadioUser.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-
+    console.log(document.documentElement.clientHeight)
     const labelCol = ref({ style: { width: '100px' } });
     const props = defineProps({
         isShow: Boolean,
@@ -85,9 +92,13 @@
         layoutList: [],
         list: {},
         select: {},
-        search: {}
+        search: {},
+        height: document.documentElement.clientHeight - 300,
+        isRadioDept: false,
+        isMultipleDept: true,
+        isRadioUser: true,
     })
-    const { title, layoutList, list, select, search } = toRefs(data);
+    const { title, layoutList, list, select, search, height, isRadioDept, isRadioUser, isMultipleDept } = toRefs(data);
     const formState = reactive({
 
     })
@@ -123,11 +134,37 @@
             data.search[attribute.targetValue] = listData;
         })
     }
+
+    onMounted(()=>{
+        window.addEventListener("resize",e=>{
+            data.height = document.documentElement.clientHeight - 300;
+        })
+    })
+
+    const cancelDeptModal = (params) =>{
+        data.isRadioDept = params;
+        data.isMultipleDept = params;
+    }
+    // 弹框选中部门
+    const handleDeptParams = (params) => {
+        console.log("deptData",params);
+        data.isRadioDept = false;
+        data.isMultipleDept = false;
+    }
+
+    const cancelUserModal = (params) =>{
+        data.isRadioUser = params;
+    }
+    const handleUserParams = (params) => {
+        console.log("userData",params);
+        data.isRadioUser = false;
+    }
+
 </script>
 <style lang="less">
     @import url('@/style/modal.less');
     .ant-modal-content .modalContainer .modalCenter{
-        height: 500px !important;
+        /* height: 500px !important; */
     }
     .section{
         .sectionTitle{

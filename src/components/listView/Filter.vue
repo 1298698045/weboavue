@@ -100,6 +100,9 @@
         data.current++;
         var index = data.current;
         setFormStyle(index);
+        nextTick(()=>{
+            resetForm();
+        })
     }
     // 全部删除
     const handleAllDelete = () => {
@@ -140,6 +143,9 @@
         // console.log("itemRefs123123", itemRefs[index].el.offsetLeft);
         // console.log("panelBdRef.value.scrollTop",panelBdRef.value.scrollTop)
         // data.isFormModal = true;
+        formState.field = item.field;
+        formState.operator = item.operator;
+        formState.val = item.val;
         data.current = index;
         setFormStyle(index);
         // let top = itemRefs[index].el.offsetTop;
