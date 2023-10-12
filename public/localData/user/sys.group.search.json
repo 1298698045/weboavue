@@ -1,0 +1,126 @@
+{
+  "status": 1,
+  "msg": "",
+  "rowsPerPage": 50,
+  "totalRecords": 13,
+  "page": 1,
+  "listData": [
+    {
+      "GroupId": "1350c017-838a-4b73-909a-f820398be65e",
+      "Name": "护士长",
+      "Quantity": "18",
+      "CreatedOn": "2016-03-21 15:23:23",
+      "CreatedByName": "",
+      "CreatedBy": "c7373b02-7c1c-4c5b-b7fc-5accc088003c",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "00b8489d-e6c4-40e4-aa24-6ad198d139d2",
+      "Name": "纪检小组",
+      "Quantity": "6",
+      "CreatedOn": "2017-12-27 09:04:22",
+      "CreatedByName": "jackliu3",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "4e79774d-75c1-434d-94a8-c615802ebacd",
+      "Name": "奖金上报员",
+      "Quantity": "6",
+      "CreatedOn": "2018-01-07 14:26:10",
+      "CreatedByName": "jackliu3",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "7de2d44a-daa3-4687-bfff-3b6ce4589c95",
+      "Name": "经审小组除审计",
+      "Quantity": "0",
+      "CreatedOn": "2017-12-26 13:24:54",
+      "CreatedByName": "jackliu3",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "ecf20814-75e7-4a00-a11d-faabbfe63329",
+      "Name": "考勤员",
+      "Quantity": "0",
+      "CreatedOn": "2017-12-26 15:31:28",
+      "CreatedByName": "jackliu3",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "199b1ac1-0b84-4095-b1de-e380081267c3",
+      "Name": "临床医技科室负责人",
+      "Quantity": "14",
+      "CreatedOn": "2017-12-12 21:13:03",
+      "CreatedByName": "jackliu3",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "5f7c5763-23c8-4ed8-8b92-b4245561e4a6",
+      "Name": "统计日报分析组",
+      "Quantity": "9",
+      "CreatedOn": "2018-01-07 14:29:09",
+      "CreatedByName": "jackliu3",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "9c676aa4-470b-4041-9cbf-9375a379b18f",
+      "Name": "统计日报组",
+      "Quantity": "31",
+      "CreatedOn": "2018-01-07 14:31:32",
+      "CreatedByName": "jackliu3",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "18dde19c-431a-4baa-8357-368c81d28266",
+      "Name": "系统维护组",
+      "Quantity": "6",
+      "CreatedOn": "2015-04-27 15:42:06",
+      "CreatedByName": "",
+      "CreatedBy": "9deb9cc4-32cd-46f9-b005-e2723430cc4b",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "2840a66b-9437-47e7-93d4-4e2f9e169b0f",
+      "Name": "院办",
+      "Quantity": "6",
+      "CreatedOn": "2015-09-10 06:52:43",
+      "CreatedByName": "合同管理员",
+      "CreatedBy": "27a909e1-9fb4-4c67-afcd-3dc9032fdd6b",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "e2eaeacc-f815-422f-9d93-403f79c93477",
+      "Name": "院领导",
+      "Quantity": "6",
+      "CreatedOn": "2017-08-23 16:54:30",
+      "CreatedByName": "jackliu3",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "398f4bcf-406d-47f9-8a13-f351f312bb1a",
+      "Name": "职能科室负责人",
+      "Quantity": "23",
+      "CreatedOn": "2017-08-23 16:55:57",
+      "CreatedByName": "jackliu3",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "BusinessUnitId": ""
+    },
+    {
+      "GroupId": "fd56f79d-c61a-49dd-8f1d-86bb2486cb08",
+      "Name": "中层干部",
+      "Quantity": "72",
+      "CreatedOn": "0001-01-01 00:00:00",
+      "CreatedByName": "",
+      "CreatedBy": "9deb9cc4-32cd-46f9-b005-e2723430cc4b",
+      "BusinessUnitId": ""
+    }
+  ]
+}

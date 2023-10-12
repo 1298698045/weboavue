@@ -40,7 +40,13 @@ const Interface = {
 
     entityConfig: "/localData/entity.config.get.json", // 通用弹窗布局配置
     picklist: "/localData/layout.picklistvalues.get.json",
-    treeList: "/localData/tree.get.json"
+    treeList: "/localData/tree.get.json",
+    user: {
+        mybusinessUser: "/localData/user.mybusiness.getlist.json", // 同部门下用户
+        roleUser: "/localData/sys.role.search.json", // 角色
+        groupList: "/localData/sys.group.search.json", // 小组列表
+        groupUser: "/localData/sys.group.member.search.json", // 小组下用户
+    }
 
 }
 export default Interface;

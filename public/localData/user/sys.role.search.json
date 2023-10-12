@@ -1,0 +1,259 @@
+{
+  "status": 1,
+  "msg": "",
+  "rowsPerPage": 1,
+  "total": 50,
+  "page": 1,
+  "listData": [
+    {
+      "RoleId": "9da90b32-6dc9-42a6-a210-99db1409a855",
+      "Name": "办文人员",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "ddd26389-6fa3-430e-9027-705f1cc4dccc",
+      "Name": "保卫处副处长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "b5ef3bb9-85e1-4c50-9316-2c39a1634003",
+      "Name": "标准用户",
+      "Quantity": "1"
+    },
+    {
+      "RoleId": "c4607fa7-09d5-4874-9e94-0718d38b33f5",
+      "Name": "病案科主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "2d741d3b-f16e-4fe1-b343-04e8d6f692b8",
+      "Name": "财务处处长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "fb3620c0-8948-4455-9b9b-d829b088218b",
+      "Name": "财务处副处长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "e6e02b7a-0f7b-47ee-82c4-f1cc1e44525b",
+      "Name": "采购员",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "551562ba-36d4-4676-825d-f2dc36dcd005",
+      "Name": "党办主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "f96251e2-105c-437a-9a75-6326c2a69311",
+      "Name": "党委书记",
+      "Quantity": "1"
+    },
+    {
+      "RoleId": "3ca79af7-4646-4a42-8196-456f2a32266b",
+      "Name": "放射影像科主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "a3a28d34-0d45-4f07-adea-7468c8442ba9",
+      "Name": "副院长",
+      "Quantity": "2"
+    },
+    {
+      "RoleId": "44a34bb3-bb6d-49b4-b317-7801d71ce7c6",
+      "Name": "工会主席",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "5ae0e874-d74a-44c1-9ebe-9c3690467118",
+      "Name": "后勤分管院长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "6aa5b1a5-d5a7-439e-8174-934547de2be1",
+      "Name": "护理部主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "65994987-bb34-42bc-8ac3-c7eae2cb6ecc",
+      "Name": "护士长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "59fc94d1-fe91-4d10-b244-09be1383f6ba",
+      "Name": "急诊室主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "10690653-fbbc-430b-8231-ac3cb14509d4",
+      "Name": "纪检监察办公室主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "a12f1cf6-ee4a-42c3-95c2-56ead3e77e9a",
+      "Name": "纪委书记",
+      "Quantity": "1"
+    },
+    {
+      "RoleId": "48774f4d-0333-4d89-a9e5-7bec11bad1eb",
+      "Name": "教育处处长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "49c7ff3e-e0a1-44b0-9ebe-f573db34e36e",
+      "Name": "科技处处长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "c651a42d-e7a4-4958-8a1d-54cf7551a844",
+      "Name": "科教分管院长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "7f87d278-a244-4a4b-97d5-8f6b8198d2aa",
+      "Name": "科室领导",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "ec1d3775-b85c-4814-bb73-f7c570031097",
+      "Name": "离退休办公室主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "82dbbad5-88e3-42cd-a873-da21799a78f0",
+      "Name": "临床心理科主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "60e5a1ad-1592-48cc-93ec-f4bea69cd0fb",
+      "Name": "门诊部主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "c9435aee-4b86-4c6f-a8ca-25346132a8b5",
+      "Name": "人事科科长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "6bc4fd12-bc7d-4713-b749-82d67f1977c9",
+      "Name": "人事专员",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "22a2cac1-0a7e-458a-9d79-b7f911677ef4",
+      "Name": "社区防治科科长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "629c71e3-9b67-418b-be02-d7cd155ea547",
+      "Name": "审计处处长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "cd38c823-5f5b-4959-9444-4103c20be8b7",
+      "Name": "食堂管理员",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "8828f4ec-a57f-48ba-9fb5-9443a71e13c9",
+      "Name": "团委书记",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "3248e241-cab9-4fae-81a5-1fc0711f57f9",
+      "Name": "系统管理员",
+      "Quantity": "2"
+    },
+    {
+      "RoleId": "7bd38d21-7eac-4d9a-833d-f66034c2f909",
+      "Name": "信息发布员",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "7c2dfe48-12f2-4018-a506-53843e47a4ca",
+      "Name": "信息中心科长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "2d197242-eb3d-435b-b7eb-dcb82e0645b0",
+      "Name": "宣传中心主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "457f03fd-2c47-4897-8bf2-37e41f518d5e",
+      "Name": "医工副处长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "d8fe8666-9118-4186-967d-641df835d513",
+      "Name": "医患办主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "f8b231b9-a5fd-44a3-94f2-6afe78ada393",
+      "Name": "医疗保险办公室主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "5099c17b-70cb-4dee-8684-2a4e97e2dc54",
+      "Name": "医务处处长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "0f89ba87-defe-4e5d-ab81-3230b0316eba",
+      "Name": "医务处副处长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "f789fb40-4847-46df-b20e-bb5060b944ee",
+      "Name": "院办副主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "8680b4c2-2563-4255-9694-fb9ad2ea222f",
+      "Name": "院办主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "8cc0246f-5221-4ae0-a077-c95dda05fedb",
+      "Name": "院长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "92346769-0fff-48a4-b311-54dc25514a7f",
+      "Name": "院长助理",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "62e1cdac-166c-4459-9ad9-2cb3a0d86a42",
+      "Name": "运营部主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "1764895d-a5f9-44cc-88b3-2e98b9b892de",
+      "Name": "质管办主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "bc51dad3-c164-4d29-ba1b-6fffa2e6f1be",
+      "Name": "重点实验室主任",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "0107de19-700b-47ba-a0be-eeeb7ffaa01f",
+      "Name": "总会计师",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "d826cee6-64af-426a-91d0-ef3d320d29f3",
+      "Name": "总务处处长",
+      "Quantity": ""
+    },
+    {
+      "RoleId": "4d8c5a2b-f714-4a7b-982d-30ac30e2df13",
+      "Name": "总务处副处长",
+      "Quantity": ""
+    }
+  ]
+}
