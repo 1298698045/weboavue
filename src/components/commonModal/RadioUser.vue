@@ -9,7 +9,7 @@
             </template>
             <div class="modalContainer">
                 <div class="headerTab">
-                    <a-tabs v-model:activeKey="currentTab">
+                    <a-tabs v-model:activeKey="currentTab" @change="changeTab">
                         <a-tab-pane :key="index" :tab="item.name" v-for="(item,index) in tabs"></a-tab-pane>
                     </a-tabs>
                     <div class="search">
@@ -17,13 +17,27 @@
                     </div>
                 </div>
                 <div class="modalCenter">
-                    <div class="tabContainer">
+                    <div class="tabContainer" v-if="currentTab==1">
                         <ul class="userBox">
-                            <li class="userItem">
+                            <li class="userItem" v-for="(item,index) in sameDeptUserList" :key="index">
                                 <div class="avatar"></div>
                                 <div class="info">
-                                    <p class="name">oa管理员</p>
+                                    <div>
+                                        <span class="name">{{item.FullName}}</span>/{{item.UserName}}/{{ item.EmployeeNo }}
+                                    </div>
                                     <p class="dept">部门</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tabContainer" v-if="currentTab==5">
+                        <ul class="userBox">
+                            <li class="userItem" v-for="(item,index) in roleList" :key="index">
+                                <div class="avatar"></div>
+                                <div class="info">
+                                    <div>
+                                        <span class="name">{{item.Name}}</span>
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -32,8 +46,8 @@
             </div>
             <template #footer>
                 <div>
-                    <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
-                    <a-button @click="clearData">清除</a-button>
+                    <!-- <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
+                    <a-button @click="clearData">清除</a-button> -->
                     <a-button @click="handleCancel">取消</a-button>
                 </div>
             </template>
@@ -58,10 +72,12 @@
     }
 
     const data = reactive({
-        currentTab: 0,
+        currentTab: 1,
         deptTreeList: [],
         deptList: [],
-        selectData: {}
+        selectData: {},
+        sameDeptUserList: [],
+        roleList: []
     })
     const tabs = toRaw([
         {
@@ -89,7 +105,31 @@
             name: '角色'
         }
     ])
-    const { currentTab, deptTreeList, deptList, selectData } = toRefs(data);
+    const { currentTab, deptTreeList, deptList, selectData, sameDeptUserList, roleList } = toRefs(data);
+
+    const getSameDeptUser = () => {
+        proxy.$get(Interface.user.mybusinessUser,{}).then(res=>{
+            // console.log("res",res);
+            data.sameDeptUserList = res.listData;
+        })
+    }
+    getSameDeptUser();
+
+    // 角色
+    const getRoleList = () => {
+        proxy.$get(Interface.user.roleUser,{}).then(res=>{
+            // console.log("res",res);
+            data.roleList = res.listData;
+        })
+    }
+    const changeTab = (e) => {
+        console.log("e",e);
+        switch(e){
+            case 5:
+                getRoleList();
+                break;
+        }
+    }
     const getTreeDept = () => {
         proxy.$get(Interface.treeList, {
             entity: "organizationtree",
@@ -102,7 +142,7 @@
             console.log("deptTreeList", data.deptTreeList)
         })
     }
-    getTreeDept();
+    // getTreeDept();
 
     const formTreeData = (list) => {
         var result = [];
@@ -162,5 +202,33 @@
     :deep :where(.css-dev-only-do-not-override-kqecok).ant-tabs>.ant-tabs-nav,
     :where(.css-dev-only-do-not-override-kqecok).ant-tabs>div>.ant-tabs-nav {
         margin: 0 !important;
+    }
+
+    .tabContainer{
+        .userBox{
+            .userItem{
+                display: flex;
+                align-items: center;
+                padding: 10px 20px;
+                border-bottom: 1px solid #e2e3e5;
+                .avatar{
+                    width: 40px;
+                    height: 40px;
+                    background: #e2e3e5;
+                    border-radius: 50%;
+                }
+                .info{
+                    flex: 1;
+                    margin-left: 10px;
+                    .name{
+                        color: var(--textColor);
+                    }
+                }
+            }
+            .userItem:hover{
+                cursor: pointer;
+                background: #f4f4f4;
+            }
+        }
     }
 </style>
