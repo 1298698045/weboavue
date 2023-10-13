@@ -68,7 +68,7 @@
         currentTab: '1',
         deptTreeList: [],
         deptList: [],
-        selectData: []
+        selectData: {}
     })
     const { currentTab, deptTreeList, deptList, selectData } = toRefs(data);
     const getTreeDept = () => {
@@ -108,16 +108,16 @@
 
     const handleSelectTree = (selectedKeys,selectedNodes) => {
         console.log("e",selectedKeys,selectedNodes);
-        data.selectData = [{
+        data.selectData = {
             ID: selectedNodes.node.id,
             Name: selectedNodes.node.text
-        }]
+        }
     }
     const clearData = () => {
         data.selectData = [];
     }
     const handleSubmit = () => {
-        if(data.selectData.length){
+        if(Object.keys(data.selectData).length){
             emit("select-val", data.selectData);
         }else {
             message.error('请选择部门!');

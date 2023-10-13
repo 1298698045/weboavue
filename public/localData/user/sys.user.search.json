@@ -1,0 +1,38 @@
+{
+  "status": 1,
+  "msg": "",
+  "rowsPerPage": 50,
+  "page": 1,
+  "listData": [
+    {
+      "systemUserId": "c81b58e3-1c8a-4902-b96e-0f5c1c909ea2",
+      "userName": "18309",
+      "fullName": "姚奇",
+      "createdOn": "2017-11-29",
+      "createdBy": "",
+      "businessUnitId": "c3256c12-a98c-4228-a70a-02a6261ac572",
+      "EmployeeId": "18309",
+      "Pinyin": "yq",
+      "MobilePhone": "",
+      "InternalEMailAddress": "",
+      "BusinessUnitIdName": "其他",
+      "OrganizationName": "北京市凤凰世纪健康医院",
+      "PhotoUrl": "/rest?method=sys.user.avatar.get&sessionKey=c81b58e3-1c8a-4902-b96e-0f5c1c909ea2&UserId=c81b58e3-1c8a-4902-b96e-0f5c1c909ea2"
+    },
+    {
+      "systemUserId": "2f4bc29d-3b7d-458f-90f0-874ec805b0c4",
+      "userName": "shitang01",
+      "fullName": "食堂管理员",
+      "createdOn": "2015-04-23",
+      "createdBy": "",
+      "businessUnitId": "c3256c12-a98c-4228-a70a-02a6261ac572",
+      "EmployeeId": "shitang01",
+      "Pinyin": "fby",
+      "MobilePhone": "",
+      "InternalEMailAddress": "",
+      "BusinessUnitIdName": "其他",
+      "OrganizationName": "北京市凤凰世纪健康医院",
+      "PhotoUrl": "/rest?method=sys.user.avatar.get&sessionKey=2f4bc29d-3b7d-458f-90f0-874ec805b0c4&UserId=2f4bc29d-3b7d-458f-90f0-874ec805b0c4"
+    }
+  ]
+}

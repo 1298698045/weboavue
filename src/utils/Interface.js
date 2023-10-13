@@ -46,6 +46,7 @@ const Interface = {
         roleUser: "/localData/user/sys.role.search.json", // 角色
         groupList: "/localData/user/sys.group.search.json", // 小组列表
         groupUser: "/localData/user/sys.group.member.search.json", // 小组下用户
+        sysUser: "/localData/user/sys.user.search.json"
     }
 
 }

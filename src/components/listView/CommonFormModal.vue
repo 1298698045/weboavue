@@ -13,40 +13,41 @@
                             <div class="sectionTitle">{{item.title}}</div>
                             <div class="sectionRow" v-for="(row,idx) in item.rows" :key="idx">
                                 <div class="sectionItem" v-for="(attribute,attributeIdx) in row.attributes" :key="attributeIdx">
-                                    <a-form-item v-if="['L','LT','DT'].includes(attribute.attributes.type)"
+                                    <a-form-item :name="attribute.targetValue" v-if="['L','LT','DT'].includes(attribute.attributes.type)"
                                      :label="attribute.label" :rules="[{ required: attribute.attributes.required, message: '请选择'+attribute.label }]">
                                         <a-select
                                             allowClear
-                                            v-model:value="list[attribute.targetValue]"
+                                            v-model:value="formState[attribute.targetValue]"
                                             :placeholder="'请选择'+attribute.label">
                                             <a-select-option v-for="(option,optionIdx) in select[attribute.targetValue]&&select[attribute.targetValue].values"
                                              :key="optionIdx" :value="option.value">{{option.label}}</a-select-option>
                                         </a-select>
                                     </a-form-item>
-                                    <a-form-item v-else-if="['O','Y','U','Y_MD'].includes(attribute.attributes.type)"
+                                    <a-form-item :name="attribute.targetValue" v-else-if="['O','Y','U','Y_MD'].includes(attribute.attributes.type)"
                                      :label="attribute.label" :rules="[{ required: attribute.attributes.required, message: '请选择'+attribute.label }]">
                                         <a-select
                                             allowClear
-                                            v-model:value="list[attribute.targetValue]"
+                                            v-model:value="formState[attribute.targetValue]"
                                             :default-active-first-option="false"
                                             :filter-option="false"
                                             showSearch
                                             @search="(e)=>{searchlookup(e,attribute)}"
                                             @dropdownVisibleChange="(e)=>{searchlookup('',attribute)}"
                                             :placeholder="'请选择'+attribute.label">
-                                            <template #suffixIcon><SearchOutlined class="ant-select-suffix" @click.stop /></template>
+                                            <template #suffixIcon><SearchOutlined class="ant-select-suffix" @click="handleOpenLook(attribute)" /></template>
                                             <a-select-option v-for="(option,optionIdx) in search[attribute.targetValue]"
                                              :key="optionIdx" :value="option.ID">{{option.Name}}</a-select-option>
                                         </a-select>
+                                        <a-button @click="handleOpenLook(attribute)">搜索</a-button>
                                     </a-form-item>
-                                    <a-form-item v-else-if="attribute.attributes.type=='D'" :label="attribute.label">
-                                        <a-date-picker valueFormat="YYYY-MM-DD" :placeholder="'请选择'+attribute.label" v-model:value="list[attribute.targetValue]" />
+                                    <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type=='D'" :label="attribute.label">
+                                        <a-date-picker valueFormat="YYYY-MM-DD" :placeholder="'请选择'+attribute.label" v-model:value="formState[attribute.targetValue]" />
                                     </a-form-item>
-                                    <a-form-item v-else-if="attribute.attributes.type=='X'" :label="attribute.label">
-                                        <a-textarea :rows="4" v-model:value="list[attribute.targetValue]" />
+                                    <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type=='X'" :label="attribute.label">
+                                        <a-textarea :rows="4" v-model:value="formState[attribute.targetValue]" />
                                     </a-form-item>
-                                    <a-form-item v-else :label="attribute.label">
-                                        <a-input v-model:value="list[attribute.targetValue]"></a-input>
+                                    <a-form-item :name="attribute.targetValue" v-else :label="attribute.label">
+                                        <a-input v-model:value="formState[attribute.targetValue]"></a-input>
                                     </a-form-item>
                                 </div>
                             </div>
@@ -54,7 +55,8 @@
                     </a-form>
                     <radio-dept :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
                     <multiple-dept :isShow="isMultipleDept"  @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
-                    <radio-user :isShow="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams" ></radio-user>
+                    <radio-user :isShow="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams" :localId="localId" ></radio-user>
+                    <multiple-user :isShow="isMultipleUser" @cancel="cancelMuUserModal"  @selectVal="handleMuUserParams" />
                 </div>
             </div>
             <template #footer>
@@ -68,11 +70,12 @@
 </template>
 <script setup>
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps,defineExpose,
-        defineEmits } from "vue";
+        defineEmits, toRaw } from "vue";
     import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
     import RadioDept from "@/components/commonModal/RadioDept.vue";
     import MultipleDept from "@/components/commonModal/MultipleDept.vue";
     import RadioUser from "@/components/commonModal/RadioUser.vue";
+    import MultipleUser from "@/components/commonModal/MultipleUser.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     console.log(document.documentElement.clientHeight)
@@ -80,12 +83,10 @@
     const props = defineProps({
         isShow: Boolean,
     })
+    const formRef = ref();
     const emit = defineEmits(['cancel']);
     const handleCancel = ()=> {
         emit("cancel", false);
-    }
-    const handleSubmit = ()=> {
-
     }
     const data = reactive({
         title: "新建部门变动",
@@ -95,14 +96,16 @@
         search: {},
         height: document.documentElement.clientHeight - 300,
         isRadioDept: false,
-        isMultipleDept: true,
-        isRadioUser: true,
+        isMultipleDept: false,
+        isRadioUser: false,
+        localId: "",
+        isMultipleUser: true
     })
-    const { title, layoutList, list, select, search, height, isRadioDept, isRadioUser, isMultipleDept } = toRefs(data);
+    const { title, layoutList, list, select, search, height, isRadioDept, isRadioUser, isMultipleDept, localId, isMultipleUser } = toRefs(data);
     const formState = reactive({
 
     })
-
+    
     const getConfig = () => {
         proxy.$get(Interface.entityConfig,{}).then(res=>{
             let componentDef = res.actions[0].returnValue.componentDef;
@@ -113,6 +116,9 @@
                 data.list[item.name] = { Id: '', Name: '' };
                 data.search[item.name] = [];
             })
+            for(var key in data.list){
+                formState[key] = data.list[key];
+            }
         })
     }
     getConfig();
@@ -150,16 +156,60 @@
         console.log("deptData",params);
         data.isRadioDept = false;
         data.isMultipleDept = false;
+        // 单选部门赋值
+        var isEmpty = data.search[data.localId].some(item=>item.ID==params.ID);
+        if(!isEmpty){
+            data.search[data.localId].push({
+                ID: params.ID,
+                Name: params.Name
+            })
+        }
+        formState[data.localId] = params.ID;
     }
 
     const cancelUserModal = (params) =>{
         data.isRadioUser = params;
     }
+    // 关闭用户多选弹窗
+    const cancelMuUserModal = (params) => {
+        data.isMultipleUser = params;
+    }
     const handleUserParams = (params) => {
         console.log("userData",params);
+        console.log("赋值字段", data.localId);
         data.isRadioUser = false;
+        formState[data.localId] = params.id;
+        var isEmpty = data.search[data.localId].some(item=>item.ID==params.id);
+        if(!isEmpty){
+            data.search[data.localId].push({
+                ID: params.id,
+                Name: params.name
+            })
+        }
+    }
+    // 多选用户
+    const handleMuUserParams = (params) => {
+        
+    }
+    // 查找类型打开弹窗
+    const handleOpenLook = (attribute)=> {
+        let localId = attribute.localId;
+        data.localId = localId;
+        let sObjectType = attribute.attributes.sObjectType;
+        if(sObjectType==30020){
+            data.isRadioUser = true;
+        }else if(sObjectType==10){
+            data.isRadioDept = true;
+        }
     }
 
+    const handleSubmit = ()=> {
+        formRef.value.validate().then(() => {
+            console.log('values', formState, toRaw(formState));
+        }).catch(err => {
+            console.log('error', err);
+        });
+    }
 </script>
 <style lang="less">
     @import url('@/style/modal.less');
