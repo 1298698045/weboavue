@@ -1,0 +1,38 @@
+{
+  "status": 1,
+  "data": {
+    "EmpJobTransferId": "4122f9a1-a399-4bd3-b68c-89d159e5ee91",
+    "Name": "王虎",
+    "EmployeeId": "821da311-e8b3-45d1-81e9-56ee9bfb7921",
+    "ApplyDate": "2023-09-25",
+    "OutDate": "2023-09-25",
+    "TransferTypeCode": "正常调动",
+    "TransferDate": "2023-09-25",
+    "FromDept": "63a1820f-e332-4c71-bfb5-39677c7ecdd8",
+    "ToDept": "a97909d8-d097-4ae0-92e7-e1c5aa790400",
+    "FromPost": "",
+    "ToPost": "",
+    "StatusCode": "3",
+    "GroupId": "",
+    "Description": "考勤调出操作:",
+    "OwningUser": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "CreatedOn": "2023-09-25 14:19:22",
+    "ModifiedOn": "2023-10-16 19:57:15",
+    "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "ModifiedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "ApproveOfToDept": "",
+    "ApproveOfFromDeptMgr": "",
+    "ApproveOfSuperiorDept": "",
+    "ApproveOfIncharge": "",
+    "ApproveOfTop": "",
+    "ApproveOfHR": "",
+    "ApproveOfXzFengguan": ""
+  },
+  "recordRep": {
+    "id": "4122f9a1-a399-4bd3-b68c-89d159e5ee91",
+    "objTypeCode": 30027,
+    "fields": {}
+  },
+  "recordSaveParams": {},
+  "refreshFields": []
+}
