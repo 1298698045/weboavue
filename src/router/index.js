@@ -138,6 +138,32 @@ const routes = [
     ]
   },
   {
+    path: "/oa",
+    name: "Oa",
+    component: Layout,
+    redirect: "/oa/addressBook",
+    children:[
+      {
+        path:"/oa/addressBook",
+        component: () => import("../views/oa/addressBook/index.vue"),
+        name: "通讯录",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian"
+        }
+      },
+      {
+        path:"/oa/group",
+        component: () => import("../views/oa/group/index.vue"),
+        name: "小组",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian"
+        }
+      },
+    ]
+  },
+  {
     path: "/detail",
     name: "Detail",
     component: ()=> import("../views/detail/detail.vue")

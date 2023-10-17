@@ -447,7 +447,6 @@ const New = () => {
 const handleClickBtn = (type) => {
   if (typeof eval(type) == "function") {
     eval(type + "();");
-    
   }
 };
 </script>

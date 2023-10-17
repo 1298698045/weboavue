@@ -50,5 +50,10 @@ const Interface = {
     sysUser: "/localData/user/sys.user.search.json",
   },
   saveRecord: "/localData/entity.saverecord.json",
+  // 通讯录
+  addressBook: {
+    lastList: "/localData/addressBook/user.latestuse.getlist.json", // 最近联系人
+    addresslist: "/localData/addressBook/addresslist.search.json", // 全部联系人
+  }
 };
 export default Interface;
