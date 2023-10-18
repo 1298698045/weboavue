@@ -82,7 +82,9 @@ ul,ol,li{list-style:none;}
 .ant-tree-switcher {
     line-height: 30px !important;
 }
-
+.ant-tabs-nav{
+    margin: 0 !important;
+}
 
 /* a-tab */
 .ant-tabs-tab{

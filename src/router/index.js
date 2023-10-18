@@ -164,6 +164,11 @@ const routes = [
     ]
   },
   {
+    path: "/group/detail",
+    name: "GroupDetail",
+    component: ()=> import("../views/oa/groupDetail/index.vue")
+  },
+  {
     path: "/detail",
     name: "Detail",
     component: ()=> import("../views/detail/detail.vue")

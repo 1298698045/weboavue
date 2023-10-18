@@ -36,11 +36,11 @@
                 </div>
             </div>
             <div class="rightContainer">
-                <div class="sanlan" @click="handleLeftShow">
-                    <span class="icon">
+                <div class="sanlan" :class="{'active':!isLeft}" @click="handleLeftShow">
+                    <!-- <span class="icon">
                         <LeftOutlined v-if="isLeft" />
                         <RightOutlined v-else />
-                    </span>
+                    </span> -->
                 </div>
                 <div class="rightTab">
                     <a-tabs v-model:activeKey="activeKey" @change="changeRightTab">
@@ -326,7 +326,7 @@
         isLeft: true,
         sortField: {
             id: 'EmployeeId',
-            name: '自定义'
+            name: '全部'
         }
     })
     const { activeKey, deptTreeData, pageNumber, pageSize, listData,

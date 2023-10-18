@@ -54,6 +54,10 @@ const Interface = {
   addressBook: {
     lastList: "/localData/addressBook/user.latestuse.getlist.json", // 最近联系人
     addresslist: "/localData/addressBook/addresslist.search.json", // 全部联系人
+  },
+  group: {
+    list: "/localData/group/sys.group.member.search.json",
+    statusList: "/localData/group/chatter.status.search.json", // 动态
   }
 };
 export default Interface;

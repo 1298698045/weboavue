@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.0",
+    "@antv/g2": "^5.1.5",
     "@surely-vue/table": "^4.1.9",
     "@tinymce/tinymce-vue": "^5.1.1",
     "ant-design-vue": "4.x",

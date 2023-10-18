@@ -1,0 +1,40 @@
+{
+  "status": "1",
+  "msg": "",
+  "listData": [
+    {
+      "ChatterId": "f4ebdc70-2ff0-4678-8729-4e4d0a79f5c3",
+      "BuidingName": "",
+      "ImageUrls": "",
+      "Location": "",
+      "Longitude": "",
+      "Latitude": "",
+      "NumOfComment": "",
+      "NumOfLike": "",
+      "NumOfForward": "",
+      "DeptName": "信息中心",
+      "HasLike": "false",
+      "IsLike": "False",
+      "CreatedOn": "2023-10-17 09:22",
+      "ModifiedOn": "2023-10-17 09:22",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "OwningUser": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "OwningUserName": "jackliu3",
+      "VisibleType": "2",
+      "ChatterTypeCode": "",
+      "Description": "123",
+      "imgs": []
+    }
+  ],
+  "UserStatics": {
+    "SystemUserId": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "SystemUserIdName": "jackliu3",
+    "Post": 0,
+    "Comment": 0,
+    "Follower": 0,
+    "Follow": 0,
+    "Read": 0,
+    "Favorate": 0,
+    "IsFollowed": "0"
+  }
+}

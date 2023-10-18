@@ -55,72 +55,6 @@
                 overflow: hidden;
                 padding: 20px 15px;
             }
-            .rightAside{
-                min-width: 20%;
-                .panel{
-                    padding: 20px;
-                    background: #fff;
-                    border-radius: 4px;
-                    margin-bottom: 16px;
-                    cursor: pointer;
-                    overflow: auto;
-                    .panel-head{
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        margin-bottom: 19px;
-                        .panel-title{
-                            font-size: 16px;
-                            color: #1d2129;
-                            font-weight: bold;
-                        }
-                    }
-                    .panel-bd{
-                        .empty {
-                            height: 100%;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            flex-direction: column;
-                            text-align: center;
-                            color: #666;
-                            img{
-                                width: 50px;
-                            }
-                            .emptyDesc{
-                                font-size: 14px;
-                            }
-                        }
-                        .relevantList{
-                            .relevantItem{
-                                width: 100%;
-                                position: relative;
-                                padding: 13px 8px;
-                                border-bottom: 1px solid #e5e6eb;
-                                .relevantTitle{
-                                    width: 75%;
-                                    font-size: 14px;
-                                    color: #1d2129;
-                                }
-                                .relevantTimerInfo{
-                                    font-size: 12px;
-                                    color: #86909c;
-                                    padding-top: 10px;
-                                }
-                                .anticon-delete{
-                                    position: absolute;
-                                    right: 10px;
-                                    top: 25px;
-                                    font-size: 16px;
-                                }
-                            }
-                            .relevantItem:hover{
-                                background: #f2f3f5 !important;
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
     .detail-footer{
@@ -156,5 +90,72 @@
     }
     .ant-btn{
         margin-top: 12px;
+    }
+}
+
+.rightAside{
+    min-width: 20%;
+    .panel{
+        padding: 20px;
+        background: #fff;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        cursor: pointer;
+        overflow: auto;
+        .panel-head{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 19px;
+            .panel-title{
+                font-size: 16px;
+                color: #1d2129;
+                font-weight: bold;
+            }
+        }
+        .panel-bd{
+            .empty {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                text-align: center;
+                color: #666;
+                img{
+                    width: 50px;
+                }
+                .emptyDesc{
+                    font-size: 14px;
+                }
+            }
+            .relevantList{
+                .relevantItem{
+                    width: 100%;
+                    position: relative;
+                    padding: 13px 8px;
+                    border-bottom: 1px solid #e5e6eb;
+                    .relevantTitle{
+                        width: 75%;
+                        font-size: 14px;
+                        color: #1d2129;
+                    }
+                    .relevantTimerInfo{
+                        font-size: 12px;
+                        color: #86909c;
+                        padding-top: 10px;
+                    }
+                    .anticon-delete{
+                        position: absolute;
+                        right: 10px;
+                        top: 25px;
+                        font-size: 16px;
+                    }
+                }
+                .relevantItem:hover{
+                    background: #f2f3f5 !important;
+                }
+            }
+        }
     }
 }

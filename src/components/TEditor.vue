@@ -29,6 +29,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  placeholder: {
+    type: String,
+    default: false,
+  }
   // plugins: {
   //     type: [String, Array],
   //     default: "lists  table",
@@ -84,6 +88,7 @@ let init = reactive({
   // 设置插件
   plugins:
     "codesample lists advlist link autolink charmap fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
+  placeholder: props.placeholder
 });
 let content = ref("");
 </script>
