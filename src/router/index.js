@@ -172,6 +172,18 @@ const routes = [
     path: "/detail",
     name: "Detail",
     component: ()=> import("../views/detail/detail.vue")
+  },
+  {
+    path: "/email",
+    name: "Email",
+    component: ()=> import("../views/email/home/index.vue"),
+    children: [
+      {
+        path: "/email/write",
+        name: "WriteEmail",
+        component: ()=> import("../views/email/writeEmail/index.vue")
+      }
+    ]
   }
   // {
   //   path: "/about",

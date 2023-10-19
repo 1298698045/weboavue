@@ -15,7 +15,7 @@ import {
   defineEmits,
   toRaw,
 } from "vue";
-
+const emit = defineEmits(['input']);
 const props = defineProps({
   value: {
     type: String,
@@ -88,7 +88,12 @@ let init = reactive({
   // 设置插件
   plugins:
     "codesample lists advlist link autolink charmap fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
-  placeholder: props.placeholder
+  placeholder: props.placeholder,
+  statusbar: false,
+  promotion: false
 });
 let content = ref("");
+watch(content, (newVal) => {
+    emit("input", newVal);
+}, {deep: true,immediate:true});
 </script>

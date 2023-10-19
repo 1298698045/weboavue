@@ -29,12 +29,12 @@
     const props = defineProps({
         isShow: Boolean
     })
-    const emit = defineEmits(['cancel']);
+    const emit = defineEmits(['cancel','ok']);
     const handleCancel = ()=> {
         emit("cancel", false);
     }
     const handleSubmit = ()=> {
-
+        emit("ok", false);
     }
     const data = reactive({
         listData: [],

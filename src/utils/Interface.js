@@ -58,6 +58,8 @@ const Interface = {
   group: {
     list: "/localData/group/sys.group.member.search.json",
     statusList: "/localData/group/chatter.status.search.json", // 动态
+    statistics: "/localData/group/chatter.status.statistics.json", // 统计
+    addPeople: "/localData/group/sys.group.member.add.json", // 添加成员
   }
 };
 export default Interface;

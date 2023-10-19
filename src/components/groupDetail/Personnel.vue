@@ -9,10 +9,27 @@
                 </div>
             </div>
             <div class="panel-bd">
+                <div class="peopleHeader">
+                    <div class="left">
+                        <a-input-search
+                            v-model:value="searchVal"
+                            placeholder="搜索动态"
+                            style="width: 300px;"
+                            @search="onSearch"
+                        />
+                    </div>
+                    <div class="rightOption">
+                        <a-button class="ml10" type="primary">添加成员</a-button>
+                        <a-button class="ml10" type="primary">添加管理员</a-button>
+                        <a-button class="ml10" type="primary">查询</a-button>
+                        <a-button class="ml10" type="default">重置</a-button>
+                        <a-button class="ml10" type="default">导出</a-button>
+
+                    </div>
+                </div>
                 <a-table :columns="columns" :data-source="listData">
                  <template #bodyCell="{ column,index }">
                     <template v-if="column.key === 'Action'">
-                      <a-button type="text" size="small">查看</a-button>
                       <a-button type="text" size="small">删除</a-button>
                     </template>
                     <template v-if="column.key === 'index'">
@@ -83,14 +100,18 @@
         list: [],
         selectedRowKeys: [],
         loading: false,
-        listData: []
+        listData: [],
+        searchVal: ""
     })
     const columnList = toRaw(columns);
-    const { listData } = toRefs(data);
+    const { listData, searchVal } = toRefs(data);
     const getQuery = () => {
         proxy.$get(Interface.user.groupUser,{}).then(res=>{
             data.listData = res.rows;
         })
+    }
+    const onSearch = (e) => {
+        getQuery();
     }
     getQuery();
 </script>
@@ -98,6 +119,10 @@
     .relatedWrap{
         width: 100%;
     }
-    .sortIcon {
+    .peopleHeader{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
     }
 </style>

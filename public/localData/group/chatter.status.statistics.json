@@ -1,0 +1,23 @@
+{
+  "status": "1",
+  "msg": "",
+  "data": {
+    "TotalPeople": 33,
+    "TotalContent": 1,
+    "TotalQuestion": 0,
+    "TotalContentLike": 0,
+    "TotalDesc": 0,
+    "TotalUnAnser": 0,
+    "PeopleStatistics": [
+      {
+        "YearMonth": "",
+        "TotalPeople": "31"
+      },
+      {
+        "YearMonth": "202310",
+        "TotalPeople": "2"
+      }
+    ],
+    "ContentStatistics": []
+  }
+}
