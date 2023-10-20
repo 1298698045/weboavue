@@ -4,21 +4,19 @@ export default createStore({
   state: {
     collapsed: false,
     moduleName: "日程管理",
-    groupId: ""
+    groupId: "",
   },
   mutations: {
     setCollapsed(state, val) {
       state.collapsed = val;
     },
-    setModuleName(state, val){
+    setModuleName(state, val) {
       state.moduleName = val;
     },
-    setGroupId(state,val){
+    setGroupId(state, val) {
       state.groupId = val;
-    }
+    },
   },
-  actions: {
-
-  },
+  actions: {},
   modules: {},
 });

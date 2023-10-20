@@ -1,0 +1,28 @@
+{
+  "totalRecords": 2,
+  "pageNumber": 1,
+  "data": [
+    {
+      "emailId": "76e734e6-9db5-4b5a-bdaf-ad995369f2e7",
+      "subject": "传附件查看",
+      "content": "",
+      "createdOn": "2022/1/21 17:50:44",
+      "fromName": "刘优",
+      "isRead": true,
+      "isStar": false,
+      "mailTag": "inbox",
+      "isAttach": false
+    },
+    {
+      "emailId": "67832e28-0bbb-45d9-a0ed-d7303b865c42",
+      "subject": "ddd",
+      "content": "dddd",
+      "createdOn": "2021/6/16 18:06:21",
+      "fromName": "刘优",
+      "isRead": true,
+      "isStar": false,
+      "mailTag": "inbox",
+      "isAttach": false
+    }
+  ]
+}

@@ -15,7 +15,7 @@ import {
   defineEmits,
   toRaw,
 } from "vue";
-const emit = defineEmits(['input']);
+const emit = defineEmits(["input"]);
 const props = defineProps({
   value: {
     type: String,
@@ -32,7 +32,7 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: false,
-  }
+  },
   // plugins: {
   //     type: [String, Array],
   //     default: "lists  table",
@@ -90,10 +90,14 @@ let init = reactive({
     "codesample lists advlist link autolink charmap fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
   placeholder: props.placeholder,
   statusbar: false,
-  promotion: false
+  promotion: false,
 });
 let content = ref("");
-watch(content, (newVal) => {
+watch(
+  content,
+  (newVal) => {
     emit("input", newVal);
-}, {deep: true,immediate:true});
+  },
+  { deep: true, immediate: true }
+);
 </script>

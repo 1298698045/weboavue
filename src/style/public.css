@@ -2,6 +2,10 @@
     margin: 0;
     padding: 0;
 }
+button{
+    outline: 0;
+    border: none;
+}
 body{
     font-size: 14px;
 }
@@ -44,8 +48,20 @@ ul,ol,li{list-style:none;}
 .hidden{
     overflow: hidden;
 }
+.ml5{
+    margin-left: 5px;
+}
+.mr5{
+    margin-right: 5px;
+}
 .ml10{
     margin-left: 10px;
+}
+.ml16{
+    margin-left: 16px;
+}
+.mr16{
+    margin-right: 16px;
 }
 .mr10{
     margin-right: 10px;
@@ -104,4 +120,16 @@ ul,ol,li{list-style:none;}
 /*设置点击行后背景色变化，默认黄色*/
 .datagrid-row-selected {
     background: #ffffff;
+}
+
+/* 单行超出文本 */
+.rowEllipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* icon头像颜色 */
+.icon-morentouxiang {
+    color: #c9cdd4 !important;
 }

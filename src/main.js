@@ -2,7 +2,7 @@ import { createApp } from "vue";
 // import STable from '@surely-vue/table';
 // import '@surely-vue/table/dist/index.less';
 import ElementPlus from "element-plus";
-
+import 'element-plus/dist/index.css'
 // import 'v3-easyui/dist/themes/default/easyui.css';
 // import 'v3-easyui/dist/themes/icon.css';
 // import 'v3-easyui/dist/themes/vue.css';

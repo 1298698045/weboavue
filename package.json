@@ -39,11 +39,13 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/test-utils": "^2.0.0-0",
     "babel-eslint": "^10.1.0",
+    "css-loader": "^6.8.1",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.0.0",
     "lint-staged": "^9.5.0",
     "prettier": "^2.2.1",
+    "style-loader": "^3.3.3",
     "typescript": "~3.9.3",
     "vue-easytable": "^2.27.1",
     "vue-jest": "^5.0.0-0"

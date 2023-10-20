@@ -129,7 +129,7 @@
 
     .headerTab {
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
         align-items: center;
         border-bottom: 1px solid #e2e3e5;
         padding: 0 10px 10px;

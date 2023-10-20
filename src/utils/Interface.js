@@ -60,6 +60,11 @@ const Interface = {
     statusList: "/localData/group/chatter.status.search.json", // 动态
     statistics: "/localData/group/chatter.status.statistics.json", // 统计
     addPeople: "/localData/group/sys.group.member.add.json", // 添加成员
+  },
+  email: {
+    inboxList: "/localData/email/email.inbox.search.json", //邮件列表
+    myEmailFolder: "/localData/email/email.folder.my.json", // 我的文件夹
+    emailInfo: "/localData/email/email.info.get.json", // 邮件详情
   }
 };
 export default Interface;
