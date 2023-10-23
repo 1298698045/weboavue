@@ -65,6 +65,8 @@ const Interface = {
     inboxList: "/localData/email/email.inbox.search.json", //邮件列表
     myEmailFolder: "/localData/email/email.folder.my.json", // 我的文件夹
     emailInfo: "/localData/email/email.info.get.json", // 邮件详情
+    read: "/localData/email/email.read.mark.json",  // 未读/已读邮件设置
+    star: "/localData/email/email.star.mark.json", // 重要邮件
   }
 };
 export default Interface;

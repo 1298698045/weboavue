@@ -12,7 +12,7 @@
       </template>
       <div class="modalContainer">
         <p style="text-align: center">
-          如果您删除此列表视图，该视图将为所有具备访问权限的用户永久删除。是否确定要删除？
+          {{ desc }}
         </p>
       </div>
       <template #footer>
@@ -44,6 +44,10 @@ const { proxy } = getCurrentInstance();
 const labelCol = ref({ style: { width: "100px" } });
 const props = defineProps({
   isShow: Boolean,
+  desc:{
+    type: String,
+    default: "如果您删除此列表视图，该视图将为所有具备访问权限的用户永久删除。是否确定要删除？"
+  }
 });
 const emit = defineEmits(["cancel", "ok"]);
 const handleCancel = () => {

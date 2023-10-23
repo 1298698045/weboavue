@@ -260,12 +260,12 @@
                             </el-checkbox-group>
                         </div>
                     </div>
-                    <!-- <div class="emptyContent">
+                    <div class="emptyContent" v-if="!isDetail">
                         <div class="emptyContentbox">未选择邮件</div>
-                    </div> -->
+                    </div>
                     <!-- 邮件详情 -->
-                    <div class="mailContainerWrap inboxContainer">
-                        <email-detail></email-detail>
+                    <div class="mailContainerWrap inboxContainer" v-if="isDetail">
+                        <email-detail :emailId="emailId"></email-detail>
                     </div>
                 </div>
             </div>
@@ -369,10 +369,15 @@
         checkList: [],
         checkAll: [],
         isIndeterminate: false,
-        isFold: true
+        isFold: true,
+        isDetail: false,
+        emailIndex: 0,
+        pageNumber: 1,
+        pageSize: 20
     });
     const { navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
-         folderList, folderText, renameFolderId, isEdit, checkList, checkAll, isIndeterminate,isFold } = toRefs(data);
+         folderList, folderText, renameFolderId, isEdit, checkList, checkAll, isIndeterminate, isFold, 
+         isDetail, emailIndex, pageNumber, pageSize } = toRefs(data);
     let itemRefs = [];
     const handleTypeEmail = (item, index) => {
         console.log(item, index);
@@ -381,7 +386,7 @@
         if (data.ltags.indexOf("folder") != -1) {
             data.folderId = item.Id;
         }
-        // this.queryInboxList();
+        getInboxList();
     };
     const handleOpen = (item, index) => {
         item.isBook = !item.isBook;
@@ -390,7 +395,12 @@
 
     // 获取邮件列表
     const getInboxList = () => {
-        proxy.$get(Interface.email.inboxList, {}).then(res => {
+        proxy.$get(Interface.email.inboxList, {
+            ltags: data.ltags,
+            search: '',
+            pageNumber: data.pageNumber,
+            pageSize: data.pageSize
+        }).then(res => {
             data.inboxList = res.data;
             data.inboxList.forEach(function (item) {
                 data.isBook = false;
@@ -540,6 +550,16 @@
                 el
             })
             console.log("itemRefs",itemRefs)
+        }
+    }
+    // 切换邮件
+    const handleRowEmail = (item,index) => {
+        if(data.ltags=='draft'){
+            window.location.href = '/email/writeEmail.html?emailId='+item.emailId+'&isDraft=1'
+        }else {
+            data.emailId = item.emailId;
+            data.emailIndex = index;
+            data.isDetail = true;
         }
     }
 </script>

@@ -7,9 +7,41 @@
             <div class="emailOption">
                 <a-button class="ml5">回复</a-button>
                 <a-button class="ml5">转发</a-button>
-                <a-button class="ml5">移动</a-button>
-                <a-button class="ml5">删除</a-button>
-                <a-button :icon="h(EllipsisOutlined)" class="ml5"> </a-button>
+                <a-dropdown>
+                    <template #overlay>
+                        <a-menu @click="handleMenuClick" style="width: 150px;">
+                            <a-menu-item key="1">
+                                通知
+                            </a-menu-item>
+                        </a-menu>
+                    </template>
+                    <a-button class="ml5">移动</a-button>
+                </a-dropdown>
+                <a-button class="ml5" @click="handleDeleteEmail">删除</a-button>
+                <a-dropdown>
+                    <template #overlay>
+                      <a-menu>
+                        <a-menu-item key="1" @click="handleUnRead">
+                          <i class="iconfont icon-weiduyoujian"></i>
+                          设为未读邮件
+                        </a-menu-item>
+                        <a-menu-item key="2" @click="handleStar">
+                          <i class="iconfont icon-zhongyaoyoujian"></i>
+                          设为重要邮件
+                        </a-menu-item>
+                        <a-menu-item key="3">
+                          回复
+                        </a-menu-item>
+                        <a-menu-item key="4">
+                            转发
+                        </a-menu-item>
+                        <a-menu-item key="5">
+                            删除
+                        </a-menu-item>
+                      </a-menu>
+                    </template>
+                    <a-button :icon="h(EllipsisOutlined)" class="ml5"> </a-button>
+                </a-dropdown>
                 <a-button :icon="h(CloseOutlined)" class="ml5"> </a-button>
 
             </div>
@@ -54,6 +86,7 @@
                 </div>
             </div>
         </div>
+        <Delete :isShow="isDelete" :desc="'是否删除当前邮件?'" @cancel="cancelDelete" @ok="deleteEmail" />
     </div>
 </template>
 <script setup>
@@ -73,30 +106,33 @@
         h
     } from "vue";
     import {
-        EllipsisOutlined, CloseOutlined
+        EllipsisOutlined, CloseOutlined, UserOutlined
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
+    import Delete from "@/components/listView/Delete.vue";
     const { proxy } = getCurrentInstance();
-
+    const props = defineProps({
+        emailId: String
+    })
     const data = reactive({
         isDetail: false,
         isEmailTitle: false,
         detail: {},
-        emailId: "76e734e6-9db5-4b5a-bdaf-ad995369f2e7",
         ltags: "inbox",
-        receiverNames: []
+        receiverNames: [],
+        isDelete: false
     })
-    const { isDetail, isEmailTitle, detail, receiverNames } = toRefs(data);
+    const { isDetail, isEmailTitle, detail, receiverNames, isDelete } = toRefs(data);
 
     const handleClickText = () => {
         data.isDetail = !data.isDetail;
         data.isEmailTitle = !data.isEmailTitle;
     }
-
+    
     const getDetail = () => {
         proxy.$get(Interface.email.emailInfo,{
-            id: data.emailId,
+            id: props.emailId,
             ltags: data.ltags
         }).then(res=>{
             data.detail = res.data;
@@ -104,7 +140,40 @@
 
         })
     }
-    getDetail();
+    watch(()=>props.emailId,(newVal,oldVal)=>{
+        getDetail();
+    },{immediate:true,deep:true})
+    const handleDeleteEmail = () => {
+        data.isDelete = true;
+    }
+    const cancelDelete = (e) => {
+        data.isDelete = e;
+    }
+
+    const deleteEmail = () => {
+        data.isDelete = false;
+    }
+    const handleMenuClick = () => {
+
+    }
+    // 未读邮件
+    const handleUnRead = () => {
+        proxy.$get(Interface.email.read,{
+            ids: props.emailId,
+            isRead: 0
+        }).then(res=>{
+            message.success("设置成功!");
+        })
+    }
+    // 重要邮件
+    const handleStar = () => {
+        proxy.$get(Interface.email.star,{
+            Id: props.emailId,
+            IsStar: 1
+        }).then(res=>{
+            message.success("设置成功!");
+        })
+    }
 </script>
 <style lang="less" scoped>
     .readElement {
