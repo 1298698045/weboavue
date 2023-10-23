@@ -13,17 +13,23 @@
                         <div class="formWrap">
                             <a-form :model="formState" :label-col="labelCol">
                                 <a-form-item label="收件人" name="addressee"
+                                    v-if="activeKey=='1'"
                                     :rules="[{ required: true, message: '请选择收件人' }]">
                                     <a-select ref="select" v-model:value="formState.addressee" mode="multiple"
                                         placeholder="请选择收件人">
-                                        <a-select-option value="jack">Jack</a-select-option>
-                                        <a-select-option value="lucy">Lucy</a-select-option>
-                                        <a-select-option value="disabled" disabled>Disabled</a-select-option>
-                                        <a-select-option value="Yiminghe">yiminghe</a-select-option>
+                                        <a-select-option v-for="(item, index) in selectConcatsList" :key="index" :value="item.systemUserId">{{item.fullName}}</a-select-option>
+                                    </a-select>
+                                </a-form-item>
+                                <a-form-item label="群组" name="group"
+                                    v-if="activeKey=='2'"
+                                    :rules="[{ required: true, message: '请选择群组' }]">
+                                    <a-select v-model:value="formState.group" mode="multiple"
+                                        placeholder="请选择群组">
+                                        <a-select-option v-for="(item, index) in selectGroupList" :key="index" :value="item.key">{{item.value}}</a-select-option>
                                     </a-select>
                                 </a-form-item>
                                 <a-form-item label="主题" name="theme" :rules="[{ required: true, message: '请输入主题' }]">
-                                    <a-input v-model:value="formState.theme"></a-input>
+                                    <a-input v-model:value="formState.theme" placeholder="请输入主题"></a-input>
                                 </a-form-item>
                             </a-form>
                             <div class="filesWrap">
@@ -44,18 +50,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="rightContainer">
+                <div class="rightContainer" v-if="activeKey=='1'">
                     <div class="rightFixedHead">
                         <a-input-search v-model:value="searchVal" placeholder="请输入" style="width: 200px"
                             @search="onSearch" />
                         <a-button :icon="h(PlusOutlined)"></a-button>
                     </div>
                     <div class="treePeopleWrap">
-                        <a-tree blockNode  v-model:expandedKeys="DeptexpandedKeys" v-model:selectedKeys="deptSelectedKeys"
+                        <a-tree blockNode  @select="selectPeople"  v-model:expandedKeys="DeptexpandedKeys" v-model:selectedKeys="deptSelectedKeys"
                             :load-data="loadDeptNode" :tree-data="departListTree">
                         </a-tree>
-                        <a-tree blockNode @select="selectGroup" v-model:expandedKeys="expandedKeys" v-model:selectedKeys="selectedKeys"
+                        <a-tree blockNode @select="selectPeople" v-model:expandedKeys="expandedKeys" v-model:selectedKeys="selectedKeys"
                             :load-data="loadGroupNode" :tree-data="groupTreeData">
+                        </a-tree>
+                    </div>
+                </div>
+                <div class="rightContainer" v-else>
+                    <div class="treePeopleWrap">
+                        <a-tree blockNode :tree-data="departListTree2" @select="selectGroup">
+                        </a-tree>
+                        <a-tree blockNode :tree-data="groupTreeData2" @select="selectGroup">
                         </a-tree>
                     </div>
                 </div>
@@ -95,12 +109,13 @@
     import Editor from "@/components/TEditor.vue"
     import { formTreeData } from "@/utils/common.js";
     const { proxy } = getCurrentInstance();
-    const activeKey = ref();
+    const activeKey = ref('1');
     const labelCol = ref({ style: { width: '100px' } });
     const formState = reactive({
         addressee: [],
         theme: "",
-        chkSms: false
+        chkSms: false,
+        group: []
     })
     const data = reactive({
         fileList: [],
@@ -123,10 +138,26 @@
         groupDataList: [],
         DeptexpandedKeys: [],
         deptSelectedKeys: [],
-        deptTreeData: []
+        deptTreeData: [],
+        selectConcatsList: [],
+        selectGroupList: [],
+        departListTree2: [
+            {
+                title: '部门',
+                key: 1,
+                children: []
+            }
+        ],
+        groupTreeData2: [
+            {
+                title: '小组',
+                key: 1,
+                children: []
+            }
+        ],
     })
     const { fileList, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
-        deptSelectedKeys, deptTreeData, departListTree
+        deptSelectedKeys, deptTreeData, departListTree, selectConcatsList, selectGroupList, departListTree2, groupTreeData2
     } = toRefs(data);
     const handleChange = (e) => {
 
@@ -143,6 +174,7 @@
                 item.children = [];
                 return item;
             });
+            data.groupTreeData2[0].children = data.groupDataList;
         })
     }
     getGroupList();
@@ -184,10 +216,21 @@
             })
         })
     }
-    const selectGroup = (e,selectedNodes) => {
+    const selectPeople = (e,selectedNodes) => {
         console.log("e",e, selectedNodes);
-        let item = selectedNodes.node;
-        console.log(item);
+        let row = selectedNodes.node;
+        console.log(row);
+        let index = data.selectConcatsList.findIndex(item=>item.systemUserId==row.SystemUserId);
+        if(index==-1 && row.SystemUserId){
+            data.selectConcatsList.push({
+                systemUserId: row.SystemUserId,
+                fullName: row.FullName
+            });
+            formState.addressee.push(row.SystemUserId);
+        }
+        if(index>=0){
+            message.error("不能重复添加收件人！");
+        }
     }
 
     
@@ -203,6 +246,7 @@
             });
             let list = formTreeData(rows, 'id', 'pid');
             data.deptTreeData = list;
+            data.departListTree2[0].children = list;
         })
     }
     getDeptTree();
@@ -242,6 +286,22 @@
                 resolve(res);
             })
         })
+    }
+    // 选择群组
+    const selectGroup = (e,node)=>{
+        console.log(e,node);
+        let row = node.node;
+        let index = data.selectGroupList.findIndex(item=>item.key == row.id);
+        if(index==-1){
+            data.selectGroupList.push({
+                value: row.title,
+                key: row.key
+            });
+            formState.group.push(row.key);
+        }
+        if(index>=0){
+            message.error("不能重复添加群组！");
+        }
     }
 </script>
 <style lang="less" scoped>
