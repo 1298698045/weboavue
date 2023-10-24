@@ -182,6 +182,23 @@ const routes = [
     path: "/email/write",
     name: "WriteEmail",
     component: ()=> import("../views/email/writeEmail/index.vue")
+  },
+  {
+    path: "/meeting",
+    name: "Metting",
+    component: Layout,
+    redirect: "/meeting/calendar",
+    children: [
+      {
+        path: "/meeting/calendar",
+        name: "会议日历",
+        component: ()=> import("../views/meeting/calendar/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian"
+        }
+      }
+    ]
   }
   // {
   //   path: "/about",

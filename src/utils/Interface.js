@@ -67,6 +67,10 @@ const Interface = {
     emailInfo: "/localData/email/email.info.get.json", // 邮件详情
     read: "/localData/email/email.read.mark.json",  // 未读/已读邮件设置
     star: "/localData/email/email.star.mark.json", // 重要邮件
+    send: "/localData/email/email.send.json", // 发送邮件
+  },
+  meeting: {
+    userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织
   }
 };
 export default Interface;

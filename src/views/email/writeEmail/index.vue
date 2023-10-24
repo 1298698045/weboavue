@@ -11,18 +11,20 @@
                 <div class="leftContainer">
                     <div class="leftBd">
                         <div class="formWrap">
-                            <a-form :model="formState" :label-col="labelCol">
+                            <a-form ref="formRef" :model="formState" :label-col="labelCol">
                                 <a-form-item label="收件人" name="addressee"
                                     v-if="activeKey=='1'"
-                                    :rules="[{ required: true, message: '请选择收件人' }]">
-                                    <a-select ref="select" v-model:value="formState.addressee" mode="multiple"
+                                    :rules="[{ required: activeKey==1?true:false, message: '请选择收件人' }]">
+                                    <a-select :default-active-first-option="false"
+                                    allowClear :filter-option="false" showSearch
+                                    @search="getUserList" ref="select" v-model:value="formState.addressee" mode="multiple"
                                         placeholder="请选择收件人">
                                         <a-select-option v-for="(item, index) in selectConcatsList" :key="index" :value="item.systemUserId">{{item.fullName}}</a-select-option>
                                     </a-select>
                                 </a-form-item>
                                 <a-form-item label="群组" name="group"
                                     v-if="activeKey=='2'"
-                                    :rules="[{ required: true, message: '请选择群组' }]">
+                                    :rules="[{ required: activeKey==2?true:false, message: '请选择群组' }]">
                                     <a-select v-model:value="formState.group" mode="multiple"
                                         placeholder="请选择群组">
                                         <a-select-option v-for="(item, index) in selectGroupList" :key="index" :value="item.key">{{item.value}}</a-select-option>
@@ -37,11 +39,40 @@
                                     <a-upload v-model:file-list="fileList" name="file" action="/mail/attach/upload"
                                         :headers="headers" @change="handleChange">
                                         <a-button type="link">添加附件</a-button>
+                                        <template #itemRender>
+                                            
+                                        </template>
                                     </a-upload>
+                                    <div class="inboxFileList">
+                                        <div class="inboxFileItem">
+                                            <div class="leftImg">
+                                                <img :src="require('@/assets/img/avatar.png')" alt="">
+                                            </div>
+                                            <div class="rightFileInfo">
+                                                <div class="fileName rowEllipsis">
+                                                    u=3315324068,1694602888&fm=26&gp=0.jpg..jpg
+                                                </div>
+                                                <div class="fileSize"></div>
+                                                <div class="fileOptionShow">
+                                                    <div class="btns">
+                                                        <a-tooltip title="查看" placement="top">
+                                                            <a-button type="text" :icon="previewIcon"></a-button>
+                                                        </a-tooltip>
+                                                        <a-tooltip title="下载" placement="top">
+                                                            <a-button type="text" :icon="h(VerticalAlignBottomOutlined)"></a-button>
+                                                        </a-tooltip>
+                                                        <a-tooltip title="删除" placement="top">
+                                                            <a-button type="text" :icon="h(CloseOutlined)"></a-button>
+                                                        </a-tooltip>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="editor">
-                                <Editor placeholder="请输入邮件内容" />
+                                <Editor placeholder="请输入邮件内容" :height="height" @input="getContent" />
                             </div>
                             <div class="checkWrap">
                                 <a-checkbox v-model:checked="formState.chkSms">短信</a-checkbox>
@@ -54,9 +85,11 @@
                     <div class="rightFixedHead">
                         <a-input-search v-model:value="searchVal" placeholder="请输入" style="width: 200px"
                             @search="onSearch" />
-                        <a-button :icon="h(PlusOutlined)"></a-button>
+                        <a-button class="ml10" :icon="h(PlusOutlined)"></a-button>
                     </div>
                     <div class="treePeopleWrap">
+                        <a-tree blockNode  @select="selectPeople"  v-model:expandedKeys="latelyexpandedKeys" v-model:selectedKeys="latelySelectedKeys" :tree-data="latelyTreeData">
+                        </a-tree>
                         <a-tree blockNode  @select="selectPeople"  v-model:expandedKeys="DeptexpandedKeys" v-model:selectedKeys="deptSelectedKeys"
                             :load-data="loadDeptNode" :tree-data="departListTree">
                         </a-tree>
@@ -77,7 +110,7 @@
         </div>
         <div class="writeFooter">
             <div class="footerOption">
-                <a-button class="mr10" type="primary">发送</a-button>
+                <a-button class="mr10" type="primary" @click="handleSendEmail">发送</a-button>
                 <a-button class="mr10">存草稿</a-button>
                 <a-button class="mr10">取消</a-button>
             </div>
@@ -98,10 +131,11 @@
         defineExpose,
         defineEmits,
         nextTick,
-        h
+        h,
+        toRaw
     } from "vue";
     import {
-        EllipsisOutlined, CloseOutlined, UserOutlined, PlusOutlined
+        EllipsisOutlined, CloseOutlined, UserOutlined, PlusOutlined, VerticalAlignBottomOutlined
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
@@ -111,11 +145,16 @@
     const { proxy } = getCurrentInstance();
     const activeKey = ref('1');
     const labelCol = ref({ style: { width: '100px' } });
+    const formRef = ref();
     const formState = reactive({
         addressee: [],
         theme: "",
         chkSms: false,
-        group: []
+        group: [],
+        mailBody: ""
+    })
+    const previewIcon = h("i",{
+        class: "iconfont icon-yulanwenjian"
     })
     const data = reactive({
         fileList: [],
@@ -155,16 +194,51 @@
                 children: []
             }
         ],
+        latelyTreeData:[
+            {
+                title: '最近联系人',
+                key: 1,
+                children:[]
+            }
+        ],
+        latelyexpandedKeys: [],
+        latelySelectedKeys: [],
+        height: 600
+        
     })
     const { fileList, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
-        deptSelectedKeys, deptTreeData, departListTree, selectConcatsList, selectGroupList, departListTree2, groupTreeData2
+        deptSelectedKeys, deptTreeData, departListTree, selectConcatsList, selectGroupList, departListTree2, groupTreeData2, latelyTreeData,
+        latelyexpandedKeys, latelySelectedKeys, height
     } = toRefs(data);
+    const getContent = (e) => {
+        formState.mailBody = e;
+    }
     const handleChange = (e) => {
 
     }
     const onSearch = (e) => {
 
     }
+    const getUserList = (e) => {
+        proxy.$get(Interface.user.sysUser,{
+            searchVal: e
+        }).then(res=>{
+            data.selectConcatsList = res.listData;
+        })
+    }
+    // 获取最近联系人
+    const getLately = () => {
+        proxy.$get(Interface.addressBook.lastList,{}).then(res=>{
+            let rows = res.listData.map(item=>{
+                item.title = item.FullName;
+                item.key = item.SystemUserId;
+                return item;
+            })
+            data.latelyTreeData[0].children = rows;
+
+        })
+    }
+    getLately();
     // 公共小组
     const getGroupList = () => {
         proxy.$get(Interface.user.groupList, {}).then(res => {
@@ -303,6 +377,28 @@
             message.error("不能重复添加群组！");
         }
     }
+    // 发送邮件
+    const handleSendEmail = () => {
+        formRef.value.validate().then(() => {
+            console.log('values', formState, toRaw(formState));
+            proxy.$get(Interface.email.send,{
+                id: "",
+                subject: formState.theme,
+                mailBody: formState.mailBody,
+                toUserIds: "",
+                emailStatus: 1,
+                priority: 0,
+                Forward: "",
+                IsGroupmail: false,
+                chkSms: formState.chkSms
+            }).then(res=>{
+                console.log("res",res);
+            })
+        }).catch(err => {
+            console.log('error', err);
+        });
+        
+    }
 </script>
 <style lang="less" scoped>
     .writeEmail {
@@ -328,7 +424,7 @@
             .leftContainer {
                 flex: 1;
                 height: 100%;
-
+                overflow: auto;
                 .leftBd {
                     padding: 20px 50px;
                     height: 100%;
@@ -336,6 +432,65 @@
 
                     .checkWrap {
                         padding: 10px 0;
+                    }
+                    .filesWrap{
+                        .selectFile{
+                            .inboxFileList{
+                                display: flex;
+                                flex-wrap: wrap;
+                                .inboxFileItem{
+                                    width: 266px;
+                                    border-radius: 2px;
+                                    background: #f2f3f5;
+                                    padding: 10px;
+                                    box-sizing: border-box;
+                                    margin-right: 16px;
+                                    margin-bottom: 16px;
+                                    cursor: pointer;
+                                    display: flex;
+                                    overflow: hidden;
+                                    position: relative;
+                                    .leftImg{
+                                        width: 32px;
+                                        height: 32px;
+                                        img{
+                                            width: 100%;
+                                            height: 100%;
+                                        }
+                                    }
+                                    .rightFileInfo{
+                                        flex: 1;
+                                        margin-left: 14px;
+                                        overflow: hidden;
+                                        color: #1d2129;
+                                        .fileSize{
+                                            color: #4e5969;
+                                            padding-top: 4px;
+                                        }
+                                        .fileOptionShow{
+                                            position: absolute;
+                                            width: calc(~"100% - 36px");
+                                            height: 100%;
+                                            left: 42px;
+                                            top: 0;
+                                            background: rgba(242, 243, 245,.8);
+                                            display: none;
+                                            .btns{
+                                                display: flex;
+                                                align-items: center;
+                                                height: 100%;
+                                                justify-content: flex-end;
+                                                padding-right: 20px;
+                                                box-sizing: border-box;
+                                            }
+                                        }
+                                    }
+                                    &:hover .fileOptionShow{
+                                        display: block;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -346,10 +501,15 @@
                 border-left: 1px solid #dcdcdc;
                 padding: 20px;
                 box-sizing: border-box;
-
                 .rightFixedHead {
                     display: flex;
                     align-items: center;
+                }
+                .treePeopleWrap{
+                    height: calc(~"100% - 60px");
+                    box-sizing: border-box;
+                    margin: 10px 0;
+                    overflow-y: auto;
                 }
             }
         }

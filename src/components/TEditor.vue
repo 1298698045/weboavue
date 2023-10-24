@@ -33,6 +33,10 @@ const props = defineProps({
     type: String,
     default: false,
   },
+  height: {
+    type: Number,
+    default: 300
+  }
   // plugins: {
   //     type: [String, Array],
   //     default: "lists  table",
@@ -91,6 +95,7 @@ let init = reactive({
   placeholder: props.placeholder,
   statusbar: false,
   promotion: false,
+  height: props.height
 });
 let content = ref("");
 watch(

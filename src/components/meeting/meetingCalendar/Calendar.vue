@@ -1,0 +1,359 @@
+<template>
+    <div class="calendarWrap">
+        <div class="leftBox">
+            <div class="tabsWrap">
+                <a-tabs v-model:activeKey="activeKey">
+                    <a-tab-pane key="1" tab="会议状态"></a-tab-pane>
+                    <a-tab-pane key="2" tab="人员组织"></a-tab-pane>
+                </a-tabs>
+            </div>
+            <ul class="meetingStatelist" v-if="activeKey=='1'">
+                <li class="statusItem" :class="{'active':statusCurrent==index}" v-for="(item,index) in statusList"
+                    @click="handleStatus(item,index)">{{ item.label }}</li>
+            </ul>
+            <div class="peopleOrgBody" v-else>
+                <a-input-search v-model:value="searchVal" placeholder="请输入" style="width: 100%" @search="onSearch" />
+                <div class="userTree">
+                    <a-tree blockNode :tree-data="userListTree"></a-tree>
+                </div>
+            </div>
+        </div>
+        <div class="rightBox">
+            <div class="calendarHeader">
+                <div class="form">
+                    <div class="formItem">
+                        <span class="label">会议类型：</span>
+                        <a-select v-model:value="formState.type" style="width: 200px;">
+                            <a-select-option value="0">例会</a-select-option>
+                            <a-select-option value="1">学术会议</a-select-option>
+                        </a-select>
+                    </div>
+                    <div class="calendar-selectlist">
+                        <div class="calendar-typechook">
+                            <li class="">日</li>
+                            <li class="">周</li>
+                            <li class="active">月</li>
+                        </div>
+                    </div>
+                    <div class="formItem ml10">
+                        <a-date-picker v-model:value="value3" :format="monthFormat" picker="month" />
+                    </div>
+                    <a-button disabled class="ml10">本月</a-button>
+                    <a-button class="ml10" :icon="h(RedoOutlined)"></a-button>
+                </div>
+               
+                <div class="btnOptions">
+                    <a-button type="primary">新建会议</a-button>
+                    <a-button type="primary" class="ml10">新建重复会议</a-button>
+                </div>
+            </div>
+            <div class="calendarBody">
+                <a-calendar v-model:value="value" :locale="locale">
+                    <template #headerRender>
+                        <div>
+                            
+                        </div>
+                    </template>
+                    <template #dateCellRender="{ current }">
+                        <ul class="events">
+                            <li v-for="item in getListData(current)" :key="item.content">
+                                <a-badge :status="item.type" :text="item.content" />
+                            </li>
+                        </ul>
+                    </template>
+                    <template #monthCellRender="{ current }">
+                        <div v-if="getMonthData(current)" class="notes-month">
+                            <section>{{ getMonthData(current) }}</section>
+                            <span>Backlog number</span>
+                        </div>
+                    </template>
+                </a-calendar>
+            </div>
+        </div>
+    </div>
+</template>
+<script setup>
+    import {
+        ref,
+        watch,
+        reactive,
+        toRefs,
+        onMounted,
+        getCurrentInstance,
+        onUpdated,
+        defineProps,
+        defineExpose,
+        defineEmits,
+        h
+    } from "vue";
+    import dayjs from 'dayjs';
+    import 'dayjs/locale/zh-cn';
+    import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+    dayjs.locale('zh-cn');
+    import { SearchOutlined, DeleteOutlined, RedoOutlined } from "@ant-design/icons-vue";
+    import { message } from "ant-design-vue";
+    import Interface from "@/utils/Interface.js";
+    const { proxy } = getCurrentInstance();
+    const formRef = ref();
+    const monthFormat = 'YYYY/MM';
+    const value3 = ref(dayjs(new Date(), monthFormat));
+    const data = reactive({
+        activeKey: "1",
+        statusList: [
+            {
+                label: "全部",
+                value: ""
+            },
+            {
+                label: "草稿",
+                value: "0"
+            },
+            {
+                label: "已发布",
+                value: "1"
+            },
+            {
+                label: "已完成",
+                value: "2"
+            },
+            {
+                label: "已取消",
+                value: "3"
+            },
+        ],
+        statusCurrent: 0,
+        searchVal: "",
+        userListTree: []
+    });
+    const formState = reactive({
+        type: ""
+    })
+    const { activeKey, statusList, statusCurrent, searchVal, userListTree } = toRefs(data);
+    const handleStatus = (item, index) => {
+        data.statusCurrent = index;
+    }
+    const onSearch = (e) => {
+
+    }
+    const getPeople = () => {
+        proxy.$get(Interface.meeting.userTree, {}).then(res => {
+            let list = res.returnValue.map(item => {
+                item.key = item.id;
+                item.title = item.name;
+                return item;
+            });
+            data.userListTree = list;
+        })
+    }
+    getPeople();
+
+
+    const value = ref();
+    const getListData = value => {
+        let listData;
+        switch (value.date()) {
+            case 8:
+                listData = [
+                    {
+                        type: 'warning',
+                        content: 'This is warning event.',
+                    },
+                    {
+                        type: 'success',
+                        content: 'This is usual event.',
+                    },
+                ];
+                break;
+            case 10:
+                listData = [
+                    {
+                        type: 'warning',
+                        content: 'This is warning event.',
+                    },
+                    {
+                        type: 'success',
+                        content: 'This is usual event.',
+                    },
+                    {
+                        type: 'error',
+                        content: 'This is error event.',
+                    },
+                ];
+                break;
+            case 15:
+                listData = [
+                    {
+                        type: 'warning',
+                        content: 'This is warning event',
+                    },
+                    {
+                        type: 'success',
+                        content: 'This is very long usual event。。....',
+                    },
+                    {
+                        type: 'error',
+                        content: 'This is error event 1.',
+                    },
+                    {
+                        type: 'error',
+                        content: 'This is error event 2.',
+                    },
+                    {
+                        type: 'error',
+                        content: 'This is error event 3.',
+                    },
+                    {
+                        type: 'error',
+                        content: 'This is error event 4.',
+                    },
+                ];
+                break;
+            default:
+        }
+        return listData || [];
+    };
+    const getMonthData = value => {
+        if (value.month() === 8) {
+            return 1394;
+        }
+    };
+</script>
+<style lang="less" scoped>
+    .calendarWrap {
+        width: 100%;
+        height: 100%;
+        display: flex;
+
+        .leftBox {
+            width: 220px;
+            height: 100%;
+            border-right: 1px solid #e5e6eb;
+            padding: 15px 0;
+
+            .tabsWrap {
+                padding: 0 15px;
+            }
+
+            .meetingStatelist {
+                line-height: 30px;
+                margin-top: 15px;
+                padding: 0 15px;
+
+                .statusItem {
+                    padding-left: 20px;
+                    cursor: pointer;
+                    margin-bottom: 4px;
+
+                    &:hover {
+                        background: #f2f3f5;
+                        color: var(--textColor);
+                        font-weight: 700;
+                    }
+
+                    &.active {
+                        background: #f2f3f5;
+                        font-weight: 700;
+                        color: var(--textColor);
+                    }
+                }
+            }
+
+            .peopleOrgBody {
+                margin-top: 15px;
+                padding: 0 15px;
+
+                .userTree {
+                    margin-top: 10px;
+                }
+            }
+        }
+
+        .rightBox {
+            flex: 1;
+
+            .calendarHeader {
+                width: 100%;
+                padding: 12px;
+                border-bottom: 1px solid #e5e6eb;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .form{
+                    display: flex;
+                    .formItem{
+                        
+                    }
+                }
+            }
+            .calendarBody{
+                height: calc(~"100% - 60px");
+                overflow: auto;
+            }
+        }
+    }
+
+    .events {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .events .ant-badge-status {
+        overflow: hidden;
+        white-space: nowrap;
+        width: 100%;
+        text-overflow: ellipsis;
+        font-size: 12px;
+    }
+
+    .notes-month {
+        text-align: center;
+        font-size: 28px;
+    }
+
+    .notes-month section {
+        font-size: 28px;
+    }
+    .ant-picker-content{
+        border-collapse: collapse;
+    }
+    :deep .ant-picker-content tr td{
+        border: 1px solid #e2e3e5;
+    }
+    :deep :where(.css-dev-only-do-not-override-kqecok).ant-picker-calendar.ant-picker-calendar-full .ant-picker-calendar-date{
+        border-top:none;
+    }
+    :deep .ant-picker-content thead tr{
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+    }
+    :deep .ant-picker-content thead tr th{
+        border: 1px solid #e2e3e5;
+    }
+    .calendar-selectlist{
+        width: 122px;
+        border: 1px solid #e5e6eb;
+        border-radius: 4px;
+        background: #f2f3f5;
+        height: 32px;
+        padding-top: 1px;
+        margin-left: 15px;
+        box-sizing: content-box;
+        .calendar-typechook{
+            display: flex;
+            li{
+                cursor: pointer;
+                padding: 3px 9px;
+                margin: 0 4px;
+                margin-top: 3px;
+                &.active{
+                    font-weight: 700;
+                    background: #fff;
+                    border-radius: 4px;
+                    color: var(--textColor);
+                }
+            }
+        }
+    }
+</style>
