@@ -8,7 +8,7 @@
                 </a-tabs>
             </div>
             <ul class="meetingStatelist" v-if="activeKey=='1'">
-                <li class="statusItem" :class="{'active':statusCurrent==index}" v-for="(item,index) in statusList"
+                <li class="statusItem" :class="{'active':statusCurrent==index}" v-for="(item,index) in statusList" :key="index"
                     @click="handleStatus(item,index)">{{ item.label }}</li>
             </ul>
             <div class="peopleOrgBody" v-else>

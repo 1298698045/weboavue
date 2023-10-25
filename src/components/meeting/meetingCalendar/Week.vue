@@ -6,13 +6,7 @@
                     时间
                 </div>
                 <div class="calendarDayHeaders">
-                    <div class="weekDayHeadItem">10月22日 (周日)</div>
-                    <div class="weekDayHeadItem">10月22日 (周日)</div>
-                    <div class="weekDayHeadItem">10月22日 (周日)</div>
-                    <div class="weekDayHeadItem">10月22日 (周日)</div>
-                    <div class="weekDayHeadItem">10月22日 (周日)</div>
-                    <div class="weekDayHeadItem">10月22日 (周日)</div>
-                    <div class="weekDayHeadItem">10月22日 (周日)</div>
+                    <div class="weekDayHeadItem" v-for="(item,index) in weekList" :key="index">{{item}} ({{ weeks[index] }})</div>
                 </div>
             </div>
             <div class="weekCalendarBody" ref="weekRef">
@@ -74,7 +68,14 @@
                     </strong>
                 </div>
                 <div class="weekRightDay">
-                    <div class="calendarDay">
+                    <div class="calendarDay" v-for="(item,index) in weekList" :key="index">
+                        <div class="eventList" :style="{height: height+'px'}">
+                            <div class="eventItem" :style="{top:countTop(row)}" v-for="(row,idx) in meetingList[item]" :key="idx">
+                                {{row.Name}}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="calendarDay">
                         <div class="eventList" :style="{height: height+'px'}"></div>
                     </div>
                     <div class="calendarDay">
@@ -91,10 +92,7 @@
                     </div>
                     <div class="calendarDay">
                         <div class="eventList" :style="{height: height+'px'}"></div>
-                    </div>
-                    <div class="calendarDay">
-                        <div class="eventList" :style="{height: height+'px'}"></div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -112,20 +110,94 @@
         defineProps,
         defineExpose,
         defineEmits,
-        nextTick
+        nextTick,
+        toRaw
     } from "vue";
+    import dayjs from 'dayjs';
+    import 'dayjs/locale/zh-cn';
+    import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+    dayjs.locale('zh-cn');
+    import calendar from 'dayjs/plugin/calendar';
+    import weekday from 'dayjs/plugin/weekday';
+    import localeData from 'dayjs/plugin/localeData';
+    
+    dayjs.extend(calendar);
+    dayjs.extend(weekday);
+    dayjs.extend(localeData);
+    
     import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
-        height: ""
+        height: "",
+        weekList: [],
+        meetingList: {},
+        times: ["06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00",
+        "16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"]
+        
     });
-    const { height } = toRefs(data);
+    const weeks = toRaw(['周日','周一','周二','周三','周四','周五','周六']);
+    const { height, weekList, meetingList, times } = toRefs(data);
     const weekRef = ref(null);
     onMounted(()=>{
         data.height = weekRef.value.scrollHeight;
     })
+
+    const today = dayjs();
+    const week = [];
+    for(let i = 0;  i < 7; i++) {
+        const date = today.startOf('week').add(i-1, 'day');
+        // console.log("date",date.format("YYYY-MM-DD"))
+        var time = date.format("YYYY-MM-DD");
+        week.push(time);
+    }
+
+
+
+    // const week2 = week.map(date => {
+    //     if (date.isSame(today, 'day')) {
+    //         return '今天';
+    // } else {
+    //     return date.format('MM.DD');
+    //     }
+    // });
+
+    console.log("week",week);
+    data.weekList = week;
+    const countTop = (row) => {
+        let index = data.times.findIndex(item=>item==row.ScheduledStartTime);
+        // console.log("index",index);
+        return (index+1) * 2 * 30 + "px";
+    }
+
+
+
+    const getQuery = ()=> {
+        let startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
+        let endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
+        proxy.$get(Interface.meeting.getall,{
+            startTime: startTime,
+            endTime: endTime,
+            MeetingType: "",
+            employeeId: "",
+            StatusCode: ""
+        }).then(res=>{
+            let meetingItems = res.returnValue.meetings[0].meetingItems;
+            let obj = {};
+            meetingItems.forEach(item=>{
+                let daydate = dayjs(item.ScheduledStartDate).format('YYYY-MM-DD');
+                console.log("daydate",daydate);
+                if(!obj[daydate]){
+                    obj[daydate] = [];
+                }
+                obj[daydate].push(item);
+            })
+            data.meetingList = obj;
+            console.log("obj",obj)
+        })
+    }
+    getQuery();
 </script>
 <style lang="less">
     .weekWrap{
@@ -208,6 +280,14 @@
                             }
                             &.active{
                                 background: rgb(254, 250, 230);
+                            }
+                            .eventItem{
+                                width: 100%;
+                                height: 60px;
+                                background: var(--backColor);
+                                color: #fff;
+                                position: absolute;
+                                line-height: 60px;
                             }
                         }
                     }
