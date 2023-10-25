@@ -71,6 +71,7 @@ const Interface = {
   },
   meeting: {
     userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织
+    getall: "localData/meeting/meeting.getall.json", // 日历月数据
   }
 };
 export default Interface;

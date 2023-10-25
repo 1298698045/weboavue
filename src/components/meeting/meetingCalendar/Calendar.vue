@@ -30,13 +30,13 @@
                     </div>
                     <div class="calendar-selectlist">
                         <div class="calendar-typechook">
-                            <li class="">日</li>
-                            <li class="">周</li>
-                            <li class="active">月</li>
+                            <li :class="{'active':calendarType==0}" @click="calendarType=0">日</li>
+                            <li :class="{'active':calendarType==1}" @click="calendarType=1">周</li>
+                            <li :class="{'active':calendarType==2}" @click="calendarType=2">月</li>
                         </div>
                     </div>
                     <div class="formItem ml10">
-                        <a-date-picker v-model:value="value3" :format="monthFormat" picker="month" />
+                        <a-date-picker v-model:value="monthValue" :format="monthFormat" picker="month" @change="changeMonth" />
                     </div>
                     <a-button disabled class="ml10">本月</a-button>
                     <a-button class="ml10" :icon="h(RedoOutlined)"></a-button>
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="calendarBody">
-                <a-calendar v-model:value="value" :locale="locale">
+                <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2">
                     <template #headerRender>
                         <div>
                             
@@ -56,18 +56,79 @@
                     </template>
                     <template #dateCellRender="{ current }">
                         <ul class="events">
-                            <li v-for="item in getListData(current)" :key="item.content">
-                                <a-badge :status="item.type" :text="item.content" />
-                            </li>
+                            <a-popconfirm
+                                trigger="hover"
+                                cancelText="编辑"
+                                okText="删除"
+                                v-for="(item,index) in getListData(current)" :key="index"
+                            >   
+                                <template #icon></template>
+                                <template #title>
+                                    <div class="meetingMessageWrap">
+                                        <div class="meetingHead">
+                                            <div class="meetingLogo">
+                                                <img :src="require('@/assets/img/meeting.png')" alt="">
+                                            </div>
+                                            <p class="meetingName">{{item.Name}}</p>
+                                        </div>
+                                        <div class="meetingBody">
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
+                                                    召集人：
+                                                    <span class="OwningUserName">{{item.CreatedByName}}</span>
+                                                </div>
+                                                <div class="meetingInfoItem">
+                                                    联系电话：
+                                                    <span class="TelePhone">{{item.TelePhone || ''}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
+                                                    会议室：
+                                                    <span class="OwningUserName">{{ item.RoomIdName }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
+                                                    会议设备：
+                                                    <span class="OwningUserName">jackliu3</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
+                                                    开始：
+                                                    <span class="OwningUserName">{{item.ScheduledStart}}</span>
+                                                </div>
+                                                <div class="meetingInfoItem">
+                                                    结束：
+                                                    <span class="TelePhone">{{item.ScheduledEnd}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
+                                                    备注：
+                                                    <span class="OwningUserName">{{item.Description}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <a-button type="link">更多详细信息</a-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>                                
+                                <li class="messageItem" :style="{background:backFn(getListData(current))}">
+                                    <!-- <a-badge status="success" :text="item.Name" /> -->
+                                    <p class="name123">{{item.Name}}</p>
+                                    <p class="time">
+                                        {{item.ScheduledStartTime}}~{{item.ScheduledEndTime}}
+                                        &nbsp; {{item.CreatedByName}} 预约
+                                    </p>
+                                </li>
+                            </a-popconfirm>
                         </ul>
                     </template>
-                    <template #monthCellRender="{ current }">
-                        <div v-if="getMonthData(current)" class="notes-month">
-                            <section>{{ getMonthData(current) }}</section>
-                            <span>Backlog number</span>
-                        </div>
-                    </template>
                 </a-calendar>
+                <WeekVue v-if="calendarType==1" />
             </div>
         </div>
     </div>
@@ -84,19 +145,28 @@
         defineProps,
         defineExpose,
         defineEmits,
-        h
+        h,
+        nextTick
     } from "vue";
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
     import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
     dayjs.locale('zh-cn');
+    import calendar from 'dayjs/plugin/calendar';
+    import weekday from 'dayjs/plugin/weekday';
+    import localeData from 'dayjs/plugin/localeData';
+    
+    dayjs.extend(calendar);
+    dayjs.extend(weekday);
+    dayjs.extend(localeData);
+
+    import WeekVue from "@/components/meeting/meetingCalendar/Week.vue";
     import { SearchOutlined, DeleteOutlined, RedoOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const formRef = ref();
     const monthFormat = 'YYYY/MM';
-    const value3 = ref(dayjs(new Date(), monthFormat));
     const data = reactive({
         activeKey: "1",
         statusList: [
@@ -123,12 +193,22 @@
         ],
         statusCurrent: 0,
         searchVal: "",
-        userListTree: []
+        userListTree: [],
+        meetingList: {},
+        monthValue: dayjs(new Date(), monthFormat),
+        calendarType: 2
+        
     });
+    const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
+    const backFn = (list) => {
+        var len = list.length;
+        var index = Math.floor(Math.random() * len);
+        return colors[index];
+    }
     const formState = reactive({
         type: ""
     })
-    const { activeKey, statusList, statusCurrent, searchVal, userListTree } = toRefs(data);
+    const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList, monthValue, calendarType} = toRefs(data);
     const handleStatus = (item, index) => {
         data.statusCurrent = index;
     }
@@ -148,75 +228,111 @@
     getPeople();
 
 
-    const value = ref();
+    const currentDate = ref(null);
     const getListData = value => {
-        let listData;
-        switch (value.date()) {
-            case 8:
-                listData = [
-                    {
-                        type: 'warning',
-                        content: 'This is warning event.',
-                    },
-                    {
-                        type: 'success',
-                        content: 'This is usual event.',
-                    },
-                ];
-                break;
-            case 10:
-                listData = [
-                    {
-                        type: 'warning',
-                        content: 'This is warning event.',
-                    },
-                    {
-                        type: 'success',
-                        content: 'This is usual event.',
-                    },
-                    {
-                        type: 'error',
-                        content: 'This is error event.',
-                    },
-                ];
-                break;
-            case 15:
-                listData = [
-                    {
-                        type: 'warning',
-                        content: 'This is warning event',
-                    },
-                    {
-                        type: 'success',
-                        content: 'This is very long usual event。。....',
-                    },
-                    {
-                        type: 'error',
-                        content: 'This is error event 1.',
-                    },
-                    {
-                        type: 'error',
-                        content: 'This is error event 2.',
-                    },
-                    {
-                        type: 'error',
-                        content: 'This is error event 3.',
-                    },
-                    {
-                        type: 'error',
-                        content: 'This is error event 4.',
-                    },
-                ];
-                break;
-            default:
-        }
-        return listData || [];
+        // console.log("value:", value.date());
+        // let listData;
+        // switch (value.date()) {
+        //     case 8:
+        //         listData = [
+        //             {
+        //                 type: 'warning',
+        //                 content: 'This is warning event.',
+        //             },
+        //             {
+        //                 type: 'success',
+        //                 content: 'This is usual event.',
+        //             },
+        //         ];
+        //         break;
+        //     case 10:
+        //         listData = [
+        //             {
+        //                 type: 'warning',
+        //                 content: 'This is warning event.',
+        //             },
+        //             {
+        //                 type: 'success',
+        //                 content: 'This is usual event.',
+        //             },
+        //             {
+        //                 type: 'error',
+        //                 content: 'This is error event.',
+        //             },
+        //         ];
+        //         break;
+        //     case 15:
+        //         listData = [
+        //             {
+        //                 type: 'warning',
+        //                 content: 'This is warning event',
+        //             },
+        //             {
+        //                 type: 'success',
+        //                 content: 'This is very long usual event。。....',
+        //             },
+        //             {
+        //                 type: 'error',
+        //                 content: 'This is error event 1.',
+        //             },
+        //             {
+        //                 type: 'error',
+        //                 content: 'This is error event 2.',
+        //             },
+        //             {
+        //                 type: 'error',
+        //                 content: 'This is error event 3.',
+        //             },
+        //             {
+        //                 type: 'error',
+        //                 content: 'This is error event 4.',
+        //             },
+        //         ];
+        //         break;
+        //     default:
+        // }
+        // return listData || [];
+        let date = value.date();
+        return data.meetingList[date] || [];
     };
     const getMonthData = value => {
         if (value.month() === 8) {
             return 1394;
         }
     };
+    const changeMonth = (e) => {
+        data.monthValue = dayjs(e, monthFormat);
+        // console.log("data.monthValue",data.monthValue.format("YYYY-MM"));
+        // console.log('dayjs---', data.monthValue)
+        window.dayjs = dayjs;
+        currentDate.value = dayjs(e);
+        getQuery();
+    }
+    const getQuery = ()=> {
+        let startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
+        let endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
+        proxy.$get(Interface.meeting.getall,{
+            startTime: startTime,
+            endTime: endTime,
+            MeetingType: "",
+            employeeId: "",
+            StatusCode: ""
+        }).then(res=>{
+            let meetingItems = res.returnValue.meetings[0].meetingItems;
+            let obj = {};
+            meetingItems.forEach(item=>{
+                let daydate = dayjs(item.ScheduledStartDate).format('DD');
+                console.log("daydate",daydate);
+                if(!obj[daydate]){
+                    obj[daydate] = [];
+                }
+                obj[daydate].push(item);
+            })
+            data.meetingList = obj;
+            console.log("obj",obj)
+        })
+    }
+    getQuery();
 </script>
 <style lang="less" scoped>
     .calendarWrap {
@@ -296,6 +412,14 @@
         list-style: none;
         margin: 0;
         padding: 0;
+        .messageItem{
+            background: #2977f6;
+            padding: 5px;
+            color: #fff;
+            border-radius: 3px;
+            margin-bottom: 3px;
+            font-size: 12px;
+        }
     }
 
     .events .ant-badge-status {
@@ -352,6 +476,41 @@
                     background: #fff;
                     border-radius: 4px;
                     color: var(--textColor);
+                }
+            }
+        }
+    }
+    .meetingMessageWrap{
+        width: 300px;
+        .meetingHead{
+            display: flex;
+            align-items: center;
+            .meetingLogo{
+                width: 32px;
+                height: 32px;
+                background: var(--backColor);
+                border-radius: 4px;
+                img{
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            .meetingName{
+                margin-left: 20px;
+                font-size: 16px;
+                font-weight: bold;
+            }
+        }
+        .meetingBody{
+            margin-top: 10px;
+            .meetingInfo{
+                display: flex;
+                .meetingInfoItem{
+                    flex: 1;
+                    font-size: 12px;
+                }
+                :deep .ant-btn{
+                    padding: 0;
                 }
             }
         }
