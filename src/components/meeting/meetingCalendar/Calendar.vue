@@ -35,10 +35,27 @@
                             <li :class="{'active':calendarType==2}" @click="calendarType=2">月</li>
                         </div>
                     </div>
-                    <div class="formItem ml10">
+                    <div class="formItem ml10" v-if="calendarType==0">
+                        <a-date-picker v-model:value="currentTime" @change="changeTime" />
+                    </div>
+                    <div class="formItem ml10 pickerTime" v-if="calendarType==1">
+                        <span class="arrowIcon" @click="handlePrevWeek">
+                            <LeftOutlined />
+                        </span>
+                        <a-date-picker v-model:value="startWeekTime" @change="changeStartTime" />
+                        ~
+                        <a-date-picker v-model:value="endWeekTime" @change="changeEndTime" />
+                        <span class="arrowIcon" @click="handleNextWeek">
+                            <RightOutlined />
+                        </span>
+                    </div>
+                    <div class="formItem ml10" v-if="calendarType==2">
                         <a-date-picker v-model:value="monthValue" :format="monthFormat" picker="month" @change="changeMonth" />
                     </div>
-                    <a-button disabled class="ml10">本月</a-button>
+                    <a-button disabled class="ml10" v-if="calendarType==0">今天</a-button>
+                    <a-button disabled class="ml10" v-if="calendarType==1">本周</a-button>
+                    <a-button disabled class="ml10" v-if="calendarType==2">本月</a-button>
+
                     <a-button class="ml10" :icon="h(RedoOutlined)"></a-button>
                 </div>
                
@@ -128,9 +145,11 @@
                         </ul>
                     </template>
                 </a-calendar>
-                <WeekVue v-if="calendarType==1" />
+                <DayCalendar v-if="calendarType==0" :currentTime="currentTime"/>
+                <WeekVue v-if="calendarType==1" :week="week" />
             </div>
         </div>
+        <NewMeeting :isShow="isNewMeeting" />
     </div>
 </template>
 <script setup>
@@ -161,7 +180,11 @@
     dayjs.extend(localeData);
 
     import WeekVue from "@/components/meeting/meetingCalendar/Week.vue";
-    import { SearchOutlined, DeleteOutlined, RedoOutlined } from "@ant-design/icons-vue";
+    import DayCalendar from "@/components/meeting/meetingCalendar/DayCalendar.vue";
+
+    // 新建
+    import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
+    import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
@@ -196,9 +219,15 @@
         userListTree: [],
         meetingList: {},
         monthValue: dayjs(new Date(), monthFormat),
-        calendarType: 2
-        
+        calendarType: 2,
+        currentTime: dayjs(),
+        startWeekTime: "",
+        endWeekTime: "",
+        week: [],
+        isNewMeeting: true
     });
+    const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
+         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const backFn = (list) => {
         var len = list.length;
@@ -208,7 +237,52 @@
     const formState = reactive({
         type: ""
     })
-    const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList, monthValue, calendarType} = toRefs(data);
+    // 日-切换日期
+    const changeTime = (e) => {
+        data.currentTime = dayjs(e);
+    }
+    const today = dayjs();
+    for (let i = 0; i < 7; i++) {
+        const date = today.startOf('week').add(i - 1, 'day');
+        // console.log("date",date.format("YYYY-MM-DD"))
+        var time = date.format("YYYY-MM-DD");
+        data.week.push(time);
+    }
+    data.startWeekTime = dayjs(data.week[0]);
+    data.endWeekTime = dayjs(data.week[data.week.length-1]);
+    watch(week,(newVal,oldVal)=>{
+        data.startWeekTime = dayjs(newVal[0]);
+        data.endWeekTime = dayjs(newVal[newVal.length-1]);
+    },{deep: true, immediate: true})
+    // 周-切换日期
+    const changeStartTime = (e) => {
+        
+    }
+    const changeEndTime = (e) => {
+
+    }
+    // 周-上周
+    const handlePrevWeek = () => {
+        let temp = [];
+        for (let i = 0; i < 7; i++) {
+            const date = dayjs(data.endWeekTime).startOf('week').add(i - 8, 'day');
+            var time = date.format("YYYY-MM-DD");
+            temp.push(time);
+        }
+        console.log("temp",temp);
+        data.week = temp;
+    }
+    // 周-下周
+    const handleNextWeek = () => {
+        let temp = [];
+        for (let i = 0; i < 7; i++) {
+            const date = dayjs(data.endWeekTime).startOf('week').add(i + 6, 'day');
+            var time = date.format("YYYY-MM-DD");
+            temp.push(time);
+        }
+        console.log("temp",temp);
+        data.week = temp;
+    }
     const handleStatus = (item, index) => {
         data.statusCurrent = index;
     }
@@ -397,7 +471,14 @@
                 .form{
                     display: flex;
                     .formItem{
-                        
+                        &.pickerTime{
+                            .arrowIcon{
+                                cursor: pointer;
+                            }
+                            .ant-picker{
+                                border: none;
+                            }
+                        }
                     }
                 }
             }
