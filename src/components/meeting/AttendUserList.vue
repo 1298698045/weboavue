@@ -186,7 +186,7 @@
             let record = res.actions[0].returnValue;
             let listItems = record.listItems;
             let recordIds = record.recordIds;
-            data.columns = listItems.MeetingItem.map(item=>{
+            data.columns = listItems.MeetingAudience.map(item=>{
                 item.title = item.title;
                 item.dataIndex = item.field;
                 item.key = item.field;

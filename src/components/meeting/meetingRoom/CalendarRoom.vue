@@ -1,23 +1,5 @@
 <template>
     <div class="calendarWrap">
-        <div class="leftBox">
-            <div class="tabsWrap">
-                <a-tabs v-model:activeKey="activeKey">
-                    <a-tab-pane key="1" tab="会议状态"></a-tab-pane>
-                    <a-tab-pane key="2" tab="人员组织"></a-tab-pane>
-                </a-tabs>
-            </div>
-            <ul class="meetingStatelist" v-if="activeKey=='1'">
-                <li class="statusItem" :class="{'active':statusCurrent==index}" v-for="(item,index) in statusList" :key="index"
-                    @click="handleStatus(item,index)">{{ item.label }}</li>
-            </ul>
-            <div class="peopleOrgBody" v-else>
-                <a-input-search v-model:value="searchVal" placeholder="请输入" style="width: 100%" @search="onSearch" />
-                <div class="userTree">
-                    <a-tree blockNode :tree-data="userListTree"></a-tree>
-                </div>
-            </div>
-        </div>
         <div class="rightBox">
             <div class="calendarHeader">
                 <div class="form">
@@ -181,7 +163,7 @@
     dayjs.extend(localeData);
 
     import WeekVue from "@/components/meeting/meetingCalendar/Week.vue";
-    import DayCalendar from "@/components/meeting/meetingCalendar/DayCalendar.vue";
+    import DayCalendar from "@/components/meeting/meetingRoom/DayCalendarRoom.vue";
 
     // 新建
     import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
@@ -222,7 +204,7 @@
         userListTree: [],
         meetingList: {},
         monthValue: dayjs(new Date(), monthFormat),
-        calendarType: 2,
+        calendarType: 0,
         currentTime: dayjs(),
         startWeekTime: "",
         endWeekTime: "",
@@ -623,11 +605,5 @@
                 }
             }
         }
-    }
-    :deep .ant-picker-content tbody tr td:first-child{
-        background: #f9f9f9;
-    }
-    :deep .ant-picker-content tbody tr td:last-child{
-        background: #f9f9f9;
     }
 </style>

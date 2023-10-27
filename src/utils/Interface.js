@@ -73,7 +73,7 @@ const Interface = {
     userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织
     getall: "localData/meeting/meeting.getall.json", // 日历月数据
     config: "localData/meeting/config.json",
-    relatedrecords:"/localData/meeting/entity.relatedrecords.get.json", // 获取通用数据
+    relatedrecords:"/localData/meeting/entity.relatedrecords.get.json", // 相关列表数据
   }
 };
 export default Interface;

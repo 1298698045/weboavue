@@ -9,6 +9,7 @@
         <div class="userList">
             <div class="userItem" v-for="(item,index) in userList" :key="index">
                 {{item.name}}
+                <span class="del-icon" @click="handleDeleteItem(item,index)"><DeleteOutlined/></span>
             </div>
         </div>
         <radio-user :isShow="isRadioUser" @selectVal="getUserData"></radio-user>
@@ -48,6 +49,9 @@
         data.isRadioUser = false;
         console.log(data.userList);
     }
+    const handleDeleteItem = (item,index) => {
+        data.userList.splice(index,1);
+    }
 </script>
 <style lang="less">
     .userList{
@@ -59,6 +63,9 @@
             margin-right: 10px;
             line-height: 15px;
             margin-bottom: 5px;
+            .del-icon{
+                cursor: pointer;
+            }
         }
     }
 </style>

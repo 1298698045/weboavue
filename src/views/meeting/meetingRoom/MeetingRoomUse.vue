@@ -18,6 +18,14 @@
                         日历
                     </div>
                 </div>
+                <div class="leftTabMenu" :class="{'active':current==2}" @click="current=2">
+                    <div class="menuIcon">
+                        <i class="iconfont icon-wodeshenpi"></i>
+                    </div>
+                    <div class="name">
+                        我的审批
+                    </div>
+                </div>
             </div>
             <div class="calendarRight">
                 <ListView v-if="current==0" />
@@ -42,12 +50,12 @@
     } from "vue";
     import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
     import ListView from "@/components/meeting/meetingCalendar/List.vue";
-    import CalendarVue from "@/components/meeting/meetingCalendar/Calendar.vue";
+    import CalendarVue from "@/components/meeting/meetingRoom/CalendarRoom.vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
-        current: 0
+        current: 1
     });
     const { current } = toRefs(data);
 </script>

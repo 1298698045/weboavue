@@ -197,6 +197,15 @@ const routes = [
         meta: {
           icon: "xinjian"
         }
+      },
+      {
+        path:"/meeting/room",
+        name: "会议室使用状况",
+        component: ()=> import("../views/meeting/meetingRoom/MeetingRoomUse.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian"
+        }
       }
     ]
   }

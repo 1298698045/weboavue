@@ -1,13 +1,12 @@
 <template>
     <div class="weekWrap">
-        <div class="weekCalendar">
+        <!-- <div class="weekCalendar">
             <div class="weekCalendarHead">
                 <div class="timeZone">
                     时间
                 </div>
                 <div class="calendarDayHeaders">
-                    <div class="weekDayHeadItem" v-for="(item,index) in weekList" :key="index">{{item}} ({{ weeks[index]
-                        }})</div>
+                    <div class="weekDayHeadItem">{{currentDate}}</div>
                 </div>
             </div>
             <div class="weekCalendarBody" ref="weekRef">
@@ -70,10 +69,10 @@
                 </div>
                 <div class="weekRightDay">
 
-                    <div class="calendarDay" v-for="(item,index) in weekList" :key="index">
-                        <div class="eventList"  :class="{'active':isToDay(item)}" :style="{height: height+'px'}">
+                    <div class="calendarDay">
+                        <div class="eventList" :style="{height: height+'px'}">
                             <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
-                                v-for="(row,idx) in meetingList[item]" :key="idx">
+                                v-for="(row,idx) in meetingList[currentDate]" :key="idx">
                                 <template #icon></template>
                                 <template #title>
                                     <div class="meetingMessageWrap">
@@ -135,27 +134,9 @@
                             </a-popconfirm>
                         </div>
                     </div>
-                    <!-- <div class="calendarDay">
-                        <div class="eventList" :style="{height: height+'px'}"></div>
-                    </div>
-                    <div class="calendarDay">
-                        <div class="eventList" :style="{height: height+'px'}"></div>
-                    </div>
-                    <div class="calendarDay">
-                        <div class="eventList" :style="{height: height+'px'}"></div>
-                    </div>
-                    <div class="calendarDay">
-                        <div class="eventList" :style="{height: height+'px'}"></div>
-                    </div>
-                    <div class="calendarDay">
-                        <div class="eventList" :style="{height: height+'px'}"></div>
-                    </div>
-                    <div class="calendarDay">
-                        <div class="eventList" :style="{height: height+'px'}"></div>
-                    </div> -->
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 <script setup>
@@ -191,18 +172,22 @@
     const { proxy } = getCurrentInstance();
 
     const props = defineProps({
-        week: Array
+        currentTime: String
     })
     const data = reactive({
         height: "",
         weekList: [],
         meetingList: {},
         times: ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]
-
+            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],
+        currentDate: ""
     });
+    watch(()=>props.currentTime,(newVal,oldVal)=>{
+        data.currentDate = dayjs(newVal).format("YYYY-MM-DD");
+        console.log("data.currentDate",data.currentDate);
+    },{deep: true, immediate: true})
     const weeks = toRaw(['周日', '周一', '周二', '周三', '周四', '周五', '周六']);
-    const { height, weekList, meetingList, times } = toRefs(data);
+    const { height, weekList, meetingList, times, currentDate } = toRefs(data);
     const weekRef = ref(null);
     onMounted(() => {
         data.height = weekRef.value.scrollHeight;
@@ -217,12 +202,8 @@
         week.push(time);
     }
 
-    // 判断是否是今天
-    const isToDay = (time) => {
-        const currentTime = dayjs(new Date()).format("YYYY-MM-DD");
-        return currentTime == time ? true : false;
-    }
 
+    // data.currentDate = dayjs(new Date()).format("YYYY-MM-DD");
     // const week2 = week.map(date => {
     //     if (date.isSame(today, 'day')) {
     //         return '今天';
@@ -231,10 +212,8 @@
     //     }
     // });
 
-    // console.log("week", week);
-    watch(()=>props.week,(newVal,oldVal)=>{
-        data.weekList = newVal;
-    },{deep: true, immediate: true})
+    console.log("week", week);
+    data.weekList = week;
     const countTop = (row) => {
         let index = data.times.findIndex(item => item == row.ScheduledStartTime);
         // console.log("index",index);
@@ -344,6 +323,7 @@
                     .calendarDay {
                         flex: 1;
                         text-align: center;
+
                         .eventList {
                             height: 1000px;
                             margin: 0;
@@ -363,8 +343,7 @@
                             }
 
                             &.active {
-                                background-color: rgb(254, 250, 230);
-                                background-size: 100% 30px;
+                                background: rgb(254, 250, 230);
                             }
 
                             .eventItem {

@@ -14,7 +14,7 @@
                     <div style="width: 50px;">{{ index+1 }}</div>
                 </template>
                 <template v-else-if="column.dType === 'U' || column.dType === 'O'">
-                    <div class="searchItem">
+                    <div class="searchItem" style="width: 150px;">
                         <a-select
                             allowClear
                             :default-active-first-option="false"
@@ -137,7 +137,7 @@
     }
     // D
     const handleDatePicker =  (e,record, column, index) => 
-    {
+    {   
         data.dataList[index][column.dataIndex] = e;
     }
     // F 时间
@@ -186,7 +186,7 @@
             let record = res.actions[0].returnValue;
             let listItems = record.listItems;
             let recordIds = record.recordIds;
-            data.columns = listItems.MeetingItem.map(item=>{
+            data.columns = listItems.MeetingService.map(item=>{
                 item.title = item.title;
                 item.dataIndex = item.field;
                 item.key = item.field;

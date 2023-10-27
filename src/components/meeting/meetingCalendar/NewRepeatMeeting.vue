@@ -4,7 +4,7 @@
             @ok="handleSubmit">
             <template #title>
                 <div>
-                    新建会议
+                    新建重复会议
                 </div>
             </template>
             <div class="modalContainer">
@@ -12,19 +12,13 @@
                     <a-tabs v-model:activeKey="currentTab" @change="changeTab">
                         <a-tab-pane key="1" tab="基本信息"></a-tab-pane>
                         <a-tab-pane key="2" tab="参会人员"></a-tab-pane>
-                        <a-tab-pane key="3" tab="会议议题"></a-tab-pane>
-                        <a-tab-pane key="4" tab="会议参会人"></a-tab-pane>
-                        <a-tab-pane key="5" tab="会议服务"></a-tab-pane>
 
                     </a-tabs>
                 </div>
                 <div class="modalCenter" :style="{ height: height + 'px' }">
                     <ConfigForm v-if="currentTab==1" />
                     <AttendUser v-if="currentTab==2" />
-                    <Topics v-if="currentTab==3" />
-                    <AttendUserList v-if="currentTab==4" />
-                    <Service v-if="currentTab==5" />
-                    <MeetingNotice :isShow="isNotice" @selectVal="handleRead" />
+                    <!-- <MeetingNotice :isShow="isNotice" @selectVal="handleRead" /> -->
                 </div>
             </div>
             <template #footer>
