@@ -70,7 +70,7 @@
                 <div class="weekRightDay">
 
                     <div class="calendarDay">
-                        <div class="eventList" :style="{height: height+'px'}">
+                        <div class="eventList"  :class="{'active':isToDay(currentDate)}" :style="{height: height+'px'}">
                             <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
                                 v-for="(row,idx) in meetingList[currentDate]" :key="idx">
                                 <template #icon></template>
@@ -202,7 +202,12 @@
         week.push(time);
     }
 
-
+    // 判断是否是今天
+    const isToDay = (time) => {
+        const currentTime = dayjs(new Date()).format("YYYY-MM-DD");
+        return currentTime == time ? true : false;
+    }
+    
     // data.currentDate = dayjs(new Date()).format("YYYY-MM-DD");
     // const week2 = week.map(date => {
     //     if (date.isSame(today, 'day')) {
@@ -248,7 +253,7 @@
     }
     getQuery();
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .weekWrap {
         width: 100%;
         height: 100%;
@@ -343,7 +348,8 @@
                             }
 
                             &.active {
-                                background: rgb(254, 250, 230);
+                                background-color: rgb(254, 250, 230);
+                                background-size: 100% 30px;
                             }
 
                             .eventItem {

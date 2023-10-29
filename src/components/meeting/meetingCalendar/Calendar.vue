@@ -306,7 +306,7 @@
     getPeople();
 
 
-    const currentDate = ref(null);
+    const currentDate = ref(dayjs());
     const getListData = value => {
         // console.log("value:", value.date());
         // let listData;

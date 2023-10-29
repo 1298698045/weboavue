@@ -47,6 +47,8 @@
                 </div>
             </div>
             <div class="calendarBody">
+                <DayCalendar v-if="calendarType==0"/>
+                <WeekVue v-if="calendarType==1" :week="week" />
                 <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2">
                     <template #headerRender>
                         <div>
@@ -127,8 +129,6 @@
                         </ul>
                     </template>
                 </a-calendar>
-                <DayCalendar v-if="calendarType==0" :currentTime="currentTime"/>
-                <WeekVue v-if="calendarType==1" :week="week" />
             </div>
         </div>
         <NewMeeting :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" />
