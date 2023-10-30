@@ -1,6 +1,142 @@
 <template>
     <div class="weekWrap">
+        <div class="weekCalendar">
+            <div class="weekCalendarHead">
+                <div class="timeZone">
+                    时间
+                </div>
+                <div class="calendarDayHeaders">
+                    <div class="weekDayHeadItem" v-for="(item,index) in roomList" :key="index">{{item.Name}}</div>
+                </div>
+            </div>
+            <div class="weekCalendarBody" ref="weekRef">
+                <div class="timeBox">
+                    <strong></strong>
+                    <strong>
+                        <span>06:00</span>
+                    </strong>
+                    <strong>
+                        <span>07:00</span>
+                    </strong>
+                    <strong>
+                        <span>08:00</span>
+                    </strong>
+                    <strong>
+                        <span>09:00</span>
+                    </strong>
+                    <strong>
+                        <span>10:00</span>
+                    </strong>
+                    <strong>
+                        <span>11:00</span>
+                    </strong>
+                    <strong>
+                        <span>12:00</span>
+                    </strong>
+                    <strong>
+                        <span>13:00</span>
+                    </strong>
+                    <strong>
+                        <span>14:00</span>
+                    </strong>
+                    <strong>
+                        <span>15:00</span>
+                    </strong>
+                    <strong>
+                        <span>16:00</span>
+                    </strong>
+                    <strong>
+                        <span>17:00</span>
+                    </strong>
+                    <strong>
+                        <span>18:00</span>
+                    </strong>
+                    <strong>
+                        <span>19:00</span>
+                    </strong>
+                    <strong>
+                        <span>20:00</span>
+                    </strong>
+                    <strong>
+                        <span>21:00</span>
+                    </strong>
+                    <strong>
+                        <span>22:00</span>
+                    </strong>
+                    <strong>
+                        <span>23:00</span>
+                    </strong>
+                </div>
+                <div class="weekRightDay">
 
+                    <div class="calendarDay" v-for="(item,index) in roomList" :key="index">
+                        <div class="eventList"  :style="{height: height+'px'}">
+                            <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
+                                v-for="(row,idx) in item.Reserves" :key="idx">
+                                <template #icon></template>
+                                <template #title>
+                                    <div class="meetingMessageWrap">
+                                        <div class="meetingHead">
+                                            <div class="meetingLogo">
+                                                <img :src="require('@/assets/img/meeting.png')" alt="">
+                                            </div>
+                                            <p class="meetingName">{{row.Name}}</p>
+                                        </div>
+                                        <div class="meetingBody">
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
+                                                    召集人：
+                                                    <span class="OwningUserName">{{row.CreatedByName}}</span>
+                                                </div>
+                                                <div class="meetingInfoItem">
+                                                    联系电话：
+                                                    <span class="TelePhone">{{row.TelePhone || ''}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
+                                                    会议室：
+                                                    <span class="OwningUserName">{{ row.RoomIdName }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
+                                                    会议设备：
+                                                    <span class="OwningUserName">jackliu3</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
+                                                    开始：
+                                                    <span class="OwningUserName">{{row.ScheduledStart}}</span>
+                                                </div>
+                                                <div class="meetingInfoItem">
+                                                    结束：
+                                                    <span class="TelePhone">{{row.ScheduledEnd}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
+                                                    备注：
+                                                    <span class="OwningUserName">{{row.Description}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <a-button type="link">更多详细信息</a-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <div class="eventItem" :style="{top:countTop(row)}">
+                                    <p>{{row.Name}}</p>
+                                    <p>{{row.ScheduledStartTime}}-{{row.ScheduledEndTime}} {{row.CreatedByName}}预约</p>
+                                </div>
+                            </a-popconfirm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script setup>
@@ -35,21 +171,43 @@
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
 
+    const props = defineProps({
+        week: Array
+    })
     const data = reactive({
         height: "",
-        weekList: [],
         meetingList: {},
         times: ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
             "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],
-        currentDate: ""
+        roomList: []
+
     });
-    const { height, weekList, meetingList, times, currentDate } = toRefs(data);
+    const { height, meetingList, times, roomList } = toRefs(data);
     const weekRef = ref(null);
     onMounted(() => {
-
+        data.height = weekRef.value.scrollHeight;
     })
+
+    const getMeetingRoom = () => {
+        proxy.$get(Interface.meetingRoom.roomList,{}).then(res=>{
+            console.log("res",res);
+            data.roomList = res.listData;
+        })
+    }
+    getMeetingRoom();
+    const today = dayjs();
+
+    // 判断是否是今天
+    const isToDay = (time) => {
+        const currentTime = dayjs(new Date()).format("YYYY-MM-DD");
+        return currentTime == time ? true : false;
+    }
+    const countTop = (row) => {
+        let index = data.times.findIndex(item => item == row.ScheduledStartTime);
+        return (index + 1) * 2 * 30 + "px";
+    }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .weekWrap {
         width: 100%;
         height: 100%;
@@ -124,7 +282,6 @@
                     .calendarDay {
                         flex: 1;
                         text-align: center;
-
                         .eventList {
                             height: 1000px;
                             margin: 0;
@@ -144,7 +301,8 @@
                             }
 
                             &.active {
-                                background: rgb(254, 250, 230);
+                                background-color: rgb(254, 250, 230);
+                                background-size: 100% 30px;
                             }
 
                             .eventItem {
@@ -156,6 +314,7 @@
                                 text-align: left;
                                 padding: 5px;
                                 cursor: pointer;
+                                border-radius: 3px;
                             }
                         }
                     }

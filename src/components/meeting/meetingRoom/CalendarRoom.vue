@@ -46,89 +46,10 @@
                     <a-button type="primary" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button>
                 </div>
             </div>
-            <div class="calendarBody">
+            <div class="calendarBody" ref="contentRef">
                 <DayCalendar v-if="calendarType==0"/>
                 <WeekVue v-if="calendarType==1" :week="week" />
-                <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2">
-                    <template #headerRender>
-                        <div>
-                            
-                        </div>
-                    </template>
-                    <template #dateCellRender="{ current }">
-                        <ul class="events">
-                            <a-popconfirm
-                                trigger="hover"
-                                cancelText="编辑"
-                                okText="删除"
-                                v-for="(item,index) in getListData(current)" :key="index"
-                            >   
-                                <template #icon></template>
-                                <template #title>
-                                    <div class="meetingMessageWrap">
-                                        <div class="meetingHead">
-                                            <div class="meetingLogo">
-                                                <img :src="require('@/assets/img/meeting.png')" alt="">
-                                            </div>
-                                            <p class="meetingName">{{item.Name}}</p>
-                                        </div>
-                                        <div class="meetingBody">
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    召集人：
-                                                    <span class="OwningUserName">{{item.CreatedByName}}</span>
-                                                </div>
-                                                <div class="meetingInfoItem">
-                                                    联系电话：
-                                                    <span class="TelePhone">{{item.TelePhone || ''}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    会议室：
-                                                    <span class="OwningUserName">{{ item.RoomIdName }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    会议设备：
-                                                    <span class="OwningUserName">jackliu3</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    开始：
-                                                    <span class="OwningUserName">{{item.ScheduledStart}}</span>
-                                                </div>
-                                                <div class="meetingInfoItem">
-                                                    结束：
-                                                    <span class="TelePhone">{{item.ScheduledEnd}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    备注：
-                                                    <span class="OwningUserName">{{item.Description}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <a-button type="link">更多详细信息</a-button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>                                
-                                <li class="messageItem" :style="{background:backFn(getListData(current))}">
-                                    <!-- <a-badge status="success" :text="item.Name" /> -->
-                                    <p class="name123">{{item.Name}}</p>
-                                    <p class="time">
-                                        {{item.ScheduledStartTime}}~{{item.ScheduledEndTime}}
-                                        &nbsp; {{item.CreatedByName}} 预约
-                                    </p>
-                                </li>
-                            </a-popconfirm>
-                        </ul>
-                    </template>
-                </a-calendar>
+                <MonthCalendar v-if="calendarType==2" :width="width" />
             </div>
         </div>
         <NewMeeting :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" />
@@ -162,8 +83,9 @@
     dayjs.extend(weekday);
     dayjs.extend(localeData);
 
-    import WeekVue from "@/components/meeting/meetingCalendar/Week.vue";
+    import WeekVue from "@/components/meeting/meetingRoom/WeekRoom.vue";
     import DayCalendar from "@/components/meeting/meetingRoom/DayCalendarRoom.vue";
+    import MonthCalendar from "@/components/meeting/meetingRoom/MonthCalendarRoom.vue";
 
     // 新建
     import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
@@ -210,11 +132,17 @@
         endWeekTime: "",
         week: [],
         isNewMeeting: false,
-        isRepeatMeeting: false
+        isRepeatMeeting: false,
+        width: 0
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
-         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting} = toRefs(data);
+         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, width} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
+    const contentRef = ref(null);
+    onMounted(()=>{
+        console.log("contentRef",contentRef.value.clientWidth)
+        data.width = contentRef.value.clientWidth;
+    })
     const backFn = (list) => {
         var len = list.length;
         var index = Math.floor(Math.random() * len);
@@ -493,6 +421,7 @@
                 }
             }
             .calendarBody{
+                width: 100%;
                 height: calc(~"100% - 60px");
                 overflow: auto;
             }
@@ -567,41 +496,6 @@
                     background: #fff;
                     border-radius: 4px;
                     color: var(--textColor);
-                }
-            }
-        }
-    }
-    .meetingMessageWrap{
-        width: 300px;
-        .meetingHead{
-            display: flex;
-            align-items: center;
-            .meetingLogo{
-                width: 32px;
-                height: 32px;
-                background: var(--backColor);
-                border-radius: 4px;
-                img{
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-            .meetingName{
-                margin-left: 20px;
-                font-size: 16px;
-                font-weight: bold;
-            }
-        }
-        .meetingBody{
-            margin-top: 10px;
-            .meetingInfo{
-                display: flex;
-                .meetingInfoItem{
-                    flex: 1;
-                    font-size: 12px;
-                }
-                :deep .ant-btn{
-                    padding: 0;
                 }
             }
         }

@@ -30,6 +30,7 @@
             <div class="calendarRight">
                 <ListView v-if="current==0" />
                 <CalendarVue v-if="current==1" />
+                <MyApproval v-if="current==2" />
             </div>
         </div>
     </div>
@@ -51,6 +52,7 @@
     import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
     import ListView from "@/components/meeting/meetingCalendar/List.vue";
     import CalendarVue from "@/components/meeting/meetingRoom/CalendarRoom.vue";
+    import MyApproval from "@/components/meeting/meetingRoom/MyApproval.vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();

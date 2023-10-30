@@ -74,6 +74,9 @@ const Interface = {
     getall: "localData/meeting/meeting.getall.json", // 日历月数据
     config: "localData/meeting/config.json",
     relatedrecords:"/localData/meeting/entity.relatedrecords.get.json", // 相关列表数据
+  },
+  meetingRoom: {
+    roomList: "/localData/meetingRoom/meetingroom.reservation.getlist2.json"
   }
 };
 export default Interface;
