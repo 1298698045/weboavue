@@ -210,8 +210,9 @@
 
     const showMeeting = (col,row) => {
         // console.log(col,row);
-        var date = dayjs(col.ScheduledStartDate).format("MM-DD")
-        return date == row ? true : false;
+        // var date = dayjs(col.ScheduledStartDate).format("YYYY-MM-DD");
+        // console.log("date",date, row);
+        return col.ScheduledStartDate == row ? true : false;
     }
 </script>
 <style lang="less" scoped>

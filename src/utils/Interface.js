@@ -77,6 +77,10 @@ const Interface = {
   },
   meetingRoom: {
     roomList: "/localData/meetingRoom/meetingroom.reservation.getlist2.json"
+  },
+  file: {
+    list: "/localData/fileAdmin/file.files.search.json",
+    child: "/localData/fileAdmin/child.json"
   }
 };
 export default Interface;

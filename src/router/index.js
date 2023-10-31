@@ -161,6 +161,15 @@ const routes = [
           icon: "xinjian"
         }
       },
+      {
+        path:"/oa/file",
+        component: () => import("../views/fileAdmin/index.vue"),
+        name: "文件管理",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian"
+        }
+      },
     ]
   },
   {
