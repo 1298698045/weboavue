@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <div class="containerBox">
+        <div class="containerBox"  ref="contentRef">
             <div class="leftMenu" v-if="isLeft">
                 <div class="leftMenuItem" :class="{'active':leftCurrent==index}"
                     @click="handleMenuClick(item,index)"
@@ -13,12 +13,19 @@
                 <div class="sanlan" :class="{'active':!isLeft}" @click="handleLeftShow"></div>
                 <div class="layoutBodyHead">
                     <div class="breadcrumb">
-                        <span class="breadcrumbItem active">
+                        <!-- <span class="breadcrumbItem active">
                             <span class="name">{{menus[leftCurrent].name}}</span>
+                        </span> -->
+                        <span class="breadcrumbItem"
+                                :class="{'active':idx==breadcrumbListLength}" v-for="(item,idx) in breadcrumbList" :key="idx"
+                            @click="idx!=breadcrumbListLength?handleBreadcrumbItem(item,idx):''"
+                            >
+                            <span class="name">{{item.name}}</span>
+                            <span clss="breadcrumbItemIcon" v-if="idx!=breadcrumbListLength">/</span>
                         </span>
                     </div>
                     <div class="rightBtns">
-                        <a-button type="primary">新建</a-button>
+                        <a-button type="primary" @click="handleAddFolder">新建</a-button>
                     </div>
                 </div>
                 <div class="layoutBodyCenter">
@@ -43,7 +50,7 @@
                             </div>
                         </div>
                         <div class="tableWrapper">
-                            <a-table style="height: 100%;" :dataSource="listData" :columns="columns">
+                            <a-table :scroll="{ y: tableHeight }" :dataSource="listData" :columns="columns">
                                 <template #bodyCell="{ column, record, index }">
                                     <template v-if="column.key=='number'">
                                         <div>
@@ -109,16 +116,18 @@
                 </div>
             </div>
         </div>
+        <NewFolder :isShow="isNewFolder" />
     </div>
 </template>
 <script setup>
     import {
         ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
-        defineEmits, h, toRaw
+        defineEmits, h, toRaw, computed
     } from "vue";
     import { useRouter, useRoute } from "vue-router";
     import { SearchOutlined, MoreOutlined, CopyOutlined, SortAscendingOutlined, LeftOutlined, RightOutlined, PlusOutlined, EllipsisOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
+    import NewFolder from "@/components/file/NewFolder.vue";
     import { formTreeData } from "@/utils/common.js";
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
@@ -224,14 +233,27 @@
         ],
         leftCurrent: 0,
         fileTypes: [{ label: '图片(jpg)', value: 'jpg' }, { label: '图片(jpeg)', value: 'jpeg' }, { label: '图片(png)', value: 'png' }, { label: '文本(txt)', value: 'txt' }, { label: 'Word(docx)', value: 'docx' }, { label: 'Excel(xls)', value: 'xls' }, { label: 'PPT(pptx)', value: 'pptx' }, { label: 'ZIP(zip)', value: 'zip' }, { label: 'PDF(pdf)', value: 'pdf' }, { label: '视频(mp4)', value: 'mp4' }, { label: '音乐(mp3)', value: 'mp3' }],
-        listData: [
-            {
-
-            }
-        ]
+        listData: [],
+        breadcrumbList: [],
+        tableHeight: "",
+        isNewFolder: false
     })
-    const { isLeft, menus, leftCurrent, fileTypes, listData } = toRefs(data);
-
+    const { isLeft, menus, leftCurrent, fileTypes, listData, breadcrumbList, tableHeight, isNewFolder } = toRefs(data);
+    const contentRef = ref(null);
+    onMounted(()=>{
+       console.log("contentRef.value.clientHeight",contentRef.value.clientHeight);
+        data.tableHeight =  contentRef.value.clientHeight - 260 + 'px';
+        window.addEventListener("resize",()=>{
+            data.tableHeight =  contentRef.value.clientHeight - 260 + 'px';
+        })
+    })
+    data.breadcrumbList[0] = {
+        name: data.menus[0].name,
+        srchType: data.menus[0].srchType
+    }
+    const breadcrumbListLength = computed(()=>{
+        return data.breadcrumbList.length - 1;
+    })
     const handleLeftShow = () => {
         data.isLeft = !data.isLeft;
     }
@@ -253,12 +275,21 @@
     const handleMenuClick = (item,index) => {
         data.leftCurrent = index;
     }
-
+    // 面包屑切换
+    const handleBreadcrumbItem = (item,idx) => {
+        data.breadcrumbList = data.breadcrumbList.slice(0, idx + 1);
+    }
     const handleOpenFile = (item) => {
         console.log("item",item);
         if(item.type=='folder'){
             console.log("123");
+            data.breadcrumbList.push({
+                name: item.name,
+                type: item.type,
+                id: item.id
+            })
             handleChild(item.id);
+            
         }
     }
     const handleChild = () => {
@@ -274,6 +305,9 @@
             });
             data.listData = files.concat(folders);
         })
+    }
+    const handleAddFolder = () => {
+        data.isNewFolder = true;
     }
 </script>
 <style lang="less" scoped>
@@ -357,6 +391,18 @@
                                 font-weight: bold;
                                 cursor: initial;
                             }
+                            &:hover{
+                                .name{
+                                    cursor: pointer;
+                                    color: var(--textColor);
+                                }
+                            }
+                            &.active:hover{
+                                .name{
+                                    cursor: unset;
+                                    color: #1d2129;
+                                }
+                            }
                         }
                     }
                 }
@@ -364,6 +410,7 @@
                     height: calc(~"100% - 50px");
                     padding: 20px 0 0 0;
                     .mailListContainer{
+                        height: 100%;
                         .form{
                             display: flex;
                             align-items: center;
@@ -380,7 +427,6 @@
                             }
                         }
                         .tableWrapper{
-                            height: calc(~"100% - 80px");
                         }
                     }
                 }
