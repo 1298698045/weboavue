@@ -1,0 +1,174 @@
+{
+  "status": 1,
+  "data": [
+    {
+      "value": "10010000-0000-0000-0000-000000000001",
+      "label": "我的文件",
+      "children": [
+        {
+          "value": "a6831663-4462-4a54-9041-bc253173bfb9",
+          "label": "11111111",
+          "children": [
+            {
+              "value": "50987667-801a-4bae-97cd-5a1588fe6cf6",
+              "label": "1222222222",
+              "children": null
+            }
+          ]
+        },
+        {
+          "value": "ebc21c48-ca3e-421d-bf6f-3b0d21c7940c",
+          "label": "2222222222",
+          "children": null
+        },
+        {
+          "value": "a32ef990-6ac5-4ab1-a712-0a3f00002d2e",
+          "label": "33333333333",
+          "children": null
+        },
+        {
+          "value": "7b5ac571-78e2-45b6-8baa-8544bb322ac8",
+          "label": "44444444",
+          "children": null
+        },
+        {
+          "value": "e9609e0a-35a1-47f0-a73b-f806adb8d8b6",
+          "label": "123999",
+          "children": null
+        }
+      ]
+    },
+    {
+      "value": "10010000-0000-0000-0000-000000000003",
+      "label": "共享文件",
+      "children": []
+    },
+    {
+      "value": "00000000-0000-0000-0000-000000000000",
+      "label": "单位文件",
+      "children": [
+        {
+          "value": "10010000-0000-0000-0000-000000000011",
+          "label": "相册图片",
+          "children": [
+            {
+              "value": "2cd36768-9eb0-46a3-80c5-bd6550e345ea",
+              "label": "公司相册",
+              "children": null
+            },
+            {
+              "value": "783d3a4c-b7b3-4916-8f37-63852f234126",
+              "label": "客户上线",
+              "children": null
+            },
+            {
+              "value": "db1b63ed-24b5-47c7-a6a6-d945863737e3",
+              "label": "相册1",
+              "children": null
+            },
+            {
+              "value": "bf2af5a7-484c-417f-a77c-526e8a2e4681",
+              "label": "相册3",
+              "children": null
+            },
+            {
+              "value": "2318d0dd-ba45-40df-9a8c-99ea7ce7a719",
+              "label": "相册5",
+              "children": null
+            },
+            {
+              "value": "743372a7-b20f-4faf-87b6-cefaac70a9b9",
+              "label": "相册6",
+              "children": null
+            }
+          ]
+        },
+        {
+          "value": "10010000-0000-0000-0000-000000000012",
+          "label": "视频",
+          "children": [
+            {
+              "value": "98cbd231-d4bf-41d2-8a94-bcbf9d6a1ca9",
+              "label": "医院活动",
+              "children": [
+                {
+                  "value": "9f782358-ef10-48bb-abea-51d4b22c19dc",
+                  "label": "开会",
+                  "children": null
+                }
+              ]
+            },
+            {
+              "value": "57d51391-3898-40de-97ee-80bb06167457",
+              "label": "护理培训",
+              "children": null
+            }
+          ]
+        },
+        {
+          "value": "10010000-0000-0000-0000-000000000303",
+          "label": "流程归档目录",
+          "children": [
+            {
+              "value": "42b7a7ee-6d8c-4024-901a-2a30ed37ca79",
+              "label": "收文",
+              "children": null
+            }
+          ]
+        },
+        {
+          "value": "10010000-0000-0000-0000-000000000002",
+          "label": "组织文件夹",
+          "children": [
+            {
+              "value": "05eed6b3-a0dd-4970-a059-9887e7d502b2",
+              "label": "人力资源项目",
+              "children": null
+            },
+            {
+              "value": "873939b2-8b5e-49c3-966c-5c84cd6ae720",
+              "label": "绩效管理",
+              "children": null
+            },
+            {
+              "value": "9ee692c0-57a9-4c95-9dfc-51baeb99a5fc",
+              "label": "人力资源管理系统",
+              "children": null
+            },
+            {
+              "value": "e28cf107-b307-47be-800e-bcebad518bb7",
+              "label": "院办",
+              "children": null
+            },
+            {
+              "value": "4c59b583-f776-49c2-9173-d83c8ac33496",
+              "label": "人事资料",
+              "children": [
+                {
+                  "value": "10e4c8e6-8ae6-4a03-8355-416403b2c934",
+                  "label": "考勤数据",
+                  "children": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "value": "4e7ea71e-a2b8-4f12-b3ea-2af9739fbae3",
+          "label": "保卫处",
+          "children": null
+        },
+        {
+          "value": "5e7e784b-c7c2-4e66-aa96-74f133f8f3c5",
+          "label": "信息科",
+          "children": null
+        },
+        {
+          "value": "1f0483b4-b642-44a1-b643-de9e434e29b0",
+          "label": "1111111",
+          "children": null
+        }
+      ]
+    }
+  ]
+}

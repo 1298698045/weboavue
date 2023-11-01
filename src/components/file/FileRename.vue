@@ -13,7 +13,7 @@
           </div>
         </template>
         <div class="modalContainer">
-          <div class="modalCenter" :style="{ height: height + 'px' }">
+          <div class="modalCenter">
             <a-form :model="formState" ref="formRef">
               <div class="section">
                 <div class="sectionTitle">基本信息</div>
@@ -21,33 +21,6 @@
                     <div class="sectionItem">
                         <a-form-item name="name" label="名称" :rules="[{ required: true, message: '请输入名称' }]">
                             <a-input v-model:value="formState.name"></a-input>
-                        </a-form-item>
-                    </div>
-                    <div class="sectionItem">
-                        <a-form-item name="folderPicker" label="父栏目">
-                            <a-input disabled v-model:value="formState.folderPicker"></a-input>
-                        </a-form-item>
-                    </div>
-                </div>
-                <div class="sectionRow">
-                    <div class="sectionItem">
-                        <a-form-item name="sortNumber" label="序号">
-                            <a-input v-model:value="formState.sortNumber"></a-input>
-                        </a-form-item>
-                    </div>
-                    <div class="sectionItem">
-                        <a-form-item name="isPublic" label="设置公用目录">
-                          <a-checkbox v-model:checked="formState.isPublic"></a-checkbox>
-                        </a-form-item>
-                    </div>
-                </div>
-              </div>
-              <div class="section">
-                <div class="sectionTitle">备注信息</div>
-                <div class="sectionRow">
-                    <div class="sectionItem">
-                        <a-form-item name="description" label="备注">
-                            <a-textarea :rows="4" v-model:value="formState.description" />
                         </a-form-item>
                     </div>
                 </div>
@@ -91,8 +64,7 @@
   const labelCol = ref({ style: { width: "100px" } });
   const props = defineProps({
     isShow: Boolean,
-    folderName: String,
-    folderPicker: String
+    fileParams: Object
   });
   const formRef = ref();
   const emit = defineEmits(["cancel"]);
@@ -100,7 +72,7 @@
     emit("cancel", false);
   };
   const data = reactive({
-    title: "新建文件夹",
+    title: "重命名",
     height: document.documentElement.clientHeight - 300,
   });
   const {
@@ -109,31 +81,19 @@
   } = toRefs(data);
   const formState = reactive({
     name: "",
-    folderPicker: props.folderName,
-    sortNumber: "",
-    isPublic: false,
-    description: ""
   });
-  
-  
-  const searchlookup = (search, attribute) => {
-    console.log(search, attribute);
-    proxy
-      .$get(Interface.uilook, {
-        Lktp: attribute.attributes.sObjectType,
-        Lksrch: search,
-      })
-      .then((res) => {
-        let listData = res.listData;
-        data.search[attribute.targetValue] = listData;
-      });
-  };
-  
+  watch(()=>props.fileParams,(newVal,oldVal)=>{
+    formState.name = newVal.name;
+  },{deep: true, immediate: true})
+
+  formState.name =  props.fileParams.name;
   onMounted(() => {
     window.addEventListener("resize", (e) => {
       data.height = document.documentElement.clientHeight - 300;
     });
   });
+  
+  
   
   const handleSubmit = () => {
     formRef.value
@@ -144,13 +104,9 @@
           params: {
             objTypeCode: 30027,
             fields: {
-              name: formState.name,
-              folderPicker: props.folderPicker,
-              sortNumber: formState.sortNumber,
-              isPublic: formState.isPublic ? 1 : 0,
-              description: formState.description
+              name: formState.name
             },
-            id: "",
+            id: props.fileParams.id,
           },
         };
         var messages = JSON.stringify(obj);

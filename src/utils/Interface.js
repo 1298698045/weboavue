@@ -80,7 +80,9 @@ const Interface = {
   },
   file: {
     list: "/localData/fileAdmin/file.files.search.json",
-    child: "/localData/fileAdmin/child.json"
+    child: "/localData/fileAdmin/child.json",
+    tree: "/localData/fileAdmin/file.tree.json",
+    move: "/localData/fileAdmin/filefolder.move.json"
   }
 };
 export default Interface;

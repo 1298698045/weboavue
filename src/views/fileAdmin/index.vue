@@ -91,13 +91,13 @@
                                                       <a-menu-item>
                                                         编辑
                                                       </a-menu-item>
-                                                      <a-menu-item>
+                                                      <a-menu-item @click="handleFileRename(record)">
                                                         重命名
                                                       </a-menu-item>
-                                                      <a-menu-item>
+                                                      <a-menu-item @click="handleMoveFile(record)">
                                                         移动
                                                       </a-menu-item>
-                                                      <a-menu-item>
+                                                      <a-menu-item @click="handleDeleteFile(record)">
                                                         删除
                                                       </a-menu-item>
                                                       <a-menu-item>
@@ -116,7 +116,11 @@
                 </div>
             </div>
         </div>
-        <NewFolder :isShow="isNewFolder" />
+        <NewFolder :isShow="isNewFolder" :folderName="folderName" :folderPicker="folderPicker" @cancel="cancelNewModal" />
+        <FileRename :isShow="isRename" :fileParams="fileParams" @cancel="cancelReName" />
+        <FileMove :isShow="isFileMove" :fileParams="fileParams" @cancel="cancelFileMove" />
+        <Delete :isShow="isDelete"  :fileParams="fileParams" @cancel="cancelDelete" />
+        <SetPermissions :isShow="isSetPerm" />
     </div>
 </template>
 <script setup>
@@ -128,6 +132,14 @@
     import { SearchOutlined, MoreOutlined, CopyOutlined, SortAscendingOutlined, LeftOutlined, RightOutlined, PlusOutlined, EllipsisOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     import NewFolder from "@/components/file/NewFolder.vue";
+    // 重命名
+    import FileRename from "@/components/file/FileRename.vue";
+    // 移动
+    import FileMove from "@/components/file/FileMove.vue";
+    import Delete from "@/components/listView/Delete.vue";
+    // 设置权限
+    import SetPermissions from "@/components/file/SetPermissions.vue";
+
     import { formTreeData } from "@/utils/common.js";
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
@@ -231,14 +243,28 @@
                 folderPicker: '10010000-0000-0000-0000-000000000303'
             }
         ],
+        folderPicker: '10010000-0000-0000-0000-000000000001',
         leftCurrent: 0,
         fileTypes: [{ label: '图片(jpg)', value: 'jpg' }, { label: '图片(jpeg)', value: 'jpeg' }, { label: '图片(png)', value: 'png' }, { label: '文本(txt)', value: 'txt' }, { label: 'Word(docx)', value: 'docx' }, { label: 'Excel(xls)', value: 'xls' }, { label: 'PPT(pptx)', value: 'pptx' }, { label: 'ZIP(zip)', value: 'zip' }, { label: 'PDF(pdf)', value: 'pdf' }, { label: '视频(mp4)', value: 'mp4' }, { label: '音乐(mp3)', value: 'mp3' }],
         listData: [],
         breadcrumbList: [],
         tableHeight: "",
-        isNewFolder: false
+        isNewFolder: false,
+        isRename: false,
+        fileParams: {
+            id: "",
+            name: ""
+        },
+        isFileMove: false,
+        isDelete: false,
+        isSetPerm: true
     })
-    const { isLeft, menus, leftCurrent, fileTypes, listData, breadcrumbList, tableHeight, isNewFolder } = toRefs(data);
+    const { isLeft, menus, leftCurrent, fileTypes, listData, breadcrumbList, tableHeight, isNewFolder,
+         folderPicker, isRename, fileParams, isFileMove, isDelete, isSetPerm } = toRefs(data);
+
+    const folderName = computed(()=>{
+        return data.menus[data.leftCurrent].name;
+    })
     const contentRef = ref(null);
     onMounted(()=>{
        console.log("contentRef.value.clientHeight",contentRef.value.clientHeight);
@@ -274,6 +300,7 @@
     getQuery();
     const handleMenuClick = (item,index) => {
         data.leftCurrent = index;
+        data.folderPicker = item.folderPicker;
     }
     // 面包屑切换
     const handleBreadcrumbItem = (item,idx) => {
@@ -309,6 +336,42 @@
     const handleAddFolder = () => {
         data.isNewFolder = true;
     }
+
+    const cancelNewModal = (e) => {
+        data.isNewFolder = e;
+    }
+    const handleFileRename = (item) => {
+        data.fileParams = {
+            id: item.id,
+            name: item.name
+        };
+        data.isRename = true;
+    }
+    const cancelReName = (e) => {
+        data.isRename = e;
+    }
+    // 移动
+    const handleMoveFile = (item) => {
+        data.fileParams = {
+            id: item.id,
+            name: item.name
+        }
+        data.isFileMove = true;
+    }
+    // 删除
+    const handleDeleteFile = (item) => {
+        data.fileParams = {
+            id: item.id,
+            name: item.name
+        }
+        data.isDelete = true;
+    }
+    const cancelDelete = (e) => {
+        data.isDelete = e;
+    }
+    const cancelFileMove = (e) => {
+        data.isFileMove = e;
+    }
 </script>
 <style lang="less" scoped>
     .wrapper {
@@ -319,8 +382,8 @@
             width: 100%;
             height: 100%;
             display: flex;
-
             .leftMenu {
+                min-width: 116px;
                 width: 116px;
                 height: 100%;
                 border-top-left-radius: 4px;
@@ -328,7 +391,6 @@
                 padding: 8px;
                 box-sizing: border-box;
                 background: #fff;
-
                 .leftMenuItem {
                     width: 100%;
                     height: 40px;
@@ -341,7 +403,6 @@
                     box-sizing: border-box;
                     margin-bottom: 4px;
                     border-radius: 2px;
-
                     .menuIcon {
                         .iconfont {
                             font-size: 14px;
@@ -368,6 +429,7 @@
 
             .rightContainer {
                 flex: 1;
+                width: calc(~"100% - 116px");
                 height: 100%;
                 padding: 16px 20px;
                 background: #fff;
