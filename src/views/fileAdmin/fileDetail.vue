@@ -23,18 +23,35 @@
                 <a-button class="ml10">编辑</a-button>
                 <a-button type="primary" class="ml10">删除</a-button>
                 <a-button type="primary" class="ml10">预览</a-button>
+                <a-dropdown :trigger="['hover']" class="ml10">
+                    <span class="btn-drop">
+                      <UnorderedListOutlined style="color: #1D2129;" />
+                    </span>
+                    <template #overlay>
+                      <a-menu>
+                        <a-menu-item key="1">
+                          备注
+                        </a-menu-item>
+                      </a-menu>
+                    </template>
+                  </a-dropdown>
             </div>
         </div>
         <div class="detail-scroll">
             <div class="detail-bd">
-                <div class="tabContainer">
-                    
+                <div class="tabContainer" v-if="activeKey==0"></div>
+                <div class="tabContainer" v-if="activeKey==1">
+                    <FileReadRecord />
+                </div>
+                <div class="tabContainer" v-if="activeKey==2">
+                    <DownloadFile />
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script setup>
+    import "@/style/common.less";
     import "@/style/detail.less";
     import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw } from "vue";
     import {
@@ -44,6 +61,8 @@
         DeleteFilled,
         DeleteOutlined
     } from "@ant-design/icons-vue";
+    import FileReadRecord from "../../components/file/FileReadRecord.vue";
+    import DownloadFile from "@/components/file/DownloadFile.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
@@ -69,19 +88,20 @@
     })
     const { tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData, isCirculation, isModal, isUrging } = toRefs(data);
     const changeTabs = (e) => {
+        console.log("e",e);
         data.activeKey = e;
     }
 </script>
 <style lang="less" scoped>
     .detail-scroll{
-        height: calc(~"100% - 95px");
+        height: calc(~"100% - 95px") !important;
         .detail-bd{
             height: 100%;
             .tabContainer{
                 width: 100%;
                 height: 100%;
-                background: #fff;
-                border-radius: 5px;
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
             }
         }
     }
