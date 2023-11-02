@@ -25,17 +25,38 @@
                         </span>
                     </div>
                     <div class="rightBtns">
-                        <a-button type="primary" @click="handleAddFolder">新建</a-button>
+                        <a-button class="ml10" v-if="folderId!=''&&(srchType=='my'||srchType=='share'||srchType=='org'||srchType=='archive')&&Privilege&&(Privilege.canAdmin||Privilege.CanEdit||Privilege.canEdit)">设置权限</a-button>
+                        <a-upload
+                            v-if="folderId!=''&&(srchType=='my'||srchType=='share'||srchType=='org'||srchType=='archive')&&Privilege&&(Privilege.canAdmin||Privilege.CanEdit||Privilege.canEdit)"
+                            name="file"
+                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            :headers="headers"
+                            @change="handleChange"
+                        >
+                            <template #itemRender="{ file, actions }">
+                                
+                            </template>
+                            <a-button type="primary" class="ml10">
+                                <upload-outlined></upload-outlined>
+                                上传附件
+                            </a-button>
+                        </a-upload>
+                        <!-- <a-button class="ml10" v-if="folderId!=''&&(srchType=='my'||srchType=='share'||srchType=='org'||srchType=='archive')&&Privilege&&(Privilege.canAdmin||Privilege.CanEdit||Privilege.canEdit)">上传文件</a-button> -->
+                        <a-button class="ml10" v-if="(srchType=='my'||srchType=='share'||srchType=='org'||srchType=='archive')" type="primary" @click="handleAddFolder">新建</a-button>
+                        <a-button class="ml10" v-if="folderId!=''&&(srchType=='my'||srchType=='share'||srchType=='org'||srchType=='archive')&&Privilege&&(Privilege.canAdmin||Privilege.CanEdit||Privilege.canEdit)">文件夹排序</a-button>
+                        <a-button class="ml10" v-if="folderId!=''&&(srchType=='my'||srchType=='share'||srchType=='org'||srchType=='archive')&&Privilege&&(Privilege.canAdmin||Privilege.CanEdit||Privilege.canEdit)">文件排序</a-button>
+                        <a-button class="ml10" v-if="srchType=='recycle'">批量删除</a-button>
+
                     </div>
                 </div>
                 <div class="layoutBodyCenter">
                     <div class="mailListContainer">
                         <div class="form">
-                            <a-form :model="formState">
+                            <a-form :model="formState" ref="formRef">
                                 <a-form-item name="Name">
                                     <a-input v-model:value="formState.Name" placeholder="请输入文件名称"></a-input>
                                 </a-form-item>
-                                <a-form-item class="timeForm">
+                                <a-form-item name="time" class="timeForm">
                                     <a-range-picker v-model:value="formState.time" />
                                 </a-form-item>
                                 <a-form-item name="FileExtension">
@@ -46,7 +67,7 @@
                             </a-form>
                             <div class="right-option">
                                 <a-button type="primary">查询</a-button>
-                                <a-button class="ml10" type="primary">重置</a-button>
+                                <a-button class="ml10" type="primary" @click="handleReset">重置</a-button>
                             </div>
                         </div>
                         <div class="tableWrapper">
@@ -88,7 +109,7 @@
                                             <a-dropdown trigger="click">
                                                 <template #overlay>
                                                     <a-menu>
-                                                      <a-menu-item>
+                                                      <a-menu-item @click="handleEditFile(record)">
                                                         编辑
                                                       </a-menu-item>
                                                       <a-menu-item @click="handleFileRename(record)">
@@ -100,7 +121,7 @@
                                                       <a-menu-item @click="handleDeleteFile(record)">
                                                         删除
                                                       </a-menu-item>
-                                                      <a-menu-item>
+                                                      <a-menu-item @click="handleSetPrem(record)">
                                                         设置权限
                                                       </a-menu-item>
                                                     </a-menu>
@@ -116,11 +137,11 @@
                 </div>
             </div>
         </div>
-        <NewFolder :isShow="isNewFolder" :folderName="folderName" :folderPicker="folderPicker" @cancel="cancelNewModal" />
+        <NewFolder :isShow="isNewFolder"  :fileParams="fileParams" :folderName="folderName" :folderPicker="folderPicker" @cancel="cancelNewModal" />
         <FileRename :isShow="isRename" :fileParams="fileParams" @cancel="cancelReName" />
         <FileMove :isShow="isFileMove" :fileParams="fileParams" @cancel="cancelFileMove" />
         <Delete :isShow="isDelete"  :fileParams="fileParams" @cancel="cancelDelete" />
-        <SetPermissions :isShow="isSetPerm" />
+        <SetPermissions :isShow="isSetPerm" :fileParams="fileParams" @cancel="cancelPerm" />
     </div>
 </template>
 <script setup>
@@ -129,7 +150,7 @@
         defineEmits, h, toRaw, computed
     } from "vue";
     import { useRouter, useRoute } from "vue-router";
-    import { SearchOutlined, MoreOutlined, CopyOutlined, SortAscendingOutlined, LeftOutlined, RightOutlined, PlusOutlined, EllipsisOutlined } from "@ant-design/icons-vue";
+    import { SearchOutlined, MoreOutlined, CopyOutlined, SortAscendingOutlined, LeftOutlined, RightOutlined, PlusOutlined, EllipsisOutlined, UploadOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     import NewFolder from "@/components/file/NewFolder.vue";
     // 重命名
@@ -143,8 +164,12 @@
     import { formTreeData } from "@/utils/common.js";
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
+    const formRef = ref();
+    const handleReset = () => {
+        formRef.value.resetFields();
+    }
     const router = useRouter();
-    const formState = ({
+    const formState = reactive({
         Name: "",
         startDate: "",
         endDate: "",
@@ -257,10 +282,20 @@
         },
         isFileMove: false,
         isDelete: false,
-        isSetPerm: true
+        isSetPerm: false,
+        srchType: 'my',
+        Privilege: {
+            CanEdit: false,
+            canAdmin: false,
+            canDelete: false,
+            canDownload: false,
+            canRead: false,
+            canShare: false,
+        },
+        folderId: ""
     })
     const { isLeft, menus, leftCurrent, fileTypes, listData, breadcrumbList, tableHeight, isNewFolder,
-         folderPicker, isRename, fileParams, isFileMove, isDelete, isSetPerm } = toRefs(data);
+         folderPicker, isRename, fileParams, isFileMove, isDelete, isSetPerm, srchType, Privilege, folderId } = toRefs(data);
 
     const folderName = computed(()=>{
         return data.menus[data.leftCurrent].name;
@@ -301,6 +336,7 @@
     const handleMenuClick = (item,index) => {
         data.leftCurrent = index;
         data.folderPicker = item.folderPicker;
+        data.srchType = item.srchType;
     }
     // 面包屑切换
     const handleBreadcrumbItem = (item,idx) => {
@@ -309,7 +345,9 @@
     const handleOpenFile = (item) => {
         console.log("item",item);
         if(item.type=='folder'){
-            console.log("123");
+            data.folderId = item.id;
+            data.folderPicker = item.id;
+            data.Privilege = item.privilege;
             data.breadcrumbList.push({
                 name: item.name,
                 type: item.type,
@@ -334,9 +372,16 @@
         })
     }
     const handleAddFolder = () => {
+        data.fileParams = {};
         data.isNewFolder = true;
     }
-
+    const handleEditFile = (item) => {
+        data.fileParams = {
+            id: item.id,
+            name: item.name
+        };
+        data.isNewFolder = true;
+    }
     const cancelNewModal = (e) => {
         data.isNewFolder = e;
     }
@@ -366,11 +411,22 @@
         }
         data.isDelete = true;
     }
+    // 设置权限
+    const handleSetPrem = (item) => {
+        data.fileParams = {
+            id: item.id,
+            name: item.name
+        };
+        data.isSetPerm = true;
+    }
     const cancelDelete = (e) => {
         data.isDelete = e;
     }
     const cancelFileMove = (e) => {
         data.isFileMove = e;
+    }
+    const cancelPerm = (e) => {
+        data.isSetPerm = e;
     }
 </script>
 <style lang="less" scoped>
@@ -466,6 +522,9 @@
                                 }
                             }
                         }
+                    }
+                    .rightBtns{
+                        display: flex;
                     }
                 }
                 .layoutBodyCenter{

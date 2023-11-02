@@ -48,6 +48,7 @@ const Interface = {
     groupList: "/localData/user/sys.group.search.json", // 小组列表
     groupUser: "/localData/user/sys.group.member.search.json", // 小组下用户
     sysUser: "/localData/user/sys.user.search.json",
+    usersettings: "/localData/user/sys.usersettings.get.json"
   },
   saveRecord: "/localData/entity.saverecord.json",
   // 通讯录
@@ -82,7 +83,11 @@ const Interface = {
     list: "/localData/fileAdmin/file.files.search.json",
     child: "/localData/fileAdmin/child.json",
     tree: "/localData/fileAdmin/file.tree.json",
-    move: "/localData/fileAdmin/filefolder.move.json"
+    move: "/localData/fileAdmin/filefolder.move.json",
+    access: "/localData/fileAdmin/folder.share.access.json",
+    removecontentaccess: "/localData/fileAdmin/removecontentaccess.json",  // 已添加人删除
+    updatecontentaccess: "/localData/fileAdmin/updatecontentaccess.json", // 更新权限
+    addAccess: "/localData/fileAdmin/add.content.access.json"
   }
 };
 export default Interface;

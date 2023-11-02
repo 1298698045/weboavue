@@ -170,6 +170,15 @@ const routes = [
           icon: "xinjian"
         }
       },
+      {
+        path:"/oa/information",
+        component: () => import("../views/information/list/index.vue"),
+        name: "信息管理",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian"
+        }
+      },
     ]
   },
   {
@@ -217,7 +226,12 @@ const routes = [
         }
       }
     ]
-  }
+  },
+  {
+    path: "/fileDetail",
+    name: "FileDetail",
+    component: ()=> import("../views/fileAdmin/fileDetail.vue")
+  },
   // {
   //   path: "/about",
   //   name: "About",

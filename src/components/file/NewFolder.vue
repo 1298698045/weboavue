@@ -13,7 +13,7 @@
           </div>
         </template>
         <div class="modalContainer">
-          <div class="modalCenter" :style="{ height: height + 'px' }">
+          <div class="modalCenter" :style="{ height: height + 'px!important' }">
             <a-form :model="formState" ref="formRef">
               <div class="section">
                 <div class="sectionTitle">基本信息</div>
