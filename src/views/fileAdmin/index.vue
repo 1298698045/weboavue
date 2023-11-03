@@ -109,21 +109,30 @@
                                             <a-dropdown trigger="click">
                                                 <template #overlay>
                                                     <a-menu>
-                                                      <a-menu-item @click="handleEditFile(record)">
-                                                        编辑
-                                                      </a-menu-item>
-                                                      <a-menu-item @click="handleFileRename(record)">
-                                                        重命名
-                                                      </a-menu-item>
-                                                      <a-menu-item @click="handleMoveFile(record)">
-                                                        移动
-                                                      </a-menu-item>
-                                                      <a-menu-item @click="handleDeleteFile(record)">
-                                                        删除
-                                                      </a-menu-item>
-                                                      <a-menu-item @click="handleSetPrem(record)">
-                                                        设置权限
-                                                      </a-menu-item>
+                                                      <a-menu-item v-if="record.type=='file'&&(record.privilege?(record.privilege.canRead || record.privilege.canAdmin):record.canRead=='true')">查看</a-menu-item>
+                                                      <a-menu-item v-if="record.type=='file'&&(record.privilege?(record.privilege.canRead || record.privilege.canAdmin):record.canRead=='true')" @click="handleFileDetail(record)">详情</a-menu-item>
+                                                      <a-menu-item v-if="record.type=='file'&&(record.privilege?(record.privilege.canDownload || record.privilege.canAdmin):record.canAdmin=='true')">下载</a-menu-item>
+
+                                                      <a-menu-item v-if="record.type=='folder'&&(record.privilege?(record.privilege.CanEdit||record.privilege.canEdit||record.privilege.canAdmin):record.canAdmin=='true')" @click="handleEditFile(record)">编辑</a-menu-item>
+                                                      <a-menu-item v-if="record.privilege?(record.privilege.CanEdit||record.privilege.canEdit || record.privilege.canAdmin):record.canRead=='true'" @click="handleFileRename(record)">重命名</a-menu-item>
+                                                      <a-menu-item v-if="record.privilege?(record.privilege.CanEdit||record.privilege.canEdit || record.privilege.canAdmin):record.canRead=='true'" @click="handleMoveFile(record)">移动</a-menu-item>
+                                                      <template v-if="(record.privilege?(record.privilege.canDelete || record.privilege.canAdmin):record.canAdmin=='true')||(SystemUserId&&(record.CreatedBy==SystemUserId||record.createdBy==SystemUserId))">
+                                                          <a-menu-item v-if="srchType=='recycle'">彻底删除</a-menu-item>
+                                                          <a-menu-item v-if="srchType!='recycle'" @click="handleDeleteFile(record)">删除</a-menu-item>
+                                                      </template>
+
+                                                      <a-menu-item v-if="srchType=='recycle'">还原</a-menu-item>
+                                                      <a-menu-item v-if="srchType!='favorite'&&srchType!='recycle'&&record.type=='file'" @click="handleAddFavor">收藏</a-menu-item>
+                                                      <a-popconfirm
+                                                        title="是否确定取消收藏?"
+                                                        ok-text="确定"
+                                                        cancel-text="取消"
+                                                        @confirm="cancelFavor"
+                                                        >
+                                                      <a-menu-item v-if="srchType == 'favorite'">取消收藏</a-menu-item>
+                                                    </a-popconfirm>
+
+                                                      <a-menu-item v-if="record.privilege?record.privilege.canAdmin:record.canAdmin=='true'" @click="handleSetPrem(record)">设置权限</a-menu-item>
                                                     </a-menu>
                                                 </template>
                                                 <a-button :icon="h(EllipsisOutlined)"></a-button>
@@ -140,7 +149,7 @@
         <NewFolder :isShow="isNewFolder"  :fileParams="fileParams" :folderName="folderName" :folderPicker="folderPicker" @cancel="cancelNewModal" />
         <FileRename :isShow="isRename" :fileParams="fileParams" @cancel="cancelReName" />
         <FileMove :isShow="isFileMove" :fileParams="fileParams" @cancel="cancelFileMove" />
-        <Delete :isShow="isDelete"  :fileParams="fileParams" @cancel="cancelDelete" />
+        <Delete :isShow="isDelete"  :fileParams="fileParams" @cancel="cancelDelete" @ok="deleteOk" />
         <SetPermissions :isShow="isSetPerm" :fileParams="fileParams" @cancel="cancelPerm" />
     </div>
 </template>
@@ -292,15 +301,22 @@
             canRead: false,
             canShare: false,
         },
-        folderId: ""
+        folderId: "",
+        SystemUserId: ""
     })
     const { isLeft, menus, leftCurrent, fileTypes, listData, breadcrumbList, tableHeight, isNewFolder,
-         folderPicker, isRename, fileParams, isFileMove, isDelete, isSetPerm, srchType, Privilege, folderId } = toRefs(data);
+         folderPicker, isRename, fileParams, isFileMove, isDelete, isSetPerm, srchType, Privilege, folderId, SystemUserId } = toRefs(data);
 
     const folderName = computed(()=>{
         return data.menus[data.leftCurrent].name;
     })
     const contentRef = ref(null);
+    const getUserInfo = () => {
+        proxy.$get(Interface.userInfo,{}).then(res=>{
+            data.SystemUserId = res.userId;
+        })
+    }
+    getUserInfo();
     onMounted(()=>{
        console.log("contentRef.value.clientHeight",contentRef.value.clientHeight);
         data.tableHeight =  contentRef.value.clientHeight - 260 + 'px';
@@ -407,9 +423,22 @@
     const handleDeleteFile = (item) => {
         data.fileParams = {
             id: item.id,
-            name: item.name
+            name: item.name,
+            type: item.type
         }
         data.isDelete = true;
+    }
+    const deleteOk = (e) => {
+        console.log('fileParams',data.fileParams);
+        console.log("e",e);
+        proxy.$get(Interface.file.delete,{
+            ID: data.fileParams.id,
+            IsFolder: data.fileParams.type == 'folder' ? 1 : 0
+        }).then(res=>{
+            message.success("删除成功！");
+            data.isDelete = false;
+            getQuery();
+        })
     }
     // 设置权限
     const handleSetPrem = (item) => {
@@ -427,6 +456,36 @@
     }
     const cancelPerm = (e) => {
         data.isSetPerm = e;
+    }
+    // 文件详情
+    const handleFileDetail = (item) => {
+        const url = router.resolve({
+            name: 'FileDetail',
+            query: {
+                id: item.id
+            }
+        })
+        window.open(url.href);
+    }
+    // 收藏
+    const handleAddFavor = (item) => {
+        proxy.$get(Interface.file.favorite,{
+            fileId: item.id
+        }).then(res=>{
+            console.log("res",res);
+            message.success("收藏成功！");
+            getQuery();
+        })
+    }
+    // 取消收藏
+    const cancelFavor = (item) => {
+        proxy.$get(Interface.file.deleteFavor,{
+            fileId: item.id
+        }).then(res=>{
+            console.log("res",res);
+            message.success("取消收藏成功！");
+            getQuery();
+        })
     }
 </script>
 <style lang="less" scoped>

@@ -1,64 +1,14 @@
 <template>
     <div class="todoList">
-      <div class="todo-head">
-        <div class="todo-head-left">
-          <div class="icon-circle-base"></div>
-          <span class="wea-new-top-title-breadcrumb">待办事宜</span>
-        </div>
-        <div class="todo-head-right">
-          <a-button type="primary">全部已读</a-button>
-          <a-dropdown-button :trigger="['click']">
-            批量提交
-            <template #overlay>
-              <a-menu @click="handleMenuClick">
-                <a-menu-item key="1">
-                  <UserOutlined />
-                  1st menu item
-                </a-menu-item>
-                <a-menu-item key="2">
-                  <UserOutlined />
-                  2nd menu item
-                </a-menu-item>
-                <a-menu-item key="3">
-                  <UserOutlined />
-                  3rd item
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown-button>
-          <a-dropdown :trigger="['click']">
-            <span class="btn-drop">
-              <UnorderedListOutlined />
-            </span>
-            <template #overlay>
-              <a-menu @click="handleMenuClick">
-                <a-menu-item key="1">
-                  <UserOutlined />
-                  1st menu item
-                </a-menu-item>
-                <a-menu-item key="2">
-                  <UserOutlined />
-                  2nd menu item
-                </a-menu-item>
-                <a-menu-item key="3">
-                  <UserOutlined />
-                  3rd item
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </div>
-      </div>
       <div class="todo-content">
         <a-row>
           <a-col
-            span="5"
+            span="3"
             class="wea-left-right-layout-left"
             v-if="!isCollapsed"
           >
             <div class="wea-left-tree">
               <div class="wea-left-tree-search">
-                <span class="wea-left-tree-search-label">全部类型</span>
                 <a-input-search
                   v-model:value="value"
                   placeholder=""
@@ -99,7 +49,7 @@
             </div>
           </a-col>
           <a-col
-            :span="isCollapsed ? '24' : '19'"
+            :span="isCollapsed ? '24' : '21'"
             class="wea-left-right-layout-right"
           >
             <div
@@ -159,8 +109,6 @@
           </a-col>
         </a-row>
       </div>
-      <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
-      <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation" :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
     </div>
   </template>
   <script setup>
@@ -274,28 +222,20 @@
     },
     tabs:[
       {
-        lable: "全部",
+        lable: "我创建",
         count: 18
       },
       {
-        lable: "被退回",
+        lable: "部门的",
         count: ''
       },
       {
-        lable: "已读",
+        lable: "我管理的",
         count: 16
       },
       {
-        lable: "未读",
-        count: 2
-      },
-      {
-        lable: "超时",
-        count: ''
-      },
-      {
-        lable: "待阅",
-        count: ''
+        lable: "待审批",
+        count: 0
       }
     ],
     activeKey: 0,
@@ -447,7 +387,7 @@
       gridRef.value.loadGrid(data.queryParams);
     }
   </script>
-  <style lang="less">
+  <style lang="less" scoped>
   .todoList {
     width: 100%;
     height: 100%;
@@ -498,7 +438,8 @@
     }
     .todo-content {
       width: 100%;
-      height: calc(~"100% - 52px");
+      /* height: calc(~"100% - 52px"); */
+      height: 100%;
       .ant-row {
         height: 100%;
         .wea-left-right-layout-left {
@@ -512,8 +453,8 @@
               line-height: 46px;
               display: flex;
               align-items: center;
-              padding-right: 14px;
               box-sizing: border-box;
+              padding: 0 14px;
               .wea-left-tree-search-label {
                 display: inline-block;
                 padding-left: 14px;

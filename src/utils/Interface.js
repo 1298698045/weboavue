@@ -87,7 +87,11 @@ const Interface = {
     access: "/localData/fileAdmin/folder.share.access.json",
     removecontentaccess: "/localData/fileAdmin/removecontentaccess.json",  // 已添加人删除
     updatecontentaccess: "/localData/fileAdmin/updatecontentaccess.json", // 更新权限
-    addAccess: "/localData/fileAdmin/add.content.access.json"
+    addAccess: "/localData/fileAdmin/add.content.access.json",
+    readRecord: "/localData/fileAdmin/entitygrid.list.json",
+    delete: "/localData/fileAdmin/filefolder.delete.json",
+    favorite: "/localData/fileAdmin/file.favorite.add.json", // 收藏
+    deleteFavor: "/localData/fileAdmin/file.favorite.delete.json", // 取消收藏
   }
 };
 export default Interface;

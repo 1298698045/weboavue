@@ -9,9 +9,10 @@
                 </div>
             </div>
             <div class="panel-bd">
-                <a-table :columns="columns2" :data-source="list2">
-                    <template #bodyCell="{ column }">
-                        <template v-if="column.key === 'sortNumber'">
+                <a-table :columns="columns" :data-source="list">
+                    <template #bodyCell="{ column, record, index }">
+                        <template v-if="column.key == 'sortNumber'">
+                            {{ index+1 }}
                         </template>
                     </template>
                 </a-table>
@@ -26,38 +27,20 @@
     var columns = [
         {
             title: "序号",
-            // dataIndex: "FromActivityName"
+            key: "sortNumber",
+            dataIndex: "sortNumber"
         },
         {
-            title: "传阅人",
-            dataIndex: "ToActivityName"
+            title: "部门",
+            dataIndex: "BusinessUnitIdName"
         },
         {
-            title: "传阅时间",
-            dataIndex: "CreatedOn"
+            title: "姓名",
+            dataIndex: "ReaderIdName"
         },
         {
-            title: "接收人",
-            dataIndex: "ReceiverName"
-        },
-        {
-            title: "是否已读",
-            dataIndex: "IsRead"
-        }
-    ]
-    var columns2 = [
-        {
-            title: "序号",
-            // dataIndex: "FromActivityName",
-            key: "sortNumber"
-        },
-        {
-            title: "阅读人",
-            dataIndex: "CreatedByName"
-        },
-        {
-            title: "阅读时间",
-            dataIndex: "CreatedOn"
+            title: "状态",
+            dataIndex: "StateCodeName"
         },
         {
             title: "IP地址",
@@ -65,21 +48,32 @@
         },
         {
             title: "浏览器名称与版本",
-            dataIndex: "BrowserName"
+            dataIndex: "CreatedOn"
+        },
+        {
+            title: "阅读次数",
+            dataIndex: "ReadTimes"
+        },
+        {
+            title: "邀请时间",
+            dataIndex: "CreatedOn"
         }
     ]
     const data = reactive({
-        list: [],
-        list2: []
+        list: []
     })
-    const { list, list2 } = toRefs(data);
+    const { list } = toRefs(data);
     const columnList = toRaw(columns);
-    const columnList2 = toRaw(columns2);
     const getList = async () => {
-        await proxy.$get(Interface.readlogList,{
-            processInstanceId: "9fd5ec7f-86c8-44e2-b7ee-aa73f7730c2c"
-        }).then(res=>{
-            data.list2 = res.rows;
+        var obj = {
+            filterQuery: "fileId\teq\t"+"19e6ddee-9b2f-49ae-ba9a-cbf8d7bfe033",
+            objectTypeCode: "100102",
+            entityType: "070",
+            page: 1,
+            rows: 10
+        }
+        await proxy.$get(Interface.file.readRecord,obj).then(res=>{
+            data.list = res.rows;
         })
     }
     onMounted(()=>{

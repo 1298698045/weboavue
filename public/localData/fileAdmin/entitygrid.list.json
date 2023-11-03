@@ -1,0 +1,17 @@
+{
+  "total": 1,
+  "rows": [
+    {
+      "LIST_RECORD_ID": "8af33cd5-f776-469e-a7c4-b0c0575872aa",
+      "Name":"<a style=\"color:blue;\" href=\"/070/detail?objectTypeCode=100102&id=8af33cd5-f776-469e-a7c4-b0c0575872aa&retURL=\">-</a>","IsDownload":" <img class=\"checkImg\" width=\"21\" height=\"16\" title=\"未选取的\" alt=\"未选取的\" src=\"/img/checkbox_unchecked.gif\">",
+      "IpAddr": "::1",
+      "BrowserName": "System.Web.Mobile.MobileCapabilities118.0",
+      "DownloadTimes": "0",
+      "CreatedOn": "2023-10-17 15:37"
+    }
+  ],
+  "context": {
+    "userid": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "name": "jackliu3"
+  }
+}
