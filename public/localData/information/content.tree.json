@@ -1,0 +1,180 @@
+[
+  {
+    "id": "0781c6bd-663a-4e5c-8d96-1f4c71e08204",
+    "name": "123",
+    "text": null,
+    "quantity": 0,
+    "parent": null,
+    "children": []
+  },
+  {
+    "id": "d00b816e-a006-49d1-8387-33919346e731",
+    "name": "新闻动态",
+    "text": null,
+    "quantity": 0,
+    "parent": null,
+    "children": []
+  },
+  {
+    "id": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+    "name": "制度文件",
+    "text": null,
+    "quantity": 0,
+    "parent": null,
+    "children": [
+      {
+        "id": "b4da656b-aa84-4ba4-85b0-4e88031509b6",
+        "name": "人事管理制度",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      },
+      {
+        "id": "d3b2d1cc-c754-4787-bb7d-55fc592ab890",
+        "name": "行政管理制度",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      },
+      {
+        "id": "ae4b893b-6ea9-42d6-bc1f-898cc1b95964",
+        "name": "医疗管理制度",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      },
+      {
+        "id": "14051cfc-1952-4935-b02b-5caac02eb1a2",
+        "name": "公文库",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      },
+      {
+        "id": "5bc3a763-4351-4bc1-9929-dbfab832cfab",
+        "name": "后勤管理制度",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      },
+      {
+        "id": "93bfde90-accf-4691-b999-84ef01f1e346",
+        "name": "药事管理制度",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      },
+      {
+        "id": "42fac529-d3c8-43a8-9024-1ac77ca8634e",
+        "name": "宣传管理制度",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      },
+      {
+        "id": "e5f8f107-5d92-450a-b430-1fcfd42c281a",
+        "name": "党委工作制度",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      },
+      {
+        "id": "1d193a9a-a728-4474-be17-078e95534395",
+        "name": "纪检监察制度",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      },
+      {
+        "id": "31aac2c7-e7e0-4839-9f55-234258f258d3",
+        "name": "医院下发文",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "d82c8d16-19ad-8176-d665-453cfb2e55f0",
+    "name": "院务公开",
+    "text": null,
+    "quantity": 0,
+    "parent": null,
+    "children": []
+  },
+  {
+    "id": "a442bbf4-3bad-4477-a66d-c3d3088fcbba",
+    "name": "下载中心",
+    "text": null,
+    "quantity": 0,
+    "parent": null,
+    "children": []
+  },
+  {
+    "id": "a87ff679-a2f3-e71d-9181-a67b7542122c",
+    "name": "党务公开",
+    "text": null,
+    "quantity": 0,
+    "parent": null,
+    "children": []
+  },
+  {
+    "id": "eccbc87e-4b5c-e2fe-2830-8fd9f2a7baf3",
+    "name": "学习园地",
+    "text": null,
+    "quantity": 0,
+    "parent": null,
+    "children": [
+      {
+        "id": "fddc08f9-75e6-414a-99d5-be3c84124bab",
+        "name": "党员学习",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      },
+      {
+        "id": "5757dc6d-8347-4053-9acb-a067d1f0872a",
+        "name": "警示教育",
+        "text": null,
+        "quantity": 0,
+        "parent": null,
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "40545587-485c-49a6-b194-8c1afb2ba9ce",
+    "name": "护理之家",
+    "text": null,
+    "quantity": 0,
+    "parent": null,
+    "children": []
+  },
+  {
+    "id": "c691f001-a2ba-419d-ac02-094ce7754e32",
+    "name": "护理文件",
+    "text": null,
+    "quantity": 0,
+    "parent": null,
+    "children": []
+  },
+  {
+    "id": "2faf0418-74cd-4c37-8ba5-376fa6581bce",
+    "name": "院刊专栏",
+    "text": null,
+    "quantity": 0,
+    "parent": null,
+    "children": []
+  }
+]

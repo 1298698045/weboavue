@@ -31,18 +31,8 @@
                       style="color: rgb(163, 163, 163); font-size: 14px"
                     ></CaretDownOutlined>
                   </template>
-                  <template  v-slot:title="{ name, data, isLeaf, text, quantity }">
-                    <span v-if="name.indexOf(searchValue) > -1">
-                      {{ name.substr(0, name.indexOf(searchValue)) }}
-                      <!-- <span style="color: #f50">{{ searchValue }}</span> -->
-                      {{
-                        name.substr(
-                          name.indexOf(searchValue) + searchValue.length
-                        )
-                      }}
-                      <span class="tree-num">{{ quantity }}</span>
-                    </span>
-                    <span v-else>{{ name }}</span>
+                  <template  #title="{ name }">
+                    <span>{{ name }}</span>
                   </template>
                 </a-tree>
               </div>
@@ -70,37 +60,13 @@
                   <!-- <a-tab-pane key="2" tab="待处理" force-render></a-tab-pane>
                   <a-tab-pane key="3" tab="待阅"></a-tab-pane> -->
                 </a-tabs>
+                <div class="tabsBtn">
+                  <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
+                  <a-button type="primary" class="ml10">批量发布</a-button>
+                  <a-button class="ml10">批量取消发布</a-button>
+                </div>
               </div>
               <list-form-search ref="searchRef" @update-height="changeHeight" ></list-form-search>
-              <!-- <div class="formSearch">
-                <a-form
-                  :model="formState"
-                  name="basic"
-                  :label-col="{ span: 8 }"
-                  :wrapper-col="{ span: 16 }"
-                  autocomplete="off"
-                  @finish="onFinish"
-                  @finishFailed="onFinishFailed"
-                >
-                  <a-form-item
-                    label="标题"
-                    name="username"
-                    :rules="[{ required: true, message: 'Please input your username!' }]"
-                  >
-                    <a-input v-model:value="formState.username" />
-                  </a-form-item>
-                  <a-form-item
-                    label="发起人"
-                    name="username"
-                    :rules="[{ required: true, message: 'Please input your username!' }]"
-                  >
-                  <a-input v-model:value="formState.username" />
-                </a-form-item>
-                  <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-                    <a-button type="primary" html-type="submit">搜索</a-button>
-                  </a-form-item>
-                </a-form>
-              </div> -->
               <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
                 <!-- <a-table :dataSource="dataSource" :columns="columns"></a-table> -->
                 <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable>
@@ -109,6 +75,7 @@
           </a-col>
         </a-row>
       </div>
+      <NewInfo :isShow="isNew" :treeData="gData" @cancel="cancelNew" />
     </div>
   </template>
   <script setup>
@@ -126,7 +93,7 @@
   const route = useRoute();
   const router = useRouter();
   import Delegate from "@/components/workflow/Delegate.vue";
-  import CirculationModal from "@/components/workflow/CirculationModal.vue";
+  import NewInfo from "@/components/information/NewInfo.vue";
   const x = 3;
   const y = 2;
   const z = 1;
@@ -190,9 +157,20 @@
   const autoExpandParent = ref(true);
   const res = require("@/localData/treedata.json");
   const gData = ref([]);
-  proxy.$get('/localData/treedata.json',{}).then((response)=>{
-    console.log("res",response)
-    gData.value = response.data;
+  proxy.$get(Interface.information.contentTree,{}).then((response)=>{
+    console.log("res",response);
+    let formTree = (list) => {
+      list.forEach(item=>{
+        if(item.children){
+          formTree(item.children);
+        }
+        item.key = item.id;
+        item.value = item.id;
+      })
+    }
+    formTree(response);
+    console.log("formTree",response)
+    gData.value = response;
   })
   // console.log("genData",genData,treeList)
   
@@ -241,12 +219,13 @@
     activeKey: 0,
     queryParams: {},
     isModal: false,
-    isCirculation: false
+    isCirculation: false,
+    isNew: false
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
-  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation} = toRefs(data);
+  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew} = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
   let formSearchHeight = ref(null);
@@ -386,6 +365,12 @@
       data.queryParams.activeKey = e;
       gridRef.value.loadGrid(data.queryParams);
     }
+    const handleNew = (e) => {
+      data.isNew = true;
+    }
+    const cancelNew = (e) => {
+      data.isNew = e;
+    }
   </script>
   <style lang="less" scoped>
   .todoList {
@@ -522,6 +507,14 @@
         }
         .wea-tab {
           height: 46px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid #e2e3e5;
+          padding: 0 15px;
+          :deep .ant-tabs-nav::before{
+            border-bottom: none !important;
+          }
         }
         .wea-tabContent {
           /* height: calc(~"100% - 98px"); */

@@ -92,6 +92,9 @@ const Interface = {
     delete: "/localData/fileAdmin/filefolder.delete.json",
     favorite: "/localData/fileAdmin/file.favorite.add.json", // 收藏
     deleteFavor: "/localData/fileAdmin/file.favorite.delete.json", // 取消收藏
+  },
+  information: {
+    contentTree: "/localData/information/content.tree.json"
   }
 };
 export default Interface;
