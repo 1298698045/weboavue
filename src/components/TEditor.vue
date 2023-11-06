@@ -16,6 +16,8 @@ import {
   toRaw,
 } from "vue";
 const emit = defineEmits(["input"]);
+
+
 const props = defineProps({
   value: {
     type: String,
@@ -105,4 +107,5 @@ watch(
   },
   { deep: true, immediate: true }
 );
+defineExpose({init})
 </script>

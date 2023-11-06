@@ -53,16 +53,11 @@
         isShow: Boolean,
         treeData: Array
     })
+    import { message } from "ant-design-vue";
+
     const emit = defineEmits(['cancel']);
     const handleCancel = ()=> {
         emit("cancel", false);
-    }
-    const handleSubmit = ()=> {
-        formRef.value.validate().then(() => {
-            console.log('values', formState, toRaw(formState));
-        }).catch(error => {
-            console.log('error', error);
-        });
     }
     const data = reactive({
         listData: [],
@@ -108,6 +103,34 @@
         }).then(res=>{
             data.listData = res.listData;
         })
+    }
+    const handleSubmit = ()=> {
+        formRef.value.validate().then(() => {
+            console.log('values', formState, toRaw(formState));
+            var obj = {
+                params: {
+                    recordRep: {
+                        objTypeCode: 100201,
+                        fields: {
+                            ContentTypeCode: 1,
+                            Title: formState.name,
+                            FolderId: {
+                                Id: formState.column
+                            }
+                        }
+                    }
+                }
+            }
+            let messages = JSON.stringify(obj);
+            proxy.$get(Interface.saveRecord,{
+                message: messages
+            }).then(res=>{
+                message.success("保存成功！");
+                emit("cancel", false);
+            })
+        }).catch(error => {
+            console.log('error', error);
+        });
     }
 </script>
 <style lang="less" scoped>

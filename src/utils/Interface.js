@@ -94,7 +94,8 @@ const Interface = {
     deleteFavor: "/localData/fileAdmin/file.favorite.delete.json", // 取消收藏
   },
   information: {
-    contentTree: "/localData/information/content.tree.json"
+    contentTree: "/localData/information/content.tree.json",
+    detail: "/localData/information/entity.recordandlayout.get.json"
   }
 };
 export default Interface;

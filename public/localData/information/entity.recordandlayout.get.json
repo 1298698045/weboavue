@@ -1,0 +1,599 @@
+{
+  "actions": [
+    {
+      "state": "SUCCESS",
+      "msg": "",
+      "returnValue": {
+        "id": "90c639f7-0e93-45fd-bb3d-1026c6438d8e",
+        "entityLabel": "内容",
+        "keyPrefix": "090",
+        "entityApiName": "Content",
+        "objectTypeCode": 100201,
+        "record": {
+          "Title": "测试",
+          "CreatedBy": {
+            "Id": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+            "Name": "jackliu3",
+            "objectTypeCode": "8",
+            "sobjectType": "SystemUser"
+          },
+          "ModifiedBy": {
+            "Id": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+            "Name": "jackliu3",
+            "objectTypeCode": "8",
+            "sobjectType": "SystemUser"
+          },
+          "CreatedOn": "2023-11-06 11:18",
+          "ModifiedOn": "2023-11-06 11:18",
+          "BusinessUnitId": {
+            "Id": "",
+            "Name": "",
+            "objectTypeCode": "10",
+            "sobjectType": "BusinessUnit"
+          },
+          "ApprovedBy": {
+            "Id": "",
+            "Name": "",
+            "objectTypeCode": "8",
+            "sobjectType": "SystemUser"
+          },
+          "ApprovedOn": "",
+          "KeyWords": "",
+          "FolderId": {
+            "Id": "d00b816e-a006-49d1-8387-33919346e731",
+            "Name": "新闻动态",
+            "objectTypeCode": "100200",
+            "sobjectType": "100200"
+          },
+          "ContentBody": "",
+          "MainImg": "",
+          "ContentTypeCode": 1,
+          "IsPublic": true,
+          "IsImportant": false,
+          "IsTop": null,
+          "EndTopDate": "",
+          "ExpiresOn": "",
+          "StatusCode": "草稿 ",
+          "StateCode": "草稿",
+          "ReadDetectionFlag": "",
+          "CoverAbstract": "",
+          "CoverDisplay": "",
+          "AttachRightCode": "",
+          "ReadCount": 0,
+          "CommentCount": 0,
+          "DislikeQty": 0,
+          "LikeCount": 0,
+          "UrgentLevel": "",
+          "Position": 0,
+          "OrganizationId": {
+            "Id": "",
+            "Name": "",
+            "objectTypeCode": "0",
+            "sobjectType": "0"
+          },
+          "PeopleQuery": ""
+        }
+      }
+    }
+  ],
+  "context": {
+    "globalValueProviders": [
+      {
+        "entityId": "$Record",
+        "values": {
+          "objectMetadata": {
+            "Content": {
+              "_nameField": "Title",
+              "_entityLabel": "内容",
+              "_keyPrefix": "090"
+            }
+          }
+        }
+      }
+    ],
+    "componentDefs": [
+      {
+        "lt": {
+          "entityLabel": "内容",
+          "entityApiName": "Content",
+          "layoutId": null,
+          "name": null,
+          "objectTypeCode": 100201,
+          "recordNameField": null,
+          "keyPrefix": "090",
+          "isInlineEditable": true,
+          "isUserLayout": false,
+          "headerActions": [
+            {
+              "executionComponent": {
+                "descriptor": null,
+                "isEvent": true,
+                "isClientSideCreatable": true,
+                "componentName": null
+              },
+              "devNameOrId": "SaveEdit",
+              "requiresSelectionForUsage": false,
+              "isSelected": true,
+              "label": "保存",
+              "title": "保存",
+              "isRenderEntityIcon": false,
+              "isVisible": false,
+              "assertive": false,
+              "section": "Page",
+              "icon": "/img/icon/t4v35/action/new_custom19_120.png",
+              "url": null,
+              "isMassAction": false,
+              "actionTypeEnum": "StandardButton"
+            },
+            {
+              "executionComponent": {
+                "descriptor": null,
+                "isEvent": true,
+                "isClientSideCreatable": true,
+                "componentName": null
+              },
+              "devNameOrId": "SaveAndNew",
+              "requiresSelectionForUsage": false,
+              "isSelected": false,
+              "label": "保存并新建",
+              "title": "保存并新建",
+              "isRenderEntityIcon": false,
+              "isVisible": false,
+              "assertive": false,
+              "section": "Page",
+              "icon": "/img/icon/t4v35/action/new_custom19_120.png",
+              "url": null,
+              "isMassAction": false,
+              "actionTypeEnum": "StandardButton"
+            },
+            {
+              "executionComponent": {
+                "descriptor": null,
+                "isEvent": true,
+                "isClientSideCreatable": true,
+                "componentName": null
+              },
+              "devNameOrId": "CancelEdit",
+              "requiresSelectionForUsage": false,
+              "isSelected": false,
+              "label": "取消",
+              "title": "取消",
+              "isRenderEntityIcon": false,
+              "isVisible": false,
+              "assertive": false,
+              "section": "Page",
+              "icon": "/img/icon/t4v35/action/new_custom19_120.png",
+              "url": null,
+              "isMassAction": false,
+              "actionTypeEnum": "StandardButton"
+            }
+          ],
+          "inlineEditActions": [],
+          "sections": [
+            {
+              "sectionId": "d2477bc3-dbed-4264-8a73-2d22e8126419",
+              "labelKey": "Basic",
+              "title": "基本信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": false,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "标题",
+                      "localId": "Title",
+                      "targetValue": "Title",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "X",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "栏目",
+                      "localId": "FolderId",
+                      "targetValue": "FolderId",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "Y",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 100200,
+                        "sObjectType": 100200,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "关键字",
+                      "localId": "KeyWords",
+                      "targetValue": "KeyWords",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "X",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "部门",
+                      "localId": "BusinessUnitId",
+                      "targetValue": "BusinessUnitId",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "O",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 10,
+                        "sObjectType": 10,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "重要信息",
+                      "localId": "IsImportant",
+                      "targetValue": "IsImportant",
+                      "attributes": {
+                        "maxlength": 1,
+                        "type": "B",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "置顶",
+                      "localId": "IsTop",
+                      "targetValue": "IsTop",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "N",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 3
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "截至日期",
+                      "localId": "ExpiresOn",
+                      "targetValue": "ExpiresOn",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "置顶截止时间",
+                      "localId": "EndTopDate",
+                      "targetValue": "EndTopDate",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "F",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 4
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "审批状态",
+                      "localId": "StatusCode",
+                      "targetValue": "StatusCode",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "附件权限",
+                      "localId": "AttachRightCode",
+                      "targetValue": "AttachRightCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 5
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "紧急程度",
+                      "localId": "UrgentLevel",
+                      "targetValue": "UrgentLevel",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 6
+                }
+              ]
+            },
+            {
+              "sectionId": "0b55d58c-44ca-47db-b8f9-5898ef2da2a7",
+              "labelKey": "Content",
+              "title": "内容",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": false,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "主图",
+                      "localId": "MainImg",
+                      "targetValue": "MainImg",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "X",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "封面显示方式",
+                      "localId": "CoverDisplay",
+                      "targetValue": "CoverDisplay",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "封面简介",
+                      "localId": "CoverAbstract",
+                      "targetValue": "CoverAbstract",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "X",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            },
+            {
+              "sectionId": "64811bc2-04b4-4390-86e3-86367ac984fc",
+              "labelKey": "Response",
+              "title": "回执",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": false,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "阅读数",
+                      "localId": "ReadCount",
+                      "targetValue": "ReadCount",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "N",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "评论数量",
+                      "localId": "CommentCount",
+                      "targetValue": "CommentCount",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "N",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "喜欢数量",
+                      "localId": "LikeCount",
+                      "targetValue": "LikeCount",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "N",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "不喜欢数量",
+                      "localId": "DislikeQty",
+                      "targetValue": "DislikeQty",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "N",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            }
+          ],
+          "localizedTitle": "内容",
+          "lookupAttributes": [
+            {
+              "objectTypeCode": 100200,
+              "name": "FolderId"
+            },
+            {
+              "objectTypeCode": 10,
+              "name": "BusinessUnitId"
+            }
+          ]
+        }
+      }
+    ],
+    "compactLayoutFields": [
+      {
+        "name": "Name",
+        "label": ""
+      }
+    ]
+  }
+}

@@ -232,6 +232,11 @@ const routes = [
     name: "FileDetail",
     component: ()=> import("../views/fileAdmin/fileDetail.vue")
   },
+  {
+    path: "/informationEditor",
+    name: "InformationEditor",
+    component: ()=> import("../views/information/editor/index.vue")
+  }
   // {
   //   path: "/about",
   //   name: "About",
