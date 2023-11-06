@@ -1,5 +1,5 @@
 <template>
-  <Editor v-model="content" :init="init" />
+  <Editor v-model="content" :init="init" ref="editorRef" />
 </template>
 <script setup>
 import {
@@ -16,8 +16,8 @@ import {
   toRaw,
 } from "vue";
 const emit = defineEmits(["input"]);
-
-
+const height = ref(props.height);
+const editorRef = ref();
 const props = defineProps({
   value: {
     type: String,
@@ -74,31 +74,59 @@ import "tinymce/plugins/visualblocks";
 import "tinymce/plugins/wordcount";
 import "tinymce/plugins/insertdatetime";
 import "tinymce/plugins/image";
+import tinymce from "tinymce/tinymce";
 
-let init = reactive({
-  // 选择器
-  selector: "textarea",
-  // 设置本地主题
-  skin_url: "/tinymce/skins/ui/oxide",
-  // 设置本地css
-  content_css: "/tinymce/skins/content/default/content.css",
-  // 设置本地语言
-  language_url: "/tinymce/langs/zh_CN.js",
-  // 设置本地语言
-  language: "zh_CN",
-  // 设置工具栏
-  toolbar: [
-    "bold italic hr | fontsize forecolor backcolor | blocks blockquote removeformat | undo redo ",
-    "bullist table insertdatetime | link charmap wordcount searchreplace code | codesample visualblocks image fullscreen preview",
-  ],
-  // 设置插件
-  plugins:
-    "codesample lists advlist link autolink charmap fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
-  placeholder: props.placeholder,
-  statusbar: false,
-  promotion: false,
-  height: props.height
-});
+const initializeEditor = () => {
+  return reactive({
+    // 选择器
+    selector: "textarea",
+    // 设置本地主题
+    skin_url: "/tinymce/skins/ui/oxide",
+    // 设置本地css
+    content_css: "/tinymce/skins/content/default/content.css",
+    // 设置本地语言
+    language_url: "/tinymce/langs/zh_CN.js",
+    // 设置本地语言
+    language: "zh_CN",
+    // 设置工具栏
+    toolbar: [
+      "bold italic hr | fontsize forecolor backcolor | blocks blockquote removeformat | undo redo ",
+      "bullist table insertdatetime | link charmap wordcount searchreplace code | codesample visualblocks image fullscreen preview",
+    ],
+    // 设置插件
+    plugins:
+      "codesample lists advlist link autolink charmap fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
+    placeholder: props.placeholder,
+    statusbar: false,
+    promotion: false,
+    height: height.value
+  });
+};
+let init = initializeEditor();
+// let init = reactive({
+//   // 选择器
+//   selector: "textarea",
+//   // 设置本地主题
+//   skin_url: "/tinymce/skins/ui/oxide",
+//   // 设置本地css
+//   content_css: "/tinymce/skins/content/default/content.css",
+//   // 设置本地语言
+//   language_url: "/tinymce/langs/zh_CN.js",
+//   // 设置本地语言
+//   language: "zh_CN",
+//   // 设置工具栏
+//   toolbar: [
+//     "bold italic hr | fontsize forecolor backcolor | blocks blockquote removeformat | undo redo ",
+//     "bullist table insertdatetime | link charmap wordcount searchreplace code | codesample visualblocks image fullscreen preview",
+//   ],
+//   // 设置插件
+//   plugins:
+//     "codesample lists advlist link autolink charmap fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
+//   placeholder: props.placeholder,
+//   statusbar: false,
+//   promotion: false,
+//   height: height
+// });
 let content = ref("");
 watch(
   content,
@@ -107,5 +135,22 @@ watch(
   },
   { deep: true, immediate: true }
 );
+
+watch(()=>props.height,(newVal,oldVal)=>{
+  console.log("newVAL",newVal);
+  height.value = newVal;
+  console.log("editorRef", editorRef);
+  // if (editorRef.value && newVal !== oldVal) {
+    // init = initializeEditor();
+    // tinymce.execCommand("mceSetHeight", false, newVal)
+    if(editorRef.value && editorRef.value.editor){
+      console.log("editorRef.value.editor.editorContainer",editorRef.value.editor)
+      // editorRef.value.execCommand('mceSetHeight', false, newVal * 0.8);
+      // editorRef.value.editor.editorContainer.style.height = newVal * 0.8;
+      // editorRef.value.editor.resize();
+    }
+
+  // }
+},{ deep: true, immediate: true })
 defineExpose({init})
 </script>

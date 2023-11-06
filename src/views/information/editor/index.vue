@@ -40,7 +40,7 @@
         <div class="centerScrollWrap" ref="contentRef">
             <div class="editorBody">
                 <div class="editorBox">
-                    <Editor placeholder="" ref="editorRef" :height="height" @input="getContent" />
+                    <Editor v-if="isEditor" placeholder="" ref="editorRef" :height="height" @input="getContent" />
                     <div class="uploadPanel">
                         <a-upload-dragger v-model:fileList="fileList" name="file" :multiple="true"
                             action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -105,17 +105,26 @@
     const contentRef = ref();
     const editorRef = ref();
     const data = reactive({
-        height: 500,
+        height: 0,
         activeKey: '1',
         detail: "",
         isRadioUser: false,
         fileList: [],
-        searchVal: ""
+        searchVal: "",
+        isEditor: false
     })
-    const { height, activeKey, detail, isRadioUser, fileList, searchVal } = toRefs(data);
+    const { height, activeKey, detail, isRadioUser, fileList, searchVal, isEditor} = toRefs(data);
     onMounted(()=>{
         data.height = contentRef.value.clientHeight;
-        console.log("editorRef.value.init();",editorRef.value)
+        data.isEditor = true;
+        console.log("height", data.height);
+        // console.log("editorRef.value.init();",editorRef.value.init.height = data.height)
+        // editorRef.value.init.height = data.height;
+        window.addEventListener("resize",()=>{
+            data.height = contentRef.value.clientHeight;
+            console.log("data.height",data.height);
+
+        })
     })
     const getContent = (e) => {
         console.log('e', e);
