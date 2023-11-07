@@ -1,5 +1,5 @@
 <template>
-  <Editor v-model="content" :init="init" ref="editorRef" />
+  <Editor key="index" v-model="content" :init="init" ref="editorRef" />
 </template>
 <script setup>
 import {
@@ -18,6 +18,7 @@ import {
 const emit = defineEmits(["input"]);
 const height = ref(props.height);
 const editorRef = ref();
+const index = ref(1);
 const props = defineProps({
   value: {
     type: String,
@@ -137,18 +138,17 @@ watch(
 );
 
 watch(()=>props.height,(newVal,oldVal)=>{
-  console.log("newVAL",newVal);
+  // console.log("newVAL",newVal);
+  // console.log("editor", tinymce.DOM)
+  // console.log("editorRef", editorRef);
   height.value = newVal;
-  console.log("editorRef", editorRef);
-  // if (editorRef.value && newVal !== oldVal) {
-    // init = initializeEditor();
-    // tinymce.execCommand("mceSetHeight", false, newVal)
-    if(editorRef.value && editorRef.value.editor){
-      console.log("editorRef.value.editor.editorContainer",editorRef.value.editor)
-      // editorRef.value.execCommand('mceSetHeight', false, newVal * 0.8);
-      // editorRef.value.editor.editorContainer.style.height = newVal * 0.8;
-      // editorRef.value.editor.resize();
-    }
+  // // if (editorRef.value && newVal !== oldVal) {
+  //   // tinymce.execCommand("mceSetHeight", false, newVal)
+  //   if(editorRef.value && editorRef.value.editor){
+  //     // editorRef.value.execCommand('mceSetHeight', false, newVal);
+  //     // editorRef.value.editor.editorContainer.style.height = newVal;
+  //     // editorRef.value.editor.resize();
+  //   }
 
   // }
 },{ deep: true, immediate: true })

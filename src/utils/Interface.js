@@ -95,7 +95,10 @@ const Interface = {
   },
   information: {
     contentTree: "/localData/information/content.tree.json",
-    detail: "/localData/information/entity.recordandlayout.get.json"
+    detail: "/localData/information/entity.recordandlayout.get.json",
+    files: "/localData/information/file.attachment.getlist.json",
+    tags: "/localData/information/content.tag.getlist.json",
+    invite: "/localData/information/content.reader.invite.json",
   }
 };
 export default Interface;

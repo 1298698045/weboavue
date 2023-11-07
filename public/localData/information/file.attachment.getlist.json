@@ -1,0 +1,42 @@
+{
+  "status": 1,
+  "msg": "",
+  "rowsPerPage": 25,
+  "page": 1,
+  "listData": [
+    {
+      "Id": "4b012952-7acb-4f21-8703-ab869b7af8c6",
+      "Icon": null,
+      "Name": "u=3315324068,1694602888&fm=26&gp=0",
+      "FileSize": 37590.0,
+      "CreatedOn": "2023/11/7 10:54:28",
+      "FolderId": null,
+      "FolderIdName": null,
+      "FileExtension": "jpg",
+      "CategoryName": "",
+      "createdByName": "",
+      "SortNumber": 0,
+      "ViewLinkUrl": "/apps/files/FileViewer.aspx?id=4b012952-7acb-4f21-8703-ab869b7af8c6&isAttach=1&filesource=1001&sessionKey=2ec00cf2-a484-4136-8fef-e2a2719c5ed6&organizationid=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+      "EditLinkUrl": "",
+      "DownloadLinkUrl": "/files/FileDownload.aspx?id=4b012952-7acb-4f21-8703-ab869b7af8c6&isAttach=1&filesource=1001&sessionKey=2ec00cf2-a484-4136-8fef-e2a2719c5ed6&organizationid=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+      "Link": null,
+      "ShareUrl": null,
+      "thumbnailURL": null,
+      "Privilege": {
+        "canAdmin": true,
+        "canDelete": true,
+        "CanEdit": true,
+        "canShare": true,
+        "canRead": true,
+        "canDownload": true
+      },
+      "actinconfig": {
+        "canReadFile": false,
+        "isEditable": true,
+        "isDeletable": true,
+        "canAddFile": false,
+        "canShare": false
+      }
+    }
+  ]
+}
