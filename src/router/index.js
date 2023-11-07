@@ -236,6 +236,16 @@ const routes = [
     path: "/informationEditor",
     name: "InformationEditor",
     component: ()=> import("../views/information/editor/index.vue")
+  },
+  {
+    path: "/informationDetail",
+    name: "InformationDetail",
+    component: ()=> import("../views/information/detail/index.vue")
+  },
+  {
+    path: "/previewContent",
+    name: "PreviewContent",
+    component: ()=> import("../views/information/preview/index.vue")
   }
   // {
   //   path: "/about",

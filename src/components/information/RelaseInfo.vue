@@ -213,7 +213,10 @@
   const props = defineProps({
     isShow: Boolean,
     folderName: String,
-    folderPicker: String
+    folderPicker: String,
+    objectTypeCode: [String, Number],
+    id: [String, Number],
+    FolderId: String
   });
   const formRef = ref();
   const emit = defineEmits(["cancel"]);
@@ -223,14 +226,14 @@
   const formState = reactive({
     ApprovedBy: '',
     BusinessUnitId: '',
-    IsImportant: '',
-    IsTop: '',
+    IsImportant: false,
+    IsTop: false,
     AttachRightCode:'',
     EndTopDate: '',
     ApprovedOn: '',
     StateCode: '',
     KeyWords: [],
-    IsPublic: '',
+    IsPublic: false,
     CoverDisplay: '',
     FolderId:''
   });
@@ -298,7 +301,9 @@
     data.isRadioDept = true;
   }
   const getTreeData = () => {
-    proxy.$get(Interface.information.contentTree,{}).then((response)=>{
+    proxy.$get(Interface.information.contentTree,{
+      objectTypeCode: props.objectTypeCode
+    }).then((response)=>{
         let formTree = (list) => {
             list.forEach(item=>{
                 if(item.children){
@@ -349,7 +354,7 @@
         console.log("values", formState, toRaw(formState));
         let obj = {
           params: {
-            objTypeCode: 30027,
+            objTypeCode: props.objectTypeCode,
             fields: {
                 ApprovedBy: {
                     Id: ""
@@ -368,10 +373,10 @@
                 CoverDisplay: formState.CoverDisplay,
                 Title: "",
                 FolderId: {
-                    Id: ""
+                    Id: props.FolderId
                 }
             },
-            id: "",
+            id: props.id,
             ContentTypeCode: 1,
           },
         };

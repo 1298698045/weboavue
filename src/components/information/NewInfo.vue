@@ -47,6 +47,8 @@
     import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
+    import { useRouter, useRoute } from "vue-router";
+    const router = useRouter();
     const formRef = ref();
     const labelCol = ref({ style: { width: '100px' } });
     const props = defineProps({
@@ -127,6 +129,15 @@
             }).then(res=>{
                 message.success("保存成功！");
                 emit("cancel", false);
+                let url = router.resolve({
+                    name: "InformationEditor",
+                    query: {
+                        id: 123,
+                        objectTypeCode: 100201,
+                        FolderId: "123131313"
+                    }
+                })
+                window.open(url.href); 
             })
         }).catch(error => {
             console.log('error', error);

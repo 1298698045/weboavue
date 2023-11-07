@@ -28,7 +28,7 @@
                                     <a-menu-item>
                                         取消发布
                                     </a-menu-item>
-                                    <a-menu-item>
+                                    <a-menu-item @click="handleDetail">
                                         查看详情
                                     </a-menu-item>
                                     <a-menu-item>
@@ -128,7 +128,7 @@
             </div>
         </div>
         <RadioUser :isShow="isRadioUser" @cancel="cancleRadio" @selectVal="handleSelectUser" />
-        <RelaseInfo :isShow="isRelaseInfo" @cancel="cancelRelaseInfo" />
+        <RelaseInfo :isShow="isRelaseInfo" :objectTypeCode="objectTypeCode" :id="id" :FolderId="FolderId" @cancel="cancelRelaseInfo" />
     </div>
 </template>
 <script setup>
@@ -148,6 +148,7 @@
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
     const router = useRouter();
+    const route = useRoute();
     const contentRef = ref();
     const editorRef = ref();
     const data = reactive({
@@ -168,10 +169,13 @@
                     '                        </svg></span><li data-b_id="lAN2QWtGw-X"><div class="list-bullet user-no-select" contenteditable="false" style="opacity: 1; top: 15.5px;" data-index="1."></div><div class="list-content"><div data-b_id="XZyFQakV1ws" class="p"> </div></div></li><li data-b_id="VMfaSuCyyX_"><div class="list-bullet user-no-select" contenteditable="false" style="opacity: 1; top: 15.5px;" data-index="2."></div><div class="list-content"><div draggable="true" class="list-drag-handle ProseMirror-widget" contenteditable="false"><svg draggable="false" viewBox="0 0 14 14"><use xlink:href="#5jqQY"></use></svg></div><div data-b_id="pNdbT247mbz" class="p"> </div></div></li><li data-b_id="EN_wT6AgCZr"><div class="list-bullet user-no-select" contenteditable="false" style="opacity: 1; top: 16.5px;" data-index="3."></div><div class="list-content"><div data-b_id="PsBYSGlxup4" class="p"><br></div></div></li></ol><div class="custom-hr" contenteditable="false"><div class="block-insert-handle" draggable="false"><svg viewBox="1.3 1.3 14 14"><use xlink:href="#3pIoG"></use></svg></div><div class="block-drag-handle" draggable="true"><svg viewBox="0 0 14 14"><use xlink:href="#5jqQY"></use></svg></div></div><h2 data-b_id="d85wQKHrgdx">下一步行动</h2><en-blockquote spellcheck="false"><div class="quoteComponentWarp" contenteditable="false"></div><div class="quoteContent"><div data-b_id="XGOpTe1EPJY" class="p">为确保会议有效，建议会议结束后明确详细Todo、执行人、时间点信息</div></div></en-blockquote><ul data-b_id="myg0S6fA-Ca" class="en-todolist"><li data-b_id="661hSOEINTT"><div class="list-bullet user-no-select" contenteditable="false" style="opacity: 1; top: 16.5px;"></div><div class="list-content"><p data-b_id="4ISGSefrNkN" class="p">To-do1说明，交付时间，执行人</p></div></li></ul><ul data-b_id="YwuFTCOnpeh" class="en-todolist"><li data-checked="false" data-b_id="pJspSi3A1yz"><div class="list-bullet user-no-select" contenteditable="false" style="opacity: 1; top: 16.5px;"></div><div class="list-content"><p data-b_id="v9myQuPcLPu" class="p">To-do2说明，交付时间，执行人</p></div></li><li data-checked="false" data-b_id="zQdGTONmjNs"><div class="list-bullet user-no-select" contenteditable="false" style="opacity: 1; top: 16.5px;"></div><div class="list-content"><p data-b_id="CIFESimkNJG" class="p">……</p></div></li></ul><div data-b_id="5AkOTaP_HL8" class="p"><br></div></en-note>'
             }
         ],
-        isRelaseInfo: false
+        isRelaseInfo: false,
+        id: route.query.id,
+        objectTypeCode: route.query.objectTypeCode,
+        FolderId: route.query.FolderId
     })
     const { height, activeKey, content, detail, isRadioUser,
-         fileList, searchVal, isEditor, templateList, isRelaseInfo } = toRefs(data);
+         fileList, searchVal, isEditor, templateList, isRelaseInfo, id, objectTypeCode, FolderId } = toRefs(data);
     onMounted(() => {
         data.height = contentRef.value.clientHeight;
         data.isEditor = true;
@@ -210,8 +214,8 @@
     }
     const getDetail = () => {
         proxy.$get(Interface.information.detail, {
-            id: "",
-            objectTypeCode: "100201"
+            id: data.id,
+            objectTypeCode: data.objectTypeCode
         }).then(res => {
             data.detail = res.actions[0].returnValue.record;
         })
@@ -235,13 +239,13 @@
         var obj = {
             params: {
                 recordRep: {
-                    objTypeCode: "",
-                    id: "",
+                    objTypeCode: data.objectTypeCode,
+                    id: data.id,
                     ContentTypeCode: 1,
                     fields: {
                         Title: data.detail.Title,
                         FolderId:{
-                            Id: ""
+                            Id: data.FolderId
                         },
                         ContentBody: data.content
                     }
@@ -262,6 +266,18 @@
     }
     const closeEditor = () => {
         window.close();
+    }
+    // 查看详情
+    const handleDetail = () => {
+        let url = router.resolve({
+            name: "InformationDetail",
+            query: {
+                id: data.id,
+                objectTypeCode: data.objectTypeCode,
+                FolderId: data.FolderId
+            }
+        })
+        window.open(url.href); 
     }
 </script>
 <style lang="less">
