@@ -18,10 +18,19 @@
                     <div class="tagWrap">
                         文章关键字
                     </div>
+                    <div class="tagWrap">
+                        附件
+                        <span class="tag" v-for="(item,index) in detail.Attachments" :key="index">
+                            <i class="iconfont icon-file-tupian"></i>
+                            {{item.Name}}
+                            <a href="#">查看</a>
+                            <a :href="item.DownloadURL">下载</a>
+                        </span>
+                    </div>
                     <div class="operation">
-                        <div class="like btnRadius">
-                            <i class="iconfont icon-zan2"></i>
-                            0
+                        <div class="like btnRadius" @click="handleLike">
+                            <i class="iconfont icon-zan2" :class="{'active':detail.IsLike==1}"></i>
+                            {{detail.LikeCount}}
                         </div>
                     </div>
                     <div class="tabContainer">
@@ -31,15 +40,18 @@
                         </a-tabs>
                         <div class="tabContent" v-if="activeKey=='1'">
                             <div class="readList">
-                                <div class="readItem">
+                                <div class="readItem" v-for="(item,index) in readList" :key="index">
                                     <div class="avatar">
                                         <i class="iconfont icon-morentouxiang"></i>
                                     </div>
                                     <div class="rightRead">
-                                        <div class="name">六区 / 王雪梅</div>
-                                        <div class="time">2023/11/7 20:53:00</div>
+                                        <div class="name">{{item.DeptName}} / {{item.ReaderName}}</div>
+                                        <div class="time">{{item.CreatedOn}}</div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="pagination">
+                                <a-pagination v-model:current="current" :total="50" show-less-items />
                             </div>
                         </div>
                         <div class="tabContent" v-if="activeKey=='2'">
@@ -55,7 +67,43 @@
                             </div>
                         </div>
                         <div class="panel-bd">
-                            
+                            <div class="panelList">
+                                <div class="panelItem" v-for="(item,index) in contentNotices" :key="index">
+                                    <div class="panelItemTitle">{{item.Title}}</div>
+                                    <div class="panelItemCen">
+                                        <span class="noticeTag">
+                                            {{item.CategoryName}}
+                                        </span>    
+                                        {{item.FullName}} · {{item.DeptName}}
+                                    </div>
+                                    <div class="panelItemInfo">
+                                        {{item.CommentCount}}评论 · {{item.ReadCount}}阅读 · {{item.CreatedOn}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-head">
+                            <div class="panel-title">
+                                推荐阅读
+                            </div>
+                        </div>
+                        <div class="panel-bd">
+                            <div class="panelList">
+                                <div class="panelItem" v-for="(item,index) in contentNotices" :key="index">
+                                    <div class="panelItemTitle">{{item.Title}}</div>
+                                    <div class="panelItemCen">
+                                        <span class="noticeTag">
+                                            {{item.CategoryName}}
+                                        </span>    
+                                        {{item.FullName}} · {{item.DeptName}}
+                                    </div>
+                                    <div class="panelItemInfo">
+                                        {{item.CommentCount}}评论 · {{item.ReadCount}}阅读 · {{item.CreatedOn}}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -74,6 +122,7 @@
         DeleteFilled,
         DeleteOutlined
     } from "@ant-design/icons-vue";
+    import { message } from "ant-design-vue";
     import Comment from "@/components/detail/Comment.vue";
 
     import { useRouter, useRoute } from "vue-router";
@@ -85,9 +134,16 @@
         id: route.query.id,
         objectTypeCode: route.query.objectTypeCode,
         detail: {},
-        activeKey: '1'
+        activeKey: '1',
+        pageNumber: 1,
+        pageSize: 10,
+        readList: [],
+        current: 1,
+        total: 0,
+        contentNotices: []
     })
-    const { tabs, activeKey, id, objectTypeCode, detail } = toRefs(data);
+    const { tabs, activeKey, id, objectTypeCode, detail, readList, current, total,
+        contentNotices } = toRefs(data);
 
     const getDetail = ()=> {
         proxy.$get(Interface.information.detail,{
@@ -98,7 +154,47 @@
             data.detail =  res.actions[0].returnValue.record;
         })
     }
-    getDetail();
+    // getDetail();
+    const getReadList = () => {
+        proxy.$get(Interface.information.readList,{
+            NewsId: data.id,
+            pageNumber: data.pageNumber,
+            pageSize: data.pageSize
+        }).then(res=>{
+            data.readList = res.listData;
+            data.total = res.total;
+        })
+    }
+    getReadList();
+
+    const getNoticeNew = () => {
+        proxy.$get(Interface.information.contentRelated,{
+            ObjectTypeCode: data.objectTypeCode
+        }).then(res=>{
+            data.contentNotices = res.listData;
+        })
+    }
+    getNoticeNew();
+    // 点赞
+    const handleLike = () => {
+        proxy.$get(Interface.information.like,{
+            NewsId: data.id,
+            LikeType: data.detail.IsLike == 1 ? 0 : 1
+        }).then(res=>{
+            message.success(res.msg);
+            getLikeDetail();
+        })
+    }
+    const getLikeDetail = () => {
+        proxy.$get(Interface.information.likeDetail,{
+            NewsId: data.id
+        }).then(res=>{
+            console.log("res",res);
+            data.detail = res.data;
+        })
+    }
+    getLikeDetail();
+    
 </script>
 <style lang="less" scoped>
     .previewWrap{
@@ -111,10 +207,10 @@
         }
         .center{
             display: flex;
+            height: 100%;
             margin-top: 16px;
             .leftBody{
                 flex: 1;
-                height: 100%;
                 background: #fff;
                 margin-right: 12px;
                 border-radius: 4px;
@@ -138,6 +234,23 @@
                     margin: 14px 0;
                     font-size: 14px;
                     color: #86909c;
+                    .tag {
+                        display: inline-block;
+                        padding: 5px 16px;
+                        box-sizing: border-box;
+                        border-radius: 15px;
+                        font-size: 14px;
+                        background: #f2f3f5;
+                        cursor: pointer;
+                        &:hover{
+                            color: #86909c;
+                            background: #e5e6eb;
+                        }
+                        a{
+                            color: #165dff;
+                            margin-left: 10px;
+                        }
+                    }
                 }
                 .operation {
                     width: 25%;
@@ -156,6 +269,9 @@
                         color: #4e5969;
                         .iconfont{
                             font-size: 16px;
+                            &.active{
+                                color: #f53f3f;
+                            }
                         }
                     }
                 }
@@ -193,5 +309,42 @@
                 }
             }
         }
+    }
+    .pagination{
+        text-align: right;
+    }
+    .panelList{
+        .panelItem{
+            padding: 12px 8px;
+            box-sizing: border-box;
+            &:hover{
+                cursor: pointer;
+                background: #f2f3f5;
+            }
+            .panelItemTitle{
+                font-size: 14px;
+                color: #1d2129;
+            }
+            .panelItemCen{
+                font-size: 12px;
+                color: #86909c;
+                padding: 9px 0;
+                .noticeTag {
+                    color: #3491fa;
+                    background: #e8f7ff;
+                    display: inline-block;
+                    padding: 2px;
+                    margin-right: 14px;
+                }
+            }
+            .panelItemInfo{
+                font-size: 12px;
+                color: #86909c;
+            }
+        }
+    }
+    .panel{
+        max-height: 400px;
+        overflow: auto;
     }
 </style>

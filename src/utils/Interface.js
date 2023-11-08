@@ -99,6 +99,13 @@ const Interface = {
     files: "/localData/information/file.attachment.getlist.json",
     tags: "/localData/information/content.tag.getlist.json",
     invite: "/localData/information/content.reader.invite.json",
+    readList: "/localData/information/content.news.reader.list.json",
+    contentRelated: "/localData/information/content.news.related.list.json",
+    like: "/localData/information/content.news.likeordislike.set.json",
+    likeDetail: "/localData/information/content.news.content.get.json",
+    peopleList: "/localData/information/content.reader.search.json", // 人员信息列表
+    tree: "/localData/information/content.item.permission.tree.json",
+    categoryList: "/localData/information/content.category.list.json", // 隶属栏目
   }
 };
 export default Interface;
