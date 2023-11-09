@@ -151,6 +151,8 @@
         <FileMove :isShow="isFileMove" :fileParams="fileParams" @cancel="cancelFileMove" />
         <Delete :isShow="isDelete"  :fileParams="fileParams" @cancel="cancelDelete" @ok="deleteOk" />
         <SetPermissions :isShow="isSetPerm" :fileParams="fileParams" @cancel="cancelPerm" />
+        <!-- 图片预览 -->
+        <PhotoPreview :isShow="isPhoto" @cancel="cancelPhotoModal" />
     </div>
 </template>
 <script setup>
@@ -158,6 +160,7 @@
         ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
         defineEmits, h, toRaw, computed
     } from "vue";
+    import { KGBrowser, isSupportOfficePlug } from "@/jgfiles/js/WebOffice.js"
     import { useRouter, useRoute } from "vue-router";
     import { SearchOutlined, MoreOutlined, CopyOutlined, SortAscendingOutlined, LeftOutlined, RightOutlined, PlusOutlined, EllipsisOutlined, UploadOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
@@ -169,7 +172,7 @@
     import Delete from "@/components/listView/Delete.vue";
     // 设置权限
     import SetPermissions from "@/components/file/SetPermissions.vue";
-
+    import PhotoPreview  from "@/components/file/PhotoPreview.vue";
     import { formTreeData } from "@/utils/common.js";
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
@@ -302,10 +305,11 @@
             canShare: false,
         },
         folderId: "",
-        SystemUserId: ""
+        SystemUserId: "",
+        isPhoto: true
     })
     const { isLeft, menus, leftCurrent, fileTypes, listData, breadcrumbList, tableHeight, isNewFolder,
-         folderPicker, isRename, fileParams, isFileMove, isDelete, isSetPerm, srchType, Privilege, folderId, SystemUserId } = toRefs(data);
+         folderPicker, isRename, fileParams, isFileMove, isDelete, isSetPerm, srchType, Privilege, folderId, SystemUserId, isPhoto } = toRefs(data);
 
     const folderName = computed(()=>{
         return data.menus[data.leftCurrent].name;
@@ -358,6 +362,37 @@
     const handleBreadcrumbItem = (item,idx) => {
         data.breadcrumbList = data.breadcrumbList.slice(0, idx + 1);
     }
+    //文件预览
+    let KGBrowser1 = '';
+    if (typeof KGBrowser != 'undefined') {
+        KGBrowser1 = new KGBrowser();
+    }
+    console.log("KGBrowser1",KGBrowser1);
+    const RunKGBrowser = (url)=> {
+        var strOptions = '$skin=1$tabshow=1';
+        var search = '';
+        if (url) {
+            search = url.split('?')[1] || '';
+        }
+        console.log(search,'123123')
+        var str2 = "/jgfiles/KGBrowser/Word.aspx?" + search;
+        if (KGBrowser1 != '' && KGBrowser1 != 'undefined') {
+            KGBrowser1.openWindowBrowser(str2 + "$skin=0$titlecolor=f6f6f6$tabshow=1", strOptions, false);
+        }
+    }
+    const openControlViewFile = (url, type, link, name)=> {
+        var abc = isSupportOfficePlug();
+        if (!abc) {
+            if ((url && url.indexOf('/jgfiles/samples') != -1) || (link && link.indexOf('/jgfiles/samples') != -1)) {
+                RunKGBrowser(url);
+            }
+            else {
+            }
+        }
+        else {
+
+        }
+    }
     const handleOpenFile = (item) => {
         console.log("item",item);
         if(item.type=='folder'){
@@ -370,7 +405,8 @@
                 id: item.id
             })
             handleChild(item.id);
-            
+        }else if(item.type=='file'){
+            openControlViewFile(item.link, item.fileExtension, item.viewLink, item.name+'.'+item.fileExtension)
         }
     }
     const handleChild = () => {
@@ -486,6 +522,9 @@
             message.success("取消收藏成功！");
             getQuery();
         })
+    }
+    const cancelPhotoModal = (e) => {
+        data.isPhoto = e;
     }
 </script>
 <style lang="less" scoped>

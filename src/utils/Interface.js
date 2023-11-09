@@ -106,6 +106,7 @@ const Interface = {
     peopleList: "/localData/information/content.reader.search.json", // 人员信息列表
     tree: "/localData/information/content.item.permission.tree.json",
     categoryList: "/localData/information/content.category.list.json", // 隶属栏目
+    attachmentCategory: "/localData/information/attachment.category.getlist.json", // 附件分类
   }
 };
 export default Interface;
