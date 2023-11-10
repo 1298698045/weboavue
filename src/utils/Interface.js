@@ -48,7 +48,7 @@ const Interface = {
     groupList: "/localData/user/sys.group.search.json", // 小组列表
     groupUser: "/localData/user/sys.group.member.search.json", // 小组下用户
     sysUser: "/localData/user/sys.user.search.json",
-    usersettings: "/localData/user/sys.usersettings.get.json"
+    usersettings: "/localData/user/sys.usersettings.get.json",
   },
   saveRecord: "/localData/entity.saverecord.json",
   // 通讯录
@@ -66,7 +66,7 @@ const Interface = {
     inboxList: "/localData/email/email.inbox.search.json", //邮件列表
     myEmailFolder: "/localData/email/email.folder.my.json", // 我的文件夹
     emailInfo: "/localData/email/email.info.get.json", // 邮件详情
-    read: "/localData/email/email.read.mark.json",  // 未读/已读邮件设置
+    read: "/localData/email/email.read.mark.json", // 未读/已读邮件设置
     star: "/localData/email/email.star.mark.json", // 重要邮件
     send: "/localData/email/email.send.json", // 发送邮件
   },
@@ -74,10 +74,10 @@ const Interface = {
     userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织
     getall: "localData/meeting/meeting.getall.json", // 日历月数据
     config: "localData/meeting/config.json",
-    relatedrecords:"/localData/meeting/entity.relatedrecords.get.json", // 相关列表数据
+    relatedrecords: "/localData/meeting/entity.relatedrecords.get.json", // 相关列表数据
   },
   meetingRoom: {
-    roomList: "/localData/meetingRoom/meetingroom.reservation.getlist2.json"
+    roomList: "/localData/meetingRoom/meetingroom.reservation.getlist2.json",
   },
   file: {
     list: "/localData/fileAdmin/file.files.search.json",
@@ -85,7 +85,7 @@ const Interface = {
     tree: "/localData/fileAdmin/file.tree.json",
     move: "/localData/fileAdmin/filefolder.move.json",
     access: "/localData/fileAdmin/folder.share.access.json",
-    removecontentaccess: "/localData/fileAdmin/removecontentaccess.json",  // 已添加人删除
+    removecontentaccess: "/localData/fileAdmin/removecontentaccess.json", // 已添加人删除
     updatecontentaccess: "/localData/fileAdmin/updatecontentaccess.json", // 更新权限
     addAccess: "/localData/fileAdmin/add.content.access.json",
     readRecord: "/localData/fileAdmin/entitygrid.list.json",
@@ -106,7 +106,8 @@ const Interface = {
     peopleList: "/localData/information/content.reader.search.json", // 人员信息列表
     tree: "/localData/information/content.item.permission.tree.json",
     categoryList: "/localData/information/content.category.list.json", // 隶属栏目
-    attachmentCategory: "/localData/information/attachment.category.getlist.json", // 附件分类
-  }
+    attachmentCategory:
+      "/localData/information/attachment.category.getlist.json", // 附件分类
+  },
 };
 export default Interface;

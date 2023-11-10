@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory, createWebHashHistory  } from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  createWebHashHistory,
+} from "vue-router";
 // import Home from "../views/Home.vue";
 const Layout = () => import("@/layout");
 const routes = [
@@ -15,13 +19,13 @@ const routes = [
     redirect: "/flow/todoList",
     children: [
       {
-        path:"/flow/add",
+        path: "/flow/add",
         component: () => import("../views/flow/add/index.vue"),
         name: "新建事务",
         icon: "xinjian",
         meta: {
-          icon: "xinjian"
-        }
+          icon: "xinjian",
+        },
       },
       {
         path: "/flow/todoList",
@@ -30,7 +34,7 @@ const routes = [
         icon: "daiban1",
         meta: {
           icon: "daiban1",
-        }
+        },
       },
       {
         path: "/flow/completed",
@@ -39,7 +43,7 @@ const routes = [
         icon: "yiban",
         meta: {
           icon: "yiban",
-        }
+        },
       },
       {
         path: "/flow/doRecord",
@@ -48,7 +52,7 @@ const routes = [
         icon: "daiban1",
         meta: {
           icon: "daiban1",
-        }
+        },
       },
       {
         path: "/flow/myStart",
@@ -57,7 +61,7 @@ const routes = [
         icon: "faqi",
         meta: {
           icon: "faqi",
-        }
+        },
       },
       {
         path: "/flow/returnBox",
@@ -66,7 +70,7 @@ const routes = [
         icon: "tuijian",
         meta: {
           icon: "tuijian",
-        }
+        },
       },
       {
         path: "/flow/receivedCirculation",
@@ -75,7 +79,7 @@ const routes = [
         icon: "shoudaochuanyue",
         meta: {
           icon: "shoudaochuanyue",
-        }
+        },
       },
       {
         path: "/flow/myCirculation",
@@ -84,7 +88,7 @@ const routes = [
         icon: "chuanyue",
         meta: {
           icon: "chuanyue",
-        }
+        },
       },
       {
         path: "/flow/drafts",
@@ -93,7 +97,7 @@ const routes = [
         icon: "caogaoxiang",
         meta: {
           icon: "caogaoxiang",
-        }
+        },
       },
       // {
       //   path: "/about",
@@ -109,22 +113,22 @@ const routes = [
     redirect: "/workplan/calendar",
     children: [
       {
-        path:"/workplan/calendar",
+        path: "/workplan/calendar",
         component: () => import("../views/scheduleAdmin/calendar/index.vue"),
         name: "日历",
         icon: "xinjian",
         meta: {
-          icon: "xinjian"
-        }
+          icon: "xinjian",
+        },
       },
       {
-        path:"/workplan/schedule",
+        path: "/workplan/schedule",
         component: () => import("../views/scheduleAdmin/schedule/index.vue"),
         name: "日程一览表",
         icon: "xinjian",
         meta: {
-          icon: "xinjian"
-        }
+          icon: "xinjian",
+        },
       },
       {
         path: "/workplan/talent",
@@ -132,74 +136,74 @@ const routes = [
         name: "人才管理",
         icon: "xinjian",
         meta: {
-          icon: "xinjian"
-        }
-      }
-    ]
+          icon: "xinjian",
+        },
+      },
+    ],
   },
   {
     path: "/oa",
     name: "Oa",
     component: Layout,
     redirect: "/oa/addressBook",
-    children:[
+    children: [
       {
-        path:"/oa/addressBook",
+        path: "/oa/addressBook",
         component: () => import("../views/oa/addressBook/index.vue"),
         name: "通讯录",
         icon: "xinjian",
         meta: {
-          icon: "xinjian"
-        }
+          icon: "xinjian",
+        },
       },
       {
-        path:"/oa/group",
+        path: "/oa/group",
         component: () => import("../views/oa/group/index.vue"),
         name: "小组",
         icon: "xinjian",
         meta: {
-          icon: "xinjian"
-        }
+          icon: "xinjian",
+        },
       },
       {
-        path:"/oa/file",
+        path: "/oa/file",
         component: () => import("../views/fileAdmin/index.vue"),
         name: "文件管理",
         icon: "xinjian",
         meta: {
-          icon: "xinjian"
-        }
+          icon: "xinjian",
+        },
       },
       {
-        path:"/oa/information",
+        path: "/oa/information",
         component: () => import("../views/information/list/index.vue"),
         name: "信息管理",
         icon: "xinjian",
         meta: {
-          icon: "xinjian"
-        }
+          icon: "xinjian",
+        },
       },
-    ]
+    ],
   },
   {
     path: "/group/detail",
     name: "GroupDetail",
-    component: ()=> import("../views/oa/groupDetail/index.vue")
+    component: () => import("../views/oa/groupDetail/index.vue"),
   },
   {
     path: "/detail",
     name: "Detail",
-    component: ()=> import("../views/detail/detail.vue")
+    component: () => import("../views/detail/detail.vue"),
   },
   {
     path: "/email",
     name: "Email",
-    component: ()=> import("../views/email/home/index.vue")
+    component: () => import("../views/email/home/index.vue"),
   },
   {
     path: "/email/write",
     name: "WriteEmail",
-    component: ()=> import("../views/email/writeEmail/index.vue")
+    component: () => import("../views/email/writeEmail/index.vue"),
   },
   {
     path: "/meeting",
@@ -210,59 +214,60 @@ const routes = [
       {
         path: "/meeting/calendar",
         name: "会议日历",
-        component: ()=> import("../views/meeting/calendar/index.vue"),
+        component: () => import("../views/meeting/calendar/index.vue"),
         icon: "xinjian",
         meta: {
-          icon: "xinjian"
-        }
+          icon: "xinjian",
+        },
       },
       {
-        path:"/meeting/room",
+        path: "/meeting/room",
         name: "会议室使用状况",
-        component: ()=> import("../views/meeting/meetingRoom/MeetingRoomUse.vue"),
+        component: () =>
+          import("../views/meeting/meetingRoom/MeetingRoomUse.vue"),
         icon: "xinjian",
         meta: {
-          icon: "xinjian"
-        }
-      }
-    ]
+          icon: "xinjian",
+        },
+      },
+    ],
   },
   {
     path: "/fileDetail",
     name: "FileDetail",
-    component: ()=> import("../views/fileAdmin/fileDetail.vue")
+    component: () => import("../views/fileAdmin/fileDetail.vue"),
   },
   {
     path: "/informationEditor",
     name: "InformationEditor",
-    component: ()=> import("../views/information/editor/index.vue")
+    component: () => import("../views/information/editor/index.vue"),
   },
   {
     name: "InformationDetail",
-    component: ()=> import("../views/information/detail/index.vue")
+    component: () => import("../views/information/detail/index.vue"),
   },
   {
     path: "/previewContent",
     name: "PreviewContent",
-    component: ()=> import("../views/information/preview/index.vue")
+    component: () => import("../views/information/preview/index.vue"),
   },
   {
     path: "/informationDetail",
     name: "InformationDetail",
-    component: ()=> import("../views/information/detail/index.vue")
+    component: () => import("../views/information/detail/index.vue"),
   },
   {
     path: "/previewContent",
     name: "PreviewContent",
-    component: ()=> import("../views/information/preview/index.vue")
-  }
+    component: () => import("../views/information/preview/index.vue"),
+  },
 ];
 
 const router = createRouter({
   // history: createWebHistory(process.env.BASE_URL),
   history: createWebHashHistory(),
   routes,
-  mode: 'hash'
+  mode: "hash",
 });
 
 export default router;
