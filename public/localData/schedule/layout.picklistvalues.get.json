@@ -1,0 +1,207 @@
+{
+  "actions": [
+    {
+      "id": "",
+      "state": "SUCCESS",
+      "returnValue": {
+        "picklistFieldValues": {
+          "CalendarType": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "工作安排",
+                "validFor": null,
+                "value": "工作安排"
+              },
+              {
+                "attributes": null,
+                "label": "个人便笺",
+                "validFor": null,
+                "value": "个人便笺"
+              }
+            ]
+          },
+          "ActivityTypeCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "Fax",
+                "validFor": null,
+                "value": "4204"
+              },
+              {
+                "attributes": null,
+                "label": "Phone Call",
+                "validFor": null,
+                "value": "4210"
+              },
+              {
+                "attributes": null,
+                "label": "E-mail",
+                "validFor": null,
+                "value": "4202"
+              },
+              {
+                "attributes": null,
+                "label": "Letter",
+                "validFor": null,
+                "value": "4207"
+              },
+              {
+                "attributes": null,
+                "label": "Appointment",
+                "validFor": null,
+                "value": "4201"
+              },
+              {
+                "attributes": null,
+                "label": "Service Activity",
+                "validFor": null,
+                "value": "4214"
+              },
+              {
+                "attributes": null,
+                "label": "Opportunity Close",
+                "validFor": null,
+                "value": "4208"
+              },
+              {
+                "attributes": null,
+                "label": "Order Close",
+                "validFor": null,
+                "value": "4209"
+              },
+              {
+                "attributes": null,
+                "label": "Quote Close",
+                "validFor": null,
+                "value": "4211"
+              },
+              {
+                "attributes": null,
+                "label": "Case Resolution",
+                "validFor": null,
+                "value": "4206"
+              },
+              {
+                "attributes": null,
+                "label": "Task",
+                "validFor": null,
+                "value": "4212"
+              },
+              {
+                "attributes": null,
+                "label": "Campaign Response",
+                "validFor": null,
+                "value": "4401"
+              },
+              {
+                "attributes": null,
+                "label": "Campaign Activity",
+                "validFor": null,
+                "value": "4402"
+              },
+              {
+                "attributes": null,
+                "label": "Bulk Operation",
+                "validFor": null,
+                "value": "4406"
+              }
+            ]
+          },
+          "StatusCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "Open",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "Completed",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "Canceled",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "Scheduled",
+                "validFor": null,
+                "value": "4"
+              }
+            ]
+          },
+          "DisplayStatus": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "忙碌",
+                "validFor": null,
+                "value": "0"
+              },
+              {
+                "attributes": null,
+                "label": "空闲",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "在其它地方工作",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "暂定",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "离开",
+                "validFor": null,
+                "value": "4"
+              }
+            ]
+          }
+        },
+        "picklistFieldMap": []
+      },
+      "error": []
+    }
+  ],
+  "context": {
+    "globalValueProviders": null,
+    "picklistValuesMap": {},
+    "appContextUser": {
+      "userId": null,
+      "name": null,
+      "isAdmin": false,
+      "token": null
+    },
+    "enableAccessChecks": false
+  }
+}

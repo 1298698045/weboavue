@@ -92,6 +92,10 @@ const Interface = {
     delete: "/localData/fileAdmin/filefolder.delete.json",
     favorite: "/localData/fileAdmin/file.favorite.add.json", // 收藏
     deleteFavor: "/localData/fileAdmin/file.favorite.delete.json", // 取消收藏
+    commentList: "/localData/fileAdmin/chatter.comment.search.json", // 图片评论列表
+    sendComment: "/localData/fileAdmin/chatter.comment.post.json",
+    like: "/localData/fileAdmin/chatter.like.post.json",
+    deleteComment: "/localData/fileAdmin/chatter.comment.delete.json"
   },
   information: {
     contentTree: "/localData/information/content.tree.json",
@@ -108,6 +112,13 @@ const Interface = {
     categoryList: "/localData/information/content.category.list.json", // 隶属栏目
     attachmentCategory:
       "/localData/information/attachment.category.getlist.json", // 附件分类
+      commentList: "/localData/information/chatter.comment.search.json", // 图片评论列表
+      sendComment: "/localData/information/chatter.comment.post.json",
+      like: "/localData/information/chatter.like.post.json"
   },
+  schedule: {
+    list:"/localData/schedule/calendar.getlist.json",
+    pickList: "/localData/schedule/layout.picklistvalues.get.json"
+  }
 };
 export default Interface;

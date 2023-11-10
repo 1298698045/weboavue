@@ -417,7 +417,7 @@
       @cancel="cancelPerm"
     />
     <!-- 图片预览 -->
-    <PhotoPreview :isShow="isPhoto" @cancel="cancelPhotoModal" />
+    <PhotoPreview v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="cancelPhotoModal" />
   </div>
 </template>
 <script setup>
@@ -607,7 +607,8 @@ const data = reactive({
   },
   folderId: "",
   SystemUserId: "",
-  isPhoto: true,
+  isPhoto: false,
+  photoParams: {}
 });
 const {
   isLeft,
@@ -629,6 +630,7 @@ const {
   folderId,
   SystemUserId,
   isPhoto,
+  photoParams
 } = toRefs(data);
 
 const folderName = computed(() => {
@@ -730,6 +732,10 @@ const handleOpenFile = (item) => {
     });
     handleChild(item.id);
   } else if (item.type == "file") {
+    if(item.fileExtension=='png'||item.fileExtension=='jpg'){
+        data.photoParams = item;
+        data.isPhoto = true;
+    }
     openControlViewFile(
       item.link,
       item.fileExtension,
