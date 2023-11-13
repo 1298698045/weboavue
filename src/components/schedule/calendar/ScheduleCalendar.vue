@@ -5,8 +5,8 @@
         </div>
         <div class="headerRight">
             <a-button type="primary" @click="handleAddSchedule">新建日程</a-button>
-            <a-button class="ml10">共享日历</a-button>
-            <a-button class="ml10">导入日历</a-button>
+            <a-button class="ml10" @click="openShare">共享日历</a-button>
+            <a-button class="ml10" @click="openExport">导入日历</a-button>
         </div>
     </div>
     <div class="calendarWrap">
@@ -154,6 +154,9 @@
             </div>
         </div>
         <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
+        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" />
+        <ExportSchedule :isShow="isExport"  @cancel="cancelExport" />
+        <ShareCalendar :isShow="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
     </div>
 </template>
 <script setup>
@@ -188,6 +191,10 @@
 
     // 新建
     import NewSchedule from "@/components/schedule/NewSchedule.vue";
+    import AddSchedule from "@/components/schedule/AddSchedule.vue";
+    import ShareCalendar from "@/components/schedule/ShareCalendar.vue";
+    import ExportSchedule from "@/components/schedule/ExportSchedule.vue";
+
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
@@ -229,9 +236,14 @@
         endWeekTime: "",
         week: [],
         isSchedule: false,
+        isAddSchedule: false,
+        isShare: false,
+        isExport: false,
+        fileParams: {}
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
-         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isRepeatMeeting} = toRefs(data);
+         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isRepeatMeeting, isAddSchedule,
+         isShare, isExport, fileParams} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const backFn = (list) => {
         var len = list.length;
@@ -356,9 +368,25 @@
     const cancelNewSchedule = (e) => {
         data.isSchedule = e;
     }
+    const cancelAddSchedule = (e) => {
+        data.isAddSchedule = e;
+    }
     // 新建
     const handleAddSchedule = () => {
-        data.isSchedule =  true;
+        // data.isSchedule =  true;
+        data.isAddSchedule = true;
+    }
+    const cancelExport = (e) => {
+        data.isExport = e;
+    }
+    const cancelShare = (e) => {
+        data.isShare = e;
+    }
+    const openShare = () => {
+        data.isShare = true;
+    }
+    const openExport = () => {
+        data.isExport = true;
     }
 </script>
 <style lang="less" scoped>

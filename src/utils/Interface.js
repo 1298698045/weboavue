@@ -118,7 +118,8 @@ const Interface = {
   },
   schedule: {
     list:"/localData/schedule/calendar.getlist.json",
-    pickList: "/localData/schedule/layout.picklistvalues.get.json"
+    pickList: "/localData/schedule/layout.picklistvalues.get.json",
+    save: "/localData/schedule/calendar.event.edit.json", // 保存
   }
 };
 export default Interface;

@@ -1,0 +1,26 @@
+{
+  "status": 1,
+  "msg": "提交成功",
+  "data": {
+    "Reminder": "False",
+    "Subject": "123",
+    "StateCode": "0",
+    "StatusCode": "0",
+    "PriorityCode": "0",
+    "RegardingObjectTypeCode": "20290",
+    "BgColor": "#a6d5f8",
+    "IsPrivate": "False",
+    "ScheduledStart": "2023-11-12 10:52:00",
+    "ScheduledEnd": "2023-11-12 11:52:00",
+    "Location": "",
+    "ActivityTypeCode": "4201",
+    "OwningUser": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "Description": "<p>123123123</p>",
+    "IsRecurrence": "False",
+    "IsAllDayEvent": "False",
+    "CalendarType": "工作安排",
+    "OrganizationId": "8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+    "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "CreatedOn": "2023-11-13 10: 52: 41"
+  }
+}

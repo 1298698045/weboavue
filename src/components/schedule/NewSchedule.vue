@@ -78,12 +78,12 @@
                             <div class="timeWrap">
                                 <div class="timeItem">
                                     <a-form-item name="StartDateTime" label="日期">
-                                        <a-date-picker v-model:value="formState.StartDateTime" />
+                                        <a-date-picker v-model:value="formState.StartDateTime" :valueFormat="dateFormat" />
                                     </a-form-item>
                                 </div>
                                 <div class="timeItem">
                                     <a-form-item name="StartDateTime_time" label="时间">
-                                        <a-time-picker v-model:value="formState.StartDateTime_time" />
+                                        <a-time-picker v-model:value="formState.StartDateTime_time" format="HH:mm" :valueFormat="hourFormat" />
                                     </a-form-item>
                                 </div>
                             </div>
@@ -110,19 +110,17 @@
                                 </a-dropdown>
                                 <a-select
                                     class="aselect"
-                                    v-model:value="formState.role"
+                                    v-model:value="formState.RegardingObjectId.Id"
                                     show-search
-                                    mode="multiple"
                                     :placeholder="'搜索'+currentMenu"
                                     :default-active-first-option="false"
                                     :filter-option="false"
                                     :not-found-content="null"
-                                    @search="handleSearch"
-                                    @change="handleChange"
-                                    @dropdownVisibleChange="getPeople"
+                                    @search="getSearchLook"
+                                    @dropdownVisibleChange="(e)=>{getSearchLook('',e)}"
                                 >
                                     <template #suffixIcon><SearchOutlined class="ant-select-suffix" /></template>
-                                    <a-select-option :value="item.ID" v-for="(item,index) in listData" :key="index">{{item.Name}}</a-select-option>
+                                    <a-select-option :value="item.ID" v-for="(item,index) in lookList" :key="index">{{item.Name}}</a-select-option>
                                 </a-select>
                             </div>
                         </a-form-item>
@@ -132,12 +130,12 @@
                             <div class="timeWrap">
                                 <div class="timeItem">
                                     <a-form-item name="EndDateTime" label="日期">
-                                        <a-date-picker v-model:value="formState.EndDateTime" />
+                                        <a-date-picker v-model:value="formState.EndDateTime" :valueFormat="dateFormat" />
                                     </a-form-item>
                                 </div>
                                 <div class="timeItem">
                                     <a-form-item name="EndDateTime_time" label="时间">
-                                        <a-time-picker v-model:value="formState.EndDateTime_time" />
+                                        <a-time-picker v-model:value="formState.EndDateTime_time"  :valueFormat="hourFormat" />
                                     </a-form-item>
                                 </div>
                             </div>
@@ -152,14 +150,27 @@
                     </div>
                     <div class="sectionItem">
                         <a-form-item name="IsAllDayEvent" label="私有">
-                          <a-checkbox v-model:checked="formState.IsAllDayEvent"></a-checkbox>
+                          <a-checkbox v-model:checked="formState.IsPrivate"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
                         <a-form-item name="BgColor" label="背景色">
-                            <a-input v-model:value="formState.BgColor"></a-input>
+                            <div class="selectFlex">
+                                <a-select
+                                    class="aselect"
+                                    v-model:value="formState.BgColor"
+                                    :default-active-first-option="false"
+                                    :filter-option="false"
+                                    :not-found-content="null"
+                                >
+                                    <a-select-option :value="item" v-for="(item,index) in colorList" :key="item" :style="{background: item}"></a-select-option>
+                                </a-select>
+                                <span class="suffixIcon">
+                                    <el-color-picker v-model="formState.BgColor"></el-color-picker>
+                                </span>
+                            </div>
                         </a-form-item>
                     </div>
                 </div>
@@ -179,7 +190,7 @@
                 <div class="sectionRow">
                     <div class="sectionItem">
                         <a-form-item name="Description" label="内容">
-                            <TEditor />
+                            <TEditor :placeholder="'请输入内容'" @input="getEditorContent" />
                         </a-form-item>
                     </div>
                 </div>
@@ -227,6 +238,11 @@
     folderName: String,
     folderPicker: String
   });
+  const dateFormat = 'YYYY-MM-DD';
+  const hourFormat = 'HH:mm'
+  const changeDate = (e) => {
+    console.log("e",e);
+  }
   const formRef = ref();
   const emit = defineEmits(["cancel"]);
   const handleCancel = () => {
@@ -259,11 +275,19 @@
             name: "客户联系人"
         }
     ],
-    currentMenu: "项目"
+    currentMenu: "项目",
+    currentKey: 20290,
+    lookList: [],
+    colorList: ["#e1b4e8", "#c2c9e7", "#a6d5f8", "#96dfd3",
+                    "#96e9b9", "#f9ea93", "#f9ce94", "#bc35bc",
+                    "#5679c1", "#3e8ede", "#00aea9", "#3eba4d",
+                    "#f6bc26", "#f7931e", "#570d8c", "#001970",
+                    "#0b2399", "#0a7476", "#0a6b51", "#b67d11",
+                    "#b75d0d"],
   });
   const {
     title,
-    height, CalendarTypeList, OwningUserList, menus, currentMenu
+    height, CalendarTypeList, OwningUserList, menus, currentMenu, lookList, currentKey, colorList
   } = toRefs(data);
   const formState = reactive({
     RegardingObjectTypeCode: 20290,
@@ -288,10 +312,34 @@
     endTime: "",
     
   });
-  
+  const getEditorContent = (e) => {
+    formState.Description = e;
+  }
+  watch(()=>formState.StartDateTime,(newVal,oldVal)=>{
+    formState.startTime = newVal + '' + formState.StartDateTime_time;
+  }, {deep: true})
+  watch(()=>formState.StartDateTime_time,(newVal,oldVal)=>{
+    formState.startTime = formState.StartDateTime + '' + newVal;
+  }, {deep: true})
+  watch(()=>formState.EndDateTime,(newVal,oldVal)=>{
+    formState.endTime = newVal + '' + formState.EndDateTime_time;
+  }, {deep: true})
+  watch(()=>formState.EndDateTime_time,(newVal,oldVal)=>{
+    formState.endTime = formState.EndDateTime + '' + newVal;
+  }, {deep: true})
   const handleMenu = (e)=> {
         console.log("e",e);
-        data.currentMenu = data.menus.find(item=>item.key==e.key).name;
+        let item = data.menus.find(item=>item.key==e.key);
+        data.currentMenu = item.name;
+        data.currentKey = item.key;
+}
+const getSearchLook = (val) => {
+    proxy.$get(Interface.uilook,{
+        Lktp: data.currentKey,
+        lksrch: val
+    }).then(res=>{
+        data.lookList = res.listData;
+    })
 }
   const searchlookup = (search, Lktp) => {
     proxy
@@ -324,21 +372,24 @@
       .validate()
       .then(() => {
         console.log("values", formState, toRaw(formState));
-        let obj = {
-          params: {
-            objTypeCode: 30027,
-            fields: {
-              name: formState.name,
-              folderPicker: props.folderPicker,
-              sortNumber: formState.sortNumber,
-              isPublic: formState.isPublic ? 1 : 0,
-              description: formState.description
-            },
-            id: "",
-          },
-        };
-        var messages = JSON.stringify(obj);
-        proxy.$get(Interface.saveRecord, { message: messages }).then((res) => {
+        var data = {
+            Location: formState.Location,
+            Subject: formState.Subject,
+            IsAllDayEvent: formState.IsAllDayEvent,
+            Description: formState.Description,
+            ScheduledStart: formState.startTime,
+            ScheduledEnd: formState.endTime,
+            CalendarType: formState.CalendarType,
+            Phone: formState.Phone,
+            RegardingObjectTypeCode: formState.RegardingObjectTypeCode ? formState.RegardingObjectTypeCode : '',
+            RegardingObjectIdName: formState.RegardingObjectIdName,
+            RegardingObjectId: formState.RegardingObjectId.Id,
+            ReminderTime: formState.ReminderTime,
+            BgColor: formState.BgColor,
+            IsPrivate: formState.IsPrivate,
+            Reminder: formState.Reminder,
+        }
+        proxy.$get(Interface.saveRecord, data).then((res) => {
           formRef.value.resetFields();
           message.warning("保存成功！");
           emit("cancel", false);
@@ -349,7 +400,7 @@
       });
   };
   </script>
-  <style lang="less">
+  <style lang="less" scoped>
   @import url("@/style/modal.less");
   .ant-modal-content .modalContainer .modalCenter {
     /* height: 500px !important; */
@@ -404,9 +455,17 @@
         .ant-btn{
             border-radius: 4px 0 0 4px;
         }
-        :deep .ant-select-selector{
+        .ant-select-show-search:where(.css-dev-only-do-not-override-kqecok).ant-select:not(.ant-select-customize-input) .ant-select-selector{
             border-radius: 0 4px 4px 0 !important;
             margin-left: -1px !important;
+        }
+    }
+    .selectFlex{
+        width: 100%;
+        position: relative;
+        .suffixIcon{
+            position: absolute;
+            right: 5px;
         }
     }
   </style>
