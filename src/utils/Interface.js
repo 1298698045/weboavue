@@ -120,6 +120,15 @@ const Interface = {
     list:"/localData/schedule/calendar.getlist.json",
     pickList: "/localData/schedule/layout.picklistvalues.get.json",
     save: "/localData/schedule/calendar.event.edit.json", // 保存
+    sharedList: "/localData/schedule/calendar.shared.mylist.json",
+    updatecontentaccess: "/localData/schedule/calendar.shared.right.json",
+    addAccess: "/localData/schedule/calendar.share.json",
+  },
+  scheduleTable: {
+    list: "/localData/scheduleTable/calendar.all.getlist.json"
+  },
+  leaderSchedule: {
+    list: "/localData/leaderSchedule/calendar.leader.getlist.json"
   }
 };
 export default Interface;

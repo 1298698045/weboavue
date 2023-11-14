@@ -7,7 +7,7 @@
                 <a-tab-pane key="3" tab="已拒绝"></a-tab-pane>
             </a-tabs>
             <div class="rightOption">
-                <a-button type="primary" @click="handleAddMeeting">新建会议</a-button>
+                <!-- <a-button type="primary" @click="handleAddMeeting">新建会议</a-button> -->
             </div>
         </div>
         <div class="center">

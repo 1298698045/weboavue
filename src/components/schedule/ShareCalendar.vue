@@ -46,10 +46,8 @@
                                 <div class="sectionItem">
                                     <a-form-item label="访问权限">
                                         <a-select v-model:value="rightCode">
-                                            <a-select-option value="0">无权限</a-select-option>
-                                            <a-select-option value="2">查看</a-select-option>
-                                            <a-select-option value="4">查看/新建（上传）</a-select-option>
-                                            <a-select-option value="32">管理</a-select-option>
+                                            <a-select-option value="2">允许查看</a-select-option>
+                                            <a-select-option value="4">允许查看和新建事件</a-select-option>
                                         </a-select>
                                     </a-form-item>
                                 </div>
@@ -68,11 +66,9 @@
                                     {{item.ObjectName}}
                                 </div>
                                 <div class="option">
-                                    <a-select v-model:value="item.Right" style="width: 200px;" @change="(e)=>{changeItemPerm(e,item)}">
-                                        <a-select-option :value="0">无权限</a-select-option>
-                                        <a-select-option :value="2">查看</a-select-option>
-                                        <a-select-option :value="4">查看/新建（上传）</a-select-option>
-                                        <a-select-option :value="32">管理</a-select-option>
+                                    <a-select v-model:value="item.SharedRights" style="width: 200px;" @change="(e)=>{changeItemPerm(e,item)}">
+                                        <a-select-option :value="2">允许查看</a-select-option>
+                                        <a-select-option :value="4">允许查看和新建事件</a-select-option>
                                     </a-select>
                                 </div>
                                 <div class="delIcon">
@@ -176,10 +172,9 @@
     // 添加权限
     const handleAddPrem = () => {
         console.log("data",data.users, data.rightCode);
-        var objectId = "";
-        proxy.$get(Interface.file.addAccess,{
-            entityId: props.fileParams.id,
-            objectId: objectId,
+        var objecsts = "";
+        proxy.$get(Interface.schedule.addAccess,{
+            objecsts: data.users.join(","),
             rightCode: data.rightCode
         }).then(res=>{
             message.success("添加成功！");
@@ -190,11 +185,9 @@
     }
 
     const getAccess = () => {
-        proxy.$get(Interface.file.access,{
-            id: props.fileParams.id,
-            objecttypecode: 'file'
+        proxy.$get(Interface.schedule.sharedList,{
         }).then(res=>{
-            data.listData = res.data.listData;
+            data.listData = res.rows;
         })
     }
     getAccess();
@@ -226,9 +219,19 @@
     }
     const changeItemPerm = (e,item) => {
         console.log(e,item);
-        proxy.$get(Interface.file.updatecontentaccess,{
-            id: item.Id,
-            rightCode: item.Right
+        let obj = {
+            actions: [
+                {
+                    params: {
+                        CalendarShareId: item.CalendarShareId,
+                        SharedRights: item.SharedRights
+                    }
+                }
+            ]
+        }
+        let messages = JSON.stringify(obj);
+        proxy.$get(Interface.schedule.updatecontentaccess,{
+            message: messages
         }).then(res=>{
             message.success("设置成功");
             getAccess();
@@ -327,7 +330,7 @@
         .ant-btn{
             border-radius: 4px 0 0 4px;
         }
-        .ant-select-selector{
+        :deep .ant-select-show-search:where(.css-dev-only-do-not-override-kqecok).ant-select:not(.ant-select-customize-input) .ant-select-selector{
             border-radius: 0 4px 4px 0 !important;
             margin-left: -1px !important;
         }

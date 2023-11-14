@@ -1,0 +1,162 @@
+{
+  "status": 1,
+  "msg": "",
+  "rowsPerPage": 25,
+  "page": 1,
+  "listData": [
+    {
+      "SystemUserId": "5cc5c02b-6ab2-4c92-8acc-09dd29642a4b",
+      "Name": "王芳",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": [
+        {
+          "ActivityId": "863d0426-b8a0-4be4-a93b-945adb79481c",
+          "Description": "",
+          "OwningUser": "5cc5c02b-6ab2-4c92-8acc-09dd29642a4b",
+          "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+          "CreatedByName": "jackliu45",
+          "OwningUserName": "王芳",
+          "IsAllDayEvent": false,
+          "ActivityTypeCode": 0,
+          "Location": "123",
+          "Subject": "123",
+          "ReminderTime": "",
+          "ScheduledStart": "2023-11-02T17:56:00",
+          "ScheduledEnd": "2023-11-02T18:56:00",
+          "ScheduledStartDate": "2023-11-02",
+          "ScheduledEndDate": "2023-11-02",
+          "ScheduledStartTime": "17:56",
+          "ScheduledEndTime": "18:56",
+          "Time": "2023-11-02 17:56 - 18:56",
+          "StateCode": 0,
+          "StatusCode": 0,
+          "IsRecurrence": false
+        }
+      ]
+    },
+    {
+      "SystemUserId": "1b249a03-dacd-43f5-93a2-0e590a3f2d6a",
+      "Name": "刘敏",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "08a84c71-1a98-49bd-a17a-20205b2df064",
+      "Name": "贾京津",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "431c2321-dd7b-4652-9a6a-4e88b64aabb0",
+      "Name": "蔡宁",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "c8d8ffed-82a9-4230-9732-a7078f0f3944",
+      "Name": "张英",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "2dcbd36d-3216-461e-8783-b1f208043c97",
+      "Name": "李默闻",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "91431f8a-f06c-4b24-9c31-7a05b8c8d91d",
+      "Name": "李默闻",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "4f9a2390-3a8e-4928-8aff-f967f085494a",
+      "Name": "陈兴德",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "f44741ad-0fbe-4b36-a67e-baf756914b1b",
+      "Name": "滕红红",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "7dfa6786-4960-482e-8615-9bd7ff70c0a8",
+      "Name": "李占江",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "237f281f-fdc2-41e7-8902-502811afa266",
+      "Name": "张骏",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "58e0c0eb-4a40-4e6e-b51d-f7d00957c1ab",
+      "Name": "孟庆玲",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    },
+    {
+      "SystemUserId": "dbb89806-e35f-4eb9-b720-0359474bc4c9",
+      "Name": "郭敬源",
+      "BusinessUnitIdName": null,
+      "Location": "",
+      "Description": "",
+      "Activities": []
+    }
+  ],
+  "dayData": [
+    {
+      "day": "2023-11-14",
+      "qty": 1
+    },
+    {
+      "day": "2023-11-12",
+      "qty": 1
+    },
+    {
+      "day": "2023-11-10",
+      "qty": 1
+    },
+    {
+      "day": "2023-11-08",
+      "qty": 1
+    },
+    {
+      "day": "2023-11-07",
+      "qty": 1
+    }
+  ],
+  "context": {
+    "userid": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "name": "jackliu45"
+  }
+}

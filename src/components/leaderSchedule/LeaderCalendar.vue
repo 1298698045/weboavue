@@ -4,10 +4,10 @@
             <div class="calendarHeader">
                 <div class="form">
                     <div class="formItem">
-                        <span class="label">会议类型：</span>
+                        <span class="label">日程类型：</span>
                         <a-select v-model:value="formState.type" style="width: 200px;">
-                            <a-select-option value="0">例会</a-select-option>
-                            <a-select-option value="1">学术会议</a-select-option>
+                            <a-select-option value="0">工作安排</a-select-option>
+                            <a-select-option value="1">个人便笺</a-select-option>
                         </a-select>
                     </div>
                     <div class="calendar-selectlist">
@@ -83,9 +83,9 @@
     dayjs.extend(weekday);
     dayjs.extend(localeData);
 
-    import WeekVue from "@/components/meeting/meetingRoom/WeekRoom.vue";
-    import DayCalendar from "@/components/meeting/meetingRoom/DayCalendarRoom.vue";
-    import MonthCalendar from "@/components/meeting/meetingRoom/MonthCalendarRoom.vue";
+    import WeekVue from "@/components/leaderSchedule/LeaderWeekCalendar.vue";
+    import DayCalendar from "@/components/leaderSchedule/LeaderDayCalendar.vue";
+    import MonthCalendar from "@/components/leaderSchedule/LeaderMonthCalendar.vue";
 
     // 新建
     import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
@@ -126,7 +126,7 @@
         userListTree: [],
         meetingList: {},
         monthValue: dayjs(new Date(), monthFormat),
-        calendarType: 0,
+        calendarType: 2,
         currentTime: dayjs(),
         startWeekTime: "",
         endWeekTime: "",
@@ -203,86 +203,11 @@
     const onSearch = (e) => {
 
     }
-    const getPeople = () => {
-        proxy.$get(Interface.meeting.userTree, {}).then(res => {
-            let list = res.returnValue.map(item => {
-                item.key = item.id;
-                item.title = item.name;
-                return item;
-            });
-            data.userListTree = list;
-        })
-    }
-    getPeople();
+
 
 
     const currentDate = ref(null);
-    const getListData = value => {
-        // console.log("value:", value.date());
-        // let listData;
-        // switch (value.date()) {
-        //     case 8:
-        //         listData = [
-        //             {
-        //                 type: 'warning',
-        //                 content: 'This is warning event.',
-        //             },
-        //             {
-        //                 type: 'success',
-        //                 content: 'This is usual event.',
-        //             },
-        //         ];
-        //         break;
-        //     case 10:
-        //         listData = [
-        //             {
-        //                 type: 'warning',
-        //                 content: 'This is warning event.',
-        //             },
-        //             {
-        //                 type: 'success',
-        //                 content: 'This is usual event.',
-        //             },
-        //             {
-        //                 type: 'error',
-        //                 content: 'This is error event.',
-        //             },
-        //         ];
-        //         break;
-        //     case 15:
-        //         listData = [
-        //             {
-        //                 type: 'warning',
-        //                 content: 'This is warning event',
-        //             },
-        //             {
-        //                 type: 'success',
-        //                 content: 'This is very long usual event。。....',
-        //             },
-        //             {
-        //                 type: 'error',
-        //                 content: 'This is error event 1.',
-        //             },
-        //             {
-        //                 type: 'error',
-        //                 content: 'This is error event 2.',
-        //             },
-        //             {
-        //                 type: 'error',
-        //                 content: 'This is error event 3.',
-        //             },
-        //             {
-        //                 type: 'error',
-        //                 content: 'This is error event 4.',
-        //             },
-        //         ];
-        //         break;
-        //     default:
-        // }
-        // return listData || [];
-        let date = value.date();
-        return data.meetingList[date] || [];
-    };
+
     const getMonthData = value => {
         if (value.month() === 8) {
             return 1394;
@@ -296,31 +221,6 @@
         currentDate.value = dayjs(e);
         getQuery();
     }
-    const getQuery = ()=> {
-        let startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
-        let endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
-        proxy.$get(Interface.meeting.getall,{
-            startTime: startTime,
-            endTime: endTime,
-            MeetingType: "",
-            employeeId: "",
-            StatusCode: ""
-        }).then(res=>{
-            let meetingItems = res.returnValue.meetings[0].meetingItems;
-            let obj = {};
-            meetingItems.forEach(item=>{
-                let daydate = dayjs(item.ScheduledStartDate).format('DD');
-                console.log("daydate",daydate);
-                if(!obj[daydate]){
-                    obj[daydate] = [];
-                }
-                obj[daydate].push(item);
-            })
-            data.meetingList = obj;
-            console.log("obj",obj)
-        })
-    }
-    getQuery();
     // 关闭新建
     const cancelNewMeeting = (e) => {
         data.isNewMeeting = e;

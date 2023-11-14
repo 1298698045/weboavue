@@ -1,5 +1,14 @@
 <template>
     <div class="addressBook">
+        <div class="headerBar">
+            <div class="headerLeft">
+                <div class="icon-circle-base"></div>
+                <span class="headerTitle">小组</span>
+            </div>
+            <div class="headerRight">
+                <a-button class="ml10" type="primary">新建</a-button>
+            </div>
+        </div>
         <div class="todoListWrap">
             <div class="leftTree" v-if="isLeft">
                 <div class="leftTreeWrap">

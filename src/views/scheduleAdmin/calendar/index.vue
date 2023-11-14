@@ -1,5 +1,16 @@
 <template>
     <div class="wrappper">
+        <div class="headerBar">
+            <div class="headerLeft">
+                <div class="icon-circle-base"></div>
+                <span class="headerTitle">日历</span>
+            </div>
+            <div class="headerRight">
+                <a-button type="primary" @click="handleAddSchedule">新建日程</a-button>
+                <a-button class="ml10" @click="openShare">共享日历</a-button>
+                <a-button class="ml10" @click="openExport">导入日程</a-button>
+            </div>
+        </div>
         <div class="calendarBody">
             <div class="leftMenuWrapper">
                 <div class="leftTabMenu" :class="{'active':current==0}" @click="current=0">
@@ -24,6 +35,10 @@
                 <CalendarVue v-if="current==1" />
             </div>
         </div>
+        <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
+        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" />
+        <ExportSchedule :isShow="isExport"  @cancel="cancelExport" />
+        <ShareCalendar :isShow="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
     </div>
 </template>
 <script setup>
@@ -43,13 +58,49 @@
     import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
     import ListView from "@/components/meeting/meetingCalendar/List.vue";
     import CalendarVue from "@/components/schedule/calendar/ScheduleCalendar.vue";
+
+
+    import NewSchedule from "@/components/schedule/NewSchedule.vue";
+    import AddSchedule from "@/components/schedule/AddSchedule.vue";
+    import ShareCalendar from "@/components/schedule/ShareCalendar.vue";
+    import ExportSchedule from "@/components/schedule/ExportSchedule.vue";
+
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
-        current: 1
+        current: 1,
+        isSchedule: false,
+        isAddSchedule: false,
+        isShare: false,
+        isExport: false,
+        fileParams: {}
     });
-    const { current } = toRefs(data);
+    const { current, isSchedule, isAddSchedule, isShare, isExport, fileParams } = toRefs(data);
+    // 关闭新建
+    const cancelNewSchedule = (e) => {
+        data.isSchedule = e;
+    }
+    const cancelAddSchedule = (e) => {
+        data.isAddSchedule = e;
+    }
+    // 新建
+    const handleAddSchedule = () => {
+        // data.isSchedule =  true;
+        data.isAddSchedule = true;
+    }
+    const cancelExport = (e) => {
+        data.isExport = e;
+    }
+    const cancelShare = (e) => {
+        data.isShare = e;
+    }
+    const openShare = () => {
+        data.isShare = true;
+    }
+    const openExport = () => {
+        data.isExport = true;
+    }
 </script>
 <style lang="less">
     .wrappper{
@@ -57,7 +108,7 @@
         height: 100%;
         .calendarBody{
             display: flex;
-            height: 100%;
+            height: calc(~"100% - 52px");
             .leftMenuWrapper{
                 min-width: 115px;
                 width: 115px;

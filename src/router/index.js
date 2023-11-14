@@ -131,6 +131,24 @@ const routes = [
         },
       },
       {
+        path: "/workplan/schedule/leader",
+        component: () => import("../views/scheduleAdmin/leader/index.vue"),
+        name: "领导日程",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/workplan/schedule/search",
+        component: () => import("../views/scheduleAdmin/search/index.vue"),
+        name: "日程查询",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
         path: "/workplan/talent",
         component: () => import("../views/scheduleAdmin/talent/index.vue"),
         name: "人才管理",

@@ -1,5 +1,15 @@
 <template>
     <div class="wrappper">
+        <div class="headerBar">
+            <div class="headerLeft">
+                <div class="icon-circle-base"></div>
+                <span class="headerTitle">会议日历</span>
+            </div>
+            <div class="headerRight">
+                <a-button type="primary" @click="handleAddMeeting">新建会议</a-button>
+                <a-button type="primary" v-if="current==1" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button>
+            </div>
+        </div>
         <div class="calendarBody">
             <div class="leftMenuWrapper">
                 <div class="leftTabMenu" :class="{'active':current==0}" @click="current=0">
@@ -24,6 +34,8 @@
                 <CalendarVue v-if="current==1" />
             </div>
         </div>
+        <NewMeeting :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" />
+        <NewRepeatMeeting :isShow="isRepeatMeeting" @cancel="cancelRepeatMeeting" @selectVal="handleRepeatMeetingVal" />
     </div>
 </template>
 <script setup>
@@ -44,12 +56,41 @@
     import ListView from "@/components/meeting/meetingCalendar/List.vue";
     import CalendarVue from "@/components/meeting/meetingCalendar/Calendar.vue";
     import { message } from "ant-design-vue";
+
+     // 新建
+     import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
+    // 重复会议
+    import NewRepeatMeeting from "@/components/meeting/meetingCalendar/NewRepeatMeeting.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
-        current: 0
+        current: 0,
+        isNewMeeting: false,
+        isRepeatMeeting: false
     });
-    const { current } = toRefs(data);
+    const { current, isNewMeeting, isRepeatMeeting } = toRefs(data);
+    // 关闭新建
+    const cancelNewMeeting = (e) => {
+        data.isNewMeeting = e;
+    }
+    const handleNewMeetingVal = (e) => {
+        data.isNewMeeting = false;
+    }
+    // 新建会议
+    const handleAddMeeting = () => {
+        data.isNewMeeting =  true;
+    }
+    // 新建重复会议
+    const handleAddRepeatMeeting = () => {
+        data.isRepeatMeeting =  true;
+    }
+    // 关闭重复会议弹窗
+    const cancelRepeatMeeting = (e) => {
+        data.isRepeatMeeting = e;
+    }
+    const handleRepeatMeetingVal = (e) => {
+        data.isRepeatMeeting = false;
+    }
 </script>
 <style lang="less">
     .wrappper{
@@ -57,7 +98,7 @@
         height: 100%;
         .calendarBody{
             display: flex;
-            height: 100%;
+            height: calc(~"100% - 52px");
             .leftMenuWrapper{
                 min-width: 115px;
                 width: 115px;

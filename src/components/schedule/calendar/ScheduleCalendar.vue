@@ -4,9 +4,9 @@
             我的日程
         </div>
         <div class="headerRight">
-            <a-button type="primary" @click="handleAddSchedule">新建日程</a-button>
+            <!-- <a-button type="primary" @click="handleAddSchedule">新建日程</a-button>
             <a-button class="ml10" @click="openShare">共享日历</a-button>
-            <a-button class="ml10" @click="openExport">导入日历</a-button>
+            <a-button class="ml10" @click="openExport">导入日历</a-button> -->
         </div>
     </div>
     <div class="calendarWrap">

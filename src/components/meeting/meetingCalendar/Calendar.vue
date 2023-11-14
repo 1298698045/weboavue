@@ -60,8 +60,8 @@
                 </div>
                
                 <div class="btnOptions">
-                    <a-button type="primary" @click="handleAddMeeting">新建会议</a-button>
-                    <a-button type="primary" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button>
+                    <!-- <a-button type="primary" @click="handleAddMeeting">新建会议</a-button>
+                    <a-button type="primary" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button> -->
                 </div>
             </div>
             <div class="calendarBody">
