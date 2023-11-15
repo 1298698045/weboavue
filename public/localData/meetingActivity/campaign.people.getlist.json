@@ -1,0 +1,92 @@
+{
+  "status": 1,
+  "msg": "",
+  "rowsPerPage": 25,
+  "page": 1,
+  "listData": [
+    {
+      "BusinessunitId": "239949af-fd26-41c3-a86c-2513ea64d5e0",
+      "Name": "部门测试",
+      "CampaignActivityList": [
+        {
+          "Peoples": [],
+          "CampaignId": "3497ea1a-aa14-4efe-8d63-dff614961ce3",
+          "TypeCode": null,
+          "CodeName": null,
+          "PromotionCodeName": null,
+          "StatusCode": null,
+          "StateCode": "1",
+          "IsTemplate": "False",
+          "ProposedStart": "2023-11-15T18:00:00",
+          "ProposedEnd": "2023-11-15T19:00:00",
+          "ActualStart": null,
+          "ActualEnd": null,
+          "OwningBusinessUnit": null,
+          "Message": null,
+          "BudgetedCost": null,
+          "OtherCost": null,
+          "TotalActualCost": null,
+          "Objective": null,
+          "Description": "<p>22123123123123123</p>",
+          "ExpectedResponse": null,
+          "ExpectedRevenue": null,
+          "TotalCampaignActivityActualCost": null,
+          "TotalCampaignActivityActualCost_Base": null,
+          "PriceListId": null,
+          "ExchangeRate": null,
+          "ImportSequenceNumber": null,
+          "TransactionCurrencyId": null,
+          "TimeZoneRuleVersionNumber": null,
+          "UTCConversionTimeZoneCode": null,
+          "BudgetedCost_Base": null,
+          "ExpectedRevenue_Base": null,
+          "OtherCost_Base": null,
+          "TotalActualCost_Base": null,
+          "DeletionStateCode": null,
+          "VersionNumber": "System.Byte[]",
+          "NumOfPeople": 0,
+          "Name": "1111111111111111111",
+          "LIST_RECORD_ID": null,
+          "CreatedOn": null,
+          "ModifiedOn": null,
+          "OwningUser": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+          "OwningUserName": "jackliu45",
+          "CreatedBy": null,
+          "CreatedByName": null,
+          "ModifiedBy": null,
+          "ModifiedByName": null,
+          "entityActionConfig": {
+            "isEditable": false,
+            "isDeletable": false,
+            "isShareable": false,
+            "isOwner": false,
+            "canShow": false,
+            "canApprove": false
+          }
+        }
+      ],
+      "ActionsConfig": {
+        "isEditable": false,
+        "isDeletable": false,
+        "isShareable": false,
+        "isOwner": false,
+        "canShow": false,
+        "canApprove": false
+      }
+    }
+  ],
+  "dayData": [
+    {
+      "day": "2023-11-15T18: 00: 00",
+      "qty": 1
+    },
+    {
+      "day": "2023-11-15T19: 00: 00",
+      "qty": 1
+    }
+  ],
+  "context": {
+    "userid": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "name": "jackliu45"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "rows": [
+    {
+      "ActualEnd": "",
+      "ActualStart": "",
+      "BudgetedCost": "",
+      "BudgetedCost_Base": "",
+      "CampaignId": "09e37cf4-fbc1-4770-8705-7de1062ccd31",
+      "CodeName": "123",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "CreatedByName": "jackliu45",
+      "CreatedOn": "2023/11/15 16:28:48",
+      "DeletionStateCode": "0",
+      "Description": "<p>123123123</p>",
+      "ExchangeRate": "",
+      "ExpectedResponse": "",
+      "ExpectedRevenue": "",
+      "ExpectedRevenue_Base": "",
+      "ImportSequenceNumber": "123",
+      "IsTemplate": "False",
+      "LIST_RECORD_ID": null,
+      "Message": "",
+      "ModifiedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "ModifiedByName": "jackliu45",
+      "ModifiedOn": "2023/11/15 16:28:48",
+      "Name": "123123",
+      "NumOfPeople": 0,
+      "Objective": "<p><br></p>",
+      "OtherCost": "",
+      "OtherCost_Base": "",
+      "OwningBusinessUnit": "239949af-fd26-41c3-a86c-2513ea64d5e0",
+      "OwningUser": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "OwningUserName": null,
+      "Peoples": [],
+      "PriceListId": "",
+      "PromotionCodeName": "",
+      "ProposedEnd": "2023/11/15 18:00:00",
+      "ProposedStart": "2023/11/15 17:00:00",
+      "StateCode": "0",
+      "StatusCode": "0",
+      "TimeZoneRuleVersionNumber": "",
+      "TotalActualCost": "",
+      "TotalActualCost_Base": "",
+      "TotalCampaignActivityActualCost": "",
+      "TotalCampaignActivityActualCost_Base": "",
+      "TransactionCurrencyId": "",
+      "TypeCode": "1",
+      "UTCConversionTimeZoneCode": "",
+      "VersionNumber": "System.Byte[]"
+    }
+  ],
+  "total": 12,
+  "pageInfo": {
+    "hasNextPage": false,
+    "currentPage": 0,
+    "totalRecords": 0,
+    "endCursor": null,
+    "__typename": null
+  },
+  "context": {
+    "globalValueProviders": null,
+    "picklistValuesMap": {},
+    "appContextUser": {
+      "userId": null,
+      "name": null,
+      "isAdmin": false,
+      "token": null
+    },
+    "enableAccessChecks": false
+  },
+  "status": 0,
+  "msg": null
+}

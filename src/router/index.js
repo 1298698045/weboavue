@@ -248,6 +248,69 @@ const routes = [
           icon: "xinjian",
         },
       },
+      {
+        path: "/meeting/topics",
+        name: "议题管理",
+        component: () => import("../views/meeting/topics/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/meeting/search",
+        name: "会议查询",
+        component: () => import("../views/meeting/search/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/meeting/task",
+        name: "会议任务",
+        component: () => import("../views/meeting/task/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/meeting/mettingRoomMaintenance",
+        name: "会议室维护",
+        component: () => import("../views/meeting/mettingRoomMaintenance/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/meeting/participant",
+        name: "会议参会人",
+        component: () => import("../views/meeting/participant/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/meeting/reportForms",
+        name: "会议报表",
+        component: () => import("../views/meeting/reportForms/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/meeting/activity",
+        name: "会议活动",
+        component: () => import("../views/meeting/activity/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
     ],
   },
   {

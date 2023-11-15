@@ -3,10 +3,10 @@
         <div class="headerBar">
             <div class="headerLeft">
                 <div class="icon-circle-base"></div>
-                <span class="headerTitle">领导日程</span>
+                <span class="headerTitle">会议活动</span>
             </div>
             <div class="headerRight">
-                <a-button type="primary" class="ml10" @click="handleAddSchedule">新建日程</a-button>
+                <a-button type="primary">新建活动</a-button>
             </div>
         </div>
         <div class="calendarBody">
@@ -33,8 +33,6 @@
                 <CalendarVue v-if="current==1" />
             </div>
         </div>
-        <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" />
     </div>
 </template>
 <script setup>
@@ -52,31 +50,15 @@
         defineEmits,
     } from "vue";
     import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
-    import ListView from "@/components/meeting/meetingCalendar/List.vue";
-    import CalendarVue from "@/components/leaderSchedule/LeaderCalendar.vue";
-
-    import NewSchedule from "@/components/schedule/NewSchedule.vue";
-    import AddSchedule from "@/components/schedule/AddSchedule.vue";
+    import ListView from "@/components/meeting/activity/ActivityList.vue";
+    import CalendarVue from "@/components/meeting/activity/CalendarActivity.vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
-        current: 1,
-        isSchedule: false,
-        isAddSchedule: false,
+        current: 1
     });
-    const { current, isSchedule, isAddSchedule } = toRefs(data);
-    const handleAddSchedule = () => {
-        // data.isSchedule =  true;
-        data.isAddSchedule = true;
-    }
-    // 关闭新建
-    const cancelNewSchedule = (e) => {
-        data.isSchedule = e;
-    }
-    const cancelAddSchedule = (e) => {
-        data.isAddSchedule = e;
-    }
+    const { current } = toRefs(data);
 </script>
 <style lang="less">
     .wrappper{

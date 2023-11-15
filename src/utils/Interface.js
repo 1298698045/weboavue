@@ -129,6 +129,11 @@ const Interface = {
   },
   leaderSchedule: {
     list: "/localData/leaderSchedule/calendar.leader.getlist.json"
+  },
+  // 会议活动
+  meetingActivity: {
+    list: "/localData/meetingActivity/campaign.activity.getcampaignlist.json",
+    calendarList: "/localData/meetingActivity/campaign.people.getlist.json", // 日历数据
   }
 };
 export default Interface;
