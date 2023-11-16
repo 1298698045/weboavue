@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div class="calendarBody">
-                <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2">
+                <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2" @select="handleSelectCalendar">
                     <template #headerRender>
                         <div>
                             
@@ -149,7 +149,7 @@
                 <WeekVue v-if="calendarType==1" :week="week" />
             </div>
         </div>
-        <NewMeeting :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" />
+        <NewMeeting :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
         <NewRepeatMeeting :isShow="isRepeatMeeting" @cancel="cancelRepeatMeeting" @selectVal="handleRepeatMeetingVal" />
     </div>
 </template>
@@ -228,10 +228,14 @@
         endWeekTime: "",
         week: [],
         isNewMeeting: false,
-        isRepeatMeeting: false
+        isRepeatMeeting: false,
+        paramsTime: {
+            date: "",
+            time: ""
+        }
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
-         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting} = toRefs(data);
+         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const backFn = (list) => {
         var len = list.length;
@@ -241,6 +245,12 @@
     const formState = reactive({
         type: ""
     })
+    // 选择日期
+    const handleSelectCalendar = (e,info) => {
+        console.log(e.format("YYYY-MM-DD"),info);
+        data.paramsTime.date = e.format("YYYY-MM-DD");
+        data.isNewMeeting = true;
+    }
     // 日-切换日期
     const changeTime = (e) => {
         data.currentTime = dayjs(e);

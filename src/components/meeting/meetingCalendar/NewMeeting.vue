@@ -19,7 +19,7 @@
                     </a-tabs>
                 </div>
                 <div class="modalCenter" :style="{ height: height + 'px' }">
-                    <ConfigForm v-if="currentTab==1" />
+                    <ConfigForm :paramsTime="paramsTime" v-if="currentTab==1" />
                     <AttendUser v-if="currentTab==2" />
                     <Topics v-if="currentTab==3" />
                     <AttendUserList v-if="currentTab==4" />
@@ -47,7 +47,7 @@
     // 参会人员
     import AttendUser from "@/components/meeting/meetingCalendar/AttendUser.vue"
     // 基本信息
-    import ConfigForm from "@/components/ConfigForm.vue";
+    import ConfigForm from "@/components/meeting/InfoConfigForm.vue";
     // 会议议题
     import Topics from "@/components/meeting/meetingCalendar/Topics.vue";
     // 会议参会人员列表
@@ -58,7 +58,8 @@
     const { proxy } = getCurrentInstance();
     const labelCol = ref({ style: { width: '100px' } });
     const props = defineProps({
-        isShow: Boolean
+        isShow: Boolean,
+        paramsTime: Object
     })
     const emit = defineEmits(['cancel', 'select-val']);
     const handleCancel = () => {

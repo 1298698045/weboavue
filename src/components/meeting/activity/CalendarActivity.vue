@@ -39,6 +39,24 @@
                     <a-button disabled class="ml10" v-if="calendarType==2">本月</a-button>
 
                     <a-button class="ml10" :icon="h(RedoOutlined)"></a-button>
+                    <div class="statusWrap">
+                        <div class="statusItem">
+                            <span class="statusColor" style="background: #0070d2;"></span>
+                            <span class="statusText">未审批</span>
+                        </div>
+                        <div class="statusItem">
+                            <span class="statusColor" style="background: #f7aa2d;"></span>
+                            <span class="statusText">审批中</span>
+                        </div>
+                        <div class="statusItem">
+                            <span class="statusColor" style="background: #81cf9f;"></span>
+                            <span class="statusText">审批完成</span>
+                        </div>
+                        <div class="statusItem">
+                            <span class="statusColor" style="background: #b3b3b3;"></span>
+                            <span class="statusText">已拒绝</span>
+                        </div>
+                    </div>
                 </div>
                
                 <div class="btnOptions">
@@ -73,39 +91,37 @@
                                         <div class="meetingBody">
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
-                                                    召集人：
+                                                    发布人：
                                                     <span class="OwningUserName">{{item.CreatedByName}}</span>
                                                 </div>
                                                 <div class="meetingInfoItem">
+                                                    部门：
+                                                    <span class="TelePhone">{{item.BusinessunitName || ''}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="meetingInfo">
+                                                <div class="meetingInfoItem">
                                                     联系电话：
-                                                    <span class="TelePhone">{{item.TelePhone || ''}}</span>
+                                                    <span class="OwningUserName"></span>
                                                 </div>
-                                            </div>
-                                            <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
-                                                    会议室：
-                                                    <span class="OwningUserName">{{ item.RoomIdName }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    会议设备：
-                                                    <span class="OwningUserName">jackliu3</span>
+                                                    活动目标：
+                                                    <span class="OwningUserName"></span>
                                                 </div>
                                             </div>
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
                                                     开始：
-                                                    <span class="OwningUserName">{{item.ScheduledStart}}</span>
+                                                    <span class="OwningUserName">{{item.ProposedStart}}</span>
                                                 </div>
                                                 <div class="meetingInfoItem">
                                                     结束：
-                                                    <span class="TelePhone">{{item.ScheduledEnd}}</span>
+                                                    <span class="TelePhone">{{item.ProposedEnd}}</span>
                                                 </div>
                                             </div>
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
-                                                    备注：
+                                                    活动内容：
                                                     <span class="OwningUserName">{{item.Description}}</span>
                                                 </div>
                                             </div>
@@ -117,11 +133,7 @@
                                 </template>                                
                                 <li class="messageItem" :style="{background:backFn(getListData(current))}">
                                     <!-- <a-badge status="success" :text="item.Name" /> -->
-                                    <p class="name123">{{item.Name}}</p>
-                                    <p class="time">
-                                        {{item.ScheduledStartTime}}~{{item.ScheduledEndTime}}
-                                        &nbsp; {{item.CreatedByName}} 预约
-                                    </p>
+                                    <p class="name123">{{dayjs(item.ProposedStart).format('HH:mm')}} {{item.Name}}</p>
                                 </li>
                             </a-popconfirm>
                         </ul>
@@ -160,8 +172,8 @@
     dayjs.extend(weekday);
     dayjs.extend(localeData);
 
-    import WeekVue from "@/components/meeting/meetingCalendar/Week.vue";
-    import DayCalendar from "@/components/meeting/meetingCalendar/DayCalendar.vue";
+    import WeekVue from "@/components/meeting/activity/WeekCalendayActivity.vue";
+    import DayCalendar from "@/components/meeting/activity/DayCalendayActivity.vue";
 
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
@@ -198,7 +210,7 @@
         userListTree: [],
         meetingList: {},
         monthValue: dayjs(new Date(), monthFormat),
-        calendarType: 2,
+        calendarType: 0,
         currentTime: dayjs(),
         startWeekTime: "",
         endWeekTime: "",
@@ -315,6 +327,8 @@
                     if(!obj[daydate]){
                         obj[daydate] = [];
                     }
+                    row.BusinessunitId = item.BusinessunitId;
+                    row.BusinessunitName = item.Name;
                     obj[daydate].push(row);
                 })
             })
@@ -397,6 +411,21 @@
                             .ant-picker{
                                 border: none;
                             }
+                        }
+                    }
+                }
+                .statusWrap{
+                    display: flex;
+                    .statusItem{
+                        display: flex;
+                        align-items: center;
+                        margin-left: 10px;
+                        .statusColor{
+                            display: inline-block;
+                            width: 10px;
+                            height: 10px;
+                            background: #2977f6;
+                            margin: 0 5px;
                         }
                     }
                 }

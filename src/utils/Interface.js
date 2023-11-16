@@ -134,6 +134,11 @@ const Interface = {
   meetingActivity: {
     list: "/localData/meetingActivity/campaign.activity.getcampaignlist.json",
     calendarList: "/localData/meetingActivity/campaign.people.getlist.json", // 日历数据
+  },
+  // 会议报表
+  meetingRpt: {
+    list: "/localData/meetingRpt/resource.type.list.json",
+    stat: "/localData/meetingRpt/resource.room.stat.json"
   }
 };
 export default Interface;
