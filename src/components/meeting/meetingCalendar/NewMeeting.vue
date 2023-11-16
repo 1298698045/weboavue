@@ -19,7 +19,7 @@
                     </a-tabs>
                 </div>
                 <div class="modalCenter" :style="{ height: height + 'px' }">
-                    <ConfigForm :paramsTime="paramsTime" v-if="currentTab==1" />
+                    <ConfigForm ref="configRef" :paramsTime="paramsTime" v-if="currentTab==1" />
                     <AttendUser v-if="currentTab==2" />
                     <Topics v-if="currentTab==3" />
                     <AttendUserList v-if="currentTab==4" />
@@ -57,12 +57,15 @@
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const labelCol = ref({ style: { width: '100px' } });
+    const configRef = ref();
     const props = defineProps({
         isShow: Boolean,
         paramsTime: Object
     })
+    console.log("props", props.paramsTime);
     const emit = defineEmits(['cancel', 'select-val']);
     const handleCancel = () => {
+        configRef.value.clearForm();
         emit("cancel", false);
     }
     const changeTab = (e) => {

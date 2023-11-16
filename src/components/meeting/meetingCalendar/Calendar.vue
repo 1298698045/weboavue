@@ -146,10 +146,10 @@
                     </template>
                 </a-calendar>
                 <DayCalendar v-if="calendarType==0" :currentTime="currentTime"/>
-                <WeekVue v-if="calendarType==1" :week="week" />
+                <WeekVue v-if="calendarType==1" :week="week"  @openWeekNew="handleOpenWeekNew" />
             </div>
         </div>
-        <NewMeeting :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
+        <NewMeeting :isShow="isNewMeeting" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
         <NewRepeatMeeting :isShow="isRepeatMeeting" @cancel="cancelRepeatMeeting" @selectVal="handleRepeatMeetingVal" />
     </div>
 </template>
@@ -245,6 +245,12 @@
     const formState = reactive({
         type: ""
     })
+    // 周日历-新建
+    const handleOpenWeekNew = (params) => {
+        console.log("weekparams", params);
+        data.paramsTime = params;
+        data.isNewMeeting =  true;
+    }
     // 选择日期
     const handleSelectCalendar = (e,info) => {
         console.log(e.format("YYYY-MM-DD"),info);

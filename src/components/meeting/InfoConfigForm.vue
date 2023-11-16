@@ -170,7 +170,10 @@
         isMultipleUser,
     } = toRefs(data);
     const formState = reactive({});
-
+    const clearForm = () => {
+        formRef.value.resetFields();
+    }
+    defineExpose({clearForm})
     const getConfig = () => {
         proxy.$get(Interface.meeting.config, {}).then((res) => {
             let picklistValuesMap = res.context.picklistValuesMap;
@@ -212,7 +215,9 @@
                             if(props.paramsTime.date && props.paramsTime.time=='') {
                                 formState[col.localId] = props.paramsTime.date + '21:00';
                             }else if(props.paramsTime.date && props.paramsTime.time){
-                                formState[col.localId] = props.paramsTime.date + props.paramsTime.time;
+                                let hour = new Date(props.paramsTime.date +' '+ props.paramsTime.time).getHours() + 1;
+                                hour = hour < 10 ? '0' + hour : hour;
+                                formState[col.localId] = props.paramsTime.date + ' ' + hour+':00';
                             }
                         }
                     })
