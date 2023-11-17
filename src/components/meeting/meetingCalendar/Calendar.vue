@@ -77,6 +77,7 @@
                                 trigger="hover"
                                 cancelText="编辑"
                                 okText="删除"
+                                @cancel="handleEditMeeting(item,current)"
                                 v-for="(item,index) in getListData(current)" :key="index"
                             >   
                                 <template #icon></template>
@@ -145,11 +146,11 @@
                         </ul>
                     </template>
                 </a-calendar>
-                <DayCalendar v-if="calendarType==0" :currentTime="currentTime"/>
+                <DayCalendar v-if="calendarType==0" :currentTime="currentTime" @openWeekNew="handleOpenWeekNew"/>
                 <WeekVue v-if="calendarType==1" :week="week"  @openWeekNew="handleOpenWeekNew" />
             </div>
         </div>
-        <NewMeeting :isShow="isNewMeeting" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
+        <NewMeeting :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
         <NewRepeatMeeting :isShow="isRepeatMeeting" @cancel="cancelRepeatMeeting" @selectVal="handleRepeatMeetingVal" />
     </div>
 </template>
@@ -232,10 +233,12 @@
         paramsTime: {
             date: "",
             time: ""
-        }
+        },
+        meetingId: ""
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
-         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime} = toRefs(data);
+         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime,
+         meetingId} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const backFn = (list) => {
         var len = list.length;
@@ -249,6 +252,9 @@
     const handleOpenWeekNew = (params) => {
         console.log("weekparams", params);
         data.paramsTime = params;
+        if(params.meetingId){
+            data.meetingId = params.meetingId;
+        }
         data.isNewMeeting =  true;
     }
     // 选择日期
@@ -448,6 +454,12 @@
     }
     const handleRepeatMeetingVal = (e) => {
         data.isRepeatMeeting = false;
+    }
+    // 编辑日历会议
+    const handleEditMeeting = (item,e) => {
+        data.paramsTime.date = e.format('YYYY-MM-DD');
+        data.meetingId = item.MeetingId;
+        data.isNewMeeting = true;
     }
 </script>
 <style lang="less" scoped>

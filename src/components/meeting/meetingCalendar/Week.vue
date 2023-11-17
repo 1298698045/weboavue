@@ -72,7 +72,7 @@
 
                     <div class="calendarDay" v-for="(item,index) in weekList" :key="index">
                         <div class="eventList" @click="(e)=>{handleSelectTime(e,item)}" :ref="(el)=>setItemRefs(el, item, index)"  :class="{'active':isToDay(item)}" :style="{height: height+'px'}">
-                            <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
+                            <a-popconfirm trigger="hover" @cancel="handleEditMeeting(item, row)" cancelText="编辑" okText="删除"
                                 v-for="(row,idx) in meetingList[item]" :key="idx">
                                 <template #icon></template>
                                 <template #title>
@@ -203,11 +203,12 @@
             paramsTime: {
                 date: "",
                 time: ""
-            }
+            },
+            meetingId: ""
 
     });
     const weeks = toRaw(['周日', '周一', '周二', '周三', '周四', '周五', '周六']);
-    const { height, weekList, meetingList, times, paramsTime } = toRefs(data);
+    const { height, weekList, meetingList, times, paramsTime, meetingId } = toRefs(data);
     const weekRef = ref(null);
     onMounted(() => {
         data.height = weekRef.value.scrollHeight;
@@ -221,6 +222,13 @@
                 el
             })
         }
+    }
+    const handleEditMeeting = (item,row) => {
+        console.log(item,row);
+        data.paramsTime.date = row.ScheduledStartDate;
+        data.paramsTime.time = row.ScheduledStartTime;
+        data.paramsTime.meetingId = row.MeetingId;
+        emit("openWeekNew", data.paramsTime);
     }
     const handleSelectTime = (e, item) => {
         console.log('e',e,item);

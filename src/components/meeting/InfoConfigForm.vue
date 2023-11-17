@@ -61,6 +61,7 @@
                             <a-date-picker valueFormat="YYYY-MM-DD" :placeholder="'请选择' + attribute.label"
                                 v-model:value="formState[attribute.targetValue]" />
                         </a-form-item>
+                        <!-- 时间类型 -->
                         <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'F'"
                             :label="attribute.label" :rules="[
                             {
@@ -68,7 +69,15 @@
                               message: '请选择' + attribute.label,
                             },
                           ]">
-                            <a-date-picker show-time valueFormat="YYYY-MM-DD HH:mm" :placeholder="'请选择' + attribute.label" v-model:value="formState[attribute.targetValue]" />
+                            <div class="timeGroup">
+                                <a-form-item class="date">
+                                    <a-date-picker valueFormat="YYYY-MM-DD" :placeholder="'请选择' + attribute.label"
+                                    v-model:value="formState[attribute.targetValue+'_obj'].date" @change="(e)=>{changeGroupDate(e,attribute)}" />
+                                </a-form-item>
+                                <a-form-item class="time">
+                                    <a-time-picker v-model:value="formState[attribute.targetValue+'_obj'].time" valueFormat="HH:mm" format="HH:mm" @change="(e)=>{changeGroupTime(e,attribute)}" />
+                                </a-form-item>
+                            </div>
                         </a-form-item>
                         <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'X'"
                             :label="attribute.label" :rules="[
@@ -136,7 +145,13 @@
     const labelCol = ref({ style: { width: "100px" } });
     const props = defineProps({
         isShow: Boolean,
-        paramsTime: Object
+        paramsTime: {
+            type: Object,
+            default: {
+                date: "",
+                time: ""
+            }
+        }
     });
     const formRef = ref();
     const emit = defineEmits(["cancel"]);
@@ -205,25 +220,49 @@
                         //     };
                         //     console.log("data.select[col.localId]", data.select[col.localId])
                         // }
-                        if(col.attributes.type=='F' && col.localId=='ScheduledStart'){
-                            if(props.paramsTime.date && props.paramsTime.time=='') {
-                                formState[col.localId] = props.paramsTime.date + '08:00';
-                            }else if(props.paramsTime.date && props.paramsTime.time){
-                                formState[col.localId] = props.paramsTime.date + props.paramsTime.time;
+                        if(col.attributes.type=='F'){
+                            formState[col.localId+'_obj'] = {
+                                date: "",
+                                time: ""
                             }
-                        }else if(col.attributes.type=='F' && col.localId=='ScheduledEnd'){
+                        }
+                        if(col.attributes.type=='F' && col.localId=='ScheduledStart' && props.paramsTime.date){
+                            
                             if(props.paramsTime.date && props.paramsTime.time=='') {
-                                formState[col.localId] = props.paramsTime.date + '21:00';
+                                formState[col.localId] = props.paramsTime.date + ' 08:00';
+                                formState[col.localId+'_obj'] = {
+                                    date: props.paramsTime.date,
+                                    time: "08:00"
+                                }
+                            }else if(props.paramsTime.date && props.paramsTime.time){
+                                formState[col.localId] = props.paramsTime.date + ' ' + props.paramsTime.time;
+                                formState[col.localId+'_obj'] = {
+                                    date: props.paramsTime.date,
+                                    time: props.paramsTime.time
+                                }
+                            }
+                        }else if(col.attributes.type=='F' && col.localId=='ScheduledEnd' && props.paramsTime.date){
+                            if(props.paramsTime.date && props.paramsTime.time=='') {
+                                formState[col.localId] = props.paramsTime.date + ' 21:00';
+                                formState[col.localId+'_obj'] = {
+                                    date: props.paramsTime.date,
+                                    time: "21:00"
+                                }
                             }else if(props.paramsTime.date && props.paramsTime.time){
                                 let hour = new Date(props.paramsTime.date +' '+ props.paramsTime.time).getHours() + 1;
                                 hour = hour < 10 ? '0' + hour : hour;
                                 formState[col.localId] = props.paramsTime.date + ' ' + hour+':00';
+                                formState[col.localId+'_obj'] = {
+                                    date: props.paramsTime.date,
+                                    time: hour+':00'
+                                }
                             }
                         }
                     })
                 })
             })
         });
+        console.log("formState",formState);
     };
     getConfig();
     const getPickerList = () => {
@@ -328,6 +367,13 @@
                 console.log("error", err);
             });
     };
+    // 时间组合日期选择
+    const changeGroupDate = (e, attribute) => {
+        formState[attribute.localId] = e + ' ' + formState[attribute.localId+'_obj'].time;
+    }
+    const changeGroupTime = (e, attribute) => {
+        formState[attribute.localId] = formState[attribute.localId+'_obj'].date +' ' + e;
+    }
 </script>
 <style lang="less">
     .section {
@@ -373,5 +419,15 @@
         position: absolute;
         right: 10px;
         top: 5px;
+    }
+    .timeGroup{
+        display: flex;
+        .date{
+            flex: 1;
+            margin-right: 5px;
+        }
+        .time{
+            width: 100px;
+        }
     }
 </style>

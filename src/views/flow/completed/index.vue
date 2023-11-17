@@ -328,13 +328,14 @@
         searchRef.value.resetForm();
     }
     const handleSearch = (params) => {
-        console.log("params:", params);
-        var filterQuery = "";
-        for(var key in params){
-            filterQuery += "\n"+key+'\teq\t'+params[key];
-        }
-        console.log('filterQuery',filterQuery);
-        data.queryParams.filterQuery = filterQuery;
+        // console.log("params:", params);
+        // var filterQuery = "";
+        // for(var key in params){
+        //     filterQuery += "\n"+key+'\teq\t'+params[key];
+        // }
+        // console.log('filterQuery',filterQuery);
+        // data.queryParams.filterQuery = filterQuery;
+        data.queryParams.filterQuery = params;
         gridRef.value.loadGrid(data.queryParams);
     }
 </script>

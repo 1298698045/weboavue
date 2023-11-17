@@ -64,7 +64,7 @@
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
-        current: 0,
+        current: 1,
         isNewMeeting: false,
         isRepeatMeeting: false
     });

@@ -38,7 +38,7 @@
                   <a-button class="ml10">批量取消发布</a-button> -->
                 </div>
               </div>
-              <list-form-search ref="searchRef" @update-height="changeHeight" ></list-form-search>
+              <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch"></list-form-search>
               <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
                 <!-- <a-table :dataSource="dataSource" :columns="columns"></a-table> -->
                 <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable>
@@ -132,7 +132,9 @@
     console.log('data',data.tableHeight);
     console.log("gridRef",gridRef.value.loadGrid())
   }
-  
+  const handleSearch = (params) => {
+    console.log("params",params);
+  }
   // 获取tabs
   const getTabs = () => {
     proxy.$get(Interface.todoList.tabs,{

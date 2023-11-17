@@ -119,6 +119,24 @@
                       v-model:value="formState[attribute.targetValue]"
                     />
                   </a-form-item>
+                  <!-- 时间类型 -->
+                  <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'F'"
+                      :label="attribute.label" :rules="[
+                      {
+                        required: attribute.attributes.required,
+                        message: '请选择' + attribute.label,
+                      },
+                    ]">
+                      <div class="timeGroup">
+                          <a-form-item class="date">
+                              <a-date-picker valueFormat="YYYY-MM-DD" :placeholder="'请选择' + attribute.label"
+                              v-model:value="formState[attribute.targetValue+'_obj'].date" @change="(e)=>{changeGroupDate(e,attribute)}" />
+                          </a-form-item>
+                          <a-form-item class="time">
+                              <a-time-picker v-model:value="formState[attribute.targetValue+'_obj'].time" valueFormat="HH:mm" format="HH:mm" @change="(e)=>{changeGroupTime(e,attribute)}" />
+                          </a-form-item>
+                      </div>
+                  </a-form-item>
                   <a-form-item
                     :name="attribute.targetValue"
                     v-else-if="attribute.attributes.type == 'X'"
@@ -261,6 +279,24 @@ const getConfig = () => {
       formState[key] = data.list[key];
     }
     console.log("formState", formState);
+    data.layoutList.forEach(item=>{
+        item.rows.forEach(row=>{
+            row.attributes.forEach(col=>{
+                // if(col.attributes.type=='L'){
+                //     data.select[col.localId] = {
+                //         values: picklistValuesMap[col.localId]
+                //     };
+                //     console.log("data.select[col.localId]", data.select[col.localId])
+                // }
+                if(col.attributes.type=='F'){
+                    formState[col.localId+'_obj'] = {
+                        date: "",
+                        time: ""
+                    }
+                }
+            })
+        })
+    })
   });
 };
 getConfig();
@@ -366,6 +402,13 @@ const handleSubmit = () => {
       console.log("error", err);
     });
 };
+// 时间组合日期选择
+const changeGroupDate = (e, attribute) => {
+    formState[attribute.localId] = e + ' ' + formState[attribute.localId+'_obj'].time;
+}
+const changeGroupTime = (e, attribute) => {
+    formState[attribute.localId] = formState[attribute.localId+'_obj'].date +' ' + e;
+}
 </script>
 <style lang="less">
 @import url("@/style/modal.less");

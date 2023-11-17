@@ -70,8 +70,8 @@
                 <div class="weekRightDay">
 
                     <div class="calendarDay">
-                        <div class="eventList"  :class="{'active':isToDay(currentDate)}" :style="{height: height+'px'}">
-                            <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
+                        <div class="eventList"  @click="(e)=>{handleSelectTime(e,currentDate)}" :class="{'active':isToDay(currentDate)}" :style="{height: height+'px'}">
+                            <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"  @cancel="handleEditMeeting(currentDate, row)"
                                 v-for="(row,idx) in meetingList[currentDate]" :key="idx">
                                 <template #icon></template>
                                 <template #title>
@@ -127,7 +127,7 @@
                                         </div>
                                     </div>
                                 </template>
-                                <div class="eventItem" :style="{top:countTop(row)}">
+                                <div class="eventItem" :style="{top:countTop(row),height:countHeight(row)}">
                                     <p>{{row.Name}}</p>
                                     <p>{{row.ScheduledStartTime}}-{{row.ScheduledEndTime}} {{row.CreatedByName}}预约</p>
                                 </div>
@@ -170,6 +170,7 @@
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
+    const emit = defineEmits(['openWeekNew']);
 
     const props = defineProps({
         currentTime: String
@@ -180,14 +181,18 @@
         meetingList: {},
         times: ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
             "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],
-        currentDate: ""
+        currentDate: "",
+        paramsTime: {
+            date: "",
+            time: ""
+        }
     });
     watch(()=>props.currentTime,(newVal,oldVal)=>{
         data.currentDate = dayjs(newVal).format("YYYY-MM-DD");
         console.log("data.currentDate",data.currentDate);
     },{deep: true, immediate: true})
     const weeks = toRaw(['周日', '周一', '周二', '周三', '周四', '周五', '周六']);
-    const { height, weekList, meetingList, times, currentDate } = toRefs(data);
+    const { height, weekList, meetingList, times, currentDate, paramsTime } = toRefs(data);
     const weekRef = ref(null);
     onMounted(() => {
         data.height = weekRef.value.scrollHeight;
@@ -201,7 +206,30 @@
         var time = date.format("YYYY-MM-DD");
         week.push(time);
     }
-
+    const handleEditMeeting = (item,row) => {
+        console.log(item,row);
+        data.paramsTime.date = row.ScheduledStartDate;
+        data.paramsTime.time = row.ScheduledStartTime;
+        data.paramsTime.meetingId = row.MeetingId;
+        emit("openWeekNew", data.paramsTime);
+    }
+    const handleSelectTime = (e, item) => {
+        console.log('e',e,item);
+        let layerY = e.layerY;
+        console.log("layerY",layerY, data.height);
+        console.log("counth", Math.floor(layerY/30/2));
+        let index = Math.floor(layerY/30/2);
+        console.log("datatime", data.times[index > 0 ?  index-1 : index]);
+        let startTime = data.times[index > 0 ?  index-1 : index];
+        data.paramsTime.date = item;
+        data.paramsTime.time = startTime;
+        let obj = {
+            date: item,
+            time: startTime
+        }
+        // console.log("paramsTime",data.paramsTime);
+        emit("openWeekNew", obj);
+    }
     // 判断是否是今天
     const isToDay = (time) => {
         const currentTime = dayjs(new Date()).format("YYYY-MM-DD");
@@ -224,9 +252,14 @@
         // console.log("index",index);
         return (index + 1) * 2 * 30 + "px";
     }
-
-
-
+    const countHeight = (row) => {
+        console.log("dayjs(row.ScheduledEndTime).get('hour')", row.ScheduledEndTime);
+        let index = data.times.findIndex(item => item == row.ScheduledStartTime);
+        let endIndex = data.times.findIndex(item => item == row.ScheduledEndTime);
+        console.log("endIndex",index,endIndex);
+        let num = endIndex - index;
+        return num * 60 + 'px';
+    }
     const getQuery = () => {
         let startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
         let endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');

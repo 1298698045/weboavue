@@ -4,7 +4,7 @@
             @ok="handleSubmit">
             <template #title>
                 <div>
-                    新建会议
+                    {{title}}
                 </div>
             </template>
             <div class="modalContainer">
@@ -60,7 +60,11 @@
     const configRef = ref();
     const props = defineProps({
         isShow: Boolean,
-        paramsTime: Object
+        paramsTime: Object,
+        meetingId: {
+            type: String,
+            default: ""
+        }
     })
     console.log("props", props.paramsTime);
     const emit = defineEmits(['cancel', 'select-val']);
@@ -74,9 +78,13 @@
     const data = reactive({
         currentTab: '1',
         height: document.documentElement.clientHeight - 350,
-        isNotice: true
+        isNotice: true,
+        title: "新建会议"
     })
-    const { currentTab, height, isNotice  } = toRefs(data);
+    const { currentTab, height, isNotice, title  } = toRefs(data);
+    if(props.meetingId){
+        data.title = '编辑会议';
+    }
     const handleSubmit = () => {
         emit("select-val", '');
     }

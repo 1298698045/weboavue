@@ -51,12 +51,13 @@
     })
     const { activeKey, columns, isNewMeeting } = toRefs(data);
     const handleSearch = (params) => {
-        var filterQuery = "";
-        for (var key in params) {
-            filterQuery += "\n" + key + "\teq\t" + params[key];
-        }
-        console.log(filterQuery, "filterQuery");
-        data.filterQuery = filterQuery;
+        // var filterQuery = "";
+        // for (var key in params) {
+        //     filterQuery += "\n" + key + "\teq\t" + params[key];
+        // }
+        // console.log(filterQuery, "filterQuery");
+        // data.filterQuery = filterQuery;
+        data.filterQuery = params;
         loadGrid(data.columns);
     };
     const getConfig = () => {

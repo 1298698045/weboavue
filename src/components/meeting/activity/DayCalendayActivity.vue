@@ -125,7 +125,7 @@
                                         </div>
                                     </div>
                                 </template>
-                                <div class="eventItem" :style="{top:countTop(row)}">
+                                <div class="eventItem" :style="{top:countTop(row),height:countHeight(row)}">
                                     <p>{{dayjs(row.ProposedStart).format('HH:mm')}} {{row.Name}}</p>
                                 </div>
                             </a-popconfirm>
@@ -221,7 +221,14 @@
         // console.log("index",index);
         return (index + 1) * 2 * 30 + "px";
     }
-
+    const countHeight = (row) => {
+        console.log("dayjs(row.EndDateTime).get('hour')",dayjs(row.EndDateTime).get('hour'));
+        let index = data.times.findIndex(item => item.split(':')[0] == dayjs(row.StartDateTime).get('hour'));
+        let endIndex = data.times.findIndex(item => item.split(':')[0] == dayjs(row.EndDateTime).get('hour'));
+        console.log("endIndex",index,endIndex);
+        let num = endIndex - index;
+        return num * 60 + 'px';
+    }
 
 
     const getQuery = () => {
