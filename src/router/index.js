@@ -342,6 +342,28 @@ const routes = [
     name: "PreviewContent",
     component: () => import("../views/information/preview/index.vue"),
   },
+  {
+    path: "/hrsetting",
+    name: "hrsetting",
+    component: Layout,
+    redirect: "/hrsetting/dashboard",
+    children: [
+      {
+        path: "/hrsetting/dashboard",
+        name: "门户仪表盘设计",
+        component: () => import("../views/sys/dashboard/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      }
+    ]
+  },
+  {
+    path: "/hrsetting/design",
+    name: "Design",
+    component: () => import("../views/sys/design/index.vue"),
+  },
 ];
 
 const router = createRouter({

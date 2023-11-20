@@ -12,6 +12,7 @@
     "@ant-design/icons-vue": "^7.0.0",
     "@surely-vue/table": "^4.1.9",
     "@tinymce/tinymce-vue": "^5.1.1",
+    "@vue/composition-api": "^1.7.2",
     "ant-design-vue": "4.x",
     "axios": "^1.5.0",
     "core-js": "^3.6.5",
@@ -24,8 +25,9 @@
     "swiper": "^11.0.4",
     "tinymce": "^6.7.0",
     "v3-easyui": "^3.0.14",
-    "vue": "^3.0.0",
+    "vue": "^3.2.36",
     "vue-router": "^4.0.0-0",
+    "vuedraggable": "^4.1.0",
     "vuex": "^4.0.0-0",
     "vx-easyui": "^1.2.57"
   },

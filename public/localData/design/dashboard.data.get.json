@@ -1,0 +1,1129 @@
+{
+  "Board": {
+    "id": "00000000-0000-0000-0000-000000000001",
+    "name": "workspace",
+    "displayName": "个人工作台",
+    "description": "",
+    "layoutType": "AAB",
+    "columns": [
+      {
+        "components": [
+          {
+            "dashboardId": "00000000-0000-0000-0000-000000000001",
+            "queryId": "",
+            "filterExpression": "[{\"sort\":1,\"attribute\":\"StateCode\",\"label\":\"状态\",\"operator\":\"eq\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"审批通过\"],\"isEditable\":true,\"column\":\"StateCode\",\"operands\":[\"1\"],\"id\":1}]",
+            "displayColumns": "",
+            "orderExpression": "[{\"attributeName\":\"IsTop\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"},{\"attributeName\":\"CreatedOn\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+            "showHeader": false,
+            "listColumns": [
+              {
+                "label": "置顶",
+                "field": "IsTop"
+              },
+              {
+                "label": "标题",
+                "field": "Title"
+              },
+              {
+                "label": "发布部门名称",
+                "field": "BusinessUnitIdName"
+              },
+              {
+                "label": "创建时间",
+                "field": "CreatedOn"
+              }
+            ],
+            "dataList": [],
+            "nameField": null,
+            "config": {
+              "queryId": "",
+              "filterExpression": "[{\"sort\":1,\"attribute\":\"StateCode\",\"label\":\"状态\",\"operator\":\"eq\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"审批通过\"],\"isEditable\":true,\"column\":\"StateCode\",\"operands\":[\"1\"],\"id\":1}]",
+              "displayColumns": "IsTop,IsImportantm,Title,BusinessUnitIdName,CreatedOn",
+              "orderExpression": "[{\"attributeName\":\"IsTop\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"},{\"attributeName\":\"CreatedOn\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+              "showHeader": false,
+              "nameField": "Title",
+              "Id": "",
+              "Name": "ContentNew",
+              "color": "",
+              "description": "",
+              "displayOrder": 1,
+              "limitItems": 10,
+              "columnNumber": 1,
+              "templateId": "bbda8bc8-3e50-48ec-a4a8-68c86a5bd81a",
+              "templateObjectTypeCode": 100201,
+              "templateTitle": "内容",
+              "moreLinkURL": "/content/newCateList.aspx?t=myhome&contentTypeCode=1&objectTypeCode=100201",
+              "detailURL": "/apps/scontent/PreviewContent.aspx?id=",
+              "entityCode": null
+            },
+            "entityCode": "",
+            "ServiceClassName": "",
+            "ServiceAssembly": "",
+            "id": "76d41bc9-090d-41df-bee1-9b64a9ce1947",
+            "name": "content",
+            "label": "信息中心",
+            "color": "",
+            "description": "",
+            "componentType": "list",
+            "displayOrder": 1,
+            "limitItems": 10,
+            "columnNumber": 1,
+            "templateId": "BBDA8BC8-3E50-48EC-A4A8-68C86A5BD81A",
+            "templateObjectTypeCode": 100201,
+            "templateTitle": null,
+            "moreLinkURL": "/content/newCateList.aspx?t=myhome&contentTypeCode=1&objectTypeCode=100201",
+            "detailUrl": "/apps/scontent/PreviewContent.aspx?id="
+          },
+          {
+            "tabs": [
+              {
+                "id": "1",
+                "name": "bedo",
+                "displayName": "待办",
+                "listComponent": {
+                  "dashboardId": null,
+                  "queryId": "",
+                  "filterExpression": "[{\"sort\":1,\"attribute\":\"StateCode\",\"label\":\"状态\",\"operator\":\"eq\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"待办\"],\"isEditable\":true,\"column\":\"StateCode\",\"operands\":[\"0\",\"3\",\"5\"],\"id\":1},{\"sort\":1,\"attribute\":\"SourceDirect\",\"label\":\"来源\",\"operator\":\"eq\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"审批通过\"],\"isEditable\":true,\"column\":\"SourceDirect\",\"operands\":[\"2\",\"3\",\"4\",\"5\",\"16\",\"51\",\"52\"],\"id\":2},{\"sort\":3,\"attribute\":\"ExecutorIdentityId\",\"label\":\"执行人\",\"operator\":\"eq-userid\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[],\"isEditable\":true,\"column\":\"ExecutorIdentityId\",\"operands\":[],\"id\":3}]",
+                  "displayColumns": "Priority,Name,CreatedOn",
+                  "orderExpression": "[{\"attributeName\":\"CreatedOn\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+                  "showHeader": false,
+                  "listColumns": [
+                    {
+                      "label": "优先级",
+                      "field": "Priority"
+                    },
+                    {
+                      "label": "标题",
+                      "field": "Name"
+                    },
+                    {
+                      "label": "提交时间",
+                      "field": "CreatedOn"
+                    }
+                  ],
+                  "dataList": [
+                    {
+                      "LIST_RECORD_ID": "d6e5eb08-23da-4657-9c3c-11f76ce25c86",
+                      "ID": "d6e5eb08-23da-4657-9c3c-11f76ce25c86",
+                      "Priority": "",
+                      "Name": "01 请示报告 财务处 刘优 2021-10-10",
+                      "CreatedOn": "2023/9/20 19:06:26"
+                    },
+                    {
+                      "LIST_RECORD_ID": "1db7ea33-ad23-4d27-83b0-3d2e29368fd5",
+                      "ID": "1db7ea33-ad23-4d27-83b0-3d2e29368fd5",
+                      "Priority": "",
+                      "Name": "02 差旅费报销流程",
+                      "CreatedOn": "2023/9/20 19:06:26"
+                    },
+                    {
+                      "LIST_RECORD_ID": "a39ff138-ea56-4c1f-9729-3d764c278201",
+                      "ID": "a39ff138-ea56-4c1f-9729-3d764c278201",
+                      "Priority": "",
+                      "Name": "01 请示报告 财务部 刘子游",
+                      "CreatedOn": "2023/9/20 19:06:26"
+                    },
+                    {
+                      "LIST_RECORD_ID": "a1dc650c-664f-4f9e-a49a-47f5c7c5a934",
+                      "ID": "a1dc650c-664f-4f9e-a49a-47f5c7c5a934",
+                      "Priority": "",
+                      "Name": "人员年度考评表（管理） 信息中心 刘优",
+                      "CreatedOn": "2023/9/20 19:06:26"
+                    },
+                    {
+                      "LIST_RECORD_ID": "6d08c9a8-719c-4d82-9e94-5a5282423a62",
+                      "ID": "6d08c9a8-719c-4d82-9e94-5a5282423a62",
+                      "Priority": "",
+                      "Name": "01 请示报告 财务部 刘子游",
+                      "CreatedOn": "2023/9/20 19:06:26"
+                    },
+                    {
+                      "LIST_RECORD_ID": "b0b8b53b-af1d-4c60-9c75-7059b940d8f8",
+                      "ID": "b0b8b53b-af1d-4c60-9c75-7059b940d8f8",
+                      "Priority": "",
+                      "Name": "测试会议时间",
+                      "CreatedOn": "2023/9/20 19:06:26"
+                    },
+                    {
+                      "LIST_RECORD_ID": "216a6172-77c1-450f-9c0c-7d26f4906c7a",
+                      "ID": "216a6172-77c1-450f-9c0c-7d26f4906c7a",
+                      "Priority": "",
+                      "Name": "02 差旅费报销流程",
+                      "CreatedOn": "2023/9/20 19:06:26"
+                    },
+                    {
+                      "LIST_RECORD_ID": "fac7e00c-10ba-4969-a94d-854373597980",
+                      "ID": "fac7e00c-10ba-4969-a94d-854373597980",
+                      "Priority": "",
+                      "Name": "01 请示报告 财务部 刘子游",
+                      "CreatedOn": "2023/9/20 19:06:26"
+                    },
+                    {
+                      "LIST_RECORD_ID": "5b705790-e20a-4c08-97f8-8935e12cbdb4",
+                      "ID": "5b705790-e20a-4c08-97f8-8935e12cbdb4",
+                      "Priority": "",
+                      "Name": "关于合同管理系统维护合同 刘优 2023-05-21",
+                      "CreatedOn": "2023/9/20 19:06:26"
+                    },
+                    {
+                      "LIST_RECORD_ID": "f90d3f9f-c8e0-4717-90f9-896847b43d95",
+                      "ID": "f90d3f9f-c8e0-4717-90f9-896847b43d95",
+                      "Priority": "",
+                      "Name": "测试会议流程",
+                      "CreatedOn": "2023/9/20 19:06:26"
+                    }
+                  ],
+                  "nameField": "Name",
+                  "config": {
+                    "queryId": null,
+                    "filterExpression": null,
+                    "displayColumns": null,
+                    "orderExpression": null,
+                    "showHeader": null,
+                    "nameField": null,
+                    "Id": null,
+                    "Name": null,
+                    "color": null,
+                    "description": null,
+                    "displayOrder": 0,
+                    "limitItems": null,
+                    "columnNumber": null,
+                    "templateId": null,
+                    "templateObjectTypeCode": null,
+                    "templateTitle": "流转办理",
+                    "moreLinkURL": null,
+                    "detailURL": null,
+                    "entityCode": null
+                  },
+                  "entityCode": null,
+                  "ServiceClassName": null,
+                  "ServiceAssembly": null,
+                  "id": "76d41bc9-090d-41df-bee1-9b64a9ce1947",
+                  "name": "wftask",
+                  "label": null,
+                  "color": "",
+                  "description": "",
+                  "componentType": null,
+                  "displayOrder": 1,
+                  "limitItems": 10,
+                  "columnNumber": 1,
+                  "templateId": "90458C80-0352-4E06-978A-B3C9F8AB5A5C",
+                  "templateObjectTypeCode": 123,
+                  "templateTitle": null,
+                  "moreLinkURL": null,
+                  "detailUrl": null
+                }
+              },
+              {
+                "id": "2",
+                "name": "beread",
+                "displayName": "待阅",
+                "listComponent": {
+                  "dashboardId": null,
+                  "queryId": "",
+                  "filterExpression": "[{\"sort\":1,\"attribute\":\"IsRead\",\"label\":\"来源\",\"operator\":\"eq\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"否\"],\"isEditable\":true,\"column\":\"IsRead\",\"operands\":[\"0\"],\"id\":1},{\"sort\":2,\"attribute\":\"ReceiverId\",\"label\":\"执行人\",\"operator\":\"eq-userid\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[],\"isEditable\":true,\"column\":\"ReceiverId\",\"operands\":[],\"id\":2}]",
+                  "displayColumns": "Name,CreatedOn",
+                  "orderExpression": "[{\"attributeName\":\"CreatedOn\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+                  "showHeader": false,
+                  "listColumns": [
+                    {
+                      "label": "名称",
+                      "field": "Name"
+                    },
+                    {
+                      "label": "传阅时间",
+                      "field": "CreatedOn"
+                    }
+                  ],
+                  "dataList": [],
+                  "nameField": "Name",
+                  "config": {
+                    "queryId": null,
+                    "filterExpression": null,
+                    "displayColumns": null,
+                    "orderExpression": null,
+                    "showHeader": null,
+                    "nameField": null,
+                    "Id": null,
+                    "Name": null,
+                    "color": null,
+                    "description": null,
+                    "displayOrder": 0,
+                    "limitItems": null,
+                    "columnNumber": null,
+                    "templateId": null,
+                    "templateObjectTypeCode": null,
+                    "templateTitle": "知会传阅记录",
+                    "moreLinkURL": null,
+                    "detailURL": null,
+                    "entityCode": null
+                  },
+                  "entityCode": null,
+                  "ServiceClassName": null,
+                  "ServiceAssembly": null,
+                  "id": "C94B682E-F5A6-4E56-9979-9DD41941362D",
+                  "name": "WFInstanceNotifyMembers",
+                  "label": null,
+                  "color": "",
+                  "description": "",
+                  "componentType": null,
+                  "displayOrder": 2,
+                  "limitItems": 10,
+                  "columnNumber": 1,
+                  "templateId": "C94B682E-F5A6-4E56-9979-9DD41941362D",
+                  "templateObjectTypeCode": 124,
+                  "templateTitle": null,
+                  "moreLinkURL": null,
+                  "detailUrl": null
+                }
+              }
+            ],
+            "id": "20f4b867-bc80-4367-bb6b-c1c27763f557",
+            "name": "wftask",
+            "label": "待办事务",
+            "color": null,
+            "description": null,
+            "componentType": "tablist",
+            "displayOrder": 2,
+            "limitItems": 0,
+            "columnNumber": 1,
+            "templateId": null,
+            "templateObjectTypeCode": 0,
+            "templateTitle": null,
+            "moreLinkURL": "/123/o",
+            "detailUrl": "/a0M/detail?id="
+          }
+        ],
+        "columnNumber": 1
+      },
+      {
+        "components": [
+          {
+            "dashboardId": "00000000-0000-0000-0000-000000000001",
+            "queryId": "",
+            "filterExpression": "[{\"sort\":1,\"attribute\":\"StateCode\",\"label\":\"状态\",\"operator\":\"eq\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"审批通过\"],\"isEditable\":true,\"column\":\"StateCode\",\"operands\":[\"1\"],\"id\":1}",
+            "displayColumns": "",
+            "orderExpression": "[{\"attributeName\":\"IsTop\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"},{\"attributeName\":\"CreatedOn\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+            "showHeader": false,
+            "listColumns": [
+              {
+                "label": "主题",
+                "field": "Title"
+              },
+              {
+                "label": "发布部门名称",
+                "field": "BusinessUnitIdName"
+              },
+              {
+                "label": "创建时间",
+                "field": "CreatedOn"
+              }
+            ],
+            "dataList": [
+              {
+                "LIST_RECORD_ID": "e3898dba-1c27-453c-b13b-aac02504d190",
+                "ID": "e3898dba-1c27-453c-b13b-aac02504d190",
+                "Title": "测试关于通知公告未读人员推送",
+                "BusinessUnitIdName": "信息中心",
+                "CreatedOn": "2023/11/14 11:51:11"
+              }
+            ],
+            "nameField": null,
+            "config": {
+              "queryId": "",
+              "filterExpression": "[{\"sort\":1,\"attribute\":\"StateCode\",\"label\":\"状态\",\"operator\":\"eq\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"审批通过\"],\"isEditable\":true,\"column\":\"StateCode\",\"operands\":[\"1\"],\"id\":1}",
+              "displayColumns": "Title,BusinessUnitIdName,CreatedOn",
+              "orderExpression": "[{\"attributeName\":\"IsTop\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"},{\"attributeName\":\"CreatedOn\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+              "showHeader": false,
+              "nameField": "Title",
+              "Id": "",
+              "Name": "NoticeNew",
+              "color": "",
+              "description": "",
+              "displayOrder": 1,
+              "limitItems": 10,
+              "columnNumber": 2,
+              "templateId": "6cb4b179-97cd-4c85-87c2-260de457efae",
+              "templateObjectTypeCode": 100202,
+              "templateTitle": "通知",
+              "moreLinkURL": "/content/newCateList.aspx?t=myhome&contentTypeCode=2&objectTypeCode=100202",
+              "detailURL": "/apps/scontent/PreviewContent.aspx?id=",
+              "entityCode": null
+            },
+            "entityCode": "",
+            "ServiceClassName": "",
+            "ServiceAssembly": "",
+            "id": "519a3004-f2e1-45aa-979c-1f4907de17c2",
+            "name": "notice",
+            "label": "通知公告",
+            "color": "",
+            "description": "",
+            "componentType": "list",
+            "displayOrder": 1,
+            "limitItems": 10,
+            "columnNumber": 2,
+            "templateId": "6CB4B179-97CD-4C85-87C2-260DE457EFAE",
+            "templateObjectTypeCode": 100202,
+            "templateTitle": null,
+            "moreLinkURL": " /content/newCateList.aspx?t=home&contentTypeCode=2&objectTypeCode=100202",
+            "detailUrl": "/apps/scontent/PreviewContent.aspx?id="
+          },
+          {
+            "tabs": [
+              {
+                "id": "1",
+                "name": "empwf",
+                "displayName": "人员",
+                "listComponent": {
+                  "dashboardId": null,
+                  "queryId": "",
+                  "filterExpression": "[{\"sort\":1,\"attribute\":\"ExpiredWfTasks\",\"label\":\"逾期数量\",\"operator\":\"gt\",\"logical\":\"等于\",\"value\":\"0\",\"picklistValues\":[],\"isEditable\":true,\"column\":\"ExpiredWfTasks\",\"operands\":[\"0\"],\"id\":1}]",
+                  "displayColumns": "FullName,DeptName,ExpiredWfTasks,NotStartedWfTasks",
+                  "orderExpression": "[{\"attributeName\":\"ExpiredWfTasks\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+                  "showHeader": true,
+                  "listColumns": [
+                    {
+                      "label": "姓名",
+                      "field": "FullName"
+                    },
+                    {
+                      "label": "部门",
+                      "field": "DeptName"
+                    },
+                    {
+                      "label": "逾期数量",
+                      "field": "ExpiredWfTasks"
+                    },
+                    {
+                      "label": "待办数量",
+                      "field": "NotStartedWfTasks"
+                    }
+                  ],
+                  "dataList": [
+                    {
+                      "LIST_RECORD_ID": "41cc5e82-4881-440a-90e4-31fea7a18d9b",
+                      "ID": "41cc5e82-4881-440a-90e4-31fea7a18d9b",
+                      "FullName": "张瑞美",
+                      "DeptName": "院办",
+                      "ExpiredWfTasks": "19",
+                      "NotStartedWfTasks": "35"
+                    },
+                    {
+                      "LIST_RECORD_ID": "126a47fb-9458-4ecd-86c1-c624e1026538",
+                      "ID": "126a47fb-9458-4ecd-86c1-c624e1026538",
+                      "FullName": "王喆",
+                      "DeptName": "院办",
+                      "ExpiredWfTasks": "18",
+                      "NotStartedWfTasks": "32"
+                    },
+                    {
+                      "LIST_RECORD_ID": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+                      "ID": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+                      "FullName": "管理员",
+                      "DeptName": "财务部",
+                      "ExpiredWfTasks": "15",
+                      "NotStartedWfTasks": "20"
+                    },
+                    {
+                      "LIST_RECORD_ID": "ec599370-4b53-427e-9fcd-e0002945d2e0",
+                      "ID": "ec599370-4b53-427e-9fcd-e0002945d2e0",
+                      "FullName": "卜力",
+                      "DeptName": "辅助检查科",
+                      "ExpiredWfTasks": "8",
+                      "NotStartedWfTasks": "8"
+                    },
+                    {
+                      "LIST_RECORD_ID": "37ab30bd-959c-4910-972e-7c7c188d4681",
+                      "ID": "37ab30bd-959c-4910-972e-7c7c188d4681",
+                      "FullName": "许悦",
+                      "DeptName": "宣传中心",
+                      "ExpiredWfTasks": "7",
+                      "NotStartedWfTasks": "7"
+                    },
+                    {
+                      "LIST_RECORD_ID": "c8ff39a9-d013-427a-8b3b-af3f2e850d8f",
+                      "ID": "c8ff39a9-d013-427a-8b3b-af3f2e850d8f",
+                      "FullName": "王智民",
+                      "DeptName": "十区",
+                      "ExpiredWfTasks": "4",
+                      "NotStartedWfTasks": "4"
+                    },
+                    {
+                      "LIST_RECORD_ID": "a0e470ad-3714-4949-8f6b-c9c7d4164bff",
+                      "ID": "a0e470ad-3714-4949-8f6b-c9c7d4164bff",
+                      "FullName": "任艳萍",
+                      "DeptName": "科技处",
+                      "ExpiredWfTasks": "4",
+                      "NotStartedWfTasks": "5"
+                    },
+                    {
+                      "LIST_RECORD_ID": "ff9f2801-863e-4fb2-ab9c-f39ffbda4f2c",
+                      "ID": "ff9f2801-863e-4fb2-ab9c-f39ffbda4f2c",
+                      "FullName": "贾军朴",
+                      "DeptName": "病案质控科",
+                      "ExpiredWfTasks": "4",
+                      "NotStartedWfTasks": "4"
+                    },
+                    {
+                      "LIST_RECORD_ID": "2c18398d-8fce-4d83-8f35-ff1aab63b9a5",
+                      "ID": "2c18398d-8fce-4d83-8f35-ff1aab63b9a5",
+                      "FullName": "蔡笑",
+                      "DeptName": "院办",
+                      "ExpiredWfTasks": "4",
+                      "NotStartedWfTasks": "11"
+                    },
+                    {
+                      "LIST_RECORD_ID": "83d1ce95-6f0d-43ef-b73d-f16031eb78d5",
+                      "ID": "83d1ce95-6f0d-43ef-b73d-f16031eb78d5",
+                      "FullName": "唐永怡",
+                      "DeptName": "心协",
+                      "ExpiredWfTasks": "3",
+                      "NotStartedWfTasks": "3"
+                    }
+                  ],
+                  "nameField": null,
+                  "config": {
+                    "queryId": null,
+                    "filterExpression": null,
+                    "displayColumns": null,
+                    "orderExpression": null,
+                    "showHeader": null,
+                    "nameField": null,
+                    "Id": null,
+                    "Name": null,
+                    "color": null,
+                    "description": null,
+                    "displayOrder": 0,
+                    "limitItems": null,
+                    "columnNumber": null,
+                    "templateId": null,
+                    "templateObjectTypeCode": null,
+                    "templateTitle": "事务统计",
+                    "moreLinkURL": null,
+                    "detailURL": null,
+                    "entityCode": null
+                  },
+                  "entityCode": null,
+                  "ServiceClassName": null,
+                  "ServiceAssembly": null,
+                  "id": "2e21efb4-f985-4787-8c89-f4719f557770",
+                  "name": "wftaskStat",
+                  "label": null,
+                  "color": "",
+                  "description": "",
+                  "componentType": null,
+                  "displayOrder": 1,
+                  "limitItems": 10,
+                  "columnNumber": 1,
+                  "templateId": "2e21efb4-f985-4787-8c89-f4719f557770",
+                  "templateObjectTypeCode": 20033,
+                  "templateTitle": null,
+                  "moreLinkURL": "/wfinstance/dashboard.aspx?t=InstaceDashboard",
+                  "detailUrl": "/wfinstance/dashboard.aspx?t=InstaceDashboard"
+                }
+              }
+            ],
+            "id": "718aad69-87e4-40cd-b939-1f6dd1fb3e5f",
+            "name": "wftaskStat",
+            "label": "流程效率曝光",
+            "color": null,
+            "description": null,
+            "componentType": "tablist",
+            "displayOrder": 2,
+            "limitItems": 0,
+            "columnNumber": 2,
+            "templateId": null,
+            "templateObjectTypeCode": 0,
+            "templateTitle": null,
+            "moreLinkURL": "/wfinstance/dashboard.aspx?t=InstaceDashboard",
+            "detailUrl": "/wfinstance/dashboard.aspx?t=InstaceDashboard"
+          }
+        ],
+        "columnNumber": 2
+      },
+      {
+        "components": [
+          {
+            "dashboardId": "00000000-0000-0000-0000-000000000001",
+            "queryId": "",
+            "filterExpression": "",
+            "displayColumns": "",
+            "orderExpression": "[{\"attributeName\":\"DisplayOrder\",\"SortDir\":\"ASC\",\"sort\":\"ASC\"}]",
+            "showHeader": false,
+            "listColumns": [
+              {
+                "label": "名称",
+                "field": "Name"
+              },
+              {
+                "label": "链接",
+                "field": "LinkUrl"
+              },
+              {
+                "label": "图片",
+                "field": "ImageUrl"
+              }
+            ],
+            "dataList": [
+              {
+                "LIST_RECORD_ID": "b8d2b3b0-3b3e-4bdc-92ce-3e493afbbf84",
+                "ID": "b8d2b3b0-3b3e-4bdc-92ce-3e493afbbf84",
+                "Name": "邮件",
+                "LinkUrl": "/email/inbox/home",
+                "ImageUrl": ""
+              },
+              {
+                "LIST_RECORD_ID": "2340da92-654f-44e0-ad33-43540851d953",
+                "ID": "2340da92-654f-44e0-ad33-43540851d953",
+                "Name": "待办事务",
+                "LinkUrl": "/123/o",
+                "ImageUrl": ""
+              },
+              {
+                "LIST_RECORD_ID": "3866fda7-0e5d-4ced-bbd0-8636331deffe",
+                "ID": "3866fda7-0e5d-4ced-bbd0-8636331deffe",
+                "Name": "日程",
+                "LinkUrl": "/lightning/o/Event/home",
+                "ImageUrl": ""
+              },
+              {
+                "LIST_RECORD_ID": "740e6106-8550-4691-8ce2-d7b6038b97c6",
+                "ID": "740e6106-8550-4691-8ce2-d7b6038b97c6",
+                "Name": "党建门户",
+                "LinkUrl": "/portal/partyHome.aspx",
+                "ImageUrl": ""
+              },
+              {
+                "LIST_RECORD_ID": "9da7ead9-cdaf-4989-969c-20966dbd807e",
+                "ID": "9da7ead9-cdaf-4989-969c-20966dbd807e",
+                "Name": "社区",
+                "LinkUrl": "/chatter/chatterHome.aspx",
+                "ImageUrl": ""
+              }
+            ],
+            "nameField": null,
+            "config": {
+              "queryId": "",
+              "filterExpression": "",
+              "displayColumns": "Name,LinkUrl,ImageUrl,ImageUrl1",
+              "orderExpression": "[{\"attributeName\":\"DisplayOrder\",\"SortDir\":\"ASC\",\"sort\":\"ASC\"}]",
+              "showHeader": false,
+              "nameField": "Name",
+              "Id": "FavoriteUrl",
+              "Name": "FavoriteUrl",
+              "color": "",
+              "description": "",
+              "displayOrder": 1,
+              "limitItems": 10,
+              "columnNumber": 3,
+              "templateId": "",
+              "templateObjectTypeCode": 302070,
+              "templateTitle": "快捷入口",
+              "moreLinkURL": "",
+              "detailURL": "",
+              "entityCode": null
+            },
+            "entityCode": "",
+            "ServiceClassName": "",
+            "ServiceAssembly": "",
+            "id": "19f9dd42-725a-40f1-8b3a-78c447f66d96",
+            "name": "favorurl",
+            "label": "快捷入口",
+            "color": "",
+            "description": "",
+            "componentType": "icon-grid",
+            "displayOrder": 1,
+            "limitItems": 10,
+            "columnNumber": 3,
+            "templateId": "",
+            "templateObjectTypeCode": 302070,
+            "templateTitle": null,
+            "moreLinkURL": "",
+            "detailUrl": ""
+          },
+          {
+            "dashboardId": "00000000-0000-0000-0000-000000000001",
+            "queryId": "",
+            "filterExpression": "[{\"sort\":1,\"attribute\":\"JoinState\",\"label\":\"来源\",\"operator\":\"eq\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"是\"],\"isEditable\":true,\"column\":\"JoinState\",\"operands\":[\"1\"],\"id\":1},{\"sort\":2,\"attribute\":\"UserId\",\"label\":\"执行人\",\"operator\":\"eq-userid\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[],\"isEditable\":true,\"column\":\"UserId\",\"operands\":[],\"id\":2}]",
+            "displayColumns": "Name,SummaryReadOn,CreatedOn",
+            "orderExpression": "[{\"attributeName\":\"CreatedOn\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+            "showHeader": null,
+            "listColumns": [
+              {
+                "label": "名称",
+                "field": "Name"
+              },
+              {
+                "label": "活动时间",
+                "field": "SummaryReadOn"
+              },
+              {
+                "label": "创建时间",
+                "field": "CreatedOn"
+              }
+            ],
+            "dataList": [],
+            "nameField": null,
+            "config": {
+              "queryId": null,
+              "filterExpression": null,
+              "displayColumns": null,
+              "orderExpression": null,
+              "showHeader": null,
+              "nameField": null,
+              "Id": null,
+              "Name": null,
+              "color": null,
+              "description": null,
+              "displayOrder": 0,
+              "limitItems": null,
+              "columnNumber": null,
+              "templateId": null,
+              "templateObjectTypeCode": null,
+              "templateTitle": "参加活动人员",
+              "moreLinkURL": null,
+              "detailURL": null,
+              "entityCode": null
+            },
+            "entityCode": "",
+            "ServiceClassName": "",
+            "ServiceAssembly": "",
+            "id": "c3bba950-bbfd-40a3-b7f8-50160d08d34d",
+            "name": "CampaignPeople",
+            "label": "参加活动人员",
+            "color": "",
+            "description": "",
+            "componentType": "list",
+            "displayOrder": 1,
+            "limitItems": 10,
+            "columnNumber": 3,
+            "templateId": "44aa02aa-6f1a-47f8-b659-9e323059ad3f",
+            "templateObjectTypeCode": 44021,
+            "templateTitle": null,
+            "moreLinkURL": "/701/o",
+            "detailUrl": "/701/o"
+          },
+          {
+            "calendarItems": [
+              {
+                "day": "2023/11/08",
+                "hasItems": true,
+                "items": []
+              },
+              {
+                "day": "2023/11/10",
+                "hasItems": true,
+                "items": []
+              },
+              {
+                "day": "2023/11/12",
+                "hasItems": true,
+                "items": []
+              },
+              {
+                "day": "2023/11/14",
+                "hasItems": true,
+                "items": []
+              }
+            ],
+            "Calendars": [],
+            "Meetings": [],
+            "Campaigns": [],
+            "id": "c821cd41-f315-43d1-8fa6-82787b6f06e7",
+            "name": "mycalendar",
+            "label": "日历",
+            "color": "",
+            "description": "",
+            "componentType": "calendar",
+            "displayOrder": 0,
+            "limitItems": 0,
+            "columnNumber": 3,
+            "templateId": "c821cd41-f315-43d1-8fa6-82787b6f06e7",
+            "templateObjectTypeCode": 0,
+            "templateTitle": null,
+            "moreLinkURL": "/lightning/o/Event/home",
+            "detailUrl": ""
+          },
+          {
+            "tabs": [
+              {
+                "id": "1",
+                "name": "activityPointer",
+                "displayName": "日程",
+                "listComponent": {
+                  "dashboardId": null,
+                  "queryId": "",
+                  "filterExpression": "[{\"sort\":1,\"attribute\":\"ScheduledStart\",\"label\":\"开始时间\",\"operator\":\"today\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"今天\"],\"isEditable\":true,\"column\":\"ScheduledStart\",\"operands\":[],\"id\":2},{\"sort\":3,\"attribute\":\"OwningUser\",\"label\":\"执行人\",\"operator\":\"eq-userid\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[],\"isEditable\":true,\"column\":\"OwningUser\",\"operands\":[],\"id\":2}]",
+                  "displayColumns": "Subject,ScheduledStart",
+                  "orderExpression": "[{\"attributeName\":\"ScheduledStart\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+                  "showHeader": false,
+                  "listColumns": [
+                    {
+                      "label": "主题",
+                      "field": "Subject"
+                    },
+                    {
+                      "label": "开始时间",
+                      "field": "ScheduledStart"
+                    }
+                  ],
+                  "dataList": [],
+                  "nameField": null,
+                  "config": {
+                    "queryId": null,
+                    "filterExpression": null,
+                    "displayColumns": null,
+                    "orderExpression": null,
+                    "showHeader": null,
+                    "nameField": null,
+                    "Id": null,
+                    "Name": null,
+                    "color": null,
+                    "description": null,
+                    "displayOrder": 0,
+                    "limitItems": null,
+                    "columnNumber": null,
+                    "templateId": null,
+                    "templateObjectTypeCode": null,
+                    "templateTitle": "活动与任务",
+                    "moreLinkURL": null,
+                    "detailURL": null,
+                    "entityCode": null
+                  },
+                  "entityCode": null,
+                  "ServiceClassName": null,
+                  "ServiceAssembly": null,
+                  "id": "c821cd41-f315-43d1-8fa6-82787b6f06e7",
+                  "name": "activityPointer",
+                  "label": null,
+                  "color": "",
+                  "description": "",
+                  "componentType": null,
+                  "displayOrder": 1,
+                  "limitItems": 10,
+                  "columnNumber": 1,
+                  "templateId": "c821cd41-f315-43d1-8fa6-82787b6f06e7",
+                  "templateObjectTypeCode": 4200,
+                  "templateTitle": null,
+                  "moreLinkURL": "",
+                  "detailUrl": ""
+                }
+              },
+              {
+                "id": "2",
+                "name": "meetingAudience",
+                "displayName": "会议",
+                "listComponent": {
+                  "dashboardId": null,
+                  "queryId": "",
+                  "filterExpression": "[{\"sort\":1,\"attribute\":\"meetIngStatusCode\",\"label\":\"状态\",\"operator\":\"eq\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"已发布\"],\"isEditable\":true,\"column\":\"meetIngStatusCode\",\"operands\":[\"1\"],\"id\":1},{\"sort\":1,\"attribute\":\"ScheduledStart\",\"label\":\"会议开始时间\",\"operator\":\"today\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"今天\"],\"isEditable\":true,\"column\":\"ScheduledStart\",\"operands\":[],\"id\":2},{\"sort\":3,\"attribute\":\"InviteeId\",\"label\":\"执行人\",\"operator\":\"eq-userid\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[],\"isEditable\":true,\"column\":\"InviteeId\",\"operands\":[],\"id\":3}]",
+                  "displayColumns": "MeetingIdName,ScheduledStart",
+                  "orderExpression": "[{\"attributeName\":\"ScheduledStart\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+                  "showHeader": false,
+                  "listColumns": [
+                    {
+                      "label": "会议名称",
+                      "field": "MeetingIdName"
+                    }
+                  ],
+                  "dataList": [],
+                  "nameField": null,
+                  "config": {
+                    "queryId": null,
+                    "filterExpression": null,
+                    "displayColumns": null,
+                    "orderExpression": null,
+                    "showHeader": null,
+                    "nameField": null,
+                    "Id": null,
+                    "Name": null,
+                    "color": null,
+                    "description": null,
+                    "displayOrder": 0,
+                    "limitItems": null,
+                    "columnNumber": null,
+                    "templateId": null,
+                    "templateObjectTypeCode": null,
+                    "templateTitle": "会议参会人员",
+                    "moreLinkURL": null,
+                    "detailURL": null,
+                    "entityCode": null
+                  },
+                  "entityCode": null,
+                  "ServiceClassName": null,
+                  "ServiceAssembly": null,
+                  "id": "de9d7bb5-be9e-46b2-9f43-ab4de6f10a52",
+                  "name": "meetingAudience",
+                  "label": null,
+                  "color": "",
+                  "description": "",
+                  "componentType": null,
+                  "displayOrder": 2,
+                  "limitItems": 10,
+                  "columnNumber": 1,
+                  "templateId": "de9d7bb5-be9e-46b2-9f43-ab4de6f10a52",
+                  "templateObjectTypeCode": 5002,
+                  "templateTitle": null,
+                  "moreLinkURL": "",
+                  "detailUrl": ""
+                }
+              },
+              {
+                "id": "3",
+                "name": "campaignPeople",
+                "displayName": "活动",
+                "listComponent": {
+                  "dashboardId": null,
+                  "queryId": "",
+                  "filterExpression": "[{\"sort\":1,\"attribute\":\"CampaignStatusCode\",\"label\":\"状态\",\"operator\":\"eq\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"已发布\"],\"isEditable\":true,\"column\":\"CampaignStatusCode\",\"operands\":[\"1\"],\"id\":1},{\"sort\":1,\"attribute\":\"ProposedStart\",\"label\":\"来源\",\"operator\":\"today\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[\"今天\"],\"isEditable\":true,\"column\":\"ProposedStart\",\"operands\":[],\"id\":2},{\"sort\":3,\"attribute\":\"UserId\",\"label\":\"执行人\",\"operator\":\"eq-userid\",\"logical\":\"等于\",\"value\":\"\",\"picklistValues\":[],\"isEditable\":true,\"column\":\"UserId\",\"operands\":[],\"id\":3}]",
+                  "displayColumns": "Name,ProposedStart",
+                  "orderExpression": "[{\"attributeName\":\"CreatedOn\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+                  "showHeader": false,
+                  "listColumns": [
+                    {
+                      "label": "名称",
+                      "field": "Name"
+                    },
+                    {
+                      "label": "活动开始时间",
+                      "field": "ProposedStart"
+                    }
+                  ],
+                  "dataList": [],
+                  "nameField": null,
+                  "config": {
+                    "queryId": null,
+                    "filterExpression": null,
+                    "displayColumns": null,
+                    "orderExpression": null,
+                    "showHeader": null,
+                    "nameField": null,
+                    "Id": null,
+                    "Name": null,
+                    "color": null,
+                    "description": null,
+                    "displayOrder": 0,
+                    "limitItems": null,
+                    "columnNumber": null,
+                    "templateId": null,
+                    "templateObjectTypeCode": null,
+                    "templateTitle": "参加活动人员",
+                    "moreLinkURL": null,
+                    "detailURL": null,
+                    "entityCode": null
+                  },
+                  "entityCode": null,
+                  "ServiceClassName": null,
+                  "ServiceAssembly": null,
+                  "id": "44aa02aa-6f1a-47f8-b659-9e323059ad3f",
+                  "name": "campaignPeople",
+                  "label": null,
+                  "color": "",
+                  "description": "",
+                  "componentType": null,
+                  "displayOrder": 3,
+                  "limitItems": 10,
+                  "columnNumber": 1,
+                  "templateId": "44aa02aa-6f1a-47f8-b659-9e323059ad3f",
+                  "templateObjectTypeCode": 44021,
+                  "templateTitle": null,
+                  "moreLinkURL": "",
+                  "detailUrl": ""
+                }
+              }
+            ],
+            "id": "c6c61b31-7d64-411d-a051-b76c85855e1c",
+            "name": "tabcalendaritm",
+            "label": "日程|会议|活动",
+            "color": null,
+            "description": null,
+            "componentType": "tab-calendar-item",
+            "displayOrder": 3,
+            "limitItems": 0,
+            "columnNumber": 3,
+            "templateId": null,
+            "templateObjectTypeCode": 0,
+            "templateTitle": null,
+            "moreLinkURL": "",
+            "detailUrl": ""
+          },
+          {
+            "dashboardId": "00000000-0000-0000-0000-000000000001",
+            "queryId": "",
+            "filterExpression": "",
+            "displayColumns": "ImageUrl,Name,LinkUrl",
+            "orderExpression": "[{\"attributeName\":\"ClickCount\",\"SortDir\":\"DESC\",\"sort\":\"DESC\"}]",
+            "showHeader": null,
+            "listColumns": [
+              {
+                "label": "图片",
+                "field": "ImageUrl"
+              },
+              {
+                "label": "名称 ",
+                "field": "Name"
+              },
+              {
+                "label": "链接",
+                "field": "LinkUrl"
+              }
+            ],
+            "dataList": [
+              {
+                "LIST_RECORD_ID": "4c8eee45-5a92-4a78-9324-86251f48e471",
+                "ID": "4c8eee45-5a92-4a78-9324-86251f48e471",
+                "ImageUrl": "",
+                "Name": "我的人事档案",
+                "LinkUrl": "/apps/hr/UserJumpEmp.aspx"
+              },
+              {
+                "LIST_RECORD_ID": "acbeecac-6299-4f3e-bd62-7fd3b99272af",
+                "ID": "acbeecac-6299-4f3e-bd62-7fd3b99272af",
+                "ImageUrl": "",
+                "Name": "志愿者活动预约",
+                "LinkUrl": "/ui/hr/volunteer/appoint?t=VolunteerActivity"
+              },
+              {
+                "LIST_RECORD_ID": "9fa76001-96ab-4455-9bc1-17184c5fc69f",
+                "ID": "9fa76001-96ab-4455-9bc1-17184c5fc69f",
+                "ImageUrl": "",
+                "Name": "火狐浏览器",
+                "LinkUrl": "/firefox40.exe"
+              },
+              {
+                "LIST_RECORD_ID": "60eff4af-c102-4f62-b0dc-746989d975fc",
+                "ID": "60eff4af-c102-4f62-b0dc-746989d975fc",
+                "ImageUrl": "",
+                "Name": "分线花名册",
+                "LinkUrl": "/hr/rpts/eme/emplistgrpDept.aspx?label=1"
+              },
+              {
+                "LIST_RECORD_ID": "621d40af-75fa-4284-913b-8d21c48da482",
+                "ID": "621d40af-75fa-4284-913b-8d21c48da482",
+                "ImageUrl": "",
+                "Name": "Win7 IE11",
+                "LinkUrl": "/ie11.exe"
+              },
+              {
+                "LIST_RECORD_ID": "a184df23-483c-4296-b7f7-df8d925854c0",
+                "ID": "a184df23-483c-4296-b7f7-df8d925854c0",
+                "ImageUrl": "",
+                "Name": "花名册",
+                "LinkUrl": "/hr/rpts/eme/emplistgrpDept.aspx"
+              },
+              {
+                "LIST_RECORD_ID": "bfbd82c8-99d6-4cbb-bbd8-ee04e56ea6e4",
+                "ID": "bfbd82c8-99d6-4cbb-bbd8-ee04e56ea6e4",
+                "ImageUrl": "",
+                "Name": "XP IE8补丁",
+                "LinkUrl": "/IE8-WindowsXP-KB2416400-x86-CHS.exe"
+              }
+            ],
+            "nameField": null,
+            "config": {
+              "queryId": null,
+              "filterExpression": null,
+              "displayColumns": null,
+              "orderExpression": null,
+              "showHeader": null,
+              "nameField": null,
+              "Id": null,
+              "Name": null,
+              "color": null,
+              "description": null,
+              "displayOrder": 0,
+              "limitItems": null,
+              "columnNumber": null,
+              "templateId": null,
+              "templateObjectTypeCode": null,
+              "templateTitle": "快速链接",
+              "moreLinkURL": null,
+              "detailURL": null,
+              "entityCode": null
+            },
+            "entityCode": "",
+            "ServiceClassName": "",
+            "ServiceAssembly": "",
+            "id": "dba10166-db7a-4091-8439-42549f40ca40",
+            "name": "quicklink",
+            "label": "常用链接",
+            "color": "",
+            "description": "",
+            "componentType": "text-grid",
+            "displayOrder": 3,
+            "limitItems": 10,
+            "columnNumber": 3,
+            "templateId": "5a53f80a-5d63-4694-8aa6-3480441ac32a",
+            "templateObjectTypeCode": 20032,
+            "templateTitle": null,
+            "moreLinkURL": "",
+            "detailUrl": ""
+          },
+          {
+            "list": [
+              {
+                "ValueId": "d91f3671-0635-48ea-9a71-cef41921746e",
+                "Name": "",
+                "ImgUrl": "/SysFiles/images/90C639F7-0E93-45FD-BB3D-1026C6438D8E.jpg",
+                "LnkUrl": "/apps/scontent/PreviewContent.aspx?id=90c639f7-0e93-45fd-bb3d-1026c6438d8e",
+                "Position": 1
+              },
+              {
+                "ValueId": "5f153890-cb88-4496-a60c-b7b3b5b11601",
+                "Name": "",
+                "ImgUrl": "/SysFiles/images/F1580026-3357-4BB4-B80F-6EE4EBB20BCF.jpeg",
+                "LnkUrl": "/apps/scontent/PreviewContent.aspx?id=f1580026-3357-4bb4-b80f-6ee4ebb20bcf",
+                "Position": 2
+              },
+              {
+                "ValueId": "4b134b8a-6efb-4f60-8a9a-cee6d024572b",
+                "Name": "",
+                "ImgUrl": "/SysFiles/images/F1580026-3357-4BB4-B80F-6EE4EBB20BCF.jpeg",
+                "LnkUrl": "/apps/scontent/PreviewContent.aspx?id=f1580026-3357-4bb4-b80f-6ee4ebb20bcf",
+                "Position": 3
+              },
+              {
+                "ValueId": "92ca539c-bda1-4462-8abb-06479f6efcf6",
+                "Name": "",
+                "ImgUrl": "/SysFiles/images/F1580026-3357-4BB4-B80F-6EE4EBB20BCF.jpeg",
+                "LnkUrl": "/apps/scontent/PreviewContent.aspx?id=f1580026-3357-4bb4-b80f-6ee4ebb20bcf",
+                "Position": 4
+              },
+              {
+                "ValueId": "f6a00c84-d7cf-414a-a81d-0f622c5c14d9",
+                "Name": "",
+                "ImgUrl": "/SysFiles/images/F1580026-3357-4BB4-B80F-6EE4EBB20BCF.png",
+                "LnkUrl": "/apps/scontent/PreviewContent.aspx?id=f1580026-3357-4bb4-b80f-6ee4ebb20bcf",
+                "Position": 5
+              },
+              {
+                "ValueId": "78fc9f76-9403-471e-987d-93d06057ea7a",
+                "Name": "",
+                "ImgUrl": "/SysFiles/images/F1580026-3357-4BB4-B80F-6EE4EBB20BCF.png",
+                "LnkUrl": "/apps/scontent/PreviewContent.aspx?id=f1580026-3357-4bb4-b80f-6ee4ebb20bcf",
+                "Position": 6
+              }
+            ],
+            "id": "81993b42-e620-4f07-a717-2232b9f0bff1",
+            "name": "banner",
+            "label": "轮播图",
+            "color": "",
+            "description": "",
+            "componentType": "swiper",
+            "displayOrder": 4,
+            "limitItems": 10,
+            "columnNumber": 3,
+            "templateId": "",
+            "templateObjectTypeCode": -1,
+            "templateTitle": null,
+            "moreLinkURL": null,
+            "detailUrl": null
+          }
+        ],
+        "columnNumber": 3
+      }
+    ],
+    "top": [],
+    "bottom": []
+  }
+}

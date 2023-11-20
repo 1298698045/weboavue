@@ -139,6 +139,10 @@ const Interface = {
   meetingRpt: {
     list: "/localData/meetingRpt/resource.type.list.json",
     stat: "/localData/meetingRpt/resource.room.stat.json"
+  },
+  // 门户设计
+  design: {
+    list: "/localData/design/dashboard.data.get.json"
   }
 };
 export default Interface;
