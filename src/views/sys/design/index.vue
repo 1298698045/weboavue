@@ -1,104 +1,245 @@
 <template>
-    <div class="design">
-        <div class="designHead">
-            <a-button>添加模板</a-button>
-            <a-button class="ml10">更改布局</a-button>
-            <a-button type="primary" class="ml10">完成</a-button>
-        </div>
-        <div class="designBody">
-            <div class="itxst row">
-                <div class="columnItem col-3" v-for="(self,selfIdx) in columns" :key="selfIdx">
-                    <transition name="fade" mode="out-in">
-                        <draggable class="list-group" :component-data="{name:'fade'}" :list="self.components" group="people" itemKey="name">
-                            <template #item="{ element, index }">
-                                <div class="itemBox panelItemWrap">
-                                    <div class="panel">
-                                        <div class="panel-head">
-                                            <div class="panel-title">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><g fill="currentColor" fill-rule="evenodd"><circle cx="10" cy="8" r="1"></circle> <circle cx="14" cy="8" r="1"></circle> <circle cx="10" cy="16" r="1"></circle> <circle cx="14" cy="16" r="1"></circle> <circle cx="10" cy="12" r="1"></circle> <circle cx="14" cy="12" r="1"></circle></g></svg>    
-                                                {{element.label}}
-                                                <span v-if="element.componentType!='calendar'&&element.componentType!='abstract'&&element.componentType!='chart'">
-                                                    <span class="descNum" v-if="element.componentType=='tablist'">（{{element.tabs && element.tabs.length || 0}}项）</span>
-                                                    <span class="descNum" v-else>（{{element.dataList && element.dataList.length || 0}}项）</span>
-                                                </span>
+    <div class="designWrap">
+        <div class="design">
+            <div class="designHead">
+                <a-button @click="showTemplate(true)">添加模板</a-button>
+                <a-button class="ml10 layoutBtn">更改布局
+                    <div class="dropMenuWapper">
+                        <div class="layoutIconList">
+                            <div title="一列" class="img" :class="{'active':layoutType=='A'}" @click.stop="choiceLayout('A')"><svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><rect x="5" y="5" width="14" height="14" rx="2" fill="currentColor" fill-rule="evenodd"></rect></svg></div>
+                            <div title="两列" class="img" :class="{'active':layoutType=='AA'}" @click.stop="choiceLayout('AA')"><svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><path d="M5 5h5a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm9 0h5a1 1 0 011 1v12a1 1 0 01-1 1h-5a1 1 0 01-1-1V6a1 1 0 011-1z" fill="currentColor" fill-rule="evenodd"></path></svg></div>
+                            <div title="三列" class="img" :class="{'active':layoutType=='AAA'}" @click.stop="choiceLayout('AAA')"><svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><path d="M5 5h2a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm6 0h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V6a1 1 0 011-1zm6 0h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V6a1 1 0 011-1z" fill="currentColor" fill-rule="evenodd"></path></svg></div>
+                            <div title="左侧边栏" class="img" :class="{'active':layoutType=='BA'}" @click.stop="choiceLayout('BA')"><svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><path d="M5 5h1a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm5 0h9a1 1 0 011 1v12a1 1 0 01-1 1h-9a1 1 0 01-1-1V6a1 1 0 011-1z" fill="currentColor" fill-rule="evenodd"></path></svg></div>
+                            <div title="右侧边栏" class="img" :class="{'active':layoutType=='AB'}" @click.stop="choiceLayout('AB')"><svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><path d="M18 5h1a1 1 0 011 1v12a1 1 0 01-1 1h-1a1 1 0 01-1-1V6a1 1 0 011-1zM5 5h9a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z" fill="currentColor" fill-rule="evenodd"></path></svg></div>
+                        </div>
+                    </div>
+                </a-button>
+                <a-button type="primary" class="ml10" @click="handleComplete">
+                    完成
+                </a-button>
+            </div>
+            <div class="designBody">
+                <div class="itxst row">
+                    <div class="columnItem col-3" v-for="(self,selfIdx) in columns" :key="selfIdx">
+                        <transition name="fade" mode="out-in">
+                            <draggable class="list-group" :component-data="{name:'fade'}" :list="self.components" group="people" itemKey="name">
+                                <template #item="{ element, index }">
+                                    <div class="itemBox panelItemWrap">
+                                        <div class="panel">
+                                            <div class="panel-head">
+                                                <div class="panel-title">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><g fill="currentColor" fill-rule="evenodd"><circle cx="10" cy="8" r="1"></circle> <circle cx="14" cy="8" r="1"></circle> <circle cx="10" cy="16" r="1"></circle> <circle cx="14" cy="16" r="1"></circle> <circle cx="10" cy="12" r="1"></circle> <circle cx="14" cy="12" r="1"></circle></g></svg>    
+                                                    {{element.label}}
+                                                    <span v-if="element.componentType!='calendar'&&element.componentType!='abstract'&&element.componentType!='chart'">
+                                                        <span class="descNum" v-if="element.componentType=='tablist'">（{{element.tabs && element.tabs.length || 0}}项）</span>
+                                                        <span class="descNum" v-else>（{{element.dataList && element.dataList.length || 0}}项）</span>
+                                                    </span>
+                                                </div>
+                                                <div class="panel-btns">
+                                                    <button class="btn buttonIcon" @click.stop="handleMore(element)">
+                                                        <i class="iconfont icon-gengduobiaoqian"></i>
+                                                        <div class="dropMenuWapper" v-if="element.isMore" @click.stop>
+                                                            <div class="dropMenu">
+                                                                <div class="colorTemplate">
+                                                                    <p class="colorDesc">突出显示颜色</p>
+                                                                    <div class="colorsBox">
+                                                                        <span class="colorItem" :style="'background:'+colorItem" v-for="(colorItem,colorIdx) in colorList" :key="colorIdx">
+                                                                            <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
+                                                                                <path
+                                                                                    d="M7.356 10.942a.497.497 0 00-.713 0l-.7.701a.501.501 0 00-.003.71l3.706 3.707a.501.501 0 00.705.003l7.712-7.712a.493.493 0 00-.006-.708l-.7-.7a.504.504 0 00-.714 0l-6.286 6.286a.506.506 0 01-.713 0l-2.288-2.287z"
+                                                                                    fill="currentColor"></path>
+                                                                            </svg>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="dropMenuItem">
+                                                                    <div class="item">配置</div>
+                                                                </div>
+                                                                <div class="dropMenuItem">
+                                                                    <div class="item">查看更多</div>
+                                                                </div>
+                                                                <div class="dropMenuItem">
+                                                                    <div class="item">重命名</div>
+                                                                </div>
+                                                                <div class="dropMenuItem">
+                                                                    <div class="item">删除</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div class="panel-btns">
-                                                <button class="btn buttonIcon" @click.stop="handleMore(element)">
-                                                    <i class="iconfont icon-gengduobiaoqian"></i>
-                                                    <div class="dropMenuWapper" v-if="element.isMore" @click.stop>
-                                                        <div class="dropMenu">
-                                                            <div class="colorTemplate">
-                                                                <p class="colorDesc">突出显示颜色</p>
-                                                                <div class="colorsBox">
-                                                                    <span class="colorItem" :style="'background:'+colorItem" v-for="(colorItem,colorIdx) in colorList" :key="colorIdx">
-                                                                        <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
-                                                                            <path
-                                                                                d="M7.356 10.942a.497.497 0 00-.713 0l-.7.701a.501.501 0 00-.003.71l3.706 3.707a.501.501 0 00.705.003l7.712-7.712a.493.493 0 00-.006-.708l-.7-.7a.504.504 0 00-.714 0l-6.286 6.286a.506.506 0 01-.713 0l-2.288-2.287z"
-                                                                                fill="currentColor"></path>
-                                                                        </svg>
+                                            <!-- 日历 -->
+                                            <div class="panel-bd" v-if="element.componentType=='calendar'">
+                                                <div :style="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px' }">
+                                                    <a-calendar :locale="locale" v-model:value="date" :fullscreen="false" @panelChange="onPanelChange" />
+                                                  </div>
+                                            </div>
+                                            <!-- 轮播图 -->
+                                            <div class="panel-bd" v-else-if="element.componentType=='swiper'">
+                                                <a-carousel dots-class="slick-dots slick-thumb" autoplay>
+                                                    <div v-for="(listItem,listitemIdx) in element.list" :key="listitemIdx">
+                                                        <img :src="listItem.ImgUrl" alt="">
+                                                    </div>
+                                                </a-carousel>
+                                            </div>
+                                            <!-- 常用链接 -->
+                                            <div class="panel-bd oftenLinkBody" v-else-if="element.componentType=='text-grid'">
+                                                <div class="oftenLinkList">
+                                                    <div class="oftenLinkItem" v-for="listItem in element.dataList" @click="gotoMoreUrl(listItem.LinkUrl)">
+                                                        <a href="#">{{listItem.Name}}</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- 快捷入口 -->
+                                            <div class="panel-bd" v-else-if="element.componentType=='icon-grid'">
+                                                <div class="oftenLinkList">
+                                                    <div class="oftenLinkItem oftenLinkItem1" v-for="listItem in element.dataList" @click="gotoMoreUrl(listItem.LinkUrl)">
+                                                        <div class="oftenLinkIcon">
+                                                            <img :src="listItem.ImageUrl"  />
+                                                        </div>
+                                                        <div class="oftenLinkText">
+                                                            <a :href="listItem.LinkUrl">{{listItem.Name}}</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- 列表-list  list-survey-->
+                                            <div class="panel-bd" v-else-if="element.componentType=='list'||element.componentType=='list-survey'">
+                                                <ul class="listWrap" :class="{'listWrapFixed':element.showHeader}">
+                                                    <div  v-if="element.dataList.length>0">
+                                                        <li class="listItem isFixed" v-if="element.listColumns!=''&&element.showHeader">
+                                                            <span v-for="child in element.listColumns && element.listColumns">{{child.label}}</span>
+                                                        </li>
+                                                        <li class="listItem" v-for="child in element.dataList" @click="handleRowDetail(element.detailUrl,child)">
+                                                            <template v-if="element.listColumns!=''&&element.listColumns">
+                                                                <span v-for="cell in element.listColumns && element.listColumns">
+                                                                    <span v-if="cell.field=='IsTop'">
+                                                                        <button class="btnTag tagWarning" v-if="child[cell.field]==1">置顶</button>
+                                                                    </span>
+                                                                    <span v-else>
+                                                                        {{child[cell.field]}}
+                                                                    </span>
+                                                                </span>
+                                                            </template>
+                                                            <template v-else>
+                                                                <span v-for="(cell,key,cellIdx) in child" v-if="key!='ID'&&key!='LIST_RECORD_ID'">{{cell}}</span>
+                                                            </template>
+                                                        </li>
+                                                    </div>
+                                                    <div class="empty" v-else><img :src="require('@/assets/img/empty.png')" alt=""><p class="emptyDesc">当前暂无数据</p></div>
+                                                </ul>
+                                            </div>
+                                            <!-- tabllist -->
+                                            <div class="panel-bd" v-else-if="element.componentType=='tablist'">
+                                                <div>
+                                                    <div class="tabContainer flex">
+                                                        <div class="tabList">
+                                                            <div class="tab" :class="{'active':element.currentTab==tabIdx}" v-for="(tab,tabIdx) in element.tabs" @click="handleItemTab(element,tabIdx)">
+                                                                <div class="tabHover">
+                                                                    <span class="tabText">
+                                                                        {{tab.displayName}}
+                                                                        <span class="tabnum">{{tab.listComponent.dataList.length}}</span>
+                                                                        <span style="font-weight:normal;" @click.stop="deleteTabListTag(element,tab,tabIdx)">
+                                                                            <i class="iconfont icon-yishanchu"></i>
+                                                                        </span>
                                                                     </span>
                                                                 </div>
                                                             </div>
-                                                            <div class="dropMenuItem">
-                                                                <div class="item">配置</div>
-                                                            </div>
-                                                            <div class="dropMenuItem">
-                                                                <div class="item">查看更多</div>
-                                                            </div>
-                                                            <div class="dropMenuItem">
-                                                                <div class="item">重命名</div>
-                                                            </div>
-                                                            <div class="dropMenuItem">
-                                                                <div class="item">删除</div>
-                                                            </div>
+                                                        </div>
+                                                        <div class="rightAdd">
+                                                            <a-popover trigger="click" placement="right">
+                                                                <template #content>
+                                                                  <a-form>
+                                                                    <a-form-item label="标签名称">
+                                                                        <a-input v-model:value="element.addTagName"></a-input>
+                                                                    </a-form-item>
+                                                                    <a-form-item label="对象代码">
+                                                                        <a-select v-model:value="element.addObjCode" placeholder="请选择对象代码">
+                                                                            <a-select-option  v-for="(field,fieldIdx) in objCodeList" :key="fieldIdx" :value="field.ID">{{field.Name}}</a-select-option>
+                                                                          </a-select>
+                                                                    </a-form-item>
+                                                                    <div>
+                                                                        <a-button type="primary"  @click="handleAddTags(element)">确认添加</a-button>
+                                                                    </div>
+                                                                  </a-form>
+                                                                </template>
+                                                                <a-button type="link">添加标签</a-button>
+                                                            </a-popover>
                                                         </div>
                                                     </div>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <!-- 日历 -->
-                                        <div class="panel-bd" v-if="element.componentType=='calendar'">
-                                            <div :style="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px' }">
-                                                <a-calendar :locale="locale" v-model:value="date" :fullscreen="false" @panelChange="onPanelChange" />
-                                              </div>
-                                        </div>
-                                        <!-- 轮播图 -->
-                                        <div class="panel-bd" v-else-if="element.componentType=='swiper'">
-                                            <a-carousel dots-class="slick-dots slick-thumb" autoplay>
-                                                <div v-for="(listItem,listitemIdx) in element.list" :key="listitemIdx">
-                                                    <img :src="listItem.ImgUrl" alt="">
                                                 </div>
-                                            </a-carousel>
-                                        </div>
-                                        <!-- 常用链接 -->
-                                        <div class="panel-bd oftenLinkBody" v-else-if="element.componentType=='text-grid'">
-                                            <div class="oftenLinkList">
-                                                <div class="oftenLinkItem" v-for="listItem in element.dataList" @click="gotoMoreUrl(listItem.LinkUrl)">
-                                                    <a href="#">{{listItem.Name}}</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- 快捷入口 -->
-                                        <div class="panel-bd" v-else-if="element.componentType=='icon-grid'">
-                                            <div class="oftenLinkList">
-                                                <div class="oftenLinkItem oftenLinkItem1" v-for="listItem in element.dataList" @click="gotoMoreUrl(listItem.LinkUrl)">
-                                                    <div class="oftenLinkIcon">
-                                                        <img :src="listItem.ImageUrl"  />
-                                                    </div>
-                                                    <div class="oftenLinkText">
-                                                        <a :href="listItem.LinkUrl">{{listItem.Name}}</a>
-                                                    </div>
+                                                <div class="tabListWrap" v-for="(tab,tabIdx) in element.tabs" :key="tabIdx"  :class="{'isheadlist':tab.listComponent&&tab.listComponent.showHeader}">
+                                                    <ul class="listWrap"  v-if="element.currentTab==tabIdx">
+                                                        <div v-if="tab.listComponent.dataList.length>0">
+                                                            <li class="listItem listItemHead" v-if="tab.listComponent.listColumns && tab.listComponent.showHeader">
+                                                                <p class="listItemTitle" v-for="child in tab.listComponent.listColumns">
+                                                                    <span v-if="child.field != 'Priority' && child.field != 'IsTop' && child.field != 'UrgentLevel' && child.field != 'IsImportant'">{{child.label}}</span>
+                                                                </p>
+                                                            </li>
+                                                            <li class="listItem tablistItem" v-for="child in tab.listComponent.dataList" @click="handleRowDetail(element.detailUrl,listItem)">
+                                                                <template v-if="tab.listComponent.displayColumns">
+                                                                    <template v-for="(cell,index) in tab.listComponent.displayColumns&&(tab.listComponent.displayColumns).split(',')">
+                                                                        <p v-if="cell == 'Name' || cell == 'FullName' || cell == 'Title'" class="listItemTitle listItemTitle1">
+                                                                            {{child[cell]}}
+                                                                        </p>
+                                                                        <p v-else-if="cell == 'BusinessUnitIdName'" class="listItemDept">{{child[cell]}}</p>
+                                                                        <p v-else-if="cell=='CreatedOn'||cell=='PlanPayOn'" class="listItemTime">{{child[cell]?child[cell].split(' ')[0]:''}}</p>
+                                                                        <p v-else-if="cell != 'Priority' && cell != 'IsTop' && cell != 'UrgentLevel' && cell != 'IsImportant'" class="listItemTitle">{{child[cell]}}</p>
+                                                                    </template>
+                                                                </template>
+                                                            </li>
+                                                        </div>
+                                                    </ul>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="panel-bd" v-else-if="element.componentType=='list'||element.componentType=='list-survey'">
-
                                         </div>
                                     </div>
+                                </template>
+                            </draggable>
+                        </transition>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="context-panel" v-if="isTemplate">
+            <div class="context-head">
+                <p class="name">添加模板</p>
+                <div class="closeIcon" @click="showTemplate(false)"><i class="iconfont icon-guanbi"></i></div>
+            </div>
+            <div class="search">
+                <a-input-search
+                    v-model:value="searchVal"
+                    placeholder="搜索模板"
+                    style="width: 100%"
+                    @search="getTemplate"
+                />
+            </div>
+            <div class="context-content">
+                <div class="templateList">
+                    <draggable
+                        class="list-group"
+                        :list="templateList"
+                        group="people"
+                        itemKey="template"
+                        @change="changeTemplate"
+                    >
+                        <template #item="{ element, index }">
+                            <div class="templateItem">
+                                <div class="itemLeft">
+                                    <div class="thumbnail">
+                                        <img :src="element.pictureUrl?item.pictureUrl:'https://jackliu185.atlassian.net/s/azc3hx/b/8/f3df60f8ce75a4f8aa003d30ed6116b219461d32/_/download/resources/com.atlassian.jira.gadgets:two-dimensional-stats-gadget/twoDimensionalStats-thumb.png'" alt="" />
+                                    </div>
+                                    <a-button type="primary" @click="handleAddLeft(element)">添加</a-button>
                                 </div>
-                            </template>
-                        </draggable>
-                    </transition>
+                                <div class="itemRight">
+                                    <strong class="title">{{element.displayName}}</strong>
+                                    <div class="sc-12e1e96-2 duqoAg">由 Atlassian 创建</div>
+                                    <p class="desc">{{element.description}}</p>
+                                </div>
+                            </div>
+                        </template>
+                    </draggable>
                 </div>
             </div>
         </div>
@@ -110,6 +251,7 @@
     import {
         EllipsisOutlined,
     } from "@ant-design/icons-vue";
+    import { message } from "ant-design-vue";
     import {
         ref,
         watch,
@@ -137,6 +279,7 @@
     const { proxy } = getCurrentInstance();
 
     const data = reactive({
+        id: "",
         dboardName: "workspace",
         columns: [],
         colorList: [
@@ -149,18 +292,47 @@
             '#97a0af',
             '#ffffff'
         ],
-        date: ""
+        date: "",
+        searchVal: "",
+        list2: [
+            { name: "Juan", id: 5 },
+            { name: "Edgard", id: 6 },
+            { name: "Johnson", id: 7 }
+        ],
+        templateList: [],
+        layoutType: "",
+        isTemplate: false,
+        objCodeList: []
     });
-    const { dboardName, columns, colorList, group, list1, list2, date } = toRefs(data);
+    const { id, dboardName, columns, colorList, group, list1, list2, date, searchVal, templateList,
+        layoutType, isTemplate, objCodeList } = toRefs(data);
     const getLayout = () => {
         proxy.$get(Interface.design.list,{
             dboardName: data.dboardName
         }).then(res=>{
             data.columns = res.Board.columns;
+            data.columns.forEach(item=>{
+                item.components.forEach(row=>{
+                    if(row.componentType=='tablist'){
+                        row.currentTab = 0;
+                    }
+                })
+            })
         })
     }
     getLayout();
-
+    // 获取对象代码列表
+    const getObjList = () => {
+        proxy.$get(Interface.uilook,{
+            Lktp: 100000
+        }).then(res=>{
+            data.objCodeList = res.listData;
+        })
+    }
+    getObjList();
+    const showTemplate = (isBook) => {
+        data.isTemplate = isBook;
+    }
     const handleMore = (item) => {
         item.isMore = !item.isMore;
     }
@@ -182,8 +354,203 @@
     const gotoMoreUrl = (link) => {
         window.open(link);
     }
+    // 搜索模板
+    const getTemplate = () => {
+        proxy.$get(Interface.design.templateList,{}).then(res=>{
+            data.templateList = res.rows;
+            data.templateList.forEach(item=>{
+                item.id = item.Id;
+                item.label = item.displayName;
+                item.componentType = item.name;
+                item.isNewAdd = true;
+            })
+        })
+    }
+    getTemplate();
+    const changeTemplate = (e) => {
+        console.log("e",e);
+        console.log('data',data.columns)
+    }
+    // 更换布局
+    const choiceLayout = (layoutType) => {
+        data.layoutType = layoutType;
+        saveLayout();
+    }
+    const saveLayout = () => {
+        var obj = {
+            params: {
+                recordRep: {
+                    objTypeCode: 9170,
+                    id: data.id,
+                    fields: {
+                        LayoutType: data.layoutType
+                    }
+                }
+            }
+        }
+        var d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$get(Interface.saveRecord,d).then(res=>{
+
+        })
+    }
+    // 完成
+    const handleComplete = () => {
+        var result = [];
+        data.columns.forEach(function (item) {
+            item.components.forEach(function (v, idx) {
+                if (v.componentType != 'tab-calendar-item') {
+                    v.columnNumber = item.columnNumber;
+                    v.displayOrder = idx + 1;
+                    result.push(v);
+                }
+            });
+        });
+        let len = result.length;
+        for(var i = 0; i < result.length; i++){
+            var _result$i = result[i];
+            var id = _result$i.id;
+            var columnNumber = _result$i.columnNumber;
+            var displayOrder = _result$i.displayOrder;
+            setTemplateSort(id, columnNumber, displayOrder,result[i], i, len)
+        }
+    }
+    //排序
+    const setTemplateSort = (itemid, columnsIndex, displayOrder,item, i, len) => {
+        var obj = {
+            params: {
+                recordRep: {
+                    objTypeCode: 9171,
+                    id: itemid,
+                    fields: {
+                        DisplayOrder: displayOrder,
+                        ColumnNumber: columnsIndex,
+                    }
+                }
+            }
+        }
+        var d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$get(Interface.saveRecord,d).then(res=>{
+            if(res && i==len-1){
+                message.success("保存成功！");
+            }
+        })
+    }
+    // tablist 添加标签
+    const handleAddTags = (item) => {
+        let addObjCode = item.addObjCode;
+        var d = {
+            Id: addObjCode,
+            ObjTypeCode: 100000
+        }
+        proxy.$get(Interface.detail,d).then(res=>{
+            let addObjectTypeCode = res.record.ObjectTypeCode;
+            let copyObj = {
+                id:'',
+                name: item.addTagName,
+                displayName: item.addTagName,
+                listComponent: {
+
+                }
+            }
+            item.tabs.push(copyObj);
+            saveRowListTags(item);
+        })
+    }
+    const saveRowListTags = (item) => {
+        let config = {
+            componentType: item.componentType,
+            tabs: item.tabs
+        }
+        var obj = {
+            params: {
+                recordRep: {
+                    id: item.id,
+                    objTypeCode: 9171,
+                    fields: {
+                        Config: JSON.stringify(config)
+                    }
+                }
+            }
+        }
+        var d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$get(Interface.saveRecord,d).then(res=>{
+            getLayout();
+        })
+    }
 </script>
 <style lang="less" scoped>
+    .designWrap{
+        display: flex;
+        .design{
+            flex: 1;
+            min-width: calc(~"100% - 320px");
+        }
+        .context-panel {
+            width: 320px;
+            height: 100vh;
+            background: #fff;
+            z-index: 99;
+            box-shadow: rgb(235, 236, 240) 2px 0px 0px 0px inset;
+            padding: 16px;
+            box-sizing: border-box;
+            .context-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+                .name{
+                    color: #4e5969;
+                    font-weight: bold;
+                }
+                .closeIcon {
+                    width: 32px;
+                    height: 32px;
+                    line-height: 32px;
+                    text-align: center;
+                    border-radius: 2px;
+                    cursor: pointer;
+                    &:hover{
+                        background: rgba(9,30,66,0.08);
+                    }
+                    .iconfont{
+                        color: #4e5969;
+                    }
+                }
+            }
+            .templateList{
+                .templateItem{
+                    display:flex;
+                    margin:16px 0;
+                    .itemLeft{
+                        width: 75px;
+                        .thumbnail{
+                            width: 100%;
+                            img{
+                                width:100%;
+                            }
+                        }
+                    }
+                }
+                .itemRight{
+                    flex:1;
+                    margin-left: 12px;
+                    .title{
+                        font-weight: 600;
+                    }
+                    .desc{
+                        color:#6b778c;
+                        font-size:12px;
+                    }
+                }
+            }
+        }
+    }
     .designHead{
         display: flex;
         justify-content: flex-end;
@@ -340,6 +707,9 @@
                 text-decoration: none;
             }
         }
+        .oftenLinkItem:nth-child(2n){
+            margin-right: 0;
+        }
         .oftenLinkItem1 {
             width: 33%;
             background: #fff;
@@ -361,6 +731,183 @@
             }
             .oftenLinkText {
                 font-size: 14px;
+            }
+        }
+    }
+    .panelItemWrap {
+        .listWrap{
+            height: 300px;
+            overflow-y: auto;
+            .listItem{
+                height: 50px;
+                line-height: 50px;
+                border-bottom: 1px solid #e5e6eb;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                &:hover{
+                    background: #f2f3f5;
+                }
+                span{
+                    flex: 1;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    padding-right: 10px;
+                    box-sizing: border-box;
+                }
+                .listItemTitle {
+                    flex: 1;
+                    color: #4e5969;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    text-align: left;
+                }
+                .listItemTime {
+                    width: 100px;
+                    margin-right: 10px;
+                    text-align: right;
+                    color: #b8bbcc;
+                    margin-left: auto;
+                }
+            }
+        }
+    }
+
+    .tabContainer.flex{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .tabContainer{
+        border-bottom: 1px solid #e5e6eb;
+        .tabList {
+            height: 40px;
+            line-height: 40px;
+            cursor: pointer;
+            .tab{
+                font-size: 14px;
+                color: #4e5969;
+                padding: 0 8px;
+                float: left;
+                width: auto !important;
+                &:hover{
+                    .tabHover{
+                        background: #f2f3f5;
+                    }
+                }
+                .tabHover{
+                    border-radius: 2px;
+                    padding: 0 8px !important;
+                    box-sizing: border-box;
+                    background: transparent;
+                    display: inline-block;
+                    height: 29px;
+                    line-height: 29px;
+                    .bottom{
+                        position: absolute;
+                        width: 100%;
+                        height: 2px;
+                        background: var(--textColor);
+                        top: 33px;
+                        left: 1px;
+                    }
+                    .tabText{
+                        position: relative;
+                        .num.active{
+                            color: #f53f3f;
+                        }
+                    }
+                    
+                }
+            }
+            .tab.active{
+                .tabHover{
+                    .tabText{
+                        color: var(--textColor);
+                        font-weight:700;
+                    }
+                    .tabText::before{
+                        content: '';
+                        display: inline-block;
+                        position: absolute;
+                        width: 100%;
+                        height: 2px;
+                        background: var(--textColor);
+                        top: 29px;
+                        left: 0;
+                        transition: all .5s;
+                    }
+                }
+                &:hover {
+                    .tabHover{
+                        background: transparent;
+                    }
+                }
+            }
+        }
+    }
+    .tabContainer.notBorder{
+        border: none;
+    }
+    .tabnum {
+        color: red;
+        margin-left: 5px;
+    }
+    .isheadlist{
+        position: relative;
+        text-align: center;
+        .listItem.listItemHead {
+            position: absolute !important;
+            top: 0px !important;
+            width: calc(~"100% - 10px");
+            background: #f2f3f5;
+            .listItemTitle{
+                flex: 1;
+                margin: 0;
+            }
+        }
+        .listItemTitle{
+            flex: 1;
+            text-align: center !important;
+        }
+    }
+    .layoutBtn{
+        position: relative;
+        &:hover {
+            .dropMenuWapper{
+                display: block;
+            }
+        }
+        .dropMenuWapper{
+            width: auto;
+            left: inherit;
+            right: 0;
+            top: 100%;
+            padding: 4px;
+            display: none;
+            .layoutIconList{
+                display: flex;
+                color: #4e5969;
+                .img{
+                    width: 32px;
+                    height: 32px;
+                    text-align: center;
+                    font-weight: 500;
+                    border-radius: 3px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 3px;
+                    &:hover,&.active{
+                        background: rgba(9,30,66,0.08);
+                    }
+                    svg{
+                        width: 24px;
+                        height: 24px;
+                    }
+                }
             }
         }
     }

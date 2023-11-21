@@ -142,7 +142,9 @@ const Interface = {
   },
   // 门户设计
   design: {
-    list: "/localData/design/dashboard.data.get.json"
-  }
+    list: "/localData/design/dashboard.data.get.json",
+    templateList: "/localData/design/dashboard.widget.data.get.json"
+  },
+  detail: "/localData/entity.detail.get.json"
 };
 export default Interface;
