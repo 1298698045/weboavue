@@ -143,7 +143,9 @@ const Interface = {
   // 门户设计
   design: {
     list: "/localData/design/dashboard.data.get.json",
-    templateList: "/localData/design/dashboard.widget.data.get.json"
+    templateList: "/localData/design/dashboard.widget.data.get.json",
+    attrs: "/localData/design/entity.attribute.getlist.json",
+    look: "/localData/design/ui.entity.lookup.json"
   },
   detail: "/localData/entity.detail.get.json"
 };

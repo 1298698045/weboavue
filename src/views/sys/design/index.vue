@@ -24,16 +24,19 @@
                         <transition name="fade" mode="out-in">
                             <draggable class="list-group" :component-data="{name:'fade'}" :list="self.components" group="people" itemKey="name">
                                 <template #item="{ element, index }">
-                                    <div class="itemBox panelItemWrap">
+                                    <div class="itemBox panelItemWrap" :style="'border-top:4px solid' + element?.config?.color">
                                         <div class="panel">
                                             <div class="panel-head">
-                                                <div class="panel-title">
+                                                <div class="panel-title"  v-if="!element.isRename">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><g fill="currentColor" fill-rule="evenodd"><circle cx="10" cy="8" r="1"></circle> <circle cx="14" cy="8" r="1"></circle> <circle cx="10" cy="16" r="1"></circle> <circle cx="14" cy="16" r="1"></circle> <circle cx="10" cy="12" r="1"></circle> <circle cx="14" cy="12" r="1"></circle></g></svg>    
-                                                    {{element.label}}
+                                                    <span>{{element.label}}</span>
                                                     <span v-if="element.componentType!='calendar'&&element.componentType!='abstract'&&element.componentType!='chart'">
                                                         <span class="descNum" v-if="element.componentType=='tablist'">（{{element.tabs && element.tabs.length || 0}}项）</span>
                                                         <span class="descNum" v-else>（{{element.dataList && element.dataList.length || 0}}项）</span>
                                                     </span>
+                                                </div>
+                                                <div class="panel-title" v-else>
+                                                    <a-input :ref="(e)=>{setInputRef(e,element)}" @pressEnter="e=>{changeTitle(e,element)}" @blur="e=>{changeTitle(e,element)}" v-model:value="element.label"></a-input>
                                                 </div>
                                                 <div class="panel-btns">
                                                     <button class="btn buttonIcon" @click.stop="handleMore(element)">
@@ -44,7 +47,7 @@
                                                                     <p class="colorDesc">突出显示颜色</p>
                                                                     <div class="colorsBox">
                                                                         <span class="colorItem" :style="'background:'+colorItem" v-for="(colorItem,colorIdx) in colorList" :key="colorIdx">
-                                                                            <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
+                                                                            <svg width="24" height="24" viewBox="0 0 24 24" role="presentation" v-if="element.config.color==colorItem">
                                                                                 <path
                                                                                     d="M7.356 10.942a.497.497 0 00-.713 0l-.7.701a.501.501 0 00-.003.71l3.706 3.707a.501.501 0 00.705.003l7.712-7.712a.493.493 0 00-.006-.708l-.7-.7a.504.504 0 00-.714 0l-6.286 6.286a.506.506 0 01-.713 0l-2.288-2.287z"
                                                                                     fill="currentColor"></path>
@@ -52,13 +55,13 @@
                                                                         </span>
                                                                     </div>
                                                                 </div>
-                                                                <div class="dropMenuItem">
+                                                                <div class="dropMenuItem" v-if="element.componentType!='calendar'" @click="handleRowConfig(element)">
                                                                     <div class="item">配置</div>
                                                                 </div>
-                                                                <div class="dropMenuItem">
+                                                                <div class="dropMenuItem" v-if="element.componentType!='calendar'&&element.componentType!='abstract'&&element.componentType!='chart'">
                                                                     <div class="item">查看更多</div>
                                                                 </div>
-                                                                <div class="dropMenuItem">
+                                                                <div class="dropMenuItem" @click="handleRename(element)">
                                                                     <div class="item">重命名</div>
                                                                 </div>
                                                                 <div class="dropMenuItem">
@@ -106,7 +109,7 @@
                                             </div>
                                             <!-- 列表-list  list-survey-->
                                             <div class="panel-bd" v-else-if="element.componentType=='list'||element.componentType=='list-survey'">
-                                                <ul class="listWrap" :class="{'listWrapFixed':element.showHeader}">
+                                                <ul class="listWrap" v-if="!element.isConfig" :class="{'listWrapFixed':element.showHeader}">
                                                     <div  v-if="element.dataList.length>0">
                                                         <li class="listItem isFixed" v-if="element.listColumns!=''&&element.showHeader">
                                                             <span v-for="child in element.listColumns && element.listColumns">{{child.label}}</span>
@@ -129,6 +132,7 @@
                                                     </div>
                                                     <div class="empty" v-else><img :src="require('@/assets/img/empty.png')" alt=""><p class="emptyDesc">当前暂无数据</p></div>
                                                 </ul>
+                                                <ListConfig :item="element" v-else></ListConfig>
                                             </div>
                                             <!-- tabllist -->
                                             <div class="panel-bd" v-else-if="element.componentType=='tablist'">
@@ -261,6 +265,7 @@
         getCurrentInstance,
         onUpdated,
         h,
+        nextTick
     } from "vue";
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
@@ -274,10 +279,11 @@
     dayjs.extend(weekday);
     dayjs.extend(localeData);
 
-    import draggable from 'vuedraggable'
+    import draggable from 'vuedraggable';
+    import ListConfig from "@/components/design/ListConfig.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-
+    const itemRefs = [];
     const data = reactive({
         id: "",
         dboardName: "workspace",
@@ -316,6 +322,19 @@
                     if(row.componentType=='tablist'){
                         row.currentTab = 0;
                     }
+                    if(row.componentType=='list'){
+                        var orderExpression2 = JSON.parse(row.config.orderExpression);
+                        if(!Array.isArray(orderExpression2) || orderExpression2.length==0){
+                            orderExpression2 = [{
+                                attributeName: "",
+                                SortDir: "",
+                                sort: ""
+                            }]
+                        }
+                        row.orderExpression2 = orderExpression2;
+                    }
+                    row.isConfig = false;
+                    row.isRename = false;
                 })
             })
         })
@@ -369,7 +388,25 @@
     getTemplate();
     const changeTemplate = (e) => {
         console.log("e",e);
-        console.log('data',data.columns)
+        let columnNumber,
+        displayOrder;
+        let id = e.removed.element.Id;
+        // console.log('data',data.columns);
+        for(let i = 0; i < data.columns.length; i++) {
+            for ( let j = 0; j < data.columns[i].components.length; j++) {
+                let item = data.columns[i].components[j];
+                if(id == item.id){
+                    columnNumber = i+1;
+                    displayOrder = j+1;
+                    break;
+                }
+            }
+        }
+        let item = e.removed.element;
+        item.ColumnNumber = columnNumber;
+        item.DisplayOrder = displayOrder;
+        console.log('columnNumber',columnNumber, displayOrder);
+        handleAddLeft(item);
     }
     // 更换布局
     const choiceLayout = (layoutType) => {
@@ -482,6 +519,104 @@
         proxy.$get(Interface.saveRecord,d).then(res=>{
             getLayout();
         })
+    }
+    // 重命名
+    const handleRename = (item) => {
+        item.isRename = true;
+        nextTick(()=>{
+            let refName = 'ref_'+item.name;
+            let index = itemRefs.findIndex(row=>row.name==refName);
+            itemRefs[index].el.focus();
+            item.isMore = false;
+        })
+    }
+    const setInputRef = (el,item) => {
+        if(el && el!=null){
+            itemRefs.push({
+                name: 'ref_'+item.name,
+                el
+            })
+        }
+    }
+    // 修改标题
+    const changeTitle = (e, item) => {
+        saveTitle(item);
+    }
+    const saveTitle = (item) => {
+        var obj = {
+            params: {
+                recordRep: {
+                    id: item.id,
+                    objTypeCode: 9171,
+                    fields: {
+                        DisplayName: item.label
+                    }
+                }
+            }
+        }
+        var d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$get(Interface.saveRecord,d).then(res=> {
+            message.success("保存成功！")
+            item.isRename = false;
+        })
+    }
+    // 添加模板
+    const handleAddLeft = (item) => {
+        var obj = {
+            params: {
+                recordRep: {
+                    objTypeCode: 9171,
+                    fields: {
+                        ComponentType: item.componentType,
+                        DisplayName: item.displayName,
+                        DashboardId:{
+                            Id: data.id
+                        },
+                        config: JSON.stringify(item.config),
+                        DisplayOrder: item.DisplayOrder || 1,
+                        ColumnNumber: item.ColumnNumber || 1,
+                        filterExpression: item.config.filterExpression,
+                        DisplayColumns: item.config.displayColumns,
+                        orderExpression: item.config.OrderExpression,
+                        EntityCode: item.config.entityCode,
+                        TemplateObjectTypeCode: item.config.templateObjectTypeCode,
+                        DetailUrl: item.config.detailURL,
+                        MoreLinkURL: item.config.moreLinkURL,
+                        TemplateId: {
+                            Id: item.config.templateId
+                        }
+                    }
+                }
+            }
+        }
+        if(item.componentType=='tablist'){
+            obj.params.recordRep.fields.config = JSON.stringify(item.configTab);
+        }else {
+            var addObj = {
+                filterExpression: item.config.filterExpression,
+                DisplayColumns: item.config.displayColumns,
+                orderExpression: item.config.orderExpression || '',
+                EntityCode: item.config.entityCode,
+                TemplateObjectTypeCode: item.config.templateObjectTypeCode,
+                DetailUrl: item.config.detailURL,
+                MoreLinkURL: item.config.moreLinkURL
+            }
+            Object.assign(obj.params.recordRep.fields, addObj)
+        }
+        var d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$get(Interface.saveRecord,d).then(res=>{
+            message.success("添加成功！");
+            getLayout();
+        })
+    }
+    // 配置
+    const handleRowConfig = (item) => {
+        item.isConfig = !item.isConfig;
+        item.isMore = false;
     }
 </script>
 <style lang="less" scoped>
