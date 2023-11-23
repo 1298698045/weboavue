@@ -47,7 +47,7 @@
                                                                     <p class="colorDesc">突出显示颜色</p>
                                                                     <div class="colorsBox">
                                                                         <span class="colorItem" :style="'background:'+colorItem" v-for="(colorItem,colorIdx) in colorList" :key="colorIdx">
-                                                                            <svg width="24" height="24" viewBox="0 0 24 24" role="presentation" v-if="element.config.color==colorItem">
+                                                                            <svg width="24" height="24" viewBox="0 0 24 24" role="presentation" v-if="element?.config?.color==colorItem">
                                                                                 <path
                                                                                     d="M7.356 10.942a.497.497 0 00-.713 0l-.7.701a.501.501 0 00-.003.71l3.706 3.707a.501.501 0 00.705.003l7.712-7.712a.493.493 0 00-.006-.708l-.7-.7a.504.504 0 00-.714 0l-6.286 6.286a.506.506 0 01-.713 0l-2.288-2.287z"
                                                                                     fill="currentColor"></path>
@@ -74,17 +74,23 @@
                                             </div>
                                             <!-- 日历 -->
                                             <div class="panel-bd" v-if="element.componentType=='calendar'">
-                                                <div :style="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px' }">
+                                                <div v-if="!element.isConfig" :style="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px' }">
                                                     <a-calendar :locale="locale" v-model:value="date" :fullscreen="false" @panelChange="onPanelChange" />
-                                                  </div>
+                                                </div>
+                                                <div v-else>
+                                                    <SwiperConfig :item="element" />
+                                                </div>
                                             </div>
                                             <!-- 轮播图 -->
                                             <div class="panel-bd" v-else-if="element.componentType=='swiper'">
-                                                <a-carousel dots-class="slick-dots slick-thumb" autoplay>
+                                                <a-carousel v-if="!element.isConfig" dots-class="slick-dots slick-thumb" autoplay>
                                                     <div v-for="(listItem,listitemIdx) in element.list" :key="listitemIdx">
                                                         <img :src="listItem.ImgUrl" alt="">
                                                     </div>
                                                 </a-carousel>
+                                                <div v-else>
+                                                    <swiper-config :item="element"></swiper-config>
+                                                </div>
                                             </div>
                                             <!-- 常用链接 -->
                                             <div class="panel-bd oftenLinkBody" v-else-if="element.componentType=='text-grid'">
@@ -281,6 +287,7 @@
 
     import draggable from 'vuedraggable';
     import ListConfig from "@/components/design/ListConfig.vue";
+    import SwiperConfig from "@/components/design/SwiperConfig.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const itemRefs = [];
@@ -335,6 +342,7 @@
                     }
                     row.isConfig = false;
                     row.isRename = false;
+                    row.isMore = false;
                 })
             })
         })

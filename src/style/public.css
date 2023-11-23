@@ -30,6 +30,9 @@ ul,ol,li{list-style:none;}
 [v-cloak]{
     display: none;
 }
+.cursorPointer{
+    cursor: pointer;
+}
 .a-split{
     display: inline-block;
     width: 10px;

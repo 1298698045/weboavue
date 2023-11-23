@@ -147,6 +147,7 @@ const Interface = {
     attrs: "/localData/design/entity.attribute.getlist.json",
     look: "/localData/design/ui.entity.lookup.json"
   },
-  detail: "/localData/entity.detail.get.json"
+  detail: "/localData/entity.detail.get.json",
+  delete: "/localData/entity.delete.json"
 };
 export default Interface;
