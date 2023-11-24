@@ -23,7 +23,7 @@
     </div>
     <div class="header-search">
       <div class="search-type">
-        <span class="search-type-name">微搜</span>
+        <span class="search-type-name">全搜</span>
         <span class="search-type-icon">
           <DownOutlined style="font-size: 10px" />
         </span>

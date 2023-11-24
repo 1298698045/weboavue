@@ -69,7 +69,7 @@
                 </div>
             </div>
             <a-form-item label="是否显示列头">
-                <a-checkbox v-model:checkbox="item.showHeader"></a-checkbox>
+                <a-checkbox v-model:checked="item.showHeader"></a-checkbox>
             </a-form-item>
             <a-form-item label="显示列" class="formItem">
                 <div class="showList">          
@@ -84,7 +84,7 @@
                                 <div class="dragListItem">
                                     <svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><g fill="currentColor" fill-rule="evenodd"><circle cx="10" cy="8" r="1"></circle> <circle cx="14" cy="8" r="1"></circle> <circle cx="10" cy="16" r="1"></circle> <circle cx="14" cy="16" r="1"></circle> <circle cx="10" cy="12" r="1"></circle> <circle cx="14" cy="12" r="1"></circle></g></svg>
                                     <span class="field">
-                                        {{element.field}}
+                                        {{element.label}}
                                     </span>
                                     <span class="delIcon"><i class="iconfont icon-yishanchu"></i></span>
                                 </div>
@@ -108,7 +108,7 @@
                 <div class="formRow" v-for="(sortItem,sortIdx) in item.orderExpression2" :key="sortIdx">
                     <a-form-item label="排序字段" class="formItem">
                         <a-select v-model:value="sortItem.attributeName" style="width: 200px;margin-right: 10px;">
-                            <a-select-option value="beijing">Zone two</a-select-option>
+                            <a-select-option v-for="(row,idx) in attributes" :key="idx" :value="row.name">{{row.label}}</a-select-option>
                           </a-select>
                     </a-form-item>
                     <a-form-item label="排序方式" class="formItem">
@@ -173,7 +173,7 @@
     const props = defineProps({
         item: Object
     })
-    
+    const emit = defineEmits(['save-success']);
     const data = reactive({
         attributes: [],
         objectCodeList: [],
@@ -370,7 +370,87 @@
     }
     // 保存
     const saveConfig = () => {
+        console.log("props", props.item);
+        let item = props.item;
+        var isBook = true; // 是否可以保存
+        let result = [];
+        if(data.filterList&&data.filterList.length>0){
+            data.filterList.forEach(function (v) {
+                if (!Array.isArray(v.value)) {
+                    v.value = [v.value];
+                }
+                result.push({
+                    logical: v.logical,
+                    attribute: v.field,
+                    label: v.label,
+                    operator: v.operator,
+                    operands: v.value,
+                    column: v.field
+                });
+            });
+        }
+        if(item.config.templateObjectTypeCode==''){
+            isBook = false;
+            message.error('请填写必填项！');
+        }
+        var filterExpression = JSON.stringify(result);
+        item.config.filterExpression = filterExpression;
+        item.config.displayColumns = item.listColumns.map(item=>{
+            return item.field;
+        }).join(',');
+        item.config.detailUrl = item.detailUrl;
+        item.config.moreLinkURL = item.moreLinkURL;
+        item.config.templateObjectTypeCode = item.templateObjectTypeCode;
+        item.config.templateId = item.entityId;
+        item.config.sortField = item.sortField;
+        item.config.sortType = item.sortType;
+        if(item.sortField && item.sortField != ''){
+            var obj = [{
+                attributeName: item.sortField,
+                SortDir: item.sortType,
+                sort: item.sortType
+            }]
+        }
+        item.config.OrderExpression = JSON.stringify(item.orderExpression2);
 
+        var obj = {
+            params: {
+                recordRep: {
+                    id: item.id,
+                    objTypeCode: 9171,
+                    fields: {
+                        detailUrl: item.detailUrl,
+                        moreLinkURL: item.moreLinkURL,
+                        Config: JSON.stringify(item.config),
+                        filterExpression: item.config.filterExpression,
+                        DisplayColumns: item.config.displayColumns,
+                        orderExpression: item.config.OrderExpression,
+                        EntityCode: item.config.entityCode,
+                        TemplateObjectTypeCode:item.templateObjectTypeCode || item.config.templateObjectTypeCode,
+                        DetailUrl: item.config.detailURL,
+                        MoreLinkURL: item.config.moreLinkURL
+                    }
+                }
+            }
+        }
+
+        var addObj = {
+            showHeader: item.showHeader,
+            sortField: item.sortField,
+            sortType: item.sortType
+        }
+        console.log("addobj", addObj)
+        Object.assign(obj.params.recordRep.fields, addObj);
+
+        var d = {
+            message: JSON.stringify(obj)
+        }
+        if(isBook){
+            proxy.$get(Interface.saveRecord,d).then(res=>{
+                emit("save-success", '');
+                props.item.isConfig = false;
+            })
+        }
     }
 </script>
 <style lang="less" scoped>

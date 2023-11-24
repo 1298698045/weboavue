@@ -74,8 +74,69 @@
                                             </div>
                                             <!-- 日历 -->
                                             <div class="panel-bd" v-if="element.componentType=='calendar'">
-                                                <div v-if="!element.isConfig" :style="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px' }">
-                                                    <a-calendar :locale="locale" v-model:value="date" :fullscreen="false" @panelChange="onPanelChange" />
+                                                <div v-if="!element.isConfig">
+                                                    <div :style="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px' }">
+                                                        <a-calendar :locale="locale" v-model:value="date" :fullscreen="false" @panelChange="onPanelChange" />
+                                                    </div>
+                                                    <div class="scheduleBody canlendartablist">
+                                                        <div class="tabContainer">
+                                                            <div class="tabList">
+                                                                <div class="tab" :class="{'active':element.currentTab==0}" @click="handleItemTab(element,0)">
+                                                                    <div class="tabHover">
+                                                                        <span class="tabText">
+                                                                            日程
+                                                                        </span>
+                                                                        <span class="tabnums">
+                                                                            {{element.Calendars.length}}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="tab" :class="{'active':element.currentTab==1}" @click="handleItemTab(element,1)">
+                                                                    <div class="tabHover">
+                                                                        <span class="tabText">
+                                                                            会议
+                                                                        </span>
+                                                                        <span class="tabnums">{{element.Meetings.length}}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="tab" :class="{'active':element.currentTab==2}" @click="handleItemTab(element,2)">
+                                                                    <div class="tabHover">
+                                                                        <span class="tabText">
+                                                                            活动
+                                                                        </span>
+                                                                        <span class="tabnums">{{element.Campaigns.length}}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="scheduleList" v-if="element.currentTab==0">
+                                                            <div v-if="element.Calendars.length>0">
+                                                                <div class="scheduleItem" style="background-color: rgb(41, 119, 246);" v-for="(listItem,listIdx) in element.Calendars">
+                                                                    <div class="time">{{listItem.time}}</div>
+                                                                    <div class="title">{{listItem.subject}}</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="empty" v-else><img :src="require('@/assets/img/empty.png')" alt=""><p class="emptyDesc">当前暂无数据</p></div>
+                                                        </div>
+                                                        <div class="scheduleList" v-if="element.currentTab==1">
+                                                            <div v-if="element.Meetings.length>0">
+                                                                <div class="scheduleItem" style="background-color: rgb(41, 119, 246);" v-for="(listItem,listIdx) in element.Meetings">
+                                                                    <div class="time">{{listItem.time}}</div>
+                                                                    <div class="title">{{listItem.subject}}</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="empty" v-else><img :src="require('@/assets/img/empty.png')" alt=""><p class="emptyDesc">当前暂无数据</p></div>
+                                                        </div>
+                                                        <div class="scheduleList" v-if="element.currentTab==2">
+                                                            <div v-if="element.Campaigns.length>0">
+                                                                <div class="scheduleItem" style="background-color: rgb(41, 119, 246);" v-for="(listItem,listIdx) in element.Campaigns">
+                                                                    <div class="time">{{listItem.time}}</div>
+                                                                    <div class="title">{{listItem.subject}}</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="empty" v-else><img :src="require('@/assets/img/empty.png')" alt=""><p class="emptyDesc">当前暂无数据</p></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div v-else>
                                                     <SwiperConfig :item="element" />
@@ -138,7 +199,7 @@
                                                     </div>
                                                     <div class="empty" v-else><img :src="require('@/assets/img/empty.png')" alt=""><p class="emptyDesc">当前暂无数据</p></div>
                                                 </ul>
-                                                <ListConfig :item="element" v-else></ListConfig>
+                                                <ListConfig :item="element" @save-success="getLayout"  v-else></ListConfig>
                                             </div>
                                             <!-- tabllist -->
                                             <div class="panel-bd" v-else-if="element.componentType=='tablist'">
@@ -200,7 +261,14 @@
                                                                 </template>
                                                             </li>
                                                         </div>
+                                                        <div class="empty" v-else><img :src="require('@/assets/img/empty.png')" alt=""><p class="emptyDesc">当前暂无数据</p></div>
                                                     </ul>
+                                                </div>
+                                            </div>
+                                            <!-- chart -->
+                                            <div class="panel-bd" v-else-if="element.componentType=='chart'">
+                                                <div class="chartWrap" v-if="!element.isConfig">
+                                                    <div :id="'showChart_'+selfIdx+'_'+index" style="width: 100%; height: 400px"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -253,6 +321,7 @@
                 </div>
             </div>
         </div>
+        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" />
     </div>
 </template>
 <script setup>
@@ -273,6 +342,7 @@
         h,
         nextTick
     } from "vue";
+    import Delete from "@/components/listView/Delete.vue";
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
     import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
@@ -284,7 +354,7 @@
     dayjs.extend(calendar);
     dayjs.extend(weekday);
     dayjs.extend(localeData);
-
+    import * as echarts from "echarts";
     import draggable from 'vuedraggable';
     import ListConfig from "@/components/design/ListConfig.vue";
     import SwiperConfig from "@/components/design/SwiperConfig.vue";
@@ -315,18 +385,32 @@
         templateList: [],
         layoutType: "",
         isTemplate: false,
-        objCodeList: []
+        objCodeList: [],
+        isDelete: false,
+        deleteDesc: '',
+        deleteData: {
+            url: "",
+            method: "",
+            data: {},
+            success: "",
+            prevFn: ""
+        }
     });
     const { id, dboardName, columns, colorList, group, list1, list2, date, searchVal, templateList,
-        layoutType, isTemplate, objCodeList } = toRefs(data);
+        layoutType, isTemplate, objCodeList, isDelete, deleteDesc, deleteData } = toRefs(data);
     const getLayout = () => {
         proxy.$get(Interface.design.list,{
             dboardName: data.dboardName
         }).then(res=>{
             data.columns = res.Board.columns;
-            data.columns.forEach(item=>{
-                item.components.forEach(row=>{
-                    if(row.componentType=='tablist'){
+            data.columns[0].components.push({
+                componentType: "chart",
+                label: "图表",
+                id: 'chart'
+            })
+            data.columns.forEach((item,index)=>{
+                item.components.forEach((row,idx)=>{
+                    if(row.componentType=='tablist' || row.componentType=='calendar'){
                         row.currentTab = 0;
                     }
                     if(row.componentType=='list'){
@@ -340,6 +424,11 @@
                         }
                         row.orderExpression2 = orderExpression2;
                     }
+                    if(row.componentType=='chart'){
+                        nextTick(()=>{
+                            getChartItemData(row, index, idx);
+                        })
+                    }
                     row.isConfig = false;
                     row.isRename = false;
                     row.isMore = false;
@@ -348,6 +437,104 @@
         })
     }
     getLayout();
+    // 获取chart数据
+    const getChartItemData = (item,index,idx) => {
+        nextTick(()=>{
+            loadChartData(item,index,idx);
+        })
+    }
+    const loadChartData = (item, index ,idx) => {
+        var showChartDom = document.getElementById('showChart_'+index+'_'+idx);
+        var chartData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        var chartName = [
+            "一月",
+            "二月",
+            "三月",
+            "四月",
+            "五月",
+            "六月",
+            "七月",
+            "八月",
+            "九月",
+            "十月",
+            "十一月",
+            "十二月",
+        ];
+        var myChart;
+        if (myChart != null && myChart != "" && myChart != undefined) {
+            myChart.dispose(); //销毁
+        }
+        myChart = echarts.init(showChartDom);
+        var option;
+        option = {
+            title: {
+            text: "",
+            },
+            tooltip: {
+            trigger: "axis",
+            axisPointer: {
+                type: "shadow",
+            },
+            },
+            color: ["#165dff"],
+            legend: {
+            show: false,
+            data: ["发布帖子数量"],
+            },
+            grid: {
+            show: false,
+            left: "5%",
+            top: "10%",
+            right: "5%",
+            bottom: "10%",
+            },
+            xAxis: {
+            data: chartName,
+            axisLabel: {
+                interval: 0,
+                //rotate: 15,
+            },
+            axisLine: {
+                show: false,
+            },
+            axisTick: {
+                show: false,
+            },
+            },
+            yAxis: {
+            type: "value",
+            name: "发布帖子数量",
+            nameLocation: "center",
+            nameGap: 50,
+            nameTextStyle: {
+                fontSize: 14,
+            },
+            axisLine: {
+                show: false,
+            },
+            axisTick: {
+                show: false,
+            },
+            },
+            series: [
+            {
+                name: "发布帖子数量",
+                type: "line",
+                symbol: "circle",
+                symbolSize: 5,
+                data: chartData,
+                label: {
+                normal: {
+                    show: true,
+                    position: "top",
+                },
+                formatter: "{@value}",
+                },
+            },
+            ],
+        };
+        option && myChart.setOption(option);
+    }
     // 获取对象代码列表
     const getObjList = () => {
         proxy.$get(Interface.uilook,{
@@ -505,6 +692,41 @@
             saveRowListTags(item);
         })
     }
+    // 删除tablist下的标签
+    const deleteTabListTag = (item,tab,tabIdx)=> {
+        data.deleteDesc = "是否确认删除该标签?";
+        data.deleteData.url = Interface.saveRecord;
+        data.deleteData.prevFn = () => {
+            item.tabs.splice(tabIdx, 1);
+            let config = {
+            componentType: item.componentType,
+                tabs: item.tabs
+            }
+            var obj = {
+                params: {
+                    recordRep: {
+                        id: item.id,
+                        objTypeCode: 9171,
+                        fields: {
+                            Config: JSON.stringify(config)
+                        }
+                    }
+                }
+            }
+            var d = {
+                message: JSON.stringify(obj)
+            }
+            data.deleteData.data = d;
+        }
+        data.isDelete = true;
+    }
+    // tablist 切换
+    const handleItemTab = (item,index) => {
+        item.currentTab = index;
+        if(item.componentType=='tablist'){
+            item.entityCode = item.tabs[0].listComponent.entityCode || '090';
+        }
+    }
     const saveRowListTags = (item) => {
         let config = {
             componentType: item.componentType,
@@ -625,6 +847,23 @@
     const handleRowConfig = (item) => {
         item.isConfig = !item.isConfig;
         item.isMore = false;
+    }
+    // 删除
+    const deleteOk = (params) => {
+        console.log("data.deleteData", data.deleteData);
+        // data.deleteData.prevFn();
+        if(typeof data.deleteData.prevFn == 'function'){
+            data.deleteData.prevFn();
+        }
+        proxy.$get(data.deleteData.url,data.deleteData.data).then(res=>{
+            data.isDelete = false;
+            data.deleteData = {};
+            message.success("删除成功！");
+            getLayout();
+        })
+    }
+    const cancelDelete = (params) => {
+        data.isDelete = params;
     }
 </script>
 <style lang="less" scoped>
@@ -1053,5 +1292,9 @@
                 }
             }
         }
+    }
+    .chartWrap{
+        width: 100%;
+        height: 500px;
     }
 </style>

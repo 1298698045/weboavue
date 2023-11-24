@@ -34,7 +34,7 @@
             <a-button type="link" @click="handleAddSwiper(item)">添加轮播图</a-button>
         </div>
         <div class="footBtns">
-            <a-button @click="saveConfig">保存</a-button>
+            <a-button @click="saveConfig(item)">保存</a-button>
             <a-button class="ml10" type="primary" @click="cancel">取消</a-button>
         </div>
     </div>
@@ -107,8 +107,41 @@
         props.item.isConfig = false;
     }
     // 保存
-    const saveConfig = () => {
-
+    const saveConfig = (item) => {
+        item.list.forEach(function(v){
+            saveSwiperImg(v);
+        })
+        return Promise.all(item.list).then(function(res){
+            console.log('success',res)
+            message.success("保存成功！");
+            item.isConfig = false;
+        }).catch(function(error){
+            console.log('err', error)
+        })
+    }
+    const saveSwiperImg = async (swiperItem) => {
+        var obj = {
+            params: {
+                recordRep: {
+                    objTypeCode: 20549,
+                    id: swiperItem.ValueId || '',
+                    fields: {
+                        ImgUrl: swiperItem.ImgUrl,
+                        LinkUrl: swiperItem.LnkUrl,
+                        Position: swiperItem.Position,
+                        Name: swiperItem.Name
+                    }
+                }
+            }
+        }
+        var d = {
+            message: JSON.stringify(obj)
+        }
+        return new Promise((resolve,reject)=>{
+            proxy.$get(Interface.saveRecord,d).then(res=>{
+                resolve(res);
+            })
+        })
     }
     const handleDelSwiperItem = (item, swiperItem, swiperIdx) => {
         var d = {
