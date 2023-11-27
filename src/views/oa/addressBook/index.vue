@@ -78,6 +78,8 @@
                     <a-tabs v-model:activeKey="activeKey" @change="changeRightTab">
                         <a-tab-pane key="1" tab="最近联系人"></a-tab-pane>
                         <a-tab-pane key="2" tab="全部人员"></a-tab-pane>
+                        <a-tab-pane key="3" tab="同部门"></a-tab-pane>
+                        <a-tab-pane key="4" tab="我的下属"></a-tab-pane>
                     </a-tabs>
                     <!-- <div class="rWrap" v-if="activeKey==2">
                         <a-button class="ml10">导入</a-button>

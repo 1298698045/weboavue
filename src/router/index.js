@@ -364,6 +364,11 @@ const routes = [
     name: "Design",
     component: () => import("../views/sys/design/index.vue"),
   },
+  {
+    path: "/hrsetting/home",
+    name: "DesignHome",
+    component: () => import("../views/sys/home/index.vue"),
+  },
 ];
 
 const router = createRouter({

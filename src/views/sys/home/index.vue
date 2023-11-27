@@ -1,23 +1,6 @@
 <template>
     <div class="designWrap">
         <div class="design">
-            <div class="designHead">
-                <a-button @click="showTemplate(true)">添加模板</a-button>
-                <a-button class="ml10 layoutBtn">更改布局
-                    <div class="dropMenuWapper">
-                        <div class="layoutIconList">
-                            <div title="一列" class="img" :class="{'active':layoutType=='A'}" @click.stop="choiceLayout('A')"><svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><rect x="5" y="5" width="14" height="14" rx="2" fill="currentColor" fill-rule="evenodd"></rect></svg></div>
-                            <div title="两列" class="img" :class="{'active':layoutType=='AA'}" @click.stop="choiceLayout('AA')"><svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><path d="M5 5h5a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm9 0h5a1 1 0 011 1v12a1 1 0 01-1 1h-5a1 1 0 01-1-1V6a1 1 0 011-1z" fill="currentColor" fill-rule="evenodd"></path></svg></div>
-                            <div title="三列" class="img" :class="{'active':layoutType=='AAA'}" @click.stop="choiceLayout('AAA')"><svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><path d="M5 5h2a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm6 0h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V6a1 1 0 011-1zm6 0h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V6a1 1 0 011-1z" fill="currentColor" fill-rule="evenodd"></path></svg></div>
-                            <div title="左侧边栏" class="img" :class="{'active':layoutType=='BA'}" @click.stop="choiceLayout('BA')"><svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><path d="M5 5h1a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm5 0h9a1 1 0 011 1v12a1 1 0 01-1 1h-9a1 1 0 01-1-1V6a1 1 0 011-1z" fill="currentColor" fill-rule="evenodd"></path></svg></div>
-                            <div title="右侧边栏" class="img" :class="{'active':layoutType=='AB'}" @click.stop="choiceLayout('AB')"><svg width="24" height="24" viewBox="0 0 24 24" role="presentation"><path d="M18 5h1a1 1 0 011 1v12a1 1 0 01-1 1h-1a1 1 0 01-1-1V6a1 1 0 011-1zM5 5h9a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z" fill="currentColor" fill-rule="evenodd"></path></svg></div>
-                        </div>
-                    </div>
-                </a-button>
-                <a-button type="primary" class="ml10" @click="handleComplete">
-                    完成
-                </a-button>
-            </div>
             <div class="designBody">
                 <div class="itxst row">
                     <div class="columnItem col-3" v-for="(self,selfIdx) in columns" :key="selfIdx">
@@ -39,7 +22,7 @@
                                                     <a-input :ref="(e)=>{setInputRef(e,element)}" @pressEnter="e=>{changeTitle(e,element)}" @blur="e=>{changeTitle(e,element)}" v-model:value="element.label"></a-input>
                                                 </div>
                                                 <div class="panel-btns">
-                                                    <button class="btn buttonIcon" @click.stop="handleMore(element)">
+                                                    <!-- <button class="btn buttonIcon" @click.stop="handleMore(element)">
                                                         <i class="iconfont icon-gengduobiaoqian"></i>
                                                         <div class="dropMenuWapper" v-if="element.isMore" @click.stop>
                                                             <div class="dropMenu">
@@ -55,7 +38,7 @@
                                                                         </span>
                                                                     </div>
                                                                 </div>
-                                                                <div class="dropMenuItem" v-if="element.componentType!='calendar'" @click="handleRowConfig(element, selfIdx, index)">
+                                                                <div class="dropMenuItem" v-if="element.componentType!='calendar'" @click="handleRowConfig(element)">
                                                                     <div class="item">配置</div>
                                                                 </div>
                                                                 <div class="dropMenuItem" v-if="element.componentType!='calendar'&&element.componentType!='abstract'&&element.componentType!='chart'">
@@ -69,7 +52,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </button>
+                                                    </button> -->
                                                 </div>
                                             </div>
                                             <!-- 日历 -->
@@ -203,77 +186,73 @@
                                             </div>
                                             <!-- tabllist -->
                                             <div class="panel-bd" v-else-if="element.componentType=='tablist'">
-                                                <div v-if="!element.isConfig">
-                                                    <div>
-                                                        <div class="tabContainer flex">
-                                                            <div class="tabList">
-                                                                <div class="tab" :class="{'active':element.currentTab==tabIdx}" v-for="(tab,tabIdx) in element.tabs" @click="handleItemTab(element,tabIdx)">
-                                                                    <div class="tabHover">
-                                                                        <span class="tabText">
-                                                                            {{tab.displayName}}
-                                                                            <span class="tabnum">{{tab.listComponent.dataList.length}}</span>
-                                                                            <span style="font-weight:normal;" @click.stop="deleteTabListTag(element,tab,tabIdx)">
-                                                                                <i class="iconfont icon-yishanchu"></i>
-                                                                            </span>
+                                                <div>
+                                                    <div class="tabContainer flex">
+                                                        <div class="tabList">
+                                                            <div class="tab" :class="{'active':element.currentTab==tabIdx}" v-for="(tab,tabIdx) in element.tabs" @click="handleItemTab(element,tabIdx)">
+                                                                <div class="tabHover">
+                                                                    <span class="tabText">
+                                                                        {{tab.displayName}}
+                                                                        <span class="tabnum">{{tab.listComponent.dataList.length}}</span>
+                                                                        <span style="font-weight:normal;" @click.stop="deleteTabListTag(element,tab,tabIdx)">
+                                                                            <i class="iconfont icon-yishanchu"></i>
                                                                         </span>
-                                                                    </div>
+                                                                    </span>
                                                                 </div>
                                                             </div>
-                                                            <div class="rightAdd">
-                                                                <a-popover trigger="click" placement="right">
-                                                                    <template #content>
-                                                                      <a-form>
-                                                                        <a-form-item label="标签名称">
-                                                                            <a-input v-model:value="element.addTagName"></a-input>
-                                                                        </a-form-item>
-                                                                        <a-form-item label="对象代码">
-                                                                            <a-select v-model:value="element.addObjCode" placeholder="请选择对象代码">
-                                                                                <a-select-option  v-for="(field,fieldIdx) in objCodeList" :key="fieldIdx" :value="field.ID">{{field.Name}}</a-select-option>
-                                                                              </a-select>
-                                                                        </a-form-item>
-                                                                        <div>
-                                                                            <a-button type="primary"  @click="handleAddTags(element)">确认添加</a-button>
-                                                                        </div>
-                                                                      </a-form>
-                                                                    </template>
-                                                                    <a-button type="link">添加标签</a-button>
-                                                                </a-popover>
-                                                            </div>
+                                                        </div>
+                                                        <div class="rightAdd">
+                                                            <a-popover trigger="click" placement="right">
+                                                                <template #content>
+                                                                  <a-form>
+                                                                    <a-form-item label="标签名称">
+                                                                        <a-input v-model:value="element.addTagName"></a-input>
+                                                                    </a-form-item>
+                                                                    <a-form-item label="对象代码">
+                                                                        <a-select v-model:value="element.addObjCode" placeholder="请选择对象代码">
+                                                                            <a-select-option  v-for="(field,fieldIdx) in objCodeList" :key="fieldIdx" :value="field.ID">{{field.Name}}</a-select-option>
+                                                                          </a-select>
+                                                                    </a-form-item>
+                                                                    <div>
+                                                                        <a-button type="primary"  @click="handleAddTags(element)">确认添加</a-button>
+                                                                    </div>
+                                                                  </a-form>
+                                                                </template>
+                                                                <a-button type="link">添加标签</a-button>
+                                                            </a-popover>
                                                         </div>
                                                     </div>
-                                                    <div class="tabListWrap" v-for="(tab,tabIdx) in element.tabs" :key="tabIdx"  :class="{'isheadlist':tab.listComponent&&tab.listComponent.showHeader}">
-                                                        <ul class="listWrap"  v-if="element.currentTab==tabIdx">
-                                                            <div v-if="tab.listComponent.dataList.length>0">
-                                                                <li class="listItem listItemHead" v-if="tab.listComponent.listColumns && tab.listComponent.showHeader">
-                                                                    <p class="listItemTitle" v-for="child in tab.listComponent.listColumns">
-                                                                        <span v-if="child.field != 'Priority' && child.field != 'IsTop' && child.field != 'UrgentLevel' && child.field != 'IsImportant'">{{child.label}}</span>
-                                                                    </p>
-                                                                </li>
-                                                                <li class="listItem tablistItem" v-for="child in tab.listComponent.dataList" @click="handleRowDetail(element.detailUrl,listItem)">
-                                                                    <template v-if="tab.listComponent.displayColumns">
-                                                                        <template v-for="(cell,index) in tab.listComponent.displayColumns&&(tab.listComponent.displayColumns).split(',')">
-                                                                            <p v-if="cell == 'Name' || cell == 'FullName' || cell == 'Title'" class="listItemTitle listItemTitle1">
-                                                                                {{child[cell]}}
-                                                                            </p>
-                                                                            <p v-else-if="cell == 'BusinessUnitIdName'" class="listItemDept">{{child[cell]}}</p>
-                                                                            <p v-else-if="cell=='CreatedOn'||cell=='PlanPayOn'" class="listItemTime">{{child[cell]?child[cell].split(' ')[0]:''}}</p>
-                                                                            <p v-else-if="cell != 'Priority' && cell != 'IsTop' && cell != 'UrgentLevel' && cell != 'IsImportant'" class="listItemTitle">{{child[cell]}}</p>
-                                                                        </template>
-                                                                    </template>
-                                                                </li>
-                                                            </div>
-                                                            <div class="empty" v-else><img :src="require('@/assets/img/empty.png')" alt=""><p class="emptyDesc">当前暂无数据</p></div>
-                                                        </ul>
-                                                    </div>
                                                 </div>
-                                                <ListConfig :item="element" @save-success="getLayout"  v-else></ListConfig>
+                                                <div class="tabListWrap" v-for="(tab,tabIdx) in element.tabs" :key="tabIdx"  :class="{'isheadlist':tab.listComponent&&tab.listComponent.showHeader}">
+                                                    <ul class="listWrap"  v-if="element.currentTab==tabIdx">
+                                                        <div v-if="tab.listComponent.dataList.length>0">
+                                                            <li class="listItem listItemHead" v-if="tab.listComponent.listColumns && tab.listComponent.showHeader">
+                                                                <p class="listItemTitle" v-for="child in tab.listComponent.listColumns">
+                                                                    <span v-if="child.field != 'Priority' && child.field != 'IsTop' && child.field != 'UrgentLevel' && child.field != 'IsImportant'">{{child.label}}</span>
+                                                                </p>
+                                                            </li>
+                                                            <li class="listItem tablistItem" v-for="child in tab.listComponent.dataList" @click="handleRowDetail(element.detailUrl,listItem)">
+                                                                <template v-if="tab.listComponent.displayColumns">
+                                                                    <template v-for="(cell,index) in tab.listComponent.displayColumns&&(tab.listComponent.displayColumns).split(',')">
+                                                                        <p v-if="cell == 'Name' || cell == 'FullName' || cell == 'Title'" class="listItemTitle listItemTitle1">
+                                                                            {{child[cell]}}
+                                                                        </p>
+                                                                        <p v-else-if="cell == 'BusinessUnitIdName'" class="listItemDept">{{child[cell]}}</p>
+                                                                        <p v-else-if="cell=='CreatedOn'||cell=='PlanPayOn'" class="listItemTime">{{child[cell]?child[cell].split(' ')[0]:''}}</p>
+                                                                        <p v-else-if="cell != 'Priority' && cell != 'IsTop' && cell != 'UrgentLevel' && cell != 'IsImportant'" class="listItemTitle">{{child[cell]}}</p>
+                                                                    </template>
+                                                                </template>
+                                                            </li>
+                                                        </div>
+                                                        <div class="empty" v-else><img :src="require('@/assets/img/empty.png')" alt=""><p class="emptyDesc">当前暂无数据</p></div>
+                                                    </ul>
+                                                </div>
                                             </div>
                                             <!-- chart -->
                                             <div class="panel-bd" v-else-if="element.componentType=='chart'">
                                                 <div class="chartWrap" v-if="!element.isConfig">
                                                     <div :id="'showChart_'+selfIdx+'_'+index" style="width: 100%; height: 400px"></div>
                                                 </div>
-                                                <ChartConfig :item="element" :index="selfIdx" :itemIdx="index" @cancel="handleRowConfig(element, selfIdx, index)" v-else></ChartConfig>
                                             </div>
                                         </div>
                                     </div>
@@ -362,8 +341,6 @@
     import draggable from 'vuedraggable';
     import ListConfig from "@/components/design/ListConfig.vue";
     import SwiperConfig from "@/components/design/SwiperConfig.vue";
-    import ChartConfig from "@/components/design/ChartConfig.vue";
-
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const itemRefs = [];
@@ -412,10 +389,7 @@
             data.columns[0].components.push({
                 componentType: "chart",
                 label: "图表",
-                id: 'chart',
-                config:{
-                    templateObjectTypeCode: 20000
-                }
+                id: 'chart'
             })
             data.columns.forEach((item,index)=>{
                 item.components.forEach((row,idx)=>{
@@ -853,13 +827,8 @@
         })
     }
     // 配置
-    const handleRowConfig = (item, index, idx) => {
+    const handleRowConfig = (item) => {
         item.isConfig = !item.isConfig;
-        if(!item.isConfig && item.componentType=='chart'){
-            nextTick(()=>{
-                getChartItemData(item, index, idx);
-            })
-        }
         item.isMore = false;
     }
     // 删除
