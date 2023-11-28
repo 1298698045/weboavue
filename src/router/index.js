@@ -99,12 +99,26 @@ const routes = [
           icon: "caogaoxiang",
         },
       },
+      {
+        path: "/flow/seeting",
+        component: () => import("../views/flow/seeting/index.vue"),
+        name: "流程设置",
+        icon: "caogaoxiang",
+        meta: {
+          icon: "caogaoxiang",
+        },
+      },
       // {
       //   path: "/about",
       //   component: () => import("../views/About.vue"),
       //   name: "about",
       // },
     ],
+  },
+  {
+    path: "/flow/seeting/detail",
+    component: () => import("@/views/flow/seeting/detail/index.vue"),
+    name: "FlowSeetingDetail"
   },
   {
     path: "/workplan",

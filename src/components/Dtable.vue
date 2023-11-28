@@ -7,7 +7,7 @@
 <script setup>
   import { ref, reactive, toRefs, onMounted, watch, defineProps, defineExpose } from "vue";
   const props = defineProps({
-    tableHeight: String,
+    tableHeight: [String, Number],
     isCollapsed: Boolean,
     columns: Array,
     gridUrl: String
@@ -77,6 +77,30 @@
     $('#datagrid').datagrid({
       // url: '/localData/datalist.json',
       url: url,
+      loadFilter: function (data) {
+          var data0 = { rows: [], total: 0 }
+          if (data) {
+              if (data.rows) {
+                  if (data.rows.Table) {
+                      data0.rows = data.rows.Table;
+                  }
+                  else {
+                      data0.rows = data.rows;
+                  }
+              }
+              else if (data.data && data.data.Table) {
+                  data0.rows = data.data.Table;
+              }
+              else if (data.listData) {
+                  data0.rows = data.listData;
+              }
+              else {
+                  data0.rows = data;
+              }
+          }
+          data0.total = data&&data.total ? Number(data.total) : data0.rows.length;
+          return data0
+      },
       method: "get",
       columns: [columns],
       queryParams: queryParams,

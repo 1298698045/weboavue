@@ -148,6 +148,18 @@ const Interface = {
     look: "/localData/design/ui.entity.lookup.json"
   },
   detail: "/localData/entity.detail.get.json",
-  delete: "/localData/entity.delete.json"
+  delete: "/localData/entity.delete.json",
+  flow: {
+    processTree: "/localData/flow/process.statistics.tree.get.json",
+    tree: "/localData/flow/tree.get.json",
+    treeDetail: "/localData/flow/entity.detail.get.json",
+    stepList: "/localData/flow/process.step.getlist.json",
+    ruleList: "/localData/flow/process.rule.getlist.json",
+    formSearchPerm: "/localData/flow/process.datapri.getlist.json",
+    formStartPerm: "/localData/flow/process.usepri.getlist.json",
+    processSearch: "/localData/flow/wf.process.search.json",
+    list: "/localData/flow/entitygrid.list.json",
+    steppri: "/localData/flow/process.steppri.get.json"
+  }
 };
 export default Interface;
