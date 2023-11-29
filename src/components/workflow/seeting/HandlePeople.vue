@@ -2,7 +2,7 @@
     <div>
       <a-modal
         v-model:open="props.isShow"
-        width="850px"
+        width="80%"
         :maskClosable="false"
         @cancel="handleCancel"
         @ok="handleSubmit"
@@ -16,63 +16,114 @@
           <div class="modalCenter" :style="{ height: height + 'px!important' }">
             <a-form :model="formState" ref="formRef">
               <div class="section">
-                <div class="sectionTitle">步骤名称</div>
+                <div class="sectionTitle">选择人员/小组</div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="name" label="步骤">
-                            <a-input disabled v-model:value="formState.name"></a-input>
+                        <a-form-item name="name" label="人员类型">
+                            <a-radio-group v-model:value="formState.peopleType" @change="changePeopleType">
+                                <a-radio value="U">用户</a-radio>
+                                <a-radio value="A">角色</a-radio>
+                                <a-radio value="P">个人小组</a-radio>
+                                <a-radio value="R">公共小组</a-radio>
+                                <a-radio value="B">部门</a-radio>
+                            </a-radio-group>
                         </a-form-item>
+                    </div>
+                </div>
+                <div class="sectionRow">
+                    <div class="sectionItem">
+                        <div class="search">
+                            <a-input-search
+                                v-model:value="searchVal"
+                                placeholder="请输入搜索字符"
+                                style="width: 200px"
+                                @search="onSearch"
+                            />
+                        </div>
+                        <div class="peopleBox">
+                            <div class="deptTree" v-if="formState.peopleType=='U'">
+                                <div class="deptName">部门</div>
+                                <div class="treeBody">
+                                    <a-tree :selectedKeys="deptId"  @select="handleSelectTree" block-node :tree-data="treeData">
+                                        <template  #title="{text, key }">
+                                            <span>{{text}}</span>
+                                        </template>
+                                    </a-tree>
+                                </div>
+                            </div>
+                            <a-transfer
+                                v-model:target-keys="targetKeys"
+                                v-model:selected-keys="selectedKeys"
+                                :data-source="listData"
+                                :list-style="{
+                                    width: '260px',
+                                    height: '280px',
+                                }"
+                                :locale="{itemUnit:'',itemsUnit:'',notFoundContent:'列表为空',searchPlaceholder: '请输入搜索内容'}"
+                                show-search
+                                :titles="['可用', '已选']"
+                                :render="item => item.name"
+                                :disabled="disabled"
+                                @change="handleChange"
+                                @selectChange="handleSelectChange"
+                            />
+                        </div>
                     </div>
                 </div>
               </div>
               <div class="section">
-                <div class="sectionTitle">流程处理权限</div>
+                <div class="sectionTitle">流程变量</div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="checked0" label="退回权限">
+                        <a-form-item name="checked0" label="发起人">
                           <a-checkbox v-model:checked="formState.checked0"></a-checkbox>
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="checked1" label="终止权限">
+                        <a-form-item name="checked1" label="流程参与人">
                           <a-checkbox v-model:checked="formState.checked1"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="checked2" label="跳转权限">
+                        <a-form-item name="checked2" label="发起人部门负责人">
                           <a-checkbox v-model:checked="formState.checked2"></a-checkbox>
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="checked3" label="退回到发起人">
+                        <a-form-item name="checked3" label="发起人部门分管领导">
                           <a-checkbox v-model:checked="formState.checked3"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="checked4" label="结束流程">
+                        <a-form-item name="checked4" label="与发起人相同部门人员">
                           <a-checkbox v-model:checked="formState.checked4"></a-checkbox>
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="checked5" label="可手动加办理人">
+                        <a-form-item name="checked5" label="主管部门负责人">
                           <a-checkbox v-model:checked="formState.checked5"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="checked6" label="加签">
+                        <a-form-item name="checked6" label="发起人部门分管业务领导">
+                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                    <div class="sectionItem">
+                        <a-form-item name="checked6" label="发起人的护士长">
                           <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
               </div>
               <div class="section">
-                <div class="sectionTitle">正文附件权限</div>
+                <div class="sectionTitle">节点流程变量</div>
                 <div class="sectionRow">
                     <div class="sectionItem">
                         <a-form-item name="docRight1" label="正文权限">
@@ -84,60 +135,68 @@
                             </a-select>
                         </a-form-item>
                     </div>
+                </div>
+                <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="docRight2" label="附件权限">
-                            <a-select v-model:value="formState.docRight2">
-                                <a-select-option value="2">不可见</a-select-option>
-                                <a-select-option value="4">只读</a-select-option>
-                                <a-select-option value="8">读写</a-select-option>
-                                <a-select-option value="16">读写/删除</a-select-option>
-                            </a-select>
+                        <a-form-item name="checked6" label="来源节点相同办理人员">
+                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                    <div class="sectionItem">
+                        <a-form-item name="checked6" label="来源节点办理人的部门负责人">
+                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                </div>
+                <div class="sectionRow">
+                    <div class="sectionItem">
+                        <a-form-item name="checked6" label="来源节点办理人的部门分管领导">
+                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                    <div class="sectionItem">
+                        <a-form-item name="checked6" label="来源节点办理人的部门人员">
+                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                </div>
+                <div class="sectionRow">
+                    <div class="sectionItem">
+                        <a-form-item name="checked6" label="来源节点办理人的部门的相同岗位类别人员">
+                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                    <div class="sectionItem">
+                        <a-form-item name="checked6" label="来源节点办理人的部门的相同职务人员">
+                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                </div>
+                <div class="sectionRow">
+                    <div class="sectionItem">
+                        <a-form-item name="checked6" label="来源节点办理人的部门的相同职称人员">
+                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                    <div class="sectionItem">
+                        <a-form-item name="checked6" label="来源节点办理人的护士长">
+                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
               </div>
               <div class="section">
-                <div class="sectionTitle">字段访问权限</div>
+                <div class="sectionTitle">条件查询</div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <table class="tablePerm" v-for="(item,index) in entityRightList" :key="index">
-                            <thead>
-                                <tr>
-                                    <th style="width: 20%;">{{item.DisplayName}}</th>
-                                    <th>
-                                        <span style="line-height: 42px; margin-right: 10px;">权限</span>
-                                        <a-select @change="(e)=>{changeItemRight(e, item)}" v-model:value="item.right" style="width: 200px;">
-                                            <a-select-option value="2">不可见</a-select-option>
-                                            <a-select-option value="4">只读</a-select-option>
-                                            <a-select-option value="8">读写</a-select-option>
-                                            <a-select-option value="16">读写/删除</a-select-option>
-                                        </a-select>
-                                        <span class="childRightText">必填</span>
-                                        <a-checkbox v-model:checked="tableRight[item.Name+'_required']"></a-checkbox>
-                                        <span class="childRightText">可见</span>
-                                        <a-checkbox v-model:checked="tableRight[item.Name+'_list']"></a-checkbox>
-                                        <span class="childRightText">可新增</span>
-                                        <a-checkbox v-model:checked="tableRight[item.Name+'_add']"></a-checkbox>
-                                        <span class="childRightText">可删除</span>
-                                        <a-checkbox v-model:checked="tableRight[item.Name+'_delete']"></a-checkbox>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(row,idx) in item.FieldRight" :key="idx">
-                                    <td style="width: 20%;">{{row.DisplayName}}【{{row.FieldName}}】</td>
-                                    <td>
-                                        <a-radio-group v-model:value="row.Permission">
-                                            <a-radio value="2">不可见</a-radio>
-                                            <a-radio value="4">只读</a-radio>
-                                            <a-radio value="8">读写</a-radio>
-                                            <a-radio value="16">显示默认值且不可修改</a-radio>
-                                            <a-radio value="32">显示默认值且可修改</a-radio>
-                                        </a-radio-group>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <a-form-item name="name" label="查询范围">
+                            <a-radio-group>
+                                <a-radio value="U">全部</a-radio>
+                                <a-radio value="A">发起人所在部门</a-radio>
+                                <a-radio value="P">来源节点</a-radio>
+                            </a-radio-group>
+                        </a-form-item>
+                        <FilterQuery></FilterQuery>
                     </div>
                 </div>
               </div>
@@ -173,7 +232,8 @@
     UserOutlined,
   } from "@ant-design/icons-vue";
   import { message } from "ant-design-vue";
-  
+import { formTreeData } from "@/utils/common.js";
+  import FilterQuery from "@/components/FilterQuery.vue";
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
   console.log(document.documentElement.clientHeight);
@@ -192,19 +252,24 @@
     emit("cancel", false);
   };
   const data = reactive({
-    title: "权限设置",
+    title: "办理人员",
     height: document.documentElement.clientHeight - 300,
     treeData: [],
     entityRightList: [],
-    tableRight: {}
+    tableRight: {},
+    listData: [],
+    targetKeys: [],
+    selectedKeys: [],
+    deptId: [],
+    searchVal: "",
+    disabled: false
   });
   const {
-    title,
-    height, treeData, entityRightList, tableRight
+    title, searchVal, disabled,
+    height, treeData, deptId, entityRightList, tableRight, listData, targetKeys, selectedKeys
   } = toRefs(data);
   const formState = reactive({
-    docRight1: '4',
-    docRight2: '4',
+    peopleType: "U",
     name: "",
     checked0: false,
     checked1: false,
@@ -214,29 +279,65 @@
     checked5: false,
     checked6: false,
   });
+
+  const onSearch = (e) => {
+
+  }
   const getTree = () => {
-    proxy.$get(Interface.flow.tree,{
-        entity: "processtree"
+    proxy.$get(Interface.flow.deptTree,{
+        entity: "organizationtree"
     }).then(res=>{
         let listData = res.rows;
-        let formTree = (list) => {
-        list.forEach(item=>{
-            if(item.children){
-                formTree(item.children);
-            }
-            item.key = item.id;
-            item.value = item.id;
-        })
-        }
-        formTree(listData);
-        data.treeData = listData;
+        data.treeData = formTreeData(listData, 'id', 'pid');
     })
   }
   getTree();
   const handleSelectTree = (selectedKeys,selectedNodes) => {
-        // console.log("e",selectedKeys,selectedNodes);
-        formState.ParentId = [selectedNodes.node.id];
+        data.deptId = [selectedNodes.node.id];
+        getUserQuery(selectedNodes.node.id);
     }
+    const handleChange = (nextTargetKeys, direction, moveKeys) => {
+        console.log('targetKeys: ', nextTargetKeys);
+        console.log('direction: ', direction);
+        console.log('moveKeys: ', moveKeys);
+    };
+    const handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+        console.log('sourceSelectedKeys: ', sourceSelectedKeys);
+        console.log('targetSelectedKeys: ', targetSelectedKeys);
+    };
+    const changePeopleType = (e) => {
+        console.log("e",formState.peopleType);
+        let type = formState.peopleType;
+        if(type=='U'){
+            getUserQuery();
+        }else if(type=='A'){
+            getRoleUser();
+        }
+    }
+    // 用户
+    const getUserQuery = (deptId) => {
+        proxy.$get(Interface.flow.userList,{
+            businessUnitId: deptId
+        }).then(res=>{
+            data.listData = res.listData.map(item=>{
+                item.key = item.systemUserId;
+                item.name = item.userName;
+                return item;
+            });
+        })
+    }
+    // 角色
+    const getRoleUser = () => {
+        proxy.$get(Interface.user.roleUser,{
+        }).then(res=>{
+            data.listData = res.listData.map(item=>{
+                item.key = item.RoleId;
+                item.name = '角色:' + item.Name
+                return item;
+            });
+        })
+    }
+    getRoleUser();
   const getDetail = () => {
     proxy.$get(Interface.flow.treeDetail,{
         id: props.id,
@@ -397,6 +498,26 @@
   .childRightText{
     padding-left: 10px;
     padding-right: 5px;
+  }
+  .peopleBox{
+    display: flex;
+    margin: 10px 0;
+    .deptTree{
+        width: 300px;
+        height: 300px;
+        border: 1px solid #e2e3e5;
+        margin-right: 10px;
+        .deptName{
+            height: 30px;
+            line-height: 30px;
+            background: #f4f4f4;
+            padding-left: 10px;
+        }
+        .treeBody{
+            height: calc(~"100% - 30px");
+            overflow: auto;
+        }
+    }
   }
   </style>
   

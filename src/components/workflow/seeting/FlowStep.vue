@@ -12,7 +12,7 @@
             <div class="panel-bd">
                 <div class="formWrap">
                     <div class="col">
-                        <a-form ref="formRef" :model="formState" :label-col="labelCol">
+                        <a-form ref="formRef" :model="formState">
                             <a-form-item name="name">
                                 <a-input v-model:value="formState.name" placeholder="请输入姓名" />
                             </a-form-item>
@@ -28,7 +28,7 @@
                         {{index+1}}
                     </template>
                     <template v-if="column.dataIndex === 'Action'">
-                      <a-button type="text" size="small">权限</a-button>
+                      <a-button type="text" size="small" @click="handlePerm(record)">权限</a-button>
                       <a-button type="text" size="small">办理人员</a-button>
                       <a-button type="text" size="small">预览人员</a-button>
                     </template>
@@ -36,13 +36,15 @@
                 </a-table>
             </div>
         </div>
-        <PermSeeting :isShow="isPrem"></PermSeeting>
+        <PermSeeting v-if="isPerm" :isShow="isPerm" :stepId="stepId" @cancel="cancelPerm"></PermSeeting>
+        <HandlePeople v-if="isHandlePeople" :isShow="isHandlePeople" />
     </div>
 </template>
 <script setup>
     import "@/style/common.less";
     import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance } from "vue";
     import PermSeeting from "@/components/workflow/seeting/PermSeeting.vue";
+    import HandlePeople from "@/components/workflow/seeting/HandlePeople.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     var columns = [
@@ -73,7 +75,9 @@
     ]
     const data = reactive({
         listData: [],
-        isPrem: true
+        isPerm: false,
+        stepId: "",
+        isHandlePeople: true
     })
     const formState = reactive({
         name: "",
@@ -81,7 +85,7 @@
         depart: "",
         
     })
-    const { listData, isPrem } = toRefs(data);
+    const { listData, isPerm, stepId, isHandlePeople } = toRefs(data);
     const columnList = toRaw(columns);
     const loadList = () => {
       proxy.$get(Interface.flow.stepList,{
@@ -91,6 +95,15 @@
       })
     };
     loadList();
+    // 权限
+    const handlePerm = (item) => {
+        // console.log("item",item);
+        data.stepId = item.id;
+        data.isPerm = true;
+    }
+    const cancelPerm = (e) => {
+        data.isPerm = e;
+    }
 </script>
 <style lang="less">
     .relatedWrap{

@@ -159,7 +159,10 @@ const Interface = {
     formStartPerm: "/localData/flow/process.usepri.getlist.json",
     processSearch: "/localData/flow/wf.process.search.json",
     list: "/localData/flow/entitygrid.list.json",
-    steppri: "/localData/flow/process.steppri.get.json"
+    steppri: "/localData/flow/process.steppri.get.json",
+    savePerm: "/localData/flow/process.steppri.save.json",
+    deptTree: "/localData/flow/tree.dept.get.json",
+    userList: "/localData/flow/user.search.json"
   }
 };
 export default Interface;
