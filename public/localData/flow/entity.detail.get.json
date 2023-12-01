@@ -1,1 +1,79 @@
-{"status":1,"msg":"","id":"6e095e6e-bb8d-4c54-8495-e1ed1fd7b8de","entityLabel":"目录","keyPrefix":"00l","entityApiName":"ItemTree","record":{"Name":"通用","CreatedBy":{"Id":"2ec00cf2-a484-4136-8fef-e2a2719c5ed6","Name":"","objectTypeCode":"0","sobjectType":"0"},"CreatedOn":"2017-08-28 14:40:35","ModifiedBy":{"Id":"2ec00cf2-a484-4136-8fef-e2a2719c5ed6","Name":"","objectTypeCode":"0","sobjectType":"0"},"ModifiedOn":"2020-11-17 09:35:38","Description":"","SortNumber":1,"ObjectTypeCode":121,"AllowComment":false,"NeedCensor":false,"ParentId":{"Id":"","Name":"","objectTypeCode":"0","sobjectType":"0"},"IsPinned":false,"DefaultFolders":false,"IsPublic":true,"IsCustom":true,"IsLeaf":true,"IsStandardFolder":false,"BusinessUnitId":{"Id":"","Name":"","objectTypeCode":"0","sobjectType":"0"},"OrganizationId":{"Id":"8d23d5e5-d7fb-445b-8e1b-66db56f2fd99","Name":"","objectTypeCode":"0","sobjectType":"0"}},"context":{"picklistValuesMap":{},"globalValueProviders":[{"type":"$Record","values":{"objectMetadata":{"ItemTree":{"_nameField":"Name","_entityLabel":"目录","_keyPrefix":"00l"}}}}],"appContextUser":{"userId":"2ec00cf2-a484-4136-8fef-e2a2719c5ed6","name":"jackliu45"}},"entity":{"ObjectTypeCode":100200,"EntityType":"00l"}}
+{
+  "status": 1,
+  "msg": "",
+  "id": "6e095e6e-bb8d-4c54-8495-e1ed1fd7b8de",
+  "entityLabel": "目录",
+  "keyPrefix": "00l",
+  "entityApiName": "ItemTree",
+  "record": {
+    "Name": "通用",
+    "CreatedBy": {
+      "Id": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "Name": "",
+      "objectTypeCode": "0",
+      "sobjectType": "0"
+    },
+    "CreatedOn": "2017-08-28 14:40:35",
+    "ModifiedBy": {
+      "Id": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "Name": "",
+      "objectTypeCode": "0",
+      "sobjectType": "0"
+    },
+    "ModifiedOn": "2020-11-17 09:35:38",
+    "Description": "",
+    "SortNumber": 1,
+    "ObjectTypeCode": 121,
+    "AllowComment": false,
+    "NeedCensor": false,
+    "ParentId": {
+      "Id": "",
+      "Name": "",
+      "objectTypeCode": "0",
+      "sobjectType": "0"
+    },
+    "IsPinned": false,
+    "DefaultFolders": false,
+    "IsPublic": true,
+    "IsCustom": true,
+    "IsLeaf": true,
+    "IsStandardFolder": false,
+    "BusinessUnitId": {
+      "Id": "",
+      "Name": "",
+      "objectTypeCode": "0",
+      "sobjectType": "0"
+    },
+    "OrganizationId": {
+      "Id": "8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+      "Name": "",
+      "objectTypeCode": "0",
+      "sobjectType": "0"
+    }
+  },
+  "context": {
+    "picklistValuesMap": {},
+    "globalValueProviders": [
+      {
+        "type": "$Record",
+        "values": {
+          "objectMetadata": {
+            "ItemTree": {
+              "_nameField": "Name",
+              "_entityLabel": "目录",
+              "_keyPrefix": "00l"
+            }
+          }
+        }
+      }
+    ],
+    "appContextUser": {
+      "userId": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "name": "jackliu45"
+    }
+  },
+  "entity": {
+    "ObjectTypeCode": 100200,
+    "EntityType": "00l"
+  }
+}

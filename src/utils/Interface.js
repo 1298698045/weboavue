@@ -162,7 +162,10 @@ const Interface = {
     steppri: "/localData/flow/process.steppri.get.json",
     savePerm: "/localData/flow/process.steppri.save.json",
     deptTree: "/localData/flow/tree.dept.get.json",
-    userList: "/localData/flow/user.search.json"
+    userList: "/localData/flow/user.search.json",
+    editFlowDefineDetail: "/localData/flow/entity.detail.get.editflowdefine.json",
+    editProcess: "/localData/flow/process.edit.json",
+    handlePeople: "/localData/flow/process.participantor.save.json", // 办理人员
   }
 };
 export default Interface;

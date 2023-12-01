@@ -63,19 +63,32 @@
 </template>
 <script setup>
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps,defineExpose,
-        defineEmits, h } from "vue";
+        defineEmits, h, computed } from "vue";
         import {
         EllipsisOutlined, PlusOutlined
     } from "@ant-design/icons-vue";
+    const emit = defineEmits(['params']);
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
         attributes: [],
         objectCodeList: [],
-        filterExpression: [],
         jsonFilter: [],
-        filterList: [],
+        filterList: [{
+            operator: "",
+            field: "",
+            logical: "",
+            operatorList: [],
+            operatorType: "",
+            dType: "",
+            value: "",
+            label: "",
+            Lktp: "",
+            options: [],
+            deptText: ""
+        }],
         isRadioDept: false,
+        filterExpression: [],
         filterIdx: '', // 记录筛选器下标
     });
     const { attributes, objectCodeList, filterExpression, jsonFilter, filterList, isRadioDept, filterIdx } = toRefs(data);
@@ -87,6 +100,30 @@
         });
     }
     getConfig();
+    watch(()=>data.filterList,(newVal,oldVal)=>{
+        console.log("newVal",newVal)
+        let result = [];
+        if (newVal && newVal.length > 0) {
+            newVal.forEach(function (v) {
+                let value = v.value;
+                if (!Array.isArray(v.value)) {
+                    value = [v.value];
+                }
+                result.push({
+                    logical: v.logical,
+                    attribute: v.field,
+                    label: v.label,
+                    operator: v.operator,
+                    operands: value,
+                    column: v.field
+                });
+            });
+        }
+        let filterExpression = JSON.stringify(result);
+        console.log("filterExpression",filterExpression);
+        data.filterExpression = filterExpression;
+        emit("params", filterExpression);
+    },{deep: true, immediate: true})
     const getLook = () => {
         proxy.$get(Interface.design.look, {
             Lktp: 100000

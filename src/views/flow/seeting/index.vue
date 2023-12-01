@@ -97,6 +97,7 @@
         </a-row>
       </div>
       <NewCategory v-if="isCategory" @cancel="cancelCategory" :isShow="isCategory" :id="treeId" ObjectTypeCode="流程" />
+      <EditFlowDefine v-if="isEditFlow" :isShow="isEditFlow" :id="id" @cancel="cancelEditFlowDefine" />
     </div>
   </template>
   <script setup>
@@ -112,7 +113,8 @@
   import Dtable from "@/components/Dtable.vue";
   import ListFormSearch from "@/components/ListFormSearch.vue";
 
-  import NewCategory from "@/components/workflow/NewCategory.vue"
+  import NewCategory from "@/components/workflow/NewCategory.vue";
+  import EditFlowDefine from "@/components/workflow/EditFlowDefine.vue";
   import { useRouter, useRoute } from "vue-router";
   const route = useRoute();
   const router = useRouter();
@@ -243,16 +245,18 @@
     isNew: false,
     searchVal: "",
     isCategory: false,
-    treeId: ""
+    treeId: "",
+    isEditFlow: false,
+    id: ""
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
   const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, searchVal,
-    isCategory, treeId} = toRefs(data);
+    isCategory, treeId, isEditFlow, id } = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
-  let formSearchHeight = ref(null);
+  let formSearchHeight = ref(null); 
   const gridRef = ref(null);
   onMounted(()=>{
     window.addEventListener('resize',changeHeight)
@@ -297,6 +301,11 @@
         }
       });
   }
+  const EditFlow = (id) => {
+    console.log("id",id);
+    data.id = id;
+    data.isEditFlow = true;
+  }
   const DelegateData = reactive({
     params: {}
   })
@@ -323,8 +332,7 @@
     data.isCirculation = true;
   }
   window.handleTo = handleTo;
-  window.DelegateFn = DelegateFn; // 委派
-  window.CirculationFn = CirculationFn; // 传阅
+  window.EditFlow = EditFlow;
   window.data = data;
   const formatStatus2 = (val, row, index) => {
     var value = row["StateCode"];
@@ -357,7 +365,7 @@
                 <div class="iconBox">
                   <div class="popup">
                     <div class="option-item" id=${row.WFRuleLogId} onclick="handleTo('${row.WFRuleLogId}')">权限设置</div>
-                    <div class="option-item" onclick="DelegateFn('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">编辑基本信息</div>  
+                    <div class="option-item" onclick="EditFlow('${row.LIST_RECORD_ID}')">编辑基本信息</div>  
                     <div class="option-item" onclick="CirculationFn('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">设计流程</div>  
                   </div>
                   <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
@@ -446,6 +454,9 @@
     }
     const cancelCategory = (e) => {
         data.isCategory = e;
+    };
+    const cancelEditFlowDefine = (e) => {
+        data.isEditFlow = e;
     }
   </script>
   <style lang="less" scoped>

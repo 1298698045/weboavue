@@ -196,7 +196,7 @@
                                 <a-radio value="P">来源节点</a-radio>
                             </a-radio-group>
                         </a-form-item>
-                        <FilterQuery></FilterQuery>
+                        <FilterQuery @params="getFilterQuery"></FilterQuery>
                     </div>
                 </div>
               </div>
@@ -262,11 +262,12 @@ import { formTreeData } from "@/utils/common.js";
     selectedKeys: [],
     deptId: [],
     searchVal: "",
-    disabled: false
+    disabled: false,
+    filterExpression: ""
   });
   const {
     title, searchVal, disabled,
-    height, treeData, deptId, entityRightList, tableRight, listData, targetKeys, selectedKeys
+    height, treeData, deptId, entityRightList, tableRight, listData, targetKeys, selectedKeys, filterExpression
   } = toRefs(data);
   const formState = reactive({
     peopleType: "U",
@@ -312,6 +313,10 @@ import { formTreeData } from "@/utils/common.js";
             getUserQuery();
         }else if(type=='A'){
             getRoleUser();
+        }else if(type=='P'){
+            getGroupQuery('public');
+        }else if(type=='R'){
+            getGroupQuery('owner');
         }
     }
     // 用户
@@ -338,12 +343,34 @@ import { formTreeData } from "@/utils/common.js";
         })
     }
     getRoleUser();
+    const getGroupQuery = (scope) => {
+        proxy.$get(Interface.user.groupList,{
+            scope: scope
+        }).then(res=>{
+            let str = '';
+            if(scope=='public'){
+                    str = '个人小组:';
+            }else {
+                str = '公共小组:';
+            }
+            data.listData = res.listData.map(item=>{
+                item.key = item.GroupId;
+                item.name = str + item.Name
+                return item;
+            });
+        })
+    }
   const getDetail = () => {
     proxy.$get(Interface.flow.treeDetail,{
         id: props.id,
         objTypeCode: 100200
     }).then(res=>{
     })
+  }
+  // 获取筛选器的数据
+  const getFilterQuery = (e) => {
+    console.log("e", e);
+    data.filterExpression = e;
   }
   const getFieldPerm = () => {
      proxy.$get(Interface.flow.steppri,{
