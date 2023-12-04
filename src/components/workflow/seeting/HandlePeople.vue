@@ -75,49 +75,49 @@
                 <div class="sectionTitle">流程变量</div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="checked0" label="发起人">
-                          <a-checkbox v-model:checked="formState.checked0"></a-checkbox>
+                        <a-form-item label="发起人">
+                          <a-checkbox v-model:checked="formState.Variables.checked0.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="checked1" label="流程参与人">
-                          <a-checkbox v-model:checked="formState.checked1"></a-checkbox>
-                        </a-form-item>
-                    </div>
-                </div>
-                <div class="sectionRow">
-                    <div class="sectionItem">
-                        <a-form-item name="checked2" label="发起人部门负责人">
-                          <a-checkbox v-model:checked="formState.checked2"></a-checkbox>
-                        </a-form-item>
-                    </div>
-                    <div class="sectionItem">
-                        <a-form-item name="checked3" label="发起人部门分管领导">
-                          <a-checkbox v-model:checked="formState.checked3"></a-checkbox>
+                        <a-form-item label="流程参与人">
+                          <a-checkbox v-model:checked="formState.Variables.checked1.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="checked4" label="与发起人相同部门人员">
-                          <a-checkbox v-model:checked="formState.checked4"></a-checkbox>
+                        <a-form-item label="发起人部门负责人">
+                          <a-checkbox v-model:checked="formState.Variables.checked2.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="checked5" label="主管部门负责人">
-                          <a-checkbox v-model:checked="formState.checked5"></a-checkbox>
+                        <a-form-item label="发起人部门分管领导">
+                          <a-checkbox v-model:checked="formState.Variables.checked3.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="checked6" label="发起人部门分管业务领导">
-                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        <a-form-item label="与发起人相同部门人员">
+                          <a-checkbox v-model:checked="formState.Variables.checked4.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="checked6" label="发起人的护士长">
-                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        <a-form-item label="主管部门负责人">
+                          <a-checkbox v-model:checked="formState.Variables.checked5.checkbox"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                </div>
+                <div class="sectionRow">
+                    <div class="sectionItem">
+                        <a-form-item label="发起人部门分管业务领导">
+                          <a-checkbox v-model:checked="formState.Variables.checked6.checkbox"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                    <div class="sectionItem">
+                        <a-form-item label="发起人的护士长">
+                          <a-checkbox v-model:checked="formState.Variables.checked7.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
@@ -138,49 +138,49 @@
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="checked6" label="来源节点相同办理人员">
-                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        <a-form-item label="来源节点相同办理人员">
+                          <a-checkbox v-model:checked="formState.StepVariables.checked0.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="checked6" label="来源节点办理人的部门负责人">
-                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
-                        </a-form-item>
-                    </div>
-                </div>
-                <div class="sectionRow">
-                    <div class="sectionItem">
-                        <a-form-item name="checked6" label="来源节点办理人的部门分管领导">
-                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
-                        </a-form-item>
-                    </div>
-                    <div class="sectionItem">
-                        <a-form-item name="checked6" label="来源节点办理人的部门人员">
-                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        <a-form-item label="来源节点办理人的部门负责人">
+                          <a-checkbox v-model:checked="formState.StepVariables.checked1.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="checked6" label="来源节点办理人的部门的相同岗位类别人员">
-                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        <a-form-item label="来源节点办理人的部门分管领导">
+                          <a-checkbox v-model:checked="formState.StepVariables.checked2.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="checked6" label="来源节点办理人的部门的相同职务人员">
-                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        <a-form-item label="来源节点办理人的部门人员">
+                          <a-checkbox v-model:checked="formState.StepVariables.checked3.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="checked6" label="来源节点办理人的部门的相同职称人员">
-                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        <a-form-item label="来源节点办理人的部门的相同岗位类别人员">
+                          <a-checkbox v-model:checked="formState.StepVariables.checked4.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="checked6" label="来源节点办理人的护士长">
-                          <a-checkbox v-model:checked="formState.checked6"></a-checkbox>
+                        <a-form-item label="来源节点办理人的部门的相同职务人员">
+                          <a-checkbox v-model:checked="formState.StepVariables.checked5.checkbox"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                </div>
+                <div class="sectionRow">
+                    <div class="sectionItem">
+                        <a-form-item label="来源节点办理人的部门的相同职称人员">
+                          <a-checkbox v-model:checked="formState.StepVariables.checked6.checkbox"></a-checkbox>
+                        </a-form-item>
+                    </div>
+                    <div class="sectionItem">
+                        <a-form-item label="来源节点办理人的护士长">
+                          <a-checkbox v-model:checked="formState.StepVariables.checked7.checkbox"></a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
@@ -190,10 +190,10 @@
                 <div class="sectionRow">
                     <div class="sectionItem">
                         <a-form-item name="name" label="查询范围">
-                            <a-radio-group>
-                                <a-radio value="U">全部</a-radio>
-                                <a-radio value="A">发起人所在部门</a-radio>
-                                <a-radio value="P">来源节点</a-radio>
+                            <a-radio-group v-model:value="formState.scope">
+                                <a-radio value="all">全部</a-radio>
+                                <a-radio value="draftby">发起人所在部门</a-radio>
+                                <a-radio value="step">来源节点</a-radio>
                             </a-radio-group>
                         </a-form-item>
                         <FilterQuery @params="getFilterQuery"></FilterQuery>
@@ -225,6 +225,7 @@
     defineExpose,
     defineEmits,
     toRaw,
+    inject
   } from "vue";
   import {
     SearchOutlined,
@@ -244,7 +245,8 @@ import { formTreeData } from "@/utils/common.js";
     folderPicker: String,
     ObjectTypeCode: String,
     id: String,
-    stepId: String
+    stepId: String,
+    stepCode: String
   });
   const formRef = ref();
   const emit = defineEmits(["cancel"]);
@@ -263,22 +265,102 @@ import { formTreeData } from "@/utils/common.js";
     deptId: [],
     searchVal: "",
     disabled: false,
-    filterExpression: ""
+    filterExpression: "",
+    processId: inject("processId")
+    
   });
   const {
-    title, searchVal, disabled,
+    title, searchVal, disabled, processId,
     height, treeData, deptId, entityRightList, tableRight, listData, targetKeys, selectedKeys, filterExpression
   } = toRefs(data);
   const formState = reactive({
     peopleType: "U",
     name: "",
-    checked0: false,
-    checked1: false,
-    checked2: false,
-    checked3: false,
-    checked4: false,
-    checked5: false,
-    checked6: false,
+    Variables: {
+        checked0: {
+            checkbox: false,
+            name: "发起人",
+            value: "00000000-0000-0000-0000-000000000001"
+        },
+        checked1: {
+            checkbox: false,
+            name: "流程参与人",
+            value: "00000000-0000-0000-0000-000000000002"
+        },
+        checked2: {
+            checkbox: false,
+            name: "发起人部门负责人",
+            value: "00000000-0000-0000-0000-000000000003"
+        },
+        checked3: {
+            checkbox: false,
+            name: "发起人部门分管领导",
+            value: "00000000-0000-0000-0000-000000000004"
+        },
+        checked4: {
+            checkbox: false,
+            name: "与发起人相同部门人员",
+            value: "00000000-0000-0000-0000-000000000006"
+        },
+        checked5: {
+            checkbox: false,
+            name: "主管部门负责人",
+            value: "00000000-0000-0000-0000-000000000007"
+        },
+        checked6: {
+            checkbox: false,
+            name: "发起人部门分管业务领导",
+            value: "00000000-0000-0000-0000-000000000041"
+        },
+        checked7: {
+            checkbox: false,
+            name: "发起人的护士长",
+            value: "00000000-0000-0000-0000-000000000020"
+        },
+    },
+    StepVariables: {
+        checked0: {
+            checkbox: false,
+            name: "来源节点相同办理人员",
+            value: "00000000-0000-0000-0000-000000000042"
+        },
+        checked1: {
+            checkbox: false,
+            name: "来源节点办理人的部门负责人",
+            value: "00000000-0000-0000-0000-000000000043"
+        },
+        checked2: {
+            checkbox: false,
+            name: "来源节点办理人的部门分管领导",
+            value: "00000000-0000-0000-0000-000000000044"
+        },
+        checked3: {
+            checkbox: false,
+            name: "来源节点办理人的部门人员",
+            value: "00000000-0000-0000-0000-000000000045"
+        },
+        checked4: {
+            checkbox: false,
+            name: "来源节点办理人的部门的相同岗位类别人员",
+            value: "00000000-0000-0000-0000-000000000046"
+        },
+        checked5: {
+            checkbox: false,
+            name: "来源节点办理人的部门的相同职务人员",
+            value: "00000000-0000-0000-0000-000000000047"
+        },
+        checked6: {
+            checkbox: false,
+            name: "来源节点办理人的部门的相同职称人员",
+            value: "00000000-0000-0000-0000-000000000048"
+        },
+        checked7: {
+            checkbox: false,
+            name: "来源节点办理人的护士长",
+            value: "00000000-0000-0000-0000-000000000060"
+        },
+    },
+    scope: "all"
   });
 
   const onSearch = (e) => {
@@ -310,12 +392,16 @@ import { formTreeData } from "@/utils/common.js";
         console.log("e",formState.peopleType);
         let type = formState.peopleType;
         if(type=='U'){
+            // 8
             getUserQuery();
         }else if(type=='A'){
+            // 1036
             getRoleUser();
         }else if(type=='P'){
+            // 9
             getGroupQuery('public');
         }else if(type=='R'){
+            // 9
             getGroupQuery('owner');
         }
     }
@@ -325,8 +411,8 @@ import { formTreeData } from "@/utils/common.js";
             businessUnitId: deptId
         }).then(res=>{
             data.listData = res.listData.map(item=>{
-                item.key = item.systemUserId;
-                item.name = item.userName;
+                item.key = '8:' + item.systemUserId;
+                item.name = '用户:'+item.fullName+'/'+item.BusinessUnitIdName;
                 return item;
             });
         })
@@ -336,13 +422,13 @@ import { formTreeData } from "@/utils/common.js";
         proxy.$get(Interface.user.roleUser,{
         }).then(res=>{
             data.listData = res.listData.map(item=>{
-                item.key = item.RoleId;
+                item.key = '1036:'+item.RoleId;
                 item.name = '角色:' + item.Name
                 return item;
             });
         })
     }
-    getRoleUser();
+    getUserQuery();
     const getGroupQuery = (scope) => {
         proxy.$get(Interface.user.groupList,{
             scope: scope
@@ -354,55 +440,46 @@ import { formTreeData } from "@/utils/common.js";
                 str = '公共小组:';
             }
             data.listData = res.listData.map(item=>{
-                item.key = item.GroupId;
+                item.key = '9:'+item.GroupId;
                 item.name = str + item.Name
                 return item;
             });
         })
     }
-  const getDetail = () => {
-    proxy.$get(Interface.flow.treeDetail,{
-        id: props.id,
-        objTypeCode: 100200
-    }).then(res=>{
-    })
-  }
+    const getDetail = () => {
+        proxy.$get(Interface.flow.handleDetail,{
+            ProcessId: data.processId,
+            StepId: props.stepId,
+            StepCode: props.stepCode
+        }).then(res=>{
+            let Variables = res.Variables;
+            Variables.forEach(item=>{
+                for(let key in formState.Variables){
+                    if(item.Id==formState.Variables[key].value){
+                        formState.Variables[key].checkbox = true;
+                    }
+                }
+            });
+            let StepVariables = res.StepVariables;
+            StepVariables.Variables.forEach(item=>{
+                for(let key in formState.StepVariables){
+                    if(item.Id==formState.StepVariables[key].value){
+                        formState.StepVariables[key].checkbox = true;
+                    }
+                }
+            })
+            let Groups = res.Groups;
+            Groups.forEach(item=>{
+                data.targetKeys.push(item.ObjectTypeCode+':'+item.Id);
+            })
+            formState.scope = res.FilterScope.Scope;
+        })
+    }
+  getDetail();
   // 获取筛选器的数据
   const getFilterQuery = (e) => {
     console.log("e", e);
     data.filterExpression = e;
-  }
-  const getFieldPerm = () => {
-     proxy.$get(Interface.flow.steppri,{
-        processId: "",
-        stepId: props.stepId
-     }).then(res=>{
-        data.entityRightList = res.EntityRight;
-        // data.tableRight = res.Rights?.TableRights;
-        for(let i = 0; i < data.entityRightList.length; i++){
-            data.entityRightList[i].right = '4';
-            for (var j = 0; j < data.entityRightList[i].FieldRight.length; j++) {
-                if (data.entityRightList[data.entityRightList[i].Name + '~' + data.entityRightList[i].FieldRight[j].Name]) {
-                    data.entityRightList[i].FieldRight[j].right = data.entityRightList[data.entityRightList[i].Name + '~' + data.entityRightList[i].FieldRight[j].Name];
-                }
-                data.entityRightList[i].FieldRight[j].Permission = data.entityRightList[i].FieldRight[j].Permission || '4';
-            }
-            // if (data.tableRight && data.tableRight != 'undefined') {
-                data.tableRight[data.entityRightList[i].Name + '_add'] = data.tableRight[data.entityRightList[i].Name + '_add'] && Number(data.tableRight[data.entityRightList[i].Name + '_add']) ? true : false;
-                data.tableRight[data.entityRightList[i].Name + '_delete'] = data.tableRight[data.entityRightList[i].Name + '_delete'] && Number(data.tableRight[data.entityRightList[i].Name + '_delete']) ? true : false;
-                data.tableRight[data.entityRightList[i].Name + '_list'] = data.tableRight[data.entityRightList[i].Name + '_list'] && Number(data.tableRight[data.entityRightList[i].Name + '_list']) ? true : false;
-                data.tableRight[data.entityRightList[i].Name + '_required'] = data.tableRight[data.entityRightList[i].Name + '_required'] && Number(data.tableRight[data.entityRightList[i].Name + '_required']) ? true : false;
-            // }
-            console.log("tableRight:", data.tableRight)
-        }
-     })
-  }
-  getFieldPerm();
-  const changeItemRight = (e, item) => {
-    console.log(e,item);
-    item.FieldRight.forEach(row=>{
-        row.Permission = e;
-    })
   }
   onMounted(() => {
     window.addEventListener("resize", (e) => {
@@ -415,39 +492,63 @@ import { formTreeData } from "@/utils/common.js";
       .validate()
       .then(() => {
         console.log("values", formState, toRaw(formState));
-        let flowRights = [];
-        let fieldRight = {};
-        let TableRight = {};
+        let Variables = [];
+        let StepVariables = [];
         for (var i = 0; i < 7; i++) {
-            if (formState['checked' + i]) {
-                flowRights.push(1)
-            } else {
-                flowRights.push(0)
+            if (formState.Variables['checked' + i].checkbox) {
+                Variables.push({
+                    Id: formState.Variables['checked' + i].value,
+                    Name: formState.Variables['checked' + i].name
+                })
+            }
+            if (formState.StepVariables['checked' + i].checkbox) {
+                StepVariables.push({
+                    Id: formState.Variables['checked' + i].value,
+                    Name: formState.Variables['checked' + i].name
+                })
             }
         }
-        if (data.entityRightList && data.entityRightList.length) {
-            for (var i = 0; i < data.entityRightList.length; i++) {
-                for (var j = 0; j < data.entityRightList[i].FieldRight.length; j++) {
-                    fieldRight[data.entityRightList[i].Name + '~' + data.entityRightList[i].FieldRight[j].FieldName] = data.entityRightList[i].FieldRight[j].Permission
+        console.log("Variables:",Variables);
+        console.log("StepVariables:", StepVariables);
+        console.log("targetKeys:", data.targetKeys, data.listData);
+        let Groups = [];
+        data.listData.forEach(item=>{
+            data.targetKeys.forEach(row=>{
+                if(item.key == row){
+                    Groups.push({
+                        Id: item.key.split(":")[1],
+                        ObjectTypeCode: item.key.split(":")[0],
+                        Name: item.name
+                    })
                 }
-                TableRight[data.entityRightList[i].Name + '_add'] = data.tableRight[data.entityRightList[i].Name + '_add'] ? 1 : 0;
-                TableRight[data.entityRightList[i].Name + '_delete'] = data.tableRight[data.entityRightList[i].Name + '_delete'] ? 1 : 0;
-                TableRight[data.entityRightList[i].Name + '_list'] = data.tableRight[data.entityRightList[i].Name + '_list'] ? 1 : 0;
-                TableRight[data.entityRightList[i].Name + '_required'] = data.tableRight[data.entityRightList[i].Name + '_required'] ? 1 : 0;
-            }
-        }
-        fieldRight = JSON.stringify(fieldRight)
-        TableRight = JSON.stringify(TableRight)
+            })
+        })
         let obj = {
-            processId: "",
-            stepId: props.stepId,
-            docRight1: formState.docRight1,
-            docRight2: formState.docRight2,
-            flowRights: flowRights.join("_"),
-            fieldRight: fieldRight,
-            TableRight: TableRight
+            Participantors: {
+                StepId: props.stepId,
+                StepCode: props.stepCode,
+                ProcessId: data.processId,
+                Name: "",
+                Variables : Variables,
+                StepVariables: {
+                    Name: "",
+                    FromStepId: "",
+                    Variables: StepVariables
+                },
+                Groups: Groups,
+                FilterExpresssion: data.filterExpression,
+                FilterScope: {
+                    FromStepId: "",
+                    FromStepName: "",
+                    Scope: formState.scope
+                }
+            }
         };
-        proxy.$get(Interface.flow.savePerm, obj).then((res) => {
+        let params = {
+            messages: JSON.stringify(obj)
+        };
+        
+        proxy.$get(Interface.flow.savePerm, params).then((res) => {
             message.success("保存成功！");
             emit("cancel", false);
         });

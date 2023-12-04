@@ -29,7 +29,7 @@
                     </template>
                     <template v-if="column.dataIndex === 'Action'">
                       <a-button type="text" size="small" @click="handlePerm(record)">权限</a-button>
-                      <a-button type="text" size="small">办理人员</a-button>
+                      <a-button type="text" size="small" @click="handlePeopleOpen(record)">办理人员</a-button>
                       <a-button type="text" size="small">预览人员</a-button>
                     </template>
                   </template>
@@ -37,7 +37,7 @@
             </div>
         </div>
         <PermSeeting v-if="isPerm" :isShow="isPerm" :stepId="stepId" @cancel="cancelPerm"></PermSeeting>
-        <HandlePeople v-if="isHandlePeople" :isShow="isHandlePeople" />
+        <HandlePeople v-if="isHandlePeople" :isShow="isHandlePeople" @cancel="cancelPeople" :stepId="stepId" :stepCode="stepCode" />
     </div>
 </template>
 <script setup>
@@ -77,7 +77,8 @@
         listData: [],
         isPerm: false,
         stepId: "",
-        isHandlePeople: true
+        isHandlePeople: false,
+        stepCode: ""
     })
     const formState = reactive({
         name: "",
@@ -85,7 +86,7 @@
         depart: "",
         
     })
-    const { listData, isPerm, stepId, isHandlePeople } = toRefs(data);
+    const { listData, isPerm, stepId, isHandlePeople, stepCode } = toRefs(data);
     const columnList = toRaw(columns);
     const loadList = () => {
       proxy.$get(Interface.flow.stepList,{
@@ -101,8 +102,17 @@
         data.stepId = item.id;
         data.isPerm = true;
     }
+    // 办理人员
+    const handlePeopleOpen = (item) => {
+        data.stepId = item.id;
+        data.stepCode = item.stepCode;
+        data.isHandlePeople = true;
+    }
     const cancelPerm = (e) => {
         data.isPerm = e;
+    }
+    const cancelPeople = (e) => {
+        data.isHandlePeople = e;
     }
 </script>
 <style lang="less">

@@ -166,6 +166,7 @@
     defineExpose,
     defineEmits,
     toRaw,
+    inject
   } from "vue";
   import {
     SearchOutlined,
@@ -196,11 +197,12 @@
     height: document.documentElement.clientHeight - 300,
     treeData: [],
     entityRightList: [],
-    tableRight: {}
+    tableRight: {},
+    processId: inject("processId")
   });
   const {
     title,
-    height, treeData, entityRightList, tableRight
+    height, treeData, entityRightList, tableRight, processId
   } = toRefs(data);
   const formState = reactive({
     docRight1: '4',
@@ -238,7 +240,7 @@
         formState.ParentId = [selectedNodes.node.id];
     }
   const getDetail = () => {
-    proxy.$get(Interface.flow.treeDetail,{
+    proxy.$get(Interface.flow.handleDetail,{
         id: props.id,
         objTypeCode: 100200
     }).then(res=>{
@@ -246,7 +248,7 @@
   }
   const getFieldPerm = () => {
      proxy.$get(Interface.flow.steppri,{
-        processId: "",
+        processId: data.processId,
         stepId: props.stepId
      }).then(res=>{
         data.entityRightList = res.EntityRight;
@@ -281,7 +283,6 @@
       data.height = document.documentElement.clientHeight - 300;
     });
   });
-  
   const handleSubmit = () => {
     formRef.value
       .validate()
@@ -311,7 +312,7 @@
         fieldRight = JSON.stringify(fieldRight)
         TableRight = JSON.stringify(TableRight)
         let obj = {
-            processId: "",
+            processId: data.processId,
             stepId: props.stepId,
             docRight1: formState.docRight1,
             docRight2: formState.docRight2,

@@ -166,6 +166,7 @@ const Interface = {
     editFlowDefineDetail: "/localData/flow/entity.detail.get.editflowdefine.json",
     editProcess: "/localData/flow/process.edit.json",
     handlePeople: "/localData/flow/process.participantor.save.json", // 办理人员
+    handleDetail: "/localData/flow/process.participantor.getlist.json", // 办理人员详情
   }
 };
 export default Interface;

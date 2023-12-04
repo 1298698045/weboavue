@@ -73,6 +73,8 @@
     getCurrentInstance,
     defineEmits,
     toRaw,
+    provide,
+    inject
   } from "vue";
   import {
     UnorderedListOutlined,
@@ -134,6 +136,7 @@
     fileCategorys: [],
     files: [],
   });
+  provide("processId", data.id || '123')
   const {
     tabs,
     activeKey,
