@@ -1,0 +1,544 @@
+[
+  {
+    "ItemId": "6e095e6e-bb8d-4c54-8495-e1ed1fd7b8de",
+    "ParentId": null,
+    "ItemName": "通用",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "9ee8cef8-875b-4fac-992d-16d0526fb6cf",
+        "ProcessId": "29666c1a-a65c-4956-8460-88ce9588ba08",
+        "Name": "01 请示报告",
+        "DisplayName": "",
+        "EntityType": "09A",
+        "ObjectTypeCode": 100119
+      }
+    ]
+  },
+  {
+    "ItemId": "1e9eaeb1-6331-44ef-b501-e84571af28ec",
+    "ParentId": null,
+    "ItemName": "1",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": []
+  },
+  {
+    "ItemId": "b643d297-4a2d-405d-905d-dedfb887c4f6",
+    "ParentId": null,
+    "ItemName": "办公室",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "81d7abc5-d622-4e44-983b-0f6e525c4de8",
+        "ProcessId": "7726a9e2-40dc-4b04-a358-0269a35e3901",
+        "Name": "09 院长办公会决议实施登记表",
+        "DisplayName": "",
+        "EntityType": "",
+        "ObjectTypeCode": 20270
+      },
+      {
+        "EntityId": "039b2efd-50e3-453d-9664-f64a2cd14d71",
+        "ProcessId": "00f53700-78e5-404f-b860-0e46279871d0",
+        "Name": "03 发文流程",
+        "DisplayName": "",
+        "EntityType": "A09",
+        "ObjectTypeCode": 100109
+      },
+      {
+        "EntityId": "394f21c0-9993-4110-bccc-8db4aeefada0",
+        "ProcessId": "b5478cd3-22a6-47e9-a121-3e106e65286e",
+        "Name": "院议题申请流程",
+        "DisplayName": "",
+        "EntityType": "00W",
+        "ObjectTypeCode": 5001
+      },
+      {
+        "EntityId": "8a0cfa6b-a95d-421f-9a0f-e8818b223a00",
+        "ProcessId": "2134b046-24f9-4e87-88e0-7d8946306f79",
+        "Name": "02 上级通知转办",
+        "DisplayName": "",
+        "EntityType": "A10",
+        "ObjectTypeCode": 100110
+      },
+      {
+        "EntityId": "63f359f1-8fb4-427f-bc15-4ba212a85a31",
+        "ProcessId": "bae13105-4284-4da8-80c9-8b4c24b4b89b",
+        "Name": "合同变更流程12",
+        "DisplayName": "",
+        "EntityType": "C93",
+        "ObjectTypeCode": 10189
+      },
+      {
+        "EntityId": "1db121a9-7d01-4a0b-8a8a-bb398dfc99a5",
+        "ProcessId": "fe7d683b-0554-434e-a909-db77614ddc46",
+        "Name": "工作餐申请",
+        "DisplayName": "",
+        "EntityType": "oa0",
+        "ObjectTypeCode": 20143
+      },
+      {
+        "EntityId": "9ee8cef8-875b-4fac-992d-16d0526fb6cf",
+        "ProcessId": "ab81fcf3-54cc-46c7-a8fd-f7dec5f25d05",
+        "Name": "08 政务信息",
+        "DisplayName": "",
+        "EntityType": "09A",
+        "ObjectTypeCode": 100119
+      },
+      {
+        "EntityId": "cb8ceecd-0abe-4804-941d-f012321fd68c",
+        "ProcessId": "712d438f-ac5e-4573-8b70-e1776a13d028",
+        "Name": "用章申请",
+        "DisplayName": "",
+        "EntityType": "A07",
+        "ObjectTypeCode": 20054
+      },
+      {
+        "EntityId": "bf38e766-bfa0-4083-a307-221e8d66865a",
+        "ProcessId": "a8829c37-733c-4f82-bf57-73b8c69b05bf",
+        "Name": "上级来文办理",
+        "DisplayName": "",
+        "EntityType": "A08",
+        "ObjectTypeCode": 100108
+      },
+      {
+        "EntityId": "039b2efd-50e3-453d-9664-f64a2cd14d71",
+        "ProcessId": "c13ed09d-74b9-4812-97ef-130309206bec",
+        "Name": "04 院内下发文",
+        "DisplayName": "",
+        "EntityType": "A09",
+        "ObjectTypeCode": 100109
+      }
+    ]
+  },
+  {
+    "ItemId": "bc192eeb-b57f-4701-9d9d-79275c7a29e1",
+    "ParentId": null,
+    "ItemName": "财务科",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "4264139b-f79b-4d56-ade6-3a1368599c37",
+        "ProcessId": "83977c93-14a8-4fed-a664-5bc3ae3a4583",
+        "Name": "03 医院费用报销流程",
+        "DisplayName": "",
+        "EntityType": "",
+        "ObjectTypeCode": 20172
+      },
+      {
+        "EntityId": "1254235e-128a-46e5-9b7d-6e523ff8ba23",
+        "ProcessId": "a3a2bcb7-d841-4786-9854-a51cd02ade93",
+        "Name": "02 差旅费报销流程",
+        "DisplayName": "",
+        "EntityType": "F05",
+        "ObjectTypeCode": 7005
+      }
+    ]
+  },
+  {
+    "ItemId": "081cf0b8-a1a8-42e6-8ee1-58fbf4b62720",
+    "ParentId": null,
+    "ItemName": "人事科",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "fa2151b2-7988-4e73-9640-3c5fb7a7ad14",
+        "ProcessId": "4dcc01bf-27ed-4032-bcc1-6bb528f2d393",
+        "Name": "合同人员续签考评表",
+        "DisplayName": "",
+        "EntityType": "a0b",
+        "ObjectTypeCode": 30062
+      },
+      {
+        "EntityId": "7c22c32b-4993-4d3a-89ee-17426bf6d122",
+        "ProcessId": "78760cdc-81dd-41e5-85a3-9cb70dbf7d7b",
+        "Name": "10 加班登记",
+        "DisplayName": "",
+        "EntityType": "a0R",
+        "ObjectTypeCode": 30037
+      },
+      {
+        "EntityId": "fe039765-8fb8-402b-beac-a38ba0a38db7",
+        "ProcessId": "7915948e-1f4e-40e5-a173-e7d57b570f1b",
+        "Name": "员工退休申请表",
+        "DisplayName": "",
+        "EntityType": "a1F",
+        "ObjectTypeCode": 30271
+      },
+      {
+        "EntityId": "99b6180e-c6cc-4240-a629-66f2c6b08683",
+        "ProcessId": "816faef4-9a3b-409b-9a14-eab0a30a1ab9",
+        "Name": "人事合同签订",
+        "DisplayName": "",
+        "EntityType": "a0a",
+        "ObjectTypeCode": 30060
+      },
+      {
+        "EntityId": "fb5f8a76-8ee4-420d-8fef-edd518587a06",
+        "ProcessId": "3cd81295-6018-4f5b-81b8-eee43ec1b5f7",
+        "Name": "退休人员返聘流程",
+        "DisplayName": "",
+        "EntityType": "",
+        "ObjectTypeCode": 30276
+      },
+      {
+        "EntityId": "23017e65-72f4-49b6-8942-1fee0f8a4775",
+        "ProcessId": "015230e9-1d58-4276-b733-11e572dbcd0f",
+        "Name": "出国申请",
+        "DisplayName": "",
+        "EntityType": "A06",
+        "ObjectTypeCode": 20191
+      },
+      {
+        "EntityId": "c0c6aa9c-dcac-4ce1-8794-e846a52df131",
+        "ProcessId": "2442350c-257f-446d-9a44-28a31bfb6ccb",
+        "Name": "01 请假单",
+        "DisplayName": "",
+        "EntityType": "a0T",
+        "ObjectTypeCode": 30022
+      }
+    ]
+  },
+  {
+    "ItemId": "1b93af89-e680-4b03-810e-dc7a67a4e6a0",
+    "ParentId": null,
+    "ItemName": "人事考核",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "1c4d193d-cf82-4a73-be8a-caf4f2cef429",
+        "ProcessId": "71894ced-8dd1-45fb-884f-4adf7af91e3f",
+        "Name": "人员年度考评表（专业技术）",
+        "DisplayName": "",
+        "EntityType": "a5B",
+        "ObjectTypeCode": 30258
+      },
+      {
+        "EntityId": "1c4d193d-cf82-4a73-be8a-caf4f2cef429",
+        "ProcessId": "f7339e9e-ae04-4376-a88f-8765aba66e82",
+        "Name": "人员年度考评表（管理）",
+        "DisplayName": "",
+        "EntityType": "a5B",
+        "ObjectTypeCode": 30258
+      }
+    ]
+  },
+  {
+    "ItemId": "c6707ace-50a5-469e-96ca-b2956b5ac59d",
+    "ParentId": null,
+    "ItemName": "合同管理",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "741b2843-e4c2-404f-b99d-a786a3871973",
+        "ProcessId": "a39549b4-6f8f-44fd-93c1-6455b845f765",
+        "Name": "合同会签单",
+        "DisplayName": "",
+        "EntityType": "800",
+        "ObjectTypeCode": 1010
+      },
+      {
+        "EntityId": "0560e147-782f-4800-9f03-d14f8a2d4484",
+        "ProcessId": "e494b32b-5a2a-4f02-8b3f-c9471e0a900a",
+        "Name": "合同付款单",
+        "DisplayName": "",
+        "EntityType": "C82",
+        "ObjectTypeCode": 10182
+      },
+      {
+        "EntityId": "d7da4b9c-3628-48b5-bb2f-1c68a9c0f658",
+        "ProcessId": "d387bec8-5068-44c6-a57a-e5990ee5af1f",
+        "Name": "合同执行审计流程",
+        "DisplayName": "",
+        "EntityType": "C85",
+        "ObjectTypeCode": 10185
+      }
+    ]
+  },
+  {
+    "ItemId": "b2ba4400-490c-49b9-8e2d-936e7487afba",
+    "ParentId": null,
+    "ItemName": "党委办公室",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "90ad5f20-ba45-43b6-bac0-f14897af0ac8",
+        "ProcessId": "e06e9931-8b19-461f-badc-b2ca6bf9cf65",
+        "Name": "02行文表单（发文）",
+        "DisplayName": "",
+        "EntityType": "C99",
+        "ObjectTypeCode": 10199
+      }
+    ]
+  },
+  {
+    "ItemId": "e196041e-6fc5-480d-9532-efa6557b0470",
+    "ParentId": null,
+    "ItemName": "纪检监察办",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "039b2efd-50e3-453d-9664-f64a2cd14d71",
+        "ProcessId": "67048108-16ac-469d-b8bd-c03930aa80a4",
+        "Name": "01 纪检文件制定",
+        "DisplayName": "",
+        "EntityType": "A09",
+        "ObjectTypeCode": 100109
+      },
+      {
+        "EntityId": "bf38e766-bfa0-4083-a307-221e8d66865a",
+        "ProcessId": "d0a7d693-dbbc-4e63-a45d-e2a9cf407d9c",
+        "Name": "02 纪检文件传阅",
+        "DisplayName": "",
+        "EntityType": "A08",
+        "ObjectTypeCode": 100108
+      },
+      {
+        "EntityId": "92cad0c0-1349-43b0-951c-1b2c953cda61",
+        "ProcessId": "63795d62-4324-4aa4-b34e-fcd8d7b5415e",
+        "Name": "03 纪检工作办理",
+        "DisplayName": "",
+        "EntityType": "",
+        "ObjectTypeCode": 20248
+      }
+    ]
+  },
+  {
+    "ItemId": "47531785-d73b-4127-82b8-3c6a3c10afe2",
+    "ParentId": null,
+    "ItemName": "信息中心",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": []
+  },
+  {
+    "ItemId": "44db8c73-9672-4004-b260-1c55649b53fa",
+    "ParentId": null,
+    "ItemName": "护理部",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": []
+  },
+  {
+    "ItemId": "8b4510b2-55f9-461e-9db7-d7af943bc404",
+    "ParentId": null,
+    "ItemName": "宣传",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": []
+  },
+  {
+    "ItemId": "6f96de03-f04b-47f8-a41a-ed5ef8f85973",
+    "ParentId": null,
+    "ItemName": "质管办",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "4b6d2c96-5d2f-4cbc-94a2-04d08bec1b94",
+        "ProcessId": "aa236dc9-cfa6-49be-a36d-fe6538ac1cd6",
+        "Name": "行政管理质量问题报告",
+        "DisplayName": "",
+        "EntityType": "",
+        "ObjectTypeCode": 20209
+      }
+    ]
+  },
+  {
+    "ItemId": "f4445382-3a1e-4a12-ab3a-2f4b5d51e393",
+    "ParentId": null,
+    "ItemName": "医务科",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": []
+  },
+  {
+    "ItemId": "45ffe49c-f5a1-4a80-a441-e611ee0ed334",
+    "ParentId": null,
+    "ItemName": "资产管理",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "5ba41158-8f52-4eeb-9593-bc20dbb7fccb",
+        "ProcessId": "de999486-3e39-4d66-9f6a-661884a05041",
+        "Name": "资产调拨申请",
+        "DisplayName": "",
+        "EntityType": "02m",
+        "ObjectTypeCode": 20137
+      },
+      {
+        "EntityId": "0c8239c5-84dc-4472-b989-4f2e2d1057ff",
+        "ProcessId": "9188a8a7-bee5-404c-a7de-8bfc800c0908",
+        "Name": "一般固定资产购置申请",
+        "DisplayName": "",
+        "EntityType": "02P",
+        "ObjectTypeCode": 20114
+      },
+      {
+        "EntityId": "58a06d79-9995-4b2d-ac20-e7c706d80265",
+        "ProcessId": "4452ad33-c804-48fd-abb8-e58ca084df2f",
+        "Name": "02 资产报废申请",
+        "DisplayName": "",
+        "EntityType": "02k",
+        "ObjectTypeCode": 20213
+      }
+    ]
+  },
+  {
+    "ItemId": "724baaa4-04d1-470c-a42d-14958edd189b",
+    "ParentId": null,
+    "ItemName": "档案管理",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "de9a7363-1ba6-4096-8456-0a044fcb9cde",
+        "ProcessId": "64990187-61d8-47b2-8484-463bfa41be90",
+        "Name": "档案借阅",
+        "DisplayName": "",
+        "EntityType": "a2D",
+        "ObjectTypeCode": 20083
+      }
+    ]
+  },
+  {
+    "ItemId": "1237ce7c-7018-4dd4-a096-46411188acdf",
+    "ParentId": null,
+    "ItemName": "医学工程处",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "295a5c11-5c16-4892-9e64-aac0b9085a6f",
+        "ProcessId": "398dcd2b-885d-4941-b6d1-d84511935021",
+        "Name": "01 物品采购申请",
+        "DisplayName": "",
+        "EntityType": "0Pm",
+        "ObjectTypeCode": 20045
+      }
+    ]
+  },
+  {
+    "ItemId": "c7d1fa63-5031-4407-a513-924e1f41157c",
+    "ParentId": null,
+    "ItemName": "科教科",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": []
+  },
+  {
+    "ItemId": "27d89091-5b36-4399-93a1-6c16b2d0dba9",
+    "ParentId": null,
+    "ItemName": "规划建设处",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "d7d29f9f-860f-4ea7-ad63-fcec604bf9dc",
+        "ProcessId": "0d3a3056-1c9e-4a75-8ce0-a63c85472dd2",
+        "Name": "01 住宿申请审批（学生、进修）",
+        "DisplayName": "",
+        "EntityType": "",
+        "ObjectTypeCode": 20210
+      },
+      {
+        "EntityId": "d7d29f9f-860f-4ea7-ad63-fcec604bf9dc",
+        "ProcessId": "3d3b9a46-f1d2-495b-9944-b3e5536bd9b7",
+        "Name": "02 住宿申请审批（外包人员）",
+        "DisplayName": "",
+        "EntityType": "",
+        "ObjectTypeCode": 20210
+      }
+    ]
+  },
+  {
+    "ItemId": "36c32504-9cae-4af6-b2cc-26a13392b270",
+    "ParentId": null,
+    "ItemName": "工作报表",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": [
+      {
+        "EntityId": "36d4c7f1-9889-478c-863b-8aca696d1515",
+        "ProcessId": "9d296f6a-a8f6-400f-a0a1-6197b3292421",
+        "Name": "06 功能检查科月报表",
+        "DisplayName": "",
+        "EntityType": "E22",
+        "ObjectTypeCode": 30236
+      },
+      {
+        "EntityId": "642e92ef-b794-2173-4881-b53e1e1b18b6",
+        "ProcessId": "aab32389-22bc-c25a-6f60-6eb525ffdc56",
+        "Name": "02 统计日报流程",
+        "DisplayName": "",
+        "EntityType": "h27",
+        "ObjectTypeCode": 40207
+      },
+      {
+        "EntityId": "642e92ef-b794-2173-4881-b53e1e1b18b6",
+        "ProcessId": "4e732ced-3463-d06d-e0ca-9a15b6153677",
+        "Name": "03 统计分析",
+        "DisplayName": "",
+        "EntityType": "h27",
+        "ObjectTypeCode": 40207
+      },
+      {
+        "EntityId": "a5888d68-8a3f-41dd-8a14-14d528db9bd0",
+        "ProcessId": "4bdcadab-ee10-48c1-9576-db3f3ab25a4e",
+        "Name": "01 京医通",
+        "DisplayName": "",
+        "EntityType": "h14",
+        "ObjectTypeCode": 30014
+      },
+      {
+        "EntityId": "67c6a1e7-ce56-d3d6-fa74-8ab6d9af3fd7",
+        "ProcessId": "c51ce410-c124-a10e-0db5-e4b97fc2af39",
+        "Name": "05 工娱科医疗月报",
+        "DisplayName": "",
+        "EntityType": "h25",
+        "ObjectTypeCode": 40205
+      },
+      {
+        "EntityId": "3295c76a-cbf4-caae-d33c-36b1b5fc2cb1",
+        "ProcessId": "d645920e-395f-edad-7bbb-ed0eca3fe2e0",
+        "Name": "04 医务处下属科室工作月报表",
+        "DisplayName": "",
+        "EntityType": "",
+        "ObjectTypeCode": 20242
+      }
+    ]
+  },
+  {
+    "ItemId": "8be4d3bb-95a2-4fa1-acdb-4b8dd7c5c9bb",
+    "ParentId": null,
+    "ItemName": "采购中心",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": []
+  },
+  {
+    "ItemId": "9aa02e03-a0a5-4405-b03c-5d59f0265362",
+    "ParentId": null,
+    "ItemName": "考勤",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": []
+  },
+  {
+    "ItemId": "458e3f41-35c5-4c02-b417-d1813bd28c11",
+    "ParentId": null,
+    "ItemName": "院感管理科",
+    "Children": null,
+    "ParentTree": null,
+    "ProcessFormInfo": []
+  }
+]

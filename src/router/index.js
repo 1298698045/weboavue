@@ -108,6 +108,33 @@ const routes = [
           icon: "caogaoxiang",
         },
       },
+      {
+        path: "/flow/workAdmin",
+        component: () => import("../views/flow/workAdmin/index.vue"),
+        name: "事务管理",
+        icon: "caogaoxiang",
+        meta: {
+          icon: "caogaoxiang",
+        },
+      },
+      {
+        path: "/flow/signatureAdmin",
+        component: () => import("../views/flow/signatureAdmin/index.vue"),
+        name: "签名管理",
+        icon: "caogaoxiang",
+        meta: {
+          icon: "caogaoxiang",
+        },
+      },
+      {
+        path: "/flow/formSearch",
+        component: () => import("../views/flow/formSearch/index.vue"),
+        name: "表单查询",
+        icon: "caogaoxiang",
+        meta: {
+          icon: "caogaoxiang",
+        },
+      },
       // {
       //   path: "/about",
       //   component: () => import("../views/About.vue"),

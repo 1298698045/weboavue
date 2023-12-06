@@ -53,6 +53,9 @@
                             <a-input v-model:value="filter.value"></a-input>
                         </div>
                     </a-form-item>
+                    <div class="deleteIcon">
+                        <DeleteOutlined @click="handleDelFilter(filter,filterIdx)" />
+                    </div>
                 </a-form>
             </div>
         </div>
@@ -65,8 +68,11 @@
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps,defineExpose,
         defineEmits, h, computed } from "vue";
         import {
-        EllipsisOutlined, PlusOutlined
+        EllipsisOutlined, PlusOutlined, DeleteOutlined
     } from "@ant-design/icons-vue";
+    const props = defineProps({
+        FilterExpresssionList: Array
+    })
     const emit = defineEmits(['params']);
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
@@ -140,6 +146,55 @@
             filter.options = response.listData;
         })
     }
+    const getFilterList = () => {
+        if(props.FilterExpresssionList.length){
+            data.filterList = [];
+            let item = {};
+            props.FilterExpresssionList.forEach(v=>{
+                var operatorList = getOperator(v.attribute, item);
+                var dType = getDType(v.attribute, item);
+                var operatorType = getOperatorType(v.operator, operatorList, item);
+                var Lktp = getLktp(v.attribute, item);
+                var options = [];
+                if (Lktp == '' && dType == 'BusinessUnit') {
+                    Lktp = 10;
+                }
+                if (Lktp && dType == 'BusinessUnit' || dType == 'User' || dType == 'MasterDetail') {
+                    var response = getEntityLookup(Lktp)
+                    if (response) {
+                        options = response.listData;
+                    }
+                }
+                if (dType == 'Picklist' || dType == 'L') {
+                    options = getFilterValues(v.attribute, item)
+                }
+                if (dType == 'Picklist' || dType == 'L' || dType == 'BusinessUnit' || dType == 'User' || dType == 'MasterDetail') {
+
+                } else {
+                    if (v.operands && v.operands.length > 0) {
+                        v.operands = v.operands[0];
+                    }
+                    if (v.value && v.value.length > 0) {
+                        v.value = v.value[0];
+                    }
+                }
+                data.filterList.push({
+                    operator: v.operator,
+                    field: v.attribute,
+                    logical: v.logical,
+                    operatorList: operatorList,
+                    operatorType: operatorType,
+                    dType: dType,
+                    value: v.operands || v.value,
+                    label: v.label,
+                    Lktp: Lktp,
+                    options: options,
+                    deptText: ''
+                })
+            })
+        }
+    }
+    
     const handleOpenLook = (filter, filterIdx) => {
         data.filterIdx = filterIdx;
         if (filter.Lktp == 8) {
@@ -228,6 +283,14 @@
         item.condition = '';
         item.value = '';
     }
+    watch(()=>props.FilterExpresssionList,(newVal,oldVal)=>{
+        if(newVal.length){
+            getFilterList();
+        }
+    })
+    const handleDelFilter = (filter,filterIdx) => {
+        data.filterList.splice(filterIdx, 1);
+    }
 </script>
 <style lang="less" scoped>
     .formItem {
@@ -265,5 +328,11 @@
         top: 3px;
         right: 10px;
         cursor: pointer;
+    }
+    .deleteIcon{
+        font-size: 18px;
+        cursor: pointer;
+        padding-top: 30px;
+        padding-left: 10px;
     }
 </style>

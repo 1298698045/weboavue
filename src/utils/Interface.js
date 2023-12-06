@@ -167,6 +167,9 @@ const Interface = {
     editProcess: "/localData/flow/process.edit.json",
     handlePeople: "/localData/flow/process.participantor.save.json", // 办理人员
     handleDetail: "/localData/flow/process.participantor.getlist.json", // 办理人员详情
+    workAdminList: "/localData/flow/entity.grid.search.json", // 事务管理列表
+    signature: "/localData/flow/process.signature.search.json", // 签名管理
+    permissionform: "/localData/flow/process.permissionform.get.json", // 表单查询
   }
 };
 export default Interface;

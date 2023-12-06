@@ -196,7 +196,7 @@
                                 <a-radio value="step">来源节点</a-radio>
                             </a-radio-group>
                         </a-form-item>
-                        <FilterQuery @params="getFilterQuery"></FilterQuery>
+                        <FilterQuery :FilterExpresssionList="FilterExpresssionList" @params="getFilterQuery"></FilterQuery>
                     </div>
                 </div>
               </div>
@@ -265,13 +265,14 @@ import { formTreeData } from "@/utils/common.js";
     deptId: [],
     searchVal: "",
     disabled: false,
+    FilterExpresssionList: [],
     filterExpression: "",
     processId: inject("processId")
     
   });
   const {
     title, searchVal, disabled, processId,
-    height, treeData, deptId, entityRightList, tableRight, listData, targetKeys, selectedKeys, filterExpression
+    height, treeData, deptId, entityRightList, tableRight, listData, targetKeys, selectedKeys, FilterExpresssionList, filterExpression
   } = toRefs(data);
   const formState = reactive({
     peopleType: "U",
@@ -473,6 +474,7 @@ import { formTreeData } from "@/utils/common.js";
                 data.targetKeys.push(item.ObjectTypeCode+':'+item.Id);
             })
             formState.scope = res.FilterScope.Scope;
+            data.FilterExpresssionList = res.FilterExpresssion;
         })
     }
   getDetail();

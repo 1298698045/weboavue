@@ -1,0 +1,36 @@
+{
+  "status": 1,
+  "rootPath": "D:\\MediaFiles\\20170904\\SignutureImgs",
+  "msg": "",
+  "total": 2,
+  "rows": [
+    {
+      "BusinessUnitId": "63a1820f-e332-4c71-bfb5-39677c7ecdd8",
+      "BusinessUnitIdName": "信息中心",
+      "FullName": "jackliu45",
+      "SignName": "jackliu | jackliu3",
+      "SignExtName": ".png",
+      "SignatureId": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "SystemUserID": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "CreatedON": "2023-09-22 11:50:06",
+      "ModifiedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "ModifiedOn": "2023-09-22 11:50:06",
+      "RowNumber": "1"
+    },
+    {
+      "BusinessUnitId": "63a1820f-e332-4c71-bfb5-39677c7ecdd8",
+      "BusinessUnitIdName": "信息中心",
+      "FullName": "张莉",
+      "SignName": "张莉",
+      "SignExtName": ".jpg",
+      "SignatureId": "26d24af4-a453-42c2-b197-dc70d18346f4",
+      "SystemUserID": "26d24af4-a453-42c2-b197-dc70d18346f4",
+      "CreatedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "CreatedON": "2023-05-15 11:29:42",
+      "ModifiedBy": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "ModifiedOn": "2023-05-15 11:29:42",
+      "RowNumber": "2"
+    }
+  ]
+}

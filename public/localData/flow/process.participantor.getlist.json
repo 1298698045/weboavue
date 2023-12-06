@@ -59,7 +59,23 @@
       "Name": "用户：崔彦强/部门测试"
     }
   ],
-  "FilterExpresssion": [],
+  "FilterExpresssion": [
+    {
+      "id": 0,
+      "sort": 0,
+      "label": "模块代码",
+      "column": "AppModule.ModuleId",
+      "attribute": "AppModule.ModuleId",
+      "dataType": "S",
+      "logical": "AND",
+      "operator": "gt",
+      "isEditable": false,
+      "operands": [
+        "32123"
+      ],
+      "picklistValues": []
+    }
+  ],
   "FilterScope": {
     "Scope": "all",
     "FromStepId": "",
