@@ -6,7 +6,7 @@
               <span class="headerTitle">流程管理</span>
           </div>
           <div class="headerRight">
-            <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
+            <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
           </div>
       </div>
       <div class="todo-content">
@@ -96,6 +96,14 @@
           </a-col>
         </a-row>
       </div>
+      <!-- 委派 -->
+        <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
+        <!-- 跳转 -->
+        <Jump v-if="isJump" :isShow="isJump" :paramsData="jumpData.params" @update-status="isJump=false" />
+        <!-- 加签 -->
+        <Countersign v-if="isCountersign" :isShow="isCountersign" :paramsData="CountersignData.params" @update-status="isCountersign=false"  />
+        <!-- 发布 -->
+        <ReleaseFlow v-if="isRelease" :isShow="isRelease" :id="ProcessInstanceId" @cancel="cancelRelase"></ReleaseFlow>
       <NewCategory v-if="isCategory" @cancel="cancelCategory" :isShow="isCategory" :id="treeId" ObjectTypeCode="流程" />
       <EditFlowDefine v-if="isEditFlow" :isShow="isEditFlow" :id="id" @cancel="cancelEditFlowDefine" />
     </div>
@@ -115,6 +123,10 @@
 
   import NewCategory from "@/components/workflow/NewCategory.vue";
   import EditFlowDefine from "@/components/workflow/EditFlowDefine.vue";
+  import Delegate from "@/components/workflow/Delegate.vue";
+  import Jump from "@/components/workflow/Jump.vue";
+  import Countersign from "@/components/workflow/Countersign.vue";
+  import ReleaseFlow from "@/components/workflow/ReleaseFlow.vue"
   import { useRouter, useRoute } from "vue-router";
   import useWorkAdmin from "@/utils/flow/workAdmin";
   const { tabList } = useWorkAdmin();
@@ -258,18 +270,22 @@
     queryParams: {},
     isModal: false,
     isCirculation: false,
-    isNew: false,
     searchVal: "",
     isCategory: false,
     treeId: "",
     isEditFlow: false,
-    id: ""
+    id: "",
+    isJump: false,
+    isCountersign: false,
+    isRelease: false,
+    ProcessInstanceId: ""
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
-  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, searchVal,
-    isCategory, treeId, isEditFlow, id } = toRefs(data);
+  
+  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
+    isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId } = toRefs(data);
 //   console.log("tabs", data.tabs);
   const tabContent = ref(null);
   const contentRef = ref(null);
@@ -292,7 +308,9 @@
     console.log('data',data.tableHeight);
     console.log("gridRef",gridRef.value.loadGrid())
   }
-  
+  const cancelRelase = (e) => {
+    data.isRelease = e;
+  }
   // 获取tabs
   const getTabs = () => {
     proxy.$get(Interface.todoList.tabs,{
@@ -329,6 +347,12 @@
   const CirculationData = reactive({
     params: {}
   })
+  const jumpData = reactive({
+    params: {}
+  })
+  const CountersignData = reactive({
+    params: {}
+  })
   const updateStatus = (e) => {
     data.isModal = e;
     data.isCirculation = e;
@@ -348,10 +372,32 @@
     }
     data.isCirculation = true;
   }
+  // 跳转
+  function handleJump(ProcessId,ProcessIdName, ProcessInstanceId){
+    jumpData.params = {
+        ProcessId,ProcessIdName, ProcessInstanceId
+    }
+    data.isJump = true;
+  }
+  // 加签
+  function handleCountersign(ProcessId,ProcessIdName, ProcessInstanceId){
+    CountersignData.params = {
+        ProcessId,ProcessIdName,ProcessInstanceId
+    }
+    data.isCountersign = true;
+  }
+  // 发布
+  const handleRelase = (ProcessInstanceId) => {
+    data.ProcessInstanceId = ProcessInstanceId;
+    data.isRelease = true;
+  }
+  window.handleRelase = handleRelase;
+  window.handleJump = handleJump;
+  window.handleCountersign = handleCountersign;
   window.handleTo = handleTo;
   window.EditFlow = EditFlow;
   window.data = data;
-
+  window.DelegateFn = DelegateFn;
     const imgUrl = require("@/assets/flow/checkbox_checked.gif");
     const gridUrl = ref(Interface.flow.workAdminList);
 
@@ -363,12 +409,6 @@
       data.queryParams.activeKey = e;
       columns.value = data.tabs[e].table.columnsArray;
       gridRef.value.loadGrid(data.queryParams);
-    }
-    const handleNew = (e) => {
-      data.isNew = true;
-    }
-    const cancelNew = (e) => {
-      data.isNew = e;
     }
     // 添加分类
     const handleAddCategory = (key) => {

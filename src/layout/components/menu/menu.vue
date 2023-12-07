@@ -81,14 +81,16 @@ const loadMenus = (list,path) => {
   formTreeData(list);
   var temp = [];
   list2.map((item) => {
-    temp.push({
-      key: item.path,
-      label: item.name,
-      title: item.name,
-      icon: ()=> h("i", {
-        class:["iconfont","icon-"+item.meta.icon]
-      }),
-    });
+    if(item.name){
+      temp.push({
+        key: item.path,
+        label: item.name,
+        title: item.name,
+        icon: ()=> h("i", {
+          class:["iconfont","icon-"+item.meta.icon]
+        }),
+      });
+    }
   });
   data.items = temp;
 }

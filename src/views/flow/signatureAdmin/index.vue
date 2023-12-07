@@ -74,8 +74,9 @@
                 </a-col>
             </a-row>
         </div>
-        <NewCategory v-if="isCategory" @cancel="cancelCategory" :isShow="isCategory" :id="treeId" ObjectTypeCode="流程" />
-        <EditFlowDefine v-if="isEditFlow" :isShow="isEditFlow" :id="id" @cancel="cancelEditFlowDefine" />
+        <SignatureUpload v-if="isSignature" :isShow="isSignature" :id="id" @cancel="cancelSignature" />
+        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" />
+
     </div>
 </template>
 <script setup>
@@ -91,8 +92,8 @@
     import Dtable from "@/components/Dtable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
 
-    import NewCategory from "@/components/workflow/NewCategory.vue";
-    import EditFlowDefine from "@/components/workflow/EditFlowDefine.vue";
+    import SignatureUpload from "@/components/workflow/SignatureUpload.vue";
+    import Delete from "@/components/listView/Delete.vue";
     import { formTreeData } from "@/utils/common.js";
     import { useRouter, useRoute } from "vue-router";
     const route = useRoute();
@@ -150,13 +151,16 @@
         isCategory: false,
         treeId: "",
         isEditFlow: false,
-        id: ""
+        id: "",
+        isSignature: false,
+        isDelete: false,
+        deleteDesc: "是否确定要删除？",
     });
     const handleCollapsed = () => {
         data.isCollapsed = !data.isCollapsed;
     };
     const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, searchVal,
-        isCategory, treeId, isEditFlow, id } = toRefs(data);
+        isCategory, treeId, isEditFlow, id, isSignature, isDelete, deleteDesc } = toRefs(data);
     const tabContent = ref(null);
     const contentRef = ref(null);
     let formSearchHeight = ref(null);
@@ -178,7 +182,32 @@
         console.log('data', data.tableHeight);
         console.log("gridRef", gridRef.value.loadGrid())
     }
-
+    const cancelSignature = (e) => {
+        data.isSignature = e;
+    }
+    const handleEditSignature = (id) => {
+        data.id = id;
+        data.isSignature = true;
+    }
+    const handleDelete = (id) => {
+        console.log("id",id);
+        data.id = id;
+        data.isDelete = true;
+    }
+    const cancelDelete = (e) => {
+        data.isDelete = e;
+    }
+    const deleteOk = (e) => {
+        console.log("e",e);
+        proxy.$get(Interface.flow.deleteSignature, {
+            signatureId: data.id
+        })
+        .then((res) => {
+            message.success("删除成功！");
+            data.isDelete = false;
+            gridRef.value.loadGrid({});
+        });
+    }
     // 获取tabs
     const getTabs = () => {
         proxy.$get(Interface.todoList.tabs, {
@@ -234,24 +263,11 @@
         }
         data.isCirculation = true;
     }
-    window.handleTo = handleTo;
-    window.EditFlow = EditFlow;
+
     window.data = data;
-    const formatStatus2 = (val, row, index) => {
-        var value = row["StateCode"];
-        if (value == "1" || value == "审批通过" || value == "已发布") {
-            return "<span style='color:blue;font-weight:bold;'>已发布</span>";
-        }
-        if (value == "2" || value == "审批未通过") {
-            return "<span style='color:red'>审批未通过</span>";
-        }
-        if (value == "0" || value == "草稿") {
-            return "<span style='color:grey'>草稿</span>";
-        }
-        if (value == "已退回" || value == "退回") {
-            return "<span style='color:#8F3A44;font-weight:bold;'>" + value + "</span>";
-        }
-    }
+    window.handleEditSignature = handleEditSignature;
+    window.handleDelete = handleDelete;
+
     const imgUrl = require("@/assets/flow/checkbox_checked.gif");
     const gridUrl = ref(Interface.flow.signature);
     const columns = ref(
@@ -267,8 +283,8 @@
                     var str = `
                 <div class="iconBox">
                   <div class="popup">
-                    <div class="option-item" id=${row.WFRuleLogId} onclick="handleTo('${row.WFRuleLogId}')">编辑签名</div>
-                    <div class="option-item" onclick="EditFlow('${row.LIST_RECORD_ID}')">删除</div>  
+                    <div class="option-item" onclick="handleEditSignature('${row.SignatureId}')">编辑签名</div>
+                    <div class="option-item" onclick="handleDelete('${row.SignatureId}')">删除</div>  
                   </div>
                   <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
               `
@@ -302,10 +318,7 @@
         gridRef.value.loadGrid(data.queryParams);
     }
     const handleNew = (e) => {
-        data.isNew = true;
-    }
-    const cancelNew = (e) => {
-        data.isNew = e;
+        data.isSignature = true
     }
     // 添加分类
     const handleAddCategory = (key) => {

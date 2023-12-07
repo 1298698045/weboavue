@@ -19,7 +19,7 @@
                 <div class="modalCenter">
                     <div class="tabContainer" v-if="currentTab==1">
                         <ul class="userBox">
-                            <li class="userItem" v-for="(item,index) in sameDeptUserList" :key="index" @click="handleSelectRow(item.SystemUserId,item.FullName)">
+                            <li class="userItem" v-for="(item,index) in sameDeptUserList" :key="index" @click="handleSelectRow(item.SystemUserId,item.FullName, item.BusinessUnitIdName)">
                                 <div class="avatar"></div>
                                 <div class="info">
                                     <div>
@@ -41,7 +41,7 @@
                                 </a-tree>
                             </div>
                             <ul class="userBox rightUserList">
-                                <li class="userItem" v-for="(item,index) in deptUserList" :key="index" @click="handleSelectRow(item.systemUserId,item.fullName)">
+                                <li class="userItem" v-for="(item,index) in deptUserList" :key="index" @click="handleSelectRow(item.systemUserId,item.fullName, item.businessUnitIdName)">
                                     <div class="avatar"></div>
                                     <div class="info">
                                         <div>
@@ -64,7 +64,7 @@
                                 </a-tree>
                             </div>
                             <ul class="userBox rightUserList">
-                                <li class="userItem" v-for="(item,index) in groupUserList" :key="index" @click="handleSelectRow(item.SystemUserId,item.FullName)">
+                                <li class="userItem" v-for="(item,index) in groupUserList" :key="index" @click="handleSelectRow(item.SystemUserId,item.FullName,item.BusinessUnitIdName)">
                                     <div class="avatar"></div>
                                     <div class="info">
                                         <div>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="tabContainer" v-if="currentTab==5">
                         <ul class="userBox">
-                            <li class="userItem" v-for="(item,index) in roleList" :key="index" @click="handleSelectRow(item.RoleId,item.Name)">
+                            <li class="userItem" v-for="(item,index) in roleList" :key="index" @click="handleSelectRow(item.RoleId,item.Name,item.BusinessUnitIdName)">
                                 <div class="avatar"></div>
                                 <div class="info">
                                     <div>
@@ -273,11 +273,12 @@
     }
 
     // 选择人员
-    const handleSelectRow = (id,name) => {
+    const handleSelectRow = (id,name, BusinessUnitIdName) => {
         console.log("id:",id,name);
         var selectUser = {
             id: id,
-            name: name
+            name: name,
+            BusinessUnitIdName: BusinessUnitIdName
         }
         emit("select-val", selectUser);
     }

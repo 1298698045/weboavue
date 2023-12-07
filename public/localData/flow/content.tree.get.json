@@ -1,0 +1,169 @@
+{
+  "total": "29",
+  "rows": [
+    {
+      "pid": "bdfddb35-fddb-43dd-848f-1002fc5820b7",
+      "_parentId": "bdfddb35-fddb-43dd-848f-1002fc5820b7",
+      "id": "79340a1b-ceb2-48d0-b487-7de156f6bc8c",
+      "text": "纪监监察制度"
+    },
+    {
+      "pid": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "_parentId": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "id": "b4da656b-aa84-4ba4-85b0-4e88031509b6",
+      "text": "人事管理制度"
+    },
+    {
+      "pid": "",
+      "id": "0781c6bd-663a-4e5c-8d96-1f4c71e08204",
+      "text": "123"
+    },
+    {
+      "pid": "eccbc87e-4b5c-e2fe-2830-8fd9f2a7baf3",
+      "_parentId": "eccbc87e-4b5c-e2fe-2830-8fd9f2a7baf3",
+      "id": "fddc08f9-75e6-414a-99d5-be3c84124bab",
+      "text": "党员学习"
+    },
+    {
+      "pid": "eccbc87e-4b5c-e2fe-2830-8fd9f2a7baf3",
+      "_parentId": "eccbc87e-4b5c-e2fe-2830-8fd9f2a7baf3",
+      "id": "5757dc6d-8347-4053-9acb-a067d1f0872a",
+      "text": "警示教育"
+    },
+    {
+      "pid": "",
+      "id": "d00b816e-a006-49d1-8387-33919346e731",
+      "text": "新闻动态"
+    },
+    {
+      "pid": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "_parentId": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "id": "d3b2d1cc-c754-4787-bb7d-55fc592ab890",
+      "text": "行政管理制度"
+    },
+    {
+      "pid": "",
+      "id": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "text": "制度文件"
+    },
+    {
+      "pid": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "_parentId": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "id": "ae4b893b-6ea9-42d6-bc1f-898cc1b95964",
+      "text": "医疗管理制度"
+    },
+    {
+      "pid": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "_parentId": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "id": "14051cfc-1952-4935-b02b-5caac02eb1a2",
+      "text": "公文库"
+    },
+    {
+      "pid": "37dbc249-a218-4e32-bd74-a6075fe2c564",
+      "_parentId": "37dbc249-a218-4e32-bd74-a6075fe2c564",
+      "id": "61d4c1af-d8ad-43ea-9a4d-707601738d4d",
+      "text": "党委制度"
+    },
+    {
+      "pid": "37dbc249-a218-4e32-bd74-a6075fe2c564",
+      "_parentId": "37dbc249-a218-4e32-bd74-a6075fe2c564",
+      "id": "2e161f19-c204-49f0-8c6e-776580d8ba9f",
+      "text": "党委工作"
+    },
+    {
+      "pid": "37dbc249-a218-4e32-bd74-a6075fe2c564",
+      "_parentId": "37dbc249-a218-4e32-bd74-a6075fe2c564",
+      "id": "dee00e63-6193-4eac-9b01-3fc877741254",
+      "text": "学习园地"
+    },
+    {
+      "pid": "",
+      "id": "d82c8d16-19ad-8176-d665-453cfb2e55f0",
+      "text": "院务公开"
+    },
+    {
+      "pid": "bdfddb35-fddb-43dd-848f-1002fc5820b7",
+      "_parentId": "bdfddb35-fddb-43dd-848f-1002fc5820b7",
+      "id": "46a51e69-4eea-40b2-8376-7bbdc3c30244",
+      "text": "工作部署"
+    },
+    {
+      "pid": "",
+      "id": "a442bbf4-3bad-4477-a66d-c3d3088fcbba",
+      "text": "下载中心"
+    },
+    {
+      "pid": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "_parentId": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "id": "5bc3a763-4351-4bc1-9929-dbfab832cfab",
+      "text": "后勤管理制度"
+    },
+    {
+      "pid": "",
+      "id": "a87ff679-a2f3-e71d-9181-a67b7542122c",
+      "text": "党务公开"
+    },
+    {
+      "pid": "37dbc249-a218-4e32-bd74-a6075fe2c564",
+      "_parentId": "37dbc249-a218-4e32-bd74-a6075fe2c564",
+      "id": "0d97fb82-fe37-482e-b35f-fe4b0ed617a1",
+      "text": "党务公开与公示"
+    },
+    {
+      "pid": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "_parentId": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "id": "93bfde90-accf-4691-b999-84ef01f1e346",
+      "text": "药事管理制度"
+    },
+    {
+      "pid": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "_parentId": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "id": "42fac529-d3c8-43a8-9024-1ac77ca8634e",
+      "text": "宣传管理制度"
+    },
+    {
+      "pid": "",
+      "id": "eccbc87e-4b5c-e2fe-2830-8fd9f2a7baf3",
+      "text": "学习园地"
+    },
+    {
+      "pid": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "_parentId": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "id": "e5f8f107-5d92-450a-b430-1fcfd42c281a",
+      "text": "党委工作制度"
+    },
+    {
+      "pid": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "_parentId": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "id": "1d193a9a-a728-4474-be17-078e95534395",
+      "text": "纪检监察制度"
+    },
+    {
+      "pid": "bdfddb35-fddb-43dd-848f-1002fc5820b7",
+      "_parentId": "bdfddb35-fddb-43dd-848f-1002fc5820b7",
+      "id": "ac4b59fa-1eca-477a-ae72-ea9ad6e82c44",
+      "text": "廉政教育"
+    },
+    {
+      "pid": "",
+      "id": "40545587-485c-49a6-b194-8c1afb2ba9ce",
+      "text": "护理之家"
+    },
+    {
+      "pid": "",
+      "id": "c691f001-a2ba-419d-ac02-094ce7754e32",
+      "text": "护理文件"
+    },
+    {
+      "pid": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "_parentId": "c4ca4238-a0b9-2382-0dcc-509a6f75849b",
+      "id": "31aac2c7-e7e0-4839-9f55-234258f258d3",
+      "text": "医院下发文"
+    },
+    {
+      "pid": "",
+      "id": "2faf0418-74cd-4c37-8ba5-376fa6581bce",
+      "text": "院刊专栏"
+    }
+  ]
+}

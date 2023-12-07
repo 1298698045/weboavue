@@ -135,6 +135,13 @@ const routes = [
           icon: "caogaoxiang",
         },
       },
+      {
+        path: "/flow/formSearch/list",
+        component: () => import("../views/flow/formSearch/list.vue"),
+        meta: {
+          icon: "caogaoxiang",
+        },
+      },
       // {
       //   path: "/about",
       //   component: () => import("../views/About.vue"),
@@ -409,7 +416,7 @@ const routes = [
     path: "/hrsetting/home",
     name: "DesignHome",
     component: () => import("../views/sys/home/index.vue"),
-  },
+  }
 ];
 
 const router = createRouter({

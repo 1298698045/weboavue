@@ -170,6 +170,13 @@ const Interface = {
     workAdminList: "/localData/flow/entity.grid.search.json", // 事务管理列表
     signature: "/localData/flow/process.signature.search.json", // 签名管理
     permissionform: "/localData/flow/process.permissionform.get.json", // 表单查询
+    processNodes: "/localData/flow/process.all.nodes.json", // 节点
+    jump: "/localData/flow/process.approve.jump.json", // 跳转
+    insertapprove: "/localData/flow/process.instance.insertapprove.json", // 加签
+    contentTree: "/localData/flow/content.tree.get.json",
+    publishtocontent:"/localData/flow/prcoess.instance.publishtocontent.json", // 发布
+    addSignature: "/localData/flow/process.signature.upload.json", // 新建签名
+    deleteSignature: "/localData/flow/process.signature.delete.json", // 删除签名
   }
 };
 export default Interface;

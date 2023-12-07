@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="moduleBoxWrap">
-                    <div class="moduleBox" v-for="(item,index) in list[current] && list[current].ProcessFormInfo" :key="index">
+                    <div class="moduleBox" v-for="(item,index) in list[current] && list[current].ProcessFormInfo" :key="index" @click="handleDetail(item)">
                         <div class="title">
                             {{item.Name}}
                         </div>
@@ -48,6 +48,8 @@
     DownOutlined,
     UserOutlined,
   } from "@ant-design/icons-vue";
+  import { useRouter, useRoute } from "vue-router";
+  const router = useRouter();
   import { message } from "ant-design-vue";
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
@@ -79,6 +81,16 @@
   getProcessList();
   const handleTab = (item,index) => {
     data.current = index;
+  }
+  const handleDetail = (item) => {
+    console.log(item);
+    router.push({
+        path: "/flow/formSearch/list",
+        query: {
+            objectTypeCode: item.ObjectTypeCode,
+            entityType: item.EntityType
+        }
+    })
   }
 </script>
 <style lang="less" scoped>
