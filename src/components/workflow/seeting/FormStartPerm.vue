@@ -6,9 +6,9 @@
                     表单发起权限
                 </div>
                 <div class="panel-btn">
-                    <a-button type="primary">添加用户</a-button>
-                    <a-button type="primary" class="ml10">添加筛选器</a-button>
-                    <a-button type="primary" class="ml10">添加自定义筛选器</a-button>
+                    <a-button type="primary" @click="handleAddUser">添加用户</a-button>
+                    <a-button type="primary" class="ml10" @click="handleAddFilter">添加筛选器</a-button>
+                    <a-button type="primary" class="ml10" @click="handleDefindFilter">添加自定义筛选器</a-button>
                 </div>
             </div>
             <div class="panel-bd">
@@ -26,13 +26,17 @@
                 </a-table>
             </div>
         </div>
-        
+        <AddFlowUser v-if="isAddFlowUser" :isShow="isAddFlowUser" @cancel="isAddFlowUser=false" />
+        <AddFilter v-if="isAddFilter" :isShow="isAddFilter" @cancel="isAddFilter=false" />
+        <AddFlowFilter v-if="isAddFlowFilter" :isShow="isAddFlowFilter" @cancel="cancelAddFlowFilter" />
     </div>
 </template>
 <script setup>
     import "@/style/common.less";
     import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance } from "vue";
-
+    import AddFlowUser from "@/components/workflow/seeting/AddFlowUser.vue";
+    import AddFilter from "@/components/commonModal/AddFilter.vue";
+    import AddFlowFilter from "@/components/workflow/seeting/AddFlowFilter.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     var columns = [
@@ -51,7 +55,9 @@
     ]
     const data = reactive({
         listData: [],
-        
+        isAddFlowUser: false,
+        isAddFilter: false,
+        isAddFlowFilter: false
     })
     const formState = reactive({
         name: "",
@@ -59,16 +65,28 @@
         depart: "",
         
     })
-    const { listData } = toRefs(data);
+    const { listData, isAddFlowUser, isAddFilter, isAddFlowFilter } = toRefs(data);
     const columnList = toRaw(columns);
     const loadList = () => {
       proxy.$get(Interface.flow.formStartPerm,{
         processId: ""
       }).then(res=>{
-        data.listData = res;
+        // data.listData = res;
       })
     };
     loadList();
+    const handleAddUser = () => {
+        data.isAddFlowUser = true;
+    }
+    const handleAddFilter = () => {
+        data.isAddFilter = true;
+    }
+    const handleDefindFilter = () => {
+        data.isAddFlowFilter = true;
+    }
+    const cancelAddFlowFilter = (e) => {
+        data.isAddFlowFilter = e;
+    }
 </script>
 <style lang="less">
     .relatedWrap{

@@ -177,6 +177,10 @@ const Interface = {
     publishtocontent:"/localData/flow/prcoess.instance.publishtocontent.json", // 发布
     addSignature: "/localData/flow/process.signature.upload.json", // 新建签名
     deleteSignature: "/localData/flow/process.signature.delete.json", // 删除签名
-  }
+    datapriAdd: "/localData/flow/process.datapri.add.json", // 添加用户
+    usepriAdd: "/localData/flow/process.usepri.add.json", // 添加筛选器
+  },
+  lookSearch: "/localData/entity.lookup.search.json",
+  lookupfilter: "/localData/entity.lookupfilter.getlist.json"
 };
 export default Interface;

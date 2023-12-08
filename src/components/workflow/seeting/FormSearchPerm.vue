@@ -6,8 +6,8 @@
                     表单查询权限
                 </div>
                 <div class="panel-btn">
-                    <a-button type="primary">添加用户</a-button>
-                    <a-button type="primary" class="ml10">添加筛选器</a-button>
+                    <a-button type="primary" @click="handleAddUser">添加用户</a-button>
+                    <a-button type="primary" class="ml10" @click="handleAddFilter">添加筛选器</a-button>
                 </div>
             </div>
             <div class="panel-bd">
@@ -25,13 +25,15 @@
                 </a-table>
             </div>
         </div>
-        
+        <AddFlowUser v-if="isAddFlowUser" :isShow="isAddFlowUser" @cancel="isAddFlowUser=false" />
+        <AddFilter v-if="isAddFilter" :isShow="isAddFilter" @cancel="isAddFilter=false" />
     </div>
 </template>
 <script setup>
     import "@/style/common.less";
     import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance } from "vue";
-
+    import AddFlowUser from "@/components/workflow/seeting/AddFlowUser.vue";
+    import AddFilter from "@/components/commonModal/AddFilter.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     var columns = [
@@ -50,7 +52,8 @@
     ]
     const data = reactive({
         listData: [],
-        
+        isAddFlowUser: false,
+        isAddFilter: false
     })
     const formState = reactive({
         name: "",
@@ -58,7 +61,7 @@
         depart: "",
         
     })
-    const { listData } = toRefs(data);
+    const { listData, isAddFlowUser, isAddFilter } = toRefs(data);
     const columnList = toRaw(columns);
     const loadList = () => {
       proxy.$get(Interface.flow.formSearchPerm,{
@@ -68,6 +71,12 @@
       })
     };
     loadList();
+    const handleAddUser = () => {
+        data.isAddFlowUser = true;
+    }
+    const handleAddFilter = () => {
+        data.isAddFilter = true;
+    }
 </script>
 <style lang="less">
     .relatedWrap{

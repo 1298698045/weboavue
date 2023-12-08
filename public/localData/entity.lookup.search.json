@@ -1,0 +1,16 @@
+{
+  "total": 4,
+  "rows": [
+    {
+      "LIST_RECORD_ID": "00000000-0000-0000-00aa-000010001021",
+      "Name": "全部用户",
+      "returnedtypecode": "8",
+      "IsPinned":" <img class=\"checkImg\" width=\"21\" height=\"16\" title=\"选取的\" alt=\"选取的\" src=\"/img/checkbox_checked.gif\">","Scope":""},{"LIST_RECORD_ID":"04d6056d-ebe7-45b8-9913-067cc3d7efbd","Name":"部门","returnedtypecode":"8","IsPinned":" <img class=\"checkImg\" width=\"21\" height=\"16\" title=\"未选取的\" alt=\"未选取的\" src=\"/img/checkbox_unchecked.gif\">","Scope":""},{"LIST_RECORD_ID":"00000000-0000-0000-00aa-000010001019","Name":"启用的用户","returnedtypecode":"8","IsPinned":" <img class=\"checkImg\" width=\"21\" height=\"16\" title=\"未选取的\" alt=\"未选取的\" src=\"/img/checkbox_unchecked.gif\">","Scope":""},{"LIST_RECORD_ID":"00000000-0000-0000-00aa-000010001119","Name":"停用的用户","returnedtypecode":"8","IsPinned":" <img class=\"checkImg\" width=\"21\" height=\"16\" title=\"未选取的\" alt=\"未选取的\" src=\"/img/checkbox_unchecked.gif\">",
+      "Scope": ""
+    }
+  ],
+  "context": {
+    "userid": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "name": "jackliu45"
+  }
+}

@@ -416,6 +416,32 @@ const routes = [
     path: "/hrsetting/home",
     name: "DesignHome",
     component: () => import("../views/sys/home/index.vue"),
+  },
+  {
+    path: "/OfficialDocument",
+    name: "OfficialDocument",
+    component: Layout,
+    redirect: "/OfficialDocument/myReceiving",
+    children: [
+      {
+        path: "/OfficialDocument/myReceiving",
+        name: "我的公文",
+        component: () => import("../views/documentAdmin/myReceiving/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/OfficialDocument/myDispatch",
+        name: "我的发文",
+        component: () => import("../views/documentAdmin/myDispatch/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      }
+    ]
   }
 ];
 

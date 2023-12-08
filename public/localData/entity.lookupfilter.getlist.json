@@ -1,0 +1,53 @@
+{
+  "id": "",
+  "state": "SUCCESS",
+  "returnValue": {
+    "SearchFields": [
+      {
+        "Name": "QueryType",
+        "Label": "查询类型",
+        "DataType": "N",
+        "ReferencedEntityObjectTypeCode": 0,
+        "PicklistValues": []
+      },
+      {
+        "Name": "ReturnedTypeCode",
+        "Label": "对象代码",
+        "DataType": "N",
+        "ReferencedEntityObjectTypeCode": 0,
+        "PicklistValues": []
+      }
+    ],
+    "GridColumns": [
+      {
+        "Name": "Name",
+        "Title": "视图名称",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": true
+      },
+      {
+        "Name": "returnedtypecode",
+        "Title": "对象代码",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": false
+      },
+      {
+        "Name": "IsPinned",
+        "Title": "固定住",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": false
+      },
+      {
+        "Name": "Scope",
+        "Title": "范围",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": false
+      }
+    ]
+  },
+  "error": []
+}

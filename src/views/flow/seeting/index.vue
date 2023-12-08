@@ -331,6 +331,15 @@
     }
     data.isCirculation = true;
   }
+  const handlePermSeeting = (id) => {
+    router.push({
+      name: "FlowSeetingDetail",
+      query: {
+        id: id
+      }
+    })
+  }
+  window.handlePermSeeting = handlePermSeeting;
   window.handleTo = handleTo;
   window.EditFlow = EditFlow;
   window.data = data;
@@ -364,9 +373,9 @@
               var str = `
                 <div class="iconBox">
                   <div class="popup">
-                    <div class="option-item" id=${row.WFRuleLogId} onclick="handleTo('${row.WFRuleLogId}')">权限设置</div>
-                    <div class="option-item" onclick="EditFlow('${row.LIST_RECORD_ID}')">编辑基本信息</div>  
-                    <div class="option-item" onclick="CirculationFn('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">设计流程</div>  
+                    <div class="option-item" id=${row.WFRuleLogId} onclick="handlePermSeeting('${row.LIST_RECORD_ID}')">权限设置</div>
+                    <div class="option-item">编辑基本信息</div>  
+                    <div class="option-item">设计流程</div>  
                   </div>
                   <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
               `

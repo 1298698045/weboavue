@@ -119,7 +119,14 @@
       }
     });
   }
-  defineExpose({loadGrid})
+  
+  
+  const getCheckList = () => {
+    let list = $('#datagrid').datagrid("getChecked");
+    console.log("list",list);
+    return list;
+  }
+  defineExpose({loadGrid,getCheckList})
 </script>
 <style lang="less">
   .iconBox{
