@@ -181,6 +181,15 @@ const Interface = {
     usepriAdd: "/localData/flow/process.usepri.add.json", // 添加筛选器
   },
   lookSearch: "/localData/entity.lookup.search.json",
-  lookupfilter: "/localData/entity.lookupfilter.getlist.json"
+  lookupfilter: "/localData/entity.lookupfilter.getlist.json",
+  documentAdmin: {
+    tree: "/localData/documentAdmin/tree.get.json",
+    processList: "/localData/documentAdmin/wf.process.search.json",
+    processCreate:"/localData/documentAdmin/process.instance.create.json",
+    receivingAdmin: {// 收文管理
+      list: "/localData/documentAdmin/entitygrid.list.json"
+    },
+    handleActions: "/localData/documentAdmin/listview.handle.actions.json"
+  }
 };
 export default Interface;

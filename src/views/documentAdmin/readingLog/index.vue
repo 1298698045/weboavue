@@ -3,10 +3,10 @@
         <div class="headerBar">
             <div class="headerLeft">
                 <div class="icon-circle-base"></div>
-                <span class="headerTitle">我的公文</span>
+                <span class="headerTitle">阅读日志</span>
             </div>
             <div class="headerRight">
-                <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
+
             </div>
         </div>
         <div class="todo-content">
@@ -31,7 +31,6 @@
                 </div>
             </div>
         </div>
-        <NewReceiving :isShow="isNew" v-if="isNew" @cancel="isNew=false" />
     </div>
 </template>
 <script setup>
@@ -48,11 +47,10 @@
     import { message } from "ant-design-vue";
     import Dtable from "@/components/Dtable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
-    import NewReceiving from "@/components/documentAdmin/NewReceiving.vue";
 
     import { useRouter, useRoute } from "vue-router";
-    import useMyReceiving from "@/utils/documentAdmin/myReceiving";
-    const { tabList } = useMyReceiving();
+    import useReadingLog from "@/utils/documentAdmin/readingLog";
+    const { tabList } = useReadingLog();
     console.log("tabList", tabList);
     const route = useRoute();
     const router = useRouter();

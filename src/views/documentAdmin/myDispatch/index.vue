@@ -42,6 +42,8 @@
     } from "@ant-design/icons-vue";
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated } from "vue";
     import Interface from "@/utils/Interface.js";
+    const { proxy } = getCurrentInstance();
+
     import { message } from "ant-design-vue";
     import Dtable from "@/components/Dtable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";

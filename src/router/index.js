@@ -413,7 +413,7 @@ const routes = [
     component: () => import("../views/sys/design/index.vue"),
   },
   {
-    path: "/hrsetting/home",
+    path: "/portal",
     name: "DesignHome",
     component: () => import("../views/sys/home/index.vue"),
   },
@@ -436,6 +436,60 @@ const routes = [
         path: "/OfficialDocument/myDispatch",
         name: "我的发文",
         component: () => import("../views/documentAdmin/myDispatch/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/OfficialDocument/receivingAdmin",
+        name: "收文管理",
+        component: () => import("../views/documentAdmin/receivingAdmin/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/OfficeDocument/out/home",
+        name: "发文管理",
+        component: () => import("../views/documentAdmin/outgoingAdmin/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/ui/RequestReport/search",
+        name: "请示报告",
+        component: () => import("../views/documentAdmin/report/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/OfficialNotice/search",
+        name: "上级通知",
+        component: () => import("../views/documentAdmin/superiorNotice/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/o/ContentDocument/template/home",
+        name: "正文模板",
+        component: () => import("../views/documentAdmin/textTemplate/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/OfficeDocument/read/log",
+        name: "阅读日志",
+        component: () => import("../views/documentAdmin/readingLog/index.vue"),
         icon: "xinjian",
         meta: {
           icon: "xinjian",
