@@ -70,6 +70,12 @@ const loadMenus = (list,path) => {
   var list2 = [];
   const formTreeData = (arr) => {
     arr.forEach((item) => {
+      item.key = item.path;
+      item.label = item.name;
+      item.title = item.name;
+      item.icon = ()=> h("i", {
+        class:["iconfont","icon-"+item.meta.icon]
+      })
       if (item.path == path) {
         list2 = arr;
       }
@@ -80,8 +86,35 @@ const loadMenus = (list,path) => {
   };
   formTreeData(list);
   var temp = [];
+  const handleTwoMenu = (list) => {
+    let children = [];
+    list.forEach(item=>{
+      if(item.children){
+        children.push({
+          key: item.path,
+          label: item.name,
+          title: item.name,
+          icon: ()=> h("i", {
+            class:["iconfont","icon-"+item.meta.icon]
+          }),
+          children: handleTwoMenu(item.children)
+        })
+      }else {
+        children.push({
+          key: item.path,
+          label: item.name,
+          title: item.name,
+          icon: ()=> h("i", {
+            class:["iconfont","icon-"+item.meta.icon]
+          })
+        })
+      }
+    })
+    return children;
+  }
   list2.map((item) => {
-    if(item.name){
+    if(item.children && item.name){
+      let arr = handleTwoMenu(item.children);
       temp.push({
         key: item.path,
         label: item.name,
@@ -89,10 +122,21 @@ const loadMenus = (list,path) => {
         icon: ()=> h("i", {
           class:["iconfont","icon-"+item.meta.icon]
         }),
+        children: arr
+      });
+    }else if(item.name){
+      temp.push({
+        key: item.path,
+        label: item.name,
+        title: item.name,
+        icon: ()=> h("i", {
+          class:["iconfont","icon-"+item.meta.icon]
+        })
       });
     }
   });
   data.items = temp;
+  console.log("items:",temp)
 }
 loadMenus(routes,currentPath)
 // var list2 = [];
@@ -163,8 +207,24 @@ watch(
 watch(() => route.path,newRoute=> {
     console.log(newRoute,router.options.routes);
     const listData = router.options.routes;
-    state.selectedKeys = [ newRoute ]
-    loadMenus(listData,newRoute);
+    state.selectedKeys = [ newRoute ];
+    console.log(newRoute,'newRoute',route, data.items);
+    let isBook = false;
+    const filterVal = (list) => {
+      list.forEach(item=>{
+        if(item.key==newRoute){
+          isBook = true;
+          return false;
+        }
+        if(item.children){
+          filterVal(item.children);
+        }
+      })
+    }
+    filterVal(data.items);
+    if(!isBook){
+      loadMenus(listData,newRoute);
+    }
 })
 const toggleCollapsed = () => {
   state.collapsed = !state.collapsed;

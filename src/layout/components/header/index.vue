@@ -42,17 +42,112 @@
       </div>
     </div>
     <div class="header-end">
+      <div class="header-toobar-plugin signPlugin">
+        <a-popover class="signPlugin" trigger="click">
+          <template #title>
+            <div class="popup-header">
+              <ScheduleOutlined style="font-size: 16px;color:var(--textColor)" />
+              <span>2023-12-12</span>
+              <span>星期二</span>
+            </div>
+          </template>
+          <template #content>
+            <div class="content">
+              <div class="wea-new-scroll">
+                <a-timeline>
+                  <a-timeline-item>
+                    <template #dot>
+                      <div>
+                        <WeiboCircleOutlined style="font-size: 25px" />
+                      </div>
+                    </template>
+                    <p>上班时间 09:00</p>
+                    <p>打卡时间 今天 11:31:19</p>
+                  </a-timeline-item>
+                  <a-timeline-item>
+                    <template #dot>
+                      <div>
+                        <WeiboCircleOutlined style="font-size: 25px" />
+                      </div>
+                    </template>
+                    <p>下班时间 18:00</p>
+                    <p>打卡时间 今天 11:31:22</p>
+                    <a href="#">更新打卡时间</a>
+                  </a-timeline-item>
+                </a-timeline>
+              </div>
+              <div class="flow">
+                如有打卡异常，请 
+                <a class="flow-link">提交考勤流程 &gt;&gt;</a>
+              </div>
+              <div class="popup-footer">
+                <div class="checking" title="考勤统计">
+                  <BarChartOutlined />
+                  <span class="checkTitle text-elli">考勤统计</span>
+                </div>
+                <a-tooltip>
+                  <template #title>当前所在考勤组：默认考勤组</template>
+                  <InfoCircleOutlined style="font-size: 16px" />
+                </a-tooltip>
+              </div>
+            </div>
+          </template>
+          <ScheduleOutlined style="font-size: 16px" />
+          <span>考勤</span>
+        </a-popover>
+      </div>
+      <div class="header-toobar-plugin" @click="hanldeOpenNotice">
+        <BellOutlined style="font-size: 18px;" />
+      </div>
       <div class="header-info">
-        <div class="avatar">
+        <div class="avatar" @click.stop="handleOpenInfo">
           <img
             class="img"
             src="https://enterprise.e-cology.com.cn/messager/usericon/fabe85b769064b61ad77a39d531a6e71.jpg"
             alt=""
           />
         </div>
-        <div class="info-name">杨文元（演示账号）</div>
-        <div class="info-icon">
+        <div class="info-name" @click.stop="handleOpenInfo">张三（演示账号）</div>
+        <div class="info-icon" @click.stop="handleOpenInfo">
           <DownOutlined style="font-size: 10px" />
+        </div>
+        <div class="header-info-popup" @click.stop v-if="isInfoPopup">
+          <div class="row-text">
+            主次账号切换
+          </div>
+          <div class="header-account-splitter"></div>
+          <div class="header-account-list">
+            <div v-for="item in 2">
+              <div class="header-account-item">
+                <div class="header-account-item-avatar">
+                  <img
+                  class="img"
+                  src="https://enterprise.e-cology.com.cn/messager/usericon/fabe85b769064b61ad77a39d531a6e71.jpg"
+                  alt=""
+                />
+                </div>
+                <div class="header-account-item-info">
+                  <span class="header-account-item-username">
+                    张三（演示账号）
+                  </span>
+                  <span class="header-account-item-jobs">董事长</span>
+                  <br/>
+                  <div class="header-account-item-deptName rowEllipsis">维森集团股份有限公司/董事长办公室</div>
+                </div>
+              </div>
+              <div class="header-account-splitter"></div>
+            </div>
+          </div>
+          <div class="header-account-seeting">
+            <div class="header-account-seeting-item">
+              <ScheduleOutlined class="icon" />
+              <span class="header-account-seeting-title">主题中心</span>
+            </div>
+            <div class="header-account-seeting-item">
+              <ScheduleOutlined class="icon" />
+              <span class="header-account-seeting-title">退出</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -67,12 +162,15 @@
         </div>
       </div>
     </div>
+    <NoticeMessages v-if="isNotice" :isShow="isNotice" @cancel="isNotice=false" />
   </div>
 </template>
 <script setup>
+  import "@/style/header.less";
 import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance } from "vue";
-import { DownOutlined, SearchOutlined } from "@ant-design/icons-vue";
+import { DownOutlined, SearchOutlined, BellOutlined, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
+import NoticeMessages from "@/components/NoticeMessages.vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 let store = useStore();
@@ -92,16 +190,22 @@ watch(() => route.path,newRoute=> {
   moduleName.value = store.state.moduleName;
 },{immediate:true,deep:true})
 const data = reactive({
-  appList: []
+  appList: [],
+  isInfoPopup: false,
+  isNotice: false,
 })
-const { appList } = toRefs(data);
+const { appList, isInfoPopup, isNotice } = toRefs(data);
 proxy.$get(Interface.applist,{}).then((res)=>{
   console.log("res",res) 
   data.appList = res.rows;
 })
+const hanldeOpenNotice = () => {
+  data.isNotice = true;
+}
 onMounted(() => {
   window.addEventListener("click", function (e) {
     isShow.value = false;
+    data.isInfoPopup  = false;
   });
 });
 const handleGoModule = (item) => {
@@ -112,7 +216,22 @@ const handleGoModule = (item) => {
   });
   isShow.value = false;
 }
+const handleOpenInfo = () => {
+  data.isInfoPopup = !data.isInfoPopup;
+}
 </script>
 <style lang="less">
-@import "./header.less";
+/* @import "./header.less"; */
+.ant-menu-submenu{
+  .ant-menu-submenu-title{
+    background: var(--textColor);
+    box-shadow: none;
+    margin: 0;
+    width: 100%;
+    border-radius: 0;
+    &:hover{
+      background: #2866C3 !important;
+    }
+  }
+}
 </style>

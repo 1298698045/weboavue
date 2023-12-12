@@ -494,6 +494,28 @@ const routes = [
         meta: {
           icon: "xinjian",
         },
+        children: [
+          {
+            path: "/OfficeDocument/read/list",
+            name: "阅读日志child",
+            component: () => import("../views/documentAdmin/readingLog/list.vue"),
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+            },
+            children: [
+              {
+                path: "/OfficeDocument/read/listchild",
+                name: "阅读日志child",
+                component: () => import("../views/documentAdmin/readingLog/list.vue"),
+                icon: "xinjian",
+                meta: {
+                  icon: "xinjian",
+                },
+              }
+            ]
+          }
+        ]
       }
     ]
   }
