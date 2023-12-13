@@ -116,6 +116,10 @@
             主次账号切换
           </div>
           <div class="header-account-splitter"></div>
+          <div class="row-text" @click="handlePersonal">
+            个人中心
+          </div>
+          <div class="header-account-splitter"></div>
           <div class="header-account-list">
             <div v-for="item in 2">
               <div class="header-account-item">
@@ -201,6 +205,15 @@ proxy.$get(Interface.applist,{}).then((res)=>{
 })
 const hanldeOpenNotice = () => {
   data.isNotice = true;
+}
+const handlePersonal = () => {
+  data.isInfoPopup = false;
+  router.push({
+    path: "/workspace/personal/home",
+    query: {
+      name: "123"
+    }
+  })
 }
 onMounted(() => {
   window.addEventListener("click", function (e) {

@@ -518,6 +518,72 @@ const routes = [
         ]
       }
     ]
+  },
+  {
+    path: "/workspace",
+    name: "workspace",
+    component: Layout,
+    redirect: "/workspace/personal/home",
+    children: [
+      {
+        path: "/workspace/personal/home",
+        name: "个人中心",
+        component: () => import("../views/workspace/personalCenter/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "个人中心"
+        },
+      }
+    ]
+  },
+  {
+    path: "/contract",
+    name: "Contract",
+    component: Layout,
+    redirect: "/contract/home",
+    children: [
+      {
+        path: "/contract/home",
+        name: "合同门户",
+        component: () => import("../views/contract/home/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "合同门户"
+        },
+      },
+      {
+        path: "/contract/admin",
+        name: "合同管理",
+        component: () => import("../views/contract/contractAdmin/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "合同管理"
+        },
+      },
+      {
+        path: "/contract/Invoice/home",
+        name: "发票管理",
+        component: () => import("../views/contract/invoice/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "发票管理"
+        },
+      },
+      {
+        path: "/contract/execution",
+        name: "合同执行",
+        component: () => import("../views/contract/execution/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "合同执行"
+        },
+      }
+    ]
   }
 ];
 

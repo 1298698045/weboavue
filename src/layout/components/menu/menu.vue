@@ -68,7 +68,9 @@ const data = reactive({
 const { items } = toRefs(data);
 const loadMenus = (list,path) => {
   var list2 = [];
+  let index = 0;
   const formTreeData = (arr) => {
+    index++;
     arr.forEach((item) => {
       item.key = item.path;
       item.label = item.name;
@@ -77,6 +79,7 @@ const loadMenus = (list,path) => {
         class:["iconfont","icon-"+item.meta.icon]
       })
       if (item.path == path) {
+        console.log("index",index, item);
         list2 = arr;
       }
       if (item.children) {

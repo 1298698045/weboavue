@@ -1,0 +1,850 @@
+.appcenter-header-wrap {
+    height: 64px;
+    width: 100%;
+    padding: 16px 34px 16px 38px;
+    box-sizing: border-box;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.appcenter-header-Icons {
+    display: flex;
+    align-items: center;
+}
+
+.appcenter-header-wrap .appcenter-header-Icons .appcenter-header-content {
+    margin-left: 20px;
+    font-size: 14px;
+    color: #646a73;
+    height: 28px;
+    border-radius: 4px;
+    padding-right: 4px;
+    padding-left: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.appcenter-header-wrap .appcenter-header-Icons .appcenter-header-content .appcenter-header-icon {
+    font-size: 24px;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+    cursor: pointer;
+    -webkit-flex: none;
+    -ms-flex: none;
+    flex: none;
+}
+
+.appcenter-header-wrap .appcenter-header-Icons .appcenter-header-content span {
+    margin-left: 1px;
+}
+
+.appcenter-header-wrap .appcenter-header-Icons .appcenter-header-content.appcenter-admin-wrap {
+    padding-left: 4px;
+}
+
+.workplace-wrapper *,
+.workplace-wrapper :after,
+.workplace-wrapper :before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.appcenter-quickjump-wrap {
+    width: 400px;
+}
+
+.larkc-svg-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+    cursor: pointer;
+    -webkit-flex: none;
+    -ms-flex: none;
+    flex: none;
+}
+
+.quick-jump-enter-com .quick-jump-enter-com__box {
+    width: 100%;
+    background-color: #fff;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 32px;
+    border-radius: 16px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    border: 1px solid #dee0e3;
+    position: relative;
+    color: #8f959e;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0 8px;
+    font-size: 12px;
+    -webkit-transition: color .2s ease-in, border-color .2s ease-in;
+    -o-transition: color .2s ease-in, border-color .2s ease-in;
+    transition: color .2s ease-in, border-color .2s ease-in;
+}
+
+.quick-jump-enter-com .quick-jump-enter-com__box .quick-jump-enter-com__box__text-icon {
+    position: absolute;
+    left: 8px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.quick-jump-enter-com .quick-jump-enter-com__box .quick-jump-enter-com__box__text-desc {
+    margin-left: 20px;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.quick-jump-enter-com .quick-jump-enter-com__box .quick-jump-enter-com__box__text-shortcut {
+    margin-left: 8px;
+}
+
+.workplace_content-wrap {
+    width: 100%;
+    height: calc(~"100% - 64px");
+    overflow-y: overlay;
+    overflow-x: hidden;
+}
+
+.workplace_content-section {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    padding: 0 38px;
+}
+
+.workplace_content-section.common {
+    margin-top: 38px;
+}
+
+.list-layout-wrap {
+    width: 100%;
+    max-width: 1440px;
+    /* display: -ms-grid;
+    display: grid; */
+    /* gap: 16px 16px; */
+    /* grid-template-rows: repeat(auto-fill, 80px); */
+    /* -ms-grid-columns: 50% 50%;
+        grid-template-columns: 50% 50%; */
+    /* -ms-grid-rows: 246px 246px;
+        grid-template-rows: 246px 246px; */
+    display: flex;
+}
+
+.appcenter-list-layout-item-4 {
+    /* grid-template-columns: repeat(6, minmax(194px, 246px)); */
+    /* grid-template-columns: repeat(auto-fill,minmax(193px,1fr)); */
+}
+
+.common_card-wrap {
+    width: 16%;
+    height: 80px;
+    margin-right: 10px;
+}
+.common_card-wrap.common_card-wrap100 .appcenter-card-wrap{
+    width: 100%;
+}
+.common_card-wrap:nth-child(6n){
+    margin-right: 0;
+}
+.appcenter-card-wrap:hover {
+    -webkit-box-shadow: 0 10px 16px 0 rgba(31, 35, 41, .18);
+    box-shadow: 0 10px 16px 0 rgba(31, 35, 41, .18);
+}
+
+.appcenter-card-wrap {
+    /* width: 100%; */
+    width: 16%;
+    height: 80px;
+    position: relative;
+    background-color: #fff;
+    -webkit-box-shadow: 0 3px 10px 0 rgba(31, 35, 41, .04);
+    box-shadow: 0 3px 10px 0 rgba(31, 35, 41, .04);
+    border-radius: 5px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 20px 14px 20px 16px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.appcenter-card-wrap:nth-child(6n){
+    margin-right: 0;
+}
+.appcenter-avatar-wrap {
+    position: relative;
+}
+
+.larkc-avatar {
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.appcenter-avatar-wrap .appcenter-avatar-inline {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.appcenter-avatar-wrap .appcenter-avatar-inline:before {
+    content: "";
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    z-index: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, .05);
+}
+
+.larkc-avatar-img {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: inherit;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+img {
+    vertical-align: top;
+    -webkit-user-drag: none;
+}
+
+.larkc-avatar-img:after {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #f8f9fa;
+}
+
+.appcenter-recommend-wrap {
+    margin-left: 10px;
+    height: 40px;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.appcenter-recommend-wrap.without-tag {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.appcenter-recommend-wrap .appcenter-recommend-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1f2329;
+    line-height: 20px;
+}
+
+.appcenter-recommend-wrap .appcenter-recommend-name-withouttag,
+.appcenter-recommend-wrap .appcenter-recommend-name-withtag {
+    word-break: break-all;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical;
+}
+
+.appcenter-recommend-wrap .appcenter-recommend-name-withouttag {
+    -webkit-line-clamp: 2;
+}
+
+.appcenter-add-card {
+    width: 100%;
+    height: 80px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 3px 10px 0 rgba(31, 35, 41, .04);
+    box-shadow: 0 3px 10px 0 rgba(31, 35, 41, .04);
+    border-radius: 5px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    padding: 20px 14px 20px 16px;
+    cursor: pointer;
+}
+
+.appcenter-add-card .apcenter-add-left img {
+    width: 40px;
+    height: 40px;
+}
+
+.appcenter-add-card .appcenter-add-right {
+    height: 40px;
+    margin-left: 10px;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    color: #1f2329;
+    overflow: hidden;
+}
+
+.appcenter-add-card .appcenter-add-right span {
+    word-break: break-word;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.appcenter-add-card:hover {
+    -webkit-box-shadow: 0 10px 16px 0 rgba(31, 35, 41, .18);
+    box-shadow: 0 10px 16px 0 rgba(31, 35, 41, .18);
+}
+
+.workplace_content-section {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    padding: 0 38px;
+}
+
+.workplace-app-title {
+    width: 100%;
+    max-width: 1440px;
+    height: 26px;
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 600;
+    margin-top: 38px;
+    margin-bottom: 6px;
+    color: #1f2329;
+}
+
+.category-list-section {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    /* z-index: 2; */
+    background-color: #e8edf4;
+}
+
+.category-list-wrap {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 38px;
+    padding: 10px 0 8px;
+    background-color: #e8edf4;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.category-list-wrap .category-list {
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.category-list-wrap .category-list .category-list-content {
+    margin-left: -38px;
+}
+
+.category-list-wrap .category-list .category-list-content .category-list-item {
+    font-size: 14px;
+    color: #646a73;
+    line-height: 26px;
+    word-break: break-all;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.category-list-wrap .category-list .category-list-content .active-item {
+    line-height: 26px;
+}
+
+.category-list-wrap .category-list .category-list-content .category-list-item:before {
+    content: "/";
+    margin: 0 18px;
+    color: #bbbfc4 !important;
+}
+
+.category-list-wrap .category-list .category-list-content .category-list-item>span {
+    position: relative;
+    border-bottom: 2px solid transparent;
+}
+
+.category-list-wrap .category-list .category-list-content .active-item>span {
+    font-weight: 600;
+    color: #3370ff;
+    border-bottom: 2px solid #3370ff;
+}
+
+.category-list-wrap .category-list .category-list-content .category-list-item>span span {
+    position: absolute;
+    left: 0;
+}
+
+.category-list-wrap .category-list .category-list-content .category-list-item>span:after {
+    content: attr(title);
+    font-weight: 600;
+    visibility: hidden;
+}
+
+.category-list-wrap .category-list .category-list-content .category-list-item:hover {
+    color: #3370ff;
+}
+
+.app-list-section {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    padding: 0 38px;
+    margin-bottom: 16px;
+}
+
+.app-list-section .app-list-layout {
+    margin-top: 12px;
+    /* display: grid; */
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.larkc-modall-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-app-region: no-drag;
+}
+
+.larkc-modall-wrapper-mask {
+    background-color: rgba(31, 35, 41, .3);
+}
+
+.larkc-modall-wrapper.content-center {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.larkc-modall-content {
+    position: absolute;
+}
+
+.larkc-modall {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 28px;
+    border-radius: 4px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 2px 8px 0 rgba(31, 35, 41, .2);
+    box-shadow: 0 2px 8px 0 rgba(31, 35, 41, .2);
+    max-height: 580px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+}
+
+.larkc-modall-middle {
+    width: 600px;
+}
+
+.larkc-modall-main {
+    -webkit-flex: 1 1;
+    -ms-flex: 1 1;
+    flex: 1 1;
+}
+
+.larkc-modall-title-wrapper {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+}
+
+.larkc-modall-title {
+    color: #1f2329;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    -webkit-flex: 1 1;
+    -ms-flex: 1 1;
+    flex: 1 1;
+    word-break: break-word;
+}
+
+.larkc-modall-body:not(:first-child),
+.larkc-modall-footer:not(:first-child) {
+    margin-top: 28px;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body {
+    height: 384px;
+    border: 1px solid #dee0e3;
+    border-radius: 4px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-list {
+    border-right: 1px solid #dee0e3;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    height: 382px;
+    width: 50%;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-selected {
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    height: 382px;
+    width: 50%;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .footer-action {
+    margin-top: 28px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+
+.larkc-btn {
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    white-space: nowrap;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    border: none;
+    text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.larkc-btn-large {
+    font-size: 14px;
+}
+
+.i18n-zh,
+.i18n-zh button,
+.i18n-zh input,
+.i18n-zh pre,
+.i18n-zh select,
+.i18n-zh textarea {
+    font-family: LarkHackSafariFont, LarkEmojiFont, LarkChineseQuote, -apple-system, BlinkMacSystemFont, Helvetica Neue, Tahoma, PingFang SC, Microsoft Yahei, Arial, Hiragino Sans GB, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+}
+
+.larkc-btn-normal.larkc-btn-large {
+    height: 32px;
+    line-height: 30px;
+    min-width: 100px;
+    padding: 0 16px;
+    border-radius: 4px;
+}
+
+.larkc-btn-normal.larkc-btn-minor,
+.larkc-btn-round.larkc-btn-minor {
+    background-color: #fff;
+    border: 1px solid #dee0e3;
+    color: #1f2329;
+}
+
+.larkc-btn-normal.larkc-btn-primary,
+.larkc-btn-round.larkc-btn-primary {
+    background-color: #3370ff;
+    color: #fff;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .footer-action .confirm {
+    margin-left: 16px;
+}
+
+.larkc-btn-normal.larkc-btn-minor:hover,
+.larkc-btn-round.larkc-btn-minor:hover {
+    background-color: #e8edf4;
+}
+
+.larkc-btn-normal.larkc-btn-primary:hover,
+.larkc-btn-round.larkc-btn-primary:hover {
+    background-color: #4e83fd;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-list .app-search-container {
+    position: relative;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-list .app-search-container .app-search-icon {
+    position: absolute;
+    left: 28px;
+    top: 25px;
+    font-size: 14px;
+    color: #8f959e;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-list .app-search-container .app-search {
+    height: 32px;
+    margin: 16px 16px 8px;
+    padding: 7px 26px 7px 30px;
+    border: 1px solid #dee0e3;
+    border-radius: 4px;
+    width: calc(~"100% - 32px");
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 12px;
+    line-height: 18px;
+    caret-color: #3370ff;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-list .app-search-container .app-search:hover {
+    border-color: #4e83fd;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-list .app-search-container .app-search:active,
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-list .app-search-container .app-search:focus {
+    border-color: #3370ff;
+}
+
+.appcenter-common-app-body ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    -webkit-transition: all 1s;
+    transition: all 1s;
+    background-color: rgba(100, 106, 115, .3);
+    border-bottom: none;
+    border-top: none;
+}
+
+.appcenter-common-app-body ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-list .app-list-content {
+    height: 326px;
+    overflow: overlay;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .app-item {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 8px 16px;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-list .app-list-content .app-item {
+    cursor: pointer;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .app-item:hover {
+    background-color: #eff0f1;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .app-item .app-avatar {
+    width: 32px;
+    height: 32px;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .app-item .app-info {
+    margin-left: 8px;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .app-item .app-info .app-name {
+    font-size: 14px;
+    line-height: 22px;
+    color: #1f2329;
+    word-break: break-all;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .app-item .app-info .app-desc {
+    font-size: 12px;
+    line-height: 18px;
+    color: #8f959e;
+    word-break: break-all;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.larkc-checkbox {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    font-size: 12px;
+    line-height: 18px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-list .app-list-content .app-list-checkbox {
+    width: 14px;
+    height: 14px;
+    margin-left: 14px;
+}
+
+.larkc-checkbox-icon {
+    margin-right: 8px;
+    font-size: 16px;
+    color: #bbbfc4;
+}
+
+.larkc-checkbox-checked>.larkc-checkbox-icon,
+.larkc-checkbox-icon:hover {
+    color: #3370ff;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-selected .app-selected-info {
+    margin: 22px 16px 12px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    font-size: 14px;
+    line-height: 22px;
+    color: #646a73;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-selected .app-selected-info .app-selected-info-right {
+    cursor: pointer;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-selected .app-selected-info .app-selected-info-right:hover {
+    color: #4e83fd;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-selected .app-selected-list {
+    height: 326px;
+    overflow: overlay;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-selected .app-selected-list .app-selected-remove {
+    font-size: 17px;
+    margin-left: 14px;
+    color: #646a73;
+}
+
+.appcenter-common-app-modal .appcenter-common-app-content .appcenter-common-app-body .app-selected .app-selected-list .app-selected-remove:hover {
+    color: #4e83fd;
+}

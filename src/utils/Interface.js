@@ -190,6 +190,25 @@ const Interface = {
       list: "/localData/documentAdmin/entitygrid.list.json"
     },
     handleActions: "/localData/documentAdmin/listview.handle.actions.json"
+  },
+  workspace: {
+    list: "/localData/applicationcenter.getlist.json"
+  },
+  contract: {
+    invoice: {
+      list: "/localData/contract/entitygrid.list.json",
+      statistics: "/localData/contract/contract.summary.statistics.get.json"
+    },
+    execution: {
+      list: "/localData/contract/contract.owner.getlist.json",
+      statistics: "/localData/contract/contract.summary.statistics.get.json"
+    },
+    tree: "/localData/contract/tree.get.json",
+    admin: {
+      handleActions: "/localData/contract/admin/listview.handle.actions.json",
+      config: "/localData/contract/entitygrid.config.get.json",
+      list: "/localData/contract/admin/entitygrid.list.json"
+    }
   }
 };
 export default Interface;

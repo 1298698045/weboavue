@@ -1,0 +1,25 @@
+{
+  "total": 1,
+  "rows": [
+    {
+      "LIST_RECORD_ID": "22c12de7-219a-4b07-8be1-b18f712e14e1",
+      "Name": "北京合同科技管理有限公司",
+      "InvoiceCode": "06001",
+      "InvoiceNumber": "<a style=\"color:blue;\" href=\"/I0E/detail?objectTypeCode=1090&id=22c12de7-219a-4b07-8be1-b18f712e14e1&retURL=\">100001</a>",
+      "RadomNumber": "",
+      "InvoiceType": "增值税专用发票",
+      "IssueDate": "2021-09-01",
+      "AccountId": "<a href='/001/detail?id=fe015f05-989f-4560-a552-cb30480841db'>福州第二医院</a>",
+      "TotalAmount": "1.0000",
+      "TotalTax": "",
+      "StateCode": "未付款",
+      "CreatedOn": "2020-01-02 10: 43",
+      "ModifiedBy": "<a href='#' title='jackliu3'>jackliu3</a>",
+      "ModifiedOn": "2021-09-05 10: 09"
+    }
+  ],
+  "context": {
+    "userid": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+    "name": "jackliu45"
+  }
+}
