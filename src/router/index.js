@@ -554,14 +554,46 @@ const routes = [
         },
       },
       {
-        path: "/contract/admin",
-        name: "合同管理",
-        component: () => import("../views/contract/contractAdmin/index.vue"),
+        path: "/contract/performance/admin",
+        name: "合同履约",
         icon: "xinjian",
         meta: {
           icon: "xinjian",
-          name: "合同管理"
+          name: "合同履约"
         },
+        children: [
+          {
+            path: "/contract/performance/admin",
+            name: "合同管理",
+            component: () => import("../views/contract/contractAdmin/index.vue"),
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "合同管理"
+            },
+          },
+          {
+            path: "/contract/performance/payment",
+            name: "付款管理",
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "付款管理"
+            },
+            children: [
+              {
+                path: "/contract/performance/payment",
+                name: "付款计划",
+                component: () => import("../views/contract/payment/index.vue"),
+                icon: "xinjian",
+                meta: {
+                  icon: "xinjian",
+                  name: "付款计划"
+                },
+              },
+            ]
+          },
+        ]
       },
       {
         path: "/contract/Invoice/home",
@@ -593,16 +625,16 @@ const routes = [
           name: "合同计划"
         },
       },
-      {
-        path: "/contract/payment",
-        name: "付款管理",
-        component: () => import("../views/contract/payment/index.vue"),
-        icon: "xinjian",
-        meta: {
-          icon: "xinjian",
-          name: "付款管理"
-        },
-      },
+      // {
+      //   path: "/contract/payment",
+      //   name: "付款管理",
+      //   component: () => import("../views/contract/payment/index.vue"),
+      //   icon: "xinjian",
+      //   meta: {
+      //     icon: "xinjian",
+      //     name: "付款管理"
+      //   },
+      // },
       {
         path: "/contract/collection",
         name: "收款管理",
