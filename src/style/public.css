@@ -27,6 +27,9 @@ ul,ol,li{list-style:none;}
     -webkit-box-shadow: transparent;
     background-color: transparent;
 }
+a{
+    text-decoration: none;
+}
 [v-cloak]{
     display: none;
 }

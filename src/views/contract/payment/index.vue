@@ -3,13 +3,10 @@
         <div class="headerBar">
             <div class="headerLeft">
                 <div class="icon-circle-base"></div>
-                <span class="headerTitle">发票管理</span>
+                <span class="headerTitle">付款管理</span>
             </div>
             <div class="headerRight">
-                <a-button type="primary" class="ml10">新建收票</a-button>
-                <a-button type="primary" class="ml10">新建开票</a-button>
-                <a-button type="primary" class="ml10">批量添加发票</a-button>
-                <a-button type="primary" class="ml10">发票识别</a-button>
+                <a-button type="primary" class="ml10">新建付款记录</a-button>
             </div>
         </div>
         <div class="todo-content">
@@ -31,7 +28,7 @@
                 <div class="statistics">
                     <div class="statisticItem">
                         <div class="statisticLeft">
-                            <div class="statisticName">收票总金额</div>
+                            <div class="statisticName">应付款金额</div>
                             <div class="statisticCount">{{statistics.TotalAmount || 0}}</div>
                         </div>
                         <div class="statisticRight">
@@ -42,30 +39,8 @@
                     </div>
                     <div class="statisticItem">
                         <div class="statisticLeft">
-                            <div class="statisticName">退票总额</div>
+                            <div class="statisticName">实际付款金额</div>
                             <div class="statisticCount">{{statistics.RefundAmount || 0}}</div>
-                        </div>
-                        <div class="statisticRight">
-                            <p class="icon">
-                                <MoneyCollectOutlined />
-                            </p>
-                        </div>
-                    </div>
-                    <div class="statisticItem">
-                        <div class="statisticLeft">
-                            <div class="statisticName">本月收票总额</div>
-                            <div class="statisticCount">{{statistics.MonthTotalAmount || 0}}</div>
-                        </div>
-                        <div class="statisticRight">
-                            <p class="icon">
-                                <MoneyCollectOutlined />
-                            </p>
-                        </div>
-                    </div>
-                    <div class="statisticItem">
-                        <div class="statisticLeft">
-                            <div class="statisticName">本月退票总额</div>
-                            <div class="statisticCount">{{statistics.MonthRefundAmount || 0}}</div>
                         </div>
                         <div class="statisticRight">
                             <p class="icon">
@@ -100,8 +75,8 @@
     import NewReceiving from "@/components/documentAdmin/NewReceiving.vue";
 
     import { useRouter, useRoute } from "vue-router";
-    import useInvoice from "@/utils/contract/invoice";
-    const { tabList } = useInvoice();
+    import usePayment from "@/utils/contract/payment";
+    const { tabList } = usePayment();
     console.log("tabList", tabList);
     const route = useRoute();
     const router = useRouter();

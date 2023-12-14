@@ -3,13 +3,13 @@
         <div class="headerBar">
             <div class="headerLeft">
                 <div class="icon-circle-base"></div>
-                <span class="headerTitle">发票管理</span>
+                <span class="headerTitle">合同审计</span>
             </div>
             <div class="headerRight">
-                <a-button type="primary" class="ml10">新建收票</a-button>
-                <a-button type="primary" class="ml10">新建开票</a-button>
-                <a-button type="primary" class="ml10">批量添加发票</a-button>
-                <a-button type="primary" class="ml10">发票识别</a-button>
+                <a-button type="primary" class="ml10">新增审计合同</a-button>
+                <a-button type="primary" class="ml10">批量删除</a-button>
+                <a-button type="primary" class="ml10">审计抽查</a-button>
+                <a-button type="primary" class="ml10">生成审计报告</a-button>
             </div>
         </div>
         <div class="todo-content">
@@ -28,52 +28,6 @@
                     </div>
                 </div>
                 <list-form-search ref="searchRef" @update-height="changeHeight"></list-form-search>
-                <div class="statistics">
-                    <div class="statisticItem">
-                        <div class="statisticLeft">
-                            <div class="statisticName">收票总金额</div>
-                            <div class="statisticCount">{{statistics.TotalAmount || 0}}</div>
-                        </div>
-                        <div class="statisticRight">
-                            <p class="icon">
-                                <MoneyCollectOutlined />
-                            </p>
-                        </div>
-                    </div>
-                    <div class="statisticItem">
-                        <div class="statisticLeft">
-                            <div class="statisticName">退票总额</div>
-                            <div class="statisticCount">{{statistics.RefundAmount || 0}}</div>
-                        </div>
-                        <div class="statisticRight">
-                            <p class="icon">
-                                <MoneyCollectOutlined />
-                            </p>
-                        </div>
-                    </div>
-                    <div class="statisticItem">
-                        <div class="statisticLeft">
-                            <div class="statisticName">本月收票总额</div>
-                            <div class="statisticCount">{{statistics.MonthTotalAmount || 0}}</div>
-                        </div>
-                        <div class="statisticRight">
-                            <p class="icon">
-                                <MoneyCollectOutlined />
-                            </p>
-                        </div>
-                    </div>
-                    <div class="statisticItem">
-                        <div class="statisticLeft">
-                            <div class="statisticName">本月退票总额</div>
-                            <div class="statisticCount">{{statistics.MonthRefundAmount || 0}}</div>
-                        </div>
-                        <div class="statisticRight">
-                            <p class="icon">
-                                <MoneyCollectOutlined />
-                            </p>
-                        </div>
-                    </div>
-                  </div>
                 <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
                     <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
                         :isCollapsed="isCollapsed"></Dtable>
@@ -100,8 +54,8 @@
     import NewReceiving from "@/components/documentAdmin/NewReceiving.vue";
 
     import { useRouter, useRoute } from "vue-router";
-    import useInvoice from "@/utils/contract/invoice";
-    const { tabList } = useInvoice();
+    import useAudit from "@/utils/contract/audit";
+    const { tabList } = useAudit();
     console.log("tabList", tabList);
     const route = useRoute();
     const router = useRouter();
@@ -165,7 +119,7 @@
         let contentHeight = contentRef.value.clientHeight;
         let tabsHeight = 46;
         let height = contentHeight - tabsHeight - formSearchHeight.value;
-        data.tableHeight = height - 80;
+        data.tableHeight = height;
         console.log('data', data.tableHeight);
         console.log("gridRef", gridRef.value.loadGrid())
     }

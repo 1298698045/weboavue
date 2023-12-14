@@ -582,6 +582,66 @@ const routes = [
           icon: "xinjian",
           name: "合同执行"
         },
+      },
+      {
+        path: "/contract/plan",
+        name: "合同计划",
+        component: () => import("../views/contract/plan/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "合同计划"
+        },
+      },
+      {
+        path: "/contract/payment",
+        name: "付款管理",
+        component: () => import("../views/contract/payment/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "付款管理"
+        },
+      },
+      {
+        path: "/contract/collection",
+        name: "收款管理",
+        component: () => import("../views/contract/collection/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "收款管理"
+        }
+      },
+      {
+        path: "/Contract/change/home",
+        name: "合同变更",
+        component: () => import("../views/contract/change/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "合同变更"
+        }
+      },
+      {
+        path: "/contract/audit",
+        name: "合同审计",
+        component: () => import("../views/contract/audit/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "合同审计"
+        }
+      },
+      {
+        path: "/contract/template",
+        name: "合同模板",
+        component: () => import("../views/contract/template/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "合同模板"
+        }
       }
     ]
   }

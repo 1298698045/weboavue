@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="noticeWrap">
       <a-modal
         v-model:open="props.isShow"
         width="900px"
@@ -117,7 +117,7 @@
   </script>
 <style lang="less">
 @import url("@/style/modal.less");
-.ant-modal-footer{
+.noticeWrap .ant-modal-footer{
     display: none;
 }
 .ant-modal-header{
