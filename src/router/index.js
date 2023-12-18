@@ -679,7 +679,7 @@ const routes = [
           {
             path: "/contract/performance/admin",
             name: "合同管理",
-            component: () => import("../views/contract/contractAdmin/index.vue"),
+            component: () => import("../views/contract/performance/contractAdmin/index.vue"),
             icon: "xinjian",
             meta: {
               icon: "xinjian",
@@ -698,7 +698,7 @@ const routes = [
               {
                 path: "/contract/performance/payment",
                 name: "付款计划",
-                component: () => import("../views/contract/paymentAdmin/plan/index.vue"),
+                component: () => import("../views/contract/performance/paymentAdmin/plan/index.vue"),
                 icon: "xinjian",
                 meta: {
                   icon: "xinjian",
@@ -708,7 +708,7 @@ const routes = [
               {
                 path: "/contract/performance/payment/execute",
                 name: "付款执行",
-                component: () => import("../views/contract/paymentAdmin/execute/index.vue"),
+                component: () => import("../views/contract/performance/paymentAdmin/execute/index.vue"),
                 icon: "xinjian",
                 meta: {
                   icon: "xinjian",
@@ -718,7 +718,7 @@ const routes = [
               {
                 path: "/contract/performance/payment/voucher",
                 name: "付款凭证",
-                component: () => import("../views/contract/paymentAdmin/voucher/index.vue"),
+                component: () => import("../views/contract/performance/paymentAdmin/voucher/index.vue"),
                 icon: "xinjian",
                 meta: {
                   icon: "xinjian",
@@ -728,7 +728,7 @@ const routes = [
               {
                 path: "/contract/performance/payment/record",
                 name: "付款记录",
-                component: () => import("../views/contract/paymentAdmin/record/index.vue"),
+                component: () => import("../views/contract/performance/paymentAdmin/record/index.vue"),
                 icon: "xinjian",
                 meta: {
                   icon: "xinjian",
@@ -749,7 +749,7 @@ const routes = [
               {
                 path: "/contract/performance/collection/plan",
                 name: "收款计划",
-                component: () => import("../views/contract/collectionAdmin/plan/index.vue"),
+                component: () => import("../views/contract/performance/collectionAdmin/plan/index.vue"),
                 icon: "xinjian",
                 meta: {
                   icon: "xinjian",
@@ -759,7 +759,7 @@ const routes = [
               {
                 path: "/contract/performance/collection/record",
                 name: "收款记录",
-                component: () => import("../views/contract/collectionAdmin/record/index.vue"),
+                component: () => import("../views/contract/performance/collectionAdmin/record/index.vue"),
                 icon: "xinjian",
                 meta: {
                   icon: "xinjian",
@@ -769,7 +769,7 @@ const routes = [
               {
                 path: "/contract/performance/collection/notPayment",
                 name: "开票未到款",
-                component: () => import("../views/contract/collectionAdmin/notPayment/index.vue"),
+                component: () => import("../views/contract/performance/collectionAdmin/notPayment/index.vue"),
                 icon: "xinjian",
                 meta: {
                   icon: "xinjian",
@@ -781,7 +781,7 @@ const routes = [
           {
             path: "/contract/performance/change",
             name: "变更管理",
-            component: () => import("../views/contract/change/index.vue"),
+            component: () => import("../views/contract/performance/change/index.vue"),
             icon: "xinjian",
             meta: {
               icon: "xinjian",
@@ -791,7 +791,7 @@ const routes = [
           {
             path: "/contract/performance/invoice",
             name: "发票管理",
-            component: () => import("../views/contract/invoice/index.vue"),
+            component: () => import("../views/contract/performance/invoice/index.vue"),
             icon: "xinjian",
             meta: {
               icon: "xinjian",
@@ -1114,7 +1114,36 @@ const routes = [
           name: "合同权限"
         },
         children: [
-          
+          {
+            path: "/contract/permission/approval",
+            name: "合同审批权限",
+            component: () => import("../views/contract/permission/approval/index.vue"),
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "合同审批权限"
+            },
+          },
+          {
+            path: "/contract/permission/matrix",
+            name: "多维权责矩阵",
+            component: () => import("../views/contract/permission/matrix/index.vue"),
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "多维权责矩阵"
+            },
+          },
+          {
+            path: "/contract/permission/group",
+            name: "集团分级分权",
+            component: () => import("../views/contract/permission/group/index.vue"),
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "集团分级分权"
+            },
+          },
         ]
       },
       {
@@ -1126,7 +1155,116 @@ const routes = [
           name: "基础设置"
         },
         children: [
-          
+          {
+            path: "/contract/seeting/supplier",
+            name: "供应商管理",
+            component: () => import("../views/contract/seeting/supplier/index.vue"),
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "供应商管理"
+            },
+          },
+          {
+            path: "/contract/seeting/relativeList",
+            name: "相对方列表",
+            component: () => import("../views/contract/seeting/relativeList/index.vue"),
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "相对方列表"
+            },
+          },
+          {
+            path: "/contract/seeting/system",
+            name: "合同制度库",
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "合同制度库"
+            },
+            children: []
+          },
+          {
+            path: "/contract/seeting/type",
+            name: "合同类型管理",
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "合同类型管理"
+            },
+            children: []
+          },
+          {
+            path: "/contract/seeting/rule",
+            name: "编码规则设定",
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "编码规则设定"
+            },
+            children: []
+          },
+          {
+            path: "/contract/seeting/templateAdmin",
+            name: "合同模板管理",
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "合同模板管理"
+            },
+            children: []
+          },
+          {
+            path: "/contract/seeting/modelAdmin",
+            name: "合同范本管理",
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "合同范本管理"
+            },
+            children: []
+          },
+          {
+            path: "/contract/seeting/keyword",
+            name: "关键词设置",
+            component: () => import("../views/contract/seeting/keyword/index.vue"),
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "关键词设置"
+            },
+          },
+          {
+            path: "/contract/seeting/cooperateWith",
+            name: "合同协同信息",
+            component: () => import("../views/contract/seeting/cooperateWith/index.vue"),
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "合同协同信息"
+            },
+          },
+          {
+            path: "/contract/seeting/inspectAdmin",
+            name: "合规检查管理",
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "合规检查管理"
+            },
+            children: []
+          },
+          {
+            path: "/contract/seeting/settlementRule",
+            name: "结算规则设定",
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "结算规则设定"
+            },
+            component: () => import("../views/contract/seeting/settlementRule/index.vue"),
+          },
         ]
       },
       // {

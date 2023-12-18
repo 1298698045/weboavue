@@ -178,7 +178,7 @@
     })
     defineExpose({ resetForm })
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .formSearch {
         padding: 10px;
         box-sizing: border-box;

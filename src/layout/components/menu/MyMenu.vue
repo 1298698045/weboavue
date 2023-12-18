@@ -5,13 +5,14 @@
             <MenuFoldOutlined v-else />
         </a-button> -->
     <a-menu
-      v-model:openKeys="state.openKeys"
+      :open-keys="state.openKeys"
       v-model:selectedKeys="state.selectedKeys"
       mode="inline"
       theme="dark"
       :inline-collapsed="props.collapsed"
       :items="items"
       @click="handleMenu"
+      @openChange="onOpenChange"
     >
     </a-menu>
   </div>
@@ -159,9 +160,16 @@ loadMenus(routes,currentPath)
 const state = reactive({
   collapsed: false,
   selectedKeys: [ route.path ],
-  openKeys: ["sub1"],
-  preOpenKeys: ["sub1"],
+  openKeys: [],
+  preOpenKeys: [],
+  rootSubmenuKeys: [],
 });
+watch(()=>data.items,(newVal,oldVal)=>{
+  console.log("newVal", newVal)
+  newVal.forEach(item=>{
+    state.rootSubmenuKeys.push(item.key);
+  })
+},{deep: true, immediate: true})
 // const items = reactive([
 //   {
 //     key: "1",
@@ -237,8 +245,44 @@ const handleMenu = (e) => {
   console.log("e", e);
   router.push(e.key);
 };
+const onOpenChange = openKeys => {
+  console.log("openKeys", openKeys, state.openKeys);
+  const latestOpenKey = openKeys.find(key => state.openKeys.indexOf(key) === -1);
+  if (state.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+    state.openKeys = openKeys;
+  } else {
+    state.openKeys = latestOpenKey ? [latestOpenKey] : [];
+  }
+};
+
+
+// 处理数据展开应展开的菜单
+const handleData = (result) => {
+    function loop(list, keys = []) {
+      // 循环【顶级菜单数组列表】 循环的数组下标用i表示
+      // keys参数为当前菜单的所有上级菜单的router（用作openKeys的值)
+      for (let item of list) {
+        if (item.router === route.path) {
+          // 如果路由path与item.router相等则直接返回当前路由的所有上级的router
+          return [...keys]
+    } else if (item.children && item.children.length) {
+      // 如果item.router不等于当前$router.path则递归调用loop函数，传入item.children、[...keys, item.router]
+      let tempResult = loop(item.children, [...keys, item.router])
+      if (tempResult !== false) {
+        return tempResult
+      }
+    }
+      }
+      return false
+    }
+    data.openKeys = loop(result)
+}
 </script>
-<style>
+<style lang="less">
 @import "./menu.less";
 @import "../../../style/icon/iconfont.css";
+.menuContainer{
+  height: calc(~"100% - 40px");
+  overflow: auto;
+}
 </style>
