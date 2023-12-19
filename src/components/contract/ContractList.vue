@@ -10,13 +10,7 @@
                     <a-button type="primary" class="ml10">新建付款记录</a-button>
                 </div>
             </div>
-            <div class="searchWrap">
-                <list-form-search ref="searchRef" @update-height="changeHeight"></list-form-search>
-            </div>
-        </div>
-        <div class="todo-content">
-            <div style="height: 100%" ref="contentRef">
-                <!-- <div class="wea-tab">
+            <div class="wea-tab" v-if="isTab">
                     <a-tabs v-model:activeKey="activeKey" @change="changeTab">
                         <a-tab-pane v-for="(item,index) in tabs" :key="index">
                             <template #tab>
@@ -28,7 +22,13 @@
                     </a-tabs>
                     <div class="tabsBtn">
                     </div>
-                </div> -->
+            </div>
+            <div class="searchWrap">
+                <list-form-search  ref="searchRef" @update-height="changeHeight"></list-form-search>
+            </div>
+        </div>
+        <div class="todo-content">
+            <div style="height: 100%" ref="contentRef">
                 <div class="statistics" v-if="isStatistics">
                     <div class="statisticItem">
                         <div class="statisticLeft">
@@ -67,7 +67,8 @@
         UnorderedListOutlined,
         DownOutlined,
         CaretDownOutlined,
-        UserOutlined
+        UserOutlined,
+        MoneyCollectOutlined
     } from "@ant-design/icons-vue";
     import "@/style/contractList.less";
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps } from "vue";
@@ -81,6 +82,7 @@
 
     import { useRouter, useRoute } from "vue-router";
     import usePayment from "@/utils/contract/payment";
+    const { tabList } = usePayment();
 
 
     const props = defineProps({
@@ -91,10 +93,17 @@
         isStatistics:  {
             type: Boolean,
             default: false
+        },
+        isTab: {
+            type: Boolean,
+            default: false
+        },
+        isSearch: {
+            type: Boolean,
+            default: true
         }
     })
-
-    const { tabList } = usePayment();
+    console.log("props", props.isSearch)
 
 
     console.log("tabList", tabList);
@@ -160,12 +169,16 @@
         let contentHeight = contentRef.value.clientHeight;
         let tabsHeight = 46;
         let height = contentHeight - tabsHeight - formSearchHeight.value;
+        let tableHeight;
         if(props.isStatistics){
-            data.tableHeight = height - 50;
+            tableHeight = height - 50;
         }else {
-            data.tableHeight = height + 46;
+            tableHeight = height + 46;
         }
-
+        if(props.isTab){
+            tableHeight = tableHeight - 42;
+        }
+        data.tableHeight = tableHeight;
         console.log('data', data.tableHeight);
         console.log("gridRef", gridRef.value.loadGrid())
     }
