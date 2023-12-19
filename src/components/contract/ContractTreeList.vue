@@ -3,36 +3,39 @@
         <a-row>
             <a-col span="3" class="wea-left-right-layout-left" v-if="!isCollapsed">
                 <div class="treeHead">
-                    <p class="title">范本分类</p>
+                    <p class="icon"><ApartmentOutlined /></p>
+                    <p class="title">{{treeTitle}}</p>
                 </div>
-                <a-tree :style="{height: tableHeight+'px'}" :expanded-keys="expandedKeys"
-                    :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
-                    @expand="onExpand">
-                    <template #switcherIcon="{ switcherCls }">
-                        <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
-                        </CaretDownOutlined>
-                    </template>
-                    <template #title="{ name, text, key }">
-                        <a-dropdown :trigger="['contextmenu']">
-                            <div class="treeRow">
-                                <span>{{ text }}</span>
-                            </div>
-                            <template #overlay>
-                                <a-menu>
-                                    <a-menu-item key="1" @click="handleAddCategory(key)">添加分类</a-menu-item>
-                                    <a-menu-item key="2" @click="handleEditCategory(key)">编辑</a-menu-item>
-                                    <a-menu-item key="3">删除</a-menu-item>
-                                </a-menu>
-                            </template>
-                        </a-dropdown>
-                    </template>
-                </a-tree>
+                <div class="treebd">
+                    <a-tree style="height: 100%;" :expanded-keys="expandedKeys"
+                        :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
+                        @expand="onExpand">
+                        <template #switcherIcon="{ switcherCls }">
+                            <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
+                            </CaretDownOutlined>
+                        </template>
+                        <template #title="{ name, text, key }">
+                            <a-dropdown :trigger="['contextmenu']">
+                                <div class="treeRow">
+                                    <span>{{ text }}</span>
+                                </div>
+                                <template #overlay>
+                                    <a-menu>
+                                        <a-menu-item key="1" @click="handleAddCategory(key)">添加分类</a-menu-item>
+                                        <a-menu-item key="2" @click="handleEditCategory(key)">编辑</a-menu-item>
+                                        <a-menu-item key="3">删除</a-menu-item>
+                                    </a-menu>
+                                </template>
+                            </a-dropdown>
+                        </template>
+                    </a-tree>
+                </div>
             </a-col>
             <a-col :span="isCollapsed ? '24' : '21'" class="wea-left-right-layout-right">
-                <div class="headerBar">
+                <div class="headerBar" v-if="isHead">
                     <div class="headerLeft">
                         <div class="icon-circle-base"></div>
-                        <span class="headerTitle">合同执行</span>
+                        <span class="headerTitle">{{title}}</span>
                     </div>
                     <div class="headerRight">
                         <a-button type="primary" class="ml10">新建合作方</a-button>
@@ -40,7 +43,7 @@
                         <a-button type="primary" class="ml10">高级搜索</a-button>
                     </div>
                 </div>
-                <div class="todo-content">
+                <div class="todo-content" :class="{'active':!isHead}">
                     <div class="wea-left-right-layout-right">
                         <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
                             :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
@@ -62,7 +65,7 @@
                                 </div>
                             </div>
                             <list-form-search ref="searchRef" @update-height="changeHeight"></list-form-search>
-                            <div class="statistics">
+                            <div class="statistics" v-if="isStatistics">
                                 <div class="statisticItem">
                                     <div class="statisticLeft">
                                         <div class="statisticName">合同总数</div>
@@ -136,7 +139,7 @@
         UnorderedListOutlined,
         DownOutlined,
         CaretDownOutlined,
-        UserOutlined, MoneyCollectOutlined
+        UserOutlined, MoneyCollectOutlined, ApartmentOutlined
     } from "@ant-design/icons-vue";
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated } from "vue";
     import Interface from "@/utils/Interface.js";
@@ -149,6 +152,33 @@
 
     import { useRouter, useRoute } from "vue-router";
     import useExecution from "@/utils/contract/execution";
+
+    const props = defineProps({
+        title: {
+            type: String,
+            default: '标题'
+        },
+        treeTitle: {
+            type: String,
+            default: "分类"
+        },
+        isHead: {
+            type: Boolean,
+            default: true
+        },
+        isStatistics:  {
+            type: Boolean,
+            default: false
+        },
+        isTab: {
+            type: Boolean,
+            default: false
+        },
+        isSearch: {
+            type: Boolean,
+            default: true
+        }
+    })
     const { tabList } = useExecution();
     console.log("tabList", tabList);
     const route = useRoute();
@@ -235,10 +265,15 @@
         if (typeof h == 'number') {
             formSearchHeight.value = h;
         }
+        let tableHeight;
         let contentHeight = contentRef.value.clientHeight;
         let tabsHeight = 46;
         let height = contentHeight - tabsHeight - formSearchHeight.value;
-        data.tableHeight = height - 80;
+        tableHeight = height;
+        if(props.isStatistics){
+            tableHeight = tableHeight - 100; 
+        }
+        data.tableHeight = tableHeight;
         console.log('data', data.tableHeight);
         console.log("gridRef", gridRef.value.loadGrid())
     }
@@ -291,6 +326,14 @@
                 display: flex;
                 align-items: center;
                 padding: 20px;
+                .icon{
+                    padding-right: 10px;
+                    font-size: 16px;
+                }
+            }
+            .treebd{
+                height: calc(~"100% - 52px");
+                padding: 10px 0;
             }
         }
     }
@@ -355,6 +398,9 @@
             width: 100%;
             height: calc(~"100% - 52px");
             position: relative;
+            &.active{
+                height: 100%;
+            }
 
             .wea-left-right-layout-right {
                 height: 100%;
@@ -417,39 +463,39 @@
         }
     }
 
-    .statistics {
-        display: flex;
-        margin: 0 10px 10px 10px;
-
-        .statisticItem {
-            flex: 1;
-            min-height: 50px;
-            border: 1px solid #eee;
-            border-radius: 2px;
-            margin-right: 10px;
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            .statisticLeft {
-                .statisticCount {
-                    font-weight: 700;
-                    font-size: 22px;
-                    color: #555;
-                }
-            }
-
-            .statisticRight {
-                .icon {
-                    font-size: 28px;
-                    color: var(--textColor);
-                }
-            }
-        }
-
-        .statisticItem:last-child {
-            margin-right: 0;
+    .statistics{
+display: flex;
+padding: 10px;
+background: #efeff4;
+.statisticItem{
+    flex: 1;
+    border: 1px solid #eee;
+    margin-right: 10px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    border: 1px solid #e5e5e5!important;
+    border-left: 5px solid #e5e5e5!important;
+    color: #666;
+    line-height: 1.6;
+    background: #fff;
+    .statisticLeft{
+        .statisticCount{
+            font-weight: 700;
+            font-size: 22px;
         }
     }
+    .statisticRight{
+        .icon{
+            font-size: 28px;
+            color: var(--textColor);
+        }
+    }
+}
+.statisticItem:last-child{
+    margin-right: 0;
+}
+}
 </style>

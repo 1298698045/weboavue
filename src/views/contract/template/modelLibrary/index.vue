@@ -1,6 +1,6 @@
 <template>
   <div class="treeListWrap">
-    <ContractTreeList title="范本库" />
+    <ContractTreeList title="范本库" treeTitle="范本分类" :isStatistics="isStatistics" />
   </div>
 </template>
 <script setup>
@@ -14,7 +14,10 @@
   import ContractTreeList from "@/components/contract/ContractTreeList.vue";
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
-
+  const data = reactive({
+    isStatistics: true
+  });
+  const { isStatistics } = toRefs(data);
 </script>
 <style lang="less" scoped>
   .treeListWrap{
