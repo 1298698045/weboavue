@@ -668,7 +668,7 @@ const routes = [
         ]
       },
       {
-        path: "/contract/performance/admin",
+        path: "/contract/performance",
         name: "合同履约",
         icon: "xinjian",
         meta: {

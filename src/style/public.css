@@ -78,6 +78,9 @@ a{
 .mb10{
     margin-bottom: 10px;
 }
+.ml8{
+    margin-left: 8px;
+}
 /* antd css */
 /* a-tree */
 .ant-tree-treenode{
