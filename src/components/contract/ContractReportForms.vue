@@ -182,8 +182,7 @@
     import { message } from "ant-design-vue";
 
     import { useRouter, useRoute } from "vue-router";
-    import usePayment from "@/utils/contract/payment";
-    const { tabList } = usePayment();
+
 
 
     const props = defineProps({
@@ -197,7 +196,6 @@
         }
     })
     console.log("props", props.isSearch)
-    console.log("tabList", tabList);
 
     const route = useRoute();
     const router = useRouter();
@@ -211,7 +209,20 @@
         fieldNames: {
             children: 'children', title: 'name', key: 'id'
         },
-        tabs: tabList,
+        tabs: [
+            {
+                label: "签订报表",
+                key: 1
+            },
+            {
+                label: "审批效率",
+                key: 2
+            },
+            {
+                label: "归档报表",
+                key: 3
+            },
+        ],
         activeKey: 0,
         queryParams: {},
         searchVal: "",
@@ -270,11 +281,7 @@
 
     }
     const changeTab = (e) => {
-        console.log("e", e);
         data.activeKey = e;
-        data.queryParams.activeKey = e;
-        columns.value = data.tabs[e].table.columnsArray;
-        gridRef.value.loadGrid(data.queryParams);
     }
     const handleMax = () => {
         data.isMax = true;

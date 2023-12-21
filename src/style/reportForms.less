@@ -1,0 +1,108 @@
+.center{
+    background: #f4f4f4;
+    height: calc(~"100% - 95px");
+    padding: 8px 0 0 8px;
+    overflow: auto;
+    .rowCard{
+        display: flex;
+        .ant-card{
+            width: calc(~"25% - 8px");
+            margin-right: 8px;
+            margin-bottom: 8px;
+            border-radius: 0;
+            
+            .cardHead{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 30px;
+                line-height: 30px;
+                .title{
+                    color: #444;
+                    font-size: 16px;
+                    font-weight: 700;
+                }
+                .icon{
+                    color: #666;
+                    font-size: 16px;
+                    display: none;
+                    cursor: pointer;
+                }
+            }
+            .cardBd{
+                .ditigal-data{
+                    display: flex;
+                    padding: 20px 0;
+                    justify-content: center;
+                    flex-direction: column;
+                    .ditigal-data-text{
+                        height: 38px;
+                        margin-bottom: 0;
+                        overflow: hidden;
+                        font-size: 28px;
+                        color: rgb(51, 51, 51);
+                        line-height: 38px;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        word-break: break-all;
+                        font-family: -apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif;
+                    }
+                }
+                .extra{
+                    display: flex;
+                    &>div{
+                        font-family: -apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif;
+                        font-size: 16px;
+                        margin-right: 16px;
+                        
+                    }
+                }
+                .number-text {
+                    color: rgba(0,0,0,.65);
+                }
+                .number{
+                    color: rgb(51, 51, 51);
+                }
+            }
+            .cardFooter{
+                position: relative;
+                padding-top: 9px;
+                margin-top: 8px;
+                border-top: 1px solid #e8e8e8;
+            }
+        }
+        .ant-card.card50{
+            width: calc(~"50% - 8px");
+        }
+        .ant-card.w100{
+            width: 100%;
+            height: 100%;
+        }
+        .ant-card.w70{
+            width: calc(~"70% - 8px");
+        }
+        .ant-card.w30{
+            width: calc(~"30% - 8px");
+        }
+        .ant-card:hover .icon{
+            display: block !important;
+        }
+        .ant-card:last-child{
+            margin-right: 0;
+        }
+    }
+}
+.foundationTable{
+    width: 100%;
+    table{
+        width: 100%;
+        border-collapse: collapse;
+        tr{
+            th,td{
+                border: 1px solid #333;
+                line-height: 32px;
+                text-align: center;
+            }
+        }
+    }
+}

@@ -1339,7 +1339,119 @@ const routes = [
       },
       
     ]
-  }
+  },
+  {
+    path: "/reimburse",
+    name: "Reimburse",
+    component: Layout,
+    redirect: "/reimburse/home",
+    children: [
+      {
+        path: "/reimburse/home",
+        name: "费控首页",
+        component: () => import("../views/reimburse/home/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "费控首页"
+        },
+      },
+      {
+        path: "/reimburse/invoice",
+        name: "发票管理",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "发票管理"
+        },
+        children: [
+
+        ]
+      },
+      {
+        path: "/reimburse/reimburse",
+        name: "报销审核",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "报销审核"
+        },
+        children: [
+          
+        ]
+      },
+      {
+        path: "/reimburse/finance",
+        name: "财务处理",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "财务处理"
+        },
+        children: [
+          
+        ]
+      },
+      {
+        path: "/reimburse/myReimburse",
+        name: "我的报销",
+        component: () => import("../views/reimburse/myReimburse/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "我的报销"
+        },
+      },
+      {
+        path: "/reimburse/accounting",
+        name: "电子会计档案",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "电子会计档案"
+        },
+        children: [
+          
+        ]
+      },
+      {
+        path: "/reimburse/arap",
+        name: "应收应付",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "应收应付"
+        },
+        children: [
+          
+        ]
+      },
+      {
+        path: "/reimburse/budgetSeeting",
+        name: "预算设置",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "预算设置"
+        },
+        children: [
+          
+        ]
+      },
+      {
+        path: "/reimburse/reportForms",
+        name: "报表分析",
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "报表分析"
+        },
+        children: [
+          
+        ]
+      },
+    ]
+  } 
 ];
 
 const router = createRouter({
