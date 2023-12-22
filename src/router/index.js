@@ -1365,7 +1365,26 @@ const routes = [
           name: "发票管理"
         },
         children: [
-
+          {
+            path: "/reimburse/invoice/ledger",
+            name: "发票台账",
+            icon: "xinjian",
+            component: () => import("../views/reimburse/invoiceAdmin/ledger/index.vue"),
+            meta: {
+              icon: "xinjian",
+              name: "发票台账"
+            },
+          },
+          {
+            path: "/reimburse/invoice/foundation",
+            name: "基础设置",
+            icon: "xinjian",
+            component: () => import("../views/reimburse/invoiceAdmin/foundation/index.vue"),
+            meta: {
+              icon: "xinjian",
+              name: "基础设置"
+            },
+          }
         ]
       },
       {
@@ -1377,7 +1396,57 @@ const routes = [
           name: "报销审核"
         },
         children: [
-          
+          {
+            path: "/reimburse/reimburse/inadvanceApply",
+            name: "事前申请",
+            icon: "xinjian",
+            meta: {
+              icon: "xinjian",
+              name: "事前申请"
+            },
+            children: [
+              {
+                path: "/reimburse/reimburse/inadvanceApply/travel",
+                name: "差旅申请",
+                icon: "xinjian",
+                component: () => import("../views/reimburse/reimburse/inadvanceApply/travel/index.vue"),
+                meta: {
+                  icon: "xinjian",
+                  name: "差旅申请"
+                },
+              },
+              {
+                path: "/reimburse/reimburse/inadvanceApply/hospitality",
+                name: "业务招待申请管理",
+                icon: "xinjian",
+                component: () => import("../views/reimburse/reimburse/inadvanceApply/hospitality/index.vue"),
+                meta: {
+                  icon: "xinjian",
+                  name: "业务招待申请管理"
+                },
+              },
+              {
+                path: "/reimburse/reimburse/inadvanceApply/borrowingAndRepayment",
+                name: "借还款中心",
+                icon: "xinjian",
+                component: () => import("../views/reimburse/reimburse/inadvanceApply/borrowingAndRepayment/index.vue"),
+                meta: {
+                  icon: "xinjian",
+                  name: "借还款中心"
+                },
+              }
+            ]
+          },
+          {
+            path: "/reimburse/reimburse/apply",
+            name: "报销申请",
+            icon: "xinjian",
+            component: () => import("../views/reimburse/reimburse/reimbursementApply/index.vue"),
+            meta: {
+              icon: "xinjian",
+              name: "报销申请"
+            },
+          }
         ]
       },
       {
@@ -1389,7 +1458,17 @@ const routes = [
           name: "财务处理"
         },
         children: [
-          
+          {
+            
+            path: "/reimburse/finance/financialReview",
+            name: "财务审核",
+            icon: "xinjian",
+            component: () => import("../views/reimburse/finance/financialReview/index.vue"),
+            meta: {
+              icon: "xinjian",
+              name: "财务审核"
+            },
+          }
         ]
       },
       {
