@@ -22,148 +22,35 @@
             </div>
         </div>
         <div class="tabContent" v-else-if="activeKey==2">
-            <div class="mainArea mainArea2">
-                <div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">手动录入发票文件是否必传</div>
-                            <div class="fontDesc">开启后，手动录入如果没有发票文件将禁止录入</div>
-                        </div>
-                        <div class="rootr">
-                            <a-switch></a-switch>
-                        </div>
+            <div class="checktable">
+                <div class="checktitle">
+                    <div>
+                        <span>定时查验发票</span>
+                        <span> （可设置定时查验规则，系统将在指定时间内查验发票并会再次扣除接口次数） </span>
                     </div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">手动录入的发票文件上传，是否使用发票识别功能</div>
-                            <div class="fontDesc">使用发票识别功能，会调用发票识别接口。默认开启，使用发票识别，关闭后，则不使用发票识别，只做文件上传</div>
-                        </div>
-                        <div class="rootr">
-                            <a-switch></a-switch>
-                        </div>
-                    </div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">电子发票文件格式校验
-                                <a-checkbox v-model:checked="checked">不包含油票类电子发票</a-checkbox>
-                            </div>
-                            <div class="fontDesc">发票是电子发票，则只支持文件格式是PDF或OFD的原文件，其他格式禁止录入</div>
-                        </div>
-                        <div class="rootr">
-                            <a-switch></a-switch>
-                        </div>
-                    </div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">公司签章</div>
-                            <div class="fontDesc">
-                                对支持签章识别的发票，有签章才可以录入，无签章禁止录入，校验的发票类型有：增值税电子发票、机打发票、增值税普通发票、定额发票、机动车销售统一发票</div>
-                        </div>
-                        <div class="rootr">
-                            <a-switch></a-switch>
-                        </div>
-                    </div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">个人类型的发票按用户姓名校验</div>
-                            <div class="fontDesc">发票录入时校验购买方名称和当前用户姓名是否一致，如果不一致，禁止录入。默认关闭，则不校验，开启后校验。</div>
-                        </div>
-                        <div class="rootr">
-                            <a-switch></a-switch>
-                        </div>
-                    </div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">是否禁止录入个人抬头的发票</div>
-                            <div class="fontDesc">设置对象包括增值税类发票和机打发票，即有购买方抬头信息的发票，若开启，则不允许个人抬头的发票录入，默认关闭，表示允许录入个人抬头的发票。
-                            </div>
-                        </div>
-                        <div class="rootr">
-                            <a-switch></a-switch>
-                        </div>
-                    </div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">发票联次控制
-                                <a-checkbox-group v-model:value="value">
-                                    <a-checkbox value="发票联">发票联</a-checkbox>
-                                    <a-checkbox value="抵扣联">抵扣联</a-checkbox>
-                                    <a-checkbox value="记账联">记账联</a-checkbox>
-                                    <a-checkbox value="存根联">存根联</a-checkbox>
-                                </a-checkbox-group>
-                            </div>
-                            <div class="fontDesc">默认所有联次可以录入，勾选的将禁止录入
-                            </div>
-                        </div>
-                        <div class="rootr">
-                            <a-switch></a-switch>
-                        </div>
-                    </div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">不允许指定的发票类型录入</div>
-                            <div class="fontDesc">默认为空，允许所有类型的发票录入，可设置指定的发票类型不让录入</div>
-                            <a-button :icon="h(PlusOutlined)" href="https://www.google.com" />
-                        </div>
-                    </div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">是否禁止编辑发票金额</div>
-                            <div class="fontDesc">默认开关关闭，允许所有类型的发票识别后编辑金额，可设置指定类型的发票不允许编辑；开关打开，禁止所有类型的发票编辑金额</div>
-                            <div class="fontDesc">影响字段：价税合计、税额、不含税金额、税率</div>
-                            <a-button :icon="h(PlusOutlined)" href="https://www.google.com" />
-                        </div>
-                        <div class="rootr">
-                            <a-switch></a-switch>
-                        </div>
-                    </div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">是否按发票来源允许编辑发票金额</div>
-                            <div class="fontDesc">默认开关关闭，所有录入来源的发票均可编辑发票金额；开关打开，可设置指定录入类型的发票允许编辑金额</div>
-                            <div class="fontDesc">影响字段：价税合计、税额、不含税金额、税率</div>
-                        </div>
-                        <div class="rootr">
-                            <a-switch></a-switch>
-                        </div>
-                    </div>
-                    <div class="switchRoot">
-                        <div class="rootl">
-                            <div class="fontLabel">关键字过滤</div>
-                            <div class="fontDesc">可设置关键字，若是发票明细中包含对应的关键字，则对应发票禁止录入</div>
-                            <table class="rootTable">
-                                <colgroup>
-                                    <col name="el-table_3_column_18" width="25">
-                                    <col name="el-table_3_column_1" width="710">
-                                    <col name="el-table_3_column_2" width="55">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>敏感词</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="item in 8">
-                                        <td>{{item}}</td>
-                                        <td>
-                                            茅台
-                                        </td>
-                                        <td>
-                                            <MinusCircleOutlined />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="rootr">
-                            <a-button type="primary">增加</a-button>
-                        </div>
+                    <div @click="handleAdd">
+                        <PlusOutlined />
+                        <span>添加</span>
                     </div>
                 </div>
+                <table>
+                    <colgroup>
+                        <col width="474">
+                        <col width="472">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>查验频率</th>
+                            <th>查验泛微</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="paginFooter">
+                <a-pagination v-model:current="current" :total="500" />
             </div>
         </div>
+        <EditInspectionRule v-if="isShow" :isShow="isShow" @cancel="isShow=false" />
     </div>
 </template>
 <script setup>
@@ -174,12 +61,18 @@
         UserOutlined, PlusOutlined, MinusCircleOutlined
     } from "@ant-design/icons-vue";
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, h } from "vue";
+    import EditInspectionRule from "@/components/reimburse/invoice/foundationSetting/model/EditInspectionRule.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
-        activeKey: '1'
+        activeKey: '1',
+        current: 1,
+        isShow: false
     });
-    const { activeKey } = toRefs(data);
+    const { activeKey, current, isShow } = toRefs(data);
+    const handleAdd = () => {
+        data.isShow = true;
+    }
 </script>
 <style lang="less" scoped>
     .split-line {
@@ -266,6 +159,7 @@
         border: 1px solid #ebebeb;
         border-radius: 5px;
         margin-top: 10px;
+
         thead {
             color: #909399;
             font-weight: 500;
@@ -286,12 +180,69 @@
                 color: #666;
                 height: 35px;
             }
-            &:hover{
 
-            }
+            &:hover {}
         }
-        tr:nth-child(2n){
+
+        tr:nth-child(2n) {
             background: #fbfbfb;
         }
+    }
+
+    .checktable {
+        margin-top: 20px;
+        .checktitle {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-bottom: none;
+            padding: 0 16px;
+            justify-content: space-between;
+            span:first-child{
+                font-family: PingFang-SC-Medium;
+                font-size: 14px;
+                color: #111;
+                line-height: 12px;
+                font-weight: 700;
+            }
+            span:nth-child(2){
+                font-size: 12px;
+                color: #faad14;
+                line-height: 12px;
+                font-weight: 400;
+                margin-left: 8px;
+            }
+            div:nth-child(2){
+                span{
+                    margin-left: 4px;
+                    color: var(--textColor);
+                    cursor: pointer;
+                }
+            }
+        }
+
+        table {
+            width: 100%;
+            border: 1px solid #ebeef5;
+            border-collapse: collapse;
+
+            thead {
+                color: #909399;
+                font-weight: 500;
+            }
+
+            th,
+            td {
+                height: 48px;
+                padding: 0 10px;
+                text-align: left;
+            }
+        }
+    }
+    .paginFooter{
+        text-align: right;
+        margin-top: 10px;
     }
 </style>

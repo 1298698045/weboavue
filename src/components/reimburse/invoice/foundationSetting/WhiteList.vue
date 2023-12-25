@@ -3,7 +3,7 @@
         <div class="cvnHeader">
             <div class="cnvText">可设置购买方的企业名称和税号，设置后，企业类型的发票，只允许录入购买方的企业名称和税号完全一致的发票</div>
             <div class="cnvBtn">
-                <a-button type="primary">增加</a-button>
+                <a-button type="primary" @click="handleAdd">增加</a-button>
             </div>
         </div>
         <table class="table">
@@ -67,6 +67,7 @@
                 </tr>
             </tbody>
         </table>
+        <NewWhiteList :isShow="isShow" @cancel="isShow=false" />
     </div>
 </template>
 <script setup>
@@ -77,11 +78,16 @@
         UserOutlined, MinusCircleOutlined
     } from "@ant-design/icons-vue";
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated } from "vue";
+   import NewWhiteList from "@/components/reimburse/invoice/foundationSetting/model/NewWhiteList.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const data = reactive({
-
+        isShow: false
     });
+    const { isShow } = toRefs(data);
+    const handleAdd = () => {
+        data.isShow = true;
+    }
 </script>
 <style lang="less" scoped>
     .WhiteList {

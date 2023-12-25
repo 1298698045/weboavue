@@ -11,6 +11,21 @@
                         <div class="sel">
                             <span> 人员 </span>
                             <a-button :icon="h(PlusOutlined)"></a-button>
+                            <a-input-search
+                                v-model:value="value"
+                                placeholder="搜索人员"
+                                style="width: 200px;margin-left: 10px;"
+                                @search="onSearch"
+                                />
+                        </div>
+                        <div class="list">
+                            <div>
+                                <div class="iuv-user">
+                                    <CloseCircleOutlined class="del-icon" />
+                                    <span class="user-avatar">姚</span>
+                                    <div class="user-name"> 姚萍(YT) </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -24,7 +39,16 @@
                     <div class="action">
                         <div class="sel">
                             <span> 编辑字段 </span>
-                            <a-button :icon="h(PlusOutlined)"></a-button>
+                            <div style="display: inline-block;margin-left: 10px;">
+                                <!-- <a-select style="width: 150px;">
+                                    <a-select-option value="费用类型">费用类型</a-select-option>
+                                    <a-select-option value="用途备注">用途备注</a-select-option>
+                                </a-select> -->
+                                <a-button :icon="h(PlusOutlined)"></a-button>
+                                <div class="tags">
+                                    <span class="tag">费用类型</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -45,7 +69,7 @@
        UnorderedListOutlined,
        DownOutlined,
        CaretDownOutlined,
-       UserOutlined, PlusOutlined
+       UserOutlined, PlusOutlined, CloseCircleOutlined
    } from "@ant-design/icons-vue";
    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, h } from "vue";
    import Interface from "@/utils/Interface.js";
@@ -125,6 +149,51 @@
             .action{
                 padding: 16px 0;
                 display: flex;
+                .sel{
+                    display: flex;
+                    align-items: center;
+                    .tags{
+                        margin-top: 15px;
+                    }
+                }
+                .list{
+                    &>div{
+                        margin: 0 5px 5px 0;
+                        .iuv-user{
+                            width: 48px;
+                            position: relative;
+                            .del-icon{
+                                position: absolute;
+                                right: 2px;
+                                top: -5px;
+                                color: red;
+                                cursor: pointer;
+                                display: none;
+                            }
+                            &:hover .del-icon{
+                                display: block;
+                            }
+                            .user-avatar{
+                                height: 34px;
+                                width: 34px;
+                                line-height: 34px;
+                                background: #409eff;
+                                margin-left: 7px;
+                                border-radius: 4px;
+                                display: inline-block;
+                                text-align: center;
+                                color: #fff;
+                            }
+                            .user-name{
+                                font-family: PingFangSC-Regular;
+                                font-size: 12px;
+                                color: #999;
+                                text-align: center;
+                                line-height: 16px;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

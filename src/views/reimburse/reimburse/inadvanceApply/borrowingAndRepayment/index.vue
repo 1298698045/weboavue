@@ -16,7 +16,7 @@
     import ContractList  from "@/components/contract/ContractList.vue";
     const data = reactive({
         isStatistics: true,
-        isTab: false
+        isTab: false,
     });
     const { isStatistics, isTab } = toRefs(data);
   </script>

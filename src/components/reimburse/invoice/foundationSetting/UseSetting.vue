@@ -3,8 +3,8 @@
         <div class="main">
             <span class="caption">允许报销的发票查验状态</span>
             <a-checkbox-group v-model:value="value">
-                <a-checkbox value="有效已查验">有效已查验</a-checkbox>
-                <a-checkbox value="有效">有效</a-checkbox>
+                <a-checkbox value="有效已查验" disabled>有效已查验</a-checkbox>
+                <a-checkbox value="有效" disabled>有效</a-checkbox>
                 <a-checkbox value="未查验">未查验</a-checkbox>
                 <a-checkbox value="无效">无效</a-checkbox>
                 <a-checkbox value="校验失败">校验失败</a-checkbox>
@@ -24,8 +24,9 @@
    import Interface from "@/utils/Interface.js";
    const { proxy } = getCurrentInstance();
    const data = reactive({
-     
+    value: ['有效已查验','有效']
    });
+   const { value } = toRefs(data);
  </script>
  <style lang="less" scoped>
     .statusContent{

@@ -23,7 +23,7 @@
                     <div class="tabsBtn">
                     </div>
             </div>
-            <div class="searchWrap">
+            <div class="searchWrap" v-if="isSearch">
                 <list-form-search  ref="searchRef" @update-height="changeHeight"></list-form-search>
             </div>
         </div>
@@ -235,7 +235,9 @@
     const gridUrl = ref(Interface.contract.invoice.list);
 
     const columns = ref(data.tabs[0].table.columnsArray);
-
+    if(!props.isSearch){
+        gridRef.value.loadGrid();
+    }
     const changeTab = (e) => {
         console.log("e", e);
         data.activeKey = e;
