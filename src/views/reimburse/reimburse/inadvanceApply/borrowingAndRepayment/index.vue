@@ -1,6 +1,6 @@
 <template>
     <div class="listWrap">
-        <ContractList title="借还款中心" :isStatistics="isStatistics" :isTab="isTab" />
+        <ContractList moduleName="reimburse" title="借还款中心" :isStatistics="isStatistics" :isTab="isTab" tabName="borrowingAndRepayment" />
     </div>
   </template>
   <script setup>
@@ -16,7 +16,7 @@
     import ContractList  from "@/components/contract/ContractList.vue";
     const data = reactive({
         isStatistics: true,
-        isTab: false,
+        isTab: true,
     });
     const { isStatistics, isTab } = toRefs(data);
   </script>

@@ -758,12 +758,12 @@ const routes = [
               },
               {
                 path: "/contract/performance/collection/record",
-                name: "收款记录",
+                name: "到款记录",
                 component: () => import("../views/contract/performance/collectionAdmin/record/index.vue"),
                 icon: "xinjian",
                 meta: {
                   icon: "xinjian",
-                  name: "收款记录"
+                  name: "到款记录"
                 },
               },
               {
@@ -790,7 +790,7 @@ const routes = [
           },
           {
             path: "/contract/performance/invoice",
-            name: "发票管理",
+            name: "合同发票管理",
             component: () => import("../views/contract/performance/invoice/index.vue"),
             icon: "xinjian",
             meta: {
@@ -1147,7 +1147,7 @@ const routes = [
         ]
       },
       {
-        path: "/contract/seeting",
+        path: "/contract/seeting/",
         name: "基础设置",
         icon: "xinjian",
         meta: {
@@ -1162,7 +1162,7 @@ const routes = [
             icon: "xinjian",
             meta: {
               icon: "xinjian",
-              name: "供应商管理"
+              name: "供应商管理1"
             },
           },
           {
@@ -1377,7 +1377,7 @@ const routes = [
           },
           {
             path: "/reimburse/invoice/foundation",
-            name: "基础设置",
+            name: "发票基础设置",
             icon: "xinjian",
             component: () => import("../views/reimburse/invoiceAdmin/foundation/index.vue"),
             meta: {

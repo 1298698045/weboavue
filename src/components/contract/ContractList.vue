@@ -71,7 +71,7 @@
         MoneyCollectOutlined
     } from "@ant-design/icons-vue";
     import "@/style/contractList.less";
-    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps } from "vue";
+    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, nextTick } from "vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
 
@@ -79,11 +79,12 @@
     import Dtable from "@/components/Dtable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
     import NewReceiving from "@/components/documentAdmin/NewReceiving.vue";
+    import moduleTabs from "@/utils/tabs/index.js";
 
+    // import tabsData from "@/utils/tabs/reimburse/reimburse.js";
     import { useRouter, useRoute } from "vue-router";
     import usePayment from "@/utils/contract/payment";
     const { tabList } = usePayment();
-
 
     const props = defineProps({
         title: {
@@ -101,12 +102,20 @@
         isSearch: {
             type: Boolean,
             default: true
-        }
+        },
+        tabName: {
+            type: String,
+            default: ''
+        },
+        moduleName: String
     })
+
     console.log("props", props.isSearch)
 
 
     console.log("tabList", tabList);
+
+    
     const route = useRoute();
     const router = useRouter();
 
@@ -119,7 +128,7 @@
         fieldNames: {
             children: 'children', title: 'name', key: 'id'
         },
-        tabs: tabList,
+        tabs: [],
         activeKey: 0,
         queryParams: {},
         isModal: false,
@@ -139,12 +148,17 @@
 
     const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
         isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, isNew, statistics } = toRefs(data);
+    if(props.tabName){
+        data.tabs = moduleTabs[props.moduleName][props.tabName] && moduleTabs[props.moduleName][props.tabName].tabs;
+    }
     const tabContent = ref(null);
     const contentRef = ref(null);
     let formSearchHeight = ref(null);
     const gridRef = ref(null);
     onMounted(() => {
-        window.addEventListener('resize', changeHeight)
+        window.addEventListener('resize', changeHeight);
+        changeHeight();
+        
     })
     const onSearch = (e) => {
 
@@ -180,7 +194,16 @@
         }
         data.tableHeight = tableHeight;
         console.log('data', data.tableHeight);
-        console.log("gridRef", gridRef.value.loadGrid())
+        // console.log("gridRef", gridRef.value.loadGrid())
+        if(!props.isSearch){
+            nextTick(()=>{
+                gridRef.value.loadGrid();
+            })
+        }else {
+            nextTick(()=>{
+                gridRef.value.loadGrid();
+            })
+        }
     }
     const cancelRelase = (e) => {
         data.isRelease = e;
@@ -234,10 +257,14 @@
     const imgUrl = require("@/assets/flow/checkbox_checked.gif");
     const gridUrl = ref(Interface.contract.invoice.list);
 
-    const columns = ref(data.tabs[0].table.columnsArray);
-    if(!props.isSearch){
-        gridRef.value.loadGrid();
+    let columnsArray;
+    if(!props.isTab){
+        columnsArray = moduleTabs[props.moduleName][props.tabName].table.columnsArray;
+    }else {
+        columnsArray = data.tabs[0].table.columnsArray;
     }
+    const columns = ref(columnsArray);
+    
     const changeTab = (e) => {
         console.log("e", e);
         data.activeKey = e;

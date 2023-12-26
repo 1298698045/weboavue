@@ -1,6 +1,6 @@
 <template>
     <div class="listWrap">
-        <ContractList title="合同后评价" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" />
+        <ContractList moduleName="contract" tabName="evaluate" title="合同后评价" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" />
     </div>
 </template>
 <script setup>

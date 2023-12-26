@@ -1,6 +1,6 @@
 <template>
     <div class="listWrap">
-        <ContractList title="业务招待申请管理" :isStatistics="isStatistics" :isTab="isTab" />
+        <ContractList moduleName="reimburse" title="业务招待申请管理" :isStatistics="isStatistics" :isTab="isTab" tabName="hospitality" />
     </div>
   </template>
   <script setup>
