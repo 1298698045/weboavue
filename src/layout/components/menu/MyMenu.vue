@@ -77,33 +77,50 @@ const loadMenus = () => {
       list = item.children;
     }
   })
-  const formTreeData = (arr) => {
+  const formTreeData = (arr, count) => {
     let arrTemp = [];
     arr.forEach((item) => {
       if(item.children){
-        arrTemp.push({
-          key: item.path,
-          label: item.name,
-          title: item.name,
-          icon: ()=> h("i", {
-            class:["iconfont","icon-"+item.meta.icon]
-          }),
-          children: formTreeData(item.children)
-        })
-      }else {
-        arrTemp.push({
-          key: item.path,
-          label: item.name,
-          title: item.name,
-          icon: ()=> h("i", {
-            class:["iconfont","icon-"+item.meta.icon]
+        if(count==1){
+          arrTemp.push({
+            key: item.path,
+            label: item.meta.name,
+            title: item.meta.name,
+            icon: ()=> h("i", {
+              class:["iconfont","icon-"+item.meta.icon]
+            }),
+            children: formTreeData(item.children, 2)
           })
-        })
+        }else {
+          arrTemp.push({
+            key: item.path,
+            label: item.meta.name,
+            title: item.meta.name,
+            children: formTreeData(item.children, 2)
+          })
+        }
+      }else {
+        if(count==1){
+          arrTemp.push({
+            key: item.path,
+            label: item.meta.name,
+            title: item.meta.name,
+            icon: ()=> h("i", {
+              class:["iconfont","icon-"+item.meta.icon]
+            })
+          })
+        }else {
+          arrTemp.push({
+            key: item.path,
+            label: item.meta.name,
+            title: item.meta.name
+          })
+        }
       }
     });
     return arrTemp;
   };
-  let result = formTreeData(list);
+  let result = formTreeData(list, 1);
   data.items = result;
 }
 watch(() => route.path, newRoute => {

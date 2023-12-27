@@ -1,6 +1,6 @@
 <template>
   <div class="treeListWrap">
-    <ContractTreeList title="范本库" treeTitle="范本分类" :isStatistics="isStatistics" />
+    <ContractTreeList title="范本库" treeTitle="范本分类" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" />
   </div>
 </template>
 <script setup>
@@ -15,9 +15,11 @@
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
   const data = reactive({
-    isStatistics: true
+    isStatistics: true,
+    isTab: false,
+    isSearch: true
   });
-  const { isStatistics } = toRefs(data);
+  const { isStatistics, isTab, isSearch } = toRefs(data);
 </script>
 <style lang="less" scoped>
   .treeListWrap{

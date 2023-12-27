@@ -53,8 +53,8 @@ const currentRoutes = route.matched;
 // list2.map((item) => {
 //   list.push({
 //     key: item.path,
-//     label: item.name,
-//     title: item.name,
+//     label: item.meta.name,
+//     title: item.meta.name,
 //     // icon: () => h(PieChartOutlined),
 //     icon: ()=> h("i", {
 //       class:["iconfont","icon-"+item.meta.icon]
@@ -74,8 +74,8 @@ const loadMenus = (list,path) => {
     index++;
     arr.forEach((item) => {
       item.key = item.path;
-      item.label = item.name;
-      item.title = item.name;
+      item.label = item.meta.name;
+      item.title = item.meta.name;
       item.icon = ()=> h("i", {
         class:["iconfont","icon-"+item.meta.icon]
       })
@@ -96,8 +96,8 @@ const loadMenus = (list,path) => {
       if(item.children){
         children.push({
           key: item.path,
-          label: item.name,
-          title: item.name,
+          label: item.meta.name,
+          title: item.meta.name,
           icon: ()=> h("i", {
             class:["iconfont","icon-"+item.meta.icon]
           }),
@@ -106,8 +106,8 @@ const loadMenus = (list,path) => {
       }else {
         children.push({
           key: item.path,
-          label: item.name,
-          title: item.name,
+          label: item.meta.name,
+          title: item.meta.name,
           icon: ()=> h("i", {
             class:["iconfont","icon-"+item.meta.icon]
           })
@@ -117,22 +117,22 @@ const loadMenus = (list,path) => {
     return children;
   }
   list2.map((item) => {
-    if(item.children && item.name){
+    if(item.children && item.meta.name){
       let arr = handleTwoMenu(item.children);
       temp.push({
         key: item.path,
-        label: item.name,
-        title: item.name,
+        label: item.meta.name,
+        title: item.meta.name,
         icon: ()=> h("i", {
           class:["iconfont","icon-"+item.meta.icon]
         }),
         children: arr
       });
-    }else if(item.name){
+    }else if(item.meta.name){
       temp.push({
         key: item.path,
-        label: item.name,
-        title: item.name,
+        label: item.meta.name,
+        title: item.meta.name,
         icon: ()=> h("i", {
           class:["iconfont","icon-"+item.meta.icon]
         })
@@ -194,8 +194,8 @@ watch(()=>data.items,(newVal,oldVal)=>{
 // list2.map((item) => {
 //   list.push({
 //     key: item.path,
-//     label: item.name,
-//     title: item.name,
+//     label: item.meta.name,
+//     title: item.meta.name,
 //     // icon: () => h(PieChartOutlined),
 //     icon: ()=> h("i", {
 //       class:["iconfont","icon-"+item.meta.icon]

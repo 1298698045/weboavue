@@ -31,7 +31,7 @@
                     </a-tree>
                 </div>
             </a-col>
-            <a-col :span="isCollapsed ? '24' : '21'" class="wea-left-right-layout-right">
+            <a-col :span="isCollapsed ? '24' : '21'" class="wea-left-right-layout-right" style="height: 100%;">
                 <div class="headerBar" v-if="isHead">
                     <div class="headerLeft">
                         <div class="icon-circle-base"></div>
@@ -48,7 +48,7 @@
                         <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
                             :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
                         <div style="height: 100%" ref="contentRef">
-                            <div class="wea-tab">
+                            <div class="wea-tab" v-if="isTab">
                                 <a-tabs v-model:activeKey="activeKey" @change="changeTab">
                                     <a-tab-pane v-for="(item,index) in tabs" :key="index">
                                         <template #tab>
@@ -64,7 +64,7 @@
                             <a-button class="ml10">批量取消发布</a-button> -->
                                 </div>
                             </div>
-                            <list-form-search ref="searchRef" @update-height="changeHeight"></list-form-search>
+                            <list-form-search v-if="isSearch" ref="searchRef" @update-height="changeHeight"></list-form-search>
                             <div class="statistics" v-if="isStatistics">
                                 <div class="statisticItem">
                                     <div class="statisticLeft">
@@ -141,7 +141,7 @@
         CaretDownOutlined,
         UserOutlined, MoneyCollectOutlined, ApartmentOutlined
     } from "@ant-design/icons-vue";
-    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated } from "vue";
+    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, nextTick } from "vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
 
@@ -245,7 +245,8 @@
     let formSearchHeight = ref(null);
     const gridRef = ref(null);
     onMounted(() => {
-        window.addEventListener('resize', changeHeight)
+        window.addEventListener('resize', changeHeight);
+        changeHeight();
     })
     const onSearch = (e) => {
 
@@ -267,15 +268,29 @@
         }
         let tableHeight;
         let contentHeight = contentRef.value.clientHeight;
-        let tabsHeight = 46;
+        let tabsHeight;
+        if(props.isTab){
+            tabsHeight = 46;
+        }else {
+            tabsHeight = 0;
+        }
         let height = contentHeight - tabsHeight - formSearchHeight.value;
         tableHeight = height;
         if(props.isStatistics){
             tableHeight = tableHeight - 100; 
         }
         data.tableHeight = tableHeight;
-        console.log('data', data.tableHeight);
-        console.log("gridRef", gridRef.value.loadGrid())
+        // console.log('data', data.tableHeight);
+        // console.log("gridRef", gridRef.value.loadGrid())
+        if(!props.isSearch){
+            nextTick(()=>{
+                gridRef.value.loadGrid();
+            })
+        }else {
+            nextTick(()=>{
+                gridRef.value.loadGrid();
+            })
+        }
     }
 
     // 获取tabs
