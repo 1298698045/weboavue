@@ -40,27 +40,29 @@ const routes = router.options.routes;
 const currentPath = route.path;
 const currentRoutes = route.matched;
 
-
 const data = reactive({
-  items: []
+  items: [],
 });
 const { items } = toRefs(data);
 
-
 const state = reactive({
   collapsed: false,
-  selectedKeys: [ route.path ],
+  selectedKeys: [route.path],
   openKeys: [],
   preOpenKeys: [],
   rootSubmenuKeys: [],
 });
 
-watch(()=>data.items,(newVal,oldVal)=>{
-  console.log("newVal", newVal);
-  newVal.forEach(item=>{
-    state.rootSubmenuKeys.push(item.key);
-  })
-},{deep: true, immediate: true});
+watch(
+  () => data.items,
+  (newVal, oldVal) => {
+    console.log("newVal", newVal);
+    newVal.forEach((item) => {
+      state.rootSubmenuKeys.push(item.key);
+    });
+  },
+  { deep: true, immediate: true }
+);
 
 watch(
   () => state.openKeys,
@@ -72,49 +74,51 @@ watch(
 const loadMenus = () => {
   const routepath = route.matched[0].path;
   let list = [];
-  routes.forEach(item=>{
-    if(item.path==routepath){
+  routes.forEach((item) => {
+    if (item.path == routepath) {
       list = item.children;
     }
-  })
+  });
   const formTreeData = (arr, count) => {
     let arrTemp = [];
     arr.forEach((item) => {
-      if(item.children){
-        if(count==1){
+      if (item.children) {
+        if (count == 1) {
           arrTemp.push({
             key: item.path,
             label: item.meta.name,
             title: item.meta.name,
-            icon: ()=> h("i", {
-              class:["iconfont","icon-"+item.meta.icon]
-            }),
-            children: formTreeData(item.children, 2)
-          })
-        }else {
+            icon: () =>
+              h("i", {
+                class: ["iconfont", "icon-" + item.meta.icon],
+              }),
+            children: formTreeData(item.children, 2),
+          });
+        } else {
           arrTemp.push({
             key: item.path,
             label: item.meta.name,
             title: item.meta.name,
-            children: formTreeData(item.children, 2)
-          })
+            children: formTreeData(item.children, 2),
+          });
         }
-      }else {
-        if(count==1){
+      } else {
+        if (count == 1) {
           arrTemp.push({
             key: item.path,
             label: item.meta.name,
             title: item.meta.name,
-            icon: ()=> h("i", {
-              class:["iconfont","icon-"+item.meta.icon]
-            })
-          })
-        }else {
+            icon: () =>
+              h("i", {
+                class: ["iconfont", "icon-" + item.meta.icon],
+              }),
+          });
+        } else {
           arrTemp.push({
             key: item.path,
             label: item.meta.name,
-            title: item.meta.name
-          })
+            title: item.meta.name,
+          });
         }
       }
     });
@@ -122,13 +126,15 @@ const loadMenus = () => {
   };
   let result = formTreeData(list, 1);
   data.items = result;
-}
-watch(() => route.path, newRoute => {
-  state.selectedKeys = [ newRoute ];
-  loadMenus();
-},{deep: true, immediate: true})
-
-
+};
+watch(
+  () => route.path,
+  (newRoute) => {
+    state.selectedKeys = [newRoute];
+    loadMenus();
+  },
+  { deep: true, immediate: true }
+);
 
 const toggleCollapsed = () => {
   state.collapsed = !state.collapsed;
@@ -138,9 +144,11 @@ const handleMenu = (e) => {
   console.log("e", e);
   router.push(e.key);
 };
-const onOpenChange = openKeys => {
+const onOpenChange = (openKeys) => {
   console.log("openKeys", openKeys, state.openKeys);
-  const latestOpenKey = openKeys.find(key => state.openKeys.indexOf(key) === -1);
+  const latestOpenKey = openKeys.find(
+    (key) => state.openKeys.indexOf(key) === -1
+  );
   if (state.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
     state.openKeys = openKeys;
   } else {
@@ -148,40 +156,39 @@ const onOpenChange = openKeys => {
   }
 };
 
-
 // 处理数据展开应展开的菜单
 const handleData = (result) => {
-    function loop(list, keys = []) {
-      // 循环【顶级菜单数组列表】 循环的数组下标用i表示
-      // keys参数为当前菜单的所有上级菜单的router（用作openKeys的值)
-      for (let item of list) {
-        // console.log("item.path === route.path",item.key,'===', route.path)
-        if (item.key === route.path) {
-          // 如果路由path与item.router相等则直接返回当前路由的所有上级的router
-          console.log("itemkeys",item);
-          // keys.concat(item.path)
-          return [...keys]
-    } else if (item.children && item.children.length) {
-      // 如果item.router不等于当前$router.path则递归调用loop函数，传入item.children、[...keys, item.router]
-      let tempResult = loop(item.children, [...keys, item.key])
-      console.log("tempResult",tempResult); 
-      if (tempResult !== false) {
-        return tempResult
+  function loop(list, keys = []) {
+    // 循环【顶级菜单数组列表】 循环的数组下标用i表示
+    // keys参数为当前菜单的所有上级菜单的router（用作openKeys的值)
+    for (let item of list) {
+      // console.log("item.path === route.path",item.key,'===', route.path)
+      if (item.key === route.path) {
+        // 如果路由path与item.router相等则直接返回当前路由的所有上级的router
+        console.log("itemkeys", item);
+        // keys.concat(item.path)
+        return [...keys];
+      } else if (item.children && item.children.length) {
+        // 如果item.router不等于当前$router.path则递归调用loop函数，传入item.children、[...keys, item.router]
+        let tempResult = loop(item.children, [...keys, item.key]);
+        console.log("tempResult", tempResult);
+        if (tempResult !== false) {
+          return tempResult;
+        }
       }
     }
-      }
-      return false
-    }
-    let openKeys = loop(result)
-    console.log("openKeys88",openKeys);
-    state.openKeys = openKeys;
-}
+    return false;
+  }
+  let openKeys = loop(result);
+  console.log("openKeys88", openKeys);
+  state.openKeys = openKeys;
+};
 handleData(data.items);
 </script>
 <style lang="less">
 @import "./menu.less";
 @import "../../../style/icon/iconfont.css";
-.menuContainer{
+.menuContainer {
   height: calc(~"100% - 40px");
   overflow: auto;
 }

@@ -1,6 +1,44 @@
+const formatter = () => {
+    var str = `
+        <div class="iconBox">
+        <div class="popup">
+            <div class="option-item">编辑</div>
+        </div>
+        <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
+    `
+    return str;
+}
 const tabsData = {
     //发票台账
     ledger: {
+        headerBtns: [
+            {
+                label: "文件识别",
+                name: "",
+                type: 'primary'
+            },
+            {
+                label: "手动录入",
+                name: "",
+                type: "default"
+            },
+            {
+                label: "发起报销",
+                name: "",
+                disabled: true,
+                type: "default"
+            },
+            {
+                label: "链接识别发票",
+                name: "",
+                type: "default"
+            },
+            {
+                label: "批量操作",
+                name: "",
+                isMenu: true
+            },
+        ],
         tabs: [
             {
                 label: "全部",
@@ -66,7 +104,35 @@ const tabsData = {
                         title: '紧急程度',
                         sortable: true
                     }]
-                }
+                },
+                headerBtns: [
+                    {
+                        label: "文件识别",
+                        name: "",
+                        type: 'primary'
+                    },
+                    {
+                        label: "手动录入",
+                        name: "",
+                        type: "default"
+                    },
+                    {
+                        label: "发起报销",
+                        name: "",
+                        disabled: true,
+                        type: "default"
+                    },
+                    {
+                        label: "链接识别发票",
+                        name: "",
+                        type: "default"
+                    },
+                    {
+                        label: "批量操作",
+                        name: "",
+                        isMenu: true
+                    },
+                ]
             },
             {
                 label: "未报销",
@@ -270,6 +336,23 @@ const tabsData = {
     },
     // 差旅申请
     travel: {
+        headerBtns: [
+            {
+                label: "发起差旅申请",
+                name: "",
+                type: 'primary'
+            },
+            {
+                label: "商旅对账",
+                name: "",
+                type: 'primary'
+            },
+            {
+                label: "费用分摊",
+                name: "",
+                type: 'primary'
+            },
+        ],
         tabs: [
             {
                 label: "全部",
@@ -473,6 +556,13 @@ const tabsData = {
     },
     // 业务招待申请
     hospitality: {
+        headerBtns: [
+            {
+                label: "业务招待申请",
+                name: "",
+                type: 'primary'
+            }
+        ],
         table: {
             columnsArray: [{
                 field: 'ids',
@@ -674,7 +764,24 @@ const tabsData = {
                         title: '紧急程度',
                         sortable: true
                     }]
-                }
+                },
+                headerBtns: [
+                    {
+                        label: "发起差旅费报销",
+                        name: "",
+                        type: 'primary'
+                    },
+                    {
+                        label: "发起日常费用报销",
+                        name: "",
+                        type: 'primary'
+                    },
+                    {
+                        label: "发起业务招待费用申请",
+                        name: "",
+                        type: 'primary'
+                    }
+                ],
             },
             {
                 label: "业务审批",
@@ -740,7 +847,14 @@ const tabsData = {
                         title: '紧急程度',
                         sortable: true
                     }]
-                }
+                },
+                headerBtns: [
+                    {
+                        label: "智能审批",
+                        name: "",
+                        type: 'primary'
+                    }
+                ],
             },
             {
                 label: "财务处理",
@@ -806,7 +920,19 @@ const tabsData = {
                         title: '紧急程度',
                         sortable: true
                     }]
-                }
+                },
+                headerBtns: [
+                    {
+                        label: "扫码收单",
+                        name: "",
+                        type: 'primary'
+                    },
+                    {
+                        label: "智能票审",
+                        name: "",
+                        type: 'primary'
+                    }
+                ],
             },
         ]
     },
@@ -873,7 +999,19 @@ const tabsData = {
                 title: '紧急程度',
                 sortable: true
             }]
-        }
+        },
+        headerBtns: [
+            {
+                label: "扫码收单",
+                name: "",
+                type: 'primary'
+            },
+            {
+                label: "智能票审",
+                name: "",
+                type: "primary"
+            }
+        ],
     },
     // 我的报销
     myReimburse: {
@@ -938,7 +1076,19 @@ const tabsData = {
                 title: '紧急程度',
                 sortable: true
             }]
-        }
+        },
+        headerBtns: [
+            {
+                label: "扫码收单",
+                name: "",
+                type: 'primary'
+            },
+            {
+                label: "智能票审",
+                name: "",
+                type: "primary"
+            }
+        ],
     }
 }
 export default tabsData;

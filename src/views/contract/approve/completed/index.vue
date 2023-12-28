@@ -1,6 +1,6 @@
 <template>
     <div class="treeListWrap">
-      <ContractTreeList :treeTitle="'按流程类型显示'" :isHead="isHead" :isTab="isTab" :isSearch="isSearch" :isStatistics="isStatistics" />
+      <ContractTreeList moduleName="contract" tabName="contractApproval"  :treeTitle="'按流程类型显示'" :isHead="isHead" :isTab="isTab" :isSearch="isSearch" :isStatistics="isStatistics" />
     </div>
   </template>
   <script setup>

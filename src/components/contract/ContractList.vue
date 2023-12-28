@@ -7,7 +7,7 @@
                     <span class="headerTitle">{{title}}</span>
                 </div>
                 <div class="headerRight">
-                    <a-button type="primary" class="ml10">新建付款记录</a-button>
+                    <a-button :type="item.type" :disabled="item.disabled" class="ml10" v-for="(item, index) in headerBtns" :key="index">{{item.label}}</a-button>
                 </div>
             </div>
             <div class="wea-tab" v-if="isTab">
@@ -143,13 +143,18 @@
         isRelease: false,
         ProcessInstanceId: "",
         isNew: false,
-        statistics: {}
+        statistics: {},
+        headerBtns: []
     });
 
     const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
-        isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, isNew, statistics } = toRefs(data);
+        isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, isNew, statistics, headerBtns } = toRefs(data);
     if(props.tabName){
         data.tabs = moduleTabs[props.moduleName][props.tabName] && moduleTabs[props.moduleName][props.tabName].tabs;
+        data.headerBtns = moduleTabs[props.moduleName][props.tabName].headerBtns;
+    }
+    if(data.tabs && data.tabs.length && data.tabs[0] && data.tabs[0].headerBtns){
+        data.headerBtns = data.tabs[0].headerBtns;
     }
     const tabContent = ref(null);
     const contentRef = ref(null);
@@ -269,6 +274,9 @@
         console.log("e", e);
         data.activeKey = e;
         data.queryParams.activeKey = e;
+        if(data.tabs[e].headerBtns){
+            data.headerBtns = data.tabs[e].headerBtns;
+        }
         columns.value = data.tabs[e].table.columnsArray;
         gridRef.value.loadGrid(data.queryParams);
     }

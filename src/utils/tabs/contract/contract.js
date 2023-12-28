@@ -1,3 +1,13 @@
+const formatter = () => {
+    var str = `
+        <div class="iconBox">
+        <div class="popup">
+            <div class="option-item">编辑</div>
+        </div>
+        <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
+    `
+    return str;
+}
 const tabsData = {
     // 合同管理
     admin: {
@@ -11,7 +21,8 @@ const tabsData = {
                         checkbox: true
                     }, {
                         field: "Action",
-                        title: "操作"
+                        title: "操作",
+                        formatter: formatter
                     },
                     {
                         field: "ProcessInstanceNumber",
@@ -2864,7 +2875,339 @@ const tabsData = {
                 sortable: true
             }]
         }
+    },
+    // 合同审批
+    contractApproval: {
+        tabs: [
+            {
+                label: "直接参与",
+                number: "",
+                table: {
+                    columnsArray: [{
+                        field: 'ids',
+                        checkbox: true
+                    }, {
+                        field: "Action",
+                        title: "操作"
+                    },
+                    {
+                        field: "ProcessInstanceNumber",
+                        title: '流程编号',
+                        sortable: true
+                    },
+                    {
+                        field: 'Name',
+                        title: '标题',
+                        sortable: true
+                    }, {
+                        field: 'ProcessIdName',
+                        title: '流程名称',
+                        sortable: true
+                    }, {
+                        field: 'StateCodeName',
+                        title: '状态',
+                        sortable: true
+                    }, {
+                        field: 'ExpiredOn',
+                        title: '截至时间',
+                        sortable: true
+                    }, {
+                        field: 'AttachQty',
+                        title: '附件数量',
+                        sortable: true
+                    },{
+                        field: 'CreatedByName',
+                        title: '发起人',
+                        sortable: true
+                    },
+                    {
+                        field: 'CurrentStepName',
+                        title: '当前步骤',
+                        sortable: true
+                    },
+                     {
+                         field: 'CreatedOn',
+                         title: '发起时间',
+                         sortable: true
+                     },
+                    {
+                        field: 'BusinessUnitIdName',
+                        title: '发起人部门',
+                        sortable: true
+                    }, {
+                        field: 'ModifiedOn',
+                        title: '上一次修改时间',
+                        sortable: true
+                    },{
+                        field: 'PriorityName',
+                        title: '紧急程度',
+                        sortable: true
+                    }]
+                }
+            },
+            {
+                label: "我的关注",
+                number: "",
+                table: {
+                    columnsArray: [{
+                        field: 'ids',
+                        checkbox: true
+                    }, {
+                        field: "Action",
+                        title: "操作"
+                    },
+                    {
+                        field: "ProcessInstanceNumber",
+                        title: '流程编号',
+                        sortable: true
+                    },
+                    {
+                        field: 'Name',
+                        title: '标题',
+                        sortable: true
+                    }, {
+                        field: 'ProcessIdName',
+                        title: '流程名称',
+                        sortable: true
+                    }, {
+                        field: 'StateCodeName',
+                        title: '状态',
+                        sortable: true
+                    }, {
+                        field: 'ExpiredOn',
+                        title: '截至时间',
+                        sortable: true
+                    }, {
+                        field: 'AttachQty',
+                        title: '附件数量',
+                        sortable: true
+                    },{
+                        field: 'CreatedByName',
+                        title: '发起人',
+                        sortable: true
+                    },
+                    {
+                        field: 'CurrentStepName',
+                        title: '当前步骤',
+                        sortable: true
+                    },
+                     {
+                         field: 'CreatedOn',
+                         title: '发起时间',
+                         sortable: true
+                     },
+                    {
+                        field: 'BusinessUnitIdName',
+                        title: '发起人部门',
+                        sortable: true
+                    }, {
+                        field: 'ModifiedOn',
+                        title: '上一次修改时间',
+                        sortable: true
+                    },{
+                        field: 'PriorityName',
+                        title: '紧急程度',
+                        sortable: true
+                    }]
+                }
+            },
+            {
+                label: "共享给我",
+                number: "",
+                table: {
+                    columnsArray: [{
+                        field: 'ids',
+                        checkbox: true
+                    }, {
+                        field: "Action",
+                        title: "操作"
+                    },
+                    {
+                        field: "ProcessInstanceNumber",
+                        title: '流程编号',
+                        sortable: true
+                    },
+                    {
+                        field: 'Name',
+                        title: '标题',
+                        sortable: true
+                    }, {
+                        field: 'ProcessIdName',
+                        title: '流程名称',
+                        sortable: true
+                    }, {
+                        field: 'StateCodeName',
+                        title: '状态',
+                        sortable: true
+                    }, {
+                        field: 'ExpiredOn',
+                        title: '截至时间',
+                        sortable: true
+                    }, {
+                        field: 'AttachQty',
+                        title: '附件数量',
+                        sortable: true
+                    },{
+                        field: 'CreatedByName',
+                        title: '发起人',
+                        sortable: true
+                    },
+                    {
+                        field: 'CurrentStepName',
+                        title: '当前步骤',
+                        sortable: true
+                    },
+                     {
+                         field: 'CreatedOn',
+                         title: '发起时间',
+                         sortable: true
+                     },
+                    {
+                        field: 'BusinessUnitIdName',
+                        title: '发起人部门',
+                        sortable: true
+                    }, {
+                        field: 'ModifiedOn',
+                        title: '上一次修改时间',
+                        sortable: true
+                    },{
+                        field: 'PriorityName',
+                        title: '紧急程度',
+                        sortable: true
+                    }]
+                }
+            }
+        ]
+    },
+    // 范本库
+    modelLibrary: {
+        table: {
+            columnsArray: [{
+                field: 'ids',
+                checkbox: true
+            }, {
+                field: "Action",
+                title: "操作"
+            },
+            {
+                field: "ProcessInstanceNumber",
+                title: '流程编号',
+                sortable: true
+            },
+            {
+                field: 'Name',
+                title: '标题',
+                sortable: true
+            }, {
+                field: 'ProcessIdName',
+                title: '流程名称',
+                sortable: true
+            }, {
+                field: 'StateCodeName',
+                title: '状态',
+                sortable: true
+            }, {
+                field: 'ExpiredOn',
+                title: '截至时间',
+                sortable: true
+            }, {
+                field: 'AttachQty',
+                title: '附件数量',
+                sortable: true
+            },{
+                field: 'CreatedByName',
+                title: '发起人',
+                sortable: true
+            },
+            {
+                field: 'CurrentStepName',
+                title: '当前步骤',
+                sortable: true
+            },
+             {
+                 field: 'CreatedOn',
+                 title: '发起时间',
+                 sortable: true
+             },
+            {
+                field: 'BusinessUnitIdName',
+                title: '发起人部门',
+                sortable: true
+            }, {
+                field: 'ModifiedOn',
+                title: '上一次修改时间',
+                sortable: true
+            },{
+                field: 'PriorityName',
+                title: '紧急程度',
+                sortable: true
+            }]
+        }
+    },
+    // 条款库
+    termLibrary: {
+        table: {
+            columnsArray: [{
+                field: 'ids',
+                checkbox: true
+            }, {
+                field: "Action",
+                title: "操作"
+            },
+            {
+                field: "ProcessInstanceNumber",
+                title: '流程编号',
+                sortable: true
+            },
+            {
+                field: 'Name',
+                title: '标题',
+                sortable: true
+            }, {
+                field: 'ProcessIdName',
+                title: '流程名称',
+                sortable: true
+            }, {
+                field: 'StateCodeName',
+                title: '状态',
+                sortable: true
+            }, {
+                field: 'ExpiredOn',
+                title: '截至时间',
+                sortable: true
+            }, {
+                field: 'AttachQty',
+                title: '附件数量',
+                sortable: true
+            },{
+                field: 'CreatedByName',
+                title: '发起人',
+                sortable: true
+            },
+            {
+                field: 'CurrentStepName',
+                title: '当前步骤',
+                sortable: true
+            },
+             {
+                 field: 'CreatedOn',
+                 title: '发起时间',
+                 sortable: true
+             },
+            {
+                field: 'BusinessUnitIdName',
+                title: '发起人部门',
+                sortable: true
+            }, {
+                field: 'ModifiedOn',
+                title: '上一次修改时间',
+                sortable: true
+            },{
+                field: 'PriorityName',
+                title: '紧急程度',
+                sortable: true
+            }]
+        }
     }
-
 }
 export default tabsData;
