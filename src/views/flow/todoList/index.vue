@@ -6,22 +6,42 @@
         <span class="wea-new-top-title-breadcrumb">待办事宜</span>
       </div>
       <div class="todo-head-right">
-        <a-button type="primary">全部已读</a-button>
+        <!-- <a-button type="primary">全部已读</a-button> -->
+        <button class="f-btn primary">全部已读</button>
+        <span>
+          <button disabled class="f-btn primary ml10">批量提交</button>
+          <a-dropdown>
+            <button class="f-btn primary rdownIcon">
+              <CaretDownOutlined />
+            </button>
+            <template #overlay>
+              <a-menu @click="handleMenuClick">
+                <a-menu-item key="1">
+                  批量提交
+                </a-menu-item>
+                <a-menu-item key="2">
+                  批量关注
+                </a-menu-item>
+                <a-menu-item key="3">
+                  批量转发
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </span>
+
         <a-dropdown-button :trigger="['click']">
           批量提交
           <template #overlay>
             <a-menu @click="handleMenuClick">
               <a-menu-item key="1">
-                <UserOutlined />
-                1st menu item
+                批量提交
               </a-menu-item>
               <a-menu-item key="2">
-                <UserOutlined />
-                2nd menu item
+                批量关注
               </a-menu-item>
               <a-menu-item key="3">
-                <UserOutlined />
-                3rd item
+                批量转发
               </a-menu-item>
             </a-menu>
           </template>
@@ -34,15 +54,39 @@
             <a-menu @click="handleMenuClick">
               <a-menu-item key="1">
                 <UserOutlined />
-                1st menu item
+                搜索
               </a-menu-item>
               <a-menu-item key="2">
                 <UserOutlined />
-                2nd menu item
+                批量提交
               </a-menu-item>
               <a-menu-item key="3">
                 <UserOutlined />
-                3rd item
+                批量关注
+              </a-menu-item>
+              <a-menu-item key="4">
+                <UserOutlined />
+                批量转发
+              </a-menu-item>
+              <a-menu-item key="5">
+                <UserOutlined />
+                全部已读
+              </a-menu-item>
+              <a-menu-item key="6">
+                <UserOutlined />
+                显示列定制
+              </a-menu-item>
+              <a-menu-item key="7">
+                <UserOutlined />
+                默认排序设置
+              </a-menu-item>
+              <a-menu-item key="8">
+                <UserOutlined />
+                上报敏感词
+              </a-menu-item>
+              <a-menu-item key="9">
+                <UserOutlined />
+                帮助
               </a-menu-item>
             </a-menu>
           </template>
