@@ -49,7 +49,7 @@
     </div>
 </template>
 <script setup>
-    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, defineExpose } from "vue";
+    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, defineExpose, nextTick } from "vue";
     import {
         SearchOutlined,
         DownOutlined,
@@ -152,7 +152,9 @@
         proxy.$get(Interface.formSearch, {}).then(res => {
             // console.log("SearchFields", res);
             data.searchFields = res.returnValue.SearchFields;
-            emit("update-height", formSearchRef.value.clientHeight)
+            nextTick(()=>{
+                emit("update-height", formSearchRef.value.clientHeight);
+            })
             data.searchFields.forEach(item => {
                 formState[item.Name] = "";
                 if(item.DataType=='F'){

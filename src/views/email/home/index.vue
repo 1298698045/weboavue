@@ -563,7 +563,7 @@
         }
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     @import url("@/style/email.less");
     .el-checkbox-group{
         font-size: 14px !important;
