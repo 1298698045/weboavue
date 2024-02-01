@@ -148,13 +148,13 @@ const routes = [
           icon: "caogaoxiang",
         },
       },
-      {
-        path: "/flow/formSearch/list",
-        component: () => import("../views/flow/formSearch/list.vue"),
-        meta: {
-          icon: "caogaoxiang",
-        },
-      },
+      // {
+      //   path: "/flow/formSearch/list",
+      //   component: () => import("../views/flow/formSearch/list.vue"),
+      //   meta: {
+      //     icon: "caogaoxiang",
+      //   },
+      // },
       // {
       //   path: "/about",
       //   component: () => import("../views/About.vue"),

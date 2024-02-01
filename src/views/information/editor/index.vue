@@ -280,7 +280,7 @@
         window.open(url.href); 
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .editorWrap {
         height: 100vh;
     }

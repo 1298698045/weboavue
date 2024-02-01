@@ -104,7 +104,6 @@
   import { useRouter, useRoute } from "vue-router";
   const route = useRoute();
   const router = useRouter();
-  import Delegate from "@/components/workflow/Delegate.vue";
   import NewInfo from "@/components/information/NewInfo.vue";
   const x = 3;
   const y = 2;
@@ -232,23 +231,21 @@
     queryParams: {},
     isModal: false,
     isCirculation: false,
-    isNew: false
+    isNew: false,
+    value: ""
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
-  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew} = toRefs(data);
+  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value} = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
   let formSearchHeight = ref(null);
   const gridRef = ref(null);
+  const onSearch = () => {
+
+  }
   onMounted(()=>{
-    // console.log("contentRef",contentRef.value.clientHeight)
-    // var contentHeight = contentRef.value.clientHeight;
-    // var tabsHeight = 46;
-    // var height = contentHeight - tabsHeight;
-    // data.tableHeight = height;
-    // console.log(data.tableHeight)
     window.addEventListener('resize',changeHeight)
   })
   function changeHeight(h){
@@ -279,43 +276,38 @@
   }
   const DelegateRef = ref();
   
-  function handleTo(WFRuleLogId){
-      console.log("WFRuleLogId",WFRuleLogId);
+  function handleDetail(WFRuleLogId){
       router.push({
-        path:"/detail",
+        path:"/informationDetail",
         query: {
           id: WFRuleLogId
         }
       });
   }
-  const DelegateData = reactive({
-    params: {}
-  })
-  const CirculationData = reactive({
-    params: {}
-  })
+  function handlePreview(id) {
+    router.push({
+        path:"/previewContent",
+        query: {
+          id: id
+        }
+    });
+  }
+  function handleEdit(id){
+    router.push({
+        path:"/informationEditor",
+        query: {
+          id: id
+        }
+    });
+  }
   const updateStatus = (e) => {
     data.isModal = e;
     data.isCirculation = e;
   }
-  // 委派
-  function DelegateFn(InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName){
-    // console.log("RuleLogId",RuleLogId, DelegateRef);
-    DelegateData.params = {
-      InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName
-    }
-    console.log(DelegateData.params)
-    data.isModal = true;
-  }
-  function CirculationFn(InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName){
-    CirculationData.params = {
-      InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName
-    }
-    data.isCirculation = true;
-  }
-  window.handleTo = handleTo;
-  window.DelegateFn = DelegateFn; // 委派
-  window.CirculationFn = CirculationFn; // 传阅
+  window.handleDetail = handleDetail;
+  window.handlePreview = handlePreview;
+  window.handleEdit = handleEdit;
+
   window.data = data;
   const imgUrl = require("@/assets/flow/checkbox_checked.gif");
     const gridUrl = ref("/localData/datalist.json");
@@ -332,10 +324,10 @@
               var str = `
                 <div class="iconBox">
                   <div class="popup">
-                    <div class="option-item" id=${row.WFRuleLogId} onclick="handleTo('${row.WFRuleLogId}')">办理</div>
-                    <div class="option-item" onclick="DelegateFn('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">委派</div>  
-                    <div class="option-item" onclick="CirculationFn('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">传阅</div>  
-                    <div class="option-item">打印</div>
+                    <div class="option-item" onclick="handleDetail('${row.WFRuleLogId}')">查看</div>
+                    <div class="option-item" onclick="handlePreview('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">预览</div>  
+                    <div class="option-item" onclick="handleEdit('${row.ProcessInstanceId}','${row.WFRuleLogId}',\'${row.InstanceName}\','${row.ExecutorIdentityName}')">编辑</div>  
+                    <div class="option-item">删除</div>
                   </div>
                   <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
               `

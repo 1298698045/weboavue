@@ -115,7 +115,7 @@
   });
 
   </script>
-<style lang="less">
+<style lang="less" scoped>
 @import url("@/style/modal.less");
 .noticeWrap .ant-modal-footer{
     display: none;

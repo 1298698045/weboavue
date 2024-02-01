@@ -43,7 +43,7 @@
     </div>
     <div class="header-end">
       <div class="header-toobar-plugin signPlugin">
-        <a-popover class="signPlugin" trigger="click">
+        <a-popover overlayClassName="signPlugin" trigger="click">
           <template #title>
             <div class="popup-header">
               <ScheduleOutlined style="font-size: 16px;color:var(--textColor)" />
@@ -246,5 +246,10 @@ const handleOpenInfo = () => {
       background: #2866C3 !important;
     }
   }
+}
+</style>
+<style>
+.ant-popover.signPlugin .ant-popover-inner{
+  padding: 0 !important;
 }
 </style>

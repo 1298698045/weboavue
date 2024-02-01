@@ -60,7 +60,7 @@
     });
     const { current } = toRefs(data);
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .wrappper{
         width: 100%;
         height: 100%;

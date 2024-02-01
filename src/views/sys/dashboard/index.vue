@@ -193,6 +193,9 @@
   import Filter from "@/components/listView/Filter.vue";
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
+ import { useRouter, useRoute } from "vue-router";
+ const route = useRoute();
+const router = useRouter();
   const data = reactive({
     currentMenu: "全部",
     menus: [
@@ -296,6 +299,13 @@
   const Edit = (id) => {
     console.log("id", id);
     data.isCommon = true;
+    // 编辑仪表盘
+    // router.push({
+    //   path: "/hrsetting/design",
+    //   query: {
+    //     id: id,
+    //   },
+    // })
   };
   window.Edit = Edit;
   const getConfig = () => {

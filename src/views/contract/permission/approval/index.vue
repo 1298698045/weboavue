@@ -21,7 +21,7 @@
     });
     const { isStatistics, isTab, isSearch } = toRefs(data);
 </script>
-<style>
+<style scoped>
     .listWrap{
         width: 100%;
         height: 100%;
