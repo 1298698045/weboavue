@@ -441,19 +441,19 @@
                     }
 
                     .wea-left-right-layout-btn.wea-left-right-layout-btn-show {
-                        background: url(https://enterprise.e-cology.com.cn/cloudstore/resource/pc/com/images/leftTree-show.png) no-repeat -2px 0;
+                        background: url(~@/assets/img/leftTree-show.png) no-repeat -2px 0;
                     }
 
                     .wea-left-right-layout-btn.wea-left-right-layout-btn-show:hover {
-                        background: url(https://enterprise.e-cology.com.cn/cloudstore/resource/pc/com/images/leftTree-show-hover.png) no-repeat -2px 0;
+                        background: url(~@/assets/img/leftTree-show-hover.png) no-repeat -2px 0;
                     }
 
                     .wea-left-right-layout-btn.wea-left-right-layout-btn-hide {
-                        background: url(https://enterprise.e-cology.com.cn/cloudstore/resource/pc/com/images/leftTree-hide.png) no-repeat -2px 0;
+                        background: url(~@/assets/img/leftTree-hide.png) no-repeat -2px 0;
                     }
 
                     .wea-left-right-layout-btn.wea-left-right-layout-btn-hide:hover {
-                        background: url(https://enterprise.e-cology.com.cn/cloudstore/resource/pc/com/images/leftTree-hide-hover.png) no-repeat -2px 0;
+                        background: url(~@/assets/img/leftTree-hide-hover.png) no-repeat -2px 0;
                     }
                 }
 

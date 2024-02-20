@@ -145,6 +145,10 @@ a {
 .items-center {
     align-items: center;
 }
+
+.radiusNone{
+    border-radius: 0;
+}
 /* antd css */
 /* a-tree */
 .ant-tree-treenode {

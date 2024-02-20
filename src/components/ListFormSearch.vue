@@ -12,7 +12,7 @@
             </a-form-item> -->
             <div class="searchItem" v-for="(item,index) in searchFields" :key="item.Name">
                 <a-form-item :name="item.Name" :label="item.Label" v-if="item.DataType=='S'">
-                    <a-input :placeholder="item.Label" v-model:value="formState[item.Name]" />
+                    <a-input class="radiusNone" :placeholder="item.Label" v-model:value="formState[item.Name]" />
                     <!-- <a-date-picker :locale="locale" @change="(e)=>{changeDate(e,item)}" valueFormat="YYYY-MM-DD" v-else-if="item.DataType=='F'" :placeholder="item.Label" v-model:value="formState[item.Name]" /> -->
                 </a-form-item>
                 <a-form-item :name="item.Name" :label="item.Label"
@@ -25,8 +25,8 @@
                     </a-select>
                 </a-form-item>
                 <a-form-item class="formTime" :name="item.Name" :label="item.Label" v-else-if="item.DataType=='F'">
-                    <a-range-picker valueFormat="YYYY-MM-DD" v-if="item.dateTypeCurrent.value=='default'" v-model:value="formState[item.Name]" @change="(e)=>{changeRangeDate(e,item)}" />
-                    <a-dropdown>
+                    <a-range-picker  style="border-right: none;" class="radiusNone" valueFormat="YYYY-MM-DD" v-if="item.dateTypeCurrent.value=='default'" v-model:value="formState[item.Name]" @change="(e)=>{changeRangeDate(e,item)}" />
+                    <a-dropdown class="radiusNone">
                         <template #overlay>
                           <a-menu>
                             <a-menu-item v-for="(row,idx) in timeoperator" :key="row.value" @click="changeDateType(item,row)">
@@ -49,7 +49,7 @@
     </div>
 </template>
 <script setup>
-    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, defineExpose, nextTick } from "vue";
+    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, defineExpose, nextTick, defineProps, watch } from "vue";
     import {
         SearchOutlined,
         DownOutlined,
@@ -64,7 +64,16 @@
     const { proxy } = getCurrentInstance();
     const formRef = ref();
     const formState = reactive({
-    })
+    });
+    
+    const props = defineProps({
+        isCollapsed: false
+    });
+    watch(()=>props.isCollapsed,(newVal,oldVal)=>{
+        nextTick(()=>{
+            emit("update-height", formSearchRef.value.clientHeight);
+        })
+    }, {deep: true});
     // 搜索
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -217,5 +226,10 @@
                 padding: 0;
             }
         }
+    }
+</style>
+<style>
+    .formSearch :where(.css-dev-only-do-not-override-kqecok).ant-select-single .ant-select-selector{
+        border-radius: 0 !important;
     }
 </style>

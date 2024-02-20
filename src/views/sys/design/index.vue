@@ -310,7 +310,7 @@
                             <div class="templateItem">
                                 <div class="itemLeft">
                                     <div class="thumbnail">
-                                        <img :src="element.pictureUrl?item.pictureUrl:'https://jackliu185.atlassian.net/s/azc3hx/b/8/f3df60f8ce75a4f8aa003d30ed6116b219461d32/_/download/resources/com.atlassian.jira.gadgets:two-dimensional-stats-gadget/twoDimensionalStats-thumb.png'" alt="" />
+                                        <img :src="element.pictureUrl?item.pictureUrl:require('@/assets/img/twoDimensionalStats-thumb.png')" alt="" />
                                     </div>
                                     <a-button type="primary" @click="handleAddLeft(element)">添加</a-button>
                                 </div>

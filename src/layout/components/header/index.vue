@@ -103,7 +103,7 @@
         <div class="avatar" @click.stop="handleOpenInfo">
           <img
             class="img"
-            src="https://enterprise.e-cology.com.cn/messager/usericon/fabe85b769064b61ad77a39d531a6e71.jpg"
+            :src="require('@/assets/img/fabe85b769064b61ad77a39d531a6e71.jpg')"
             alt=""
           />
         </div>
@@ -126,7 +126,7 @@
                 <div class="header-account-item-avatar">
                   <img
                   class="img"
-                  src="https://enterprise.e-cology.com.cn/messager/usericon/fabe85b769064b61ad77a39d531a6e71.jpg"
+                  :src="require('@/assets/img/fabe85b769064b61ad77a39d531a6e71.jpg')"
                   alt=""
                 />
                 </div>
