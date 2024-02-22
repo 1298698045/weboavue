@@ -29,6 +29,9 @@
                                 </div>
                             </li>
                         </ul>
+                        <div class="pageWrap">
+                            <a-pagination v-model:current="currentPage" :total="50" :show-total="total => `共 ${total} 条`" />
+                        </div>
                     </div>
                     <div class="tabContainer" v-if="currentTab==3">
                         <div class="deptTreeBox">
@@ -40,17 +43,22 @@
                                     </template>
                                 </a-tree>
                             </div>
-                            <ul class="userBox rightUserList">
-                                <li class="userItem" v-for="(item,index) in deptUserList" :key="index" @click="handleSelectRow(item.systemUserId,item.fullName, item.businessUnitIdName)">
-                                    <div class="avatar"></div>
-                                    <div class="info">
-                                        <div>
-                                            <span class="name">{{item.fullName}}</span>/{{item.userName}}/{{ item.employeeNo }}
+                            <div class="rightUserList">
+                                <ul class="userBox">
+                                    <li class="userItem" v-for="(item,index) in deptUserList" :key="index" @click="handleSelectRow(item.systemUserId,item.fullName, item.businessUnitIdName)">
+                                        <div class="avatar"></div>
+                                        <div class="info">
+                                            <div>
+                                                <span class="name">{{item.fullName}}</span>/{{item.userName}}/{{ item.employeeNo }}
+                                            </div>
+                                            <p class="dept">{{item.OrganizationName}}</p>
                                         </div>
-                                        <p class="dept">{{item.OrganizationName}}</p>
-                                    </div>
-                                </li>
-                            </ul>
+                                    </li>
+                                </ul>
+                                <div class="pageWrap">
+                                    <a-pagination v-model:current="currentPage" :total="50" :show-total="total => `共 ${total} 条`" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="tabContainer" v-if="currentTab==4">
@@ -63,17 +71,22 @@
                                     </template>
                                 </a-tree>
                             </div>
-                            <ul class="userBox rightUserList">
-                                <li class="userItem" v-for="(item,index) in groupUserList" :key="index" @click="handleSelectRow(item.SystemUserId,item.FullName,item.BusinessUnitIdName)">
-                                    <div class="avatar"></div>
-                                    <div class="info">
-                                        <div>
-                                            <span class="name">{{item.FullName}}</span>/{{item.UserName}}/{{ item.EmployeeId }}
+                            <div class="rightUserList">
+                                <ul class="userBox rightUserList">
+                                    <li class="userItem" v-for="(item,index) in groupUserList" :key="index" @click="handleSelectRow(item.SystemUserId,item.FullName,item.BusinessUnitIdName)">
+                                        <div class="avatar"></div>
+                                        <div class="info">
+                                            <div>
+                                                <span class="name">{{item.FullName}}</span>/{{item.UserName}}/{{ item.EmployeeId }}
+                                            </div>
+                                            <p class="dept">{{item.BusinessUnitIdName}}</p>
                                         </div>
-                                        <p class="dept">{{item.BusinessUnitIdName}}</p>
-                                    </div>
-                                </li>
-                            </ul>
+                                    </li>
+                                </ul>
+                                <div class="pageWrap">
+                                    <a-pagination v-model:current="currentPage" :total="50" :show-total="total => `共 ${total} 条`" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="tabContainer" v-if="currentTab==5">
@@ -87,6 +100,9 @@
                                 </div>
                             </li>
                         </ul>
+                        <div class="pageWrap">
+                            <a-pagination v-model:current="currentPage" :total="50" :show-total="total => `共 ${total} 条`" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -128,7 +144,8 @@
         groupList: [],
         groupUserList: [],
         deptIdCurrent: [],
-        groupIdCurrent: []
+        groupIdCurrent: [],
+        currentPage: 1
     })
     const tabs = toRaw([
         {
@@ -157,7 +174,7 @@
         }
     ])
     const { currentTab, deptTreeList, deptList, selectData, sameDeptUserList, 
-        roleList, deptUserList, groupList, groupUserList, deptIdCurrent, groupIdCurrent } = toRefs(data);
+        roleList, deptUserList, groupList, groupUserList, deptIdCurrent, groupIdCurrent, currentPage } = toRefs(data);
 
     const getSameDeptUser = () => {
         proxy.$get(Interface.user.mybusinessUser,{}).then(res=>{
@@ -312,6 +329,8 @@
 
     .tabContainer{
         height: 100%;
+        position: relative;
+        overflow: hidden;
         .deptTreeBox{
             height: 100%;
             display: flex;
@@ -321,13 +340,20 @@
                 overflow: auto;
                 border-right: 1px solid #e2e3e5;
             }
-            .userBox.rightUserList{
-                height: 100%;
-                overflow: auto;
+            .rightUserList{
                 flex: 1;
+                position: relative;
+                .userBox{
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                }
             }
         }
         .userBox{
+            height: 100%;
+            overflow: auto;
+            padding-bottom: 44px;
             .userItem{
                 display: flex;
                 align-items: center;
@@ -351,6 +377,14 @@
                 cursor: pointer;
                 background: #f4f4f4;
             }
+        }
+        .pageWrap{
+            width: 100%;
+            background: #f4f4f4;
+            position: absolute;
+            bottom: 0;
+            padding: 10px 0;
+            text-align: center;
         }
     }
 </style>

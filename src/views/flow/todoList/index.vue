@@ -6,7 +6,7 @@
         <span class="wea-new-top-title-breadcrumb">待办事宜</span>
       </div>
       <div class="todo-head-right">
-        <a-button type="primary" shape="circle">全部已读</a-button>
+        <a-button type="primary">全部已读</a-button>
         <!-- <button class="f-btn primary">全部已读</button>
         <span>
           <button disabled class="f-btn primary ml10">批量提交</button>
@@ -396,12 +396,13 @@ const DelegateRef = ref();
 
 function handleTo(WFRuleLogId){
     console.log("WFRuleLogId",WFRuleLogId);
-    router.push({
+    const url = router.resolve({
       path:"/detail",
       query: {
         id: WFRuleLogId
       }
-    });
+    })
+    window.open(url.href);
 }
 const onSearch = () => {
   
@@ -496,6 +497,6 @@ const imgUrl = require("@/assets/flow/checkbox_checked.gif");
     gridRef.value.loadGrid(data.queryParams);
   }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 @import "@/style/flow/treeList.less";
 </style>

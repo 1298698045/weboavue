@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="calendarBody">
-                <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2">
+                <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2" @select="selectCalendar">
                     <template #headerRender>
                         <div>
                             
@@ -149,12 +149,12 @@
                         </ul>
                     </template>
                 </a-calendar>
-                <DayCalendar v-if="calendarType==0" :currentTime="currentTime"/>
-                <WeekVue v-if="calendarType==1" :week="week" />
+                <DayCalendar v-if="calendarType==0" :currentTime="currentTime"  @openWeekNew="openWeekNew"/>
+                <WeekVue v-if="calendarType==1" :week="week" @openWeekNew="openWeekNew" />
             </div>
         </div>
         <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" />
+        <AddSchedule :isShow="isAddSchedule" v-if="isAddSchedule" :paramsTime="paramsTime" @cancel="cancelAddSchedule" />
         <ExportSchedule :isShow="isExport"  @cancel="cancelExport" />
         <ShareCalendar :isShow="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
     </div>
@@ -239,11 +239,15 @@
         isAddSchedule: false,
         isShare: false,
         isExport: false,
-        fileParams: {}
+        fileParams: {},
+        paramsTime: {
+            date: "",
+            time: ""
+        }
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isRepeatMeeting, isAddSchedule,
-         isShare, isExport, fileParams} = toRefs(data);
+         isShare, isExport, fileParams, paramsTime} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const backFn = (list) => {
         var len = list.length;
@@ -376,6 +380,18 @@
         // data.isSchedule =  true;
         data.isAddSchedule = true;
     }
+    // 日历-点击日期创建
+    const selectCalendar = (date, {source}) => {
+        console.log("e", date.format("YYYY-MM-DD"), source);
+        data.paramsTime.date = date.format("YYYY-MM-DD");
+        data.isAddSchedule = true;
+    };
+    // 周-编辑
+    const openWeekNew = (e) => {
+        console.log("e",e);
+        data.paramsTime = e;
+        data.isAddSchedule = true;
+    };
     const cancelExport = (e) => {
         data.isExport = e;
     }
@@ -530,23 +546,32 @@
         width: 122px;
         border: 1px solid #e5e6eb;
         border-radius: 4px;
-        background: #f2f3f5;
+        /* background: #f2f3f5; */
+        background: #fff;
         height: 32px;
         padding-top: 1px;
         margin-left: 15px;
         box-sizing: content-box;
         .calendar-typechook{
             display: flex;
+            height: 100%;
             li{
                 cursor: pointer;
-                padding: 3px 9px;
+                /* padding: 3px 9px;
                 margin: 0 4px;
-                margin-top: 3px;
+                margin-top: 3px; */
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                display: inline-block;
+                text-align: center;
+                line-height: 32px;
                 &.active{
                     font-weight: 700;
-                    background: #fff;
+                    background: var(--backColor);
                     border-radius: 4px;
-                    color: var(--textColor);
+                    /* color: var(--textColor); */
+                    color: #fff;
                 }
             }
         }

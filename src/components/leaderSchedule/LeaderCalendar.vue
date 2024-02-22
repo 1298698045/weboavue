@@ -47,9 +47,9 @@
                 </div>
             </div>
             <div class="calendarBody" ref="contentRef">
-                <DayCalendar v-if="calendarType==0"/>
-                <WeekVue v-if="calendarType==1" :week="week" />
-                <MonthCalendar v-if="calendarType==2" :width="width" />
+                <DayCalendar v-if="calendarType==0" :currentTime="currentTime" @openDateNew="handleOpenDateNew" />
+                <WeekVue v-if="calendarType==1" :week="week" @openDateNew="handleOpenDateNew" />
+                <MonthCalendar v-if="calendarType==2" :width="width" @openDateNew="handleOpenDateNew" />
             </div>
         </div>
         <NewMeeting :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" />
@@ -94,6 +94,7 @@
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
+    const emit = defineEmits(['openDateNew']);
     const { proxy } = getCurrentInstance();
     const formRef = ref();
     const monthFormat = 'YYYY/MM';
@@ -133,10 +134,14 @@
         week: [],
         isNewMeeting: false,
         isRepeatMeeting: false,
-        width: 0
+        width: 0,
+        paramsTime: {
+            date: "",
+            time: ""
+        }
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
-         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, width} = toRefs(data);
+         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, width, paramsTime} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const contentRef = ref(null);
     onMounted(()=>{
@@ -243,6 +248,9 @@
     const handleRepeatMeetingVal = (e) => {
         data.isRepeatMeeting = false;
     }
+    const handleOpenDateNew = (e) => {
+        emit("openDateNew", e);
+    };
 </script>
 <style lang="less" scoped>
     .calendarWrap {
@@ -379,23 +387,32 @@
         width: 122px;
         border: 1px solid #e5e6eb;
         border-radius: 4px;
-        background: #f2f3f5;
+        /* background: #f2f3f5; */
+        background: #fff;
         height: 32px;
         padding-top: 1px;
         margin-left: 15px;
         box-sizing: content-box;
         .calendar-typechook{
             display: flex;
+            height: 100%;
             li{
                 cursor: pointer;
-                padding: 3px 9px;
+                /* padding: 3px 9px;
                 margin: 0 4px;
-                margin-top: 3px;
+                margin-top: 3px; */
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                display: inline-block;
+                text-align: center;
+                line-height: 32px;
                 &.active{
                     font-weight: 700;
-                    background: #fff;
+                    background: var(--backColor);
                     border-radius: 4px;
-                    color: var(--textColor);
+                    /* color: var(--textColor); */
+                    color: #fff;
                 }
             }
         }

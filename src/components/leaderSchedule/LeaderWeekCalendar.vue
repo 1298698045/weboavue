@@ -17,7 +17,7 @@
                             <td>
                                 <div class="roomName">{{item.Name}}</div>
                             </td>
-                            <td v-for="(row, idx) in weekList" :key="idx" :class="{'active':isToDay(row)}">
+                            <td v-for="(row, idx) in weekList" :key="idx" :class="{'active':isToDay(row)}" @click="handleSelectTime(item, row)">
                                 <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
                                 v-for="(col, colIdx) in item.Activities" :key="colIdx">
                                     <template #icon></template>
@@ -117,7 +117,7 @@
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-
+    const emit = defineEmits(['openDateNew']);
     const props = defineProps({
         week: Array
     })
@@ -188,6 +188,13 @@
         })
     }
     getQuery();
+    const handleSelectTime = (item, row) => {
+        let obj = {
+            date: row,
+            time: ""
+        }
+        emit("openDateNew", obj);
+    }
 </script>
 <style lang="less" scoped>
     .weekWrap {

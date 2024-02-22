@@ -13,7 +13,9 @@
     <div class="right">
       <Header></Header>
       <div class="container">
-        <router-view></router-view>
+        <transition name="fade" mode="out-in">
+          <router-view></router-view>
+        </transition>
       </div>
     </div>
   </div>
@@ -38,4 +40,11 @@ const handleMenuSwitch = () => {
 </script>
 <style lang="less">
 @import "./layout.less";
+/* 自定义动画样式 */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s; /* 设置动画持续时间 */
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0; /* 初始状态透明度为0 */
+}
 </style>

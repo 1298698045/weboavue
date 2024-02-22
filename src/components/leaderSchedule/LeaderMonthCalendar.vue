@@ -20,7 +20,7 @@
                         <table>
                             <tbody>
                                 <tr v-for="(item,index) in roomList" :key="index"  :ref="(el) => setItemRefs(el, item, index)">
-                                    <td v-for="(row,idx) in monthDayList" :key="idx">
+                                    <td v-for="(row,idx) in monthDayList" :key="idx"  @click="handleSelectTime(item, row)">
                                         <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
                                             v-for="(col, colIdx) in item.Activities" :key="colIdx">
                                             <template #icon></template>
@@ -121,6 +121,7 @@
     import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
+    const emit = defineEmits((['openDateNew']));
     const { proxy } = getCurrentInstance();
     const itemRefs = [];
     const data = reactive({
@@ -207,6 +208,16 @@
         var date = dayjs(col.ScheduledStartDate).format("YYYY-MM-DD");
         // console.log("date",date, row);
         return date == row ? true : false;
+    }
+    const handleSelectTime = (item, row) => {
+        console.log("item", item, row);
+        // data.paramsTime.date = item;
+        // data.paramsTime.time = startTime;
+        let obj = {
+            date: row,
+            time: ""
+        }
+        emit("openDateNew", obj);
     }
 </script>
 <style lang="less" scoped>

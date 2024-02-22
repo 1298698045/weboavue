@@ -39,6 +39,10 @@ const props = defineProps({
   height: {
     type: Number,
     default: 300
+  },
+  mode: {
+    type: [String],
+    default: ""
   }
   // plugins: {
   //     type: [String, Array],
@@ -90,10 +94,11 @@ const initializeEditor = () => {
     // 设置本地语言
     language: "zh_CN",
     // 设置工具栏
-    toolbar: [
+    toolbar: props.mode == 'simple' ? false : [
       "bold italic hr | fontsize forecolor backcolor | blocks blockquote removeformat | undo redo ",
       "bullist table insertdatetime | link charmap wordcount searchreplace code | codesample visualblocks image fullscreen preview",
     ],
+    menubar: props.mode == 'simple' ? 'edit custom' : '',
     // 设置插件
     plugins:
       "codesample lists advlist link autolink charmap fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",

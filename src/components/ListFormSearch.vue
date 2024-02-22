@@ -25,7 +25,8 @@
                     </a-select>
                 </a-form-item>
                 <a-form-item class="formTime" :name="item.Name" :label="item.Label" v-else-if="item.DataType=='F'">
-                    <a-range-picker  style="border-right: none;" class="radiusNone" valueFormat="YYYY-MM-DD" v-if="item.dateTypeCurrent.value=='default'" v-model:value="formState[item.Name]" @change="(e)=>{changeRangeDate(e,item)}" />
+                    <!--  v-if="item.dateTypeCurrent.value=='default'" v-model:value="formState[item.Name]" -->
+                    <a-range-picker  style="border-right: none;" class="radiusNone" valueFormat="YYYY-MM-DD" :disabled="item.dateTypeCurrent.value=='default'?false:true" @change="(e)=>{changeRangeDate(e,item)}" />
                     <a-dropdown class="radiusNone">
                         <template #overlay>
                           <a-menu>
@@ -42,8 +43,8 @@
                 </a-form-item>
             </div>
             <a-form-item class="formitembtn">
-                <a-button type="primary" html-type="submit">搜索</a-button>
-                <a-button style="margin-left: 10px" @click="resetForm">重置</a-button>
+                <a-button type="primary"  class="radiusNone" html-type="submit">搜索</a-button>
+                <a-button style="margin-left: 10px"  class="radiusNone" @click="resetForm">重置</a-button>
             </a-form-item>
         </a-form>
     </div>
@@ -189,13 +190,13 @@
     })
     defineExpose({ resetForm })
 </script>
-<style lang="less" scoped>
+<style lang="less">
     .formSearch {
         padding: 10px;
         box-sizing: border-box;
         display: flex;
         align-items: center;
-
+        background: #f7fbfe;
         .ant-form {
             display: flex;
             flex-wrap: wrap;

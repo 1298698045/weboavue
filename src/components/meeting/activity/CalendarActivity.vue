@@ -488,23 +488,32 @@
         width: 122px;
         border: 1px solid #e5e6eb;
         border-radius: 4px;
-        background: #f2f3f5;
+        /* background: #f2f3f5; */
+        background: #fff;
         height: 32px;
         padding-top: 1px;
         margin-left: 15px;
         box-sizing: content-box;
         .calendar-typechook{
             display: flex;
+            height: 100%;
             li{
                 cursor: pointer;
-                padding: 3px 9px;
+                /* padding: 3px 9px;
                 margin: 0 4px;
-                margin-top: 3px;
+                margin-top: 3px; */
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                display: inline-block;
+                text-align: center;
+                line-height: 32px;
                 &.active{
                     font-weight: 700;
-                    background: #fff;
+                    background: var(--backColor);
                     border-radius: 4px;
-                    color: var(--textColor);
+                    /* color: var(--textColor); */
+                    color: #fff;
                 }
             }
         }

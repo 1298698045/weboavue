@@ -1,6 +1,6 @@
 <template>
   <div class="dtable" :style="{height:tableHeight+'px'}">
-    <div id="datagrid"></div>
+    <div :id="name"></div>
   </div>
 </template>
 
@@ -10,7 +10,11 @@
     tableHeight: [String, Number],
     isCollapsed: Boolean,
     columns: Array,
-    gridUrl: String
+    gridUrl: String,
+    name: {
+      default: 'datagrid'
+    },
+    singleSelect: Boolean
   })
   watch(()=> props.isCollapsed, (newVal,oldVal) => {
     $("#datagrid").datagrid("reload");
@@ -19,6 +23,8 @@
     console.log('loadGrid:queryParams', queryParams)
     // const imgUrl = require("@/assets/flow/checkbox_checked.gif");
     var height = props.tableHeight;
+    var singleSelect = props.singleSelect || false;
+    console.log('height',height);
     var columns = props.columns;
     // var columns = [
     //   {
@@ -74,7 +80,7 @@
 
     }
     var url = props.gridUrl;
-    $('#datagrid').datagrid({
+    $('#'+props.name).datagrid({
       // url: '/localData/datalist.json',
       url: url,
       loadFilter: function (data) {
@@ -105,9 +111,9 @@
       columns: [columns],
       queryParams: queryParams,
       // data: tableList,
-      singleSelect: false,
+      singleSelect: singleSelect,
       checkOnSelect: false,
-      selectOnCheck: false,
+      selectOnCheck: true,
       pagination: true,
       pageNumber: 1,
       pageSize: 10,
@@ -115,14 +121,14 @@
       striped: false,
       rownumbers: true,
       onLoadSuccess: function () {
-        $('#datagrid').datagrid('resize', { height: height });
+        $('#'+props.name).datagrid('resize', { height: height });
       }
     });
   }
   
   
   const getCheckList = () => {
-    let list = $('#datagrid').datagrid("getChecked");
+    let list = $('#'+props.name).datagrid("getChecked");
     console.log("list",list);
     return list;
   }

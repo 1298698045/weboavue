@@ -134,7 +134,7 @@
                                         </div>
                                     </div>
                                 </template>                                
-                                <li class="messageItem" :style="{background:backFn(getListData(current))}">
+                                <li class="messageItem" :style="{background:backFn(getListData(current))}" @click.stop="handleDetail(item, current)">
                                     <!-- <a-badge status="success" :text="item.Name" /> -->
                                     <p class="name123">{{item.Name}}</p>
                                     <p class="time">
@@ -152,6 +152,8 @@
         </div>
         <NewMeeting :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
         <NewRepeatMeeting :isShow="isRepeatMeeting" @cancel="cancelRepeatMeeting" @selectVal="handleRepeatMeetingVal" />
+        <MeetingDetailModal :isShow="isMeetingDetail" :meetingId="meetingId" v-if="isMeetingDetail" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
+
     </div>
 </template>
 <script setup>
@@ -183,6 +185,9 @@
 
     import WeekVue from "@/components/meeting/meetingCalendar/Week.vue";
     import DayCalendar from "@/components/meeting/meetingCalendar/DayCalendar.vue";
+
+    // 会议详情
+    import MeetingDetailModal from "@/components/meeting/MeetingDetailModal.vue";
 
     // 新建
     import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
@@ -234,11 +239,12 @@
             date: "",
             time: ""
         },
-        meetingId: ""
+        meetingId: "",
+        isMeetingDetail: false
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime,
-         meetingId} = toRefs(data);
+         meetingId, isMeetingDetail} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const backFn = (list) => {
         var len = list.length;
@@ -461,6 +467,9 @@
         data.meetingId = item.MeetingId;
         data.isNewMeeting = true;
     }
+    const handleDetail = (item, date) => {
+        data.isMeetingDetail = true;
+    }
 </script>
 <style lang="less" scoped>
     .calendarWrap {
@@ -596,23 +605,32 @@
         width: 122px;
         border: 1px solid #e5e6eb;
         border-radius: 4px;
-        background: #f2f3f5;
+        /* background: #f2f3f5; */
+        background: #fff;
         height: 32px;
         padding-top: 1px;
         margin-left: 15px;
         box-sizing: content-box;
         .calendar-typechook{
             display: flex;
+            height: 100%;
             li{
                 cursor: pointer;
-                padding: 3px 9px;
+                /* padding: 3px 9px;
                 margin: 0 4px;
-                margin-top: 3px;
+                margin-top: 3px; */
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                display: inline-block;
+                text-align: center;
+                line-height: 32px;
                 &.active{
                     font-weight: 700;
-                    background: #fff;
+                    background: var(--backColor);
                     border-radius: 4px;
-                    color: var(--textColor);
+                    /* color: var(--textColor); */
+                    color: #fff;
                 }
             }
         }

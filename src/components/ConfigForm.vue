@@ -105,6 +105,7 @@
         <multiple-dept :isShow="isMultipleDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
         <radio-user :isShow="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams"
             :localId="localId"></radio-user>
+        <Lookup-filter v-if="isLookup" :isShow="isLookup"></Lookup-filter>
     </div>
 </template>
 <script setup>
@@ -130,6 +131,7 @@
     import MultipleDept from "@/components/commonModal/MultipleDept.vue";
     import RadioUser from "@/components/commonModal/RadioUser.vue";
     import MultipleUser from "@/components/commonModal/MultipleUser.vue";
+    import LookupFilter from "@/components/commonModal/LookupFilter.vue";
     import { message } from "ant-design-vue";
 
     import TEditor from "@/components/TEditor.vue";
@@ -161,6 +163,7 @@
         isRadioUser: false,
         localId: "",
         isMultipleUser: true,
+        isLookup: false
     });
     const {
         title,
@@ -174,6 +177,7 @@
         isMultipleDept,
         localId,
         isMultipleUser,
+        isLookup
     } = toRefs(data);
     const formState = reactive({});
 
@@ -297,6 +301,8 @@
             data.isRadioUser = true;
         } else if (sObjectType == 10) {
             data.isRadioDept = true;
+        }else {
+            data.isLookup = true;
         }
     };
 

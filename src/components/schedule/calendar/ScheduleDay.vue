@@ -70,7 +70,7 @@
                 <div class="weekRightDay">
 
                     <div class="calendarDay">
-                        <div class="eventList"  :class="{'active':isToDay(currentDate)}" :style="{height: height+'px'}">
+                        <div class="eventList"  @click="(e)=>{handleSelectTime(e,currentDate)}" :class="{'active':isToDay(currentDate)}" :style="{height: height+'px'}">
                             <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
                                 v-for="(row,idx) in meetingList[currentDate]" :key="idx">
                                 <template #icon></template>
@@ -169,7 +169,7 @@
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-
+    const emit = defineEmits(['openWeekNew']);
     const props = defineProps({
         currentTime: String
     })
@@ -179,14 +179,18 @@
         meetingList: {},
         times: ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
             "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],
-        currentDate: ""
+        currentDate: "",
+        paramsTime: {
+            date: "",
+            time: ""
+        }
     });
     watch(()=>props.currentTime,(newVal,oldVal)=>{
         data.currentDate = dayjs(newVal).format("YYYY-MM-DD");
         console.log("data.currentDate",data.currentDate);
     },{deep: true, immediate: true})
     const weeks = toRaw(['周日', '周一', '周二', '周三', '周四', '周五', '周六']);
-    const { height, weekList, meetingList, times, currentDate } = toRefs(data);
+    const { height, weekList, meetingList, times, currentDate, paramsTime } = toRefs(data);
     const weekRef = ref(null);
     onMounted(() => {
         data.height = weekRef.value.scrollHeight;
@@ -265,6 +269,23 @@
         })
     }
     getQuery();
+    const handleSelectTime = (e, item) => {
+        console.log('e',e,item);
+        let layerY = e.layerY;
+        console.log("layerY",layerY, data.height);
+        console.log("counth", Math.floor(layerY/30/2));
+        let index = Math.floor(layerY/30/2);
+        console.log("datatime", data.times[index > 0 ?  index-1 : index]);
+        let startTime = data.times[index > 0 ?  index-1 : index];
+        data.paramsTime.date = item;
+        data.paramsTime.time = startTime;
+        let obj = {
+            date: item,
+            time: startTime
+        }
+        // console.log("paramsTime",data.paramsTime);
+        emit("openWeekNew", obj);
+    }
 </script>
 <style lang="less" scoped>
     .weekWrap {

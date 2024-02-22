@@ -151,6 +151,12 @@ a {
 }
 /* antd css */
 /* a-tree */
+.ant-btn{
+    border-radius: 2px !important;
+}
+.ant-input{
+    border-radius: 0 !important;
+}
 .ant-tree-treenode {
     line-height: 30px;
     padding: 0 !important;

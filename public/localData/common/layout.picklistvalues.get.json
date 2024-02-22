@@ -1,0 +1,5083 @@
+{
+  "actions": [
+    {
+      "id": "",
+      "state": "SUCCESS",
+      "returnValue": {
+        "picklistFieldValues": {
+          "PostSubCategory": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "行政",
+                "validFor": null,
+                "value": "行政"
+              },
+              {
+                "attributes": null,
+                "label": "副教授",
+                "validFor": null,
+                "value": "副教授"
+              },
+              {
+                "attributes": null,
+                "label": "副研究馆员(图书)",
+                "validFor": null,
+                "value": "副研究馆员(图书)"
+              },
+              {
+                "attributes": null,
+                "label": "副研究院(自然科学)",
+                "validFor": null,
+                "value": "副研究院(自然科学)"
+              },
+              {
+                "attributes": null,
+                "label": "副主任护师",
+                "validFor": null,
+                "value": "副主任护师"
+              },
+              {
+                "attributes": null,
+                "label": "副主任技师",
+                "validFor": null,
+                "value": "副主任技师"
+              },
+              {
+                "attributes": null,
+                "label": "副主任药师",
+                "validFor": null,
+                "value": "副主任药师"
+              },
+              {
+                "attributes": null,
+                "label": "副主任医师",
+                "validFor": null,
+                "value": "副主任医师"
+              },
+              {
+                "attributes": null,
+                "label": "高级工程师",
+                "validFor": null,
+                "value": "高级工程师"
+              },
+              {
+                "attributes": null,
+                "label": "高级会计师",
+                "validFor": null,
+                "value": "高级会计师"
+              },
+              {
+                "attributes": null,
+                "label": "高级经济师",
+                "validFor": null,
+                "value": "高级经济师"
+              },
+              {
+                "attributes": null,
+                "label": "高级统计师",
+                "validFor": null,
+                "value": "高级统计师"
+              },
+              {
+                "attributes": null,
+                "label": "高级政工师",
+                "validFor": null,
+                "value": "高级政工师"
+              },
+              {
+                "attributes": null,
+                "label": "正高级政工师",
+                "validFor": null,
+                "value": "正高级政工师"
+              },
+              {
+                "attributes": null,
+                "label": "高级政工师(研究员级)",
+                "validFor": null,
+                "value": "高级政工师(研究员级)"
+              },
+              {
+                "attributes": null,
+                "label": "工程师",
+                "validFor": null,
+                "value": "工程师"
+              },
+              {
+                "attributes": null,
+                "label": "馆员(档案)",
+                "validFor": null,
+                "value": "馆员(档案)"
+              },
+              {
+                "attributes": null,
+                "label": "馆员(图书)",
+                "validFor": null,
+                "value": "馆员(图书)"
+              },
+              {
+                "attributes": null,
+                "label": "管理员(图书)",
+                "validFor": null,
+                "value": "管理员(图书)"
+              },
+              {
+                "attributes": null,
+                "label": "护师",
+                "validFor": null,
+                "value": "护师"
+              },
+              {
+                "attributes": null,
+                "label": "护士",
+                "validFor": null,
+                "value": "护士"
+              },
+              {
+                "attributes": null,
+                "label": "会计师",
+                "validFor": null,
+                "value": "会计师"
+              },
+              {
+                "attributes": null,
+                "label": "会计员",
+                "validFor": null,
+                "value": "会计员"
+              },
+              {
+                "attributes": null,
+                "label": "技师",
+                "validFor": null,
+                "value": "技师"
+              },
+              {
+                "attributes": null,
+                "label": "技士",
+                "validFor": null,
+                "value": "技士"
+              },
+              {
+                "attributes": null,
+                "label": "经济师",
+                "validFor": null,
+                "value": "经济师"
+              },
+              {
+                "attributes": null,
+                "label": "经济员",
+                "validFor": null,
+                "value": "经济员"
+              },
+              {
+                "attributes": null,
+                "label": "统计师",
+                "validFor": null,
+                "value": "统计师"
+              },
+              {
+                "attributes": null,
+                "label": "统计员",
+                "validFor": null,
+                "value": "统计员"
+              },
+              {
+                "attributes": null,
+                "label": "研究馆员(图书)",
+                "validFor": null,
+                "value": "研究馆员(图书)"
+              },
+              {
+                "attributes": null,
+                "label": "研究实习员(自然科学员)",
+                "validFor": null,
+                "value": "研究实习员(自然科学员)"
+              },
+              {
+                "attributes": null,
+                "label": "研究员(自然科学)",
+                "validFor": null,
+                "value": "研究员(自然科学)"
+              },
+              {
+                "attributes": null,
+                "label": "药师",
+                "validFor": null,
+                "value": "药师"
+              },
+              {
+                "attributes": null,
+                "label": "药士",
+                "validFor": null,
+                "value": "药士"
+              },
+              {
+                "attributes": null,
+                "label": "医师",
+                "validFor": null,
+                "value": "医师"
+              },
+              {
+                "attributes": null,
+                "label": "医士",
+                "validFor": null,
+                "value": "医士"
+              },
+              {
+                "attributes": null,
+                "label": "政工师",
+                "validFor": null,
+                "value": "政工师"
+              },
+              {
+                "attributes": null,
+                "label": "主管护师",
+                "validFor": null,
+                "value": "主管护师"
+              },
+              {
+                "attributes": null,
+                "label": "主管技师",
+                "validFor": null,
+                "value": "主管技师"
+              },
+              {
+                "attributes": null,
+                "label": "主管药师",
+                "validFor": null,
+                "value": "主管药师"
+              },
+              {
+                "attributes": null,
+                "label": "主任护师",
+                "validFor": null,
+                "value": "主任护师"
+              },
+              {
+                "attributes": null,
+                "label": "主任技师",
+                "validFor": null,
+                "value": "主任技师"
+              },
+              {
+                "attributes": null,
+                "label": "主任药师",
+                "validFor": null,
+                "value": "主任药师"
+              },
+              {
+                "attributes": null,
+                "label": "主任医师",
+                "validFor": null,
+                "value": "主任医师"
+              },
+              {
+                "attributes": null,
+                "label": "主治(主管)医师",
+                "validFor": null,
+                "value": "主治(主管)医师"
+              },
+              {
+                "attributes": null,
+                "label": "助理工程师",
+                "validFor": null,
+                "value": "助理工程师"
+              },
+              {
+                "attributes": null,
+                "label": "助理馆员(图书)",
+                "validFor": null,
+                "value": "助理馆员(图书)"
+              },
+              {
+                "attributes": null,
+                "label": "助理会计师",
+                "validFor": null,
+                "value": "助理会计师"
+              },
+              {
+                "attributes": null,
+                "label": "助理经济师",
+                "validFor": null,
+                "value": "助理经济师"
+              },
+              {
+                "attributes": null,
+                "label": "助理统计师",
+                "validFor": null,
+                "value": "助理统计师"
+              },
+              {
+                "attributes": null,
+                "label": "助理研究员(自然科学)",
+                "validFor": null,
+                "value": "助理研究员(自然科学)"
+              },
+              {
+                "attributes": null,
+                "label": "助理政工师",
+                "validFor": null,
+                "value": "助理政工师"
+              }
+            ]
+          },
+          "PeopleSourceCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "本省市调入",
+                "validFor": null,
+                "value": "本省市调入"
+              },
+              {
+                "attributes": null,
+                "label": "京外调入",
+                "validFor": null,
+                "value": "京外调入"
+              },
+              {
+                "attributes": null,
+                "label": "军转干部",
+                "validFor": null,
+                "value": "军转干部"
+              },
+              {
+                "attributes": null,
+                "label": "复退军人",
+                "validFor": null,
+                "value": "复退军人"
+              },
+              {
+                "attributes": null,
+                "label": "高等院校毕业生",
+                "validFor": null,
+                "value": "高等院校毕业生"
+              },
+              {
+                "attributes": null,
+                "label": "中等院校毕业生",
+                "validFor": null,
+                "value": "中等院校毕业生"
+              },
+              {
+                "attributes": null,
+                "label": "技校毕业生",
+                "validFor": null,
+                "value": "技校毕业生"
+              },
+              {
+                "attributes": null,
+                "label": "政策性安置",
+                "validFor": null,
+                "value": "政策性安置"
+              },
+              {
+                "attributes": null,
+                "label": "留学回国",
+                "validFor": null,
+                "value": "留学回国"
+              },
+              {
+                "attributes": null,
+                "label": "其他",
+                "validFor": null,
+                "value": "其他"
+              },
+              {
+                "attributes": null,
+                "label": "其他卫生机构调入",
+                "validFor": null,
+                "value": "其他卫生机构调入"
+              },
+              {
+                "attributes": null,
+                "label": "非卫生机构调入",
+                "validFor": null,
+                "value": "非卫生机构调入"
+              }
+            ]
+          },
+          "IsMiddleLevel": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "否",
+                "validFor": null,
+                "value": "否"
+              },
+              {
+                "attributes": null,
+                "label": "是",
+                "validFor": null,
+                "value": "是"
+              }
+            ]
+          },
+          "IsMultipleJob": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "否",
+                "validFor": null,
+                "value": "否"
+              },
+              {
+                "attributes": null,
+                "label": "是",
+                "validFor": null,
+                "value": "是"
+              }
+            ]
+          },
+          "StaffLevel": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "科员",
+                "validFor": null,
+                "value": "科员"
+              },
+              {
+                "attributes": null,
+                "label": "主任科员",
+                "validFor": null,
+                "value": "主任科员"
+              },
+              {
+                "attributes": null,
+                "label": "副主任科员",
+                "validFor": null,
+                "value": "副主任科员"
+              },
+              {
+                "attributes": null,
+                "label": "办事员",
+                "validFor": null,
+                "value": "办事员"
+              }
+            ]
+          },
+          "JobTitle": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "院长",
+                "validFor": null,
+                "value": "院长"
+              },
+              {
+                "attributes": null,
+                "label": "副院长",
+                "validFor": null,
+                "value": "副院长"
+              },
+              {
+                "attributes": null,
+                "label": "院长助理",
+                "validFor": null,
+                "value": "院长助理"
+              },
+              {
+                "attributes": null,
+                "label": "总院长",
+                "validFor": null,
+                "value": "总院长"
+              },
+              {
+                "attributes": null,
+                "label": "派驻副院长",
+                "validFor": null,
+                "value": "派驻副院长"
+              },
+              {
+                "attributes": null,
+                "label": "党委书记",
+                "validFor": null,
+                "value": "党委书记"
+              },
+              {
+                "attributes": null,
+                "label": "党委副书记",
+                "validFor": null,
+                "value": "党委副书记"
+              },
+              {
+                "attributes": null,
+                "label": "纪委书记",
+                "validFor": null,
+                "value": "纪委书记"
+              },
+              {
+                "attributes": null,
+                "label": "纪委副书记",
+                "validFor": null,
+                "value": "纪委副书记"
+              },
+              {
+                "attributes": null,
+                "label": "党总支书记",
+                "validFor": null,
+                "value": "党总支书记"
+              },
+              {
+                "attributes": null,
+                "label": "党总支副书记",
+                "validFor": null,
+                "value": "党总支副书记"
+              },
+              {
+                "attributes": null,
+                "label": "党支部书记",
+                "validFor": null,
+                "value": "党支部书记"
+              },
+              {
+                "attributes": null,
+                "label": "党支部副书记",
+                "validFor": null,
+                "value": "党支部副书记"
+              },
+              {
+                "attributes": null,
+                "label": "团委书记",
+                "validFor": null,
+                "value": "团委书记"
+              },
+              {
+                "attributes": null,
+                "label": "团委副书记",
+                "validFor": null,
+                "value": "团委副书记"
+              },
+              {
+                "attributes": null,
+                "label": "团总支书记",
+                "validFor": null,
+                "value": "团总支书记"
+              },
+              {
+                "attributes": null,
+                "label": "团总支副书记",
+                "validFor": null,
+                "value": "团总支副书记"
+              },
+              {
+                "attributes": null,
+                "label": "团支部书记",
+                "validFor": null,
+                "value": "团支部书记"
+              },
+              {
+                "attributes": null,
+                "label": "团支部副书记",
+                "validFor": null,
+                "value": "团支部副书记"
+              },
+              {
+                "attributes": null,
+                "label": "院所长",
+                "validFor": null,
+                "value": "院所长"
+              },
+              {
+                "attributes": null,
+                "label": "副院所长",
+                "validFor": null,
+                "value": "副院所长"
+              },
+              {
+                "attributes": null,
+                "label": "主任",
+                "validFor": null,
+                "value": "主任"
+              },
+              {
+                "attributes": null,
+                "label": "副主任",
+                "validFor": null,
+                "value": "副主任"
+              },
+              {
+                "attributes": null,
+                "label": "处长",
+                "validFor": null,
+                "value": "处长"
+              },
+              {
+                "attributes": null,
+                "label": "代理处长",
+                "validFor": null,
+                "value": "代理处长"
+              },
+              {
+                "attributes": null,
+                "label": "副处长（主持工作）",
+                "validFor": null,
+                "value": "副处长（主持工作）"
+              },
+              {
+                "attributes": null,
+                "label": "副处长",
+                "validFor": null,
+                "value": "副处长"
+              },
+              {
+                "attributes": null,
+                "label": "挂职副处长",
+                "validFor": null,
+                "value": "挂职副处长"
+              },
+              {
+                "attributes": null,
+                "label": "处主任",
+                "validFor": null,
+                "value": "处主任"
+              },
+              {
+                "attributes": null,
+                "label": "代理处主任",
+                "validFor": null,
+                "value": "代理处主任"
+              },
+              {
+                "attributes": null,
+                "label": "副处主任（主持工作）",
+                "validFor": null,
+                "value": "副处主任（主持工作）"
+              },
+              {
+                "attributes": null,
+                "label": "副处主任",
+                "validFor": null,
+                "value": "副处主任"
+              },
+              {
+                "attributes": null,
+                "label": "科长",
+                "validFor": null,
+                "value": "科长"
+              },
+              {
+                "attributes": null,
+                "label": "副科长",
+                "validFor": null,
+                "value": "副科长"
+              },
+              {
+                "attributes": null,
+                "label": "科主任",
+                "validFor": null,
+                "value": "科主任"
+              },
+              {
+                "attributes": null,
+                "label": "代理主任",
+                "validFor": null,
+                "value": "代理主任"
+              },
+              {
+                "attributes": null,
+                "label": "常务副主任",
+                "validFor": null,
+                "value": "常务副主任"
+              },
+              {
+                "attributes": null,
+                "label": "副科主任（主持工作）",
+                "validFor": null,
+                "value": "副科主任（主持工作）"
+              },
+              {
+                "attributes": null,
+                "label": "副科主任",
+                "validFor": null,
+                "value": "副科主任"
+              },
+              {
+                "attributes": null,
+                "label": "病区主任",
+                "validFor": null,
+                "value": "病区主任"
+              },
+              {
+                "attributes": null,
+                "label": "亚专业主任",
+                "validFor": null,
+                "value": "亚专业主任"
+              },
+              {
+                "attributes": null,
+                "label": "负责人",
+                "validFor": null,
+                "value": "负责人"
+              },
+              {
+                "attributes": null,
+                "label": "主管",
+                "validFor": null,
+                "value": "主管"
+              },
+              {
+                "attributes": null,
+                "label": "队长",
+                "validFor": null,
+                "value": "队长"
+              },
+              {
+                "attributes": null,
+                "label": "副队长",
+                "validFor": null,
+                "value": "副队长"
+              },
+              {
+                "attributes": null,
+                "label": "班长",
+                "validFor": null,
+                "value": "班长"
+              },
+              {
+                "attributes": null,
+                "label": "班组长",
+                "validFor": null,
+                "value": "班组长"
+              },
+              {
+                "attributes": null,
+                "label": "总护士长",
+                "validFor": null,
+                "value": "总护士长"
+              },
+              {
+                "attributes": null,
+                "label": "科护士长",
+                "validFor": null,
+                "value": "科护士长"
+              },
+              {
+                "attributes": null,
+                "label": "护士长",
+                "validFor": null,
+                "value": "护士长"
+              },
+              {
+                "attributes": null,
+                "label": "代理护士长",
+                "validFor": null,
+                "value": "代理护士长"
+              },
+              {
+                "attributes": null,
+                "label": "副护士长",
+                "validFor": null,
+                "value": "副护士长"
+              },
+              {
+                "attributes": null,
+                "label": "技师长",
+                "validFor": null,
+                "value": "技师长"
+              },
+              {
+                "attributes": null,
+                "label": "工会主席",
+                "validFor": null,
+                "value": "工会主席"
+              },
+              {
+                "attributes": null,
+                "label": "工会常务副主席",
+                "validFor": null,
+                "value": "工会常务副主席"
+              },
+              {
+                "attributes": null,
+                "label": "工会副主席",
+                "validFor": null,
+                "value": "工会副主席"
+              },
+              {
+                "attributes": null,
+                "label": "分工会主席",
+                "validFor": null,
+                "value": "分工会主席"
+              },
+              {
+                "attributes": null,
+                "label": "分工会副主席",
+                "validFor": null,
+                "value": "分工会副主席"
+              },
+              {
+                "attributes": null,
+                "label": "总会计师",
+                "validFor": null,
+                "value": "总会计师"
+              },
+              {
+                "attributes": null,
+                "label": "干部",
+                "validFor": null,
+                "value": "干部"
+              },
+              {
+                "attributes": null,
+                "label": "病房主任",
+                "validFor": null,
+                "value": "病房主任"
+              },
+              {
+                "attributes": null,
+                "label": "副主任科员",
+                "validFor": null,
+                "value": "副主任科员"
+              },
+              {
+                "attributes": null,
+                "label": "院所长助理",
+                "validFor": null,
+                "value": "院所长助理"
+              },
+              {
+                "attributes": null,
+                "label": "主任科员",
+                "validFor": null,
+                "value": "主任科员"
+              },
+              {
+                "attributes": null,
+                "label": "课题组长",
+                "validFor": null,
+                "value": "课题组长"
+              },
+              {
+                "attributes": null,
+                "label": "介入病房代理主任",
+                "validFor": null,
+                "value": "介入病房代理主任"
+              },
+              {
+                "attributes": null,
+                "label": "CT室主任",
+                "validFor": null,
+                "value": "CT室主任"
+              },
+              {
+                "attributes": null,
+                "label": "MR室主任",
+                "validFor": null,
+                "value": "MR室主任"
+              },
+              {
+                "attributes": null,
+                "label": "办事员",
+                "validFor": null,
+                "value": "办事员"
+              },
+              {
+                "attributes": null,
+                "label": "科员",
+                "validFor": null,
+                "value": "科员"
+              },
+              {
+                "attributes": null,
+                "label": "承包人",
+                "validFor": null,
+                "value": "承包人"
+              }
+            ]
+          },
+          "JobTitleCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "党委书记",
+                "validFor": null,
+                "value": "党委书记"
+              },
+              {
+                "attributes": null,
+                "label": "党委副书记",
+                "validFor": null,
+                "value": "党委副书记"
+              },
+              {
+                "attributes": null,
+                "label": "专职副书记",
+                "validFor": null,
+                "value": "专职副书记"
+              },
+              {
+                "attributes": null,
+                "label": "院长",
+                "validFor": null,
+                "value": "院长"
+              },
+              {
+                "attributes": null,
+                "label": "常务副院长",
+                "validFor": null,
+                "value": "常务副院长"
+              },
+              {
+                "attributes": null,
+                "label": "执行院长",
+                "validFor": null,
+                "value": "执行院长"
+              },
+              {
+                "attributes": null,
+                "label": "副院长",
+                "validFor": null,
+                "value": "副院长"
+              },
+              {
+                "attributes": null,
+                "label": "纪委书记",
+                "validFor": null,
+                "value": "纪委书记"
+              },
+              {
+                "attributes": null,
+                "label": "工会主席",
+                "validFor": null,
+                "value": "工会主席"
+              },
+              {
+                "attributes": null,
+                "label": "总会计师",
+                "validFor": null,
+                "value": "总会计师"
+              },
+              {
+                "attributes": null,
+                "label": "所长",
+                "validFor": null,
+                "value": "所长"
+              },
+              {
+                "attributes": null,
+                "label": "副所长",
+                "validFor": null,
+                "value": "副所长"
+              },
+              {
+                "attributes": null,
+                "label": "工会副主席",
+                "validFor": null,
+                "value": "工会副主席"
+              },
+              {
+                "attributes": null,
+                "label": "团委书记",
+                "validFor": null,
+                "value": "团委书记"
+              },
+              {
+                "attributes": null,
+                "label": "处长（主任）",
+                "validFor": null,
+                "value": "处长（主任）"
+              },
+              {
+                "attributes": null,
+                "label": "副处长（副主任）",
+                "validFor": null,
+                "value": "副处长（副主任）"
+              },
+              {
+                "attributes": null,
+                "label": "支部书记",
+                "validFor": null,
+                "value": "支部书记"
+              },
+              {
+                "attributes": null,
+                "label": "无",
+                "validFor": null,
+                "value": "无"
+              }
+            ]
+          },
+          "ProfessionTitle": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "副教授",
+                "validFor": null,
+                "value": "副教授"
+              },
+              {
+                "attributes": null,
+                "label": "副研究馆员(图书)",
+                "validFor": null,
+                "value": "副研究馆员(图书)"
+              },
+              {
+                "attributes": null,
+                "label": "副研究院(自然科学)",
+                "validFor": null,
+                "value": "副研究院(自然科学)"
+              },
+              {
+                "attributes": null,
+                "label": "副主任护师",
+                "validFor": null,
+                "value": "副主任护师"
+              },
+              {
+                "attributes": null,
+                "label": "副主任技师",
+                "validFor": null,
+                "value": "副主任技师"
+              },
+              {
+                "attributes": null,
+                "label": "副主任药师",
+                "validFor": null,
+                "value": "副主任药师"
+              },
+              {
+                "attributes": null,
+                "label": "副主任医师",
+                "validFor": null,
+                "value": "副主任医师"
+              },
+              {
+                "attributes": null,
+                "label": "高级工程师",
+                "validFor": null,
+                "value": "高级工程师"
+              },
+              {
+                "attributes": null,
+                "label": "高级会计师",
+                "validFor": null,
+                "value": "高级会计师"
+              },
+              {
+                "attributes": null,
+                "label": "高级经济师",
+                "validFor": null,
+                "value": "高级经济师"
+              },
+              {
+                "attributes": null,
+                "label": "高级统计师",
+                "validFor": null,
+                "value": "高级统计师"
+              },
+              {
+                "attributes": null,
+                "label": "高级政工师",
+                "validFor": null,
+                "value": "高级政工师"
+              },
+              {
+                "attributes": null,
+                "label": "正高级政工师",
+                "validFor": null,
+                "value": "正高级政工师"
+              },
+              {
+                "attributes": null,
+                "label": "高级政工师(研究员级)",
+                "validFor": null,
+                "value": "高级政工师(研究员级)"
+              },
+              {
+                "attributes": null,
+                "label": "工程师",
+                "validFor": null,
+                "value": "工程师"
+              },
+              {
+                "attributes": null,
+                "label": "馆员(档案)",
+                "validFor": null,
+                "value": "馆员(档案)"
+              },
+              {
+                "attributes": null,
+                "label": "馆员(图书)",
+                "validFor": null,
+                "value": "馆员(图书)"
+              },
+              {
+                "attributes": null,
+                "label": "管理员(图书)",
+                "validFor": null,
+                "value": "管理员(图书)"
+              },
+              {
+                "attributes": null,
+                "label": "护师",
+                "validFor": null,
+                "value": "护师"
+              },
+              {
+                "attributes": null,
+                "label": "护士",
+                "validFor": null,
+                "value": "护士"
+              },
+              {
+                "attributes": null,
+                "label": "会计师",
+                "validFor": null,
+                "value": "会计师"
+              },
+              {
+                "attributes": null,
+                "label": "会计员",
+                "validFor": null,
+                "value": "会计员"
+              },
+              {
+                "attributes": null,
+                "label": "技师",
+                "validFor": null,
+                "value": "技师"
+              },
+              {
+                "attributes": null,
+                "label": "技士",
+                "validFor": null,
+                "value": "技士"
+              },
+              {
+                "attributes": null,
+                "label": "经济师",
+                "validFor": null,
+                "value": "经济师"
+              },
+              {
+                "attributes": null,
+                "label": "经济员",
+                "validFor": null,
+                "value": "经济员"
+              },
+              {
+                "attributes": null,
+                "label": "统计师",
+                "validFor": null,
+                "value": "统计师"
+              },
+              {
+                "attributes": null,
+                "label": "统计员",
+                "validFor": null,
+                "value": "统计员"
+              },
+              {
+                "attributes": null,
+                "label": "研究馆员(图书)",
+                "validFor": null,
+                "value": "研究馆员(图书)"
+              },
+              {
+                "attributes": null,
+                "label": "研究实习员(自然科学员)",
+                "validFor": null,
+                "value": "研究实习员(自然科学员)"
+              },
+              {
+                "attributes": null,
+                "label": "研究员(自然科学)",
+                "validFor": null,
+                "value": "研究员(自然科学)"
+              },
+              {
+                "attributes": null,
+                "label": "药师",
+                "validFor": null,
+                "value": "药师"
+              },
+              {
+                "attributes": null,
+                "label": "药士",
+                "validFor": null,
+                "value": "药士"
+              },
+              {
+                "attributes": null,
+                "label": "医师",
+                "validFor": null,
+                "value": "医师"
+              },
+              {
+                "attributes": null,
+                "label": "医士",
+                "validFor": null,
+                "value": "医士"
+              },
+              {
+                "attributes": null,
+                "label": "政工师",
+                "validFor": null,
+                "value": "政工师"
+              },
+              {
+                "attributes": null,
+                "label": "主管护师",
+                "validFor": null,
+                "value": "主管护师"
+              },
+              {
+                "attributes": null,
+                "label": "主管技师",
+                "validFor": null,
+                "value": "主管技师"
+              },
+              {
+                "attributes": null,
+                "label": "主管药师",
+                "validFor": null,
+                "value": "主管药师"
+              },
+              {
+                "attributes": null,
+                "label": "主任护师",
+                "validFor": null,
+                "value": "主任护师"
+              },
+              {
+                "attributes": null,
+                "label": "主任技师",
+                "validFor": null,
+                "value": "主任技师"
+              },
+              {
+                "attributes": null,
+                "label": "主任药师",
+                "validFor": null,
+                "value": "主任药师"
+              },
+              {
+                "attributes": null,
+                "label": "主任医师",
+                "validFor": null,
+                "value": "主任医师"
+              },
+              {
+                "attributes": null,
+                "label": "主治(主管)医师",
+                "validFor": null,
+                "value": "主治(主管)医师"
+              },
+              {
+                "attributes": null,
+                "label": "助理工程师",
+                "validFor": null,
+                "value": "助理工程师"
+              },
+              {
+                "attributes": null,
+                "label": "助理馆员(图书)",
+                "validFor": null,
+                "value": "助理馆员(图书)"
+              },
+              {
+                "attributes": null,
+                "label": "助理会计师",
+                "validFor": null,
+                "value": "助理会计师"
+              },
+              {
+                "attributes": null,
+                "label": "助理经济师",
+                "validFor": null,
+                "value": "助理经济师"
+              },
+              {
+                "attributes": null,
+                "label": "助理统计师",
+                "validFor": null,
+                "value": "助理统计师"
+              },
+              {
+                "attributes": null,
+                "label": "助理研究员(自然科学)",
+                "validFor": null,
+                "value": "助理研究员(自然科学)"
+              },
+              {
+                "attributes": null,
+                "label": "助理政工师",
+                "validFor": null,
+                "value": "助理政工师"
+              }
+            ]
+          },
+          "ProfessionRankCodeOfHired": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "正高",
+                "validFor": null,
+                "value": "正高"
+              },
+              {
+                "attributes": null,
+                "label": "副高",
+                "validFor": null,
+                "value": "副高"
+              },
+              {
+                "attributes": null,
+                "label": "中级",
+                "validFor": null,
+                "value": "中级"
+              },
+              {
+                "attributes": null,
+                "label": "助理",
+                "validFor": null,
+                "value": "助理"
+              },
+              {
+                "attributes": null,
+                "label": "员级",
+                "validFor": null,
+                "value": "员级"
+              }
+            ]
+          },
+          "SKillLevelCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "高级技师",
+                "validFor": null,
+                "value": "高级技师"
+              },
+              {
+                "attributes": null,
+                "label": "技师",
+                "validFor": null,
+                "value": "技师"
+              },
+              {
+                "attributes": null,
+                "label": "高级工",
+                "validFor": null,
+                "value": "高级工"
+              },
+              {
+                "attributes": null,
+                "label": "中级工",
+                "validFor": null,
+                "value": "中级工"
+              },
+              {
+                "attributes": null,
+                "label": "初级工",
+                "validFor": null,
+                "value": "初级工"
+              },
+              {
+                "attributes": null,
+                "label": "普工工",
+                "validFor": null,
+                "value": "普工工"
+              }
+            ]
+          },
+          "FEducationGradeCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "普通高中",
+                "validFor": null,
+                "value": "普通高中"
+              },
+              {
+                "attributes": null,
+                "label": "专科",
+                "validFor": null,
+                "value": "专科"
+              },
+              {
+                "attributes": null,
+                "label": "本科",
+                "validFor": null,
+                "value": "本科"
+              },
+              {
+                "attributes": null,
+                "label": "硕士研究生",
+                "validFor": null,
+                "value": "硕士研究生"
+              },
+              {
+                "attributes": null,
+                "label": "博士研究生",
+                "validFor": null,
+                "value": "博士研究生"
+              },
+              {
+                "attributes": null,
+                "label": "初中及以下",
+                "validFor": null,
+                "value": "初中及以下"
+              },
+              {
+                "attributes": null,
+                "label": "中专",
+                "validFor": null,
+                "value": "中专"
+              },
+              {
+                "attributes": null,
+                "label": "职业高中",
+                "validFor": null,
+                "value": "职业高中"
+              }
+            ]
+          },
+          "FDegreeCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "学士",
+                "validFor": null,
+                "value": "学士"
+              },
+              {
+                "attributes": null,
+                "label": "硕士",
+                "validFor": null,
+                "value": "硕士"
+              },
+              {
+                "attributes": null,
+                "label": "博士",
+                "validFor": null,
+                "value": "博士"
+              },
+              {
+                "attributes": null,
+                "label": "博士后",
+                "validFor": null,
+                "value": "博士后"
+              }
+            ]
+          },
+          "EducationGradeCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "专科",
+                "validFor": null,
+                "value": "专科"
+              },
+              {
+                "attributes": null,
+                "label": "本科",
+                "validFor": null,
+                "value": "本科"
+              },
+              {
+                "attributes": null,
+                "label": "硕士研究生",
+                "validFor": null,
+                "value": "硕士研究生"
+              },
+              {
+                "attributes": null,
+                "label": "博士研究生",
+                "validFor": null,
+                "value": "博士研究生"
+              },
+              {
+                "attributes": null,
+                "label": "中专",
+                "validFor": null,
+                "value": "中专"
+              },
+              {
+                "attributes": null,
+                "label": "普通高中",
+                "validFor": null,
+                "value": "普通高中"
+              },
+              {
+                "attributes": null,
+                "label": "职业高中",
+                "validFor": null,
+                "value": "职业高中"
+              },
+              {
+                "attributes": null,
+                "label": "初中及以下",
+                "validFor": null,
+                "value": "初中及以下"
+              }
+            ]
+          },
+          "DegreeCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "学士",
+                "validFor": null,
+                "value": "学士"
+              },
+              {
+                "attributes": null,
+                "label": "硕士",
+                "validFor": null,
+                "value": "硕士"
+              },
+              {
+                "attributes": null,
+                "label": "博士",
+                "validFor": null,
+                "value": "博士"
+              },
+              {
+                "attributes": null,
+                "label": "博士后",
+                "validFor": null,
+                "value": "博士后"
+              }
+            ]
+          },
+          "MajorCategory": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "执业医师",
+                "validFor": null,
+                "value": "执业医师"
+              },
+              {
+                "attributes": null,
+                "label": "执业助理医师",
+                "validFor": null,
+                "value": "执业助理医师"
+              },
+              {
+                "attributes": null,
+                "label": "见习医师",
+                "validFor": null,
+                "value": "见习医师"
+              },
+              {
+                "attributes": null,
+                "label": "注册护士",
+                "validFor": null,
+                "value": "注册护士"
+              },
+              {
+                "attributes": null,
+                "label": "助产士",
+                "validFor": null,
+                "value": "助产士"
+              },
+              {
+                "attributes": null,
+                "label": "西药师(士)",
+                "validFor": null,
+                "value": "西药师(士)"
+              },
+              {
+                "attributes": null,
+                "label": "中药师(士)",
+                "validFor": null,
+                "value": "中药师(士)"
+              },
+              {
+                "attributes": null,
+                "label": "检验技师(士)",
+                "validFor": null,
+                "value": "检验技师(士)"
+              },
+              {
+                "attributes": null,
+                "label": "影像技师(士)",
+                "validFor": null,
+                "value": "影像技师(士)"
+              },
+              {
+                "attributes": null,
+                "label": "其他卫生技术人员",
+                "validFor": null,
+                "value": "其他卫生技术人员"
+              },
+              {
+                "attributes": null,
+                "label": "其他技术人员",
+                "validFor": null,
+                "value": "其他技术人员"
+              },
+              {
+                "attributes": null,
+                "label": "管理人员",
+                "validFor": null,
+                "value": "管理人员"
+              },
+              {
+                "attributes": null,
+                "label": "工勤及技能人员",
+                "validFor": null,
+                "value": "工勤及技能人员"
+              }
+            ]
+          },
+          "IDType": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "居民身份证",
+                "validFor": null,
+                "value": "居民身份证"
+              },
+              {
+                "attributes": null,
+                "label": "港澳居民来往内地通行证",
+                "validFor": null,
+                "value": "港澳居民来往内地通行证"
+              },
+              {
+                "attributes": null,
+                "label": "台湾居民来往大陆通行证",
+                "validFor": null,
+                "value": "台湾居民来往大陆通行证"
+              },
+              {
+                "attributes": null,
+                "label": "来华工作许可证",
+                "validFor": null,
+                "value": "来华工作许可证"
+              },
+              {
+                "attributes": null,
+                "label": "外国护照",
+                "validFor": null,
+                "value": "外国护照"
+              },
+              {
+                "attributes": null,
+                "label": "香港永久性居民身份证",
+                "validFor": null,
+                "value": "香港永久性居民身份证"
+              },
+              {
+                "attributes": null,
+                "label": "澳门特别行政区永久性居民身份证",
+                "validFor": null,
+                "value": "澳门特别行政区永久性居民身份证"
+              },
+              {
+                "attributes": null,
+                "label": "外国人永久居留证",
+                "validFor": null,
+                "value": "外国人永久居留证"
+              },
+              {
+                "attributes": null,
+                "label": "其他法定有效证件",
+                "validFor": null,
+                "value": "其他法定有效证件"
+              }
+            ]
+          },
+          "GenderCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "未知的性别",
+                "validFor": null,
+                "value": "未知的性别"
+              },
+              {
+                "attributes": null,
+                "label": "男",
+                "validFor": null,
+                "value": "男"
+              },
+              {
+                "attributes": null,
+                "label": "女",
+                "validFor": null,
+                "value": "女"
+              },
+              {
+                "attributes": null,
+                "label": "未说明的性别",
+                "validFor": null,
+                "value": "未说明的性别"
+              }
+            ]
+          },
+          "MarryStatusCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "未婚",
+                "validFor": null,
+                "value": "未婚"
+              },
+              {
+                "attributes": null,
+                "label": "已婚",
+                "validFor": null,
+                "value": "已婚"
+              },
+              {
+                "attributes": null,
+                "label": "丧偶",
+                "validFor": null,
+                "value": "丧偶"
+              },
+              {
+                "attributes": null,
+                "label": "离婚",
+                "validFor": null,
+                "value": "离婚"
+              },
+              {
+                "attributes": null,
+                "label": "其他",
+                "validFor": null,
+                "value": "其他"
+              }
+            ]
+          },
+          "RaceCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "汉族",
+                "validFor": null,
+                "value": "汉族"
+              },
+              {
+                "attributes": null,
+                "label": "壮族",
+                "validFor": null,
+                "value": "壮族"
+              },
+              {
+                "attributes": null,
+                "label": "满族",
+                "validFor": null,
+                "value": "满族"
+              },
+              {
+                "attributes": null,
+                "label": "回族",
+                "validFor": null,
+                "value": "回族"
+              },
+              {
+                "attributes": null,
+                "label": "苗族",
+                "validFor": null,
+                "value": "苗族"
+              },
+              {
+                "attributes": null,
+                "label": "维吾尔族",
+                "validFor": null,
+                "value": "维吾尔族"
+              },
+              {
+                "attributes": null,
+                "label": "土家族",
+                "validFor": null,
+                "value": "土家族"
+              },
+              {
+                "attributes": null,
+                "label": "彝族",
+                "validFor": null,
+                "value": "彝族"
+              },
+              {
+                "attributes": null,
+                "label": "蒙古族",
+                "validFor": null,
+                "value": "蒙古族"
+              },
+              {
+                "attributes": null,
+                "label": "藏族",
+                "validFor": null,
+                "value": "藏族"
+              },
+              {
+                "attributes": null,
+                "label": "布依族",
+                "validFor": null,
+                "value": "布依族"
+              },
+              {
+                "attributes": null,
+                "label": "侗族",
+                "validFor": null,
+                "value": "侗族"
+              },
+              {
+                "attributes": null,
+                "label": "瑶族",
+                "validFor": null,
+                "value": "瑶族"
+              },
+              {
+                "attributes": null,
+                "label": "朝鲜族",
+                "validFor": null,
+                "value": "朝鲜族"
+              },
+              {
+                "attributes": null,
+                "label": "白族",
+                "validFor": null,
+                "value": "白族"
+              },
+              {
+                "attributes": null,
+                "label": "哈尼族",
+                "validFor": null,
+                "value": "哈尼族"
+              },
+              {
+                "attributes": null,
+                "label": "哈萨克族",
+                "validFor": null,
+                "value": "哈萨克族"
+              },
+              {
+                "attributes": null,
+                "label": "黎族",
+                "validFor": null,
+                "value": "黎族"
+              },
+              {
+                "attributes": null,
+                "label": "傣族",
+                "validFor": null,
+                "value": "傣族"
+              },
+              {
+                "attributes": null,
+                "label": "畲族",
+                "validFor": null,
+                "value": "畲族"
+              },
+              {
+                "attributes": null,
+                "label": "傈僳族",
+                "validFor": null,
+                "value": "傈僳族"
+              },
+              {
+                "attributes": null,
+                "label": "仡佬族",
+                "validFor": null,
+                "value": "仡佬族"
+              },
+              {
+                "attributes": null,
+                "label": "东乡族",
+                "validFor": null,
+                "value": "东乡族"
+              },
+              {
+                "attributes": null,
+                "label": "高山族",
+                "validFor": null,
+                "value": "高山族"
+              },
+              {
+                "attributes": null,
+                "label": "拉祜族",
+                "validFor": null,
+                "value": "拉祜族"
+              },
+              {
+                "attributes": null,
+                "label": "水族",
+                "validFor": null,
+                "value": "水族"
+              },
+              {
+                "attributes": null,
+                "label": "佤族",
+                "validFor": null,
+                "value": "佤族"
+              },
+              {
+                "attributes": null,
+                "label": "纳西族",
+                "validFor": null,
+                "value": "纳西族"
+              },
+              {
+                "attributes": null,
+                "label": "羌族",
+                "validFor": null,
+                "value": "羌族"
+              },
+              {
+                "attributes": null,
+                "label": "土族",
+                "validFor": null,
+                "value": "土族"
+              },
+              {
+                "attributes": null,
+                "label": "仫佬族",
+                "validFor": null,
+                "value": "仫佬族"
+              },
+              {
+                "attributes": null,
+                "label": "锡伯族",
+                "validFor": null,
+                "value": "锡伯族"
+              },
+              {
+                "attributes": null,
+                "label": "柯尔克孜族",
+                "validFor": null,
+                "value": "柯尔克孜族"
+              },
+              {
+                "attributes": null,
+                "label": "达斡尔族",
+                "validFor": null,
+                "value": "达斡尔族"
+              },
+              {
+                "attributes": null,
+                "label": "景颇族",
+                "validFor": null,
+                "value": "景颇族"
+              },
+              {
+                "attributes": null,
+                "label": "毛南族",
+                "validFor": null,
+                "value": "毛南族"
+              },
+              {
+                "attributes": null,
+                "label": "撒拉族",
+                "validFor": null,
+                "value": "撒拉族"
+              },
+              {
+                "attributes": null,
+                "label": "布朗族",
+                "validFor": null,
+                "value": "布朗族"
+              },
+              {
+                "attributes": null,
+                "label": "塔吉克族",
+                "validFor": null,
+                "value": "塔吉克族"
+              },
+              {
+                "attributes": null,
+                "label": "阿昌族",
+                "validFor": null,
+                "value": "阿昌族"
+              },
+              {
+                "attributes": null,
+                "label": "普米族",
+                "validFor": null,
+                "value": "普米族"
+              },
+              {
+                "attributes": null,
+                "label": "鄂温克族",
+                "validFor": null,
+                "value": "鄂温克族"
+              },
+              {
+                "attributes": null,
+                "label": "怒族",
+                "validFor": null,
+                "value": "怒族"
+              },
+              {
+                "attributes": null,
+                "label": "京族",
+                "validFor": null,
+                "value": "京族"
+              },
+              {
+                "attributes": null,
+                "label": "基诺族",
+                "validFor": null,
+                "value": "基诺族"
+              },
+              {
+                "attributes": null,
+                "label": "德昂族",
+                "validFor": null,
+                "value": "德昂族"
+              },
+              {
+                "attributes": null,
+                "label": "保安族",
+                "validFor": null,
+                "value": "保安族"
+              },
+              {
+                "attributes": null,
+                "label": "俄罗斯族",
+                "validFor": null,
+                "value": "俄罗斯族"
+              },
+              {
+                "attributes": null,
+                "label": "裕固族",
+                "validFor": null,
+                "value": "裕固族"
+              },
+              {
+                "attributes": null,
+                "label": "乌孜别克族",
+                "validFor": null,
+                "value": "乌孜别克族"
+              },
+              {
+                "attributes": null,
+                "label": "门巴族",
+                "validFor": null,
+                "value": "门巴族"
+              },
+              {
+                "attributes": null,
+                "label": "鄂伦春族",
+                "validFor": null,
+                "value": "鄂伦春族"
+              },
+              {
+                "attributes": null,
+                "label": "独龙族",
+                "validFor": null,
+                "value": "独龙族"
+              },
+              {
+                "attributes": null,
+                "label": "塔塔尔族",
+                "validFor": null,
+                "value": "塔塔尔族"
+              },
+              {
+                "attributes": null,
+                "label": "赫哲族",
+                "validFor": null,
+                "value": "赫哲族"
+              },
+              {
+                "attributes": null,
+                "label": "珞巴族",
+                "validFor": null,
+                "value": "珞巴族"
+              }
+            ]
+          },
+          "ResidenceCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "本市城镇",
+                "validFor": null,
+                "value": "本市城镇"
+              },
+              {
+                "attributes": null,
+                "label": "外埠城镇",
+                "validFor": null,
+                "value": "外埠城镇"
+              },
+              {
+                "attributes": null,
+                "label": "本市农业",
+                "validFor": null,
+                "value": "本市农业"
+              },
+              {
+                "attributes": null,
+                "label": "外埠农业",
+                "validFor": null,
+                "value": "外埠农业"
+              },
+              {
+                "attributes": null,
+                "label": "外籍",
+                "validFor": null,
+                "value": "外籍"
+              },
+              {
+                "attributes": null,
+                "label": "香港",
+                "validFor": null,
+                "value": "香港"
+              },
+              {
+                "attributes": null,
+                "label": "台湾",
+                "validFor": null,
+                "value": "台湾"
+              },
+              {
+                "attributes": null,
+                "label": "澳门",
+                "validFor": null,
+                "value": "澳门"
+              }
+            ]
+          },
+          "NurseLevel": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "N0",
+                "validFor": null,
+                "value": "N0"
+              },
+              {
+                "attributes": null,
+                "label": "N1",
+                "validFor": null,
+                "value": "N1"
+              },
+              {
+                "attributes": null,
+                "label": "N2",
+                "validFor": null,
+                "value": "N2"
+              },
+              {
+                "attributes": null,
+                "label": "N3",
+                "validFor": null,
+                "value": "N3"
+              },
+              {
+                "attributes": null,
+                "label": "N4",
+                "validFor": null,
+                "value": "N4"
+              },
+              {
+                "attributes": null,
+                "label": "N5",
+                "validFor": null,
+                "value": "N5"
+              }
+            ]
+          },
+          "QualificationCertLevel": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "初级",
+                "validFor": null,
+                "value": "初级"
+              },
+              {
+                "attributes": null,
+                "label": "中级",
+                "validFor": null,
+                "value": "中级"
+              },
+              {
+                "attributes": null,
+                "label": "副高",
+                "validFor": null,
+                "value": "副高"
+              },
+              {
+                "attributes": null,
+                "label": "正高",
+                "validFor": null,
+                "value": "正高"
+              },
+              {
+                "attributes": null,
+                "label": "未定等级",
+                "validFor": null,
+                "value": "未定等级"
+              }
+            ]
+          },
+          "PhysicianLicenseCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "临床",
+                "validFor": null,
+                "value": "临床"
+              },
+              {
+                "attributes": null,
+                "label": "口腔",
+                "validFor": null,
+                "value": "口腔"
+              },
+              {
+                "attributes": null,
+                "label": "公共卫生",
+                "validFor": null,
+                "value": "公共卫生"
+              },
+              {
+                "attributes": null,
+                "label": "护理",
+                "validFor": null,
+                "value": "护理"
+              },
+              {
+                "attributes": null,
+                "label": "中医",
+                "validFor": null,
+                "value": "中医"
+              }
+            ]
+          },
+          "CadreSourceCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "分配干部",
+                "validFor": null,
+                "value": "分配干部"
+              },
+              {
+                "attributes": null,
+                "label": "调入干部",
+                "validFor": null,
+                "value": "调入干部"
+              },
+              {
+                "attributes": null,
+                "label": "派遣调入",
+                "validFor": null,
+                "value": "派遣调入"
+              },
+              {
+                "attributes": null,
+                "label": "军转干部",
+                "validFor": null,
+                "value": "军转干部"
+              },
+              {
+                "attributes": null,
+                "label": "转业干部",
+                "validFor": null,
+                "value": "转业干部"
+              },
+              {
+                "attributes": null,
+                "label": "复员军人",
+                "validFor": null,
+                "value": "复员军人"
+              },
+              {
+                "attributes": null,
+                "label": "聘干",
+                "validFor": null,
+                "value": "聘干"
+              }
+            ]
+          },
+          "StatusOfHouse": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "无",
+                "validFor": null,
+                "value": "无"
+              },
+              {
+                "attributes": null,
+                "label": "有",
+                "validFor": null,
+                "value": "有"
+              }
+            ]
+          },
+          "HealthStatusCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "健康",
+                "validFor": null,
+                "value": "健康"
+              },
+              {
+                "attributes": null,
+                "label": "残疾",
+                "validFor": null,
+                "value": "残疾"
+              }
+            ]
+          },
+          "PartyCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "群众",
+                "validFor": null,
+                "value": "群众"
+              },
+              {
+                "attributes": null,
+                "label": "中共党员",
+                "validFor": null,
+                "value": "中共党员"
+              },
+              {
+                "attributes": null,
+                "label": "共青团员",
+                "validFor": null,
+                "value": "共青团员"
+              },
+              {
+                "attributes": null,
+                "label": "民革党员",
+                "validFor": null,
+                "value": "民革党员"
+              },
+              {
+                "attributes": null,
+                "label": "民盟盟员",
+                "validFor": null,
+                "value": "民盟盟员"
+              },
+              {
+                "attributes": null,
+                "label": "民建会员",
+                "validFor": null,
+                "value": "民建会员"
+              },
+              {
+                "attributes": null,
+                "label": "民进会员",
+                "validFor": null,
+                "value": "民进会员"
+              },
+              {
+                "attributes": null,
+                "label": "农工党党员",
+                "validFor": null,
+                "value": "农工党党员"
+              },
+              {
+                "attributes": null,
+                "label": "致公党党员",
+                "validFor": null,
+                "value": "致公党党员"
+              },
+              {
+                "attributes": null,
+                "label": "九三学社社员",
+                "validFor": null,
+                "value": "九三学社社员"
+              },
+              {
+                "attributes": null,
+                "label": "台盟盟员",
+                "validFor": null,
+                "value": "台盟盟员"
+              }
+            ]
+          },
+          "IsFlowPartyMem": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "是",
+                "validFor": null,
+                "value": "是"
+              },
+              {
+                "attributes": null,
+                "label": "否",
+                "validFor": null,
+                "value": "否"
+              }
+            ]
+          },
+          "PartyStatus": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "正常",
+                "validFor": null,
+                "value": "正常"
+              },
+              {
+                "attributes": null,
+                "label": "停止党籍",
+                "validFor": null,
+                "value": "停止党籍"
+              }
+            ]
+          },
+          "Sequence": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "行政",
+                "validFor": null,
+                "value": "行政"
+              },
+              {
+                "attributes": null,
+                "label": "工勤",
+                "validFor": null,
+                "value": "工勤"
+              },
+              {
+                "attributes": null,
+                "label": "医疗",
+                "validFor": null,
+                "value": "医疗"
+              },
+              {
+                "attributes": null,
+                "label": "医技",
+                "validFor": null,
+                "value": "医技"
+              },
+              {
+                "attributes": null,
+                "label": "护理",
+                "validFor": null,
+                "value": "护理"
+              },
+              {
+                "attributes": null,
+                "label": "相关",
+                "validFor": null,
+                "value": "相关"
+              }
+            ]
+          },
+          "Language": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "英语",
+                "validFor": null,
+                "value": "英语"
+              },
+              {
+                "attributes": null,
+                "label": "法语",
+                "validFor": null,
+                "value": "法语"
+              },
+              {
+                "attributes": null,
+                "label": "日语",
+                "validFor": null,
+                "value": "日语"
+              },
+              {
+                "attributes": null,
+                "label": "德语",
+                "validFor": null,
+                "value": "德语"
+              },
+              {
+                "attributes": null,
+                "label": "俄语",
+                "validFor": null,
+                "value": "俄语"
+              }
+            ]
+          },
+          "BloodType": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "A",
+                "validFor": null,
+                "value": "A"
+              },
+              {
+                "attributes": null,
+                "label": "B",
+                "validFor": null,
+                "value": "B"
+              },
+              {
+                "attributes": null,
+                "label": "O",
+                "validFor": null,
+                "value": "O"
+              },
+              {
+                "attributes": null,
+                "label": "AB",
+                "validFor": null,
+                "value": "AB"
+              },
+              {
+                "attributes": null,
+                "label": "RH阴性",
+                "validFor": null,
+                "value": "RH阴性"
+              }
+            ]
+          },
+          "FilePlaceCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "本院",
+                "validFor": null,
+                "value": "本院"
+              },
+              {
+                "attributes": null,
+                "label": "人才中心",
+                "validFor": null,
+                "value": "人才中心"
+              }
+            ]
+          },
+          "OrganizationCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "肿瘤医院",
+                "validFor": null,
+                "value": "肿瘤医院"
+              },
+              {
+                "attributes": null,
+                "label": "癌症中心",
+                "validFor": null,
+                "value": "癌症中心"
+              }
+            ]
+          },
+          "RecruitMethod": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "考试",
+                "validFor": null,
+                "value": "考试"
+              },
+              {
+                "attributes": null,
+                "label": "考察",
+                "validFor": null,
+                "value": "考察"
+              }
+            ]
+          },
+          "IsParentsSeparation": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "是",
+                "validFor": null,
+                "value": "是"
+              },
+              {
+                "attributes": null,
+                "label": "否",
+                "validFor": null,
+                "value": "否"
+              }
+            ]
+          },
+          "IsSpouseSeparation": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "是",
+                "validFor": null,
+                "value": "是"
+              },
+              {
+                "attributes": null,
+                "label": "否",
+                "validFor": null,
+                "value": "否"
+              }
+            ]
+          },
+          "ContractTypeCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "在编",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "合同",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "离职",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "退休",
+                "validFor": null,
+                "value": "4"
+              },
+              {
+                "attributes": null,
+                "label": "死亡",
+                "validFor": null,
+                "value": "5"
+              },
+              {
+                "attributes": null,
+                "label": "科研博士后",
+                "validFor": null,
+                "value": "6"
+              },
+              {
+                "attributes": null,
+                "label": "临床博士后",
+                "validFor": null,
+                "value": "7"
+              },
+              {
+                "attributes": null,
+                "label": "临时工",
+                "validFor": null,
+                "value": "8"
+              },
+              {
+                "attributes": null,
+                "label": "小时工",
+                "validFor": null,
+                "value": "15"
+              },
+              {
+                "attributes": null,
+                "label": "退休返聘",
+                "validFor": null,
+                "value": "41"
+              },
+              {
+                "attributes": null,
+                "label": "研究生",
+                "validFor": null,
+                "value": "42"
+              },
+              {
+                "attributes": null,
+                "label": "科研博士后",
+                "validFor": null,
+                "value": "44"
+              },
+              {
+                "attributes": null,
+                "label": "借调",
+                "validFor": null,
+                "value": "12"
+              },
+              {
+                "attributes": null,
+                "label": "试用期",
+                "validFor": null,
+                "value": "11"
+              }
+            ]
+          },
+          "EmpCategoryCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "无",
+                "validFor": null,
+                "value": "0"
+              },
+              {
+                "attributes": null,
+                "label": "管理",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "医师",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "医技",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "护理",
+                "validFor": null,
+                "value": "4"
+              },
+              {
+                "attributes": null,
+                "label": "医药",
+                "validFor": null,
+                "value": "5"
+              },
+              {
+                "attributes": null,
+                "label": "医辅",
+                "validFor": null,
+                "value": "6"
+              },
+              {
+                "attributes": null,
+                "label": "其他卫生",
+                "validFor": null,
+                "value": "8"
+              },
+              {
+                "attributes": null,
+                "label": "其它专技",
+                "validFor": null,
+                "value": "9"
+              },
+              {
+                "attributes": null,
+                "label": "其他",
+                "validFor": null,
+                "value": "10"
+              },
+              {
+                "attributes": null,
+                "label": "院领导",
+                "validFor": null,
+                "value": "20"
+              },
+              {
+                "attributes": null,
+                "label": "工勤技能",
+                "validFor": null,
+                "value": "100"
+              },
+              {
+                "attributes": null,
+                "label": "后勤",
+                "validFor": null,
+                "value": "101"
+              }
+            ]
+          },
+          "CategoryCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "管理人员",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "卫生技术人员",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "工勤人员",
+                "validFor": null,
+                "value": "3"
+              }
+            ]
+          },
+          "CategoryOfFinance": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": []
+          },
+          "PostCategoryCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "管理人员",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "专业技术人员",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "工勤技能人员",
+                "validFor": null,
+                "value": "3"
+              }
+            ]
+          },
+          "PostLevelCode": {
+            "controllerValues": {
+              "1": 0,
+              "2": 1,
+              "3": 2
+            },
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "管理一级",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "101"
+              },
+              {
+                "attributes": null,
+                "label": "理二级",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "102"
+              },
+              {
+                "attributes": null,
+                "label": "理三级",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "103"
+              },
+              {
+                "attributes": null,
+                "label": "管理四级",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "104"
+              },
+              {
+                "attributes": null,
+                "label": "管理五级",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "105"
+              },
+              {
+                "attributes": null,
+                "label": "管理六级",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "106"
+              },
+              {
+                "attributes": null,
+                "label": "管理七级",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "107"
+              },
+              {
+                "attributes": null,
+                "label": "管理八级",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "108"
+              },
+              {
+                "attributes": null,
+                "label": "管理九级",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "109"
+              },
+              {
+                "attributes": null,
+                "label": "管理十级",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "110"
+              },
+              {
+                "attributes": null,
+                "label": "管理未定级",
+                "validFor": [
+                  1
+                ],
+                "value": "119"
+              },
+              {
+                "attributes": null,
+                "label": "专技一级",
+                "validFor": [
+                  1
+                ],
+                "value": "201"
+              },
+              {
+                "attributes": null,
+                "label": "专技二级",
+                "validFor": [
+                  1
+                ],
+                "value": "202"
+              },
+              {
+                "attributes": null,
+                "label": "专技三级",
+                "validFor": [],
+                "value": "203"
+              },
+              {
+                "attributes": null,
+                "label": "专技四级",
+                "validFor": [],
+                "value": "204"
+              },
+              {
+                "attributes": null,
+                "label": "专技五级",
+                "validFor": [],
+                "value": "205"
+              },
+              {
+                "attributes": null,
+                "label": "专技六级",
+                "validFor": [],
+                "value": "206"
+              },
+              {
+                "attributes": null,
+                "label": "专技七级",
+                "validFor": [],
+                "value": "207"
+              },
+              {
+                "attributes": null,
+                "label": "专技八级",
+                "validFor": [],
+                "value": "208"
+              },
+              {
+                "attributes": null,
+                "label": "专技九级",
+                "validFor": [],
+                "value": "209"
+              },
+              {
+                "attributes": null,
+                "label": "专技十级",
+                "validFor": [],
+                "value": "210"
+              },
+              {
+                "attributes": null,
+                "label": "专技十一级",
+                "validFor": [],
+                "value": "211"
+              },
+              {
+                "attributes": null,
+                "label": "专技十二级",
+                "validFor": [],
+                "value": "212"
+              },
+              {
+                "attributes": null,
+                "label": "专技十三级",
+                "validFor": [],
+                "value": "213"
+              },
+              {
+                "attributes": null,
+                "label": "专技未定级",
+                "validFor": [],
+                "value": "219"
+              },
+              {
+                "attributes": null,
+                "label": "工勤一级",
+                "validFor": [],
+                "value": "301"
+              },
+              {
+                "attributes": null,
+                "label": "工勤二级",
+                "validFor": [],
+                "value": "302"
+              },
+              {
+                "attributes": null,
+                "label": "工勤三级",
+                "validFor": [],
+                "value": "303"
+              },
+              {
+                "attributes": null,
+                "label": "工勤四级",
+                "validFor": [],
+                "value": "304"
+              },
+              {
+                "attributes": null,
+                "label": "工勤五级",
+                "validFor": [],
+                "value": "305"
+              },
+              {
+                "attributes": null,
+                "label": "普通工",
+                "validFor": [],
+                "value": "306"
+              },
+              {
+                "attributes": null,
+                "label": "工人未定级",
+                "validFor": [],
+                "value": "319"
+              }
+            ]
+          },
+          "StateCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "在岗",
+                "validFor": null,
+                "value": "0"
+              },
+              {
+                "attributes": null,
+                "label": "不在岗",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "离职",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "离退休",
+                "validFor": null,
+                "value": "4"
+              },
+              {
+                "attributes": null,
+                "label": "在职病故",
+                "validFor": null,
+                "value": "5"
+              }
+            ]
+          },
+          "SubStateCode": {
+            "controllerValues": {
+              "0": 0,
+              "2": 1,
+              "3": 2,
+              "4": 3,
+              "5": 4
+            },
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "在岗",
+                "validFor": [
+                  0
+                ],
+                "value": "101"
+              },
+              {
+                "attributes": null,
+                "label": "外派",
+                "validFor": [
+                  0
+                ],
+                "value": "102"
+              },
+              {
+                "attributes": null,
+                "label": "长期病、休假",
+                "validFor": [
+                  1
+                ],
+                "value": "201"
+              },
+              {
+                "attributes": null,
+                "label": "停薪留职",
+                "validFor": [
+                  1
+                ],
+                "value": "202"
+              },
+              {
+                "attributes": null,
+                "label": "内部退养",
+                "validFor": [
+                  1
+                ],
+                "value": "203"
+              },
+              {
+                "attributes": null,
+                "label": "离开本单位未解除关系人员",
+                "validFor": [
+                  1
+                ],
+                "value": "204"
+              },
+              {
+                "attributes": null,
+                "label": "长学",
+                "validFor": [
+                  1
+                ],
+                "value": "205"
+              },
+              {
+                "attributes": null,
+                "label": "其它不在岗",
+                "validFor": [
+                  1
+                ],
+                "value": "206"
+              },
+              {
+                "attributes": null,
+                "label": "出国",
+                "validFor": [
+                  1
+                ],
+                "value": "207"
+              },
+              {
+                "attributes": null,
+                "label": "待岗",
+                "validFor": [
+                  1
+                ],
+                "value": "208"
+              },
+              {
+                "attributes": null,
+                "label": "调出",
+                "validFor": [
+                  2
+                ],
+                "value": "301"
+              },
+              {
+                "attributes": null,
+                "label": "开除",
+                "validFor": [
+                  2
+                ],
+                "value": "302"
+              },
+              {
+                "attributes": null,
+                "label": "解聘",
+                "validFor": [
+                  2
+                ],
+                "value": "303"
+              },
+              {
+                "attributes": null,
+                "label": "辞退",
+                "validFor": [
+                  2
+                ],
+                "value": "304"
+              },
+              {
+                "attributes": null,
+                "label": "离职",
+                "validFor": [
+                  2
+                ],
+                "value": "305"
+              },
+              {
+                "attributes": null,
+                "label": "辞职",
+                "validFor": [
+                  2
+                ],
+                "value": "306"
+              },
+              {
+                "attributes": null,
+                "label": "终止合同",
+                "validFor": [
+                  2
+                ],
+                "value": "307"
+              },
+              {
+                "attributes": null,
+                "label": "解除合同",
+                "validFor": [
+                  2
+                ],
+                "value": "308"
+              },
+              {
+                "attributes": null,
+                "label": "交流",
+                "validFor": [
+                  2
+                ],
+                "value": "309"
+              },
+              {
+                "attributes": null,
+                "label": "退站",
+                "validFor": [
+                  2
+                ],
+                "value": "310"
+              },
+              {
+                "attributes": null,
+                "label": "其他减员",
+                "validFor": [
+                  2
+                ],
+                "value": "311"
+              },
+              {
+                "attributes": null,
+                "label": "出站",
+                "validFor": [
+                  2
+                ],
+                "value": "312"
+              },
+              {
+                "attributes": null,
+                "label": "退休",
+                "validFor": [
+                  3
+                ],
+                "value": "401"
+              },
+              {
+                "attributes": null,
+                "label": "退职",
+                "validFor": [
+                  3
+                ],
+                "value": "402"
+              },
+              {
+                "attributes": null,
+                "label": "离休",
+                "validFor": [
+                  3
+                ],
+                "value": "403"
+              },
+              {
+                "attributes": null,
+                "label": "在职病故",
+                "validFor": [
+                  4
+                ],
+                "value": "501"
+              }
+            ]
+          },
+          "SalaryPostCategory": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "管理",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "专业技术",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "工勤",
+                "validFor": null,
+                "value": "3"
+              }
+            ]
+          },
+          "SalaryPostCode": {
+            "controllerValues": {
+              "1": 0,
+              "2": 1,
+              "3": 2
+            },
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "管理一级",
+                "validFor": [
+                  0
+                ],
+                "value": "101"
+              },
+              {
+                "attributes": null,
+                "label": "管理二级",
+                "validFor": [
+                  0
+                ],
+                "value": "102"
+              },
+              {
+                "attributes": null,
+                "label": "管理三级",
+                "validFor": [
+                  0
+                ],
+                "value": "103"
+              },
+              {
+                "attributes": null,
+                "label": "管理四级",
+                "validFor": [
+                  0
+                ],
+                "value": "104"
+              },
+              {
+                "attributes": null,
+                "label": "管理五级",
+                "validFor": [
+                  0
+                ],
+                "value": "105"
+              },
+              {
+                "attributes": null,
+                "label": "管理六级",
+                "validFor": [
+                  0
+                ],
+                "value": "106"
+              },
+              {
+                "attributes": null,
+                "label": "管理七级",
+                "validFor": [
+                  0
+                ],
+                "value": "107"
+              },
+              {
+                "attributes": null,
+                "label": "管理八级",
+                "validFor": [
+                  0
+                ],
+                "value": "108"
+              },
+              {
+                "attributes": null,
+                "label": "管理九级",
+                "validFor": [
+                  0
+                ],
+                "value": "109"
+              },
+              {
+                "attributes": null,
+                "label": "管理十级",
+                "validFor": [
+                  0
+                ],
+                "value": "110"
+              },
+              {
+                "attributes": null,
+                "label": "管理未定级",
+                "validFor": [
+                  1
+                ],
+                "value": "111"
+              },
+              {
+                "attributes": null,
+                "label": "专技一级",
+                "validFor": [
+                  1
+                ],
+                "value": "201"
+              },
+              {
+                "attributes": null,
+                "label": "专技二级",
+                "validFor": [
+                  1
+                ],
+                "value": "202"
+              },
+              {
+                "attributes": null,
+                "label": "专技三级",
+                "validFor": [
+                  1
+                ],
+                "value": "203"
+              },
+              {
+                "attributes": null,
+                "label": "专技四级",
+                "validFor": [
+                  1
+                ],
+                "value": "204"
+              },
+              {
+                "attributes": null,
+                "label": "专技五级",
+                "validFor": [
+                  1
+                ],
+                "value": "205"
+              },
+              {
+                "attributes": null,
+                "label": "专技六级",
+                "validFor": [
+                  1
+                ],
+                "value": "206"
+              },
+              {
+                "attributes": null,
+                "label": "专技七级",
+                "validFor": [
+                  1
+                ],
+                "value": "207"
+              },
+              {
+                "attributes": null,
+                "label": "专技八级",
+                "validFor": [
+                  1
+                ],
+                "value": "208"
+              },
+              {
+                "attributes": null,
+                "label": "专技九级",
+                "validFor": [
+                  1
+                ],
+                "value": "209"
+              },
+              {
+                "attributes": null,
+                "label": "专技十级",
+                "validFor": [
+                  1
+                ],
+                "value": "210"
+              },
+              {
+                "attributes": null,
+                "label": "专技十一级",
+                "validFor": [
+                  1
+                ],
+                "value": "211"
+              },
+              {
+                "attributes": null,
+                "label": "专技十二级",
+                "validFor": [
+                  1
+                ],
+                "value": "212"
+              },
+              {
+                "attributes": null,
+                "label": "专技十三级",
+                "validFor": [
+                  2
+                ],
+                "value": "213"
+              },
+              {
+                "attributes": null,
+                "label": "专技未定级",
+                "validFor": [
+                  2
+                ],
+                "value": "214"
+              },
+              {
+                "attributes": null,
+                "label": "高级技师",
+                "validFor": [
+                  2
+                ],
+                "value": "301"
+              },
+              {
+                "attributes": null,
+                "label": "技师",
+                "validFor": [
+                  2
+                ],
+                "value": "302"
+              },
+              {
+                "attributes": null,
+                "label": "高级工",
+                "validFor": [
+                  2
+                ],
+                "value": "303"
+              },
+              {
+                "attributes": null,
+                "label": "中级工",
+                "validFor": [
+                  2
+                ],
+                "value": "304"
+              },
+              {
+                "attributes": null,
+                "label": "初级工",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "305"
+              },
+              {
+                "attributes": null,
+                "label": "普工",
+                "validFor": [],
+                "value": "306"
+              },
+              {
+                "attributes": null,
+                "label": "工人未定级",
+                "validFor": [],
+                "value": "319"
+              }
+            ]
+          },
+          "SalaryLevel": {
+            "controllerValues": {
+              "1": 0,
+              "2": 1,
+              "3": 2
+            },
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "1",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "2",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "3",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "4",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "4"
+              },
+              {
+                "attributes": null,
+                "label": "5",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "5"
+              },
+              {
+                "attributes": null,
+                "label": "6",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "6"
+              },
+              {
+                "attributes": null,
+                "label": "7",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "7"
+              },
+              {
+                "attributes": null,
+                "label": "8",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "8"
+              },
+              {
+                "attributes": null,
+                "label": "9",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "9"
+              },
+              {
+                "attributes": null,
+                "label": "10",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "10"
+              },
+              {
+                "attributes": null,
+                "label": "11",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "11"
+              },
+              {
+                "attributes": null,
+                "label": "12",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "12"
+              },
+              {
+                "attributes": null,
+                "label": "13",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "13"
+              },
+              {
+                "attributes": null,
+                "label": "14",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "14"
+              },
+              {
+                "attributes": null,
+                "label": "15",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "15"
+              },
+              {
+                "attributes": null,
+                "label": "16",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "16"
+              },
+              {
+                "attributes": null,
+                "label": "17",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "17"
+              },
+              {
+                "attributes": null,
+                "label": "18",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "18"
+              },
+              {
+                "attributes": null,
+                "label": "19",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "19"
+              },
+              {
+                "attributes": null,
+                "label": "20",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "20"
+              },
+              {
+                "attributes": null,
+                "label": "21",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "21"
+              },
+              {
+                "attributes": null,
+                "label": "22",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "22"
+              },
+              {
+                "attributes": null,
+                "label": "23",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "23"
+              },
+              {
+                "attributes": null,
+                "label": "24",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "24"
+              },
+              {
+                "attributes": null,
+                "label": "25",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "25"
+              },
+              {
+                "attributes": null,
+                "label": "26",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "26"
+              },
+              {
+                "attributes": null,
+                "label": "27",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "27"
+              },
+              {
+                "attributes": null,
+                "label": "28",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "28"
+              },
+              {
+                "attributes": null,
+                "label": "29",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "29"
+              },
+              {
+                "attributes": null,
+                "label": "30",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "30"
+              },
+              {
+                "attributes": null,
+                "label": "31",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "31"
+              },
+              {
+                "attributes": null,
+                "label": "32",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "32"
+              },
+              {
+                "attributes": null,
+                "label": "33",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "33"
+              },
+              {
+                "attributes": null,
+                "label": "34",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "34"
+              },
+              {
+                "attributes": null,
+                "label": "35",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "35"
+              },
+              {
+                "attributes": null,
+                "label": "36",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "36"
+              },
+              {
+                "attributes": null,
+                "label": "37",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "37"
+              },
+              {
+                "attributes": null,
+                "label": "38",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "38"
+              },
+              {
+                "attributes": null,
+                "label": "39",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "39"
+              },
+              {
+                "attributes": null,
+                "label": "40",
+                "validFor": [
+                  0,
+                  1,
+                  2
+                ],
+                "value": "40"
+              },
+              {
+                "attributes": null,
+                "label": "41",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "41"
+              },
+              {
+                "attributes": null,
+                "label": "42",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "42"
+              },
+              {
+                "attributes": null,
+                "label": "43",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "43"
+              },
+              {
+                "attributes": null,
+                "label": "44",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "44"
+              },
+              {
+                "attributes": null,
+                "label": "45",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "45"
+              },
+              {
+                "attributes": null,
+                "label": "46",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "46"
+              },
+              {
+                "attributes": null,
+                "label": "47",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "47"
+              },
+              {
+                "attributes": null,
+                "label": "48",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "48"
+              },
+              {
+                "attributes": null,
+                "label": "49",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "49"
+              },
+              {
+                "attributes": null,
+                "label": "50",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "50"
+              },
+              {
+                "attributes": null,
+                "label": "51",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "51"
+              },
+              {
+                "attributes": null,
+                "label": "52",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "52"
+              },
+              {
+                "attributes": null,
+                "label": "53",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "53"
+              },
+              {
+                "attributes": null,
+                "label": "54",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "54"
+              },
+              {
+                "attributes": null,
+                "label": "55",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "55"
+              },
+              {
+                "attributes": null,
+                "label": "56",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "56"
+              },
+              {
+                "attributes": null,
+                "label": "57",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "57"
+              },
+              {
+                "attributes": null,
+                "label": "58",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "58"
+              },
+              {
+                "attributes": null,
+                "label": "59",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "59"
+              },
+              {
+                "attributes": null,
+                "label": "60",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "60"
+              },
+              {
+                "attributes": null,
+                "label": "61",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "61"
+              },
+              {
+                "attributes": null,
+                "label": "62",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "62"
+              },
+              {
+                "attributes": null,
+                "label": "63",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "63"
+              },
+              {
+                "attributes": null,
+                "label": "64",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "64"
+              },
+              {
+                "attributes": null,
+                "label": "65",
+                "validFor": [
+                  0,
+                  1
+                ],
+                "value": "65"
+              },
+              {
+                "attributes": null,
+                "label": "见习期",
+                "validFor": [],
+                "value": "0"
+              }
+            ]
+          },
+          "EmpPool": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "在编在岗",
+                "validFor": null,
+                "value": "0"
+              },
+              {
+                "attributes": null,
+                "label": "合同",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "试用见习",
+                "validFor": null,
+                "value": "11"
+              },
+              {
+                "attributes": null,
+                "label": "劳务派遣",
+                "validFor": null,
+                "value": "12"
+              },
+              {
+                "attributes": null,
+                "label": "离职",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "退休",
+                "validFor": null,
+                "value": "4"
+              },
+              {
+                "attributes": null,
+                "label": "死亡",
+                "validFor": null,
+                "value": "5"
+              }
+            ]
+          },
+          "JobTitleLevelCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "正部",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "副部",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "正局",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "副局",
+                "validFor": null,
+                "value": "4"
+              },
+              {
+                "attributes": null,
+                "label": "正处",
+                "validFor": null,
+                "value": "5"
+              },
+              {
+                "attributes": null,
+                "label": "副处",
+                "validFor": null,
+                "value": "6"
+              },
+              {
+                "attributes": null,
+                "label": "正科",
+                "validFor": null,
+                "value": "7"
+              },
+              {
+                "attributes": null,
+                "label": "副科",
+                "validFor": null,
+                "value": "8"
+              },
+              {
+                "attributes": null,
+                "label": "科员",
+                "validFor": null,
+                "value": "9"
+              },
+              {
+                "attributes": null,
+                "label": "办事员",
+                "validFor": null,
+                "value": "10"
+              }
+            ]
+          },
+          "ProfessionRankCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "正高",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "副高",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "中级",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "初级",
+                "validFor": null,
+                "value": "4"
+              },
+              {
+                "attributes": null,
+                "label": "员级",
+                "validFor": null,
+                "value": "5"
+              },
+              {
+                "attributes": null,
+                "label": "未定级",
+                "validFor": null,
+                "value": "6"
+              }
+            ]
+          },
+          "ProfessionGrade": {
+            "controllerValues": {
+              "1": 0,
+              "2": 1,
+              "3": 2,
+              "4": 3,
+              "5": 4,
+              "6": 5
+            },
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "一级",
+                "validFor": [
+                  0
+                ],
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "二级",
+                "validFor": [
+                  0
+                ],
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "三级",
+                "validFor": [
+                  0
+                ],
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "四级",
+                "validFor": [
+                  0
+                ],
+                "value": "4"
+              },
+              {
+                "attributes": null,
+                "label": "五级",
+                "validFor": [
+                  1
+                ],
+                "value": "5"
+              },
+              {
+                "attributes": null,
+                "label": "六级",
+                "validFor": [
+                  1
+                ],
+                "value": "6"
+              },
+              {
+                "attributes": null,
+                "label": "七级",
+                "validFor": [
+                  1
+                ],
+                "value": "7"
+              },
+              {
+                "attributes": null,
+                "label": "八级",
+                "validFor": [
+                  2
+                ],
+                "value": "8"
+              },
+              {
+                "attributes": null,
+                "label": "九级",
+                "validFor": [
+                  2
+                ],
+                "value": "9"
+              },
+              {
+                "attributes": null,
+                "label": "十级",
+                "validFor": [
+                  2
+                ],
+                "value": "10"
+              },
+              {
+                "attributes": null,
+                "label": "十一级",
+                "validFor": [
+                  3
+                ],
+                "value": "11"
+              },
+              {
+                "attributes": null,
+                "label": "十二级",
+                "validFor": [
+                  3
+                ],
+                "value": "12"
+              },
+              {
+                "attributes": null,
+                "label": "十三级",
+                "validFor": [
+                  3
+                ],
+                "value": "13"
+              },
+              {
+                "attributes": null,
+                "label": "未定级",
+                "validFor": [],
+                "value": "14"
+              }
+            ]
+          },
+          "FLengthOfEducation": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "1",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "2",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "3",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "4",
+                "validFor": null,
+                "value": "4"
+              },
+              {
+                "attributes": null,
+                "label": "5",
+                "validFor": null,
+                "value": "5"
+              }
+            ]
+          },
+          "LengthOfEducation": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "1",
+                "validFor": null,
+                "value": "0"
+              },
+              {
+                "attributes": null,
+                "label": "2",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "3",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "4",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "5",
+                "validFor": null,
+                "value": "4"
+              }
+            ]
+          },
+          "NurseYears": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "5",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "10",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "15",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "20",
+                "validFor": null,
+                "value": "4"
+              }
+            ]
+          },
+          "HasNurseExtraSalary": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "否",
+                "validFor": null,
+                "value": "0"
+              }
+            ]
+          },
+          "EvalTypeCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "专业技术",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "管理",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "工勤",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "双肩挑",
+                "validFor": null,
+                "value": "4"
+              }
+            ]
+          },
+          "LabelCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "在编",
+                "validFor": null,
+                "value": "1"
+              },
+              {
+                "attributes": null,
+                "label": "在编见习",
+                "validFor": null,
+                "value": "2"
+              },
+              {
+                "attributes": null,
+                "label": "编外卫技",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "退休留用",
+                "validFor": null,
+                "value": "4"
+              },
+              {
+                "attributes": null,
+                "label": "编外其它",
+                "validFor": null,
+                "value": "5"
+              }
+            ]
+          },
+          "IdentityCate": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "职员",
+                "validFor": null,
+                "value": "0"
+              },
+              {
+                "attributes": null,
+                "label": "干部",
+                "validFor": null,
+                "value": "10"
+              },
+              {
+                "attributes": null,
+                "label": "工人",
+                "validFor": null,
+                "value": "11"
+              }
+            ]
+          },
+          "StatusCode": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "未审批",
+                "validFor": null,
+                "value": "0"
+              },
+              {
+                "attributes": null,
+                "label": "审批通过",
+                "validFor": null,
+                "value": "3"
+              },
+              {
+                "attributes": null,
+                "label": "审批不通过",
+                "validFor": null,
+                "value": "5"
+              }
+            ]
+          },
+          "IsPaySalary": {
+            "controllerValues": {},
+            "defaultValue": null,
+            "url": null,
+            "eTag": null,
+            "values": [
+              {
+                "attributes": null,
+                "label": "否",
+                "validFor": null,
+                "value": "0"
+              },
+              {
+                "attributes": null,
+                "label": "是",
+                "validFor": null,
+                "value": "1"
+              }
+            ]
+          }
+        },
+        "picklistFieldMap": [
+          {
+            "ObjectTypeCode": 0,
+            "Id": "1c49de82-7403-4bbe-8790-d8316b672c63",
+            "ControlAttributeId": "70635c3c-4058-42f6-b68f-67afbb948a95",
+            "DependentAttributeId": "70635c3c-4058-42f6-b68f-67afbb948a95",
+            "Controller": "岗位类别",
+            "Dependent": "岗位级别",
+            "ControllerName": "PostCategoryCode",
+            "DependentName": "PostLevelCode",
+            "ModifiedByName": null,
+            "ModifiedOn": null
+          },
+          {
+            "ObjectTypeCode": 0,
+            "Id": "19d1ee5e-7905-4663-8b2c-3d3ade20b273",
+            "ControlAttributeId": "3da82098-cbe8-44ac-96ae-6ca47047e61e",
+            "DependentAttributeId": "3da82098-cbe8-44ac-96ae-6ca47047e61e",
+            "Controller": "出生地",
+            "Dependent": "籍贯地区",
+            "ControllerName": "PlaceOfBirth",
+            "DependentName": "DistrictOfBirth",
+            "ModifiedByName": null,
+            "ModifiedOn": null
+          },
+          {
+            "ObjectTypeCode": 0,
+            "Id": "9c40245d-a4df-40d8-8008-9a5851fd6ac3",
+            "ControlAttributeId": "09d5dc03-94a4-4a1a-97b7-7bb98f7b00ac",
+            "DependentAttributeId": "09d5dc03-94a4-4a1a-97b7-7bb98f7b00ac",
+            "Controller": "职称级别",
+            "Dependent": "职称岗位等级（停）",
+            "ControllerName": "ProfessionRankCode",
+            "DependentName": "ProfessionGrade",
+            "ModifiedByName": null,
+            "ModifiedOn": null
+          },
+          {
+            "ObjectTypeCode": 0,
+            "Id": "f0080df6-3891-47e6-a321-0615b2405ecb",
+            "ControlAttributeId": "6cfa0232-20ad-46de-9cbb-a5063e8d027a",
+            "DependentAttributeId": "6cfa0232-20ad-46de-9cbb-a5063e8d027a",
+            "Controller": "人员状态",
+            "Dependent": "人员子状态",
+            "ControllerName": "StateCode",
+            "DependentName": "SubStateCode",
+            "ModifiedByName": null,
+            "ModifiedOn": null
+          },
+          {
+            "ObjectTypeCode": 0,
+            "Id": "1e36401b-bedc-462f-ab18-8c8fc693845f",
+            "ControlAttributeId": "ab5536eb-0283-4850-8996-d1da5e2c13b3",
+            "DependentAttributeId": "ab5536eb-0283-4850-8996-d1da5e2c13b3",
+            "Controller": "薪资岗位类别",
+            "Dependent": "薪级别",
+            "ControllerName": "SalaryPostCategory",
+            "DependentName": "SalaryLevel",
+            "ModifiedByName": null,
+            "ModifiedOn": null
+          },
+          {
+            "ObjectTypeCode": 0,
+            "Id": "84eaccfd-3472-4720-8acf-6cbda68719cc",
+            "ControlAttributeId": "ab5536eb-0283-4850-8996-d1da5e2c13b3",
+            "DependentAttributeId": "ab5536eb-0283-4850-8996-d1da5e2c13b3",
+            "Controller": "薪资岗位类别",
+            "Dependent": "薪资岗位级别",
+            "ControllerName": "SalaryPostCategory",
+            "DependentName": "SalaryPostCode",
+            "ModifiedByName": null,
+            "ModifiedOn": null
+          }
+        ]
+      },
+      "error": []
+    }
+  ],
+  "context": {
+    "globalValueProviders": null,
+    "picklistValuesMap": {},
+    "appContextUser": {
+      "userId": null,
+      "name": null,
+      "isAdmin": false,
+      "token": null
+    },
+    "enableAccessChecks": false
+  }
+}

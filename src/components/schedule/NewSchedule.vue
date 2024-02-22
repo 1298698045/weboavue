@@ -190,7 +190,7 @@
                 <div class="sectionRow">
                     <div class="sectionItem">
                         <a-form-item name="Description" label="内容">
-                            <TEditor :placeholder="'请输入内容'" @input="getEditorContent" />
+                            <TEditor :placeholder="'请输入内容'" mode="simple" @input="getEditorContent" />
                         </a-form-item>
                     </div>
                 </div>

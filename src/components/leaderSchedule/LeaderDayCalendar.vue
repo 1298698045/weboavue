@@ -70,7 +70,7 @@
                 <div class="weekRightDay">
 
                     <div class="calendarDay" v-for="(item,index) in roomList" :key="index">
-                        <div class="eventList"  :style="{height: height+'px'}">
+                        <div class="eventList"  :style="{height: height+'px'}" @click="(e)=>{handleSelectTime(e, currentTime, item)}">
                             <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
                                 v-for="(row,idx) in item.leaderSchedule" :key="idx">
                                 <template #icon></template>
@@ -169,9 +169,10 @@
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-
+    const emit = defineEmits(['openDateNew']);
     const props = defineProps({
-        week: Array
+        week: Array,
+        currentTime: [String, Date]
     })
     const data = reactive({
         height: "",
@@ -212,6 +213,17 @@
         console.log("endIndex",index,endIndex);
         let num = endIndex - index;
         return num * 60 + 'px';
+    }
+    const handleSelectTime = (e, currentTime, item) => {
+        console.log(e, currentTime.format('YYYY-MM-DD'), item);
+        let layerY = e.layerY;
+        let index = Math.floor(layerY/30/2);
+        let startTime = data.times[index > 0 ?  index-1 : index];
+        let obj = {
+            date: currentTime.format('YYYY-MM-DD'),
+            time: startTime
+        }
+        emit("openDateNew", obj);
     }
 </script>
 <style lang="less" scoped>

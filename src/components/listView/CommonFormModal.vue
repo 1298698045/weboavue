@@ -33,7 +33,7 @@
                 >
                   <a-form-item
                     :name="attribute.targetValue"
-                    v-if="['L', 'LT', 'DT'].includes(attribute.attributes.type)"
+                    v-if="['L', 'LT', 'DT'].includes(attribute.attributes.type) && select[attribute.targetValue]"
                     :label="attribute.label"
                     :rules="[
                       {
@@ -43,9 +43,11 @@
                     ]"
                   >
                     <a-select
+                      v-if="JSON.stringify(select[attribute.targetValue].controllerValues)=='{}'"
                       allowClear
                       v-model:value="formState[attribute.targetValue]"
                       :placeholder="'请选择' + attribute.label"
+                      @change="(e)=>Controllerchange(e, attribute.targetValue, picklistFieldMap[attribute.targetValue])"
                     >
                       <a-select-option
                         v-for="(option, optionIdx) in select[
@@ -53,6 +55,23 @@
                         ] && select[attribute.targetValue].values"
                         :key="optionIdx"
                         :value="option.value"
+                        >{{ option.label }}</a-select-option
+                      >
+                    </a-select>
+                    <a-select
+                      v-if="JSON.stringify(select[attribute.targetValue].controllerValues)!='{}'"
+                      allowClear
+                      v-model:value="formState[attribute.targetValue]"
+                      :placeholder="'请选择' + attribute.label"
+                      @change="(e)=>Controllerchange(e, attribute.targetValue, picklistFieldMap[attribute.targetValue])"
+                    >
+                      <a-select-option
+                        v-for="(option, optionIdx) in select[
+                          attribute.targetValue
+                        ] && select[attribute.targetValue].values"
+                        :key="optionIdx"
+                        :value="option.value"
+                        :disabled="!option.show"
                         >{{ option.label }}</a-select-option
                       >
                     </a-select>
@@ -160,23 +179,27 @@
               </div>
             </div>
           </a-form>
-          <TEditor />
+          <TEditor placeholder="请输入内容" />
           <radio-dept
+            v-if="isRadioDept"
             :isShow="isRadioDept"
             @cancel="cancelDeptModal"
             @selectVal="handleDeptParams"
           />
           <multiple-dept
+            v-if="isMultipleDept"
             :isShow="isMultipleDept"
             @cancel="cancelDeptModal"
             @selectVal="handleDeptParams"
           />
           <radio-user
+            v-if="isRadioUser"
             :isShow="isRadioUser"
             @cancel="cancelUserModal"
             @selectVal="handleUserParams"
             :localId="localId"
           ></radio-user>
+          <Lookup-filter v-if="isLookup" :isShow="isLookup" :objectTypeCode="objectTypeCode" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
           <!-- <multiple-user :isShow="isMultipleUser" @cancel="cancelMuUserModal"  @selectVal="handleMuUserParams" /> -->
         </div>
       </div>
@@ -212,6 +235,8 @@ import RadioDept from "@/components/commonModal/RadioDept.vue";
 import MultipleDept from "@/components/commonModal/MultipleDept.vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 import MultipleUser from "@/components/commonModal/MultipleUser.vue";
+import LookupFilter from "@/components/commonModal/LookupFilter.vue";
+
 import { message } from "ant-design-vue";
 
 import TEditor from "@/components/TEditor.vue";
@@ -243,6 +268,10 @@ const data = reactive({
   isRadioUser: false,
   localId: "",
   isMultipleUser: true,
+  isLookup: false,
+  objectTypeCode: "",
+  recordObj: {}, // 记录当前点击的数据
+  picklistFieldMap: {}, // 依赖字段关联关系
 });
 const {
   title,
@@ -256,6 +285,10 @@ const {
   isMultipleDept,
   localId,
   isMultipleUser,
+  isLookup,
+  objectTypeCode,
+  recordObj,
+  picklistFieldMap
 } = toRefs(data);
 const formState = reactive({});
 
@@ -303,10 +336,49 @@ getConfig();
 const getPickerList = () => {
   proxy.$get(Interface.picklist, {}).then((res) => {
     data.select = res.actions[0].returnValue.picklistFieldValues;
+    let picklistFieldMap = res.actions[0].returnValue.picklistFieldMap;
+    for(let i = 0; i < picklistFieldMap.length; i++) {
+      let item = picklistFieldMap[i];
+      if(!data.picklistFieldMap[item.ControllerName]){
+        data.picklistFieldMap[item.ControllerName] = [];
+      }
+      data.picklistFieldMap[item.ControllerName].push(item.DependentName);
+      Controllerchange(formState[item.ControllerName], item.ControllerName, data.picklistFieldMap[item.ControllerName]);
+    };
+    // console.log("data.picklistFieldMap",data.picklistFieldMap);
   });
 };
 getPickerList();
 
+const Controllerchange = (val, Controller, Dependents) => {
+  // console.log("Controllerchange", val, Controller, Dependents);
+  if(Dependents){
+    for(var i = 0; i < Dependents.length; i++){
+      var Dependent = Dependents[i];
+      var isDependent = false;
+      if (data.select[Dependent] && data.select[Dependent].values){
+        for (var j = 0; j < data.select[Dependent].values.length; j++) {
+          var item = data.select[Dependent].values[j];
+          // console.log("item-validFor", item);
+          item.show = false;
+          for(var k = 0; k < item.validFor.length; k++) {
+            var row =  item.validFor[k];
+            if (row == data.select[Dependent].controllerValues[val]) {
+              item.show = true;
+              if (formState[Dependent] == item.value){
+                isDependent = true;
+              }
+            }
+          }
+        }
+      }
+      if(isDependent == false) {
+        formState[Dependent] = '';
+      }
+    }
+    // console.log("data.select-Dependent", data.select);
+  }
+}
 const searchlookup = (search, attribute) => {
   console.log(search, attribute);
   proxy
@@ -377,9 +449,28 @@ const handleOpenLook = (attribute) => {
     data.isRadioUser = true;
   } else if (sObjectType == 10) {
     data.isRadioDept = true;
+  }else {
+    data.recordObj = attribute;
+    data.objectTypeCode = sObjectType;
+    data.isLookup = true;
   }
 };
-
+// 选中的数据
+const handleSelectData = (e) => {
+  data.isLookup = false;
+  // console.log("选中的数据", e);
+  // console.log("recordObj", data.recordObj, formState[data.recordObj.localId]);
+  let { localId } = data.recordObj;
+  let isExist = data.search[localId].some(item=>item.ID==e.LIST_RECORD_ID);
+  if(!isExist){
+    data.search[localId].push({
+      ID: e.LIST_RECORD_ID,
+      Name: e.Name
+    })
+  }
+  formState[localId].Id = e.LIST_RECORD_ID;
+  formState[localId].Name = e.Name;
+};
 const handleSubmit = () => {
   formRef.value
     .validate()

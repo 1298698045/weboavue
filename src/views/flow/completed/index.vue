@@ -58,7 +58,7 @@
                                 </a-tab-pane>
                             </a-tabs>
                         </div>
-                        <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch"></list-form-search>
+                        <list-form-search ref="searchRef" :isCollapsed="isCollapsed" @update-height="changeHeight" @search="handleSearch"></list-form-search>
                         <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
                             <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
                                 :isCollapsed="isCollapsed"></Dtable>
@@ -184,6 +184,7 @@
     });
     const handleCollapsed = () => {
         data.isCollapsed = !data.isCollapsed;
+        changeHeight();
     };
     const { isCollapsed, tableHeight, fieldNames, tabs, isCirculation } = toRefs(data);
     const tabContent = ref(null);
@@ -339,167 +340,12 @@
         gridRef.value.loadGrid(data.queryParams);
     }
 </script>
-<style lang="less" scoped>
-    .todoList {
+<style lang="less">
+@import "@/style/flow/treeList.less";
+</style>
+<style scoped>
+    .todo-content {
         width: 100%;
-        height: 100%;
-        background: #fff;
-
-        .todo-head {
-            width: 100%;
-            height: 52px;
-            line-height: 52px;
-            background: #f9f9f9;
-            border-bottom: 1px solid #eaeaea;
-            display: flex;
-            align-items: center;
-
-            .todo-head-left {
-                padding-left: 20px;
-                display: flex;
-                align-items: center;
-                flex: 1;
-
-                .icon-circle-base {
-                    width: 35px;
-                    height: 35px;
-                    background: rgb(0, 121, 222);
-                    border-radius: 50%;
-                    margin-right: 10px;
-                    color: #fff;
-                }
-
-                .wea-new-top-title-breadcrumb {
-                    color: #484a4d;
-                    margin-left: 3px;
-                    font-size: 14px;
-                    font-weight: 500;
-                }
-            }
-
-            .todo-head-right {
-                padding-right: 14px;
-                display: flex;
-                align-items: center;
-
-                .btn-drop {
-                    display: inline-block;
-                    padding-left: 20px;
-                    line-height: 40px;
-                    vertical-align: middle;
-                    cursor: pointer;
-                }
-
-                .ant-btn-group {
-                    margin-left: 10px;
-                }
-            }
-        }
-
-        .todo-content {
-            width: 100%;
-            height: 100%;
-            /* height: calc(~"100% - 52px"); */
-
-            .ant-row {
-                height: 100%;
-
-                .wea-left-right-layout-left {
-                    border-right: 1px solid #eaeaea;
-
-                    .wea-left-tree {
-                        width: 100%;
-                        height: 100%;
-
-                        .wea-left-tree-search {
-                            width: 100%;
-                            height: 46px;
-                            line-height: 46px;
-                            display: flex;
-                            align-items: center;
-                            padding-right: 14px;
-                            box-sizing: border-box;
-
-                            .wea-left-tree-search-label {
-                                display: inline-block;
-                                padding-left: 14px;
-                                min-width: 76px;
-                                cursor: pointer;
-                                font-weight: 600;
-                                text-overflow: ellipsis;
-                                overflow: hidden;
-                                white-space: nowrap;
-                                font-size: 12px;
-                            }
-                        }
-
-                        .wea-left-tree-scroll {
-                            margin-top: 10px;
-                            width: 100%;
-                            height: calc(~"100% - 56px");
-                            overflow: auto;
-
-                            .ant-tree-title {
-                                display: inline-block;
-                                width: 100%;
-                            }
-
-                            .ant-tree-title>span {
-                                width: 100%;
-                                display: flex;
-                                justify-content: space-between;
-
-                                .tree-num {
-                                    padding-right: 10px;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                .wea-left-right-layout-right {
-                    height: 100%;
-                    overflow: hidden;
-                    background-color: #fff;
-                    position: relative;
-
-                    .wea-left-right-layout-btn {
-                        width: 18px;
-                        height: 60px;
-                        position: absolute;
-                        top: 50%;
-                        left: 0;
-                        margin-top: -30px;
-                        z-index: 11;
-                        cursor: pointer;
-                        background-size: 100% 100%;
-                    }
-
-                    .wea-left-right-layout-btn.wea-left-right-layout-btn-show {
-                        background: url(~@/assets/img/leftTree-show.png) no-repeat -2px 0;
-                    }
-
-                    .wea-left-right-layout-btn.wea-left-right-layout-btn-show:hover {
-                        background: url(~@/assets/img/leftTree-show-hover.png) no-repeat -2px 0;
-                    }
-
-                    .wea-left-right-layout-btn.wea-left-right-layout-btn-hide {
-                        background: url(~@/assets/img/leftTree-hide.png) no-repeat -2px 0;
-                    }
-
-                    .wea-left-right-layout-btn.wea-left-right-layout-btn-hide:hover {
-                        background: url(~@/assets/img/leftTree-hide-hover.png) no-repeat -2px 0;
-                    }
-                }
-
-                .wea-tab {
-                    height: 46px;
-                }
-
-                .wea-tabContent {
-                    /* height: calc(~"100% - 98px"); */
-                }
-            }
-        }
+        height: 100% !important;
     }
 </style>

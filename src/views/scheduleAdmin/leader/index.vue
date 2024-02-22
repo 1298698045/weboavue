@@ -30,11 +30,11 @@
             </div>
             <div class="calendarRight">
                 <ListView v-if="current==0" />
-                <CalendarVue v-if="current==1" />
+                <CalendarVue v-if="current==1" @openDateNew="handleOpenDateNew" />
             </div>
         </div>
         <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" />
+        <AddSchedule :isShow="isAddSchedule" v-if="isAddSchedule" :paramsTime="paramsTime" @cancel="cancelAddSchedule" />
     </div>
 </template>
 <script setup>
@@ -64,8 +64,12 @@
         current: 1,
         isSchedule: false,
         isAddSchedule: false,
+        paramsTime: {
+            date: "",
+            time: ""
+        }
     });
-    const { current, isSchedule, isAddSchedule } = toRefs(data);
+    const { current, isSchedule, isAddSchedule, paramsTime } = toRefs(data);
     const handleAddSchedule = () => {
         // data.isSchedule =  true;
         data.isAddSchedule = true;
@@ -76,6 +80,11 @@
     }
     const cancelAddSchedule = (e) => {
         data.isAddSchedule = e;
+    };
+    const handleOpenDateNew = (e) => {
+        console.log("parent", e);
+        data.paramsTime = e;
+        data.isAddSchedule = true;
     }
 </script>
 <style lang="less">

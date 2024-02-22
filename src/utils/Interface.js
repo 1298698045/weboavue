@@ -41,6 +41,8 @@ const Interface = {
 
   entityConfig: "/localData/entity.config.get.json", // 通用弹窗布局配置
   picklist: "/localData/layout.picklistvalues.get.json",
+  // entityConfig: "/localData/common/entity.config.get.json", // 通用弹窗布局配置
+  // picklist: "/localData/common/layout.picklistvalues.get.json",
   treeList: "/localData/tree.get.json",
   user: {
     mybusinessUser: "/localData/user/user.mybusiness.getlist.json", // 同部门下用户

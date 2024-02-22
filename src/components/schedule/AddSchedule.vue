@@ -350,7 +350,7 @@
                                                 <UserOutlined />
                                             </div>
                                             <div class="rVal">
-                                                <TEditor :placeholder="'添加描述或附件文档'" :height=500
+                                                <TEditor mode="simple" :placeholder="'添加描述或附件文档'" :height=500
                                                     @input="getEditorContent" />
                                             </div>
                                         </div>
@@ -404,7 +404,8 @@
     const props = defineProps({
         isShow: Boolean,
         folderName: String,
-        folderPicker: String
+        folderPicker: String,
+        paramsTime: [Object]
     });
     const dateFormat = 'YYYY-MM-DD';
     const hourFormat = 'HH:mm'
@@ -475,6 +476,19 @@
         startTime: "",
         endTime: "",
     });
+    if(props.paramsTime && props.paramsTime.date && props.paramsTime.time == ''){
+        formState.StartDateTime = props.paramsTime.date;
+        formState.StartDateTime_time = "08:00";
+        formState.EndDateTime_time = "21:00";
+        formState.EndDateTime = props.paramsTime.date;
+    }else if(props.paramsTime && props.paramsTime.date && props.paramsTime.time){
+        formState.StartDateTime = props.paramsTime.date;
+        formState.StartDateTime_time = props.paramsTime.time;
+        formState.EndDateTime = props.paramsTime.date;
+        let hour = new Date(props.paramsTime.date +' '+ props.paramsTime.time).getHours() + 1;
+        hour = hour < 10 ? '0' + hour : hour;
+        formState.EndDateTime_time = hour+':00';
+    }
     const getEditorContent = (e) => {
         formState.Description = e;
     }

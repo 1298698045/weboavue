@@ -1,0 +1,5795 @@
+{
+  "actions": [
+    {
+      "id": "",
+      "state": "SUCCESS",
+      "returnValue": {
+        "componentDef": {
+          "entityLabel": "人员档案",
+          "entityApiName": "HREmployee",
+          "layoutId": null,
+          "name": null,
+          "objectTypeCode": 30020,
+          "recordNameField": null,
+          "keyPrefix": "a0V",
+          "isInlineEditable": true,
+          "isUserLayout": false,
+          "headerActions": [
+            {
+              "executionComponent": {
+                "descriptor": null,
+                "isEvent": true,
+                "isClientSideCreatable": true,
+                "componentName": null
+              },
+              "devNameOrId": "SaveEdit",
+              "requiresSelectionForUsage": false,
+              "isSelected": true,
+              "label": "保存",
+              "title": "保存",
+              "isRenderEntityIcon": false,
+              "isVisible": false,
+              "assertive": false,
+              "section": "Page",
+              "icon": "/img/icon/t4v35/action/new_custom19_120.png",
+              "url": null,
+              "isMassAction": false,
+              "actionTypeEnum": "StandardButton"
+            },
+            {
+              "executionComponent": {
+                "descriptor": null,
+                "isEvent": true,
+                "isClientSideCreatable": true,
+                "componentName": null
+              },
+              "devNameOrId": "SaveAndNew",
+              "requiresSelectionForUsage": false,
+              "isSelected": false,
+              "label": "保存并新建",
+              "title": "保存并新建",
+              "isRenderEntityIcon": false,
+              "isVisible": false,
+              "assertive": false,
+              "section": "Page",
+              "icon": "/img/icon/t4v35/action/new_custom19_120.png",
+              "url": null,
+              "isMassAction": false,
+              "actionTypeEnum": "StandardButton"
+            },
+            {
+              "executionComponent": {
+                "descriptor": null,
+                "isEvent": true,
+                "isClientSideCreatable": true,
+                "componentName": null
+              },
+              "devNameOrId": "CancelEdit",
+              "requiresSelectionForUsage": false,
+              "isSelected": false,
+              "label": "取消",
+              "title": "取消",
+              "isRenderEntityIcon": false,
+              "isVisible": false,
+              "assertive": false,
+              "section": "Page",
+              "icon": "/img/icon/t4v35/action/new_custom19_120.png",
+              "url": null,
+              "isMassAction": false,
+              "actionTypeEnum": "StandardButton"
+            }
+          ],
+          "inlineEditActions": [],
+          "sections": [
+            {
+              "sectionId": "e0c91608-2362-45cc-80ae-3967bab311fc",
+              "labelKey": "Basic",
+              "title": "基本信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "工号",
+                      "localId": "EmployeeNo",
+                      "targetValue": "EmployeeNo",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "姓名",
+                      "localId": "FullName",
+                      "targetValue": "FullName",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "人员人事类别",
+                      "localId": "ContractTypeCode",
+                      "targetValue": "ContractTypeCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "人员岗位类别",
+                      "localId": "EmpCategoryCode",
+                      "targetValue": "EmpCategoryCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "人员状态",
+                      "localId": "StateCode",
+                      "targetValue": "StateCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "人员子状态",
+                      "localId": "SubStateCode",
+                      "targetValue": "SubStateCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 3
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "一级部门",
+                      "localId": "RootDeptId",
+                      "targetValue": "RootDeptId",
+                      "attributes": {
+                        "maxlength": 36,
+                        "type": "O",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 10,
+                        "sObjectType": 10,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "部门",
+                      "localId": "DeptId",
+                      "targetValue": "DeptId",
+                      "attributes": {
+                        "maxlength": 36,
+                        "type": "O",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 10,
+                        "sObjectType": 10,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 4
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "参加工作时间",
+                      "localId": "WorkStartDate",
+                      "targetValue": "WorkStartDate",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "进院时间",
+                      "localId": "JoinDate",
+                      "targetValue": "JoinDate",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 5
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "人员类别2",
+                      "localId": "CategoryCode",
+                      "targetValue": "CategoryCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "岗位二级分类",
+                      "localId": "PostSubCategory",
+                      "targetValue": "PostSubCategory",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 6
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "身份证号",
+                      "localId": "IDNumber",
+                      "targetValue": "IDNumber",
+                      "attributes": {
+                        "maxlength": 30,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "出生年月",
+                      "localId": "Birthday",
+                      "targetValue": "Birthday",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 7
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "性别",
+                      "localId": "GenderCode",
+                      "targetValue": "GenderCode",
+                      "attributes": {
+                        "maxlength": 4,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "年龄",
+                      "localId": "Age",
+                      "targetValue": "Age",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "N",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 8
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "出生地",
+                      "localId": "PlaceOfBirth",
+                      "targetValue": "PlaceOfBirth",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "Province",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "籍贯地区",
+                      "localId": "DistrictOfBirth",
+                      "targetValue": "DistrictOfBirth",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "Province",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 9
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "婚姻状态",
+                      "localId": "MarryStatusCode",
+                      "targetValue": "MarryStatusCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "民族",
+                      "localId": "RaceCode",
+                      "targetValue": "RaceCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 10
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "户口性质",
+                      "localId": "ResidenceCode",
+                      "targetValue": "ResidenceCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "人员来源",
+                      "localId": "PeopleSourceCode",
+                      "targetValue": "PeopleSourceCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 11
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "是否双肩挑",
+                      "localId": "IsMultipleJob",
+                      "targetValue": "IsMultipleJob",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "是中层",
+                      "localId": "IsMiddleLevel",
+                      "targetValue": "IsMiddleLevel",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 12
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "住房情况",
+                      "localId": "StatusOfHouse",
+                      "targetValue": "StatusOfHouse",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "干部录聘来源",
+                      "localId": "CadreSourceCode",
+                      "targetValue": "CadreSourceCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 13
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "饭卡号",
+                      "localId": "MealCardNumber",
+                      "targetValue": "MealCardNumber",
+                      "attributes": {
+                        "maxlength": 1,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "胸卡号",
+                      "localId": "BadgeNumber",
+                      "targetValue": "BadgeNumber",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 14
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "档案存放",
+                      "localId": "FilePlaceCode",
+                      "targetValue": "FilePlaceCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "显示顺序",
+                      "localId": "DisplayOrder",
+                      "targetValue": "DisplayOrder",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "N",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 15
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "科员等级",
+                      "localId": "StaffLevel",
+                      "targetValue": "StaffLevel",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 16
+                }
+              ]
+            },
+            {
+              "sectionId": "f3fec955-e3a5-4dac-8207-e7d6a3c667ce",
+              "labelKey": "Salary ",
+              "title": "薪资",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "薪资岗位类别",
+                      "localId": "SalaryPostCategory",
+                      "targetValue": "SalaryPostCategory",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "薪资岗位级别",
+                      "localId": "SalaryPostCode",
+                      "targetValue": "SalaryPostCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "薪级别",
+                      "localId": "SalaryLevel",
+                      "targetValue": "SalaryLevel",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "工资编号",
+                      "localId": "SalaryNo",
+                      "targetValue": "SalaryNo",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "薪资岗位设置日期",
+                      "localId": "SalaryPostStart",
+                      "targetValue": "SalaryPostStart",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 3
+                }
+              ]
+            },
+            {
+              "sectionId": "f774104d-1f91-4261-8edc-831702b4bb76",
+              "labelKey": "Education Information",
+              "title": "教育信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "第一学历",
+                      "localId": "FEducationGradeCode",
+                      "targetValue": "FEducationGradeCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": true,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "第一学历学位",
+                      "localId": "FDegreeCode",
+                      "targetValue": "FDegreeCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "第一学历毕业时间",
+                      "localId": "FGraduateDate",
+                      "targetValue": "FGraduateDate",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "第一学历学制",
+                      "localId": "FLengthOfEducation",
+                      "targetValue": "FLengthOfEducation",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "第一学历专业",
+                      "localId": "FMajor",
+                      "targetValue": "FMajor",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "第一学历学校",
+                      "localId": "FSchoolName",
+                      "targetValue": "FSchoolName",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 3
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "最高学历",
+                      "localId": "EducationGradeCode",
+                      "targetValue": "EducationGradeCode",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "最高学位",
+                      "localId": "DegreeCode",
+                      "targetValue": "DegreeCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 4
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "最高学历专业",
+                      "localId": "Major",
+                      "targetValue": "Major",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "最高学历学制",
+                      "localId": "LengthOfEducation",
+                      "targetValue": "LengthOfEducation",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 5
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "最高学历毕业时间",
+                      "localId": "GraduateDate",
+                      "targetValue": "GraduateDate",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "最高学历学校",
+                      "localId": "SchoolName",
+                      "targetValue": "SchoolName",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 6
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "最高学历专业类别",
+                      "localId": "MajorCategory",
+                      "targetValue": "MajorCategory",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "导师姓名",
+                      "localId": "MasterName",
+                      "targetValue": "MasterName",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 7
+                }
+              ]
+            },
+            {
+              "sectionId": "7ade5fcd-161d-4477-8b83-b7bfa789a907",
+              "labelKey": "Job Information",
+              "title": "职务信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "职务",
+                      "localId": "JobTitle",
+                      "targetValue": "JobTitle",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "职务级别",
+                      "localId": "JobTitleLevelCode",
+                      "targetValue": "JobTitleLevelCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "管理职务名称",
+                      "localId": "JobTitleCode",
+                      "targetValue": "JobTitleCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "职务任职时间",
+                      "localId": "JobTitleStart",
+                      "targetValue": "JobTitleStart",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            },
+            {
+              "sectionId": "7bb7d7cc-ed90-4da2-8a03-3a67ea123b82",
+              "labelKey": "Profession",
+              "title": "专业技术",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "技术职务名称",
+                      "localId": "ProfessionTitle",
+                      "targetValue": "ProfessionTitle",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "职称级别",
+                      "localId": "ProfessionRankCode",
+                      "targetValue": "ProfessionRankCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "任职职称时间",
+                      "localId": "ProfessionTitleHiredOn",
+                      "targetValue": "ProfessionTitleHiredOn",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "职称岗位等级（停）",
+                      "localId": "ProfessionGrade",
+                      "targetValue": "ProfessionGrade",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "取得职称时间",
+                      "localId": "ProfessionTitleGetOn",
+                      "targetValue": "ProfessionTitleGetOn",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "聘任职称级别",
+                      "localId": "ProfessionRankCodeOfHired",
+                      "targetValue": "ProfessionRankCodeOfHired",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 3
+                }
+              ]
+            },
+            {
+              "sectionId": "5b99344c-3cd3-4084-a4fc-5d501c576d9f",
+              "labelKey": "Skill",
+              "title": "工勤",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "技术工种",
+                      "localId": "SKillType",
+                      "targetValue": "SKillType",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "技术技能级别",
+                      "localId": "SKillLevelCode",
+                      "targetValue": "SKillLevelCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "取得技能时间",
+                      "localId": "SkillGetOn",
+                      "targetValue": "SkillGetOn",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "技能聘任时间",
+                      "localId": "SkillHiredOn",
+                      "targetValue": "SkillHiredOn",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            },
+            {
+              "sectionId": "77b9ace3-b2f3-4c26-b807-4fcdf3dc2101",
+              "labelKey": "Worker",
+              "title": "编制岗位",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "岗位类别",
+                      "localId": "PostCategoryCode",
+                      "targetValue": "PostCategoryCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "岗位级别",
+                      "localId": "PostLevelCode",
+                      "targetValue": "PostLevelCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "入编时间",
+                      "localId": "EstablishedOn",
+                      "targetValue": "EstablishedOn",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "考核类别",
+                      "localId": "EvalTypeCode",
+                      "targetValue": "EvalTypeCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "岗位",
+                      "localId": "PostId",
+                      "targetValue": "PostId",
+                      "attributes": {
+                        "maxlength": 36,
+                        "type": "Y",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 30010,
+                        "sObjectType": 30010,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 3
+                }
+              ]
+            },
+            {
+              "sectionId": "b7d6b07e-247c-4ffe-b885-e0b856a8e294",
+              "labelKey": "Education Prof",
+              "title": "教育职称",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "教学职称",
+                      "localId": "TeachingTitle",
+                      "targetValue": "TeachingTitle",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "教学职称取得时间",
+                      "localId": "TeachingTitleGetOn",
+                      "targetValue": "TeachingTitleGetOn",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "外语",
+                      "localId": "Language",
+                      "targetValue": "Language",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            },
+            {
+              "sectionId": "65ef6612-d5ce-4c99-8a3c-6ea93e4d5c15",
+              "labelKey": "Certification",
+              "title": "证书信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "资格证书编码",
+                      "localId": "CertNo",
+                      "targetValue": "CertNo",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "资格证书批准日期",
+                      "localId": "CertDate",
+                      "targetValue": "CertDate",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "执业证书编码",
+                      "localId": "CertNoOfPractise",
+                      "targetValue": "CertNoOfPractise",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "执业证书取得时间",
+                      "localId": "CertDateOfPractise",
+                      "targetValue": "CertDateOfPractise",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "执业资格名称",
+                      "localId": "PracticingCertName",
+                      "targetValue": "PracticingCertName",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "执业类别",
+                      "localId": "PhysicianLicenseCode",
+                      "targetValue": "PhysicianLicenseCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 3
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "资格证书级别",
+                      "localId": "QualificationCertLevel",
+                      "targetValue": "QualificationCertLevel",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 4
+                }
+              ]
+            },
+            {
+              "sectionId": "6ed9ca8a-5f73-420c-aa9a-5cf04bdc4024",
+              "labelKey": "Contact Information",
+              "title": "联系信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "手机号码",
+                      "localId": "MobileNumber",
+                      "targetValue": "MobileNumber",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "H",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "家庭电话",
+                      "localId": "HomePhone",
+                      "targetValue": "HomePhone",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "H",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "家庭地址",
+                      "localId": "HomeAddress",
+                      "targetValue": "HomeAddress",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "居住地址",
+                      "localId": "DwellAddress",
+                      "targetValue": "DwellAddress",
+                      "attributes": {
+                        "maxlength": 200,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "邮箱地址",
+                      "localId": "EmailAddress1",
+                      "targetValue": "EmailAddress1",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "E",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "内部邮件地址",
+                      "localId": "InternalEmailAddress",
+                      "targetValue": "InternalEmailAddress",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "E",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 3
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "办公电话",
+                      "localId": "WorkPhone",
+                      "targetValue": "WorkPhone",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "H",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "传真",
+                      "localId": "Fax",
+                      "targetValue": "Fax",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "H",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 4
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "证件地址",
+                      "localId": "IDAddress",
+                      "targetValue": "IDAddress",
+                      "attributes": {
+                        "maxlength": 200,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 5
+                }
+              ]
+            },
+            {
+              "sectionId": "981b8e03-c759-4761-890a-fbf5d5fc9aed",
+              "labelKey": "Nurse Information",
+              "title": "护理信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "护士层级",
+                      "localId": "NurseLevel",
+                      "targetValue": "NurseLevel",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "护龄开始时间",
+                      "localId": "NurseStart",
+                      "targetValue": "NurseStart",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "护士鞋号",
+                      "localId": "ShoeSize",
+                      "targetValue": "ShoeSize",
+                      "attributes": {
+                        "maxlength": 20,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "享受护士10%",
+                      "localId": "HasNurseExtraSalary",
+                      "targetValue": "HasNurseExtraSalary",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            },
+            {
+              "sectionId": "50f6fbb9-00a7-43b6-868b-06cf3164640b",
+              "labelKey": "Party",
+              "title": "党员信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "政治面貌",
+                      "localId": "PartyCode",
+                      "targetValue": "PartyCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "入党时间",
+                      "localId": "JoinPartyDate",
+                      "targetValue": "JoinPartyDate",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "申请入党时间",
+                      "localId": "ApplyPartyDate",
+                      "targetValue": "ApplyPartyDate",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "现所在党支部",
+                      "localId": "UnitOfParty",
+                      "targetValue": "UnitOfParty",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "入党介绍人",
+                      "localId": "PartyRecommendBy",
+                      "targetValue": "PartyRecommendBy",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 3
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "确定积极分子时间",
+                      "localId": "PartyActiveMemberDate",
+                      "targetValue": "PartyActiveMemberDate",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "列为发展对象时间",
+                      "localId": "PartyPreJoinDate",
+                      "targetValue": "PartyPreJoinDate",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 4
+                }
+              ]
+            },
+            {
+              "sectionId": "ce94d4e9-7961-40c6-a058-9d176ea556a5",
+              "labelKey": "Category Information",
+              "title": "分类",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "人员标识",
+                      "localId": "LabelCode",
+                      "targetValue": "LabelCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "所属序列",
+                      "localId": "Sequence",
+                      "targetValue": "Sequence",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "人员库",
+                      "localId": "EmpPool",
+                      "targetValue": "EmpPool",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "财务人员类别",
+                      "localId": "CategoryOfFinance",
+                      "targetValue": "CategoryOfFinance",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "L",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            },
+            {
+              "sectionId": "2df11888-1cfc-43b4-ad4f-22c4b19f27a6",
+              "labelKey": "Probation Information",
+              "title": "试用信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "转正时间",
+                      "localId": "EndProbationOn",
+                      "targetValue": "EndProbationOn",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                }
+              ]
+            },
+            {
+              "sectionId": "4099fa21-23bf-4777-a6f4-cd3164ed829a",
+              "labelKey": "Quit Information",
+              "title": "离职信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "拟退休日期",
+                      "localId": "ScheduledRetire",
+                      "targetValue": "ScheduledRetire",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "退离日期",
+                      "localId": "QuitOn",
+                      "targetValue": "QuitOn",
+                      "attributes": {
+                        "maxlength": 8,
+                        "type": "D",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "离职原因",
+                      "localId": "QuitReason",
+                      "targetValue": "QuitReason",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            },
+            {
+              "sectionId": "ae999968-4923-41d6-ab0e-52bf10b6594e",
+              "labelKey": "Health Information",
+              "title": "健康信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "健康状态",
+                      "localId": "HealthStatusCode",
+                      "targetValue": "HealthStatusCode",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "血型",
+                      "localId": "BloodType",
+                      "targetValue": "BloodType",
+                      "attributes": {
+                        "maxlength": 10,
+                        "type": "DT",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                }
+              ]
+            },
+            {
+              "sectionId": "10affc3a-e9f4-4466-8719-3c75f2006e81",
+              "labelKey": "Other Information",
+              "title": "其它",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "从事专业方向",
+                      "localId": "PractiseMajor",
+                      "targetValue": "PractiseMajor",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "姓名首拼音",
+                      "localId": "Pinyin",
+                      "targetValue": "Pinyin",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "车牌号码",
+                      "localId": "CarNo",
+                      "targetValue": "CarNo",
+                      "attributes": {
+                        "maxlength": 20,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "用户名",
+                      "localId": "LoginName",
+                      "targetValue": "LoginName",
+                      "attributes": {
+                        "maxlength": 50,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            },
+            {
+              "sectionId": "1479f8e2-6bf5-4e15-b612-8d4e5ff40c9a",
+              "labelKey": "Basic",
+              "title": "基本信息",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": []
+            },
+            {
+              "sectionId": "308e84b0-68fa-4977-a8a3-975b2f62e4ee",
+              "labelKey": "Stat",
+              "title": "统计",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "工作年限",
+                      "localId": "WorkingYears",
+                      "targetValue": "WorkingYears",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "N",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    },
+                    {
+                      "label": "工龄",
+                      "localId": "Workinglife",
+                      "targetValue": "Workinglife",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "N",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "工龄减年限",
+                      "localId": "DeductWorkingLife",
+                      "targetValue": "DeductWorkingLife",
+                      "attributes": {
+                        "maxlength": 18,
+                        "type": "N",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            },
+            {
+              "sectionId": "32981c89-6e55-493d-a377-6d20b32689e5",
+              "labelKey": "Remark",
+              "title": "备注",
+              "showHeader": true,
+              "isCollapsed": false,
+              "isCollapsible": true,
+              "rows": [
+                {
+                  "attributes": [
+                    {
+                      "label": "工资备注",
+                      "localId": "SalaryMemo",
+                      "targetValue": "SalaryMemo",
+                      "attributes": {
+                        "maxlength": 100,
+                        "type": "S",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 1
+                },
+                {
+                  "attributes": [
+                    {
+                      "label": "备注",
+                      "localId": "Description",
+                      "targetValue": "Description",
+                      "attributes": {
+                        "maxlength": 255,
+                        "type": "X",
+                        "dataType": null,
+                        "labelClass": null,
+                        "required": false,
+                        "readonly": false,
+                        "alwaysDisplayed": true,
+                        "alwaysReadonly": false,
+                        "referencedEntityObjectTypeCode": 0,
+                        "sObjectType": 0,
+                        "onError": {}
+                      }
+                    }
+                  ],
+                  "rowNumber": 2
+                }
+              ]
+            }
+          ],
+          "localizedTitle": "人员档案",
+          "lookupAttributes": [
+            {
+              "objectTypeCode": 10,
+              "name": "RootDeptId"
+            },
+            {
+              "objectTypeCode": 10,
+              "name": "DeptId"
+            },
+            {
+              "objectTypeCode": 30010,
+              "name": "PostId"
+            }
+          ]
+        },
+        "record": {
+          "EmployeeId": "13471124-09cb-4cc7-af97-1c1d26957703",
+          "CreatedBy": {
+            "Icon": null,
+            "Id": null,
+            "Name": "",
+            "objectTypeCode": 8,
+            "sobjectType": "8",
+            "value": null,
+            "displayValue": ""
+          },
+          "CreatedOn": "2017-11-29 11:09:44",
+          "ModifiedBy": {
+            "Icon": null,
+            "Id": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+            "Name": "刘优",
+            "objectTypeCode": 8,
+            "sobjectType": "8",
+            "value": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+            "displayValue": "刘优"
+          },
+          "ModifiedOn": "2024-01-30 10:56:10",
+          "EmployeeNo": "48629",
+          "FullName": "王刚",
+          "RootDeptId": {
+            "Icon": null,
+            "Id": null,
+            "Name": "",
+            "objectTypeCode": 10,
+            "sobjectType": "10",
+            "value": null,
+            "displayValue": ""
+          },
+          "DeptId": {
+            "Icon": null,
+            "Id": "0f3d1803-7c40-493c-99c8-241823668344",
+            "Name": "院领导",
+            "objectTypeCode": 10,
+            "sobjectType": "10",
+            "value": "0f3d1803-7c40-493c-99c8-241823668344",
+            "displayValue": "院领导"
+          },
+          "SubDeptId": {
+            "Icon": null,
+            "Id": null,
+            "Name": "",
+            "objectTypeCode": 10,
+            "sobjectType": "10",
+            "value": null,
+            "displayValue": ""
+          },
+          "ContractTypeCode": "1",
+          "EmpCategoryCode": "2",
+          "CategoryCode": "1",
+          "CategoryOfFinance": "",
+          "PostCategoryCode": "",
+          "PostLevelCode": "",
+          "PostSubCategory": "行政",
+          "PostId": {
+            "Icon": null,
+            "Id": null,
+            "Name": "",
+            "objectTypeCode": 30010,
+            "sobjectType": "30010",
+            "value": null,
+            "displayValue": ""
+          },
+          "StateCode": "4",
+          "SubStateCode": "402",
+          "WorkStartDate": "1992-08-01",
+          "JoinDate": "1992-08-01",
+          "EndProbationOn": null,
+          "EstablishedOn": null,
+          "SalaryPostCategory": "1",
+          "SalaryPostCode": "105",
+          "SalaryLevel": "32",
+          "SalaryPostStart": "2022-12-01",
+          "SalaryNo": "",
+          "SalaryMemo": "",
+          "PeopleSourceCode": "",
+          "IsMiddleLevel": "0",
+          "IsMultipleJob": "",
+          "StaffLevel": "",
+          "EmpPool": "4",
+          "JobTitle": "院长",
+          "JobTitleLevelCode": "正处",
+          "JobTitleStart": "2022-12-01",
+          "JobTitleCode": "",
+          "ProfessionTitle": "副主任医师",
+          "ProfessionRankCode": "3",
+          "ProfessionGrade": "",
+          "ProfessionTitleHiredOn": "2024-01-31",
+          "ProfessionTitleGetOn": null,
+          "ProfessionRankCodeOfHired": "",
+          "TeachingTitle": "教授",
+          "TeachingTitleGetOn": null,
+          "SKillType": "",
+          "SKillLevelCode": "",
+          "SkillGetOn": null,
+          "SkillHiredOn": null,
+          "FEducationGradeCode": "博士研究生",
+          "FDegreeCode": "博士",
+          "FGraduateDate": "2000-06-30",
+          "FLengthOfEducation": "3",
+          "FMajor": "医疗",
+          "FSchoolName": "北京医科大学",
+          "EducationGradeCode": "博士研究生",
+          "DegreeCode": "",
+          "LengthOfEducation": "",
+          "GraduateDate": null,
+          "SchoolName": "",
+          "MajorCategory": "精医",
+          "Major": "",
+          "MasterName": "",
+          "StartWorkLengthDate": null,
+          "PractiseMajor": "精医",
+          "IDType": "",
+          "IDNumber": "110102196806050439",
+          "Birthday": "1968-06-05",
+          "GenderCode": "男",
+          "Age": "52",
+          "PlaceOfNative": "",
+          "DistrictOfBirth": "",
+          "PlaceOfBirth": "北京",
+          "MarryStatusCode": "",
+          "RaceCode": "汉族",
+          "ResidenceCode": "",
+          "DwellAddress": "",
+          "IDAddress": "",
+          "HomeAddress": "",
+          "MobileNumber": "13911695727",
+          "WorkPhone": "",
+          "HomePhone": "",
+          "EmailAddress1": "",
+          "Fax": "",
+          "InternalEmailAddress": "",
+          "NurseLevel": "",
+          "NurseStart": null,
+          "NurseYears": "",
+          "HasNurseExtraSalary": "",
+          "ShoeSize": "",
+          "MealCardNumber": "",
+          "BadgeNumber": "D134",
+          "CertNo": "",
+          "CertDate": null,
+          "QualificationCertLevel": "",
+          "PhysicianLicenseCode": "",
+          "PracticingCertName": "执业医师",
+          "CertNoOfPractise": "",
+          "CertDateOfPractise": null,
+          "CadreSourceCode": "分配干部",
+          "StatusOfHouse": "",
+          "HealthStatusCode": "",
+          "PartyCode": "中共党员",
+          "UnitPartyOfFrom": "",
+          "UnitOfParty": "临床六",
+          "PartyUnitId": {
+            "Icon": null,
+            "Id": null,
+            "Name": "",
+            "objectTypeCode": 31300,
+            "sobjectType": "31300",
+            "value": null,
+            "displayValue": ""
+          },
+          "ApplyPartyDate": null,
+          "PartyActiveMemberDate": "",
+          "PartyRecommendBy": "",
+          "JoinPartyDate": null,
+          "PartyPreJoinDate": "",
+          "PartyUnitApprovedOn": null,
+          "PartySuperiorApprovedOn": null,
+          "PartyDisconnetDate": null,
+          "IsFlowPartyMem": "",
+          "PartyStatus": "",
+          "ScheduledRetire": "2023-08-10",
+          "Workinglife": "30.0",
+          "WorkingYears": "30.0",
+          "DeductWorkingLife": "",
+          "Sequence": "",
+          "DisplayOrder": "1",
+          "JobTitlePart": "",
+          "CarNo": "",
+          "EvalTypeCode": "",
+          "Language": "",
+          "BloodType": "",
+          "LoginName": "48629",
+          "Pinyin": "",
+          "LabelCode": "",
+          "FilePlaceCode": "",
+          "IdentityCate": "",
+          "StatusCode": "0",
+          "OrganizationCode": "",
+          "RecruitMethod": "",
+          "QuitOn": null,
+          "QuitReason": "",
+          "Specialty": "",
+          "IsParentsSeparation": "",
+          "IsSpouseSeparation": "",
+          "Description": "2001.9.10—2004.2.10出国，2016.11.25任命为院长、党委副书记，试用期1年",
+          "PercentOfFloatingSalary": "1.10",
+          "IsPaySalary": "1",
+          "ResidentStartYear": "",
+          "deptnum": ""
+        },
+        "defaultFieldValues": {}
+      },
+      "error": []
+    }
+  ],
+  "context": {
+    "globalValueProviders": null,
+    "picklistValuesMap": {
+      "CategoryCode": [
+        {
+          "label": "管理人员",
+          "value": "1"
+        },
+        {
+          "label": "卫生技术人员",
+          "value": "2"
+        },
+        {
+          "label": "工勤人员",
+          "value": "3"
+        }
+      ],
+      "ContractTypeCode": [
+        {
+          "label": "在编",
+          "value": "1"
+        },
+        {
+          "label": "合同",
+          "value": "2"
+        },
+        {
+          "label": "离职",
+          "value": "3"
+        },
+        {
+          "label": "退休",
+          "value": "4"
+        },
+        {
+          "label": "死亡",
+          "value": "5"
+        },
+        {
+          "label": "科研博士后",
+          "value": "6"
+        },
+        {
+          "label": "临床博士后",
+          "value": "7"
+        },
+        {
+          "label": "临时工",
+          "value": "8"
+        },
+        {
+          "label": "小时工",
+          "value": "15"
+        },
+        {
+          "label": "退休返聘",
+          "value": "41"
+        },
+        {
+          "label": "研究生",
+          "value": "42"
+        },
+        {
+          "label": "科研博士后",
+          "value": "44"
+        },
+        {
+          "label": "借调",
+          "value": "12"
+        },
+        {
+          "label": "试用期",
+          "value": "11"
+        }
+      ],
+      "EmpCategoryCode": [
+        {
+          "label": "无",
+          "value": "0"
+        },
+        {
+          "label": "管理",
+          "value": "1"
+        },
+        {
+          "label": "医师",
+          "value": "2"
+        },
+        {
+          "label": "医技",
+          "value": "3"
+        },
+        {
+          "label": "护理",
+          "value": "4"
+        },
+        {
+          "label": "医药",
+          "value": "5"
+        },
+        {
+          "label": "医辅",
+          "value": "6"
+        },
+        {
+          "label": "其他卫生",
+          "value": "8"
+        },
+        {
+          "label": "其它专技",
+          "value": "9"
+        },
+        {
+          "label": "其他",
+          "value": "10"
+        },
+        {
+          "label": "院领导",
+          "value": "20"
+        },
+        {
+          "label": "工勤技能",
+          "value": "100"
+        },
+        {
+          "label": "后勤",
+          "value": "101"
+        }
+      ],
+      "EmpPool": [
+        {
+          "label": "在编在岗",
+          "value": "0"
+        },
+        {
+          "label": "合同",
+          "value": "1"
+        },
+        {
+          "label": "试用见习",
+          "value": "11"
+        },
+        {
+          "label": "劳务派遣",
+          "value": "12"
+        },
+        {
+          "label": "离职",
+          "value": "3"
+        },
+        {
+          "label": "退休",
+          "value": "4"
+        },
+        {
+          "label": "死亡",
+          "value": "5"
+        }
+      ],
+      "EvalTypeCode": [
+        {
+          "label": "专业技术",
+          "value": "1"
+        },
+        {
+          "label": "管理",
+          "value": "2"
+        },
+        {
+          "label": "工勤",
+          "value": "3"
+        },
+        {
+          "label": "双肩挑",
+          "value": "4"
+        }
+      ],
+      "FLengthOfEducation": [
+        {
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "label": "5",
+          "value": "5"
+        }
+      ],
+      "HasNurseExtraSalary": [
+        {
+          "label": "否",
+          "value": "0"
+        }
+      ],
+      "IdentityCate": [
+        {
+          "label": "职员",
+          "value": "0"
+        },
+        {
+          "label": "干部",
+          "value": "10"
+        },
+        {
+          "label": "工人",
+          "value": "11"
+        }
+      ],
+      "IsFlowPartyMem": [
+        {
+          "label": "是",
+          "value": "0"
+        },
+        {
+          "label": "否",
+          "value": "1"
+        }
+      ],
+      "IsPaySalary": [
+        {
+          "label": "否",
+          "value": "0"
+        },
+        {
+          "label": "是",
+          "value": "1"
+        }
+      ],
+      "JobTitleLevelCode": [
+        {
+          "label": "正部",
+          "value": "1"
+        },
+        {
+          "label": "副部",
+          "value": "2"
+        },
+        {
+          "label": "正局",
+          "value": "3"
+        },
+        {
+          "label": "副局",
+          "value": "4"
+        },
+        {
+          "label": "正处",
+          "value": "5"
+        },
+        {
+          "label": "副处",
+          "value": "6"
+        },
+        {
+          "label": "正科",
+          "value": "7"
+        },
+        {
+          "label": "副科",
+          "value": "8"
+        },
+        {
+          "label": "科员",
+          "value": "9"
+        },
+        {
+          "label": "办事员",
+          "value": "10"
+        }
+      ],
+      "LabelCode": [
+        {
+          "label": "在编",
+          "value": "1"
+        },
+        {
+          "label": "在编见习",
+          "value": "2"
+        },
+        {
+          "label": "编外卫技",
+          "value": "3"
+        },
+        {
+          "label": "退休留用",
+          "value": "4"
+        },
+        {
+          "label": "编外其它",
+          "value": "5"
+        }
+      ],
+      "LengthOfEducation": [
+        {
+          "label": "1",
+          "value": "0"
+        },
+        {
+          "label": "2",
+          "value": "1"
+        },
+        {
+          "label": "3",
+          "value": "2"
+        },
+        {
+          "label": "4",
+          "value": "3"
+        },
+        {
+          "label": "5",
+          "value": "4"
+        }
+      ],
+      "NurseYears": [
+        {
+          "label": "5",
+          "value": "1"
+        },
+        {
+          "label": "10",
+          "value": "2"
+        },
+        {
+          "label": "15",
+          "value": "3"
+        },
+        {
+          "label": "20",
+          "value": "4"
+        }
+      ],
+      "PostCategoryCode": [
+        {
+          "label": "管理人员",
+          "value": "1"
+        },
+        {
+          "label": "专业技术人员",
+          "value": "2"
+        },
+        {
+          "label": "工勤技能人员",
+          "value": "3"
+        }
+      ],
+      "PostLevelCode": [
+        {
+          "label": "管理一级",
+          "value": "101"
+        },
+        {
+          "label": "理二级",
+          "value": "102"
+        },
+        {
+          "label": "理三级",
+          "value": "103"
+        },
+        {
+          "label": "管理四级",
+          "value": "104"
+        },
+        {
+          "label": "管理五级",
+          "value": "105"
+        },
+        {
+          "label": "管理六级",
+          "value": "106"
+        },
+        {
+          "label": "管理七级",
+          "value": "107"
+        },
+        {
+          "label": "管理八级",
+          "value": "108"
+        },
+        {
+          "label": "管理九级",
+          "value": "109"
+        },
+        {
+          "label": "管理十级",
+          "value": "110"
+        },
+        {
+          "label": "管理未定级",
+          "value": "119"
+        },
+        {
+          "label": "专技一级",
+          "value": "201"
+        },
+        {
+          "label": "专技二级",
+          "value": "202"
+        },
+        {
+          "label": "专技三级",
+          "value": "203"
+        },
+        {
+          "label": "专技四级",
+          "value": "204"
+        },
+        {
+          "label": "专技五级",
+          "value": "205"
+        },
+        {
+          "label": "专技六级",
+          "value": "206"
+        },
+        {
+          "label": "专技七级",
+          "value": "207"
+        },
+        {
+          "label": "专技八级",
+          "value": "208"
+        },
+        {
+          "label": "专技九级",
+          "value": "209"
+        },
+        {
+          "label": "专技十级",
+          "value": "210"
+        },
+        {
+          "label": "专技十一级",
+          "value": "211"
+        },
+        {
+          "label": "专技十二级",
+          "value": "212"
+        },
+        {
+          "label": "专技十三级",
+          "value": "213"
+        },
+        {
+          "label": "专技未定级",
+          "value": "219"
+        },
+        {
+          "label": "工勤一级",
+          "value": "301"
+        },
+        {
+          "label": "工勤二级",
+          "value": "302"
+        },
+        {
+          "label": "工勤三级",
+          "value": "303"
+        },
+        {
+          "label": "工勤四级",
+          "value": "304"
+        },
+        {
+          "label": "工勤五级",
+          "value": "305"
+        },
+        {
+          "label": "普通工",
+          "value": "306"
+        },
+        {
+          "label": "工人未定级",
+          "value": "319"
+        }
+      ],
+      "ProfessionGrade": [
+        {
+          "label": "一级",
+          "value": "1"
+        },
+        {
+          "label": "二级",
+          "value": "2"
+        },
+        {
+          "label": "三级",
+          "value": "3"
+        },
+        {
+          "label": "四级",
+          "value": "4"
+        },
+        {
+          "label": "五级",
+          "value": "5"
+        },
+        {
+          "label": "六级",
+          "value": "6"
+        },
+        {
+          "label": "七级",
+          "value": "7"
+        },
+        {
+          "label": "八级",
+          "value": "8"
+        },
+        {
+          "label": "九级",
+          "value": "9"
+        },
+        {
+          "label": "十级",
+          "value": "10"
+        },
+        {
+          "label": "十一级",
+          "value": "11"
+        },
+        {
+          "label": "十二级",
+          "value": "12"
+        },
+        {
+          "label": "十三级",
+          "value": "13"
+        },
+        {
+          "label": "未定级",
+          "value": "14"
+        }
+      ],
+      "ProfessionRankCode": [
+        {
+          "label": "正高",
+          "value": "1"
+        },
+        {
+          "label": "副高",
+          "value": "2"
+        },
+        {
+          "label": "中级",
+          "value": "3"
+        },
+        {
+          "label": "初级",
+          "value": "4"
+        },
+        {
+          "label": "员级",
+          "value": "5"
+        },
+        {
+          "label": "未定级",
+          "value": "6"
+        }
+      ],
+      "SalaryLevel": [
+        {
+          "label": "1",
+          "value": "1"
+        },
+        {
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "label": "9",
+          "value": "9"
+        },
+        {
+          "label": "10",
+          "value": "10"
+        },
+        {
+          "label": "11",
+          "value": "11"
+        },
+        {
+          "label": "12",
+          "value": "12"
+        },
+        {
+          "label": "13",
+          "value": "13"
+        },
+        {
+          "label": "14",
+          "value": "14"
+        },
+        {
+          "label": "15",
+          "value": "15"
+        },
+        {
+          "label": "16",
+          "value": "16"
+        },
+        {
+          "label": "17",
+          "value": "17"
+        },
+        {
+          "label": "18",
+          "value": "18"
+        },
+        {
+          "label": "19",
+          "value": "19"
+        },
+        {
+          "label": "20",
+          "value": "20"
+        },
+        {
+          "label": "21",
+          "value": "21"
+        },
+        {
+          "label": "22",
+          "value": "22"
+        },
+        {
+          "label": "23",
+          "value": "23"
+        },
+        {
+          "label": "24",
+          "value": "24"
+        },
+        {
+          "label": "25",
+          "value": "25"
+        },
+        {
+          "label": "26",
+          "value": "26"
+        },
+        {
+          "label": "27",
+          "value": "27"
+        },
+        {
+          "label": "28",
+          "value": "28"
+        },
+        {
+          "label": "29",
+          "value": "29"
+        },
+        {
+          "label": "30",
+          "value": "30"
+        },
+        {
+          "label": "31",
+          "value": "31"
+        },
+        {
+          "label": "32",
+          "value": "32"
+        },
+        {
+          "label": "33",
+          "value": "33"
+        },
+        {
+          "label": "34",
+          "value": "34"
+        },
+        {
+          "label": "35",
+          "value": "35"
+        },
+        {
+          "label": "36",
+          "value": "36"
+        },
+        {
+          "label": "37",
+          "value": "37"
+        },
+        {
+          "label": "38",
+          "value": "38"
+        },
+        {
+          "label": "39",
+          "value": "39"
+        },
+        {
+          "label": "40",
+          "value": "40"
+        },
+        {
+          "label": "41",
+          "value": "41"
+        },
+        {
+          "label": "42",
+          "value": "42"
+        },
+        {
+          "label": "43",
+          "value": "43"
+        },
+        {
+          "label": "44",
+          "value": "44"
+        },
+        {
+          "label": "45",
+          "value": "45"
+        },
+        {
+          "label": "46",
+          "value": "46"
+        },
+        {
+          "label": "47",
+          "value": "47"
+        },
+        {
+          "label": "48",
+          "value": "48"
+        },
+        {
+          "label": "49",
+          "value": "49"
+        },
+        {
+          "label": "50",
+          "value": "50"
+        },
+        {
+          "label": "51",
+          "value": "51"
+        },
+        {
+          "label": "52",
+          "value": "52"
+        },
+        {
+          "label": "53",
+          "value": "53"
+        },
+        {
+          "label": "54",
+          "value": "54"
+        },
+        {
+          "label": "55",
+          "value": "55"
+        },
+        {
+          "label": "56",
+          "value": "56"
+        },
+        {
+          "label": "57",
+          "value": "57"
+        },
+        {
+          "label": "58",
+          "value": "58"
+        },
+        {
+          "label": "59",
+          "value": "59"
+        },
+        {
+          "label": "60",
+          "value": "60"
+        },
+        {
+          "label": "61",
+          "value": "61"
+        },
+        {
+          "label": "62",
+          "value": "62"
+        },
+        {
+          "label": "63",
+          "value": "63"
+        },
+        {
+          "label": "64",
+          "value": "64"
+        },
+        {
+          "label": "65",
+          "value": "65"
+        },
+        {
+          "label": "见习期",
+          "value": "0"
+        }
+      ],
+      "SalaryPostCategory": [
+        {
+          "label": "管理",
+          "value": "1"
+        },
+        {
+          "label": "专业技术",
+          "value": "2"
+        },
+        {
+          "label": "工勤",
+          "value": "3"
+        }
+      ],
+      "SalaryPostCode": [
+        {
+          "label": "管理一级",
+          "value": "101"
+        },
+        {
+          "label": "管理二级",
+          "value": "102"
+        },
+        {
+          "label": "管理三级",
+          "value": "103"
+        },
+        {
+          "label": "管理四级",
+          "value": "104"
+        },
+        {
+          "label": "管理五级",
+          "value": "105"
+        },
+        {
+          "label": "管理六级",
+          "value": "106"
+        },
+        {
+          "label": "管理七级",
+          "value": "107"
+        },
+        {
+          "label": "管理八级",
+          "value": "108"
+        },
+        {
+          "label": "管理九级",
+          "value": "109"
+        },
+        {
+          "label": "管理十级",
+          "value": "110"
+        },
+        {
+          "label": "管理未定级",
+          "value": "111"
+        },
+        {
+          "label": "专技一级",
+          "value": "201"
+        },
+        {
+          "label": "专技二级",
+          "value": "202"
+        },
+        {
+          "label": "专技三级",
+          "value": "203"
+        },
+        {
+          "label": "专技四级",
+          "value": "204"
+        },
+        {
+          "label": "专技五级",
+          "value": "205"
+        },
+        {
+          "label": "专技六级",
+          "value": "206"
+        },
+        {
+          "label": "专技七级",
+          "value": "207"
+        },
+        {
+          "label": "专技八级",
+          "value": "208"
+        },
+        {
+          "label": "专技九级",
+          "value": "209"
+        },
+        {
+          "label": "专技十级",
+          "value": "210"
+        },
+        {
+          "label": "专技十一级",
+          "value": "211"
+        },
+        {
+          "label": "专技十二级",
+          "value": "212"
+        },
+        {
+          "label": "专技十三级",
+          "value": "213"
+        },
+        {
+          "label": "专技未定级",
+          "value": "214"
+        },
+        {
+          "label": "高级技师",
+          "value": "301"
+        },
+        {
+          "label": "技师",
+          "value": "302"
+        },
+        {
+          "label": "高级工",
+          "value": "303"
+        },
+        {
+          "label": "中级工",
+          "value": "304"
+        },
+        {
+          "label": "初级工",
+          "value": "305"
+        },
+        {
+          "label": "普工",
+          "value": "306"
+        },
+        {
+          "label": "工人未定级",
+          "value": "319"
+        }
+      ],
+      "StateCode": [
+        {
+          "label": "在岗",
+          "value": "0"
+        },
+        {
+          "label": "不在岗",
+          "value": "2"
+        },
+        {
+          "label": "离职",
+          "value": "3"
+        },
+        {
+          "label": "离退休",
+          "value": "4"
+        },
+        {
+          "label": "在职病故",
+          "value": "5"
+        }
+      ],
+      "StatusCode": [
+        {
+          "label": "未审批",
+          "value": "0"
+        },
+        {
+          "label": "审批通过",
+          "value": "3"
+        },
+        {
+          "label": "审批不通过",
+          "value": "5"
+        }
+      ],
+      "SubStateCode": [
+        {
+          "label": "在岗",
+          "value": "101"
+        },
+        {
+          "label": "外派",
+          "value": "102"
+        },
+        {
+          "label": "长期病、休假",
+          "value": "201"
+        },
+        {
+          "label": "停薪留职",
+          "value": "202"
+        },
+        {
+          "label": "内部退养",
+          "value": "203"
+        },
+        {
+          "label": "离开本单位未解除关系人员",
+          "value": "204"
+        },
+        {
+          "label": "长学",
+          "value": "205"
+        },
+        {
+          "label": "其它不在岗",
+          "value": "206"
+        },
+        {
+          "label": "出国",
+          "value": "207"
+        },
+        {
+          "label": "待岗",
+          "value": "208"
+        },
+        {
+          "label": "调出",
+          "value": "301"
+        },
+        {
+          "label": "开除",
+          "value": "302"
+        },
+        {
+          "label": "解聘",
+          "value": "303"
+        },
+        {
+          "label": "辞退",
+          "value": "304"
+        },
+        {
+          "label": "离职",
+          "value": "305"
+        },
+        {
+          "label": "辞职",
+          "value": "306"
+        },
+        {
+          "label": "终止合同",
+          "value": "307"
+        },
+        {
+          "label": "解除合同",
+          "value": "308"
+        },
+        {
+          "label": "交流",
+          "value": "309"
+        },
+        {
+          "label": "退站",
+          "value": "310"
+        },
+        {
+          "label": "其他减员",
+          "value": "311"
+        },
+        {
+          "label": "出站",
+          "value": "312"
+        },
+        {
+          "label": "退休",
+          "value": "401"
+        },
+        {
+          "label": "退职",
+          "value": "402"
+        },
+        {
+          "label": "离休",
+          "value": "403"
+        },
+        {
+          "label": "在职病故",
+          "value": "501"
+        }
+      ],
+      "BloodType": [
+        {
+          "label": "A",
+          "value": "A"
+        },
+        {
+          "label": "B",
+          "value": "B"
+        },
+        {
+          "label": "O",
+          "value": "O"
+        },
+        {
+          "label": "AB",
+          "value": "AB"
+        },
+        {
+          "label": "RH阴性",
+          "value": "RH阴性"
+        }
+      ],
+      "CadreSourceCode": [
+        {
+          "label": "分配干部",
+          "value": "分配干部"
+        },
+        {
+          "label": "调入干部",
+          "value": "调入干部"
+        },
+        {
+          "label": "派遣调入",
+          "value": "派遣调入"
+        },
+        {
+          "label": "军转干部",
+          "value": "军转干部"
+        },
+        {
+          "label": "转业干部",
+          "value": "转业干部"
+        },
+        {
+          "label": "复员军人",
+          "value": "复员军人"
+        },
+        {
+          "label": "聘干",
+          "value": "聘干"
+        }
+      ],
+      "DegreeCode": [
+        {
+          "label": "学士",
+          "value": "学士"
+        },
+        {
+          "label": "硕士",
+          "value": "硕士"
+        },
+        {
+          "label": "博士",
+          "value": "博士"
+        },
+        {
+          "label": "博士后",
+          "value": "博士后"
+        }
+      ],
+      "EducationGradeCode": [
+        {
+          "label": "专科",
+          "value": "专科"
+        },
+        {
+          "label": "本科",
+          "value": "本科"
+        },
+        {
+          "label": "硕士研究生",
+          "value": "硕士研究生"
+        },
+        {
+          "label": "博士研究生",
+          "value": "博士研究生"
+        },
+        {
+          "label": "中专",
+          "value": "中专"
+        },
+        {
+          "label": "普通高中",
+          "value": "普通高中"
+        },
+        {
+          "label": "职业高中",
+          "value": "职业高中"
+        },
+        {
+          "label": "初中及以下",
+          "value": "初中及以下"
+        }
+      ],
+      "FDegreeCode": [
+        {
+          "label": "学士",
+          "value": "学士"
+        },
+        {
+          "label": "硕士",
+          "value": "硕士"
+        },
+        {
+          "label": "博士",
+          "value": "博士"
+        },
+        {
+          "label": "博士后",
+          "value": "博士后"
+        }
+      ],
+      "FEducationGradeCode": [
+        {
+          "label": "普通高中",
+          "value": "普通高中"
+        },
+        {
+          "label": "专科",
+          "value": "专科"
+        },
+        {
+          "label": "本科",
+          "value": "本科"
+        },
+        {
+          "label": "硕士研究生",
+          "value": "硕士研究生"
+        },
+        {
+          "label": "博士研究生",
+          "value": "博士研究生"
+        },
+        {
+          "label": "初中及以下",
+          "value": "初中及以下"
+        },
+        {
+          "label": "中专",
+          "value": "中专"
+        },
+        {
+          "label": "职业高中",
+          "value": "职业高中"
+        }
+      ],
+      "FilePlaceCode": [
+        {
+          "label": "本院",
+          "value": "本院"
+        },
+        {
+          "label": "人才中心",
+          "value": "人才中心"
+        }
+      ],
+      "GenderCode": [
+        {
+          "label": "未知的性别",
+          "value": "未知的性别"
+        },
+        {
+          "label": "男",
+          "value": "男"
+        },
+        {
+          "label": "女",
+          "value": "女"
+        },
+        {
+          "label": "未说明的性别",
+          "value": "未说明的性别"
+        }
+      ],
+      "HealthStatusCode": [
+        {
+          "label": "健康",
+          "value": "健康"
+        },
+        {
+          "label": "残疾",
+          "value": "残疾"
+        }
+      ],
+      "IDType": [
+        {
+          "label": "居民身份证",
+          "value": "居民身份证"
+        },
+        {
+          "label": "港澳居民来往内地通行证",
+          "value": "港澳居民来往内地通行证"
+        },
+        {
+          "label": "台湾居民来往大陆通行证",
+          "value": "台湾居民来往大陆通行证"
+        },
+        {
+          "label": "来华工作许可证",
+          "value": "来华工作许可证"
+        },
+        {
+          "label": "外国护照",
+          "value": "外国护照"
+        },
+        {
+          "label": "香港永久性居民身份证",
+          "value": "香港永久性居民身份证"
+        },
+        {
+          "label": "澳门特别行政区永久性居民身份证",
+          "value": "澳门特别行政区永久性居民身份证"
+        },
+        {
+          "label": "外国人永久居留证",
+          "value": "外国人永久居留证"
+        },
+        {
+          "label": "其他法定有效证件",
+          "value": "其他法定有效证件"
+        }
+      ],
+      "IsMiddleLevel": [
+        {
+          "label": "否",
+          "value": "否"
+        },
+        {
+          "label": "是",
+          "value": "是"
+        }
+      ],
+      "IsMultipleJob": [
+        {
+          "label": "否",
+          "value": "否"
+        },
+        {
+          "label": "是",
+          "value": "是"
+        }
+      ],
+      "IsParentsSeparation": [
+        {
+          "label": "是",
+          "value": "是"
+        },
+        {
+          "label": "否",
+          "value": "否"
+        }
+      ],
+      "IsSpouseSeparation": [
+        {
+          "label": "是",
+          "value": "是"
+        },
+        {
+          "label": "否",
+          "value": "否"
+        }
+      ],
+      "JobTitle": [
+        {
+          "label": "院长",
+          "value": "院长"
+        },
+        {
+          "label": "副院长",
+          "value": "副院长"
+        },
+        {
+          "label": "院长助理",
+          "value": "院长助理"
+        },
+        {
+          "label": "总院长",
+          "value": "总院长"
+        },
+        {
+          "label": "派驻副院长",
+          "value": "派驻副院长"
+        },
+        {
+          "label": "党委书记",
+          "value": "党委书记"
+        },
+        {
+          "label": "党委副书记",
+          "value": "党委副书记"
+        },
+        {
+          "label": "纪委书记",
+          "value": "纪委书记"
+        },
+        {
+          "label": "纪委副书记",
+          "value": "纪委副书记"
+        },
+        {
+          "label": "党总支书记",
+          "value": "党总支书记"
+        },
+        {
+          "label": "党总支副书记",
+          "value": "党总支副书记"
+        },
+        {
+          "label": "党支部书记",
+          "value": "党支部书记"
+        },
+        {
+          "label": "党支部副书记",
+          "value": "党支部副书记"
+        },
+        {
+          "label": "团委书记",
+          "value": "团委书记"
+        },
+        {
+          "label": "团委副书记",
+          "value": "团委副书记"
+        },
+        {
+          "label": "团总支书记",
+          "value": "团总支书记"
+        },
+        {
+          "label": "团总支副书记",
+          "value": "团总支副书记"
+        },
+        {
+          "label": "团支部书记",
+          "value": "团支部书记"
+        },
+        {
+          "label": "团支部副书记",
+          "value": "团支部副书记"
+        },
+        {
+          "label": "院所长",
+          "value": "院所长"
+        },
+        {
+          "label": "副院所长",
+          "value": "副院所长"
+        },
+        {
+          "label": "主任",
+          "value": "主任"
+        },
+        {
+          "label": "副主任",
+          "value": "副主任"
+        },
+        {
+          "label": "处长",
+          "value": "处长"
+        },
+        {
+          "label": "代理处长",
+          "value": "代理处长"
+        },
+        {
+          "label": "副处长（主持工作）",
+          "value": "副处长（主持工作）"
+        },
+        {
+          "label": "副处长",
+          "value": "副处长"
+        },
+        {
+          "label": "挂职副处长",
+          "value": "挂职副处长"
+        },
+        {
+          "label": "处主任",
+          "value": "处主任"
+        },
+        {
+          "label": "代理处主任",
+          "value": "代理处主任"
+        },
+        {
+          "label": "副处主任（主持工作）",
+          "value": "副处主任（主持工作）"
+        },
+        {
+          "label": "副处主任",
+          "value": "副处主任"
+        },
+        {
+          "label": "科长",
+          "value": "科长"
+        },
+        {
+          "label": "副科长",
+          "value": "副科长"
+        },
+        {
+          "label": "科主任",
+          "value": "科主任"
+        },
+        {
+          "label": "代理主任",
+          "value": "代理主任"
+        },
+        {
+          "label": "常务副主任",
+          "value": "常务副主任"
+        },
+        {
+          "label": "副科主任（主持工作）",
+          "value": "副科主任（主持工作）"
+        },
+        {
+          "label": "副科主任",
+          "value": "副科主任"
+        },
+        {
+          "label": "病区主任",
+          "value": "病区主任"
+        },
+        {
+          "label": "亚专业主任",
+          "value": "亚专业主任"
+        },
+        {
+          "label": "负责人",
+          "value": "负责人"
+        },
+        {
+          "label": "主管",
+          "value": "主管"
+        },
+        {
+          "label": "队长",
+          "value": "队长"
+        },
+        {
+          "label": "副队长",
+          "value": "副队长"
+        },
+        {
+          "label": "班长",
+          "value": "班长"
+        },
+        {
+          "label": "班组长",
+          "value": "班组长"
+        },
+        {
+          "label": "总护士长",
+          "value": "总护士长"
+        },
+        {
+          "label": "科护士长",
+          "value": "科护士长"
+        },
+        {
+          "label": "护士长",
+          "value": "护士长"
+        },
+        {
+          "label": "代理护士长",
+          "value": "代理护士长"
+        },
+        {
+          "label": "副护士长",
+          "value": "副护士长"
+        },
+        {
+          "label": "技师长",
+          "value": "技师长"
+        },
+        {
+          "label": "工会主席",
+          "value": "工会主席"
+        },
+        {
+          "label": "工会常务副主席",
+          "value": "工会常务副主席"
+        },
+        {
+          "label": "工会副主席",
+          "value": "工会副主席"
+        },
+        {
+          "label": "分工会主席",
+          "value": "分工会主席"
+        },
+        {
+          "label": "分工会副主席",
+          "value": "分工会副主席"
+        },
+        {
+          "label": "总会计师",
+          "value": "总会计师"
+        },
+        {
+          "label": "干部",
+          "value": "干部"
+        },
+        {
+          "label": "病房主任",
+          "value": "病房主任"
+        },
+        {
+          "label": "副主任科员",
+          "value": "副主任科员"
+        },
+        {
+          "label": "院所长助理",
+          "value": "院所长助理"
+        },
+        {
+          "label": "主任科员",
+          "value": "主任科员"
+        },
+        {
+          "label": "课题组长",
+          "value": "课题组长"
+        },
+        {
+          "label": "介入病房代理主任",
+          "value": "介入病房代理主任"
+        },
+        {
+          "label": "CT室主任",
+          "value": "CT室主任"
+        },
+        {
+          "label": "MR室主任",
+          "value": "MR室主任"
+        },
+        {
+          "label": "办事员",
+          "value": "办事员"
+        },
+        {
+          "label": "科员",
+          "value": "科员"
+        },
+        {
+          "label": "承包人",
+          "value": "承包人"
+        }
+      ],
+      "JobTitleCode": [
+        {
+          "label": "党委书记",
+          "value": "党委书记"
+        },
+        {
+          "label": "党委副书记",
+          "value": "党委副书记"
+        },
+        {
+          "label": "专职副书记",
+          "value": "专职副书记"
+        },
+        {
+          "label": "院长",
+          "value": "院长"
+        },
+        {
+          "label": "常务副院长",
+          "value": "常务副院长"
+        },
+        {
+          "label": "执行院长",
+          "value": "执行院长"
+        },
+        {
+          "label": "副院长",
+          "value": "副院长"
+        },
+        {
+          "label": "纪委书记",
+          "value": "纪委书记"
+        },
+        {
+          "label": "工会主席",
+          "value": "工会主席"
+        },
+        {
+          "label": "总会计师",
+          "value": "总会计师"
+        },
+        {
+          "label": "所长",
+          "value": "所长"
+        },
+        {
+          "label": "副所长",
+          "value": "副所长"
+        },
+        {
+          "label": "工会副主席",
+          "value": "工会副主席"
+        },
+        {
+          "label": "团委书记",
+          "value": "团委书记"
+        },
+        {
+          "label": "处长（主任）",
+          "value": "处长（主任）"
+        },
+        {
+          "label": "副处长（副主任）",
+          "value": "副处长（副主任）"
+        },
+        {
+          "label": "支部书记",
+          "value": "支部书记"
+        },
+        {
+          "label": "无",
+          "value": "无"
+        }
+      ],
+      "Language": [
+        {
+          "label": "英语",
+          "value": "英语"
+        },
+        {
+          "label": "法语",
+          "value": "法语"
+        },
+        {
+          "label": "日语",
+          "value": "日语"
+        },
+        {
+          "label": "德语",
+          "value": "德语"
+        },
+        {
+          "label": "俄语",
+          "value": "俄语"
+        }
+      ],
+      "MajorCategory": [
+        {
+          "label": "执业医师",
+          "value": "执业医师"
+        },
+        {
+          "label": "执业助理医师",
+          "value": "执业助理医师"
+        },
+        {
+          "label": "见习医师",
+          "value": "见习医师"
+        },
+        {
+          "label": "注册护士",
+          "value": "注册护士"
+        },
+        {
+          "label": "助产士",
+          "value": "助产士"
+        },
+        {
+          "label": "西药师(士)",
+          "value": "西药师(士)"
+        },
+        {
+          "label": "中药师(士)",
+          "value": "中药师(士)"
+        },
+        {
+          "label": "检验技师(士)",
+          "value": "检验技师(士)"
+        },
+        {
+          "label": "影像技师(士)",
+          "value": "影像技师(士)"
+        },
+        {
+          "label": "其他卫生技术人员",
+          "value": "其他卫生技术人员"
+        },
+        {
+          "label": "其他技术人员",
+          "value": "其他技术人员"
+        },
+        {
+          "label": "管理人员",
+          "value": "管理人员"
+        },
+        {
+          "label": "工勤及技能人员",
+          "value": "工勤及技能人员"
+        }
+      ],
+      "MarryStatusCode": [
+        {
+          "label": "未婚",
+          "value": "未婚"
+        },
+        {
+          "label": "已婚",
+          "value": "已婚"
+        },
+        {
+          "label": "丧偶",
+          "value": "丧偶"
+        },
+        {
+          "label": "离婚",
+          "value": "离婚"
+        },
+        {
+          "label": "其他",
+          "value": "其他"
+        }
+      ],
+      "NurseLevel": [
+        {
+          "label": "N0",
+          "value": "N0"
+        },
+        {
+          "label": "N1",
+          "value": "N1"
+        },
+        {
+          "label": "N2",
+          "value": "N2"
+        },
+        {
+          "label": "N3",
+          "value": "N3"
+        },
+        {
+          "label": "N4",
+          "value": "N4"
+        },
+        {
+          "label": "N5",
+          "value": "N5"
+        }
+      ],
+      "OrganizationCode": [
+        {
+          "label": "肿瘤医院",
+          "value": "肿瘤医院"
+        },
+        {
+          "label": "癌症中心",
+          "value": "癌症中心"
+        }
+      ],
+      "PartyCode": [
+        {
+          "label": "群众",
+          "value": "群众"
+        },
+        {
+          "label": "中共党员",
+          "value": "中共党员"
+        },
+        {
+          "label": "共青团员",
+          "value": "共青团员"
+        },
+        {
+          "label": "民革党员",
+          "value": "民革党员"
+        },
+        {
+          "label": "民盟盟员",
+          "value": "民盟盟员"
+        },
+        {
+          "label": "民建会员",
+          "value": "民建会员"
+        },
+        {
+          "label": "民进会员",
+          "value": "民进会员"
+        },
+        {
+          "label": "农工党党员",
+          "value": "农工党党员"
+        },
+        {
+          "label": "致公党党员",
+          "value": "致公党党员"
+        },
+        {
+          "label": "九三学社社员",
+          "value": "九三学社社员"
+        },
+        {
+          "label": "台盟盟员",
+          "value": "台盟盟员"
+        }
+      ],
+      "PartyStatus": [
+        {
+          "label": "正常",
+          "value": "正常"
+        },
+        {
+          "label": "停止党籍",
+          "value": "停止党籍"
+        }
+      ],
+      "PeopleSourceCode": [
+        {
+          "label": "本省市调入",
+          "value": "本省市调入"
+        },
+        {
+          "label": "京外调入",
+          "value": "京外调入"
+        },
+        {
+          "label": "军转干部",
+          "value": "军转干部"
+        },
+        {
+          "label": "复退军人",
+          "value": "复退军人"
+        },
+        {
+          "label": "高等院校毕业生",
+          "value": "高等院校毕业生"
+        },
+        {
+          "label": "中等院校毕业生",
+          "value": "中等院校毕业生"
+        },
+        {
+          "label": "技校毕业生",
+          "value": "技校毕业生"
+        },
+        {
+          "label": "政策性安置",
+          "value": "政策性安置"
+        },
+        {
+          "label": "留学回国",
+          "value": "留学回国"
+        },
+        {
+          "label": "其他",
+          "value": "其他"
+        },
+        {
+          "label": "其他卫生机构调入",
+          "value": "其他卫生机构调入"
+        },
+        {
+          "label": "非卫生机构调入",
+          "value": "非卫生机构调入"
+        }
+      ],
+      "PhysicianLicenseCode": [
+        {
+          "label": "临床",
+          "value": "临床"
+        },
+        {
+          "label": "口腔",
+          "value": "口腔"
+        },
+        {
+          "label": "公共卫生",
+          "value": "公共卫生"
+        },
+        {
+          "label": "护理",
+          "value": "护理"
+        },
+        {
+          "label": "中医",
+          "value": "中医"
+        }
+      ],
+      "PostSubCategory": [
+        {
+          "label": "行政",
+          "value": "行政"
+        },
+        {
+          "label": "副教授",
+          "value": "副教授"
+        },
+        {
+          "label": "副研究馆员(图书)",
+          "value": "副研究馆员(图书)"
+        },
+        {
+          "label": "副研究院(自然科学)",
+          "value": "副研究院(自然科学)"
+        },
+        {
+          "label": "副主任护师",
+          "value": "副主任护师"
+        },
+        {
+          "label": "副主任技师",
+          "value": "副主任技师"
+        },
+        {
+          "label": "副主任药师",
+          "value": "副主任药师"
+        },
+        {
+          "label": "副主任医师",
+          "value": "副主任医师"
+        },
+        {
+          "label": "高级工程师",
+          "value": "高级工程师"
+        },
+        {
+          "label": "高级会计师",
+          "value": "高级会计师"
+        },
+        {
+          "label": "高级经济师",
+          "value": "高级经济师"
+        },
+        {
+          "label": "高级统计师",
+          "value": "高级统计师"
+        },
+        {
+          "label": "高级政工师",
+          "value": "高级政工师"
+        },
+        {
+          "label": "正高级政工师",
+          "value": "正高级政工师"
+        },
+        {
+          "label": "高级政工师(研究员级)",
+          "value": "高级政工师(研究员级)"
+        },
+        {
+          "label": "工程师",
+          "value": "工程师"
+        },
+        {
+          "label": "馆员(档案)",
+          "value": "馆员(档案)"
+        },
+        {
+          "label": "馆员(图书)",
+          "value": "馆员(图书)"
+        },
+        {
+          "label": "管理员(图书)",
+          "value": "管理员(图书)"
+        },
+        {
+          "label": "护师",
+          "value": "护师"
+        },
+        {
+          "label": "护士",
+          "value": "护士"
+        },
+        {
+          "label": "会计师",
+          "value": "会计师"
+        },
+        {
+          "label": "会计员",
+          "value": "会计员"
+        },
+        {
+          "label": "技师",
+          "value": "技师"
+        },
+        {
+          "label": "技士",
+          "value": "技士"
+        },
+        {
+          "label": "经济师",
+          "value": "经济师"
+        },
+        {
+          "label": "经济员",
+          "value": "经济员"
+        },
+        {
+          "label": "统计师",
+          "value": "统计师"
+        },
+        {
+          "label": "统计员",
+          "value": "统计员"
+        },
+        {
+          "label": "研究馆员(图书)",
+          "value": "研究馆员(图书)"
+        },
+        {
+          "label": "研究实习员(自然科学员)",
+          "value": "研究实习员(自然科学员)"
+        },
+        {
+          "label": "研究员(自然科学)",
+          "value": "研究员(自然科学)"
+        },
+        {
+          "label": "药师",
+          "value": "药师"
+        },
+        {
+          "label": "药士",
+          "value": "药士"
+        },
+        {
+          "label": "医师",
+          "value": "医师"
+        },
+        {
+          "label": "医士",
+          "value": "医士"
+        },
+        {
+          "label": "政工师",
+          "value": "政工师"
+        },
+        {
+          "label": "主管护师",
+          "value": "主管护师"
+        },
+        {
+          "label": "主管技师",
+          "value": "主管技师"
+        },
+        {
+          "label": "主管药师",
+          "value": "主管药师"
+        },
+        {
+          "label": "主任护师",
+          "value": "主任护师"
+        },
+        {
+          "label": "主任技师",
+          "value": "主任技师"
+        },
+        {
+          "label": "主任药师",
+          "value": "主任药师"
+        },
+        {
+          "label": "主任医师",
+          "value": "主任医师"
+        },
+        {
+          "label": "主治(主管)医师",
+          "value": "主治(主管)医师"
+        },
+        {
+          "label": "助理工程师",
+          "value": "助理工程师"
+        },
+        {
+          "label": "助理馆员(图书)",
+          "value": "助理馆员(图书)"
+        },
+        {
+          "label": "助理会计师",
+          "value": "助理会计师"
+        },
+        {
+          "label": "助理经济师",
+          "value": "助理经济师"
+        },
+        {
+          "label": "助理统计师",
+          "value": "助理统计师"
+        },
+        {
+          "label": "助理研究员(自然科学)",
+          "value": "助理研究员(自然科学)"
+        },
+        {
+          "label": "助理政工师",
+          "value": "助理政工师"
+        }
+      ],
+      "ProfessionRankCodeOfHired": [
+        {
+          "label": "正高",
+          "value": "正高"
+        },
+        {
+          "label": "副高",
+          "value": "副高"
+        },
+        {
+          "label": "中级",
+          "value": "中级"
+        },
+        {
+          "label": "助理",
+          "value": "助理"
+        },
+        {
+          "label": "员级",
+          "value": "员级"
+        }
+      ],
+      "ProfessionTitle": [
+        {
+          "label": "副教授",
+          "value": "副教授"
+        },
+        {
+          "label": "副研究馆员(图书)",
+          "value": "副研究馆员(图书)"
+        },
+        {
+          "label": "副研究院(自然科学)",
+          "value": "副研究院(自然科学)"
+        },
+        {
+          "label": "副主任护师",
+          "value": "副主任护师"
+        },
+        {
+          "label": "副主任技师",
+          "value": "副主任技师"
+        },
+        {
+          "label": "副主任药师",
+          "value": "副主任药师"
+        },
+        {
+          "label": "副主任医师",
+          "value": "副主任医师"
+        },
+        {
+          "label": "高级工程师",
+          "value": "高级工程师"
+        },
+        {
+          "label": "高级会计师",
+          "value": "高级会计师"
+        },
+        {
+          "label": "高级经济师",
+          "value": "高级经济师"
+        },
+        {
+          "label": "高级统计师",
+          "value": "高级统计师"
+        },
+        {
+          "label": "高级政工师",
+          "value": "高级政工师"
+        },
+        {
+          "label": "正高级政工师",
+          "value": "正高级政工师"
+        },
+        {
+          "label": "高级政工师(研究员级)",
+          "value": "高级政工师(研究员级)"
+        },
+        {
+          "label": "工程师",
+          "value": "工程师"
+        },
+        {
+          "label": "馆员(档案)",
+          "value": "馆员(档案)"
+        },
+        {
+          "label": "馆员(图书)",
+          "value": "馆员(图书)"
+        },
+        {
+          "label": "管理员(图书)",
+          "value": "管理员(图书)"
+        },
+        {
+          "label": "护师",
+          "value": "护师"
+        },
+        {
+          "label": "护士",
+          "value": "护士"
+        },
+        {
+          "label": "会计师",
+          "value": "会计师"
+        },
+        {
+          "label": "会计员",
+          "value": "会计员"
+        },
+        {
+          "label": "技师",
+          "value": "技师"
+        },
+        {
+          "label": "技士",
+          "value": "技士"
+        },
+        {
+          "label": "经济师",
+          "value": "经济师"
+        },
+        {
+          "label": "经济员",
+          "value": "经济员"
+        },
+        {
+          "label": "统计师",
+          "value": "统计师"
+        },
+        {
+          "label": "统计员",
+          "value": "统计员"
+        },
+        {
+          "label": "研究馆员(图书)",
+          "value": "研究馆员(图书)"
+        },
+        {
+          "label": "研究实习员(自然科学员)",
+          "value": "研究实习员(自然科学员)"
+        },
+        {
+          "label": "研究员(自然科学)",
+          "value": "研究员(自然科学)"
+        },
+        {
+          "label": "药师",
+          "value": "药师"
+        },
+        {
+          "label": "药士",
+          "value": "药士"
+        },
+        {
+          "label": "医师",
+          "value": "医师"
+        },
+        {
+          "label": "医士",
+          "value": "医士"
+        },
+        {
+          "label": "政工师",
+          "value": "政工师"
+        },
+        {
+          "label": "主管护师",
+          "value": "主管护师"
+        },
+        {
+          "label": "主管技师",
+          "value": "主管技师"
+        },
+        {
+          "label": "主管药师",
+          "value": "主管药师"
+        },
+        {
+          "label": "主任护师",
+          "value": "主任护师"
+        },
+        {
+          "label": "主任技师",
+          "value": "主任技师"
+        },
+        {
+          "label": "主任药师",
+          "value": "主任药师"
+        },
+        {
+          "label": "主任医师",
+          "value": "主任医师"
+        },
+        {
+          "label": "主治(主管)医师",
+          "value": "主治(主管)医师"
+        },
+        {
+          "label": "助理工程师",
+          "value": "助理工程师"
+        },
+        {
+          "label": "助理馆员(图书)",
+          "value": "助理馆员(图书)"
+        },
+        {
+          "label": "助理会计师",
+          "value": "助理会计师"
+        },
+        {
+          "label": "助理经济师",
+          "value": "助理经济师"
+        },
+        {
+          "label": "助理统计师",
+          "value": "助理统计师"
+        },
+        {
+          "label": "助理研究员(自然科学)",
+          "value": "助理研究员(自然科学)"
+        },
+        {
+          "label": "助理政工师",
+          "value": "助理政工师"
+        }
+      ],
+      "QualificationCertLevel": [
+        {
+          "label": "初级",
+          "value": "初级"
+        },
+        {
+          "label": "中级",
+          "value": "中级"
+        },
+        {
+          "label": "副高",
+          "value": "副高"
+        },
+        {
+          "label": "正高",
+          "value": "正高"
+        },
+        {
+          "label": "未定等级",
+          "value": "未定等级"
+        }
+      ],
+      "RaceCode": [
+        {
+          "label": "汉族",
+          "value": "汉族"
+        },
+        {
+          "label": "壮族",
+          "value": "壮族"
+        },
+        {
+          "label": "满族",
+          "value": "满族"
+        },
+        {
+          "label": "回族",
+          "value": "回族"
+        },
+        {
+          "label": "苗族",
+          "value": "苗族"
+        },
+        {
+          "label": "维吾尔族",
+          "value": "维吾尔族"
+        },
+        {
+          "label": "土家族",
+          "value": "土家族"
+        },
+        {
+          "label": "彝族",
+          "value": "彝族"
+        },
+        {
+          "label": "蒙古族",
+          "value": "蒙古族"
+        },
+        {
+          "label": "藏族",
+          "value": "藏族"
+        },
+        {
+          "label": "布依族",
+          "value": "布依族"
+        },
+        {
+          "label": "侗族",
+          "value": "侗族"
+        },
+        {
+          "label": "瑶族",
+          "value": "瑶族"
+        },
+        {
+          "label": "朝鲜族",
+          "value": "朝鲜族"
+        },
+        {
+          "label": "白族",
+          "value": "白族"
+        },
+        {
+          "label": "哈尼族",
+          "value": "哈尼族"
+        },
+        {
+          "label": "哈萨克族",
+          "value": "哈萨克族"
+        },
+        {
+          "label": "黎族",
+          "value": "黎族"
+        },
+        {
+          "label": "傣族",
+          "value": "傣族"
+        },
+        {
+          "label": "畲族",
+          "value": "畲族"
+        },
+        {
+          "label": "傈僳族",
+          "value": "傈僳族"
+        },
+        {
+          "label": "仡佬族",
+          "value": "仡佬族"
+        },
+        {
+          "label": "东乡族",
+          "value": "东乡族"
+        },
+        {
+          "label": "高山族",
+          "value": "高山族"
+        },
+        {
+          "label": "拉祜族",
+          "value": "拉祜族"
+        },
+        {
+          "label": "水族",
+          "value": "水族"
+        },
+        {
+          "label": "佤族",
+          "value": "佤族"
+        },
+        {
+          "label": "纳西族",
+          "value": "纳西族"
+        },
+        {
+          "label": "羌族",
+          "value": "羌族"
+        },
+        {
+          "label": "土族",
+          "value": "土族"
+        },
+        {
+          "label": "仫佬族",
+          "value": "仫佬族"
+        },
+        {
+          "label": "锡伯族",
+          "value": "锡伯族"
+        },
+        {
+          "label": "柯尔克孜族",
+          "value": "柯尔克孜族"
+        },
+        {
+          "label": "达斡尔族",
+          "value": "达斡尔族"
+        },
+        {
+          "label": "景颇族",
+          "value": "景颇族"
+        },
+        {
+          "label": "毛南族",
+          "value": "毛南族"
+        },
+        {
+          "label": "撒拉族",
+          "value": "撒拉族"
+        },
+        {
+          "label": "布朗族",
+          "value": "布朗族"
+        },
+        {
+          "label": "塔吉克族",
+          "value": "塔吉克族"
+        },
+        {
+          "label": "阿昌族",
+          "value": "阿昌族"
+        },
+        {
+          "label": "普米族",
+          "value": "普米族"
+        },
+        {
+          "label": "鄂温克族",
+          "value": "鄂温克族"
+        },
+        {
+          "label": "怒族",
+          "value": "怒族"
+        },
+        {
+          "label": "京族",
+          "value": "京族"
+        },
+        {
+          "label": "基诺族",
+          "value": "基诺族"
+        },
+        {
+          "label": "德昂族",
+          "value": "德昂族"
+        },
+        {
+          "label": "保安族",
+          "value": "保安族"
+        },
+        {
+          "label": "俄罗斯族",
+          "value": "俄罗斯族"
+        },
+        {
+          "label": "裕固族",
+          "value": "裕固族"
+        },
+        {
+          "label": "乌孜别克族",
+          "value": "乌孜别克族"
+        },
+        {
+          "label": "门巴族",
+          "value": "门巴族"
+        },
+        {
+          "label": "鄂伦春族",
+          "value": "鄂伦春族"
+        },
+        {
+          "label": "独龙族",
+          "value": "独龙族"
+        },
+        {
+          "label": "塔塔尔族",
+          "value": "塔塔尔族"
+        },
+        {
+          "label": "赫哲族",
+          "value": "赫哲族"
+        },
+        {
+          "label": "珞巴族",
+          "value": "珞巴族"
+        }
+      ],
+      "RecruitMethod": [
+        {
+          "label": "考试",
+          "value": "考试"
+        },
+        {
+          "label": "考察",
+          "value": "考察"
+        }
+      ],
+      "ResidenceCode": [
+        {
+          "label": "本市城镇",
+          "value": "本市城镇"
+        },
+        {
+          "label": "外埠城镇",
+          "value": "外埠城镇"
+        },
+        {
+          "label": "本市农业",
+          "value": "本市农业"
+        },
+        {
+          "label": "外埠农业",
+          "value": "外埠农业"
+        },
+        {
+          "label": "外籍",
+          "value": "外籍"
+        },
+        {
+          "label": "香港",
+          "value": "香港"
+        },
+        {
+          "label": "台湾",
+          "value": "台湾"
+        },
+        {
+          "label": "澳门",
+          "value": "澳门"
+        }
+      ],
+      "Sequence": [
+        {
+          "label": "行政",
+          "value": "行政"
+        },
+        {
+          "label": "工勤",
+          "value": "工勤"
+        },
+        {
+          "label": "医疗",
+          "value": "医疗"
+        },
+        {
+          "label": "医技",
+          "value": "医技"
+        },
+        {
+          "label": "护理",
+          "value": "护理"
+        },
+        {
+          "label": "相关",
+          "value": "相关"
+        }
+      ],
+      "SKillLevelCode": [
+        {
+          "label": "高级技师",
+          "value": "高级技师"
+        },
+        {
+          "label": "技师",
+          "value": "技师"
+        },
+        {
+          "label": "高级工",
+          "value": "高级工"
+        },
+        {
+          "label": "中级工",
+          "value": "中级工"
+        },
+        {
+          "label": "初级工",
+          "value": "初级工"
+        },
+        {
+          "label": "普工工",
+          "value": "普工工"
+        }
+      ],
+      "StaffLevel": [
+        {
+          "label": "科员",
+          "value": "科员"
+        },
+        {
+          "label": "主任科员",
+          "value": "主任科员"
+        },
+        {
+          "label": "副主任科员",
+          "value": "副主任科员"
+        },
+        {
+          "label": "办事员",
+          "value": "办事员"
+        }
+      ],
+      "StatusOfHouse": [
+        {
+          "label": "无",
+          "value": "无"
+        },
+        {
+          "label": "有",
+          "value": "有"
+        }
+      ]
+    },
+    "appContextUser": {
+      "userId": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "name": "刘优",
+      "isAdmin": false,
+      "token": null
+    },
+    "enableAccessChecks": false
+  }
+}
