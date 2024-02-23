@@ -71,7 +71,6 @@
                         ] && select[attribute.targetValue].values"
                         :key="optionIdx"
                         :value="option.value"
-                        :disabled="!option.show"
                         >{{ option.label }}</a-select-option
                       >
                     </a-select>
@@ -272,6 +271,7 @@ const data = reactive({
   objectTypeCode: "",
   recordObj: {}, // 记录当前点击的数据
   picklistFieldMap: {}, // 依赖字段关联关系
+  selectFixed: {}, // select 固定不变的数据
 });
 const {
   title,
@@ -288,7 +288,8 @@ const {
   isLookup,
   objectTypeCode,
   recordObj,
-  picklistFieldMap
+  picklistFieldMap,
+  selectFixed
 } = toRefs(data);
 const formState = reactive({});
 
@@ -335,6 +336,7 @@ const getConfig = () => {
 getConfig();
 const getPickerList = () => {
   proxy.$get(Interface.picklist, {}).then((res) => {
+    data.selectFixed = JSON.parse(JSON.stringify(res.actions[0].returnValue.picklistFieldValues));
     data.select = res.actions[0].returnValue.picklistFieldValues;
     let picklistFieldMap = res.actions[0].returnValue.picklistFieldMap;
     for(let i = 0; i < picklistFieldMap.length; i++) {
@@ -350,27 +352,40 @@ const getPickerList = () => {
 };
 getPickerList();
 
+// 字段映射关系
 const Controllerchange = (val, Controller, Dependents) => {
   // console.log("Controllerchange", val, Controller, Dependents);
   if(Dependents){
     for(var i = 0; i < Dependents.length; i++){
       var Dependent = Dependents[i];
       var isDependent = false;
-      if (data.select[Dependent] && data.select[Dependent].values){
-        for (var j = 0; j < data.select[Dependent].values.length; j++) {
-          var item = data.select[Dependent].values[j];
-          // console.log("item-validFor", item);
-          item.show = false;
-          for(var k = 0; k < item.validFor.length; k++) {
-            var row =  item.validFor[k];
-            if (row == data.select[Dependent].controllerValues[val]) {
-              item.show = true;
-              if (formState[Dependent] == item.value){
-                isDependent = true;
-              }
+      // if (data.select[Dependent] && data.select[Dependent].values){
+      //   for (var j = 0; j < data.select[Dependent].values.length; j++) {
+      //     var item = data.select[Dependent].values[j];
+      //     // console.log("item-validFor", item);
+      //     item.show = false;
+      //     for(var k = 0; k < item.validFor.length; k++) {
+      //       var row =  item.validFor[k];
+      //       if (row == data.select[Dependent].controllerValues[val]) {
+      //         item.show = true;
+      //         if (formState[Dependent] == item.value){
+      //           isDependent = true;
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
+      if (data.selectFixed[Dependent] && data.selectFixed[Dependent].values) {
+        data.select[Dependent].values = [];
+        data.selectFixed[Dependent].values.map(item=>{
+          if(item.validFor.length && item.validFor.some(row=>row == data.selectFixed[Dependent].controllerValues[val])){
+            data.select[Dependent].values.push(item);
+            if(formState[Dependent] == item.value){
+              isDependent = true;
             }
           }
-        }
+        });
+        // console.log("data.select[Dependent].values", data.select[Dependent].values);
       }
       if(isDependent == false) {
         formState[Dependent] = '';

@@ -2,7 +2,7 @@
     <div class="commentWrap">
         <div class="panel">
             <div class="panel-head">
-                <div class="panel-title">
+                <div class="panel-title" v-if="isTitle">
                     公共面板评论
                 </div>
                 <div class="panel-btn">
@@ -49,11 +49,17 @@
     </div>
 </template>
 <script setup>
-    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw } from "vue";
+    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw, defineProps } from "vue";
     import { UserOutlined } from "@ant-design/icons-vue";
     import { notification } from 'ant-design-vue';
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
+    const props = defineProps({
+        isTitle: {
+            default: true,
+            type: Boolean
+        }
+    })
     const data = reactive({
         listData: [],
         page: 1,

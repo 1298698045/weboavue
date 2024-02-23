@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel"
+        <a-modal v-model:open="props.isShow" width="1280px" :maskClosable="false" @cancel="handleCancel"
             @ok="handleSubmit">
             <template #title>
                 <div>
@@ -23,11 +23,14 @@
                 </div>
                 <div class="modalCenter" :style="{ height: height + 'px' }">
                     <ConfigForm ref="configRef" :paramsTime="paramsTime" v-if="currentTab==1" />
-                    <AttendUser v-if="currentTab==2" />
+                    <Participants v-if="currentTab==2" />
                     <Topics v-if="currentTab==3" />
                     <AttendUserList v-if="currentTab==4" />
                     <Service v-if="currentTab==5" />
-                    <MeetingNotice :isShow="isNotice" @selectVal="handleRead" />
+                    <MeetingResolution v-if="currentTab==6" />
+                    <Comment v-if="currentTab==7" :isTitle="false" />
+                    <MeetingFile v-if="currentTab==8" />
+                    <MeetingShare v-if="currentTab==9" />
                 </div>
             </div>
             <template #footer>
@@ -43,21 +46,27 @@
 <script setup>
     import {
         ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
-        defineEmits
+        defineEmits, provide
     } from "vue";
     import { message } from 'ant-design-vue';
     import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
-    import MeetingNotice  from "@/components/meeting/meetingCalendar/MeetingNotice.vue";
     // 参会人员
-    import AttendUser from "@/components/meeting/meetingCalendar/AttendUser.vue"
+    import Participants from "@/components/meeting/Participants.vue"
     // 基本信息
-    import ConfigForm from "@/components/meeting/InfoConfigForm.vue";
+    import ConfigForm from "@/components/meeting/InfoConfigFormShow.vue";
     // 会议议题
     import Topics from "@/components/meeting/meetingCalendar/Topics.vue";
     // 会议参会人员列表
-    import AttendUserList from "@/components/meeting/AttendUserList.vue";
+    import AttendUserList from "@/components/meeting/AttendUserListShow.vue";
     // 会议服务
     import Service from "@/components/meeting/Service.vue";
+    // 会议决议
+    import MeetingResolution from "@/components/meeting/MeetingResolution.vue";
+    import Comment from "@/components/detail/Comment.vue";
+    // 会议附件
+    import MeetingFile from "@/components/meeting/MeetingFile.vue";
+    import MeetingShare from "@/components/meeting/MeetingShare.vue";
+
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const labelCol = ref({ style: { width: '100px' } });
@@ -69,11 +78,12 @@
             type: String,
             default: ""
         }
-    })
+    });
+    provide("meetingId", props.meetingId);
     console.log("props", props.paramsTime);
-    const emit = defineEmits(['cancel', 'select-val']);
+    const emit = defineEmits(['cancel', 'select-val', 'edit']);
     const handleCancel = () => {
-        configRef.value.clearForm();
+        // configRef.value.clearForm();
         emit("cancel", false);
     }
     const changeTab = (e) => {
@@ -94,7 +104,7 @@
         });
     });
     const handleEdit = () => {
-
+        emit('edit', '1');
     }
 </script>
 <style lang="less">

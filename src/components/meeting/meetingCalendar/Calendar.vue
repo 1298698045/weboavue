@@ -152,7 +152,7 @@
         </div>
         <NewMeeting :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
         <NewRepeatMeeting :isShow="isRepeatMeeting" @cancel="cancelRepeatMeeting" @selectVal="handleRepeatMeetingVal" />
-        <MeetingDetailModal :isShow="isMeetingDetail" :meetingId="meetingId" v-if="isMeetingDetail" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
+        <MeetingDetailModal :isShow="isMeetingDetail" :meetingId="meetingId" v-if="isMeetingDetail" @cancel="isMeetingDetail=false" @edit="handleOpenEdit" />
 
     </div>
 </template>
@@ -469,6 +469,10 @@
     }
     const handleDetail = (item, date) => {
         data.isMeetingDetail = true;
+    }
+    // 编辑
+    const handleOpenEdit = () => {
+        data.isNewMeeting = true;
     }
 </script>
 <style lang="less" scoped>

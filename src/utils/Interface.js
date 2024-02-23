@@ -39,10 +39,10 @@ const Interface = {
   uilook: "/localData/ui.entity.lookup.json",
   entityFilter: "/localData/entity.filter.get.json",
 
-  entityConfig: "/localData/entity.config.get.json", // 通用弹窗布局配置
-  picklist: "/localData/layout.picklistvalues.get.json",
-  // entityConfig: "/localData/common/entity.config.get.json", // 通用弹窗布局配置
-  // picklist: "/localData/common/layout.picklistvalues.get.json",
+  // entityConfig: "/localData/entity.config.get.json", // 通用弹窗布局配置
+  // picklist: "/localData/layout.picklistvalues.get.json",
+  entityConfig: "/localData/common/entity.config.get.json", // 通用弹窗布局配置
+  picklist: "/localData/common/layout.picklistvalues.get.json",
   treeList: "/localData/tree.get.json",
   user: {
     mybusinessUser: "/localData/user/user.mybusiness.getlist.json", // 同部门下用户
@@ -77,6 +77,13 @@ const Interface = {
     getall: "localData/meeting/meeting.getall.json", // 日历月数据
     config: "localData/meeting/config.json",
     relatedrecords: "/localData/meeting/entity.relatedrecords.get.json", // 相关列表数据
+    relatedrecords2: "/localData/meeting/entity.relatedrecords.get2.json", // 相关列表数据
+    sharedList: "/localData/meeting/calendar.shared.mylist.json", // 会议共享-已添加人
+    sharedRight: "/localData/meeting/calendar.shared.right.json", // 会议共享-权限设置
+    addShare: "/localData/meeting/calendar.share.json", // 会议共享-添加权限
+    removeShare: "/localData/meeting/calendar.share.remove.json",
+    meetingPeople: "/localData/meeting/meeting.people.search.json", // 详情-参会人员
+    detail: "/localData/meeting/entity.recordandlayout.get.json"
   },
   meetingRoom: {
     roomList: "/localData/meetingRoom/meetingroom.reservation.getlist2.json",
@@ -211,6 +218,7 @@ const Interface = {
       config: "/localData/contract/entitygrid.config.get.json",
       list: "/localData/contract/admin/entitygrid.list.json"
     }
-  }
+  },
+  files: "/localData/file.attachment.getlist.json"
 };
 export default Interface;
