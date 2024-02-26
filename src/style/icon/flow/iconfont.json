@@ -1,0 +1,142 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "130126167",
+      "name": "默认菜单",
+      "font_class": "morencaidan",
+      "unicode": "e852",
+      "unicode_decimal": 59474
+    },
+    {
+      "icon_id": "130141722",
+      "name": "新建事务",
+      "font_class": "xinjianshiwu",
+      "unicode": "e85b",
+      "unicode_decimal": 59483
+    },
+    {
+      "icon_id": "130141864",
+      "name": "待办事务",
+      "font_class": "daibanshiwu",
+      "unicode": "e85c",
+      "unicode_decimal": 59484
+    },
+    {
+      "icon_id": "130143425",
+      "name": "已办事务",
+      "font_class": "yibanshiwu",
+      "unicode": "e85e",
+      "unicode_decimal": 59486
+    },
+    {
+      "icon_id": "130143527",
+      "name": "办理记录",
+      "font_class": "banlijilu",
+      "unicode": "e85f",
+      "unicode_decimal": 59487
+    },
+    {
+      "icon_id": "130146707",
+      "name": "我的发起",
+      "font_class": "wodefaqi1",
+      "unicode": "e864",
+      "unicode_decimal": 59492
+    },
+    {
+      "icon_id": "130147473",
+      "name": "我的传阅",
+      "font_class": "wodechuanyue",
+      "unicode": "e86b",
+      "unicode_decimal": 59499
+    },
+    {
+      "icon_id": "130147474",
+      "name": "收到传阅",
+      "font_class": "shoudaochuanyue",
+      "unicode": "e86a",
+      "unicode_decimal": 59498
+    },
+    {
+      "icon_id": "130147475",
+      "name": "退件箱",
+      "font_class": "tuijianxiang",
+      "unicode": "e869",
+      "unicode_decimal": 59497
+    },
+    {
+      "icon_id": "130147664",
+      "name": "草稿箱",
+      "font_class": "caogaoxiang",
+      "unicode": "e86c",
+      "unicode_decimal": 59500
+    },
+    {
+      "icon_id": "130147834",
+      "name": "流程设置",
+      "font_class": "liuchengshezhi",
+      "unicode": "e86e",
+      "unicode_decimal": 59502
+    },
+    {
+      "icon_id": "130147908",
+      "name": "签名管理",
+      "font_class": "qianmingguanli",
+      "unicode": "e870",
+      "unicode_decimal": 59504
+    },
+    {
+      "icon_id": "130147910",
+      "name": "事务管理",
+      "font_class": "shiwuguanli",
+      "unicode": "e86f",
+      "unicode_decimal": 59503
+    },
+    {
+      "icon_id": "130148026",
+      "name": "表单查询",
+      "font_class": "biaodanchaxun",
+      "unicode": "e871",
+      "unicode_decimal": 59505
+    },
+    {
+      "icon_id": "130148081",
+      "name": "流程督办",
+      "font_class": "liuchengduban",
+      "unicode": "e872",
+      "unicode_decimal": 59506
+    },
+    {
+      "icon_id": "130148238",
+      "name": "待办查询",
+      "font_class": "daibanchaxun",
+      "unicode": "e874",
+      "unicode_decimal": 59508
+    },
+    {
+      "icon_id": "130148239",
+      "name": "关注事务",
+      "font_class": "guanzhushiwu",
+      "unicode": "e873",
+      "unicode_decimal": 59507
+    },
+    {
+      "icon_id": "130148325",
+      "name": "曝光图表",
+      "font_class": "puguangtubiao",
+      "unicode": "e876",
+      "unicode_decimal": 59510
+    },
+    {
+      "icon_id": "130148326",
+      "name": "审批意见",
+      "font_class": "shenpiyijian",
+      "unicode": "e875",
+      "unicode_decimal": 59509
+    }
+  ]
+}

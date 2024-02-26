@@ -31,6 +31,7 @@ import {
   InboxOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons-vue";
+
 const props = defineProps({
   collapsed: Boolean,
 });
@@ -188,8 +189,12 @@ const handleData = (result) => {
 handleData(data.items);
 </script>
 <style lang="less">
-@import "./menu.less";
-@import "../../../style/icon/iconfont.css";
+  @import "./menu.less";
+  @import "../../../style/icon/iconfont.css";
+  @import "../../../style/icon/flow/iconfont.css";
+  @import "../../../style/icon/oa/iconfont.css";
+  @import "../../../style/icon/document/font_p2dc72qnu9q/iconfont.css";
+  @import "../../../style/icon/contract/font_jlf4hlwwgvr/iconfont.css";
 .menuContainer {
   height: calc(~"100% - 40px");
   overflow: auto;

@@ -1,0 +1,135 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "130148423",
+      "name": "通讯录",
+      "font_class": "tongxunlu1",
+      "unicode": "e854",
+      "unicode_decimal": 59476
+    },
+    {
+      "icon_id": "130148424",
+      "name": "小组",
+      "font_class": "xiaozu",
+      "unicode": "e858",
+      "unicode_decimal": 59480
+    },
+    {
+      "icon_id": "130148425",
+      "name": "文件管理",
+      "font_class": "wenjianguanli",
+      "unicode": "e859",
+      "unicode_decimal": 59481
+    },
+    {
+      "icon_id": "130148426",
+      "name": "信息管理",
+      "font_class": "xinxiguanli1",
+      "unicode": "e85a",
+      "unicode_decimal": 59482
+    },
+    {
+      "icon_id": "130148579",
+      "name": "领导日程",
+      "font_class": "lingdaoricheng",
+      "unicode": "e879",
+      "unicode_decimal": 59513
+    },
+    {
+      "icon_id": "130148580",
+      "name": "日程一览表",
+      "font_class": "richengyilanbiao",
+      "unicode": "e878",
+      "unicode_decimal": 59512
+    },
+    {
+      "icon_id": "130148583",
+      "name": "日历",
+      "font_class": "rili",
+      "unicode": "e877",
+      "unicode_decimal": 59511
+    },
+    {
+      "icon_id": "130148615",
+      "name": "日程查询",
+      "font_class": "richengchaxun",
+      "unicode": "e87a",
+      "unicode_decimal": 59514
+    },
+    {
+      "icon_id": "130148647",
+      "name": "人才管理",
+      "font_class": "rencaiguanli",
+      "unicode": "e87b",
+      "unicode_decimal": 59515
+    },
+    {
+      "icon_id": "130164950",
+      "name": "会议室使用情况",
+      "font_class": "huiyishishiyongqingkuang",
+      "unicode": "e87c",
+      "unicode_decimal": 59516
+    },
+    {
+      "icon_id": "130165594",
+      "name": "议题管理",
+      "font_class": "yitiguanli",
+      "unicode": "e87e",
+      "unicode_decimal": 59518
+    },
+    {
+      "icon_id": "130165705",
+      "name": "会议任务",
+      "font_class": "huiyirenwu",
+      "unicode": "e880",
+      "unicode_decimal": 59520
+    },
+    {
+      "icon_id": "130165713",
+      "name": "会议查询",
+      "font_class": "huiyichaxun",
+      "unicode": "e87f",
+      "unicode_decimal": 59519
+    },
+    {
+      "icon_id": "130168559",
+      "name": "会议室维护",
+      "font_class": "huiyishiweihu",
+      "unicode": "e881",
+      "unicode_decimal": 59521
+    },
+    {
+      "icon_id": "130168641",
+      "name": "会议参会人",
+      "font_class": "huiyicanhuiren",
+      "unicode": "e882",
+      "unicode_decimal": 59522
+    },
+    {
+      "icon_id": "130170895",
+      "name": "会议活动",
+      "font_class": "huiyihuodong",
+      "unicode": "e884",
+      "unicode_decimal": 59524
+    },
+    {
+      "icon_id": "130170899",
+      "name": "会议报表",
+      "font_class": "huiyibaobiao",
+      "unicode": "e883",
+      "unicode_decimal": 59523
+    },
+    {
+      "icon_id": "130171333",
+      "name": "预约记录",
+      "font_class": "yuyuejilu",
+      "unicode": "e885",
+      "unicode_decimal": 59525
+    }
+  ]
+}

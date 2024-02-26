@@ -49,7 +49,8 @@
         <a-popover overlayClassName="signPlugin" trigger="click">
           <template #title>
             <div class="popup-header">
-              <ScheduleOutlined style="font-size: 16px;color:var(--textColor)" />
+              <!-- <ScheduleOutlined style="font-size: 16px;color:var(--textColor)" /> -->
+              <i class="iconfont icon-kaoqin" style="font-size: 16px;color:var(--textColor);margin-right: 10px;"></i>
               <span>2023-12-12</span>
               <span>星期二</span>
             </div>
@@ -61,7 +62,8 @@
                   <a-timeline-item>
                     <template #dot>
                       <div>
-                        <WeiboCircleOutlined style="font-size: 25px" />
+                        <!-- <WeiboCircleOutlined style="font-size: 25px" /> -->
+                        <i class="iconfont icon-shangban" style="font-size: 25px;"></i>
                       </div>
                     </template>
                     <p>上班时间 09:00</p>
@@ -70,7 +72,8 @@
                   <a-timeline-item>
                     <template #dot>
                       <div>
-                        <WeiboCircleOutlined style="font-size: 25px" />
+                        <!-- <WeiboCircleOutlined style="font-size: 25px" /> -->
+                        <i class="iconfont icon-xiaban" style="font-size: 25px;"></i>
                       </div>
                     </template>
                     <p>下班时间 18:00</p>
@@ -85,12 +88,14 @@
               </div>
               <div class="popup-footer">
                 <div class="checking" title="考勤统计">
-                  <BarChartOutlined />
+                  <!-- <BarChartOutlined /> -->
+                  <i class="iconfont icon-tongji" style="color: #b3b3b3;"></i>
                   <span class="checkTitle text-elli">考勤统计</span>
                 </div>
                 <a-tooltip>
                   <template #title>当前所在考勤组：默认考勤组</template>
-                  <InfoCircleOutlined style="font-size: 16px" />
+                  <!-- <InfoCircleOutlined style="font-size: 16px" /> -->
+                  <i class="iconfont icon-tishi" style="color: #b3b3b3;"></i>
                 </a-tooltip>
               </div>
             </div>
@@ -122,10 +127,10 @@
             主次账号切换
           </div>
           <div class="header-account-splitter"></div>
-          <div class="row-text" @click="handlePersonal">
+          <!-- <div class="row-text" @click="handlePersonal">
             个人中心
           </div>
-          <div class="header-account-splitter"></div>
+          <div class="header-account-splitter"></div> -->
           <div class="header-account-list">
             <div v-for="item in 2">
               <div class="header-account-item">
@@ -149,6 +154,10 @@
             </div>
           </div>
           <div class="header-account-seeting">
+            <div class="header-account-seeting-item"  @click="handlePersonal">
+              <i class="iconfont icon-gerenzhongxin"></i>
+              <span class="header-account-seeting-title">个人中心</span>
+            </div>
             <div class="header-account-seeting-item">
               <!-- <ScheduleOutlined class="icon" /> -->
               <i class="iconfont icon-zhutizhongxin"></i>

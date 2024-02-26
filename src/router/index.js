@@ -22,60 +22,60 @@ const routes = [
         path: "/flow/add",
         component: () => import("../views/flow/add/index.vue"),
         name: "NewFlow",
-        icon: "xinjian",
+        icon: "xinjianshiwu",
         meta: {
           name: "新建事务",
-          icon: "xinjian",
+          icon: "xinjianshiwu",
         },
       },
       {
         path: "/flow/todoList",
         component: () => import("../views/flow/todoList/index.vue"),
         name: "TodoListFlow",
-        icon: "daiban1",
+        icon: "daibanshiwu",
         meta: {
           name: "待办事务",
-          icon: "daiban1",
+          icon: "daibanshiwu",
         },
       },
       {
         path: "/flow/completed",
         component: () => import("../views/flow/completed/index.vue"),
         name: "CompletedFlow",
-        icon: "yiban",
+        icon: "yibanshiwu",
         meta: {
           name: "已办事务",
-          icon: "yiban",
+          icon: "yibanshiwu",
         },
       },
       {
         path: "/flow/doRecord",
         component: () => import("../views/flow/doRecord/index.vue"),
         name: "DoRecord",
-        icon: "daiban1",
+        icon: "banlijilu",
         meta: {
           name: "办理记录",
-          icon: "daiban1",
+          icon: "banlijilu",
         },
       },
       {
         path: "/flow/myStart",
         component: () => import("../views/flow/myStart/index.vue"),
         name: "MyStartFlow",
-        icon: "faqi",
+        icon: "wodefaqi1",
         meta: {
           name: "我的发起",
-          icon: "faqi",
+          icon: "wodefaqi1",
         },
       },
       {
         path: "/flow/returnBox",
         component: () => import("../views/flow/returnBox/index.vue"),
         name: "ReturnBox",
-        icon: "tuijian",
+        icon: "tuijianxiang",
         meta: {
           name: "退件箱",
-          icon: "tuijian",
+          icon: "tuijianxiang",
         },
       },
       {
@@ -92,10 +92,10 @@ const routes = [
         path: "/flow/myCirculation",
         component: () => import("../views/flow/myCirculation/index.vue"),
         name: "MyCirculation",
-        icon: "chuanyue",
+        icon: "wodechuanyue",
         meta: {
           name: "我传阅的",
-          icon: "chuanyue",
+          icon: "wodechuanyue",
         },
       },
       {
@@ -112,40 +112,40 @@ const routes = [
         path: "/flow/seeting",
         component: () => import("../views/flow/seeting/index.vue"),
         name: "SeetingFlow",
-        icon: "caogaoxiang",
+        icon: "liuchengshezhi",
         meta: {
           name: "流程设置",
-          icon: "caogaoxiang",
+          icon: "liuchengshezhi",
         },
       },
       {
         path: "/flow/workAdmin",
         component: () => import("../views/flow/workAdmin/index.vue"),
         name: "WorkAdmin",
-        icon: "caogaoxiang",
+        icon: "shiwuguanli",
         meta: {
           name: "事务管理",
-          icon: "caogaoxiang",
+          icon: "shiwuguanli",
         },
       },
       {
         path: "/flow/signatureAdmin",
         component: () => import("../views/flow/signatureAdmin/index.vue"),
         name: "SignatureAdmin",
-        icon: "caogaoxiang",
+        icon: "qianmingguanli",
         meta: {
           name: "签名管理",
-          icon: "caogaoxiang",
+          icon: "qianmingguanli",
         },
       },
       {
         path: "/flow/formSearch",
         component: () => import("../views/flow/formSearch/index.vue"),
         name: "FormSearchFlow",
-        icon: "caogaoxiang",
+        icon: "biaodanchaxun",
         meta: {
           name: "表单查询",
-          icon: "caogaoxiang",
+          icon: "biaodanchaxun",
         },
       },
       // {
@@ -177,50 +177,50 @@ const routes = [
         path: "/workplan/calendar",
         component: () => import("../views/scheduleAdmin/calendar/index.vue"),
         name: "CalendarSchedule",
-        icon: "xinjian",
+        icon: "rili",
         meta: {
           name: "日历",
-          icon: "xinjian",
+          icon: "rili",
         },
       },
       {
         path: "/workplan/schedule",
         component: () => import("../views/scheduleAdmin/schedule/index.vue"),
         name: "ScheduleSchedule",
-        icon: "xinjian",
+        icon: "richengyilanbiao",
         meta: {
           name: "日程一览表",
-          icon: "xinjian",
+          icon: "richengyilanbiao",
         },
       },
       {
         path: "/workplan/schedule/leader",
         component: () => import("../views/scheduleAdmin/leader/index.vue"),
         name: "LeaderSchedule",
-        icon: "xinjian",
+        icon: "lingdaoricheng",
         meta: {
           name: "领导日程",
-          icon: "xinjian",
+          icon: "lingdaoricheng",
         },
       },
       {
         path: "/workplan/schedule/search",
         component: () => import("../views/scheduleAdmin/search/index.vue"),
         name: "SearchSchedule",
-        icon: "xinjian",
+        icon: "richengchaxun",
         meta: {
           name: "日程查询",
-          icon: "xinjian",
+          icon: "richengchaxun",
         },
       },
       {
         path: "/workplan/talent",
         component: () => import("../views/scheduleAdmin/talent/index.vue"),
         name: "Talent",
-        icon: "xinjian",
+        icon: "rencaiguanli",
         meta: {
           name: "人才管理",
-          icon: "xinjian",
+          icon: "rencaiguanli",
         },
       },
     ],
@@ -235,40 +235,40 @@ const routes = [
         path: "/oa/addressBook",
         component: () => import("../views/oa/addressBook/index.vue"),
         name: "AddressBook",
-        icon: "xinjian",
+        icon: "tongxunlu1",
         meta: {
           name: "通讯录",
-          icon: "xinjian",
+          icon: "tongxunlu1",
         },
       },
       {
         path: "/oa/group",
         component: () => import("../views/oa/group/index.vue"),
         name: "group",
-        icon: "xinjian",
+        icon: "xiaozu",
         meta: {
           name: "小组",
-          icon: "xinjian",
+          icon: "xiaozu",
         },
       },
       {
         path: "/oa/file",
         component: () => import("../views/fileAdmin/index.vue"),
         name: "File",
-        icon: "xinjian",
+        icon: "wenjianguanli",
         meta: {
           name: "文件管理",
-          icon: "xinjian",
+          icon: "wenjianguanli",
         },
       },
       {
         path: "/oa/information",
         component: () => import("../views/information/list/index.vue"),
         name: "Information",
-        icon: "xinjian",
+        icon: "xinxiguanli1",
         meta: {
           name: "信息管理",
-          icon: "xinjian",
+          icon: "xinxiguanli1",
         },
       },
     ],
@@ -303,10 +303,10 @@ const routes = [
         path: "/meeting/calendar",
         name: "CalendarMeeting",
         component: () => import("../views/meeting/calendar/index.vue"),
-        icon: "xinjian",
+        icon: "rili",
         meta: {
           name: "会议日历",
-          icon: "xinjian",
+          icon: "rili",
         },
       },
       {
@@ -314,40 +314,40 @@ const routes = [
         name: "RoomMeeting",
         component: () =>
           import("../views/meeting/meetingRoom/MeetingRoomUse.vue"),
-        icon: "xinjian",
+        icon: "huiyishishiyongqingkuang",
         meta: {
           name: "会议室使用状况",
-          icon: "xinjian",
+          icon: "huiyishishiyongqingkuang",
         },
       },
       {
         path: "/meeting/topics",
         name: "TopicsMeeting",
         component: () => import("../views/meeting/topics/index.vue"),
-        icon: "xinjian",
+        icon: "yitiguanli",
         meta: {
           name: "议题管理",
-          icon: "xinjian",
+          icon: "yitiguanli",
         },
       },
       {
         path: "/meeting/search",
         name: "SearchMeeting",
         component: () => import("../views/meeting/search/index.vue"),
-        icon: "xinjian",
+        icon: "huiyichaxun",
         meta: {
           name: "会议查询",
-          icon: "xinjian",
+          icon: "huiyichaxun",
         },
       },
       {
         path: "/meeting/task",
         name: "TaskMeeting",
         component: () => import("../views/meeting/task/index.vue"),
-        icon: "xinjian",
+        icon: "huiyirenwu",
         meta: {
           name: "会议任务",
-          icon: "xinjian",
+          icon: "huiyirenwu",
         },
       },
       {
@@ -355,40 +355,40 @@ const routes = [
         name: "MettingRoomMaintenance",
         component: () =>
           import("../views/meeting/mettingRoomMaintenance/index.vue"),
-        icon: "xinjian",
+        icon: "huiyishiweihu",
         meta: {
           name: "会议室维护",
-          icon: "xinjian",
+          icon: "huiyishiweihu",
         },
       },
       {
         path: "/meeting/participant",
         name: "ParticipantMeeting",
         component: () => import("../views/meeting/participant/index.vue"),
-        icon: "xinjian",
+        icon: "huiyicanhuiren",
         meta: {
           name: "会议参会人",
-          icon: "xinjian",
+          icon: "huiyicanhuiren",
         },
       },
       {
         path: "/meeting/reportForms",
         name: "ReportFormsMeeting",
         component: () => import("../views/meeting/reportForms/index.vue"),
-        icon: "xinjian",
+        icon: "huiyibaobiao",
         meta: {
           name: "会议报表",
-          icon: "xinjian",
+          icon: "huiyibaobiao",
         },
       },
       {
         path: "/meeting/activity",
         name: "ActivityMeeting",
         component: () => import("../views/meeting/activity/index.vue"),
-        icon: "xinjian",
+        icon: "huiyihuodong",
         meta: {
           name: "会议活动",
-          icon: "xinjian",
+          icon: "huiyihuodong",
         },
       },
     ],
@@ -460,20 +460,20 @@ const routes = [
         path: "/OfficialDocument/myReceiving",
         name: "MyReceiving",
         component: () => import("../views/documentAdmin/myReceiving/index.vue"),
-        icon: "xinjian",
+        icon: "wodeshouwen",
         meta: {
-          name: "我的公文",
-          icon: "xinjian",
+          name: "我的收文",
+          icon: "wodeshouwen",
         },
       },
       {
         path: "/OfficialDocument/myDispatch",
         name: "MyDispatch",
         component: () => import("../views/documentAdmin/myDispatch/index.vue"),
-        icon: "xinjian",
+        icon: "wodefawen",
         meta: {
           name: "我的发文",
-          icon: "xinjian",
+          icon: "wodefawen",
         },
       },
       {
@@ -481,10 +481,10 @@ const routes = [
         name: "ReceivingAdmin",
         component: () =>
           import("../views/documentAdmin/receivingAdmin/index.vue"),
-        icon: "xinjian",
+        icon: "shouwenguanli",
         meta: {
           name: "收文管理",
-          icon: "xinjian",
+          icon: "shouwenguanli",
         },
       },
       {
@@ -492,20 +492,20 @@ const routes = [
         name: "OutgoingAdmin",
         component: () =>
           import("../views/documentAdmin/outgoingAdmin/index.vue"),
-        icon: "xinjian",
+        icon: "fawenguanli",
         meta: {
           name: "发文管理",
-          icon: "xinjian",
+          icon: "fawenguanli",
         },
       },
       {
         path: "/ui/RequestReport/search",
         name: "RequestReport",
         component: () => import("../views/documentAdmin/report/index.vue"),
-        icon: "xinjian",
+        icon: "qingshibaogao",
         meta: {
           name: "请示报告",
-          icon: "xinjian",
+          icon: "qingshibaogao",
         },
       },
       {
@@ -513,10 +513,10 @@ const routes = [
         name: "OfficialNotice",
         component: () =>
           import("../views/documentAdmin/superiorNotice/index.vue"),
-        icon: "xinjian",
+        icon: "shangjitongzhi",
         meta: {
           name: "上级通知",
-          icon: "xinjian",
+          icon: "shangjitongzhi",
         },
       },
       {
@@ -524,20 +524,20 @@ const routes = [
         name: "ContentDocument",
         component: () =>
           import("../views/documentAdmin/textTemplate/index.vue"),
-        icon: "xinjian",
+        icon: "zhengwenmoban",
         meta: {
           name: "正文模板",
-          icon: "xinjian",
+          icon: "zhengwenmoban",
         },
       },
       {
         path: "/OfficeDocument/read/log",
         name: "readLog",
         component: () => import("../views/documentAdmin/readingLog/index.vue"),
-        icon: "xinjian",
+        icon: "yuedurizhi",
         meta: {
           name: "阅读日志",
-          icon: "xinjian",
+          icon: "yuedurizhi",
         },
         children: [
           {
@@ -596,9 +596,9 @@ const routes = [
         path: "/contract/home",
         name: "ContractHome",
         component: () => import("../views/contract/home/index.vue"),
-        icon: "xinjian",
+        icon: "hetongmenhu",
         meta: {
-          icon: "xinjian",
+          icon: "hetongmenhu",
           name: "合同门户",
         },
       },
@@ -606,9 +606,9 @@ const routes = [
         path: "/contract/template",
         name: "ContractTemplate",
         // component: () => import("../views/contract/template/index.vue"),
-        icon: "xinjian",
+        icon: "hetongmoban1",
         meta: {
-          icon: "xinjian",
+          icon: "hetongmoban1",
           name: "合同模板",
         },
         children: [
@@ -650,9 +650,9 @@ const routes = [
       {
         path: "/contract/draft",
         name: "ContractDraft",
-        icon: "xinjian",
+        icon: "hetongnigao",
         meta: {
-          icon: "xinjian",
+          icon: "hetongnigao",
           name: "合同拟稿",
         },
         children: [
@@ -682,9 +682,9 @@ const routes = [
       {
         path: "/contract/approve",
         name: "ContractApprove",
-        icon: "xinjian",
+        icon: "hetongshenpi",
         meta: {
-          icon: "xinjian",
+          icon: "hetongshenpi",
           name: "合同审批",
         },
         children: [
@@ -726,9 +726,9 @@ const routes = [
       {
         path: "/contract/performance",
         name: "Performance",
-        icon: "xinjian",
+        icon: "hetonglvyue1",
         meta: {
-          icon: "xinjian",
+          icon: "hetonglvyue1",
           name: "合同履约",
         },
         children: [
@@ -966,9 +966,9 @@ const routes = [
       {
         path: "/contract/archives",
         name: "Archives",
-        icon: "xinjian",
+        icon: "hetongdangan",
         meta: {
-          icon: "xinjian",
+          icon: "hetongdangan",
           name: "合同档案",
         },
         children: [
@@ -1089,18 +1089,18 @@ const routes = [
         name: "FullTextSearching",
         component: () =>
           import("../views/contract/fullTextSearching/index.vue"),
-        icon: "xinjian",
+        icon: "huiyichaxun",
         meta: {
-          icon: "xinjian",
+          icon: "huiyichaxun",
           name: "全文检索",
         },
       },
       {
         path: "/contract/reportForms",
         name: "ReportForms",
-        icon: "xinjian",
+        icon: "huiyibaobiao",
         meta: {
-          icon: "xinjian",
+          icon: "huiyibaobiao",
           name: "合同报表",
         },
         children: [
@@ -1220,9 +1220,9 @@ const routes = [
       {
         path: "/contract/permission",
         name: "ContractPermission",
-        icon: "xinjian",
+        icon: "hetongquanxian",
         meta: {
-          icon: "xinjian",
+          icon: "hetongquanxian",
           name: "合同权限",
         },
         children: [
@@ -1264,9 +1264,9 @@ const routes = [
       {
         path: "/contract/seeting/",
         name: "ContractSeeting",
-        icon: "xinjian",
+        icon: "jichushezhi",
         meta: {
-          icon: "xinjian",
+          icon: "jichushezhi",
           name: "基础设置",
         },
         children: [
@@ -1401,9 +1401,9 @@ const routes = [
         path: "/contract/execution",
         name: "ContractExecution",
         component: () => import("../views/contract/execution/index.vue"),
-        icon: "xinjian",
+        icon: "hetongzhihang",
         meta: {
-          icon: "xinjian",
+          icon: "hetongzhihang",
           name: "合同执行",
         },
       },
@@ -1411,9 +1411,9 @@ const routes = [
         path: "/contract/plan",
         name: "contractPlan1",
         component: () => import("../views/contract/plan/index.vue"),
-        icon: "xinjian",
+        icon: "hetongjihua",
         meta: {
-          icon: "xinjian",
+          icon: "hetongjihua",
           name: "合同计划",
         },
       },
@@ -1451,9 +1451,9 @@ const routes = [
         path: "/contract/audit",
         name: "ContrActaudit",
         component: () => import("../views/contract/audit/index.vue"),
-        icon: "xinjian",
+        icon: "hetongshenji",
         meta: {
-          icon: "xinjian",
+          icon: "hetongshenji",
           name: "合同审计",
         },
       },
@@ -1469,18 +1469,18 @@ const routes = [
         path: "/reimburse/home",
         name: "ReimburseHome",
         component: () => import("../views/reimburse/home/index.vue"),
-        icon: "xinjian",
+        icon: "feikongshouye",
         meta: {
-          icon: "xinjian",
+          icon: "feikongshouye",
           name: "费控首页",
         },
       },
       {
         path: "/reimburse/invoice",
         name: "ReimburseInvoice",
-        icon: "xinjian",
+        icon: "fapiaoguanli",
         meta: {
-          icon: "xinjian",
+          icon: "fapiaoguanli",
           name: "发票管理",
         },
         children: [
@@ -1511,9 +1511,9 @@ const routes = [
       {
         path: "/reimburse/reimburse",
         name: "ReimburseReimburse",
-        icon: "xinjian",
+        icon: "baoxiaoshenhe",
         meta: {
-          icon: "xinjian",
+          icon: "baoxiaoshenhe",
           name: "报销审核",
         },
         children: [
@@ -1585,9 +1585,9 @@ const routes = [
       {
         path: "/reimburse/finance",
         name: "ReimburseFinance",
-        icon: "xinjian",
+        icon: "caiwuchuli",
         meta: {
-          icon: "xinjian",
+          icon: "caiwuchuli",
           name: "财务处理",
         },
         children: [
@@ -1608,18 +1608,18 @@ const routes = [
         path: "/reimburse/myReimburse",
         name: "MyReimburse",
         component: () => import("../views/reimburse/myReimburse/index.vue"),
-        icon: "xinjian",
+        icon: "wodebaoxiao",
         meta: {
-          icon: "xinjian",
+          icon: "wodebaoxiao",
           name: "我的报销",
         },
       },
       {
         path: "/reimburse/accounting",
         name: "Accounting",
-        icon: "xinjian",
+        icon: "dianzihuiji",
         meta: {
-          icon: "xinjian",
+          icon: "dianzihuiji",
           name: "电子会计档案",
         },
         children: [],
@@ -1627,9 +1627,9 @@ const routes = [
       {
         path: "/reimburse/arap",
         name: "Arap",
-        icon: "xinjian",
+        icon: "yingshouyingfu",
         meta: {
-          icon: "xinjian",
+          icon: "yingshouyingfu",
           name: "应收应付",
         },
         children: [],
@@ -1637,9 +1637,9 @@ const routes = [
       {
         path: "/reimburse/budgetSeeting",
         name: "BudgetSeeting",
-        icon: "xinjian",
+        icon: "feiyongshezhi",
         meta: {
-          icon: "xinjian",
+          icon: "feiyongshezhi",
           name: "预算设置",
         },
         children: [],

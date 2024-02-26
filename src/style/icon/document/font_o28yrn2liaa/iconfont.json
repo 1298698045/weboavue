@@ -1,0 +1,30 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "54816124",
+      "name": "进入",
+      "font_class": "jinru",
+      "unicode": "e6c5",
+      "unicode_decimal": 59077
+    },
+    {
+      "icon_id": "54818038",
+      "name": "赞",
+      "font_class": "zan2",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "59081090",
+      "name": "日程",
+      "font_class": "richeng",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    }
+  ]
+}
