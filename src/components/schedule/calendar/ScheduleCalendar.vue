@@ -80,6 +80,7 @@
                         </div>
                     </template>
                     <template #dateCellRender="{ current }">
+                        <p class="lunar" style="text-align: right;" :class="{'lunarDisabled':getlunarClass(current)}"><span class="holiday" v-if="getHolidayVal(current)">{{ getHolidayVal(current) }}</span><span class="festivals" v-if="getFestivals(current)">{{getFestivals(current)}}</span>{{ getlunarVal(current) }}</p>
                         <ul class="events">
                             <a-popconfirm
                                 trigger="hover"
@@ -198,6 +199,90 @@
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
+    import { getLunar } from 'chinese-lunar-calendar'
+    // console.log('getLunar', getLunar(2023, 6, 27)); 
+
+    import { Lunar, Solar, HolidayUtil } from "lunar-javascript";
+
+    // 是否调休
+    console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,29));
+
+    console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,18).isWork());
+
+
+    // var d = HolidayUtil.getHoliday(2024,2,29);
+    // console.log('isWork', d.isWork());
+
+    console.log('Solar', Solar.fromDate(new Date("2024-12-24")).getFestivals());
+
+    // 转阴历
+    // console.log("转阴历", Solar.fromDate(new Date('2024-2-10')).getLunar());
+
+    let lunar2 = Solar.fromDate(new Date('2024-2-9')).getLunar();
+    console.log("lunar2", lunar2)
+    let year = lunar2.getYear();
+    let month = lunar2.getMonth();
+    let day = lunar2.getDay();
+    console.log(year, month ,day)
+    // 获取农历节日
+    let festival = Lunar.fromYmd(year, month, day).getFestivals();
+    console.log('Lunar', festival);
+    
+    // 获取农历日期
+    const getlunarVal = (date) => {
+        // console.log("val", date.format("YYYY-MM-DD"));
+        let dateStr = date.format("YYYY-MM-DD");
+        let lunarDay = Lunar.fromDate(new Date(dateStr)).getDayInChinese();
+        return lunarDay;
+    };
+    // 获取节日
+    const getFestivals = (date) => {
+        let festival = '';
+        let dateStr = date.format("YYYY-MM-DD");
+        let SolarFestival = Solar.fromDate(new Date(dateStr)).getFestivals();
+        let lunar2 = Solar.fromDate(new Date(dateStr)).getLunar();
+        let year = lunar2.getYear();
+        let month = lunar2.getMonth();
+        let day = lunar2.getDay();
+        let LunarFestival = Lunar.fromYmd(year, month, day).getFestivals();
+
+        if(SolarFestival && SolarFestival.length){
+            SolarFestival.forEach(item=>{
+                festival += item;
+            });
+        };
+        if(LunarFestival && LunarFestival.length){
+            LunarFestival.forEach(item=>{
+                festival += item;
+            });
+        } 
+        return festival;
+    };
+    // 假期
+    const getHolidayVal = (date) => {
+        let holiday = '';
+        let dateStr = date.format("YYYY-MM-DD");
+        let d = HolidayUtil.getHoliday(dateStr);
+        if(d && d!=null){
+            let isWork = d.isWork();
+            if (isWork) {
+                holiday = '班';
+            }else {
+                holiday = '休';
+            }
+        }else {
+            let weekend = new Date(dateStr).getDay();
+            // if (weekend == 0 || weekend == 6) {
+            //     holiday = '休';
+            // }
+        }
+        return holiday;
+    };
+    const getlunarClass = (date) => {
+        let month = date.format("MM");
+        let currentMonth = data.monthValue.format('MM');
+        return month != currentMonth ? true : false;
+    }
     const { proxy } = getCurrentInstance();
     const formRef = ref();
     const monthFormat = 'YYYY/MM';
@@ -325,7 +410,7 @@
     const currentDate = ref(dayjs());
     const getListData = value => {
         let date = value.format('YYYY-MM-DD');
-        console.log("date",date);
+        // console.log("date",date);
         return data.meetingList[date] || [];
     };
     const getMonthData = value => {
@@ -616,5 +701,13 @@
     }
     :deep .ant-picker-content tbody tr td:last-child{
         background: #f9f9f9;
+    }
+    .lunarDisabled{
+        color: rgba(0, 0, 0, 0.25);
+    }
+    .festivals,.holiday{
+        font-size: 12px;
+        padding-right: 10px;
+        color: red;
     }
 </style>

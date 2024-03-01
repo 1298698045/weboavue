@@ -41,7 +41,7 @@
       </div>
       <div class="search-searchIcon">
         <!-- <SearchOutlined style="font-size: 12px" /> -->
-        <i class="iconfont icon-sousuo"></i>
+        <i class="iconfont icon-sousuo" style="font-size: 12px"></i>
       </div>
     </div>
     <div class="header-end">
@@ -50,7 +50,7 @@
           <template #title>
             <div class="popup-header">
               <!-- <ScheduleOutlined style="font-size: 16px;color:var(--textColor)" /> -->
-              <i class="iconfont icon-kaoqin" style="font-size: 16px;color:var(--textColor);margin-right: 10px;"></i>
+              <i class="iconfont icon-kaoqin" style="font-size: 18px;color:var(--textColor);margin-right: 10px;"></i>
               <span>2023-12-12</span>
               <span>星期二</span>
             </div>
@@ -101,13 +101,13 @@
             </div>
           </template>
           <!-- <ScheduleOutlined style="font-size: 16px" /> -->
-          <i class="iconfont icon-kaoqin"></i>
+          <i class="iconfont icon-kaoqin" style="font-size: 16px"></i>
           <span>考勤</span>
         </a-popover>
       </div>
       <div class="header-toobar-plugin" @click="hanldeOpenNotice">
         <!-- <BellOutlined style="font-size: 18px;" /> -->
-        <i class="iconfont icon-xiaoxizhongxin"></i>
+        <i class="iconfont icon-xiaoxizhongxin" style="font-size: 18px;"></i>
       </div>
       <div class="header-info">
         <div class="avatar" @click.stop="handleOpenInfo">
@@ -120,7 +120,7 @@
         <div class="info-name" @click.stop="handleOpenInfo">张三（演示账号）</div>
         <div class="info-icon" @click.stop="handleOpenInfo">
           <!-- <DownOutlined style="font-size: 10px" /> -->
-          <i class="iconfont icon-xiala"  style="font-size: 10px;font-weight: bold;"></i>
+          <i class="iconfont icon-xiala"  style="font-size: 12px;font-weight: 400;"></i>
         </div>
         <div class="header-info-popup" @click.stop v-if="isInfoPopup">
           <div class="row-text">
@@ -155,17 +155,17 @@
           </div>
           <div class="header-account-seeting">
             <div class="header-account-seeting-item"  @click="handlePersonal">
-              <i class="iconfont icon-gerenzhongxin"></i>
+              <i class="iconfont icon-gerenzhongxin" style="font-size: 18px;"></i>
               <span class="header-account-seeting-title">个人中心</span>
             </div>
             <div class="header-account-seeting-item">
               <!-- <ScheduleOutlined class="icon" /> -->
-              <i class="iconfont icon-zhutizhongxin"></i>
+              <i class="iconfont icon-zhutizhongxin" style="font-size: 18px;"></i>
               <span class="header-account-seeting-title">主题中心</span>
             </div>
             <div class="header-account-seeting-item">
               <!-- <ScheduleOutlined class="icon" /> -->
-              <i class="iconfont icon-tuichu"></i>
+              <i class="iconfont icon-tuichu" style="font-size: 18px;"></i>
               <span class="header-account-seeting-title">退出</span>
             </div>
           </div>
@@ -177,6 +177,7 @@
         <div class="app_item" v-for="(item,index) in appList" :style="{background:item.BgColor}" :key="index" @click="handleGoModule(item)">
           <div class="appBox">
             <div class="iconBox">
+              <img :src="'http://182.92.221.64:10000'+item.ImageUrl" alt="">
             </div>
             <div class="app-item-label">{{item.Label}}</div>
           </div>
@@ -267,6 +268,8 @@ const handleOpenInfo = () => {
 </style>
 <style>
   @import "~@/style/icon/header/iconfont.css";
+  @import "~@/style/icon/moduleApp/iconfont.css";
+
 .ant-popover.signPlugin .ant-popover-inner{
   padding: 0 !important;
 }

@@ -1,0 +1,163 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "130370024",
+      "name": "门户",
+      "font_class": "menhu1",
+      "unicode": "e7da",
+      "unicode_decimal": 59354
+    },
+    {
+      "icon_id": "130370052",
+      "name": "日常办公",
+      "font_class": "richangbangong1",
+      "unicode": "e7be",
+      "unicode_decimal": 59326
+    },
+    {
+      "icon_id": "130370059",
+      "name": "流程管理",
+      "font_class": "liuchengguanli2",
+      "unicode": "e7bf",
+      "unicode_decimal": 59327
+    },
+    {
+      "icon_id": "130370066",
+      "name": "日程管理",
+      "font_class": "richengguanli",
+      "unicode": "e7c0",
+      "unicode_decimal": 59328
+    },
+    {
+      "icon_id": "130370203",
+      "name": "项目管理",
+      "font_class": "xiangmuguanli",
+      "unicode": "e739",
+      "unicode_decimal": 59193
+    },
+    {
+      "icon_id": "130370208",
+      "name": "会议管理",
+      "font_class": "huiyiguanli",
+      "unicode": "e72f",
+      "unicode_decimal": 59183
+    },
+    {
+      "icon_id": "130370245",
+      "name": "公文管理",
+      "font_class": "gongwenguanli",
+      "unicode": "e72b",
+      "unicode_decimal": 59179
+    },
+    {
+      "icon_id": "130370250",
+      "name": "知识内容",
+      "font_class": "zhishineirong",
+      "unicode": "e72a",
+      "unicode_decimal": 59178
+    },
+    {
+      "icon_id": "130370303",
+      "name": "社区",
+      "font_class": "shequ",
+      "unicode": "e7d2",
+      "unicode_decimal": 59346
+    },
+    {
+      "icon_id": "130370665",
+      "name": "车辆管理",
+      "font_class": "cheliangguanli",
+      "unicode": "e73c",
+      "unicode_decimal": 59196
+    },
+    {
+      "icon_id": "130370742",
+      "name": "问卷调查",
+      "font_class": "wenjuantiaocha",
+      "unicode": "e734",
+      "unicode_decimal": 59188
+    },
+    {
+      "icon_id": "130370745",
+      "name": "党建",
+      "font_class": "dangjian",
+      "unicode": "e7ac",
+      "unicode_decimal": 59308
+    },
+    {
+      "icon_id": "130370757",
+      "name": "人事管理",
+      "font_class": "renshiguanli",
+      "unicode": "e73d",
+      "unicode_decimal": 59197
+    },
+    {
+      "icon_id": "130370763",
+      "name": "排班管理",
+      "font_class": "paibanguanli",
+      "unicode": "e737",
+      "unicode_decimal": 59191
+    },
+    {
+      "icon_id": "130370824",
+      "name": "值班管理",
+      "font_class": "zhibanguanli",
+      "unicode": "e7c1",
+      "unicode_decimal": 59329
+    },
+    {
+      "icon_id": "130370830",
+      "name": "考勤管理",
+      "font_class": "kaoqinguanli",
+      "unicode": "e736",
+      "unicode_decimal": 59190
+    },
+    {
+      "icon_id": "130370838",
+      "name": "薪资管理",
+      "font_class": "xinziguanli",
+      "unicode": "e7c2",
+      "unicode_decimal": 59330
+    },
+    {
+      "icon_id": "130370860",
+      "name": "行政管理",
+      "font_class": "hangzhengguanli",
+      "unicode": "e82b",
+      "unicode_decimal": 59435
+    },
+    {
+      "icon_id": "130370869",
+      "name": "费用控制",
+      "font_class": "feiyongkongzhi",
+      "unicode": "e7c4",
+      "unicode_decimal": 59332
+    },
+    {
+      "icon_id": "130370892",
+      "name": "合同管理",
+      "font_class": "hetongguanli",
+      "unicode": "e738",
+      "unicode_decimal": 59192
+    },
+    {
+      "icon_id": "130371136",
+      "name": "部门中心",
+      "font_class": "bumenzhongxin",
+      "unicode": "e7c3",
+      "unicode_decimal": 59331
+    },
+    {
+      "icon_id": "130371153",
+      "name": "基础设置",
+      "font_class": "jichushezhi",
+      "unicode": "e740",
+      "unicode_decimal": 59200
+    }
+  ]
+}

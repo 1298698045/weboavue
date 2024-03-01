@@ -3479,6 +3479,11 @@ check-types@^8.0.3:
   resolved "https://registry.npmjs.org/check-types/-/check-types-8.0.3.tgz"
   integrity sha512-YpeKZngUmG65rLudJ4taU7VLkOCTMhNl/u4ctNC56LQS/zJTyNH0Lrtwm1tfTsbLlwvlfsA2d1c8vCf/Kh2KwQ==
 
+chinese-lunar-calendar@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/chinese-lunar-calendar/-/chinese-lunar-calendar-1.0.1.tgz#d0d119df3ba5c40f3a9a982856c33f2d5b5b7d17"
+  integrity sha512-T5XjtA6ygOkxjwltYf8dEB1DLsPKewDKajf74fNeT6rH2g9EZPf2AHk6vAlK/SAImTYKXoUNQ3Q4JwN0BduqRA==
+
 chokidar@^2.1.8:
   version "2.1.8"
   resolved "https://registry.npmjs.org/chokidar/-/chokidar-2.1.8.tgz"
@@ -7874,6 +7879,11 @@ lru-cache@^6.0.0:
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
+
+lunar-javascript@^1.6.10:
+  version "1.6.10"
+  resolved "https://registry.npmmirror.com/lunar-javascript/-/lunar-javascript-1.6.10.tgz#1db93d4a8ed16fbdc3370d180fe3ae4b553d059a"
+  integrity sha512-9vJ8MlLbH8wrGh+qQ1v6Y2zdCdA988/wW2/0cF6s0dKZ7kLleRfOvF9xdUeK0JN7LyS8nk//9dtHarBadSxfvQ==
 
 magic-string@^0.25.7:
   version "0.25.9"

@@ -883,6 +883,10 @@
 <style lang="less" scoped>
     .designWrap{
         display: flex;
+        height: 100%;
+        overflow-y: auto;
+        background: #fff;
+        border-radius: 4px;
         .design{
             flex: 1;
             min-width: calc(~"100% - 320px");

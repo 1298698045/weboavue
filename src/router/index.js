@@ -8,6 +8,16 @@ const Layout = () => import("@/layout");
 const routes = [
   {
     path: "/",
+    name: "Login",
+    component: () => import("../views/login/index.vue")
+  },
+  {
+    path: "/forgotpassword",
+    name: "Forgotpassword",
+    component: () => import("../views/login/forgotpassword.vue")
+  },
+  {
+    path: "/layout",
     name: "Layout",
     component: Layout,
     redirect: "/flow/todoList",
@@ -434,22 +444,40 @@ const routes = [
         component: () => import("../views/sys/dashboard/index.vue"),
         icon: "xinjian",
         meta: {
+          name: "门户仪表盘",
+          icon: "xinjian",
+        },
+      },
+      {
+        path: "/hrsetting/design",
+        name: "Design",
+        component: () => import("../views/sys/design/index.vue"),
+        meta: {
           name: "门户仪表盘设计",
           icon: "xinjian",
         },
       },
+      {
+        path: "/hrsetting/design/home",
+        name: "DesignHome",
+        component: () => import("../views/sys/home/index.vue"),
+        meta: {
+          name: "门户仪表盘门户",
+          icon: "xinjian",
+        },
+      }
     ],
   },
-  {
-    path: "/hrsetting/design",
-    name: "Design",
-    component: () => import("../views/sys/design/index.vue"),
-  },
-  {
-    path: "/portal",
-    name: "DesignHome",
-    component: () => import("../views/sys/home/index.vue"),
-  },
+  // {
+  //   path: "/hrsetting/design",
+  //   name: "Design",
+  //   component: () => import("../views/sys/design/index.vue"),
+  // },
+  // {
+  //   path: "/portal",
+  //   name: "DesignHome",
+  //   component: () => import("../views/sys/home/index.vue"),
+  // },
   {
     path: "/OfficialDocument",
     name: "OfficialDocument",

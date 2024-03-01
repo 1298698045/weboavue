@@ -4,10 +4,10 @@
             <div class="designBody">
                 <div class="itxst row">
                     <div class="columnItem col-3" v-for="(self,selfIdx) in columns" :key="selfIdx">
-                        <transition name="fade" mode="out-in">
+                        <!-- <transition name="fade" mode="out-in">
                             <draggable class="list-group" :component-data="{name:'fade'}" :list="self.components" group="people" itemKey="name">
-                                <template #item="{ element, index }">
-                                    <div class="itemBox panelItemWrap" :style="'border-top:4px solid' + element?.config?.color">
+                                <template #item="{ element, index }"> -->
+                                    <div class="itemBox panelItemWrap" v-for="(element, index) in self.components" :key="index" :style="'border-top:4px solid' + element?.config?.color">
                                         <div class="panel">
                                             <div class="panel-head">
                                                 <div class="panel-title"  v-if="!element.isRename">
@@ -204,19 +204,19 @@
                                                         <div class="rightAdd">
                                                             <a-popover trigger="click" placement="right">
                                                                 <template #content>
-                                                                  <a-form>
+                                                                    <a-form>
                                                                     <a-form-item label="标签名称">
                                                                         <a-input v-model:value="element.addTagName"></a-input>
                                                                     </a-form-item>
                                                                     <a-form-item label="对象代码">
                                                                         <a-select v-model:value="element.addObjCode" placeholder="请选择对象代码">
                                                                             <a-select-option  v-for="(field,fieldIdx) in objCodeList" :key="fieldIdx" :value="field.ID">{{field.Name}}</a-select-option>
-                                                                          </a-select>
+                                                                            </a-select>
                                                                     </a-form-item>
                                                                     <div>
                                                                         <a-button type="primary"  @click="handleAddTags(element)">确认添加</a-button>
                                                                     </div>
-                                                                  </a-form>
+                                                                    </a-form>
                                                                 </template>
                                                                 <a-button type="link">添加标签</a-button>
                                                             </a-popover>
@@ -256,9 +256,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                </template>
+                                <!-- </template>
                             </draggable>
-                        </transition>
+                        </transition> -->
                     </div>
                 </div>
             </div>
@@ -852,6 +852,8 @@
 <style lang="less" scoped>
     .designWrap{
         display: flex;
+        height: 100%;
+        overflow-y: auto;
         .design{
             flex: 1;
             min-width: calc(~"100% - 320px");
@@ -958,15 +960,15 @@
             .columnItem{
                 width: 30%;
                 flex: 1;
-                padding: 10px;
+                /* padding: 10px; */
                 border: solid 1px #eee;
                 border-radius: 5px;
                 .panelItemWrap {
                     width: 100%;
                     margin-right: 0;
-                    &:hover{
+                    /* &:hover{
                         cursor: move;
-                    }
+                    } */
                 }
                 .itemBox {
                     border: solid 1px #eee;
