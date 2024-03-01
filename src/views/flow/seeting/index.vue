@@ -2,7 +2,9 @@
     <div class="todoList">
       <div class="headerBar">
           <div class="headerLeft">
-              <div class="icon-circle-base"></div>
+              <div class="icon-circle-base" style="background: #F14A2D;">
+                <img :src="require('@/assets/img/rightMenu/youliuchengshezhi.png')" alt="">
+              </div>
               <span class="headerTitle">流程设置</span>
           </div>
           <div class="headerRight">

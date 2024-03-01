@@ -1,6 +1,6 @@
 <template>
     <div class="listWrap">
-        <ContractList moduleName="contract" tabName="relativeList" title="相对方查询" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" />
+        <ContractList backColor="#96358a" moduleName="contract" tabName="relativeList" title="相对方查询" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" />
     </div>
 </template>
 <script setup>

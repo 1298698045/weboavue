@@ -1,6 +1,6 @@
 <template>
   <div class="treeListWrap">
-    <TreeList :title="'流程设置'" :isTab="isTab" :isSearch="isSearch" :isStatistics="isStatistics" />
+    <TreeList backColor="#f14a2d" :rightMenuImg="require('@/assets/img/rightMenu/youliuchengshezhi.png')" :title="'流程设置'" :isTab="isTab" :isSearch="isSearch" :isStatistics="isStatistics" />
   </div>
 </template>
 <script setup>

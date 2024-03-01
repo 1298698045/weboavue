@@ -2,7 +2,9 @@
   <div class="todoList">
     <div class="todo-head">
       <div class="todo-head-left">
-        <div class="icon-circle-base"></div>
+        <div class="icon-circle-base">
+          <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
+        </div>
         <span class="wea-new-top-title-breadcrumb">待办事宜</span>
       </div>
       <div class="todo-head-right">

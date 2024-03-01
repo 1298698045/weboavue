@@ -2,7 +2,9 @@
     <div class="addressBook">
         <div class="headerBar">
             <div class="headerLeft">
-                <div class="icon-circle-base"></div>
+                <div class="icon-circle-base" style="background: #217346;">
+                    <img :src="require('@/assets/img/rightMenu/xiaozu.png')" alt="">
+                </div>
                 <span class="headerTitle">小组</span>
             </div>
             <div class="headerRight">

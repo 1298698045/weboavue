@@ -1,6 +1,6 @@
 <template>
     <div class="listWrap">
-        <ContractList moduleName="reimburse" title="我的票夹" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" tabName="ledger" />
+        <ContractList backColor="#F14A2D" :rightMenuImg="require('@/assets/img/rightMenu/fapiaotaizhang.png')" moduleName="reimburse" title="我的票夹" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" tabName="ledger" />
     </div>
   </template>
   <script setup>

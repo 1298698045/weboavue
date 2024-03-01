@@ -2,7 +2,9 @@
     <div class="addressBook">
         <div class="headerBar">
             <div class="headerLeft">
-                <div class="icon-circle-base"></div>
+                <div class="icon-circle-base" style="background: #893D86;">
+                    <img :src="require('@/assets/img/rightMenu/tongxunlu1.png')" alt="">
+                </div>
                 <span class="headerTitle">通讯录</span>
             </div>
             <div class="headerRight" v-if="activeKey=='2'">

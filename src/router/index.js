@@ -1684,6 +1684,11 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/mobileDesign",
+    name: "MobileDesign",
+    component: () => import("../views/mobileDesign/index.vue"),
+  }
 ];
 
 const router = createRouter({

@@ -2,7 +2,9 @@
     <div class="todoList">
       <div class="headerBar">
           <div class="headerLeft">
-              <div class="icon-circle-base"></div>
+              <div class="icon-circle-base" :style="{background:backColor}">
+                <img :src="rightMenuImg" alt="">
+              </div>
               <span class="headerTitle">{{title}}</span>
           </div>
           <div class="headerRight">
@@ -179,6 +181,14 @@
         isSearch: {
             type: Boolean,
             default: true
+        },
+        rightMenuImg: {
+            type: String,
+            default: require('@/assets/img/rightMenu/hetong.png')
+        },
+        backColor: {
+          type: String,
+          default: "#0079de"
         }
     })
   console.log("tabList",tabList);

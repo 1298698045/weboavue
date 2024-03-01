@@ -1,6 +1,6 @@
 <template>
     <div class="listWrap">
-        <ContractList moduleName="contract" tabName="supplier" title="供应商列表" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" />
+        <ContractList backColor="#414A5A" :rightMenuImg="require('@/assets/img/rightMenu/gongyingshang.png')" moduleName="contract" tabName="supplier" title="供应商列表" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" />
     </div>
 </template>
 <script setup>

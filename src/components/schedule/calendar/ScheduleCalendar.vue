@@ -227,7 +227,8 @@
     // 获取农历节日
     let festival = Lunar.fromYmd(year, month, day).getFestivals();
     console.log('Lunar', festival);
-    
+    // 节气
+    console.log("Lunar.fromYmd-getJieQi", Lunar.fromYmd(2024, 3, 1).getJieQi())
     // 获取农历日期
     const getlunarVal = (date) => {
         // console.log("val", date.format("YYYY-MM-DD"));
@@ -245,7 +246,7 @@
         let month = lunar2.getMonth();
         let day = lunar2.getDay();
         let LunarFestival = Lunar.fromYmd(year, month, day).getFestivals();
-
+        let LunarJieQi = Lunar.fromYmd(year, month, day).getJieQi();
         if(SolarFestival && SolarFestival.length){
             SolarFestival.forEach(item=>{
                 festival += item;
@@ -255,7 +256,10 @@
             LunarFestival.forEach(item=>{
                 festival += item;
             });
-        } 
+        }
+        if(LunarJieQi){
+            festival += LunarJieQi;
+        }
         return festival;
     };
     // 假期

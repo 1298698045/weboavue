@@ -1,6 +1,6 @@
 <template>
     <div class="listWrap">
-        <ContractList moduleName="reimburse" title="待处理报销单" :isStatistics="isStatistics" :isTab="isTab" tabName="financialReview" />
+        <ContractList backColor="#3ae6b8" :rightMenuImg="require('@/assets/img/rightMenu/caiwushenhe.png')" moduleName="reimburse" title="待处理报销单" :isStatistics="isStatistics" :isTab="isTab" tabName="financialReview" />
     </div>
   </template>
   <script setup>

@@ -217,6 +217,7 @@
         let month = lunar2.getMonth();
         let day = lunar2.getDay();
         let LunarFestival = Lunar.fromYmd(year, month, day).getFestivals();
+        let LunarJieQi = Lunar.fromYmd(year, month, day).getJieQi();
 
         if(SolarFestival && SolarFestival.length){
             SolarFestival.forEach(item=>{
@@ -228,6 +229,9 @@
                 festival += item;
             });
         } 
+        if(LunarJieQi){
+            festival += LunarJieQi;
+        }
         return festival;
     };
     // 假期

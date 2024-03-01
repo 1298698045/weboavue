@@ -1,6 +1,6 @@
 <template>
     <div class="listWrap">
-        <ContractList moduleName="reimburse" title="我的差旅" :isStatistics="isStatistics" :isTab="isTab" tabName="travel" />
+        <ContractList  backColor="#96358a" moduleName="reimburse" title="我的差旅" :isStatistics="isStatistics" :isTab="isTab" tabName="travel" />
     </div>
   </template>
   <script setup>

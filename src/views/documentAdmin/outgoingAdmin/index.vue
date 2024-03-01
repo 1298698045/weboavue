@@ -2,7 +2,9 @@
     <div class="todoList">
       <div class="headerBar">
           <div class="headerLeft">
-              <div class="icon-circle-base"></div>
+              <div class="icon-circle-base">
+                <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
+              </div>
               <span class="headerTitle">发文管理</span>
           </div>
           <div class="headerRight">

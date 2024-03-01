@@ -3,7 +3,9 @@
         <div>
             <div class="headerBar">
                 <div class="headerLeft">
-                    <div class="icon-circle-base"></div>
+                    <div class="icon-circle-base">
+                        <img :src="require('@/assets/img/rightMenu/hetong.png')" alt="">
+                    </div>
                     <span class="headerTitle">合同进度完成情况</span>
                 </div>
                 <div class="headerRight">

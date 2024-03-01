@@ -1,6 +1,6 @@
 <template>
     <div class="listWrap">
-        <ContractList moduleName="contract" tabName="import" title="批量导入" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" />
+        <ContractList :rightMenuImg="require('@/assets/img/rightMenu/youcemoren.png')" moduleName="contract" tabName="import" title="批量导入" :isStatistics="isStatistics" :isTab="isTab" :isSearch="isSearch" />
     </div>
 </template>
 <script setup>

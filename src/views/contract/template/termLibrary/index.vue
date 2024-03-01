@@ -1,6 +1,6 @@
 <template>
   <div class="treeListWrap">
-    <ContractTreeList moduleName="contract" tabName="termLibrary" title="合同条款库" treeTitle="条款分类" />
+    <ContractTreeList backColor="#96358a" moduleName="contract" tabName="termLibrary" title="合同条款库" treeTitle="条款分类" />
   </div>
 </template>
 <script setup>

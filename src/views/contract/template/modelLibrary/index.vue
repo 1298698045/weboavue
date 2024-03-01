@@ -7,6 +7,8 @@
       :isTab="isTab"
       :isSearch="isSearch"
       moduleName="contract" tabName="modelLibrary"
+      :rightMenuImg="require('@/assets/img/rightMenu/hetong.png')"
+      backColor="#96358a"
     />
   </div>
 </template>
