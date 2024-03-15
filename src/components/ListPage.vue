@@ -6,7 +6,7 @@
             <img class="img" :src="require('@/assets/task_120.png')" alt="" />
           </div>
           <div class="menu-box">
-            <div class="label">正文模板</div>
+            <div class="label">{{pageTitle}}</div>
             <div class="row">
               <a-dropdown :trigger="['click']">
                 <a class="ant-dropdown-link" @click.prevent>
@@ -55,7 +55,7 @@
                 >{{ row.label }}</a-button
               >
             </div>
-            <a-button type="primary" class="ml10" v-else>{{ item.label }}</a-button>
+            <a-button type="primary" v-else>{{ item.label }}</a-button>
           </div>
         </div>
       </div>
@@ -64,6 +64,7 @@
           <div class="searchWrap">
             <div class="search-common">
               <list-form-search
+                :objectTypeCode="objectTypeCode"
                 ref="searchRef"
                 @search="handleSearch"
               ></list-form-search>
@@ -175,7 +176,7 @@
     onMounted,
     getCurrentInstance,
     onUpdated,
-    h,
+    h, defineProps
   } from "vue";
   import ListFormSearch from "@/components/ListFormSearch.vue";
   
@@ -193,6 +194,14 @@
   import Filter from "@/components/listView/Filter.vue";
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
+  import { useRouter, useRoute } from "vue-router";
+  const route = useRoute();
+  const router = useRouter();
+  const props = defineProps({
+    objectTypeCode: [String, Number],
+    entityType: String,
+    pageTitle: String
+  });
   const data = reactive({
     currentMenu: "全部",
     menus: [
@@ -257,12 +266,6 @@
   };
   onMounted(() => {});
   const handleSearch = (params) => {
-    // var filterQuery = "";
-    // for (var key in params) {
-    //   filterQuery += "\n" + key + "\teq\t" + params[key];
-    // }
-    // console.log(filterQuery, "filterQuery");
-    // data.filterQuery = filterQuery;
     data.filterQuery = params;
     loadGrid(data.columns);
   };
@@ -278,6 +281,8 @@
       method: "get",
       columns: [columns],
       queryParams: {
+        entityType: props.entityType,
+        objectTypeCode: props.objectTypeCode,
         filterQuery: data.filterQuery,
       },
       // data: tableList,
@@ -296,6 +301,13 @@
   const Edit = (id) => {
     console.log("id", id);
     data.isCommon = true;
+    // 编辑仪表盘
+    // router.push({
+    //   path: "/hrsetting/design",
+    //   query: {
+    //     id: id,
+    //   },
+    // })
   };
   window.Edit = Edit;
   const getConfig = () => {
@@ -320,7 +332,10 @@
       action += '</div><svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>'
       return action;
     }
-    proxy.$get(Interface.listView.config, {}).then((res) => {
+    proxy.$get(Interface.listView.config, {
+        entityType: props.entityType,
+        objecttypecode: props.objectTypeCode
+    }).then((res) => {
       console.log(res, "res");
   
       var cols = res.DataSet.Columns;
@@ -354,9 +369,8 @@
   };
   
   const getActions = () => {
-    proxy
-      .$get(Interface.documentAdmin.handleActions, {
-        objectTypeCode: 100105,
+    proxy.$get(Interface.listView.handleActions, {
+        objectTypeCode: props.objectTypeCode,
       })
       .then((res) => {
         var listViewActions =
@@ -454,7 +468,7 @@
     }
   };
   </script>
-  <style lang="less" scoped>
+  <style lang="less">
   .wrapper {
     width: 100%;
     height: 100%;

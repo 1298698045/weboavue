@@ -1,0 +1,48 @@
+{
+  "id": "",
+  "state": "SUCCESS",
+  "returnValue": {
+    "SearchFields": [
+      {
+        "Name": "StatusCode",
+        "Label": "状态",
+        "DataType": "L",
+        "ReferencedEntityObjectTypeCode": 0,
+        "PicklistValues": [
+          {
+            "label": "停用",
+            "value": "0"
+          },
+          {
+            "label": "启用",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "Name": "OwningBusinessUnit",
+        "Label": "隶属科室",
+        "DataType": "O",
+        "ReferencedEntityObjectTypeCode": 10,
+        "PicklistValues": []
+      },
+      {
+        "Name": "CreatedBy",
+        "Label": "创建人",
+        "DataType": "U",
+        "ReferencedEntityObjectTypeCode": 8,
+        "PicklistValues": []
+      }
+    ],
+    "GridColumns": [
+      {
+        "Name": "Name",
+        "Title": "名称",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": true
+      }
+    ]
+  },
+  "error": []
+}

@@ -55,7 +55,7 @@
                 >{{ row.label }}</a-button
               >
             </div>
-            <a-button type="primary" v-else>{{ item.label }}</a-button>
+            <a-button class="ml10" type="primary" v-else>{{ item.label }}</a-button>
           </div>
         </div>
       </div>
@@ -302,10 +302,12 @@
     function formatOper(val, row, index, entityType, listViewActions) {
       var rowId = row["LIST_RECORD_ID"];
       var action = "";
+      action += '<div class="iconBox">'
+      action += '<div class="popup">'
       for (var i = 0; i < listViewActions.length; i++) {
         var item = listViewActions[i];
         action +=
-          '<a style="color:#015ba7;font-size:13px;" href="javascript:;" onclick="' +
+          '<div class="option-item" href="javascript:;" onclick="' +
           [item.devNameOrId] +
           "('" +
           rowId +
@@ -313,8 +315,9 @@
           entityType +
           "')\">" +
           item.title +
-          "</a>&nbsp;&nbsp;";
+          "</div>";
       }
+      action += '</div><svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>'
       return action;
     }
     proxy.$get(Interface.listView.config, {}).then((res) => {

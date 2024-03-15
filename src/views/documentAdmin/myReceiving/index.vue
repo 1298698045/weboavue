@@ -5,7 +5,7 @@
                 <div class="icon-circle-base">
                     <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
                 </div>
-                <span class="headerTitle">我的公文</span>
+                <span class="headerTitle">我的收文</span>
             </div>
             <div class="headerRight">
                 <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>

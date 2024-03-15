@@ -625,12 +625,16 @@
       @cancel="cancelDelete"
       @ok="deleteOk"
     />
+
+    <!-- <div class="fixedSeeting" title="个性设置">
+      个性<br/>设置
+    </div> -->
   </div>
 </template>
 <script setup>
 import "@/style/common.less";
 import "@/style/icon/iconfont.css";
-import { EllipsisOutlined } from "@ant-design/icons-vue";
+import { EllipsisOutlined, SettingOutlined } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import {
   ref,
@@ -1665,5 +1669,24 @@ const cancelDelete = (params) => {
 .chartWrap {
   width: 100%;
   height: 500px;
+}
+.fixedSeeting{
+  position: fixed;
+  right: 0;
+  z-index: 100;
+  width: 48px;
+  height: 48px;
+  background: #4299e1;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  top: 50%;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* font-size: 24px; */
+  font-size: 12px;
+  color: #fff;
 }
 </style>

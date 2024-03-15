@@ -5,7 +5,8 @@ const Interface = {
     tabs: "/localData/tabs.json",
     datalist: "/localData/datalist.json",
   },
-  formSearch: "/localData/formSearch.json",
+  // formSearch: "/localData/formSearch.json",
+  formSearch: "/localData/formSearch2.json",
   applist: "/localData/applist.json",
   workflow: {
     processList: "/localData/process.search.json",

@@ -40,7 +40,7 @@
     </div>
 </template>
 <script setup>
-    import "@/style/oldIcon/iconfont.css";
+    // import "@/style/oldIcon/iconfont.css";
     import {
         ref,
         watch,

@@ -209,7 +209,11 @@ watch(searchVal, (newVal, oldVal) => {
 });
 const moduleName = ref(store.state.moduleName);
 watch(() => route.path,newRoute=> {
-  moduleName.value = store.state.moduleName;
+  let matched = router.currentRoute.value.matched;
+  if(matched.length){
+    moduleName.value = matched[0].meta.name;
+  }
+  // moduleName.value = store.state.moduleName;
 },{immediate:true,deep:true})
 const data = reactive({
   appList: [],
@@ -268,7 +272,7 @@ const handleOpenInfo = () => {
 </style>
 <style>
   @import "~@/style/icon/header/iconfont.css";
-  @import "~@/style/icon/moduleApp/iconfont.css";
+  /* @import "~@/style/icon/moduleApp/iconfont.css"; */
 
 .ant-popover.signPlugin .ant-popover-inner{
   padding: 0 !important;

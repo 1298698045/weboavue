@@ -24,9 +24,12 @@ const routes = [
   },
   {
     path: "/flow",
-    name: "流程管理",
+    name: "Flow",
     component: Layout,
     redirect: "/flow/todoList",
+    meta: {
+      name: "流程管理"
+    },
     children: [
       {
         path: "/flow/add",
@@ -179,9 +182,12 @@ const routes = [
   },
   {
     path: "/workplan",
-    name: "日程管理",
+    name: "Workplan",
     component: Layout,
     redirect: "/workplan/calendar",
+    meta: {
+      name: "日程管理"
+    },
     children: [
       {
         path: "/workplan/calendar",
@@ -240,6 +246,9 @@ const routes = [
     name: "Oa",
     component: Layout,
     redirect: "/oa/addressBook",
+    meta: {
+      name: "日常办公"
+    },
     children: [
       {
         path: "/oa/addressBook",
@@ -308,6 +317,9 @@ const routes = [
     name: "Metting",
     component: Layout,
     redirect: "/meeting/calendar",
+    meta: {
+      name: "会议管理"
+    },
     children: [
       {
         path: "/meeting/calendar",
@@ -437,6 +449,9 @@ const routes = [
     name: "hrsetting",
     component: Layout,
     redirect: "/hrsetting/dashboard",
+    meta: {
+      name: "系统配置"
+    },
     children: [
       {
         path: "/hrsetting/dashboard",
@@ -483,6 +498,9 @@ const routes = [
     name: "OfficialDocument",
     component: Layout,
     redirect: "/OfficialDocument/myReceiving",
+    meta: {
+      name: "公文管理"
+    },
     children: [
       {
         path: "/OfficialDocument/myReceiving",
@@ -619,6 +637,9 @@ const routes = [
     name: "Contract",
     component: Layout,
     redirect: "/contract/home",
+    meta: {
+      name: "合同管理"
+    },
     children: [
       {
         path: "/contract/home",
@@ -1492,6 +1513,9 @@ const routes = [
     name: "Reimburse",
     component: Layout,
     redirect: "/reimburse/home",
+    meta: {
+      name: "费用控制"
+    },
     children: [
       {
         path: "/reimburse/home",
@@ -1675,9 +1699,9 @@ const routes = [
       {
         path: "/reimburse/reportForms",
         name: "ReimburseReportForms",
-        icon: "xinjian",
+        icon: "huiyibaobiao",
         meta: {
-          icon: "xinjian",
+          icon: "huiyibaobiao",
           name: "报表分析",
         },
         children: [],

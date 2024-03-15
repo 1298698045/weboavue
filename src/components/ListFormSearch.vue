@@ -18,15 +18,16 @@
                 <a-form-item :name="item.Name" :label="item.Label"
                     v-else-if="item.DataType=='L'||item.DataType=='LT'||item.DataType=='DT'||item.DataType=='status'||item.DataType=='Priority'">
                     <a-select v-model:value="formState[item.Name]" :placeholder="item.Label" @change="handleChange">
-                        <a-select-option value="jack">Jack</a-select-option>
+                        <!-- <a-select-option value="jack">Jack</a-select-option>
                         <a-select-option value="lucy">Lucy</a-select-option>
                         <a-select-option value="disabled" disabled>Disabled</a-select-option>
-                        <a-select-option value="Yiminghe">yiminghe</a-select-option>
+                        <a-select-option value="Yiminghe">yiminghe</a-select-option> -->
+                        <a-select-option v-for="(row, idx) in item.PicklistValues" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item class="formTime" :name="item.Name" :label="item.Label" v-else-if="item.DataType=='F'">
                     <!--  v-if="item.dateTypeCurrent.value=='default'" v-model:value="formState[item.Name]" -->
-                    <a-range-picker  style="border-right: none;" class="radiusNone" valueFormat="YYYY-MM-DD" :disabled="item.dateTypeCurrent.value=='default'?false:true" @change="(e)=>{changeRangeDate(e,item)}" />
+                    <a-range-picker style="border-right: none;" class="radiusNone" valueFormat="YYYY-MM-DD" :disabled="item.dateTypeCurrent.value=='default'?false:true" @change="(e)=>{changeRangeDate(e,item)}" />
                     <a-dropdown class="radiusNone">
                         <template #overlay>
                           <a-menu>
@@ -41,12 +42,25 @@
                         </a-button>
                       </a-dropdown>
                 </a-form-item>
+                <a-form-item class="searchItem" :name="item.Name" :label="item.Label" v-else-if="['O', 'Y', 'U', 'Y_MD'].includes(item.DataType)">
+                    <a-select v-model:value="formState[item.Name]" @dropdownVisibleChange="(e)=>{searchlookup(e, item)}">
+                        <template #suffixIcon></template>
+                        <a-select-option v-for="(row, idx) in search[item.Name]" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
+                    </a-select>
+                    <div class="selectSearchIcon" @click="handleOpenLook(item)">
+                        <SearchOutlined />
+                    </div>
+                </a-form-item>
             </div>
             <a-form-item class="formitembtn">
                 <a-button type="primary"  class="radiusNone" html-type="submit">搜索</a-button>
                 <a-button style="margin-left: 10px"  class="radiusNone" @click="resetForm">重置</a-button>
             </a-form-item>
         </a-form>
+        <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
+        <radio-user v-if="isRadioUser" :isShow="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams"
+            :localId="fieldName"></radio-user>
+        <Lookup-filter v-if="isLookup" :isShow="isLookup"></Lookup-filter>
     </div>
 </template>
 <script setup>
@@ -61,6 +75,9 @@
     import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
     dayjs.locale('zh-cn');
     import moment from "moment";
+    import RadioDept from "@/components/commonModal/RadioDept.vue";
+    import RadioUser from "@/components/commonModal/RadioUser.vue";
+    import LookupFilter from "@/components/commonModal/LookupFilter.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const formRef = ref();
@@ -68,7 +85,8 @@
     });
     
     const props = defineProps({
-        isCollapsed: false
+        isCollapsed: false,
+        objectTypeCode: [String, Number]
     });
     watch(()=>props.isCollapsed,(newVal,oldVal)=>{
         nextTick(()=>{
@@ -139,10 +157,15 @@
     const data = reactive({
         searchFields: [],
         dateType: "default",
-        dateText: "自定义"
+        dateText: "自定义",
+        fieldName: "",
+        isRadioUser: false,
+        isRadioDept: false,
+        isLookup: false,
+        search: {}
     })
     
-    const { searchFields, dateType, dateText } = toRefs(data);
+    const { searchFields, dateType, dateText, isRadioUser, isRadioDept, isLookup, fieldName, search } = toRefs(data);
     const formSearchRef = ref();
     const emit = defineEmits(['update-height', 'search'])
     const changeDateType = (item,row) => {
@@ -159,7 +182,9 @@
         console.log("e",e,item);
     }
     const getSearchLayout = () => {
-        proxy.$get(Interface.formSearch, {}).then(res => {
+        proxy.$get(Interface.formSearch, {
+            objectTypeCode: props.objectTypeCode
+        }).then(res => {
             // console.log("SearchFields", res);
             data.searchFields = res.returnValue.SearchFields;
             nextTick(()=>{
@@ -173,6 +198,8 @@
                         label: "自定义"
                     }
                     formState[item.Name] = [];
+                }else if(['O', 'Y', 'U', 'Y_MD'].includes(item.DataType)){
+                    data.search[item.Name] = [];
                 }
             })
             // console.log("formState",formState)
@@ -189,6 +216,70 @@
         getSearchLayout();
     })
     defineExpose({ resetForm })
+
+    const searchlookup = (e, item) => {
+        console.log(e, item);
+        if(e){
+            proxy.$get(Interface.uilook,{
+                Lktp: item.ReferencedEntityObjectTypeCode,
+                Lksrch: ""
+            }).then(res=>{
+                console.log("res",res);
+                let list = res.listData.map(item=>{
+                    item.value = item.ID;
+                    item.label = item.Name;
+                    return item;
+                });
+                data.search[item.Name] = list;
+                // item.PicklistValues = item.PicklistValues.concat(list);
+            })
+        }
+    };
+
+    const handleOpenLook = (item) => {
+        console.log("item", item);
+        data.fieldName = item.Name;
+        let objTypeCode = item.ReferencedEntityObjectTypeCode;
+        if(objTypeCode==30020 || objTypeCode==8){
+            data.isRadioUser = true;
+        }else if(objTypeCode==10){
+            data.isRadioDept = true;
+        }else {
+            data.isLookup = true;
+        }
+    };
+
+    const cancelDeptModal = () => {
+        data.isRadioDept = false;
+    };
+    const cancelUserModal = () => {
+        data.isRadioUser = false;
+
+    };
+    const handleDeptParams = (e) => {
+        console.log('e123', e);
+        let isBook = data.search[data.fieldName].some(item=>item.value == e.ID);
+        if(!isBook){
+            data.search[data.fieldName].push({
+                label: e.Name,
+                value: e.ID
+            })
+        }
+        formState[data.fieldName] = e.ID;
+        data.isRadioDept = false;
+    };
+    const handleUserParams = (e) => {
+        console.log('handleUserParams', e, data.fieldName);
+        let isBook = data.search[data.fieldName].some(item=>item.value == e.id);
+        if(!isBook){
+            data.search[data.fieldName].push({
+                label: e.name,
+                value: e.id
+            })
+        }
+        formState[data.fieldName] = e.id;
+        data.isRadioUser = false;
+    };
 </script>
 <style lang="less">
     .formSearch {
@@ -226,6 +317,16 @@
                 width: 80px;
                 padding: 0;
             }
+        }
+    }
+    .searchItem{
+        position: relative;
+        .selectSearchIcon{
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            z-index: 99;
+            cursor: pointer;
         }
     }
 </style>
