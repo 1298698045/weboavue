@@ -189,6 +189,7 @@ const Interface = {
     deleteSignature: "/localData/flow/process.signature.delete.json", // 删除签名
     datapriAdd: "/localData/flow/process.datapri.add.json", // 添加用户
     usepriAdd: "/localData/flow/process.usepri.add.json", // 添加筛选器
+    files: "/localData/flow/process.instance.file.getlist.json"
   },
   lookSearch: "/localData/entity.lookup.search.json",
   lookupfilter: "/localData/entity.lookupfilter.getlist.json",

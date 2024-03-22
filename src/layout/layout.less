@@ -1,9 +1,12 @@
-.layoutWrapper{
+.layoutBd{
     height: 100vh;
+}
+.layoutWrapper{
+    height: calc(~"100vh - 55px");
     display: flex;
     .left{
         width: 197px;
-        height: 100vh;
+        height: 100%;
         background: #1055BC;
     }
     .right{
@@ -11,7 +14,7 @@
         height: 100%;
         overflow: hidden;
         .container{
-            height: calc(~"100% - 55px");
+            height: 100%;
             background: #e8edf4;
         }
     }

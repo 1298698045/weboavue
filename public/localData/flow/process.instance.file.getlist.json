@@ -1,0 +1,165 @@
+{
+  "Msg": null,
+  "id": null,
+  "state": 200,
+  "storable": true,
+  "canCreate": true,
+  "CategoryFiles": [
+    {
+      "CategoryName": "null",
+      "Files": [
+        {
+          "Id": "0d563977-6bfb-440b-8cfa-f8b44c3c792e",
+          "Icon": "/img/images/word.png",
+          "Name": "测试",
+          "FileSize": 14286.0,
+          "CreatedOn": "2023/9/22 19:49:12",
+          "FolderId": null,
+          "FolderIdName": null,
+          "FileExtension": "docx",
+          "CategoryName": "null",
+          "createdByName": "",
+          "SortNumber": 0,
+          "ViewLinkUrl": "/jgfiles/samples/OpenAndSave_Word.aspx?filesource=1001&id=0d563977-6bfb-440b-8cfa-f8b44c3c792e&FileType=.docx&EditType=2&OrganizationId=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "EditLinkUrl": "/jgfiles/samples/OpenAndSave_Word.aspx?filesource=1001&id=0d563977-6bfb-440b-8cfa-f8b44c3c792e&FileType=.docx&EditType=2&OrganizationId=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "DownloadLinkUrl": "/apps/files/FileDownload.aspx?id=0d563977-6bfb-440b-8cfa-f8b44c3c792e&isAttach=1&filesource=1001&sessionKey=2ec00cf2-a484-4136-8fef-e2a2719c5ed6&organizationid=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "Link": null,
+          "ShareUrl": null,
+          "thumbnailURL": null,
+          "Privilege": {
+            "canAdmin": true,
+            "canDelete": true,
+            "CanEdit": true,
+            "canShare": true,
+            "canRead": true,
+            "canDownload": true
+          },
+          "actinconfig": {
+            "canReadFile": false,
+            "isEditable": false,
+            "isDeletable": false,
+            "canAddFile": false,
+            "canShare": false
+          }
+        }
+      ]
+    },
+    {
+      "CategoryName": "null",
+      "Files": [
+        {
+          "Id": "3a7cf455-5313-4650-99b8-68768b11d06c",
+          "Icon": "/img/images/word.png",
+          "Name": "测试",
+          "FileSize": 33494.0,
+          "CreatedOn": "2023/9/22 19:49:12",
+          "FolderId": null,
+          "FolderIdName": null,
+          "FileExtension": "pptx",
+          "CategoryName": "null",
+          "createdByName": "",
+          "SortNumber": 0,
+          "ViewLinkUrl": "/jgfiles/samples/OpenAndSave_Word.aspx?filesource=1001&id=3a7cf455-5313-4650-99b8-68768b11d06c&FileType=.pptx&EditType=2&OrganizationId=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "EditLinkUrl": "/jgfiles/samples/OpenAndSave_Word.aspx?filesource=1001&id=3a7cf455-5313-4650-99b8-68768b11d06c&FileType=.pptx&EditType=2&OrganizationId=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "DownloadLinkUrl": "/apps/files/FileDownload.aspx?id=3a7cf455-5313-4650-99b8-68768b11d06c&isAttach=1&filesource=1001&sessionKey=2ec00cf2-a484-4136-8fef-e2a2719c5ed6&organizationid=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "Link": null,
+          "ShareUrl": null,
+          "thumbnailURL": null,
+          "Privilege": {
+            "canAdmin": true,
+            "canDelete": true,
+            "CanEdit": true,
+            "canShare": true,
+            "canRead": true,
+            "canDownload": true
+          },
+          "actinconfig": {
+            "canReadFile": false,
+            "isEditable": false,
+            "isDeletable": false,
+            "canAddFile": false,
+            "canShare": false
+          }
+        }
+      ]
+    },
+    {
+      "CategoryName": "null",
+      "Files": [
+        {
+          "Id": "b073794f-bd00-439e-9a82-6dba32f273e5",
+          "Icon": "/img/images/excel.png",
+          "Name": "测试",
+          "FileSize": 9186.0,
+          "CreatedOn": "2023/9/22 19:49:12",
+          "FolderId": null,
+          "FolderIdName": null,
+          "FileExtension": "xlsx",
+          "CategoryName": "null",
+          "createdByName": "",
+          "SortNumber": 0,
+          "ViewLinkUrl": "/jgfiles/samples/OpenAndSave_Excel.aspx?filesource=1001&id=b073794f-bd00-439e-9a82-6dba32f273e5&FileType=.xlsx&EditType=2&OrganizationId=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "EditLinkUrl": "/jgfiles/samples/OpenAndSave_Excel.aspx?filesource=1001&id=b073794f-bd00-439e-9a82-6dba32f273e5&FileType=.xlsx&EditType=2&OrganizationId=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "DownloadLinkUrl": "/apps/files/FileDownload.aspx?id=b073794f-bd00-439e-9a82-6dba32f273e5&isAttach=1&filesource=1001&sessionKey=2ec00cf2-a484-4136-8fef-e2a2719c5ed6&organizationid=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "Link": null,
+          "ShareUrl": null,
+          "thumbnailURL": null,
+          "Privilege": {
+            "canAdmin": true,
+            "canDelete": true,
+            "CanEdit": true,
+            "canShare": true,
+            "canRead": true,
+            "canDownload": true
+          },
+          "actinconfig": {
+            "canReadFile": false,
+            "isEditable": false,
+            "isDeletable": false,
+            "canAddFile": false,
+            "canShare": false
+          }
+        }
+      ]
+    },
+    {
+      "CategoryName": "null",
+      "Files": [
+        {
+          "Id": "0335c303-bbfb-4569-9e66-b48d2434ae51",
+          "Icon": "/img/images/excel.png",
+          "Name": "导入测试",
+          "FileSize": 29239.0,
+          "CreatedOn": "2024/1/29 16:33:22",
+          "FolderId": null,
+          "FolderIdName": null,
+          "FileExtension": "xlsx",
+          "CategoryName": "null",
+          "createdByName": "",
+          "SortNumber": 0,
+          "ViewLinkUrl": "/jgfiles/samples/OpenAndSave_Excel.aspx?filesource=1001&id=0335c303-bbfb-4569-9e66-b48d2434ae51&FileType=.xlsx&EditType=2&OrganizationId=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "EditLinkUrl": "/jgfiles/samples/OpenAndSave_Excel.aspx?filesource=1001&id=0335c303-bbfb-4569-9e66-b48d2434ae51&FileType=.xlsx&EditType=2&OrganizationId=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "DownloadLinkUrl": "/apps/files/FileDownload.aspx?id=0335c303-bbfb-4569-9e66-b48d2434ae51&isAttach=1&filesource=1001&sessionKey=2ec00cf2-a484-4136-8fef-e2a2719c5ed6&organizationid=8d23d5e5-d7fb-445b-8e1b-66db56f2fd99",
+          "Link": null,
+          "ShareUrl": null,
+          "thumbnailURL": null,
+          "Privilege": {
+            "canAdmin": true,
+            "canDelete": true,
+            "CanEdit": true,
+            "canShare": true,
+            "canRead": true,
+            "canDownload": true
+          },
+          "actinconfig": {
+            "canReadFile": false,
+            "isEditable": false,
+            "isDeletable": false,
+            "canAddFile": false,
+            "canShare": false
+          }
+        }
+      ]
+    }
+  ]
+}

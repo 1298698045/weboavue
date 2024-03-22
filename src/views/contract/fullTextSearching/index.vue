@@ -10,7 +10,7 @@
             <a-input-search
                 v-model:value="searchVal"
                 placeholder="请输入搜索内容关键字"
-                enter-button
+                enter-button="搜索"
                 @search="onSearch"
                 style="width: 400px;"
             />
@@ -77,8 +77,8 @@
         }
         .searchTitle{
             text-align: center;
-            padding-top: 90px;
-            padding-bottom: 60px;
+            padding-top: 78px;
+            padding-bottom: 48px;
             font-size: 40px;
             color: #333;
         }
@@ -92,6 +92,10 @@
             align-items: center;
             .ant-card{
                 margin-left: 20px;
+                &:hover{
+                    box-shadow: 0 1px 6px hsla(0,0%,39%,.2);
+                    border-color: #eee;
+                }
                 .icon{
                     font-size: 16px;
                     padding-left: 10px;

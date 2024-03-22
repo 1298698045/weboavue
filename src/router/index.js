@@ -619,6 +619,9 @@ const routes = [
     name: "workspace",
     component: Layout,
     redirect: "/workspace/personal/home",
+    meta: {
+      name: "个人中心"
+    },
     children: [
       {
         path: "/workspace/personal/home",

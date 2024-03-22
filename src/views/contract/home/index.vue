@@ -2,41 +2,49 @@
     <div class="wrapper">
         <div class="row">
             <div class="itemBox" v-for="item in 4">
-                <h5>
-                    业绩达成
-                    <a-dropdown>
-                        <a class="menuText" @click.prevent>
-                            本年
-                            <DownOutlined />
-                        </a>
-                        <template #overlay>
-                            <a-menu>
-                                <a-menu-item>全部</a-menu-item>
-                                <a-menu-item>本月</a-menu-item>
-                                <a-menu-item>本季</a-menu-item>
-                                <a-menu-item>本年</a-menu-item>
-                                <a-menu-item>上个月</a-menu-item>
-                                <a-menu-item>上一年</a-menu-item>
-                            </a-menu>
-                        </template>
-                    </a-dropdown>
-                </h5>
-                <div class="itemBoxBd">
-                    <div class="infoWrap">
-                        <div class="div_infor">
-                            <h3>128.00<i>万元</i></h3>
-                            <span>有效合同金额</span>
+                <div class="topBox">
+                    <div class="leftInfo">
+                        <h5>
+                            业绩达成
+                            <a-dropdown>
+                                <a class="menuText" @click.prevent>
+                                    本年
+                                    <DownOutlined />
+                                </a>
+                                <template #overlay>
+                                    <a-menu>
+                                        <a-menu-item>全部</a-menu-item>
+                                        <a-menu-item>本月</a-menu-item>
+                                        <a-menu-item>本季</a-menu-item>
+                                        <a-menu-item>本年</a-menu-item>
+                                        <a-menu-item>上个月</a-menu-item>
+                                        <a-menu-item>上一年</a-menu-item>
+                                    </a-menu>
+                                </template>
+                            </a-dropdown>
+                        </h5>
+                        <div class="itemBoxBd">
+                            <div class="infoWrap">
+                                <div class="div_infor">
+                                    <h3>128.00<i>万元</i></h3>
+                                    <span>有效合同金额</span>
+                                </div>
+                                <!-- <div class="div_echarts" id="chart" style="width: 100px;height: 100px;" ref="chartMain"></div> -->
+                            </div>
                         </div>
+                    </div>
+                    <div class="rightInfo">
                         <div class="div_echarts" id="chart" style="width: 100px;height: 100px;" ref="chartMain"></div>
                     </div>
-                    <div class="itemBottom">
-                        <span style="width: 100%; margin: 0px; display: inline-block;">
-                            <img :src="require('@/assets/img/icon_02.png')">
-                            目标金额：
-                            <a href="/spa/portal/static/index.html#/main/portal/portal-166-1" target="_blank">
-                                800.00万元（同指标排名：52名）</a>
-                        </span>
-                    </div>
+                </div>
+                
+                <div class="itemBottom">
+                    <span style="width: 100%; margin: 0px; display: inline-block;">
+                        <img :src="require('@/assets/img/icon_02.png')">
+                        目标金额：
+                        <a href="/spa/portal/static/index.html#/main/portal/portal-166-1" target="_blank">
+                            800.00万元（同指标排名：52名）</a>
+                    </span>
                 </div>
             </div>
         </div>
@@ -153,6 +161,7 @@
                                                 <b><span>阿萨德饭阿萨德</span></b>
                                                 <span><b>&nbsp;</b>（<span><span></span></span>：<span><span></span></span>）-<span><span>杨文元（演示账号）</span></span>-<span><span>2023-12-14</span></span></span>
                                             </span>
+                                            <img :src="require('@/assets/img/BDNew_wev8.png')" alt="" class="wfremindimg">
                                             <img title="查看流转意见" class="portal_workflow_signaturesIcon"
                                                 :src="require('@/assets/img/req_wev8.png')" width="14px" height="16px"
                                                 alt="">
@@ -767,7 +776,14 @@
             position: relative;
             line-height: 1.6;
             margin-bottom: 10px;
-
+            .topBox{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .leftInfo{
+                    flex: 1;
+                }
+            }
             h5 {
                 font-size: 13px;
                 color: rgb(51, 51, 51);
@@ -781,7 +797,7 @@
             }
 
             .infoWrap {
-                padding: 2px 0px 5px;
+                /* padding: 2px 0px 5px; */
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -1014,7 +1030,13 @@
                     &:hover {
                         background: #e9f7ff;
                     }
-
+                    &:hover{
+                        td{
+                            .portal_workflow_signaturesIcon {
+                                visibility: visible;
+                            }
+                        }
+                    }
                     td {
                         border: none;
                         padding: 4px 1px 3px;
@@ -1023,12 +1045,16 @@
                         img {
                             vertical-align: middle;
                         }
-
+                        .wfremindimg{
+                            vertical-align: top;
+                            margin-left: 2px;
+                        }
                         .portal_workflow_signaturesIcon {
                             width: 14px;
                             height: 16px;
                             margin-top: -8px;
                             margin-left: 10px;
+                            visibility: hidden;
                         }
                     }
                 }

@@ -1,21 +1,26 @@
 <template>
-  <div class="layoutWrapper">
-    <div class="left" :style="{ width: state.collapsed ? '80px' : '197px' }">
-      <Logo></Logo>
-      <div class="layout-aside">
-        <div class="wea-menu-switch" @click="handleMenuSwitch">
-          <MenuFoldOutlined v-if="!state.collapsed" />
-          <MenuUnfoldOutlined v-else />
-        </div>
-        <MyMenu :collapsed="state.collapsed"></MyMenu>
-      </div>
-    </div>
-    <div class="right">
+  <div class="layoutBd">
+    <div class="layoutHeader">
       <Header></Header>
-      <div class="container">
-        <transition name="fade" mode="out-in">
-          <router-view></router-view>
-        </transition>
+    </div>
+    <div class="layoutWrapper">
+      <div class="left" :style="{ width: state.collapsed ? '80px' : '197px' }">
+        <!-- <Logo></Logo> -->
+        <div class="layout-aside">
+          <div class="wea-menu-switch" @click="handleMenuSwitch">
+            <MenuFoldOutlined v-if="!state.collapsed" />
+            <MenuUnfoldOutlined v-else />
+          </div>
+          <MyMenu :collapsed="state.collapsed"></MyMenu>
+        </div>
+      </div>
+      <div class="right">
+        
+        <div class="container">
+          <transition name="fade" mode="out-in">
+            <router-view></router-view>
+          </transition>
+        </div>
       </div>
     </div>
   </div>

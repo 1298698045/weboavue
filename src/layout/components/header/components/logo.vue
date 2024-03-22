@@ -1,6 +1,7 @@
 <template>
   <div class="header-logo">
-    {{ collapsed ? title.slice(0, 2) : title }}
+    <!-- {{ collapsed ? title.slice(0, 2) : title }} -->
+    {{ title }}
   </div>
 </template>
 <script setup>
