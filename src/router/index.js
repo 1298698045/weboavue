@@ -31,9 +31,19 @@ const routes = [
       name: "流程管理"
     },
     children: [
+      // {
+      //   path: "/flow/add",
+      //   component: () => import("../views/flow/add/index.vue"),
+      //   name: "AddFlow",
+      //   icon: "xinjianshiwu",
+      //   meta: {
+      //     name: "新建事务",
+      //     icon: "xinjianshiwu",
+      //   },
+      // },
       {
-        path: "/flow/add",
-        component: () => import("../views/flow/add/index.vue"),
+        path: "/flow/new",
+        component: () => import("../views/flow/new/index.vue"),
         name: "NewFlow",
         icon: "xinjianshiwu",
         meta: {
