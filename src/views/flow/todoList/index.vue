@@ -9,29 +9,6 @@
       </div>
       <div class="todo-head-right">
         <a-button type="primary">全部已读</a-button>
-        <!-- <button class="f-btn primary">全部已读</button>
-        <span>
-          <button disabled class="f-btn primary ml10">批量提交</button>
-          <a-dropdown>
-            <button class="f-btn primary rdownIcon">
-              <CaretDownOutlined />
-            </button>
-            <template #overlay>
-              <a-menu @click="handleMenuClick">
-                <a-menu-item key="1">
-                  批量提交
-                </a-menu-item>
-                <a-menu-item key="2">
-                  批量关注
-                </a-menu-item>
-                <a-menu-item key="3">
-                  批量转发
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </span> -->
-
         <a-dropdown-button :trigger="['click']">
           批量提交
           <template #overlay>
@@ -129,13 +106,15 @@
                 </template>
                 <template  v-slot:title="{ name, data, isLeaf, text, quantity }">
                   <span v-if="name.indexOf(searchValue) > -1">
-                    {{ name.substr(0, name.indexOf(searchValue)) }}
-                    <!-- <span style="color: #f50">{{ searchValue }}</span> -->
-                    {{
-                      name.substr(
-                        name.indexOf(searchValue) + searchValue.length
-                      )
-                    }}
+                    <span class="treeRowName">
+                      {{ name.substr(0, name.indexOf(searchValue)) }}
+                      <!-- <span style="color: #f50">{{ searchValue }}</span> -->
+                      {{
+                        name.substr(
+                          name.indexOf(searchValue) + searchValue.length
+                        )
+                      }}
+                    </span>
                     <span class="tree-num">{{ quantity }}</span>
                   </span>
                   <span v-else>{{ name }}</span>

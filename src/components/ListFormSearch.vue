@@ -287,7 +287,7 @@
         box-sizing: border-box;
         display: flex;
         align-items: center;
-        background: #f7fbfe;
+        /* background: #f7fbfe; */
         .ant-form {
             display: flex;
             flex-wrap: wrap;
@@ -300,6 +300,11 @@
 
                 .ant-form-item-control-input-content {
                     display: flex;
+                }
+                .ant-form-item-label{
+                    label{
+                        color: #666666 !important;
+                    }
                 }
             }
 

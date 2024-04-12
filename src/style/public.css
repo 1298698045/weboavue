@@ -192,10 +192,12 @@ a {
 .ant-tabs-tab {
     padding: 12px 20px !important;
     margin: 0 !important;
-    color: #484848 !important;
-    font-size: 12px !important;
+    color: #666666 !important;
+    font-size: 14px !important;
 }
-
+.ant-tabs-nav::before{
+    border-bottom: 1px solid #eaeaea !important;
+}
 /* easyui datagrid */
 .panel-header,
 .panel-body {
@@ -257,4 +259,24 @@ a {
     padding: 5px 4px;
     border-radius: 0px 3px 3px 0px;
     margin-left: 1px;
+}
+
+
+/* easyui grid  */
+
+.datagrid-header-inner, .datagrid-pager{
+    background: #f7fbfe;
+}
+.datagrid{
+    border-radius: 0 !important;
+}
+.datagrid .datagrid-td-rownumber{
+    background: #fff;
+}
+.datagrid-header-row td .datagrid-cell{
+    color: #666666;
+}
+.datagrid-header{
+    border-color: #e2ecf2 !important;
+    border-bottom: 2px solid #e2ecf2 !important;
 }
