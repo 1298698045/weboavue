@@ -1,16 +1,18 @@
 <template>
     <div class="todoList">
-        <!-- <div class="todo-head">
+        <div class="todo-head">
             <div class="todo-head-left">
-                <div class="icon-circle-base"></div>
-                <span class="wea-new-top-title-breadcrumb">待办事宜</span>
+                <div class="icon-circle-base">
+                    <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
+                </div>
+                <span class="wea-new-top-title-breadcrumb">我传阅的</span>
             </div>
-            <div class="todo-head-right">
+            <!-- <div class="todo-head-right">
                 <a-button type="primary">批量打印</a-button>
                 <span class="a-split"></span>
                 <a-button type="primary">批量传阅</a-button>
-            </div>
-        </div> -->
+            </div> -->
+        </div>
         <div class="todo-content">
             <a-row>
                 <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">

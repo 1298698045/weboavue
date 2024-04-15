@@ -39,11 +39,12 @@
                             </div>
                             <div class="flowPanelItemBd">
                                 <div class="flowRowItem" v-for="(row, idx) in item.Processes" :key="idx" @click="handleStartProcess(row)">
-                                    <div class="flowName">{{row.name}}</div>
-                                    <div class="collectionIcon" :class="{'active':row.favoriteState=='1'}">
+                                    <div class="flowName rowEllipsis">{{row.name}}</div>
+                                    <div class="collectionIcon" :class="{'active':row.favoriteState=='1'}" @click.stop>
                                         <a-tooltip>
                                             <template #title>{{ row.favoriteState=='1'?'取消收藏':'收藏' }}</template>
-                                            <HeartFilled/>
+                                            <i class="iconfont icon-quxiaoshoucang" v-if="row.favoriteState=='1'"></i>
+                                            <i class="iconfont icon-tianjiashoucang" v-else></i>
                                         </a-tooltip>
                                     </div>
                                 </div>
@@ -104,7 +105,7 @@
     </div>
 </template>
 <script setup>
-
+    import "@/style/flow/icon/iconfont.css";
     import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw } from "vue";
     import { HeartFilled } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
@@ -259,14 +260,26 @@
                             margin-right: 10px;
                             &:hover{
                                 box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.2);
+                                .collectionIcon{
+                                    visibility: visible;
+                                }
                             }
                             .flowName{
                                 color: #1d2129;
                                 font-weight: bold;
+                                flex: 1;
                             }
                             .collectionIcon{
+                                visibility: hidden;
                                 &.active{
-                                    color:#3399ff;
+                                    visibility: visible;
+                                    color:#f7ba1e;
+                                }
+                                .icon-tianjiashoucang{
+                                    opacity: .6;
+                                    &:hover{
+                                        opacity: 1;
+                                    }
                                 }
                             }
                         }

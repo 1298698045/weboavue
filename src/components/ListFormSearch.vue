@@ -48,7 +48,7 @@
                         <a-select-option v-for="(row, idx) in search[item.Name]" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
                     </a-select>
                     <div class="selectSearchIcon" @click="handleOpenLook(item)">
-                        <SearchOutlined />
+                        <SearchOutlined class="lookupIcon" />
                     </div>
                 </a-form-item>
             </div>
@@ -332,6 +332,9 @@
             top: 5px;
             z-index: 99;
             cursor: pointer;
+            .lookupIcon{
+                color: rgba(0, 0, 0, 0.25);
+            }
         }
     }
 </style>

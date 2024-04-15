@@ -1,0 +1,121 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "132121336",
+      "name": "按钮下拉",
+      "font_class": "anniuxiala",
+      "unicode": "e8b2",
+      "unicode_decimal": 59570
+    },
+    {
+      "icon_id": "132121339",
+      "name": "目录更多",
+      "font_class": "mulugengduo",
+      "unicode": "e8b3",
+      "unicode_decimal": 59571
+    },
+    {
+      "icon_id": "132342337",
+      "name": "搜索按钮",
+      "font_class": "sousuoanniu",
+      "unicode": "e8be",
+      "unicode_decimal": 59582
+    },
+    {
+      "icon_id": "132342657",
+      "name": "批量提交",
+      "font_class": "piliangtijiao",
+      "unicode": "e8b7",
+      "unicode_decimal": 59575
+    },
+    {
+      "icon_id": "132342947",
+      "name": "批量关注",
+      "font_class": "piliangguanzhu",
+      "unicode": "e8b8",
+      "unicode_decimal": 59576
+    },
+    {
+      "icon_id": "132342952",
+      "name": "批量转发",
+      "font_class": "piliangzhuanfa",
+      "unicode": "e8ba",
+      "unicode_decimal": 59578
+    },
+    {
+      "icon_id": "132342977",
+      "name": "全部已读",
+      "font_class": "quanbuyidu",
+      "unicode": "e8bb",
+      "unicode_decimal": 59579
+    },
+    {
+      "icon_id": "132342982",
+      "name": "显示列定制",
+      "font_class": "xianshiliedingzhi",
+      "unicode": "e8bc",
+      "unicode_decimal": 59580
+    },
+    {
+      "icon_id": "132343139",
+      "name": "默认排序设置",
+      "font_class": "morenpaixushezhi",
+      "unicode": "e8bd",
+      "unicode_decimal": 59581
+    },
+    {
+      "icon_id": "132343714",
+      "name": "输入搜索",
+      "font_class": "shurusousuo",
+      "unicode": "e8bf",
+      "unicode_decimal": 59583
+    },
+    {
+      "icon_id": "132349831",
+      "name": "添加收藏",
+      "font_class": "tianjiashoucang",
+      "unicode": "e8b5",
+      "unicode_decimal": 59573
+    },
+    {
+      "icon_id": "132349833",
+      "name": "取消收藏",
+      "font_class": "quxiaoshoucang",
+      "unicode": "e8b6",
+      "unicode_decimal": 59574
+    },
+    {
+      "icon_id": "132363902",
+      "name": "下一个",
+      "font_class": "xiayige",
+      "unicode": "e8c1",
+      "unicode_decimal": 59585
+    },
+    {
+      "icon_id": "132364319",
+      "name": "上一个",
+      "font_class": "shangyige",
+      "unicode": "e8c2",
+      "unicode_decimal": 59586
+    },
+    {
+      "icon_id": "132364505",
+      "name": "向下",
+      "font_class": "xiangxia",
+      "unicode": "e8c3",
+      "unicode_decimal": 59587
+    },
+    {
+      "icon_id": "132365185",
+      "name": "向上",
+      "font_class": "xiangshang",
+      "unicode": "e8c4",
+      "unicode_decimal": 59588
+    }
+  ]
+}

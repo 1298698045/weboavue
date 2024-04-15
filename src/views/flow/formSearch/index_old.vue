@@ -17,7 +17,7 @@
                 </div>
                 <div class="moduleBoxWrap">
                     <div class="moduleBox" v-for="(item,index) in list[current] && list[current].ProcessFormInfo" :key="index" @click="handleDetail(item)">
-                        <div class="title rowEllipsis" :title="item.Name">
+                        <div class="title">
                             {{item.Name}}
                         </div>
                     </div>
@@ -100,24 +100,25 @@
         background: #fff;
         .tabList{
             display: flex;
-            /* align-items: center; */
+            align-items: center;
             flex-wrap: wrap;
             .tabItem{
-                padding: 5px 10px;
-                background: #f5f5f5;
-                border-radius: 1px;
-                margin-right: 2px;
-                cursor: pointer;
-                font-weight: bold;
-                margin-bottom: 2px;
-                color: #333;
+                padding: 6px 16px;
+                border-radius: 16px;
+                background: transparent;
+                font-size: 14px;
+                margin-right: 10px;
+                color: #4e5969;
+                white-space: nowrap;
+                margin-bottom: 5px;
                 &:hover{
-                    background: #108ee9;
-                    color: #fff;
+                    background: #f2f3f5;
+                    cursor: pointer;
                 }
                 &.active{
-                    background: #108ee9;
-                    color: #fff;
+                    background: #f2f3f5;
+                    color: var(--textColor);
+                    font-weight: bold;
                 }
                 
             }
@@ -138,7 +139,7 @@
             overflow-y: auto;
             align-content: flex-start;
             .moduleBox{
-                width: calc(~"25% - 16px");
+                width: 22%;
                 border-radius: 4px;
                 margin-bottom: 16px;
                 padding: 16px;
@@ -156,7 +157,7 @@
                 }
             }
             .fake_item{
-                flex: 0 0 calc(~"25% - 16px");
+                flex: 0 0 22%;
                 height: 0;
             }
         }

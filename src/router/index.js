@@ -171,13 +171,17 @@ const routes = [
           icon: "biaodanchaxun",
         },
       },
-      // {
-      //   path: "/flow/formSearch/list",
-      //   component: () => import("../views/flow/formSearch/list.vue"),
-      //   meta: {
-      //     icon: "caogaoxiang",
-      //   },
-      // },
+      {
+        path: "/flow/formSearch/list",
+        component: () => import("../views/flow/formSearch/list.vue"),
+        // meta: {
+        //   name: "表单详情查询",
+        //   icon: "caogaoxiang",
+        // },
+        meta: {
+          icon:""
+        }
+      },
       // {
       //   path: "/about",
       //   component: () => import("../views/About.vue"),
