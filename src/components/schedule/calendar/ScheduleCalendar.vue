@@ -1,16 +1,16 @@
 <template>
-    <div class="headerCalendar">
+    <!-- <div class="headerCalendar">
         <div class="breadcrumb">
             我的日程
         </div>
-        <div class="headerRight">
+        <div class="headerRight"> -->
             <!-- <a-button type="primary" @click="handleAddSchedule">新建日程</a-button>
             <a-button class="ml10" @click="openShare">共享日历</a-button>
             <a-button class="ml10" @click="openExport">导入日历</a-button> -->
-        </div>
-    </div>
+        <!-- </div>
+    </div> -->
     <div class="calendarWrap">
-        <div class="leftBox">
+        <div class="leftBox" v-if="!isCollapsed">
             <div class="tabsWrap">
                 <a-tabs v-model:activeKey="activeKey">
                     <a-tab-pane key="1" tab="我的关注"></a-tab-pane>
@@ -29,6 +29,8 @@
             </div>
         </div>
         <div class="rightBox">
+            <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
+                :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
             <div class="calendarHeader">
                 <div class="form">
                     <div class="formItem">
@@ -332,11 +334,12 @@
         paramsTime: {
             date: "",
             time: ""
-        }
+        },
+        isCollapsed: false
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isRepeatMeeting, isAddSchedule,
-         isShare, isExport, fileParams, paramsTime} = toRefs(data);
+         isShare, isExport, fileParams, paramsTime, isCollapsed} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const backFn = (list) => {
         var len = list.length;
@@ -493,6 +496,9 @@
     const openExport = () => {
         data.isExport = true;
     }
+    const handleCollapsed = () => {
+        data.isCollapsed = !data.isCollapsed;
+    }
 </script>
 <style lang="less" scoped>
     .headerCalendar{
@@ -504,7 +510,8 @@
     }
     .calendarWrap {
         width: 100%;
-        height: calc(~"100% - 49px");
+        /* height: calc(~"100% - 49px"); */
+        height: 100%;
         display: flex;
 
         .leftBox {
@@ -553,7 +560,7 @@
 
         .rightBox {
             flex: 1;
-
+            position: relative;
             .calendarHeader {
                 width: 100%;
                 padding: 12px;
@@ -713,5 +720,10 @@
         font-size: 12px;
         padding-right: 10px;
         color: red;
+    }
+</style>
+<style>
+    .ant-tabs .ant-tabs-tab{
+        padding: 12px 12px !important;
     }
 </style>

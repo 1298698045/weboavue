@@ -3,9 +3,8 @@
         <div class="detail-header">
             <div class="leftBox">
                 <div class="title">
-                    <div>
-                        <span>02 差旅费报销流程 院领导 jackliu3 2023-09-22&nbsp;</span>
-                    </div>
+                    <span class="backText"> « 返回列表</span>
+                    <span>02 差旅费报销流程 院领导 jackliu3 2023-09-22&nbsp;</span>
                 </div>
                 <div class="tabWrap">
                     <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
@@ -52,107 +51,111 @@
         </div>
         <div class="detail-scroll">
             <div class="detail-bd">
-                <div class="tabContainer containerForm" v-if="activeKey==0">
-                    <div class="tableBox">
+                <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
+                    <div class="tableBox" :class="{'active':!isAside}">
 
                     </div>
                     <div class="rightAside">
-                        <div class="panel">
-                            <div class="panel-head">
-                                <div class="panel-title">
-                                    相关事务
-                                </div>
-                                <div class="panel-btn">
-                                    <a-button type="text" size="small">添加关联</a-button>
-                                </div>
-                            </div>
-                            <div class="panel-bd">
-                                <div class="relevantList">
-                                    <div class="empty" v-if="relatedList.length==0">
-                                        <div>
-                                            <img :src="require('@/assets/img/empty.png')" alt="">
-                                            <p class="emptyDesc">当前暂无数据</p>
-                                        </div>
+                        <div class="arrowIcon rightIcon" v-if="isAside" @click="isAside=false"></div>
+                        <div class="arrowIcon leftIcon" v-else @click="isAside=true"></div>
+                        <div v-if="isAside" class="asideScroll">
+                            <div class="panel">
+                                <div class="panel-head">
+                                    <div class="panel-title">
+                                        相关事务
                                     </div>
-                                    <div class="relevantItem" v-for="(item,index) in relatedList" :key="index">
-                                        <div class="relevantTitle">{{item.Name}}</div>
-                                        <div class="relevantTimerInfo">{{item.CreatedOn}} {{item.CreatedByName}}</div>
-                                        <a-popconfirm title="是否确定要删除？"
-                                            ok-text="确定"
-                                            cancel-text="取消"
-                                            @confirm="confirm"
-                                            @cancel="cancel">
-                                            <DeleteOutlined />
-                                        </a-popconfirm>
+                                    <div class="panel-btn">
+                                        <a-button type="text" size="small">添加关联</a-button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="panel">
-                            <div class="panel-head">
-                                <div class="panel-title">
-                                    附件 (0)
+                                <div class="panel-bd">
+                                    <div class="relevantList">
+                                        <div class="empty" v-if="relatedList.length==0">
+                                            <div>
+                                                <img :src="require('@/assets/img/empty.png')" alt="">
+                                                <p class="emptyDesc">当前暂无数据</p>
+                                            </div>
+                                        </div>
+                                        <div class="relevantItem" v-for="(item,index) in relatedList" :key="index">
+                                            <div class="relevantTitle">{{item.Name}}</div>
+                                            <div class="relevantTimerInfo">{{item.CreatedOn}} {{item.CreatedByName}}</div>
+                                            <a-popconfirm title="是否确定要删除？"
+                                                ok-text="确定"
+                                                cancel-text="取消"
+                                                @confirm="confirm"
+                                                @cancel="cancel">
+                                                <DeleteOutlined />
+                                            </a-popconfirm>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="panel-bd">
-                                <div class="collapse">
-                                    <div class="collapseItem" v-for="(item, index) in categoryFiles" :key="index">
-                                        <div class="collapseHead" v-if="item.CategoryName && item.CategoryName!='null'">
-                                            <span class="collapseItemIcon">
-                                                <!-- <DownOutlined /> -->
-                                                <UpOutlined />
-                                            </span>
-                                            <span class="collapseItemName">
-                                                {{item.CategoryName}}
-                                            </span>
-                                            <span class="addIcon">
-                                                <PlusOutlined style="color: #3399ff;" />
-                                            </span>
-                                        </div>
-                                        <div class="collapseBd">
-                                            <div class="files">
-                                                <div class="fileItem" v-for="(row, idx) in item.Files" :key="row.Id">
-                                                    <div class="fileItemImg">
-                                                        <img :src="require('@/assets/img/filetype/doc.png')" v-if="row.FileExtension == 'ocx' || 
-                                                        row.FileExtension == 'docx' || row.FileExtension == 'doc'" />
-                                                        <img :src="require('@/assets/img/filetype/rar.png')" v-else-if="row.FileExtension == 'rar' || 
-                                                        row.FileExtension == 'zip'" />
-                                                        <img :src="require('@/assets/img/filetype/Excel.png')" v-else-if="row.FileExtension == 'xlsx' || 
-                                                        row.FileExtension == 'xls'" />
-                                                        <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="row.FileExtension == 'pdf'" />
-                                                        <img :src="require('@/assets/img/filetype/TXT.png')" v-else-if="row.FileExtension == 'TXT'||row.FileExtension == 'txt'" />
-                                                        <img :src="require('@/assets/img/filetype/PPT.png')" v-else-if="row.FileExtension == 'ppt'||row.FileExtension == 'pptx'" />
-                                                        <img :src="require('@/assets/img/filetype/video.png')" v-else-if="row.FileExtension == 'mp4'||row.FileExtension == '.mp4'" />
-                                                        <img :src="require('@/assets/img/filetype/defaultImg.png')" v-else-if="row.FileExtension == 'jpg'||row.FileExtension == 'png'||row.FileExtension == 'gif'" />
-                                                        <img :src="require('@/assets/img/filetype/File.png')" v-else />
-                                                    </div>
-                                                    <div class="fileItemInfo">
-                                                        <p class="name">{{row.Name}}</p>
-                                                        <p class="link">
-                                                            <a href="javascript:;">查看</a>
-                                                            ·
-                                                            <a href="javascript:;">下载</a>
-                                                        </p>
-                                                        <p class="time">
-                                                            <span>{{row.CreatedOn}}&nbsp;·</span>
-                                                            &nbsp;
-                                                            <span>{{row.FileSize}}</span>
-                                                        </p>
-                                                    </div>
-                                                    <div class="iconOpera">
-                                                        <a-dropdown trigger="click">
-                                                            <DownOutlined style="font-size: 12px;" />
-                                                            <template #overlay>
-                                                                <a-menu>
-                                                                    <a-menu-item>
-                                                                        <a href="javascript:;">查看</a>
-                                                                    </a-menu-item>
-                                                                    <a-menu-item>
-                                                                        <a href="javascript:;">删除</a>
-                                                                    </a-menu-item>
-                                                                </a-menu>
-                                                              </template>
-                                                        </a-dropdown>
+                            <div class="panel">
+                                <div class="panel-head">
+                                    <div class="panel-title">
+                                        附件 (0)
+                                    </div>
+                                </div>
+                                <div class="panel-bd">
+                                    <div class="collapse">
+                                        <div class="collapseItem" v-for="(item, index) in categoryFiles" :key="index">
+                                            <div class="collapseHead" v-if="item.CategoryName && item.CategoryName!='null'">
+                                                <span class="collapseItemIcon">
+                                                    <!-- <DownOutlined /> -->
+                                                    <UpOutlined />
+                                                </span>
+                                                <span class="collapseItemName">
+                                                    {{item.CategoryName}}
+                                                </span>
+                                                <span class="addIcon">
+                                                    <PlusOutlined style="color: #3399ff;" />
+                                                </span>
+                                            </div>
+                                            <div class="collapseBd">
+                                                <div class="files">
+                                                    <div class="fileItem" v-for="(row, idx) in item.Files" :key="row.Id">
+                                                        <div class="fileItemImg">
+                                                            <img :src="require('@/assets/img/filetype/doc.png')" v-if="row.FileExtension == 'ocx' || 
+                                                            row.FileExtension == 'docx' || row.FileExtension == 'doc'" />
+                                                            <img :src="require('@/assets/img/filetype/rar.png')" v-else-if="row.FileExtension == 'rar' || 
+                                                            row.FileExtension == 'zip'" />
+                                                            <img :src="require('@/assets/img/filetype/Excel.png')" v-else-if="row.FileExtension == 'xlsx' || 
+                                                            row.FileExtension == 'xls'" />
+                                                            <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="row.FileExtension == 'pdf'" />
+                                                            <img :src="require('@/assets/img/filetype/TXT.png')" v-else-if="row.FileExtension == 'TXT'||row.FileExtension == 'txt'" />
+                                                            <img :src="require('@/assets/img/filetype/PPT.png')" v-else-if="row.FileExtension == 'ppt'||row.FileExtension == 'pptx'" />
+                                                            <img :src="require('@/assets/img/filetype/video.png')" v-else-if="row.FileExtension == 'mp4'||row.FileExtension == '.mp4'" />
+                                                            <img :src="require('@/assets/img/filetype/defaultImg.png')" v-else-if="row.FileExtension == 'jpg'||row.FileExtension == 'png'||row.FileExtension == 'gif'" />
+                                                            <img :src="require('@/assets/img/filetype/File.png')" v-else />
+                                                        </div>
+                                                        <div class="fileItemInfo">
+                                                            <p class="name">{{row.Name}}</p>
+                                                            <p class="link">
+                                                                <a href="javascript:;">查看</a>
+                                                                ·
+                                                                <a href="javascript:;">下载</a>
+                                                            </p>
+                                                            <p class="time">
+                                                                <span>{{row.CreatedOn}}&nbsp;·</span>
+                                                                &nbsp;
+                                                                <span>{{row.FileSize}}</span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="iconOpera">
+                                                            <a-dropdown trigger="click">
+                                                                <DownOutlined style="font-size: 12px;" />
+                                                                <template #overlay>
+                                                                    <a-menu>
+                                                                        <a-menu-item>
+                                                                            <a href="javascript:;">查看</a>
+                                                                        </a-menu-item>
+                                                                        <a-menu-item>
+                                                                            <a href="javascript:;">删除</a>
+                                                                        </a-menu-item>
+                                                                    </a-menu>
+                                                                  </template>
+                                                            </a-dropdown>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -271,9 +274,10 @@
         isCirculation: false,
         isModal: false,
         isUrging: false,
-        categoryFiles: []
+        categoryFiles: [],
+        isAside: true
     })
-    const { tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData, isCirculation, isModal, isUrging, categoryFiles } = toRefs(data);
+    const { tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData, isCirculation, isModal, isUrging, categoryFiles, isAside } = toRefs(data);
     const changeTabs = (e) => {
         data.activeKey = e;
     }

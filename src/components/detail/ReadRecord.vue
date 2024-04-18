@@ -9,12 +9,13 @@
                 </div>
             </div>
             <div class="panel-bd">
-                <a-table :columns="columns" :data-source="list">
+                <!-- <a-table :columns="columns" :data-source="list">
                     <template #bodyCell="{ column }">
                         <template v-if="column.key === 'Action'">
                         </template>
                     </template>
-                </a-table>
+                </a-table> -->
+                <Dtable name="recordGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.readlogList" :tableHeight="200" :isCollapsed="isCollapsed"></Dtable>               
             </div>
         </div>
         <div class="panel">
@@ -26,12 +27,13 @@
                 </div>
             </div>
             <div class="panel-bd">
-                <a-table :columns="columns2" :data-source="list2">
+                <!-- <a-table :columns="columns2" :data-source="list2">
                     <template #bodyCell="{ column }">
                         <template v-if="column.key === 'sortNumber'">
                         </template>
                     </template>
-                </a-table>
+                </a-table> -->
+                <Dtable name="browsingHistory" ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.readlogList" :tableHeight="200" :isCollapsed="isCollapsed"></Dtable>               
             </div>
         </div>
     </div>
@@ -39,59 +41,62 @@
 <script setup>
     import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance } from "vue";
     import Interface from "@/utils/Interface.js";
+    import Dtable from "@/components/Dtable.vue";
     const { proxy } = getCurrentInstance();
-    var columns = [
-        {
-            title: "序号",
-            // dataIndex: "FromActivityName"
-        },
+    const gridRef = ref(null);
+    const browsingHistoryRef = ref(null);
+    var columns = ref([
+        // {
+        //     title: "序号",
+        //     // dataIndex: "FromActivityName"
+        // },
         {
             title: "传阅人",
-            dataIndex: "ToActivityName"
+            field: "ToActivityName"
         },
         {
             title: "传阅时间",
-            dataIndex: "CreatedOn"
+            field: "CreatedOn"
         },
         {
             title: "接收人",
-            dataIndex: "ReceiverName"
+            field: "ReceiverName"
         },
         {
             title: "是否已读",
-            dataIndex: "IsRead"
+            field: "IsRead"
         }
-    ]
-    var columns2 = [
-        {
-            title: "序号",
-            // dataIndex: "FromActivityName",
-            key: "sortNumber"
-        },
+    ]);
+    var columns2 = ref([
+        // {
+        //     title: "序号",
+        //     // dataIndex: "FromActivityName",
+        //     key: "sortNumber"
+        // },
         {
             title: "阅读人",
-            dataIndex: "CreatedByName"
+            field: "CreatedByName"
         },
         {
             title: "阅读时间",
-            dataIndex: "CreatedOn"
+            field: "CreatedOn"
         },
         {
             title: "IP地址",
-            dataIndex: "IPAddr"
+            field: "IPAddr"
         },
         {
             title: "浏览器名称与版本",
-            dataIndex: "BrowserName"
+            field: "BrowserName"
         }
-    ]
+    ]);
     const data = reactive({
         list: [],
         list2: []
     })
     const { list, list2 } = toRefs(data);
-    const columnList = toRaw(columns);
-    const columnList2 = toRaw(columns2);
+    // const columnList = toRaw(columns);
+    // const columnList2 = toRaw(columns2);
     const getList = async () => {
         await proxy.$get(Interface.readlogList,{
             processInstanceId: "9fd5ec7f-86c8-44e2-b7ee-aa73f7730c2c"
@@ -100,6 +105,8 @@
         })
     }
     onMounted(()=>{
+        gridRef.value.loadGrid();
+        browsingHistoryRef.value.loadGrid();
         getList();
     })
 </script>

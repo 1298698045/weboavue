@@ -17,7 +17,7 @@
     singleSelect: Boolean
   })
   watch(()=> props.isCollapsed, (newVal,oldVal) => {
-    $("#datagrid").datagrid("reload");
+    $("#"+props.name).datagrid("reload");
   })
   const loadGrid = (queryParams) => {
     console.log('loadGrid:queryParams', queryParams)

@@ -1,31 +1,36 @@
 <template>
-    <div class="formSearchWrap">
-        <div class="panel">
-            <div class="panel-head">
-                <div class="panel-title">
-                    选择流程
-                </div>
-                <div class="panel-search">
-                    <a-input placeholder="搜索流程"></a-input>
-                </div>
-            </div>
-            <div class="panel-bd">
-                <div class="tabList">
-                    <div class="tabItem" :class="{'active':index==current}" v-for="(item,index) in list" :key="index" @click="handleTab(item,index)">
-                        {{item.ItemName}}
+    <div style="height: 100%;" v-if="!isList">
+        <div class="formSearchWrap">
+            <div class="panel">
+                <div class="panel-head">
+                    <div class="panel-title">
+                        选择流程
+                    </div>
+                    <div class="panel-search">
+                        <a-input placeholder="搜索流程"></a-input>
                     </div>
                 </div>
-                <div class="moduleBoxWrap">
-                    <div class="moduleBox" v-for="(item,index) in list[current] && list[current].ProcessFormInfo" :key="index" @click="handleDetail(item)">
-                        <div class="title rowEllipsis" :title="item.Name">
-                            {{item.Name}}
+                <div class="panel-bd">
+                    <div class="tabList">
+                        <div class="tabItem" :class="{'active':index==current}" v-for="(item,index) in list" :key="index" @click="handleTab(item,index)">
+                            {{item.ItemName}}
                         </div>
                     </div>
-                    <div class="fake_item"></div>
-                    <div class="fake_item"></div>
+                    <div class="moduleBoxWrap">
+                        <div class="moduleBox" v-for="(item,index) in list[current] && list[current].ProcessFormInfo" :key="index" @click="handleDetail(item)">
+                            <div class="title rowEllipsis" :title="item.Name">
+                                {{item.Name}}
+                            </div>
+                        </div>
+                        <div class="fake_item"></div>
+                        <div class="fake_item"></div>
+                    </div>  
                 </div>
             </div>
         </div>
+    </div>
+    <div style="height: 100%;" v-else>
+        <FormSearchList :params="params" />
     </div>
 </template>
 <script setup>
@@ -53,11 +58,17 @@
   import { message } from "ant-design-vue";
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
+  import FormSearchList from "@/components/workflow/FormSearchList.vue";
   const data = reactive({
     list: [],
-    current: 0
+    current: 0,
+    isList: false,
+    params: {
+        ItemName: "",
+        ItemId: ""
+    }
   });
-  const { list, current } = toRefs(data);
+  const { list, current, isList, params } = toRefs(data);
   const getProcessList = () => {
     proxy.$get(Interface.flow.permissionform,{
 
@@ -84,13 +95,18 @@
   }
   const handleDetail = (item) => {
     console.log(item);
-    router.push({
-        path: "/flow/formSearch/list",
-        query: {
-            objectTypeCode: item.ObjectTypeCode,
-            entityType: item.EntityType
-        }
-    })
+    // router.push({
+    //     path: "/flow/formSearch/list",
+    //     query: {
+    //         objectTypeCode: item.ObjectTypeCode,
+    //         entityType: item.EntityType
+    //     }
+    // })
+    data.params.EntityType = item.EntityType;
+    data.params.ObjectTypeCode = item.ObjectTypeCode;
+    data.params.Name = item.Name;
+    data.params.ProcessId = item.ProcessId;
+    data.isList = true;
   }
 </script>
 <style lang="less" scoped>

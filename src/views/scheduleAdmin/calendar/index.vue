@@ -8,13 +8,22 @@
                 <span class="headerTitle">日历</span>
             </div>
             <div class="headerRight">
-                <a-button type="primary" @click="handleAddSchedule">新建日程</a-button>
+                <dRadioGroup :current="current" @change="changeRadioGroup">
+                    <a-radio-button :value="0">
+                        <i class="iconfont icon-liebiaoshitu"></i>
+                        
+                    </a-radio-button>
+                    <a-radio-button :value="1">
+                        <i class="iconfont icon-rilishitu"></i>
+                    </a-radio-button>
+                </dRadioGroup>
+                <a-button type="primary" class="ml10" @click="handleAddSchedule">新建日程</a-button>
                 <a-button class="ml10" @click="openShare">共享日历</a-button>
                 <a-button class="ml10" @click="openExport">导入日程</a-button>
             </div>
         </div>
         <div class="calendarBody">
-            <div class="leftMenuWrapper">
+            <!-- <div class="leftMenuWrapper">
                 <div class="leftTabMenu" :class="{'active':current==0}" @click="current=0">
                     <div class="menuIcon">
                         <i class="iconfont icon-rililiebiao"></i>
@@ -31,7 +40,7 @@
                         日历
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="calendarRight">
                 <ListView v-if="current==0" />
                 <CalendarVue v-if="current==1" />
@@ -45,6 +54,7 @@
 </template>
 <script setup>
     // import "@/style/oldIcon/iconfont.css";
+    import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
     import {
         ref,
         watch,
@@ -56,8 +66,9 @@
         defineProps,
         defineExpose,
         defineEmits,
+        h
     } from "vue";
-    import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
+    import "@/style/schedule/icon/iconfont.css";
     import ListView from "@/components/meeting/meetingCalendar/List.vue";
     import CalendarVue from "@/components/schedule/calendar/ScheduleCalendar.vue";
 
@@ -66,7 +77,7 @@
     import AddSchedule from "@/components/schedule/AddSchedule.vue";
     import ShareCalendar from "@/components/schedule/ShareCalendar.vue";
     import ExportSchedule from "@/components/schedule/ExportSchedule.vue";
-
+    import dRadioGroup from "@/components/antDefault/Dradio-group.vue"
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
@@ -76,9 +87,13 @@
         isAddSchedule: false,
         isShare: false,
         isExport: false,
-        fileParams: {}
+        fileParams: {},
+        size: "large"
     });
-    const { current, isSchedule, isAddSchedule, isShare, isExport, fileParams } = toRefs(data);
+    const { current, isSchedule, isAddSchedule, isShare, isExport, fileParams, size } = toRefs(data);
+    const changeRadioGroup = (e) => {
+        data.current = e;
+    }
     // 关闭新建
     const cancelNewSchedule = (e) => {
         data.isSchedule = e;
@@ -104,7 +119,7 @@
         data.isExport = true;
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .wrappper{
         width: 100%;
         height: 100%;

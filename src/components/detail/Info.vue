@@ -22,12 +22,13 @@
                 </div>
             </div>
             <div class="panel-bd">
-                <a-table :columns="columns" :data-source="list">
+                <!-- <a-table :columns="columns" :data-source="list">
                     <template #bodyCell="{ column }">
                         <template v-if="column.key === 'Action'">
                         </template>
                     </template>
-                </a-table>
+                </a-table> -->
+                <Dtable name="infoGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.rulelogList" :tableHeight="200" :isCollapsed="isCollapsed"></Dtable>               
             </div>
         </div>
     </div>
@@ -35,66 +36,68 @@
 <script setup>
     import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance } from "vue";
     import Interface from "@/utils/Interface.js";
+    import Dtable from "@/components/Dtable.vue";
     const { proxy } = getCurrentInstance();
-    var columns = [
+    const columns = ref([
         {
             title: "来源环节",
-            dataIndex: "FromActivityName"
+            field: "FromActivityName"
         },
         {
             title: "办理环节",
-            dataIndex: "ToActivityName"
+            field: "ToActivityName"
         },
         {
             title: "应办人",
-            dataIndex: "ToIdentityName"
+            field: "ToIdentityName"
         },
         {
             title: "实办人",
-            dataIndex: "ToIdentityName"
+            field: "ToIdentityName"
         },
         {
             title: "来源类型",
-            dataIndex: "SourceType"
+            field: "SourceType"
         },
         {
             title: "提交人",
-            dataIndex: "CreatedByName"
+            field: "CreatedByName"
         },
         {
             title: "分配时间",
-            dataIndex: "CreatedOn"
+            field: "CreatedOn"
         },
         {
             title: "结束时间",
-            dataIndex: "ModifiedOn"
+            field: "ModifiedOn"
         },
         {
             title: "办理时长",
-            dataIndex: "TimeCost"
+            field: "TimeCost"
         },
         {
             title: "期限",
-            dataIndex: "Deadline"
+            field: "Deadline"
         },
         {
             title: "办理结果",
-            dataIndex: "RuleLogStateCodeName"
+            field: "RuleLogStateCodeName"
         },
         {
             title: "办理方式",
-            dataIndex: "StatusCodeName"
+            field: "StatusCodeName"
         },
         {
             title: "阅读时间",
-            dataIndex: "ReadOn"
+            field: "ReadOn"
         }
-    ]
+    ]);
+    const gridRef = ref(null);
     const data = reactive({
         list: []
     })
     const { list } = toRefs(data);
-    const columnList = toRaw(columns);
+    // const columnList = toRaw(columns);
 
 
     const getList = async () => {
@@ -107,11 +110,21 @@
         })
     }
     onMounted(()=>{
-        getList();
+        // getList();
+        gridRef.value.loadGrid();
     })
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .infoWrap{
         width: 100%;
+    }
+    .ant-btn.ant-btn-text,.ant-btn.ant-btn-text:hover{
+        color: var(--textColor);
+    }
+    .panel{
+        padding: 20px 0 0 0;
+        .panel-head{
+            padding: 0 20px;
+        }
     }
 </style>
