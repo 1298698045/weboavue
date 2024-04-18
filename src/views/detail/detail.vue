@@ -52,8 +52,51 @@
         <div class="detail-scroll">
             <div class="detail-bd">
                 <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
-                    <div class="tableBox" :class="{'active':!isAside}">
-
+                    <div class="leftContent" :class="{'active':!isAside}">
+                        <div class="tableBox" style="width: 100%;height: 60%;" :class="{'active':!isAside}"></div>
+                        <div class="reqWrap">
+                            <div class="reqHead">
+                                <a-tabs v-model:activeKey="reqIndex" @change="changeTab">
+                                    <a-tab-pane :key="1" tab="流转意见"></a-tab-pane>
+                                    <a-tab-pane :key="2" tab="与我相关"></a-tab-pane>
+                                </a-tabs>
+                            </div>
+                            <div class="reqBd">
+                                <div class="reqSignList">
+                                    <div class="reqSignListCont" v-for="item in 3">
+                                        <div class="content-left">
+                                            <div class="avatarImg">
+                                                <img :src="require('@/assets/img/fabe85b769064b61ad77a39d531a6e71.jpg')" alt="">
+                                            </div>
+                                            <div style="width: 132px;">
+                                                <p class="operate-name-label">
+                                                    <a href="javaScript:openhrm(611)">王晓丽</a>
+                                                </p>
+                                                <span class="left-department-span">
+                                                    <a href="/spa/hrm/engine.html#/hrmengine/organization?showTree=false&amp;isView=1&amp;type=department&amp;id=148&amp;_key=3b4uab" target="_blank" style="color: rgb(155, 155, 155); white-space: pre-wrap;">齐业成-业务发展部</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="content-right">
+                                            <div class="content-right-remark-html">
+                                                <br>
+                                            </div>
+                                            <p class="logitem-Recipient">
+                                                <span>接收人 : </span>
+                                                王晓丽 杨元文 杨文元（演示账号） 张理祯
+                                            </p>
+                                            <p class="loglist-item-operatedate">
+                                                <span style="margin-right: 8px;">2023-12-08 16:51:16 </span>
+                                                <span>[预制凭证 / 提交]</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="pagination">
+                                        <a-pagination v-model:current="pageCurrent" show-quick-jumper :total="500" @change="changePagination" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="rightAside">
                         <div class="arrowIcon rightIcon" v-if="isAside" @click="isAside=false"></div>
@@ -275,9 +318,13 @@
         isModal: false,
         isUrging: false,
         categoryFiles: [],
-        isAside: true
+        isAside: true,
+        reqIndex: 1,
+        pageCurrent: 1
     })
-    const { tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData, isCirculation, isModal, isUrging, categoryFiles, isAside } = toRefs(data);
+    const { tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData,
+         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex,
+         pageCurrent } = toRefs(data);
     const changeTabs = (e) => {
         data.activeKey = e;
     }
@@ -331,6 +378,9 @@
         })
     };
     getFiles();
+    const changePagination = (e) => {
+
+    };
 </script>
 <style lang="less" scoped>
     .collapse{
@@ -384,6 +434,87 @@
                             
                         }
                     }
+                }
+            }
+        }
+    }
+
+    .reqWrap{
+        width: 100%;
+        margin-top: 20px;
+        box-shadow: 0 0 5px #ddd;
+        background: #fff;
+        .reqHead{
+            height: 48px;
+            line-height: 48px;
+            background: #f4f4f4;
+            border: 1px solid #d0d0d0;
+            border-top-width: 0;
+        }
+        .reqBd{
+            .reqSignList>div{
+                border-top-width: 0;
+            }
+            .reqSignList{
+                padding: 11px 10px;
+                .reqSignListCont{
+                    position: relative;
+                    padding: 15px 21px;
+                    border-bottom: 1px dashed #e4e4e4;
+                    display: flex;
+                    .content-left>div{
+                        line-height: 24px;
+                        margin-right: 10px;
+                    }
+                    .content-left{
+                        padding-left: 48px;
+                        line-height: 36px;
+                        display: flex;
+                        .avatarImg{
+                            width: 36px;
+                            height: 36px;
+                            border-radius: 50%;
+                            margin: 5px 0 0 -48px;
+                            text-align: center;
+                            margin-right: 10px;
+                            img{
+                                width: 100%;
+                                height: 100%;
+                                border-radius: 50%;
+                            }
+                        }
+                        .operate-name-label{
+                            display: inline-block;
+                            word-break: break-all;
+                            color: #4d7ad8;
+                        }
+                        .left-department-span{
+                            word-break: break-all;
+                            display: inline-block;
+                        }
+                    }
+                    .content-right{
+                        flex: 1;
+                        .content-right-remark-html{
+                            min-height: 24px;
+                            word-wrap: break-word;
+                            word-break: normal;
+                        }
+                        .logitem-Recipient{
+                            line-height: 24px;
+                            color: #8a8a8a;
+                        }
+                        .loglist-item-operatedate{
+                            line-height: 22px;
+                            margin-top: 10px;
+                            color: #9a9a9a;
+                            overflow: hidden;
+                        }
+                    }
+                }
+                .pagination{
+                    text-align: right;
+                    padding: 15px 0 10px 0;
                 }
             }
         }
