@@ -310,6 +310,21 @@ a {
 .ant-btn{
     box-shadow:none;
 }
+/* 按钮组 */
+.btnGroup {
+    .ant-btn {
+        border-radius: 0;
+    }
+    .ant-btn:first-child {
+        border-radius: 4px 0 0 4px;
+    }
+    .ant-btn:last-child {
+        border-radius: 0 4px 4px 0;
+    }
+    .ant-btn + .ant-btn {
+        margin-left: -1px;
+    }
+}
 .moreMenuBox{
     max-width: 500px;
     position: absolute;

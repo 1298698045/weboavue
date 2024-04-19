@@ -498,6 +498,15 @@ const routes = [
     ],
   },
   // {
+  //   path: "/attd",
+  //   name: "Attd"
+  // },
+  {
+    path: "/attd/report",
+    name: "AttdReport",
+    component: () => import("../views/attendance/reportingAttd/index.vue")
+  },
+  // {
   //   path: "/hrsetting/design",
   //   name: "Design",
   //   component: () => import("../views/sys/design/index.vue"),

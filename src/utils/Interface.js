@@ -221,6 +221,13 @@ const Interface = {
       list: "/localData/contract/admin/entitygrid.list.json"
     }
   },
-  files: "/localData/file.attachment.getlist.json"
+  files: "/localData/file.attachment.getlist.json",
+  attd: {
+    list: "/localData/attd/attendance.dept.employee.search.json",
+    empChange: "/localData/attd/attendance.employee.change.json", // 转移权限
+    leavetypeList: "/localData/attd/attendance.leavetype.getlist.json",
+    attdRule: "/localData/attd/attend.rule.get.json",
+    batchAddAttd: "/localData/attd/attendance.month.employeebatch.json", // 批量填报考勤
+  }
 };
 export default Interface;

@@ -1,0 +1,8 @@
+{
+  "status": 1,
+  "GlobalSettings": {
+    "ReportAttenanceStartDay": "25",
+    "EnableAttendanceApprove": true,
+    "RequireReportEveryDay": true
+  }
+}
