@@ -18,3 +18,14 @@ export const formTreeData = (list, id, pid) => {
     });
     return result;
 }
+export const unique = (list, field) => {
+    for(let i = 0; i < list.length; i++){
+        for(let j = i + 1; j < list.length; j++) {
+            if(list[i][field]==list[j][field]){
+                list.splice(j, 1);
+                j--;
+            }
+        }
+    }
+    return list;
+}

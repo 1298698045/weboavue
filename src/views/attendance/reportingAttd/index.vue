@@ -32,7 +32,7 @@
                 </div>
                 <div class="col_right">
                     <a-input-search style="width: 200px;"></a-input-search>
-                    <a-date-picker class="ml10" v-model:value="time" picker="month" />
+                    <a-date-picker class="ml10" v-model:value="time" picker="month" valueFormat="YYYY-MM" />
                     <a-button :icon="h(UndoOutlined)" class="ml10"></a-button>
                     <a-button class="ml10" @click="handleClearAttdRecord">清除考勤记录</a-button>
                     <a-button class="ml10" @click="handleBatchAttd">批量填报考勤</a-button>
@@ -58,7 +58,7 @@
             <div class="attd-classcheck" ref="attdCheckRef">
                 <div class="col">
                     <span class="label">出勤部门:</span>
-                    <span class="deptTag" v-for="(item, index) in objData.Units" :key="index">{{item.name}} <span>未上报</span></span>
+                    <span class="deptTag" :class="{'active':deptCurrent.id == item.id}" v-for="(item, index) in objData.Units" :key="index" @click="handleDeptTab(item)">{{item.name}} <span>未上报</span></span>
                 </div>
                 <div class="col">
                     <span class="label">设置请假时长：</span>
@@ -170,7 +170,9 @@
             </div>
         </div>
         <TransferPerm :isShow="isTransferPerm" v-if="isTransferPerm" @cancel="isTransferPerm=false" />
-        <BatchWriteAttd :isShow="isBatchWriteAttd" v-if="isBatchWriteAttd" :empSelects="empSelects" @cancel="isBatchWriteAttd=false" />
+        <BatchWriteAttd :isShow="isBatchWriteAttd" v-if="isBatchWriteAttd" :empSelects="empSelects" @cancel="isBatchWriteAttd=false" @writesave="writesave" />
+        <PeopleOut :isShow="isPeopleOut" v-if="isPeopleOut" :empSelects="empSelects" @cancel="isPeopleOut=false"></PeopleOut>
+        <PeopleIn :isShow="isPeopleIn" v-if="isPeopleIn" :deptCurrent="deptCurrent" :time="time" />
     </div>
 </template>
 <script setup>
@@ -196,7 +198,8 @@
     const { proxy } = getCurrentInstance();
     import TransferPerm from "@/components/attd/TransferPerm.vue";
     import BatchWriteAttd from "@/components/attd/BatchWriteAttd.vue";
-
+    import PeopleOut from "@/components/attd/PeopleOut.vue";
+    import PeopleIn from "@/components/attd/PeopleIn.vue";
     const bodyRef = ref(null);
     const headRef = ref(null);
     const leftRef = ref(null);
@@ -217,12 +220,18 @@
         employeeSelect: [],
         empSelects: [],
         isTransferPerm: false,
-        isBatchWriteAttd: false
+        isBatchWriteAttd: false,
+        isPeopleOut: false,
+        isPeopleIn: false,
+        deptCurrent: {
+            id: "",
+            name: ""
+        }
     });
     const weekdate = toRaw(['日', '一', '二', '三', '四', '五', '六'])
     const { time, leaveDuration, objData, AttendTypes, listData, 
         width, pageNumber, total, height, widthHead, employeeSelect,
-        isTransferPerm, isBatchWriteAttd, empSelects } = toRefs(data);
+        isTransferPerm, isBatchWriteAttd, empSelects, isPeopleOut, isPeopleIn, deptCurrent } = toRefs(data);
 
     const getQuery = () => {
         proxy.$get(Interface.attd.list, {}).then(res=>{
@@ -239,7 +248,9 @@
         })
     };
     getQuery();
-
+    const handleDeptTab = (item) => {
+        data.deptCurrent = item;
+    };
     onMounted(()=>{
         bodyRef.value.addEventListener('scroll',(e)=>{
             let left = e.target.scrollLeft;
@@ -283,13 +294,26 @@
             data.isBatchWriteAttd = true;
         }
     };
+    const writesave = () => {
+        data.isBatchWriteAttd = false;
+        getQuery();
+    }
     // 人员调入
     const handleEmpIn = () => {
-
+        data.isPeopleIn = true;
     };
     // 人员调出
     const handleEmpOut = () => {
-        isEmployeeSelect();
+        if(isEmployeeSelect()){
+            let arr = data.listData.filter(item=>{
+                return data.employeeSelect.find(row=>{
+                    return row == item.EmployeeId;
+                })
+            });
+            console.log("arr", arr);
+            data.empSelects = arr;
+            data.isPeopleOut = true;
+        }
     };
     const isEmployeeSelect = () => {
         let isBoolean = true;

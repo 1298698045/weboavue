@@ -1,0 +1,105 @@
+{
+  "status": 1,
+  "msg": "",
+  "id": null,
+  "entityLabel": "科室轮转",
+  "keyPrefix": "a3C",
+  "entityApiName": "HREmpRound",
+  "record": {
+    "Name": "",
+    "OwningUser": {
+      "Id": "",
+      "Name": "",
+      "objectTypeCode": "8",
+      "sobjectType": "SystemUser"
+    },
+    "CreatedBy": {
+      "Id": "",
+      "Name": "",
+      "objectTypeCode": "8",
+      "sobjectType": "SystemUser"
+    },
+    "CreatedOn": "",
+    "ModifiedBy": {
+      "Id": "",
+      "Name": "",
+      "objectTypeCode": "8",
+      "sobjectType": "SystemUser"
+    },
+    "ModifiedOn": "",
+    "BusinessUnitId": {
+      "Id": "",
+      "Name": "",
+      "objectTypeCode": "10",
+      "sobjectType": "BusinessUnit"
+    },
+    "TransferType": "",
+    "StartTime": "",
+    "EndTime": "",
+    "TotalDays": null,
+    "StatusCode": "",
+    "Description": "",
+    "FromBusinessUnitId": {
+      "Id": "",
+      "Name": "",
+      "objectTypeCode": "10",
+      "sobjectType": "BusinessUnit"
+    },
+    "EmployeeId": {
+      "Id": "",
+      "Name": "",
+      "objectTypeCode": "30020",
+      "sobjectType": "30020"
+    }
+  },
+  "context": {
+    "picklistValuesMap": {
+      "StatusCode": [
+        {
+          "label": "未审批",
+          "value": "0"
+        },
+        {
+          "label": "审批通过",
+          "value": "3"
+        }
+      ],
+      "TransferType": [
+        {
+          "label": "轮转",
+          "value": "0"
+        },
+        {
+          "label": "借入",
+          "value": "45"
+        },
+        {
+          "label": "部门调动",
+          "value": "49"
+        }
+      ]
+    },
+    "globalValueProviders": [
+      {
+        "type": "$Record",
+        "values": {
+          "objectMetadata": {
+            "HREmpRound": {
+              "_nameField": "Name",
+              "_entityLabel": "科室轮转",
+              "_keyPrefix": "a3C"
+            }
+          }
+        }
+      }
+    ],
+    "appContextUser": {
+      "userId": "2ec00cf2-a484-4136-8fef-e2a2719c5ed6",
+      "name": "刘优"
+    }
+  },
+  "entity": {
+    "ObjectTypeCode": 30033,
+    "EntityType": "a3C"
+  }
+}

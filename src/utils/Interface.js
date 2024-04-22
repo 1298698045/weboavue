@@ -228,6 +228,7 @@ const Interface = {
     leavetypeList: "/localData/attd/attendance.leavetype.getlist.json",
     attdRule: "/localData/attd/attend.rule.get.json",
     batchAddAttd: "/localData/attd/attendance.month.employeebatch.json", // 批量填报考勤
+    transferout: "/localData/attd/attendance.employee.month.transferout.json", // 人员调出
   }
 };
 export default Interface;

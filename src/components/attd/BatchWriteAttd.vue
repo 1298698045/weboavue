@@ -105,7 +105,7 @@
         empSelects: Array
     });
     const formRef = ref();
-    const emit = defineEmits(["cancel"]);
+    const emit = defineEmits(["cancel","writesave"]);
     const handleCancel = () => {
         emit("cancel", false);
     };
@@ -171,7 +171,7 @@
                 };
                 proxy.$get(Interface.attd.batchAddAttd, d).then((res) => {
                     message.success("保存成功！");
-                    emit("cancel", false);
+                    emit("writesave", false);
                     formRef.value.resetFields();
                 });
             })
