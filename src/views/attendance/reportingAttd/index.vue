@@ -169,6 +169,7 @@
                 <a-pagination v-model:current="pageNumber" :defaultPageSize="50" :total="total" @change="changePagination" />
             </div>
         </div>
+        <canvas id="canvas" class="canvas"></canvas>
         <TransferPerm :isShow="isTransferPerm" v-if="isTransferPerm" @cancel="isTransferPerm=false" />
         <BatchWriteAttd :isShow="isBatchWriteAttd" v-if="isBatchWriteAttd" :empSelects="empSelects" @cancel="isBatchWriteAttd=false" @writesave="writesave" />
         <PeopleOut :isShow="isPeopleOut" v-if="isPeopleOut" :empSelects="empSelects" @cancel="isPeopleOut=false"></PeopleOut>
@@ -200,12 +201,37 @@
     import BatchWriteAttd from "@/components/attd/BatchWriteAttd.vue";
     import PeopleOut from "@/components/attd/PeopleOut.vue";
     import PeopleIn from "@/components/attd/PeopleIn.vue";
+    
     const bodyRef = ref(null);
     const headRef = ref(null);
     const leftRef = ref(null);
     const bdRef = ref(null);
     const attdCheckRef = ref(null);
     const attdDeptRef = ref(null);
+    import { Drawer } from '@/utils/canvasExtend/drawer-ui.js';
+    const drawer = ref(null);
+
+    const initCanvas = () => {
+        const canvas = document.getElementById('canvas');
+        canvas.width = window.innerWidth - 20
+        canvas.height = window.innerHeight - 20
+        drawer.value = new Drawer({ view: canvas })
+    }
+
+    const areaPoint = {
+        startX: 0,
+        startY: 0,
+        endX: 0,
+        endY: 0
+    };
+
+    // 是否开始获取坐标
+    const startMove = ref(false);
+
+    const mouseDown = () => {
+
+    };
+
     const data = reactive({
         time: "",
         leaveDuration: "1",
@@ -262,6 +288,13 @@
         setTimeout(function () {
           window.dispatchEvent(new Event('resize'));
         });
+        bodyRef.value.addEventListener("mousedown", (e)=>{
+            console.log("mousedown", e);
+        });
+        bodyRef.value.addEventListener("mouseup", (e)=>{
+            console.log("mouseup", e);
+        });
+        initCanvas();
     });
 
     const getHeight = () => {
