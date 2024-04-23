@@ -149,7 +149,7 @@
                     <div class="attend-table-body-right" :style="{height:height+'px'}" ref="bodyRef">
                         <div>
                             <div class="attend-table-row" :style="{width:width+'px'}" v-for="(item, index) in listData" :key="index">
-                                <div class="attend-table-td" style="width: 75px; height: 29px; line-height: 30px;" v-for="(row, idx) in objData.Days" :key="idx">        
+                                <div class="attend-table-td" style="width: 75px; height: 29px; line-height: 30px;" v-for="(row, idx) in objData.Days" :key="idx" @click="handleSelectCol(item, index, row, idx)">        
                                     <div></div>
                                 </div>
                                 <div class="attend-table-td Descriptionschedual" style="width: 104px; height: 29px;">
@@ -172,7 +172,7 @@
         <TransferPerm :isShow="isTransferPerm" v-if="isTransferPerm" @cancel="isTransferPerm=false" />
         <BatchWriteAttd :isShow="isBatchWriteAttd" v-if="isBatchWriteAttd" :empSelects="empSelects" @cancel="isBatchWriteAttd=false" @writesave="writesave" />
         <PeopleOut :isShow="isPeopleOut" v-if="isPeopleOut" :empSelects="empSelects" @cancel="isPeopleOut=false"></PeopleOut>
-        <PeopleIn :isShow="isPeopleIn" v-if="isPeopleIn" :deptCurrent="deptCurrent" :time="time" />
+        <PeopleIn :isShow="isPeopleIn" v-if="isPeopleIn" :deptCurrent="deptCurrent" :time="time" @cancel="isPeopleIn=false" />
     </div>
 </template>
 <script setup>
@@ -328,6 +328,9 @@
     // 转移权限
     const handleTransferPerm = () => {
         data.isTransferPerm = true;
+    }
+    const handleSelectCol = (item, index, row, idx) => {
+        console.log(item, row);
     }
 </script>
 <style lang="less" scoped>

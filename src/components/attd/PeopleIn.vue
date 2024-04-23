@@ -220,7 +220,7 @@
   const handleCancel = () => {
     emit("cancel", false);
   };
-  
+  const formRef = ref(null);
   const data = reactive({
     title: "添加人员",
     height: document.documentElement.clientHeight - 300,
@@ -369,18 +369,27 @@
 
   };
   const handleSubmit = () => {
-    var d = {
-        objectTypeCode: 10,
-        unitId: "",
-        ToDept: "",
-        startDate: "",
-        endDate: "",
-        yearNumber: formState.yearNumber,
-        monthNumber: formState.monthNumber,
-        employeeId: data.selectUsers.join(','),
-        transferType: formState.transferType
-    }
-    console.log("data", data.selectUsers);
+    formRef.value.validate().then(() => {
+        let d = {
+            objectTypeCode: 10,
+            unitId: "",
+            ToDept: "",
+            startDate: "",
+            endDate: "",
+            yearNumber: formState.yearNumber,
+            monthNumber: formState.monthNumber,
+            employeeId: data.selectUsers.join(','),
+            transferType: formState.transferType
+        }
+        proxy.$get(Interface.attd.transferdeptIn, d).then((res) => {
+            message.success("保存成功！");
+            emit("cancel", false);
+            formRef.value.resetFields();
+        });
+    })
+    .catch((err) => {
+        console.log("error", err);
+    });
   };
 
   const handleNext = () => {
