@@ -229,7 +229,9 @@ const Interface = {
     attdRule: "/localData/attd/attend.rule.get.json",
     batchAddAttd: "/localData/attd/attendance.month.employeebatch.json", // 批量填报考勤
     transferout: "/localData/attd/attendance.employee.month.transferout.json", // 人员调出
-    transferdeptIn: "/localData/attd/attendance.employee.month.transferdept.json"
+    transferdeptIn: "/localData/attd/attendance.employee.month.transferdept.json",// 人员调入
+    setAttdLeave: "/localData/attd/attendance.leave.employee.day.set.json", // 填考勤
+    globalsettings: "/localData/attd/attendance.globalsettings.get.json"
   }
 };
 export default Interface;

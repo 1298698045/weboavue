@@ -71,7 +71,7 @@
             <div class="attd-departmentcheck" ref="attdDeptRef">
                 <span class="typeLabel">类型：</span>
                 <div>
-                    <span class="typeItem" v-for="(item,index) in AttendTypes" :key="index">{{item.Name}}</span>
+                    <span class="typeItem" :class="{'active':currentType.Id==item.Id}" v-for="(item,index) in AttendTypes" :key="index" @click="handleAttdTypes(item, index)">{{item.Name}}</span>
                 </div>
             </div>
             <div class="attdTable">
@@ -122,24 +122,24 @@
                         <div>
                             <a-checkbox-group v-model:value="employeeSelect">
                                 <div class="attend-table-row" v-for="(item, index) in listData" :key="index">
-                                    <div class="attend-table-td" style="min-width: 25px; width: 25px; height: 29px; line-height: 30px;">
+                                    <div class="attend-table-td" style="min-width: 25px; width: 25px; height: 30px; line-height: 30px;">
                                         <div><span>{{index+1}}</span></div>
                                     </div>
-                                    <div class="attend-table-td" style="min-width: 25px; width: 25px; height: 29px; line-height: 30px;">
+                                    <div class="attend-table-td" style="min-width: 25px; width: 25px; height: 30px; line-height: 30px;">
                                         <div>
                                             <a-checkbox :value="item.EmployeeId"></a-checkbox>
                                         </div>
                                     </div>
-                                    <div class="attend-table-td" style="width: 75px; height: 29px; line-height: 30px;">        
+                                    <div class="attend-table-td" style="width: 75px; height: 30px; line-height: 30px;">        
                                         <div>{{item.Name}}</div>    
                                     </div>
-                                    <div class="attend-table-td" style="width: 75px; height: 29px; line-height: 30px;">        
+                                    <div class="attend-table-td" style="width: 75px; height: 30px; line-height: 30px;">        
                                         <div>{{item.EmployeeNo}}</div>    
                                     </div>
-                                    <div class="attend-table-td" style="width: 75px; height: 29px; line-height: 30px;">        
+                                    <div class="attend-table-td" style="width: 75px; height: 30px; line-height: 30px;">        
                                         <div>{{item.CategoryCodeName}}</div>    
                                     </div>
-                                    <div class="attend-table-td" style="width: 75px; height: 29px; line-height: 30px;">        
+                                    <div class="attend-table-td" style="width: 75px; height: 30px; line-height: 30px;">        
                                         <div></div>    
                                     </div>
                                 </div>
@@ -149,16 +149,19 @@
                     <div class="attend-table-body-right" :style="{height:height+'px'}" ref="bodyRef">
                         <div>
                             <div class="attend-table-row" :style="{width:width+'px'}" v-for="(item, index) in listData" :key="index">
-                                <div class="attend-table-td" style="width: 75px; height: 29px; line-height: 30px;" v-for="(row, idx) in objData.Days" :key="idx" @click="handleSelectCol(item, index, row, idx)">        
-                                    <div></div>
+                                <div class="attend-table-td" style="width: 75px; height: 30px; line-height: 30px;" v-for="(row, idx) in item.AttendData" :key="idx" @click.stop="handleSelectCol(item, index, row, idx)">        
+                                    <div>
+                                        <p class="attdLeave" v-for="(leave, leaveIdx) in row.LeaveDetail" :key="leaveIdx">{{leave.LeaveTypeName}}({{leave.LeaveDays}})</p>
+                                    </div>
                                 </div>
-                                <div class="attend-table-td Descriptionschedual" style="width: 104px; height: 29px;">
+                                <div class="attend-table-td Descriptionschedual" style="width: 104px; height: 30px;">
                                     <div>
                                         <input class="texteare-description" style="width:95px;margin-top:4px;min-height: 20px;" value="" title="">
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- <canvas id="canvas" class="canvas"></canvas> -->
                     </div>
                 </div>
             </div>
@@ -189,7 +192,7 @@
         defineExpose,
         defineEmits,
         toRaw,
-        inject, h
+        inject, h, nextTick
     } from "vue";
     import {
         AlignCenterOutlined, SearchOutlined, RightOutlined, UndoOutlined
@@ -203,19 +206,25 @@
     import PeopleIn from "@/components/attd/PeopleIn.vue";
     
     const bodyRef = ref(null);
+    const offsetTop = ref(null);
+    nextTick(()=>{
+        // console.log("offsetTop", bodyRef.value.offsetTop);
+        // console.log("offsetLeft", bodyRef.value.offsetLeft);
+        offsetTop.value = bodyRef.value.offsetTop + 10;
+    })
     const headRef = ref(null);
     const leftRef = ref(null);
     const bdRef = ref(null);
     const attdCheckRef = ref(null);
     const attdDeptRef = ref(null);
-    import { Drawer } from '@/utils/canvasExtend/drawer-ui.js';
+    import { Drawer, Rect } from '@/utils/canvasExtend/drawer-ui.js';
     const drawer = ref(null);
 
     const initCanvas = () => {
         const canvas = document.getElementById('canvas');
         canvas.width = window.innerWidth - 20
         canvas.height = window.innerHeight - 20
-        drawer.value = new Drawer({ view: canvas })
+        drawer.value = new Drawer({ view: canvas });
     }
 
     const areaPoint = {
@@ -228,9 +237,62 @@
     // 是否开始获取坐标
     const startMove = ref(false);
 
-    const mouseDown = () => {
-
+    // 鼠标按下
+    const mouseDown = (e) => {
+        startMove.value = true;
+        if(e.x < 350 || e.y < offsetTop.value){
+            startMove.value = false;
+        }
+        const {x, y} = e;
+        // areaPoint.startX = x - 350;
+        // areaPoint.startY = y - offsetTop.value;
+        areaPoint.startX = x;
+        areaPoint.startY = y;
     };
+
+    // 鼠标移动
+    const mouseMove = (e) => {
+        if(e.x < 350 || e.y < offsetTop.value){
+            startMove.value = false;
+            drawer.value?.clear();
+        }
+        if(startMove.value){
+            const {x, y} = e;
+            // areaPoint.endX = x - 350;
+            // areaPoint.endY = y - offsetTop.value;
+            areaPoint.endX = x;
+            areaPoint.endY = y;
+
+            drawer.value?.clear();
+            const { startX, startY, endX, endY } = areaPoint;
+            const rect = new Rect({
+                x: startX,
+                y: startY,
+                width: endX - startX,
+                height: endY - startY,
+                isFill: false,
+            },'rect');
+            drawer.value?.add(rect);
+        }
+    };
+
+    // 鼠标抬起/释放
+    const mouseUp = (e) => {
+        const { screenX, screenY } = e
+        // areaPoint.endX = screenX - 350;
+        // areaPoint.endY = screenY - offsetTop.value;
+        areaPoint.endX = screenX;
+        areaPoint.endY = screenY;
+        startMove.value = false;
+        drawer.value?.clear();
+    };
+    function bindEvent() {
+        window.addEventListener('mousedown', mouseDown);
+        window.addEventListener('mousemove', mouseMove);
+        window.addEventListener('mouseup', mouseUp);
+        // bodyRef.value.addEventListener('keydown', keyDown);
+        // bodyRef.value.addEventListener('keyup', keyUp);
+    }
 
     const data = reactive({
         time: "",
@@ -252,12 +314,17 @@
         deptCurrent: {
             id: "",
             name: ""
+        },
+        currentType: {
+            Id: "",
+            Name: ""
         }
     });
     const weekdate = toRaw(['日', '一', '二', '三', '四', '五', '六'])
     const { time, leaveDuration, objData, AttendTypes, listData, 
         width, pageNumber, total, height, widthHead, employeeSelect,
-        isTransferPerm, isBatchWriteAttd, empSelects, isPeopleOut, isPeopleIn, deptCurrent } = toRefs(data);
+        isTransferPerm, isBatchWriteAttd, empSelects, isPeopleOut, isPeopleIn, deptCurrent,
+        currentType } = toRefs(data);
 
     const getQuery = () => {
         proxy.$get(Interface.attd.list, {}).then(res=>{
@@ -267,7 +334,7 @@
             data.width = res.Days.length * 75 + 104;
             data.widthHead = res.Days.length * 75 + 104;
             data.total = res.pageInfo.totalRows;
-            if(data.total * 29 > data.height){
+            if(data.total * 30 > data.height){
                 console.log("666")
                 data.widthHead = data.widthHead + 10;
             }
@@ -288,21 +355,26 @@
         setTimeout(function () {
           window.dispatchEvent(new Event('resize'));
         });
-        bodyRef.value.addEventListener("mousedown", (e)=>{
-            console.log("mousedown", e);
-        });
-        bodyRef.value.addEventListener("mouseup", (e)=>{
-            console.log("mouseup", e);
-        });
+        // bodyRef.value.addEventListener("mousedown", (e)=>{
+        //     e.stopPropagation();
+        //     console.log("mousedown", e);
+        // });
+        // bodyRef.value.addEventListener("mouseup", (e)=>{
+        //     e.stopPropagation();
+        //     console.log("mouseup", e);
+        // });
         initCanvas();
+        bindEvent();
     });
 
     const getHeight = () => {
-        let bdHeight = bdRef.value.clientHeight;
-        let checkHeight = attdCheckRef.value.clientHeight;
-        let deptHeight = attdDeptRef.value.clientHeight;
-        let height = bdHeight - checkHeight - deptHeight - 102;
-        data.height = height; 
+        nextTick(()=>{
+            let bdHeight = bdRef.value.clientHeight;
+            let checkHeight = attdCheckRef.value.clientHeight;
+            let deptHeight = attdDeptRef.value.clientHeight;
+            let height = bdHeight - checkHeight - deptHeight - 102;
+            data.height = height; 
+        })
     };
 
     const changePagination = (e) => {
@@ -362,9 +434,33 @@
     const handleTransferPerm = () => {
         data.isTransferPerm = true;
     }
+    const handleAttdTypes = (item, index) => {
+        data.currentType = item;
+    };
+    // 单点单元格填考勤
     const handleSelectCol = (item, index, row, idx) => {
         console.log(item, row);
-    }
+        if(data.currentType.Id!=''){
+            let d = {
+                attendDate: "",
+                employeeId: item.EmployeeId,
+                objectTypeCode: 10,
+                businessUnitId: item.BusinessUnitId,
+                unitId: item.businessUnitId,
+                newStatus: 3,
+                leaveDays: data.leaveDuration,
+                oldStatus: 0,
+                elementId: ""
+            }
+            proxy.$get(Interface.attd.setAttdLeave ,d).then(res=>{
+                message.success(res.msg);
+                getQuery();
+            })
+        }else {
+            message.error("请在上面类型中随意选择一个类型！")
+        }
+    };
+    
 </script>
 <style lang="less" scoped>
     @import url("~@/style/public.css");
@@ -482,7 +578,7 @@
                     padding: 0 5px;
                     cursor: pointer;
                     margin-left: 10px;
-                    &:hover{
+                    &:hover,&.active{
                         background: #1b5297;
                         color: #fff;
                     }
@@ -526,8 +622,31 @@
                     cursor: pointer;
                     height: 40px;
                     min-width: 75px;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
                     .weekdate{
 
+                    }
+                    &>div{
+                        width: 100%;
+                    }
+                    .attdLeave{
+                        width: 100%;
+                        height: 15px;
+                        line-height: 15px;
+                        padding: 0 5px;
+                        margin-top: 1px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #6ce26c;
+                        color: #333;
+                        font-size: 12px;
+                        border-radius: 2px;
+                        white-space: nowrap;
                     }
                 }
                 .attend-table-head-right{
@@ -553,14 +672,14 @@
                 .attend-table-body{
                     width: 100%;
                     /* height: 200px; */
-                    position: relative;
+                    /* position: relative; */
                     color: #888;
                     overflow: hidden;
                     /* overflow-y: auto; */
                     display: flex;
                     .attend-table-body-left{
                         height: 100%;
-                        overflow-y: auto;
+                        overflow-y: hidden;
                         &::-webkit-scrollbar {
                             width: 0;
                             height: 0;
@@ -590,6 +709,7 @@
                         width: calc(~"100% - 350px") !important;
                         overflow: auto;
                         position: relative;
+                        z-index: 999;
                     }
                 }
             }
@@ -623,5 +743,10 @@
     }
     .clear{
         clear: both;
+    }
+    .canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
     }
 </style>
