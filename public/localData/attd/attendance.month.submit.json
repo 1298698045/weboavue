@@ -1,0 +1,43 @@
+{
+  "Depts": [
+    {
+      "ApprovedBy": null,
+      "ApprovedByName": null,
+      "ApprovedOn": null,
+      "ID": "00000000-0000-0000-0000-000000000000",
+      "ValueId": "00000000-0000-0000-0000-000000000000",
+      "AttendYear": 2024,
+      "AttendMonth": 4,
+      "ObjectTypeCode": 10,
+      "ObjectId": "63a1820f-e332-4c71-bfb5-39677c7ecdd8",
+      "DeptId": "00000000-0000-0000-0000-000000000000",
+      "OwningBusinessUnit": "00000000-0000-0000-0000-000000000000",
+      "ObjectIdName": "信息中心",
+      "Name": "信息中心",
+      "StatusCode": 1,
+      "ShiftStatus": 0,
+      "CloseStatusCode": 0,
+      "CloseStatusCodeName": "未封存",
+      "ModifiedOn": "",
+      "ModifiedByName": "",
+      "ReportorByName": "",
+      "ReportorBy": "",
+      "StatusCodeName": "已上报",
+      "ShiftStatusName": "未上报",
+      "Description": null,
+      "LeaveMessage": null,
+      "DutyShiftBy": "",
+      "DutyShiftStatus": 0,
+      "DutyShiftCloseStatus": 0,
+      "Quantity": 63,
+      "QuantityOfAbsent": 0,
+      "QuantityOfAttendance": 0,
+      "DeptManagerId": null,
+      "DeptManagerIdName": null,
+      "ApproveStatusCode": null,
+      "ApproveStatusCodeName": "未审批"
+    }
+  ],
+  "status": 0,
+  "msg": "提交成功！"
+}

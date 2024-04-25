@@ -1,6 +1,13 @@
 {
   "status": 1,
   "msg": "成功",
-  "rows": [],
-  "total": 0
+  "rows": [
+    {
+      "EmployeeId": "501d405c-182b-4b3f-b514-55756b76f443",
+      "Name": "申维",
+      "EmployeeNo": "48833",
+      "DeptIdName": "信息中心"
+    }
+  ],
+  "total": 1
 }

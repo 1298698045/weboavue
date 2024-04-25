@@ -27,7 +27,7 @@
                         « 返回列表
                     </a>
                     <span>
-                        状态：<span class="status">未开放</span>
+                        状态：<span class="status">{{objData.GroupReportStatusName}}</span>
                     </span>
                 </div>
                 <div class="col_right">
@@ -39,10 +39,11 @@
                     <div class="btnGroup ml10">
                         <a-button @click="handleEmpIn">人员调入</a-button>
                         <a-button @click="handleEmpOut">人员调出</a-button>
-                        <a-button>排序</a-button>
+                        <a-button @click="handleSort">排序</a-button>
                     </div>
-                    <a-button class="ml10">备注</a-button>
-                    <a-button type="primary" class="ml10">提交发布</a-button>
+                    <a-button class="ml10" @click="handleRemarks">备注</a-button>
+                    <a-button type="primary" class="ml10" @click="handleSubmitAttd(0)" v-if="objData.GroupReportStatus==1">撤销考勤</a-button>
+                    <a-button type="primary" class="ml10" @click="handleSubmitAttd(1)" v-else>提交考勤</a-button>
                 </div>
             </div>
         </div>
@@ -172,12 +173,16 @@
                 <a-pagination v-model:current="pageNumber" :defaultPageSize="50" :total="total" @change="changePagination" />
             </div>
         </div>
-        <canvas id="canvas" class="canvas"></canvas>
         <TransferPerm :isShow="isTransferPerm" v-if="isTransferPerm" @cancel="isTransferPerm=false" />
         <BatchWriteAttd :isShow="isBatchWriteAttd" v-if="isBatchWriteAttd" :empSelects="empSelects" @cancel="isBatchWriteAttd=false" @writesave="writesave" />
         <PeopleOut :isShow="isPeopleOut" v-if="isPeopleOut" :empSelects="empSelects" @cancel="isPeopleOut=false"></PeopleOut>
         <PeopleIn :isShow="isPeopleIn" v-if="isPeopleIn" :deptCurrent="deptCurrent" :time="time" @cancel="isPeopleIn=false" />
+        <NotAddPeople :isShow="isNotAddPeople" v-if="isNotAddPeople" @cancel="isNotAddPeople=false" />
+        <DeleteAttd :isShow="isDeleteAttd" v-if="isDeleteAttd" :yearNumber="yearNumber" :monthNumber="monthNumber" :unitId="deptCurrent.id" :empSelects="empSelects" @cancel="isDeleteAttd=false"></DeleteAttd>
+        <RemarksAttd :isShow="isRemarks" v-if="isRemarks" :yearNumber="yearNumber" :monthNumber="monthNumber" :unitId="deptCurrent" @cancel="isRemarks=false" />
+        <SubmitAttd :isShow="isSubmitAttd" v-if="isSubmitAttd" :yearNumber="yearNumber" :monthNumber="monthNumber" :unitId="deptCurrent.id" :status="status" :time="time" @cancel="isSubmitAttd=false" />
     </div>
+    <canvas id="canvas" class="canvas"></canvas>
 </template>
 <script setup>
     import {
@@ -198,13 +203,18 @@
         AlignCenterOutlined, SearchOutlined, RightOutlined, UndoOutlined
     } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
+    import dayjs from 'dayjs';
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
     import TransferPerm from "@/components/attd/TransferPerm.vue";
     import BatchWriteAttd from "@/components/attd/BatchWriteAttd.vue";
     import PeopleOut from "@/components/attd/PeopleOut.vue";
     import PeopleIn from "@/components/attd/PeopleIn.vue";
-    
+    // 未添加人员列表
+    import NotAddPeople from "@/components/attd/NotAddPeople.vue";
+    import DeleteAttd from "@/components/attd/DeleteAttd.vue";
+    import RemarksAttd from "@/components/attd/RemarksAttd.vue";
+    import SubmitAttd from "@/components/attd/SubmitAttd.vue";
     const bodyRef = ref(null);
     const offsetTop = ref(null);
     nextTick(()=>{
@@ -318,14 +328,23 @@
         currentType: {
             Id: "",
             Name: ""
-        }
+        },
+        isNotAddPeople: false,
+        isDeleteAttd: false,
+        yearNumber: "",
+        monthNumber: "",
+        isRemarks: false,
+        isSubmitAttd: false,
+        status: 1
     });
     const weekdate = toRaw(['日', '一', '二', '三', '四', '五', '六'])
     const { time, leaveDuration, objData, AttendTypes, listData, 
         width, pageNumber, total, height, widthHead, employeeSelect,
         isTransferPerm, isBatchWriteAttd, empSelects, isPeopleOut, isPeopleIn, deptCurrent,
-        currentType } = toRefs(data);
-
+        currentType, isNotAddPeople, isDeleteAttd, yearNumber, monthNumber, isRemarks, isSubmitAttd, status } = toRefs(data);
+    data.time = dayjs(new Date).format('YYYY-MM');
+    data.yearNumber = dayjs(new Date).format('YYYY');
+    data.monthNumber = dayjs(new Date).format('MM');
     const getQuery = () => {
         proxy.$get(Interface.attd.list, {}).then(res=>{
             data.objData = res;
@@ -383,7 +402,9 @@
 
     // 清除考勤记录
     const handleClearAttdRecord = () => {
-        isEmployeeSelect();
+        if(isEmployeeSelect()){
+            data.isDeleteAttd = true;
+        }
     };
     // 批量填报考勤
     const handleBatchAttd = () => {
@@ -460,7 +481,18 @@
             message.error("请在上面类型中随意选择一个类型！")
         }
     };
-    
+    // 排序
+    const handleSort = () => {
+
+    };
+    // 备注
+    const handleRemarks = () => {
+        data.isRemarks = true;
+    }
+    const handleSubmitAttd = (status) => {
+        data.status = status;
+        data.isSubmitAttd = true;
+    }
 </script>
 <style lang="less" scoped>
     @import url("~@/style/public.css");
@@ -468,6 +500,8 @@
         width: 100%;
         height: 100vh;
         overflow: hidden;
+        position: relative;
+        z-index: 999;
         .attdHead{
             padding: 10px 16px;
             background: #f3f2f2;

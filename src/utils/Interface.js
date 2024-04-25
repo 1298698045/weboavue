@@ -231,7 +231,12 @@ const Interface = {
     transferout: "/localData/attd/attendance.employee.month.transferout.json", // 人员调出
     transferdeptIn: "/localData/attd/attendance.employee.month.transferdept.json",// 人员调入
     setAttdLeave: "/localData/attd/attendance.leave.employee.day.set.json", // 填考勤
-    globalsettings: "/localData/attd/attendance.globalsettings.get.json"
+    globalsettings: "/localData/attd/attendance.globalsettings.get.json",
+    notPeopleList: "/localData/attd/attendance.month.employee.lacklist.json", // 未添加人员,
+    clearAttdLeave: "/localData/attd/attendance.employee.monthleave.delete.json", // 清除考勤记录
+    remarksAttd: "/localData/attd/workshift.dept.month.remark.json", // 科室备注
+    submitAttd: "/localData/attd/attendance.month.submit.json", // 提交考勤
+    monthtips: "/localData/attd/attendace.monthtips.number.json", // 统计上月 本月人数
   }
 };
 export default Interface;
