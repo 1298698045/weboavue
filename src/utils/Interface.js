@@ -237,6 +237,7 @@ const Interface = {
     remarksAttd: "/localData/attd/workshift.dept.month.remark.json", // 科室备注
     submitAttd: "/localData/attd/attendance.month.submit.json", // 提交考勤
     monthtips: "/localData/attd/attendace.monthtips.number.json", // 统计上月 本月人数
+    sortAttd: "/localData/attd/workshift.employee.month.sort.json", // 考勤人员排序
   }
 };
 export default Interface;

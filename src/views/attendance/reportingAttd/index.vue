@@ -181,6 +181,7 @@
         <DeleteAttd :isShow="isDeleteAttd" v-if="isDeleteAttd" :yearNumber="yearNumber" :monthNumber="monthNumber" :unitId="deptCurrent.id" :empSelects="empSelects" @cancel="isDeleteAttd=false"></DeleteAttd>
         <RemarksAttd :isShow="isRemarks" v-if="isRemarks" :yearNumber="yearNumber" :monthNumber="monthNumber" :unitId="deptCurrent" @cancel="isRemarks=false" />
         <SubmitAttd :isShow="isSubmitAttd" v-if="isSubmitAttd" :yearNumber="yearNumber" :monthNumber="monthNumber" :unitId="deptCurrent.id" :status="status" :time="time" @cancel="isSubmitAttd=false" />
+        <SortAttdPeople :isShow="isSort" v-if="isSort" :peoples="listData" :yearNumber="yearNumber" :monthNumber="monthNumber" :unitId="deptCurrent.id" @cancel="isSort=false" @sortOk="handleSortOk" />
     </div>
     <canvas id="canvas" class="canvas"></canvas>
 </template>
@@ -215,6 +216,7 @@
     import DeleteAttd from "@/components/attd/DeleteAttd.vue";
     import RemarksAttd from "@/components/attd/RemarksAttd.vue";
     import SubmitAttd from "@/components/attd/SubmitAttd.vue";
+    import SortAttdPeople from "@/components/attd/SortAttdPeople.vue";
     const bodyRef = ref(null);
     const offsetTop = ref(null);
     nextTick(()=>{
@@ -335,13 +337,14 @@
         monthNumber: "",
         isRemarks: false,
         isSubmitAttd: false,
-        status: 1
+        status: 1,
+        isSort: false
     });
     const weekdate = toRaw(['日', '一', '二', '三', '四', '五', '六'])
     const { time, leaveDuration, objData, AttendTypes, listData, 
         width, pageNumber, total, height, widthHead, employeeSelect,
         isTransferPerm, isBatchWriteAttd, empSelects, isPeopleOut, isPeopleIn, deptCurrent,
-        currentType, isNotAddPeople, isDeleteAttd, yearNumber, monthNumber, isRemarks, isSubmitAttd, status } = toRefs(data);
+        currentType, isNotAddPeople, isDeleteAttd, yearNumber, monthNumber, isRemarks, isSubmitAttd, status, isSort } = toRefs(data);
     data.time = dayjs(new Date).format('YYYY-MM');
     data.yearNumber = dayjs(new Date).format('YYYY');
     data.monthNumber = dayjs(new Date).format('MM');
@@ -483,7 +486,7 @@
     };
     // 排序
     const handleSort = () => {
-
+        data.isSort = true;
     };
     // 备注
     const handleRemarks = () => {
@@ -492,6 +495,10 @@
     const handleSubmitAttd = (status) => {
         data.status = status;
         data.isSubmitAttd = true;
+    }
+    const handleSortOk = () => {
+        data.isSort = false;
+        getQuery();
     }
 </script>
 <style lang="less" scoped>
