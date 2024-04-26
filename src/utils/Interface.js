@@ -238,6 +238,11 @@ const Interface = {
     submitAttd: "/localData/attd/attendance.month.submit.json", // 提交考勤
     monthtips: "/localData/attd/attendace.monthtips.number.json", // 统计上月 本月人数
     sortAttd: "/localData/attd/workshift.employee.month.sort.json", // 考勤人员排序
+  },
+  // 排班
+  scheduling: {
+    deptMonthList: "/localData/scheduling/workshift.dept.employee.search.json", // 部门按月排班
+    workshiftSet: "/localData/scheduling/workshift.employee.day.set.json", // 排班
   }
 };
 export default Interface;

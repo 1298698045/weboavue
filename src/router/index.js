@@ -506,6 +506,11 @@ const routes = [
     name: "AttdReport",
     component: () => import("../views/attendance/reportingAttd/index.vue")
   },
+  {
+    path: "/scheduling/dept",
+    name: "DeptScheduling",
+    component: () => import("../views/scheduling/deptScheduling/index.vue")
+  },
   // {
   //   path: "/hrsetting/design",
   //   name: "Design",
