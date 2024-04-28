@@ -511,6 +511,11 @@ const routes = [
     name: "DeptScheduling",
     component: () => import("../views/scheduling/deptScheduling/index.vue")
   },
+  {
+    path: "/scheduling/deptGroup",
+    name: "DeptGroupScheduling",
+    component: () => import("../views/scheduling/deptGroupScheduling/index.vue")
+  },
   // {
   //   path: "/hrsetting/design",
   //   name: "Design",

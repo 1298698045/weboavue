@@ -131,7 +131,7 @@
                     <div class="attend-table-head-right" ref="headRef">
                         <div class="attend-table-row" :style="{width:widthHead+'px'}">
                             <div class="attend-table-td" style="width: 75px;" v-for="(item, index) in objData.Days" :key="index">
-                                <div class="weekdate">
+                                <div class="weekdate" :class="{'active':item.DayofWeek==0||item.DayofWeek==6}">
                                     <p>{{weekdate[item.DayofWeek]}}</p>
                                     <p>{{item.Name}}</p>
                                 </div>
@@ -693,7 +693,9 @@
                     align-items: center;
                     justify-content: center;
                     .weekdate{
-
+                        &.active{
+                            color: red;
+                        }
                     }
                     &>div{
                         width: 100%;

@@ -243,6 +243,9 @@ const Interface = {
   scheduling: {
     deptMonthList: "/localData/scheduling/workshift.dept.employee.search.json", // 部门按月排班
     workshiftSet: "/localData/scheduling/workshift.employee.day.set.json", // 排班
+    deptGroup: "/localData/scheduling/workshift.month.deptgroup.headerinfo.get.json",
+    monthDeptgroupList: "/localData/scheduling/workshift.month.deptgroup.employee.getlist.json", // 部门组排班
+    deptgroupEmpSort: "/localData/scheduling/workshift.deptgroup.employee.month.sort.json", // 人员排序
   }
 };
 export default Interface;
