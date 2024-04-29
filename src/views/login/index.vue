@@ -9,22 +9,32 @@
                     账号登录
                 </div>
                 <div class="loginCenter">
-                    <a-form>
-                        <a-form-item>
-                            <a-input placeholder="用户名" allow-clear>
+                    <a-form ref="formRef" :model="formState">
+                        <a-form-item name="userName" :rules="[{ required: true, message: '请输入用户名!' }]">
+                            <a-input v-model:value="formState.userName" placeholder="用户名" allow-clear>
                                 <template #prefix>
                                     <UserOutlined />
                                 </template>
                             </a-input>
                         </a-form-item>
-                        <a-form-item>
-                            <a-input type="password" placeholder="密码" allow-clear>
+                        <a-form-item name="password" :rules="[{ required: true, message: '请输入密码!' }]">
+                            <a-input v-model:value="formState.password" type="password" placeholder="密码" allow-clear>
                                 <template #prefix>
                                     <LockOutlined />
                                 </template>
                             </a-input>
                         </a-form-item>
-                        <a-button type="primary" block>登录到OA</a-button>
+                        <a-form-item name="captureId" :rules="[{ required: true, message: '请输入验证码!' }]">
+                            <a-input v-model:value="formState.captureId" placeholder="验证码">
+                                <template #prefix>
+                                    <CheckCircleOutlined />
+                                </template>
+                                <template #suffix>
+                                    <img class="validate" :src="'data:image/png;base64,'+validateImg" alt="" @click.stop="changeValidate">
+                                </template>
+                            </a-input>
+                        </a-form-item>
+                        <a-button type="primary" block @click="handleLogin">登录到OA</a-button>
                         <a href="javascript:;" style="margin-top: 15px;display: block;" @click="handleForgot">忘记密码</a>
                     </a-form>
                 </div>
@@ -59,11 +69,72 @@
         defineExpose,
         defineEmits,
         h,
-        nextTick
+        nextTick,
+        toRaw,
+        toRef
     } from "vue";
-    import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
+    import { UserOutlined, LockOutlined, CheckCircleOutlined } from "@ant-design/icons-vue";
+    const { proxy } = getCurrentInstance();
+    import { message } from "ant-design-vue";
+    import { compareIgnoreCase } from "@/utils/common.js";
     import { useRouter, useRoute } from "vue-router";
     const router = useRouter();
+    import md5 from "js-md5";
+    const formRef = ref(null);
+    const formState = reactive({
+        userName: "",
+        password: "",
+        captureId: ""
+    });
+    const validateImg = ref(require("@/assets/img/twoDimensionalStats-thumb.png"));
+    const captchaId = ref();
+    const changeValidate = () => {
+        console.log('更换验证码');
+        getValidate();
+    };
+    onMounted(()=>{
+        document.addEventListener('keydown', event => {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                event.stopPropagation();
+                handleLogin();
+            }
+        })
+    })
+    const handleLogin = () => {
+        console.log("123", md5(formState.password));
+        formRef.value.validate().then(()=>{
+            console.log('values', formState, toRaw(formState));
+            if(compareIgnoreCase(formState.captureId, captchaId.value)){
+                proxy.$get("http://192.168.1.200:9091//api/auth/doLogin", {
+                    userName: formState.userName,
+                    password: md5(formState.password),
+                    captureId: formState.captureId
+                }).then(res=>{
+                    if(res.state===200){
+                        let token = res.token;
+                        sessionStorage.setItem('token', token);
+                        router.push('/oa')
+                    }
+                })
+            }else {
+                message.error("验证码错误！");
+                changeValidate();
+            }
+        }).catch(error=>{
+            console.log('error', error);
+        })
+    };
+    const getValidate = () => {
+        proxy.$get("http://192.168.1.200:9091//api/auth/captcha", {
+
+        }).then(res=>{
+            // console.log('res', res.image)
+            // console.log("validateImg", validateImg);
+            captchaId.value = res.captchaId;
+            validateImg.value = res.image;
+        })
+    }
     const handleForgot = () => {
         router.push({
             name: "Forgotpassword",
@@ -71,9 +142,10 @@
 
             }
         })
-    }
+    };
+    getValidate();
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .loginWrap{
         width: 100%;
         height: 100vh;
@@ -95,7 +167,7 @@
             }
             .loginContent{
                 width: 400px;
-                height: 400px;
+                min-height: 400px;
                 box-shadow: 0px 1px 12px 0px rgba(0, 0, 0, 0.2);
                 border-radius: 4px;
                 padding: 0 0 30px 0;
@@ -155,5 +227,13 @@
                 color: #999;
             }
         }
+    }
+    .validate{
+        width: 105px;
+        height: 35px;
+        cursor: pointer;
+    }
+    /deep/ :where(.css-dev-only-do-not-override-kqecok).ant-input{
+        background: #f4f4f4;
     }
 </style>

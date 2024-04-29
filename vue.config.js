@@ -15,5 +15,20 @@ module.exports = {
         }        
       ]    
     }    
-  }  
+  },
+  devServer: {
+    port: 8080,
+    host: "localhost",
+    open: true,
+    https: false,
+    proxy: {
+      "/api": {
+        target: "http://192.168.1.200:9091",
+        changOrigin: true,
+        pathRewrite: {
+          "^/api": "",
+        },
+      },
+    },
+  },
 };
