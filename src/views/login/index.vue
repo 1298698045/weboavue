@@ -106,7 +106,7 @@
         formRef.value.validate().then(()=>{
             console.log('values', formState, toRaw(formState));
             if(compareIgnoreCase(formState.captureId, captchaId.value)){
-                proxy.$get("http://192.168.1.200:9091//api/auth/doLogin", {
+                proxy.$get("http://192.168.1.200:9092/api/auth/doLogin", {
                     userName: formState.userName,
                     password: md5(formState.password),
                     captureId: formState.captureId
@@ -126,7 +126,7 @@
         })
     };
     const getValidate = () => {
-        proxy.$get("http://192.168.1.200:9091//api/auth/captcha", {
+        proxy.$get("http://192.168.1.200:9092/api/auth/captcha", {
 
         }).then(res=>{
             // console.log('res', res.image)
@@ -155,7 +155,7 @@
             width: 400px;
             position: absolute;
             top: calc(~"50% - 49px");
-            left: 50%;
+            left: 70%;
             transform: translate(-50%, -50%);
             .loginImg{
                 height: 60px;

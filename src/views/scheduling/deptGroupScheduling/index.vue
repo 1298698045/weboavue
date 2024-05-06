@@ -103,21 +103,21 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="width: 70px;">小组</th>
-                                        <th style="width: 40px;">序号</th>
-                                        <th style="width: 79px;">操作</th>
-                                        <th style="width: 40px;">
+                                        <th style="min-width: 70px;width: 70px;">小组</th>
+                                        <th style="min-width: 40px;width: 40px;">序号</th>
+                                        <th style="min-width: 79px;width: 79px;">操作</th>
+                                        <th style="min-width: 40px;width: 40px;">
                                             <a-checkbox></a-checkbox>
                                         </th>
-                                        <th>姓名</th>
-                                        <th>工号</th>
-                                        <th class="thDay" :class="{'active':item.DayofWeek==0||item.DayofWeek==6}" v-for="(item, index) in objData.Days" :key="index">
+                                        <th :style="{width:nameWidth+'px'}">姓名</th>
+                                        <th :style="{width:empcodeWidth+'px'}">工号</th>
+                                        <th class="thDay" :style="{width:item.width+'px'}" v-for="(item, index) in objData.Days" :key="index">
                                             <p>{{weekdate[item.DayofWeek]}}</p>
                                             <p>{{getDateFn(item.Date)}}</p>
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <!-- <tbody>
                                     <tr v-for="(item, index) in listData.slice(0, 1)" :key="index">
                                         <td style="width: 70px;" :rowspan="listData.length">
                                             未分组
@@ -161,12 +161,72 @@
                                             </p>
                                         </td>
                                     </tr>
-                                </tbody>
+                                </tbody> -->
                             </table>
                         </div>
                         <div class="tableBody">
                             <table>
-                                
+                                <thead style="visibility: hidden;">
+                                    <tr>
+                                        <th style="width: 70px;min-width: 70px;">小组</th>
+                                        <th style="width: 40px;min-width: 40px;">序号</th>
+                                        <th style="width: 79px;min-width: 79px;">操作</th>
+                                        <th style="width: 40px;min-width: 40px;">
+                                            <a-checkbox></a-checkbox>
+                                        </th>
+                                        <th ref="nameRef">姓名</th>
+                                        <th ref="empcodeRef">工号</th>
+                                        <th class="thDay" :class="{'active':item.DayofWeek==0||item.DayofWeek==6}" v-for="(item, index) in objData.Days" :key="index">
+                                            <p>{{weekdate[item.DayofWeek]}}</p>
+                                            <p>{{getDateFn(item.Date)}}</p>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item, index) in listData.slice(0, 1)" :key="index">
+                                        <td style="width: 70px;min-width: 70px;" :rowspan="listData.length">
+                                            未分组
+                                        </td>
+                                        <td style="width: 40px;min-width: 40px;">1</td>
+                                        <td style="width: 79px;min-width: 79px;">
+                                            <div class="operaImgs">
+                                                <img :src="require('@/assets/img/02.1.2.1.Subtract_.png')" alt="">
+                                                <img :src="require('@/assets/img/Ascending2.png')" alt="" @click="handleItemSortUp(item, index)">
+                                                <img :src="require('@/assets/img/Descending2.png')" alt="" @click="handleItemSortDown(item, index)">
+                                            </div>
+                                        </td>
+                                        <td style="width: 40px;min-width: 40px;">
+                                            <a-checkbox></a-checkbox>
+                                        </td>
+                                        <td>{{item.Name}}</td>
+                                        <td>{{item.EmployeeNo}}</td>
+                                        <td class="shiftTd" :ref="(el) => {setColumnRef(el, item, index);}" :class="{'active':item.DayofWeek==0||item.DayofWeek==6}" v-for="(row, idx) in item.AttendData" :key="idx" @click.stop="handleSelectCol(item, index, row, idx)">
+                                            <p class="shiftItem" v-for="(shiftRow, shiftIdx) in row.Shifts" :key="shiftIdx">
+                                                {{shiftRow.Name}}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr v-for="(item, index) in listData.slice(1, listData.length)" :key="index">
+                                        <td style="width: 40px;min-width: 40px;">{{index+2}}</td>
+                                        <td style="width: 79px;min-width: 79px;">
+                                            <div class="operaImgs">
+                                                <img :src="require('@/assets/img/02.1.2.1.Subtract_.png')" alt="">
+                                                <img :src="require('@/assets/img/Ascending2.png')" alt="" @click="handleItemSortUp(item, index+1)">
+                                                <img :src="require('@/assets/img/Descending2.png')" alt="" @click="handleItemSortDown(item, index+1)">
+                                            </div>
+                                        </td>
+                                        <td style="width: 40px;min-width: 40px;">
+                                            <a-checkbox></a-checkbox>
+                                        </td>
+                                        <td>{{item.Name}}</td>
+                                        <td>{{item.EmployeeNo}}</td>
+                                        <td class="shiftTd" v-for="(row, idx) in item.AttendData" :key="idx" @click.stop="handleSelectCol(item, index, row, idx)">
+                                            <p class="shiftItem" v-for="(shiftRow, shiftIdx) in row.Shifts" :key="shiftIdx">
+                                                {{shiftRow.Name}}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -202,6 +262,8 @@
     const bdRef = ref(null);
     const shiftRef = ref(null);
 
+    const nameRef = ref(null);
+    const empcodeRef = ref(null);
     const data = reactive({
         time: "",
         objData: {},
@@ -225,13 +287,15 @@
         },
         isCollapsed: false,
         monthDays: [],
+        nameWidth: "",
+        empcodeWidth: ""
     });
     const itemRefs = [];
     const weekdate = toRaw(['日', '一', '二', '三', '四', '五', '六']);
     const getDateFn = (time) => {
         return new Date(time).getDate();
     }
-    const { time, objData, AttendTypes, listData, total, deptCurrent, currentType, height, deptGroupTree, fieldNames, isCollapsed, monthDays } = toRefs(data);
+    const { time, objData, AttendTypes, listData, total, deptCurrent, currentType, height, deptGroupTree, fieldNames, isCollapsed, monthDays, nameWidth, empcodeWidth } = toRefs(data);
     data.time = dayjs(new Date).format('YYYY-MM');
     data.yearNumber = dayjs(new Date).format('YYYY');
     data.monthNumber = dayjs(new Date).month() + 1;
@@ -240,13 +304,28 @@
         proxy.$get(Interface.scheduling.deptMonthList, {}).then(res => {
             data.objData = res;
             data.AttendTypes = res.AttendTypes;
+            nextTick(()=>{
+                data.nameWidth = nameRef.value.offsetWidth;
+                data.empcodeWidth = empcodeRef.value.offsetWidth;
+                console.log("data.empcodeWidth", data.empcodeWidth)
+                data.objData.Days.forEach((item,index)=>{
+                    // console.log(itemRefs[index].el.offsetWidth);
+                    item.width = itemRefs[index].el.offsetWidth;
+                    console.log(item.width);
+                })
+            })
         })
     };
-    getQuery();
-
+    
     const getList = () => {
         proxy.$get(Interface.scheduling.monthDeptgroupList, {}).then(res => {
             data.listData = res.listData;
+            getQuery();
+            // nextTick(()=>{
+            //     console.log("nameRef", nameRef.value.offsetWidth)
+            //     data.nameWidth = nameRef.value.offsetWidth;
+            //     data.empcodeWidth = empcodeRef.value.offsetWidth;
+            // })
         })
     }
     getList();
@@ -296,7 +375,7 @@
         const dates = [];
         const endDate = new Date(year, month, 0);
         for (let date = 1; date <= endDate.getDate(); date++) {
-            console.log(new Date(year, month, date).getMonth())
+            // console.log(new Date(year, month, date).getMonth())
             dates.push(new Date(year, month - 1, date));
         }
         return dates;
@@ -368,6 +447,13 @@
             getList();
         })
     };
+    const setColumnRef = (el, item, index) => {
+        if(el && el!=null){
+            itemRefs.push({
+                el
+            })
+        };
+    }
 </script>
 <style lang="less" scoped>
     @import url("~@/style/public.css");
@@ -505,63 +591,65 @@
                         overflow: auto;
                         margin-left: -1px;
                         .tableHeaderFlex{
+                            width: calc(~"100% - 210px");
+                            position: fixed;
+                            z-index: 999;
+                        }
+                        table{
                             width: 100%;
-                            position: sticky;
-                            table{
-                                width: 100%;
-                                font-size: 12px;
-                                border-collapse: collapse;
-                                thead{
-                                    position: sticky;
-                                    tr{
-                                        th{
-                                            height: 41px;
-                                            padding: 8px 0;
-                                            border: 1px solid #d8d8d8;
-                                            background: #f2f2f2;
-                                            font-weight: normal;
-                                            &.thDay{
-                                                font-weight: bold;
-                                            }
-                                            &.thDay.active{
-                                                color: red;
+                            font-size: 12px;
+                            border-collapse: collapse;
+                            thead{
+                                position: sticky;
+                                tr{
+                                    th{
+                                        height: 41px;
+                                        padding: 8px 0;
+                                        border: 1px solid #d8d8d8;
+                                        background: #f2f2f2;
+                                        font-weight: normal;
+                                        text-align: center;
+                                        &.thDay{
+                                            font-weight: bold;
+                                        }
+                                        &.thDay.active{
+                                            color: red;
+                                        }
+                                    }
+                                }
+                            }
+                            tbody{
+                                tr{
+                                    td{
+                                        height: 30px;
+                                        border: 1px solid #d8d8d8;
+                                        background: #f4f7fc;
+                                        text-align: center;
+                                        box-sizing: border-box;
+                                        &.shiftTd{
+                                            cursor: pointer;
+                                        }
+                                        .shiftItem{
+                                            width: 100%;
+                                            margin: 3px;
+                                            line-height: 25px;
+                                            background: #f0fbf8;
+                                        }
+                                        .operaImgs{
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: space-around;
+                                            img{
+                                                width: 16px;
+                                                height: 16px;
+                                                cursor: pointer;
                                             }
                                         }
                                     }
                                 }
-                                tbody{
-                                    tr{
-                                        td{
-                                            height: 30px;
-                                            border: 1px solid #d8d8d8;
-                                            background: #f4f7fc;
-                                            text-align: center;
-                                            box-sizing: border-box;
-                                            &.shiftTd{
-                                                cursor: pointer;
-                                            }
-                                            .shiftItem{
-                                                width: 100%;
-                                                margin: 3px;
-                                                line-height: 25px;
-                                                background: #f0fbf8;
-                                            }
-                                            .operaImgs{
-                                                display: flex;
-                                                align-items: center;
-                                                justify-content: space-around;
-                                                img{
-                                                    width: 16px;
-                                                    height: 16px;
-                                                    cursor: pointer;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    tr:nth-child(2n){
-                                        td{
-                                            background: #f2f2f2;
-                                        }
+                                tr:nth-child(2n){
+                                    td{
+                                        background: #f2f2f2;
                                     }
                                 }
                             }

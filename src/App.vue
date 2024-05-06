@@ -38,13 +38,13 @@ ZHLocale.DatePicker.lang = {
 const locale = ref(zhCN);
 let timerId = null;
  
-onMounted(() => {
-  startInactivityTimer();
-});
+// onMounted(() => {
+//   startInactivityTimer();
+// });
  
-onUnmounted(() => {
-  clearInactivityTimer();
-});
+// onUnmounted(() => {
+//   clearInactivityTimer();
+// });
  
 function startInactivityTimer() {
   // 设置定时器，5分钟后执行logout函数
