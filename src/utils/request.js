@@ -3,7 +3,9 @@ import QS from 'qs';
 
 // axios.defaults.baseURL = 'http://localhost:8080/';
 axios.defaults.baseURL = '/';
-// axios.defaults.baseURL = 'http://192.168.1.200:9091/';
+if (process.env.NODE_ENV === 'production') {
+    // axios.defaults.baseURL = 'http://192.168.1.200:9091/';
+}
 
 axios.interceptors.request.use( //响应拦截
     async config => {

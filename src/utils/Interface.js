@@ -1,3 +1,4 @@
+const baseUrl = 'api';
 const Interface = {
   // 待办事务
   todoList: {
@@ -32,10 +33,28 @@ const Interface = {
   myCirculationList: "/localData/process.instance.foward.search.json",
   // 草稿箱
   draftsList: "/localData/wf.instanceowner.search.json",
+  //通用列表和视图
   listView: {
-    config: "/localData/entitygrid.config.get.json",
-    list: "/localData/entitygrid.list.json",
-    handleActions: "/localData/listview.handle.actions.json",
+      config: "/localData/entitygrid.config.get.json",
+      // list: "/localData/entitygrid.list.json",
+      list: baseUrl + "/listview/data/getItems",
+      // list: "/listview/filter/listViewPicker",
+      handleActions: "/localData/listview.handle.actions.json",
+      filterList: baseUrl + "/listview/filter/listViewPicker", // 对象筛选器列表
+      getMetadataInitialLoad: baseUrl + "/listview/listViewManager/getMetadataInitialLoad", // 获取元数据
+      getFilterInfo: baseUrl + "/listview/listViewManager/getFilterInfo", // 列头
+      actions: baseUrl + "/listview/Actions/handleAction",
+      createListView: baseUrl+'/aura/listViewManager/createListView',//创建视图
+      updateListView: baseUrl+'/aura/listViewManager/updateListView',//重命名视图、共享设置、选择要显示字段、保存筛选器
+      deleteListView: baseUrl+'/aura/listViewManager/deleteListView',//删除视图
+      copyListView: baseUrl+'/listview/filter/clone',//复制视图
+      getListView: baseUrl+'/aura/listViewManager/getAdditionalMetadata',//获取单个视图/筛选器
+      pinListView: baseUrl+'/aura/listViewManager/pinListView',//固定视图
+      chartData: baseUrl + "/aura/ObjectHomeChart/getMetadata", // 图表 - 获取列表图表元数据
+      chartList: baseUrl + "/aura/listViewManager/pinListView", // 图表 - 获取列表视图图表
+      chartItems: baseUrl + "/aura/ObjectHomeChart/getChartItems", // 获取图表数据
+      getFilter: "", // 
+      saveFilter: baseUrl + "/aura/listViewManager/updateListView", // 保存筛选器
   },
   uilook: "/localData/ui.entity.lookup.json",
   entityFilter: "/localData/entity.filter.get.json",
@@ -246,6 +265,17 @@ const Interface = {
     deptGroup: "/localData/scheduling/workshift.month.deptgroup.headerinfo.get.json",
     monthDeptgroupList: "/localData/scheduling/workshift.month.deptgroup.employee.getlist.json", // 部门组排班
     deptgroupEmpSort: "/localData/scheduling/workshift.deptgroup.employee.month.sort.json", // 人员排序
-  }
+  },
+  entityFilter: baseUrl+'/aura/objectmanager/getTemplateMetadata',//获取对象字段元数据,筛选器可选字段
+  // 通用弹窗
+  formCommon: {
+      layout: baseUrl + "/aura/RecordUi/getRecordCreateDefaults"
+  },
+  pickListValues: baseUrl + "/aura/RecordUi/getPicklistValuesByRecordType", // 获取对象下拉列表字段值
+  detail: baseUrl + "/aura/RecordUi/getRecord", // 详情
+  lookup: baseUrl + "/aura/Lookup/lookup", // 查找字段搜索
+  objFieldData: "/api/aura/objectmanager/getTemplateMetadata", // 获取对象字段元数据
+  applist: baseUrl + "/aura/AppLauncher/getAppLauncherMenuData",
+  currentApp: baseUrl + "/aura/OneController/getCurrentApp", // 获取模块列表
 };
 export default Interface;

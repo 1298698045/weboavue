@@ -1,34 +1,28 @@
 module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
-  configureWebpack: {    
-    resolve: { extensions: [".ts", ".tsx", ".js", ".json"] },    
-    module: {        
-      rules: [    
-        {    
-          test: /\.tsx?$/,    
-          loader: 'ts-loader',    
-          exclude: /node_modules/,    
-          options: {
-            appendTsSuffixTo: [/\.vue$/],    
-          }    
-        }        
-      ]    
-    }    
-  },
+  publicPath: '/',  // 确保静态资源的根路径正确
+  outputDir: 'dist',  // 构建输出目录
   devServer: {
-    port: 8080,
-    host: "localhost",
-    open: true,
-    https: false,
     proxy: {
-      "/api": {
-        target: "http://192.168.1.200:9091",
-        changOrigin: true,
+      '/api': {
+        target: 'http://192.168.1.200:9091/api',
+        // target: 'http://localhost:85/api',
+        // ws: true,
+        changeOrigin: true,
         pathRewrite: {
           "^/api": "",
         },
       },
-    },
-  },
+      '/_ui': {
+        target: 'http://192.168.1.200:9091/_ui',
+        // target: 'http://localhost:85/api',
+        // ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          "^/_ui": "",
+        },
+      },
+    }
+  }
 };

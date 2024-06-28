@@ -1,13 +1,13 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="800px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+        <a-modal v-model:open="props.isShow" width="800px" :style="setTop" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
                     选择要显示的字段
                  </div>
             </template>
-            <div class="modalContainer">
-                <div class="modalCenter">
+            <div class="modalContainer" ref="modelContentRef">
+                <div class="modalCenter" style="height: auto;">
                     <div class="selectBox">
                         <a-transfer
                             v-model:target-keys="targetKeys"
@@ -37,7 +37,7 @@
                                 <span class="required">*</span>
                                 <span class="label">排序字段</span>
                                 <a-select
-                                    v-model:value="item.sortField"
+                                    v-model:value="item.name"
                                     style="width: 200px"
                                     @focus="focus"
                                     @change="handleChange"
@@ -48,7 +48,7 @@
                             <div class="fieldCol">
                                 <span class="required">*</span>
                                 <span class="label">排序方式</span>
-                                <a-radio-group v-model:value="item.sortMethod">
+                                <a-radio-group v-model:value="item.sort">
                                     <a-radio value="ASC">升序</a-radio>
                                     <a-radio value="DESC">降序</a-radio>
                                 </a-radio-group>
@@ -74,21 +74,105 @@
 </template>
 <script setup>
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps,defineExpose,
-        defineEmits } from "vue";
+        defineEmits, computed } from "vue";
     import { SearchOutlined, DeleteOutlined, UpOutlined, DownOutlined } from "@ant-design/icons-vue";
+    import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     
     const { proxy } = getCurrentInstance();
     const labelCol = ref({ style: { width: '100px' } });
     const props = defineProps({
-        isShow: Boolean
+        isShow: Boolean,
+        sObjectName:String,
+        recordId:String
     })
-    const emit = defineEmits(['cancel']);
+    const emit = defineEmits(['cancel','load']);
+    const modelContentRef = ref(null);
+    const getData = ()=> {
+        proxy.$get(Interface.listView.getListView, {
+            id: props.recordId
+            }).then(res=>{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                    let item = res.actions[0].returnValue;
+                    formState.apiname=item.apiName||'';
+                    formState.name=item.label||'';
+                    let visibility=item.visibility||'GLOBAL';
+                    if(visibility=='PRIVATE'){
+                        formState.resource='1';
+                    }else if(visibility=='GLOBAL'){
+                        formState.resource='2';
+                    }else if(visibility=='SHARED'){
+                        formState.resource='3';
+                    }
+                    let ColumnSetList=item.displayColumns;
+                    if(ColumnSetList&&ColumnSetList.length){
+                        let ColumnSet=ColumnSetList.map(item=>{
+                            return item.column
+                        })
+                        // data.selectedKeys = ColumnSet;
+                        data.targetKeys = ColumnSet;
+                    }
+                    let sortlist=item.orderedOrderBy;
+                    if(sortlist&&sortlist.length){
+                        data.list=sortlist;
+                    }
+                    
+                }
+            })
+    }
     const handleCancel = ()=> {
         emit("cancel", false);
     }
     const handleSubmit = ()=> {
-
+        let visibility='GLOBAL';
+        if(formState.resource=='1'){
+            visibility='PRIVATE';
+        }else if(formState.resource=='2'){
+            visibility='GLOBAL';
+        }else if(formState.resource=='3'){
+            visibility='SHARED';
+        }
+        let url = Interface.listView.updateListView;
+            let d = {
+                actions:[{
+                    id: "6970;a",
+                    descriptor: "serviceComponent://ui.force.components.controllers.lists.listViewManager.ListViewManagerController/ACTION$updateListView",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        entityKeyPrefixOrApiName: props.sObjectName,
+                        listViewIdOrName:props.recordId,
+                        label: formState.name||'',
+                        visibility: visibility,
+                        developerName: formState.apiname||'',
+                        displayColumnApiNames: data.targetKeys,
+                        listViewFieldCriteria: null,
+                        listViewScope: null,
+                        shareIds: null,
+                        orderedOrderBy:data.list
+                        
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url, obj).then(res => {
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state=='SUCCESS'){
+                    message.success("保存成功");
+                    emit("load", false);
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].errorMessage){
+                        message.success(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.success("保存失败");
+                    }
+                }
+                setTimeout(function(){
+                    emit("cancel", false);
+                },1000)
+            })
     }
     const data = reactive({
         listData: [],
@@ -96,12 +180,20 @@
         selectedKeys: [],
         list:[
             {
-                sortField: "",
-                sortMethod: ""
+                label:'',
+                name: "",
+                sort: ""
             }
-        ]
+        ],
+        top: ""
     })
-    const { listData, targetKeys, selectedKeys, list } = toRefs(data);
+    const { listData, targetKeys, selectedKeys, list, top } = toRefs(data);
+    const formState = reactive({
+        name: "",
+        apiname: "",
+        resource: "",
+        role: []
+    })
     const mockData = [];
     for (let i = 0; i < 20; i++) {
         mockData.push({
@@ -154,28 +246,32 @@
     }
 
     const getQuery = ()=> {
-        proxy.$get(Interface.entityFilter,{}).then(res=>{
+        let d={
+            entityApiName:props.sObjectName
+        }
+        proxy.$get(Interface.entityFilter,d).then(res=>{
             console.log('entityFilter',res);
-            let attributes = res.entity.attributes.map(item=>{
+            let attributes = res.attributes.map(item=>{
                 item.title = item.label + item.name;
                 item.key = item.name;
                 return item;
             });
             data.listData = attributes;
-            let ColumnSet = res.filter[0].ColumnSet.split(',');
+            // let ColumnSet = res.filter[0].ColumnSet.split(',');
             // let temp = data.listData.filter(item=>{
             //     return ColumnSet.find(row=>{
             //         return row == item.key;
             //     })
             // })
-            data.targetKeys = ColumnSet;
+            // data.targetKeys = ColumnSet;
         })
     }
     const handleAddRowField = () => {
         data.list.push(
             {
-                sortField: "",
-                sortMethod: ""
+                label:'',
+                name: "",
+                sort: ""
             }
         )
     }
@@ -183,6 +279,14 @@
         data.list.splice(index,1);
     }
     getQuery();
+    onMounted(()=>{
+        let h = modelContentRef.value.clientHeight;
+        data.top = (h + 126-186) / 2 + 'px';
+        getData();
+    })
+    const setTop = computed(() => ({
+        top: data.top
+    }));
 </script>
 <style lang="less">
     @import url('@/style/modal.less');
@@ -229,5 +333,9 @@
         flex-direction: column;
         margin-left: 10px;
         gap: 5px;
+    }
+    :where(.css-dev-only-do-not-override-kqecok).ant-btn.ant-btn-sm{
+        font-size: 12px !important;
+        padding: 0px 5px !important;
     }
 </style>

@@ -181,7 +181,7 @@
           <div class="app_item" v-for="(item,index) in appList" :style="{background:item.BgColor}" :key="index" @click="handleGoModule(item)">
             <div class="appBox">
               <div class="iconBox">
-                <img :src="'http://182.92.221.64:10000'+item.ImageUrl" alt="">
+                <img :src="'http://182.92.221.64:10000'+item.LogoUrl" alt="">
               </div>
               <div class="app-item-label">{{item.Label}}</div>
             </div>
@@ -226,12 +226,41 @@ const data = reactive({
   appList: [],
   isInfoPopup: false,
   isNotice: false,
+  appCode: "02u90000110",
+  currentAppName: ""
 })
-const { appList, isInfoPopup, isNotice } = toRefs(data);
-proxy.$get(Interface.applist,{}).then((res)=>{
+const { appList, isInfoPopup, isNotice, appCode, currentAppName } = toRefs(data);
+proxy.$get(Interface.applist,{
+  systemCode: 'OA'
+}).then((res)=>{
   console.log("res",res) 
-  data.appList = res.rows;
+  data.appList = res.actions[0].returnValue.apps;
+  let row = data.appList.find(item=>route.path.indexOf(item.StartUrl)!=-1);
+  if(row){
+    // data.appCode = row.AppCode;
+    // data.currentAppName =  row.Label;
+    getCurrentApp();
+  }
 })
+const getCurrentApp = () => {
+  let obj = {
+    actions:[{
+      id: "4105;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        appCode: data.appCode
+      }
+    }]
+  };
+  let d = {
+    message: JSON.stringify(obj)
+  }
+  proxy.$post(Interface.currentApp, d).then(res=>{
+    console.log("res", res);
+    data.appTabs = res.actions[0].returnValue.tabs;
+  })
+};
 const hanldeOpenNotice = () => {
   data.isNotice = true;
 }
@@ -254,7 +283,7 @@ const handleGoModule = (item) => {
   // console.log("item", item);
   store.commit('setModuleName',item.Label)
   router.push({
-      path:"/"+item.DeveloperName
+      path:"/"+item.Name
   });
   isShow.value = false;
 }

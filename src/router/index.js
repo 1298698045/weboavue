@@ -256,6 +256,47 @@ const routes = [
     ],
   },
   {
+    path: "/addresslist",
+    name: "Addresslist",
+    component: Layout,
+    redirect: "/lightning/Addresslist/Org/home",
+    meta: {
+      name: "通讯录"
+    },
+    children: [
+      {
+        path: "/lightning/Addresslist/Org/home",
+        component: () => import("../views/oa/addressBook/index.vue"),
+        name: "AddressBook1",
+        icon: "tongxunlu1",
+        meta: {
+          name: "单位通讯录",
+          icon: "tongxunlu1",
+        },
+      },
+      {
+        path: "/lightning/o/CollaborationGroup/list",
+        component: () => import("../views/oa/group/index.vue"),
+        name: "CollaborationGroup",
+        icon: "xiaozu",
+        meta: {
+          name: "小组",
+          icon: "xiaozu",
+        },
+      },
+      {
+        path: "/listView",
+        name: "ListView",
+        component: () => import("../views/listView/index.vue"),
+        icon: "listView",
+        meta: {
+          name: "通用列表",
+          icon: "xiaozu",
+        },
+      },
+    ]
+  },
+  {
     path: "/oa",
     name: "Oa",
     component: Layout,

@@ -9,7 +9,7 @@
                     账号登录
                 </div>
                 <div class="loginCenter">
-                    <a-form ref="formRef" :model="formState">
+                    <a-form ref="formRef" :model="formState" @submit.prevent="handleLogin">
                         <a-form-item name="userName" :rules="[{ required: true, message: '请输入用户名!' }]">
                             <a-input v-model:value="formState.userName" placeholder="用户名" allow-clear>
                                 <template #prefix>
@@ -91,30 +91,21 @@
     const changeValidate = () => {
         console.log('更换验证码');
         getValidate();
-    };
-    onMounted(()=>{
-        document.addEventListener('keydown', event => {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                event.stopPropagation();
-                handleLogin();
-            }
-        })
-    })
+    }
     const handleLogin = () => {
         console.log("123", md5(formState.password));
         formRef.value.validate().then(()=>{
             console.log('values', formState, toRaw(formState));
             if(compareIgnoreCase(formState.captureId, captchaId.value)){
-                proxy.$get("http://192.168.1.200:9092/api/auth/doLogin", {
+                proxy.$get("api/auth/doLogin", {
                     userName: formState.userName,
                     password: md5(formState.password),
                     captureId: formState.captureId
                 }).then(res=>{
                     if(res.state===200){
                         let token = res.token;
-                        sessionStorage.setItem('token', token);
-                        router.push('/oa')
+                        // sessionStorage.setItem('token', token);
+                        router.push('/lightning/setup/SetupOneHome/home')
                     }
                 })
             }else {
@@ -126,7 +117,7 @@
         })
     };
     const getValidate = () => {
-        proxy.$get("http://192.168.1.200:9092/api/auth/captcha", {
+        proxy.$get("api/auth/captcha", {
 
         }).then(res=>{
             // console.log('res', res.image)

@@ -14,10 +14,6 @@
       </template>
       <div class="modalContainer">
         <div class="modalCenter" :style="{ height: height + 'px' }">
-          <div class="form-legend-desktop">
-            <abbr class="required">*</abbr>
-            = 必填信息
-          </div>
           <a-form :model="formState" ref="formRef">
             <div
               class="section"
@@ -96,7 +92,7 @@
                   >
                     <a-select
                       allowClear
-                      v-model:value="formState[attribute.targetValue].value"
+                      v-model:value="formState[attribute.targetValue].Id"
                       :default-active-first-option="false"
                       :filter-option="false"
                       showSearch
@@ -134,12 +130,6 @@
                     :name="attribute.targetValue"
                     v-else-if="attribute.attributes.type == 'D'"
                     :label="attribute.label"
-                    :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请选择' + attribute.label,
-                      },
-                    ]"
                   >
                     <a-date-picker
                       valueFormat="YYYY-MM-DD"
@@ -169,39 +159,16 @@
                     :name="attribute.targetValue"
                     v-else-if="attribute.attributes.type == 'X'"
                     :label="attribute.label"
-                    :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请输入' + attribute.label,
-                      },
-                    ]"
                   >
                     <a-textarea
                       :rows="4"
                       v-model:value="formState[attribute.targetValue]"
                     />
                   </a-form-item>
-                  <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'B'"
-                    :label="attribute.label"
-                    :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请输入' + attribute.label,
-                      },
-                    ]"
-                  >
-                      <a-checkbox v-model:checked="formState[attribute.targetValue]"></a-checkbox>
-                  </a-form-item>
                   <a-form-item
                     :name="attribute.targetValue"
                     v-else
                     :label="attribute.label"
-                    :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请输入' + attribute.label,
-                      },
-                    ]"
                   >
                     <a-input
                       v-model:value="formState[attribute.targetValue]"
@@ -211,7 +178,7 @@
               </div>
             </div>
           </a-form>
-          <!-- <TEditor placeholder="请输入内容" /> -->
+          <TEditor placeholder="请输入内容" />
           <radio-dept
             v-if="isRadioDept"
             :isShow="isRadioDept"
@@ -231,7 +198,7 @@
             @selectVal="handleUserParams"
             :localId="localId"
           ></radio-user>
-          <Lookup-filter v-if="isLookup" :isShow="isLookup" :objectTypeCode="sObjectType" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
+          <Lookup-filter v-if="isLookup" :isShow="isLookup" :objectTypeCode="objectTypeCode" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
           <!-- <multiple-user :isShow="isMultipleUser" @cancel="cancelMuUserModal"  @selectVal="handleMuUserParams" /> -->
         </div>
       </div>
@@ -282,13 +249,8 @@ console.log(document.documentElement.clientHeight);
 const labelCol = ref({ style: { width: "100px" } });
 const props = defineProps({
   isShow: Boolean,
-  title: String,
-  objectTypeCode: String,
-  id: String,
-  entityId: String,
-  entityApiName: String
+  title: String
 });
-console.log("props.entityId", props.entityId);
 const formRef = ref();
 const emit = defineEmits(["cancel"]);
 const handleCancel = () => {
@@ -307,7 +269,7 @@ const data = reactive({
   localId: "",
   isMultipleUser: true,
   isLookup: false,
-  sObjectType: "",
+  objectTypeCode: "",
   recordObj: {}, // 记录当前点击的数据
   picklistFieldMap: {}, // 依赖字段关联关系
   selectFixed: {}, // select 固定不变的数据
@@ -328,122 +290,13 @@ const {
   localId,
   isMultipleUser,
   isLookup,
-  sObjectType,
+  objectTypeCode,
   recordObj,
   picklistFieldMap,
   selectFixed
 } = toRefs(data);
 const formState = reactive({});
-const handleData = (res) => {
-  let { layout, record } = res.actions[0].returnValue;
-  data.layoutList = layout.sections;
-  data.list = JSON.parse(JSON.stringify(record.fields));
-  layout.lookupAttributes.forEach((item) => {
-    // data.search[item.name] = [
-    //   { ID: data.list[item.name].Id, Name: data.list[item.name].Name },
-    // ];
-    // data.list[item.name] = {
-    //   Id: data.list[item.name].Id,
-    //   Name: data.list[item.name].Name,
-    // };
-  });
-  for (var key in data.list) {
-    formState[key] = data.list[key].value;
-  }
-  data.layoutList.forEach(item=>{
-    item.rows.forEach(row=>{
-      row.attributes.forEach(col=>{
-        if(['O', 'Y', 'U', 'Y_MD'].includes(col.attributes.type)){
-          console.log("data.list[col.localId]",data.list[col.localId]);
-          formState[col.localId] = data.list[col.localId]
-        }
-      })
-    })
-  })
-}
-const getLayoutInterface = () => {
-  sessionStorage.removeItem("entityApiName");
-  let d = {
-      actions:[{
-        id: "7366;a",
-        descriptor: "",
-        callingDescriptor: "UNKNOWN",
-        params: {
-          entityApiName: props.entityApiName,
-          defaultFieldValues: {
-            entityId: props.entityId
-          },
-          mode: "CREATE",
-          type: "FULL",
-          layoutOverride: "",
-          inContextOfComponent: "",
-          pageSize: -1,
-          offset: 0
-        }
-      }]
-    }
-  if(props.id){
-    d.actions[0].params.recordId = props.id;
-  }
-  let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(Interface.formCommon.layout, obj).then(res=>{
-    res['entityApiName'] = props.entityApiName;
-    if(props.id==''){
-      sessionStorage.setItem("entityApiName", JSON.stringify(res));
-    }
-    handleData(res);
-  })
-}
-const getLayout = () => {
-  if (sessionStorage.getItem("entityApiName") && (props.id==''||props.id=='undefined')) {
-    let res = JSON.parse(sessionStorage.getItem("entityApiName"));
-    console.log('res', res);
-    if(res.entityApiName == props.entityApiName){
-      handleData(res);
-    }else {
-      getLayoutInterface();
-    }
-  }else {
-    getLayoutInterface();
-  };
-};
-getLayout();
 
-
-const getPickerList = () => {
-  let d = {
-    actions:[{
-      id: "2320;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        objectApiName: "HREmployee",
-        recordTypeId: ""
-      }
-    }]
-  }
-  let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(Interface.pickListValues, obj).then((res) => {
-    let picklistFieldValues = res.actions[0].returnValue;
-    data.selectFixed = JSON.parse(JSON.stringify(picklistFieldValues));
-    data.select = picklistFieldValues;
-    // let picklistFieldMap = res.actions[0].returnValue.picklistFieldMap;
-    // for(let i = 0; i < picklistFieldMap.length; i++) {
-    //   let item = picklistFieldMap[i];
-    //   if(!data.picklistFieldMap[item.ControllerName]){
-    //     data.picklistFieldMap[item.ControllerName] = [];
-    //   }
-    //   data.picklistFieldMap[item.ControllerName].push(item.DependentName);
-    //   Controllerchange(formState[item.ControllerName], item.ControllerName, data.picklistFieldMap[item.ControllerName]);
-    // };
-    // console.log("data.picklistFieldMap",data.picklistFieldMap);
-  });
-};
-getPickerList();
 const getConfig = () => {
   proxy.$get(Interface.entityConfig, {}).then((res) => {
     let componentDef = res.actions[0].returnValue.componentDef;
@@ -484,24 +337,24 @@ const getConfig = () => {
     })
   });
 };
-// getConfig();
-// const getPickerList = () => {
-//   proxy.$get(Interface.picklist, {}).then((res) => {
-//     data.selectFixed = JSON.parse(JSON.stringify(res.actions[0].returnValue.picklistFieldValues));
-//     data.select = res.actions[0].returnValue.picklistFieldValues;
-//     let picklistFieldMap = res.actions[0].returnValue.picklistFieldMap;
-//     for(let i = 0; i < picklistFieldMap.length; i++) {
-//       let item = picklistFieldMap[i];
-//       if(!data.picklistFieldMap[item.ControllerName]){
-//         data.picklistFieldMap[item.ControllerName] = [];
-//       }
-//       data.picklistFieldMap[item.ControllerName].push(item.DependentName);
-//       Controllerchange(formState[item.ControllerName], item.ControllerName, data.picklistFieldMap[item.ControllerName]);
-//     };
-//     // console.log("data.picklistFieldMap",data.picklistFieldMap);
-//   });
-// };
-// getPickerList();
+getConfig();
+const getPickerList = () => {
+  proxy.$get(Interface.picklist, {}).then((res) => {
+    data.selectFixed = JSON.parse(JSON.stringify(res.actions[0].returnValue.picklistFieldValues));
+    data.select = res.actions[0].returnValue.picklistFieldValues;
+    let picklistFieldMap = res.actions[0].returnValue.picklistFieldMap;
+    for(let i = 0; i < picklistFieldMap.length; i++) {
+      let item = picklistFieldMap[i];
+      if(!data.picklistFieldMap[item.ControllerName]){
+        data.picklistFieldMap[item.ControllerName] = [];
+      }
+      data.picklistFieldMap[item.ControllerName].push(item.DependentName);
+      Controllerchange(formState[item.ControllerName], item.ControllerName, data.picklistFieldMap[item.ControllerName]);
+    };
+    // console.log("data.picklistFieldMap",data.picklistFieldMap);
+  });
+};
+getPickerList();
 
 // 字段映射关系
 const Controllerchange = (val, Controller, Dependents) => {
@@ -510,6 +363,22 @@ const Controllerchange = (val, Controller, Dependents) => {
     for(var i = 0; i < Dependents.length; i++){
       var Dependent = Dependents[i];
       var isDependent = false;
+      // if (data.select[Dependent] && data.select[Dependent].values){
+      //   for (var j = 0; j < data.select[Dependent].values.length; j++) {
+      //     var item = data.select[Dependent].values[j];
+      //     // console.log("item-validFor", item);
+      //     item.show = false;
+      //     for(var k = 0; k < item.validFor.length; k++) {
+      //       var row =  item.validFor[k];
+      //       if (row == data.select[Dependent].controllerValues[val]) {
+      //         item.show = true;
+      //         if (formState[Dependent] == item.value){
+      //           isDependent = true;
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
       if (data.selectFixed[Dependent] && data.selectFixed[Dependent].values) {
         data.select[Dependent].values = [];
         data.selectFixed[Dependent].values.map(item=>{
@@ -529,61 +398,17 @@ const Controllerchange = (val, Controller, Dependents) => {
     // console.log("data.select-Dependent", data.select);
   }
 }
-// const searchlookup = (search, attribute) => {
-//   console.log(search, attribute);
-//   proxy
-//     .$get(Interface.uilook, {
-//       Lktp: attribute.attributes.sObjectType,
-//       Lksrch: search,
-//     })
-//     .then((res) => {
-//       let listData = res.listData;
-//       data.search[attribute.targetValue] = listData;
-//     });
-// };
 const searchlookup = (search, attribute) => {
   console.log(search, attribute);
-  let obj = {
-    actions:[{
-      id: "6129;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        objectApiName: props.entityApiName,
-        fieldApiName: attribute.localId,
-        pageParam: 1,
-        pageSize: 25,
-        q: "",
-        searchType: "Recent",
-        targetApiName: "",
-        body: {
-          sourceRecord: {
-            apiName: props.entityApiName,
-            fields: {
-              Id: null,
-              RecordTypeId: ""
-            }
-          }
-        }
-      }
-    }]
-  }
-  let d = {
-    message: JSON.stringify(obj)
-  }
-  proxy.$post(Interface.lookup, d).then((res) => {
-    // let listData = res.listData;
-    // data.search[attribute.targetValue] = listData;
-    let list = res.actions[0].returnValue.lookupResults.records;
-    let arr = [];
-    list.forEach(item=>{
-        arr.push({
-            ID: item.fields.Id.value,
-            Name: item.fields.Name.value
-        })
+  proxy
+    .$get(Interface.uilook, {
+      Lktp: attribute.attributes.sObjectType,
+      Lksrch: search,
+    })
+    .then((res) => {
+      let listData = res.listData;
+      data.search[attribute.targetValue] = listData;
     });
-    data.search[attribute.targetValue] = arr;
-  });
 };
 
 onMounted(() => {
@@ -645,7 +470,7 @@ const handleOpenLook = (attribute) => {
     data.isRadioDept = true;
   }else {
     data.recordObj = attribute;
-    data.sObjectType = sObjectType;
+    data.objectTypeCode = sObjectType;
     data.isLookup = true;
   }
 };
@@ -666,35 +491,21 @@ const handleSelectData = (e) => {
   formState[localId].Name = e.Name;
 };
 const handleSubmit = () => {
-  formRef.value.validate().then(() => {
-      // console.log("values", formState, toRaw(formState));
-      let url = Interface.create;
-      let d = {
-          actions:[{
-              id: "2919;a",
-              descriptor: "",
-              callingDescriptor: "UNKNOWN",
-              params: {
-                  // recordId: props.id,
-                  recordInput:{
-                      allowSaveOnDuplicate: false,
-                      apiName: "",
-                      objTypeCode: props.objectTypeCode,
-                      fields: formState
-                  }
-              }
-          }]
-      };
-      if(props.id){
-          url = Interface.edit;
-          d.actions[0].params.recordId = props.id;
-      }
+  formRef.value
+    .validate()
+    .then(() => {
+      console.log("values", formState, toRaw(formState));
       let obj = {
-          message: JSON.stringify(d)
-      }
-      proxy.$post(url, obj).then((res) => {
-        message.success("保存成功！");
-        emit("success", false);
+        params: {
+          objTypeCode: 30027,
+          fields: formState,
+          id: "",
+        },
+      };
+      var messages = JSON.stringify(obj);
+      proxy.$get(Interface.saveRecord, { message: messages }).then((res) => {
+        message.warning("保存成功！");
+        emit("cancel", false);
       });
     })
     .catch((err) => {
