@@ -7,7 +7,7 @@ const Interface = {
     datalist: "/localData/datalist.json",
   },
   // formSearch: "/localData/formSearch.json",
-  formSearch: "/localData/formSearch2.json",
+  formSearch: "/localData/formSearch3.json",
   applist: "/localData/applist.json",
   workflow: {
     processList: "/localData/process.search.json",
@@ -55,6 +55,7 @@ const Interface = {
       chartItems: baseUrl + "/aura/ObjectHomeChart/getChartItems", // 获取图表数据
       getFilter: "", // 
       saveFilter: baseUrl + "/aura/listViewManager/updateListView", // 保存筛选器
+      node: baseUrl + "listview/data/getNodes",//通用列表接口2
   },
   uilook: "/localData/ui.entity.lookup.json",
   entityFilter: "/localData/entity.filter.get.json",
@@ -267,6 +268,9 @@ const Interface = {
     deptgroupEmpSort: "/localData/scheduling/workshift.deptgroup.employee.month.sort.json", // 人员排序
   },
   entityFilter: baseUrl+'/aura/objectmanager/getTemplateMetadata',//获取对象字段元数据,筛选器可选字段
+  delete: baseUrl + "/aura/RecordUi/delRecord", // 通用删除
+  create: baseUrl + "/aura/RecordUi/createRecord", // 通用创建
+  edit: baseUrl + "/aura/RecordUi/updateRecord", // 通用编辑
   // 通用弹窗
   formCommon: {
       layout: baseUrl + "/aura/RecordUi/getRecordCreateDefaults"
@@ -277,5 +281,11 @@ const Interface = {
   objFieldData: "/api/aura/objectmanager/getTemplateMetadata", // 获取对象字段元数据
   applist: baseUrl + "/aura/AppLauncher/getAppLauncherMenuData",
   currentApp: baseUrl + "/aura/OneController/getCurrentApp", // 获取模块列表
+  deptTree: baseUrl + "/one/organization/getBusinessUnitTree",//组织树
+  getTabs:baseUrl + "/listview/layout/getDetails",//根据对象获取通用tabs
+  lookupObj: {
+      column: baseUrl + "/aura/Lookup/getTopMetada", // 查找对话框 - 获查找字段和列表显示字段
+      list: baseUrl + "/aura/Lookup/getItems", // 查找对话框 - 获查找数据
+  }
 };
 export default Interface;

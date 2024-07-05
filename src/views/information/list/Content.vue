@@ -80,7 +80,7 @@
                   <a-button class="ml10">批量取消发布</a-button> -->
                 </div>
               </div>
-              <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch"></list-form-search>
+              <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch" entityApiName="Content" :SearchFields="SearchFields"></list-form-search>
               <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
                 <!-- <a-table :dataSource="dataSource" :columns="columns"></a-table> -->
                 <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Ntable>
@@ -89,7 +89,8 @@
           </a-col>
         </a-row>
       </div>
-      <NewInfo :isShow="isNew" :treeData="gData" @cancel="cancelNew" />
+      <NewInfo :isShow="isNew" :treeData="gData" @cancel="cancelNew" :objectTypeCode="data.queryParams.objectTypeCode" />
+      <Delete :isShow="data.isDelete" :desc="data.deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="data.queryParams.entityName" :recordId="data.recordId" :objTypeCode="data.queryParams.objectTypeCode" :external="data.external" />
     </div>
   </template>
   <script setup>
@@ -109,6 +110,7 @@
   const route = useRoute();
   const router = useRouter();
   import NewInfo from "@/components/information/NewInfo.vue";
+  import Delete from "@/components/listView/Delete.vue";
   const x = 3;
   const y = 2;
   const z = 1;
@@ -218,20 +220,24 @@
     tabs:[
       {
         lable: "我创建",
-        count: 18
+        count: ''
       },
       {
         lable: "部门的",
         count: ''
       },
       {
-        lable: "我管理的",
-        count: 16
+        lable: "全部",
+        count: ''
       },
-      {
-        lable: "待审批",
-        count: 0
-      }
+      // {
+      //   lable: "我管理的",
+      //   count: 16
+      // },
+      // {
+      //   lable: "待审批",
+      //   count: 0
+      // }
     ],
     activeKey: 0,
     queryParams: {
@@ -245,12 +251,66 @@
     isCirculation: false,
     isNew: false,
     searchVal:'',
-    value: ""
+    value: "",
+    isDelete: false,
+    deleteDesc: '确定要删除吗？',
+    recordId:'',
+    external:false,
+    SearchFields:[
+            {
+                "column": "Title",
+                "label": "标题",
+                "dataType": "S",
+                "ReferencedEntityObjectTypeCode": 0,
+                "sObjectName": "",
+                "targetApiName": "",
+            },
+            {
+                "column": "BusinessUnitId",
+                "label": "部门",
+                "dataType": "O",
+                "ReferencedEntityObjectTypeCode": 10,
+                "picklistValues": [],
+                "sObjectName": "BusinessUnit",
+                "targetApiName": "BusinessUnit",
+            },
+            {
+                "column": "StatusCode",
+                "label": "状态",
+                "dataType": "L",
+                "ReferencedEntityObjectTypeCode": 100201,
+                "picklistValues": [
+                {
+                    "label": "草稿",
+                    "value": "0"
+                },
+                {
+                    "label": "已发布",
+                    "value": "1"
+                },
+                {
+                    "label": "审批未通过",
+                    "value": "2"
+                }
+                ],
+                "sObjectName": "",
+                "targetApiName": "",
+            },
+            {
+                "column": "CreatedOn",
+                "label": "创建时间",
+                "dataType": "F",
+                "ReferencedEntityObjectTypeCode": 0,
+                "picklistValues": [],
+                "sObjectName": "",
+                "targetApiName": "",
+            }
+        ]
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
-  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal} = toRefs(data);
+  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields} = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
   let formSearchHeight = ref(null);
@@ -282,7 +342,7 @@
       }else if(data.activeKey==1){
         data.queryParams.filterquery='\nBusinessUnitId\teq-businessunitid';
       }else if(data.activeKey==2){
-
+        data.queryParams.filterquery='';
       }else if(data.activeKey==3){
 
       }
@@ -294,7 +354,7 @@
       }else if(data.activeKey==1){
         data.queryParams.filterquery='\nBusinessUnitId\teq-businessunitid';
       }else if(data.activeKey==2){
-
+        data.queryParams.filterquery='';
       }else if(data.activeKey==3){
 
       }
@@ -319,21 +379,37 @@
   }
   const DelegateRef = ref();
   
-  function handleDetail(WFRuleLogId){
-      router.push({
-        path:"/informationDetail",
-        query: {
-          id: WFRuleLogId
-        }
-      });
+  function handleDetail(id){
+      // router.push({
+      //   path:"/informationDetail",
+      //   query: {
+      //     id: id
+      //   }
+      // });
+      let reUrl = router.resolve({
+          path:"/informationDetail",
+          query: {
+            id: id
+          }
+      })
+      window.open(reUrl.href); 
   }
   function handlePreview(id) {
-    router.push({
+    // router.push({
+    //     path:"/previewContent",
+    //     query: {
+    //       id: id,
+    //       objectTypeCode:'100201'
+    //     }
+    // });
+    let reUrl = router.resolve({
         path:"/previewContent",
         query: {
-          id: id
+          id: id,
+          objectTypeCode:'100201'
         }
-    });
+    })
+    window.open(reUrl.href); 
   }
   function handleEdit(id,FolderId){
     // router.push({
@@ -354,8 +430,15 @@
     window.open(reUrl.href); 
   }
   function handleDelete(id){
-    
+    data.recordId=id;
+    data.isDelete = true;
   }
+const deleteOk = (e) => {
+  gridRef.value.loadGrid(data.queryParams);
+};
+const cancelDelete = (e) => {
+  data.isDelete = false;
+};
   const updateStatus = (e) => {
     data.isModal = e;
     data.isCirculation = e;
@@ -492,8 +575,8 @@
         data.queryParams.filterquery='\nCreatedBy\teq-userid';
       }else if(e==1){
         data.queryParams.filterquery='\nBusinessUnitId\teq-businessunitid';
-      }else if(e){
-
+      }else if(e==2){
+        data.queryParams.filterquery='';
       }else if(e){
 
       }

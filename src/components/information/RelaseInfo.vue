@@ -21,12 +21,25 @@
                 <div class="sectionRow">
                     <div class="sectionItem">
                         <a-form-item name="name" label="发布人">
-                            <a-input v-model:value="formState.ApprovedBy"></a-input>
+                            <a-input v-model:value="formState.ApprovedBy" disabled class="ApprovedByName"></a-input>
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="BusinessUnitId" label="发布部门" :rules="[{ required: true, message: '请输入名称' }]">
-                            <a-input v-model:value="formState.BusinessUnitId" @click="handleFocus"></a-input>
+                        <a-form-item name="BusinessUnitId" label="发布部门" :rules="[{ required: true, message: '请选择部门' }]">
+                            <div>
+                                <a-select placeholder="请选择"
+                                        v-model:value="data.BusinessUnitId"
+                                        :default-active-first-option="false" :filter-option="false" showSearch
+                                        @search="searchlookup2" 
+                                        @change="handleDeptParams2"
+                                        @dropdownVisibleChange="searchlookup2">
+                                        <template #suffixIcon></template>
+                                        <a-select-option v-for="v in listData" :key="v.ID" :value="v.ID">{{ v.Name
+                                            }}</a-select-option>
+                                    </a-select>
+                                    <i class="iconfont icon-sousuo pointer selectIcon"
+                                        @click="handleFocus"></i>
+                            </div>
                         </a-form-item>
                     </div>
                 </div>
@@ -46,7 +59,7 @@
                     <div class="sectionItem">
                         <a-form-item name="AttachRightCode" label="附件权限">
                             <a-select v-model:value="formState.AttachRightCode" placeholder="请选择附件权限">
-                                <a-select-option v-for="item in AttachRightCodeList" :value="item.value">{{item.label}}</a-select-option>
+                                <a-select-option v-for="(item,index) in AttachRightCodeList" :value="item.value" :key="index">{{item.label}}</a-select-option>
                             </a-select>
                         </a-form-item>
                     </div>
@@ -58,7 +71,7 @@
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="ApprovedOn" label="发布时间" :rules="[{ required: true, message: '请输入名称' }]">
+                        <a-form-item name="ApprovedOn" label="发布时间" :rules="[{ required: true, message: '请输入发布时间' }]">
                             <a-date-picker v-model:value="formState.ApprovedOn" show-time placeholder="发布时间" />
                         </a-form-item>
                     </div>
@@ -79,7 +92,7 @@
                 </div>
                 <div class="sectionRow">
                     <div class="sectionItem">
-                        <a-form-item name="FolderId" label="栏目" :rules="[{ required: true, message: '请输入名称' }]">
+                        <a-form-item name="FolderId" label="栏目" :rules="[{ required: true, message: '请选择栏目' }]">
                             <a-tree-select
                                 v-model:value="formState.FolderId"
                                 show-search
@@ -105,7 +118,7 @@
                     <div class="sectionItem">
                         <a-form-item name="CoverDisplay" label="图片（手机/首页）">
                             <a-select v-model:value="formState.CoverDisplay" placeholder="请选择图片（手机/首页）">
-                                <a-select-option v-for="item in CoverDisplayList" :value="item.value">{{item.label}}</a-select-option>
+                                <a-select-option v-for="(item,index) in CoverDisplayList" :value="item.value" :key="index">{{item.label}}</a-select-option>
                             </a-select>
                         </a-form-item>
                     </div>
@@ -280,22 +293,47 @@
     ],
     fileList: [],
     isRadioDept: false,
-    BusinessUnitId: ''
+    BusinessUnitId: '',
+    ApprovedBy:'',
+    listData:[]
   });
   const {
     title,
     height, AttachRightCodeList, keywords, treeData, CoverDisplayList,
-     fileList, isRadioDept, BusinessUnitId
+     fileList, isRadioDept, BusinessUnitId,ApprovedBy,listData
   } = toRefs(data);
 
   const cancelDeptModal = (e) => {
     data.isRadioDept = e;
   }
   const handleDeptParams = (e) => {
-    console.log("e",e);
-    formState.BusinessUnitId = e.Name;
-    data.BusinessUnitId = e.ID;
-    data.isRadioDept = false;
+    //console.log("e",e);
+    if(e.ID){
+      formState.BusinessUnitId = e.Name;
+      data.BusinessUnitId = e.ID;
+      data.isRadioDept = false;
+      let result =data.listData.filter((item) => {
+        return item.ID == e.ID;
+      });
+      if(result&&result.length){}else{
+        data.listData.push({
+          ID:e.ID,
+          Name:e.Name
+        })
+      }
+    }
+  }
+  const handleDeptParams2 = (e) => {
+    //console.log("eeee",e);
+    if(e){
+      data.BusinessUnitId = e;
+      let result =data.listData.filter((item) => {
+        return item.ID == e;
+      });
+      if(result&&result.length){
+        formState.BusinessUnitId = result[0].Name;
+      }
+    }
   }
   const handleFocus = (e) => {
     data.isRadioDept = true;
@@ -340,52 +378,175 @@
         data.search[attribute.targetValue] = listData;
       });
   };
-  
+  const searchlookup2 = () => {
+    let obj = {
+            actions:[{
+                id: "6129;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    objectApiName: props.entityApiName,
+                    fieldApiName: 'BusinessUnitId',
+                    pageParam: 1,
+                    pageSize: 25,
+                    q: "",
+                    searchType: "Recent",
+                    targetApiName: 'BusinessUnit',
+                    body: {
+                        sourceRecord: {
+                            apiName: props.entityApiName,
+                            fields: {
+                                Id: null,
+                                    RecordTypeId: ""
+                                }
+                            }
+                        }
+                    }
+                }]
+        }
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.lookup, d).then((res) => {
+            let list = res.actions[0].returnValue.lookupResults.records;
+            let arr = [];
+            list.forEach(item=>{
+                arr.push({
+                    ID: item.fields.Id.value,
+                    Name: item.fields.Name.value
+                })
+            });
+            data.listData = arr;
+        });
+  }
   onMounted(() => {
     window.addEventListener("resize", (e) => {
       data.height = document.documentElement.clientHeight - 300;
     });
+    getDetail();
   });
-  
+  const getDetail = () => {
+        let d = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                  recordId: props.id,
+                  apiName:props.objectTypeCode=='100201'?'Content':'Notice',
+                  objTypeCode: props.objectTypeCode
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.detail,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
+              let fields=res.actions[0].returnValue.fields;
+              formState.ApprovedBy=fields.ApprovedBy.displayValue;
+              data.ApprovedBy=fields.ApprovedBy.value;
+              formState.BusinessUnitId=fields.BusinessUnitId.displayValue;
+              data.BusinessUnitId=fields.BusinessUnitId.value;
+              data.listData=[];
+              data.listData.push({
+                  ID:fields.BusinessUnitId.value,
+                  Name:fields.BusinessUnitId.displayValue
+              })
+              formState.IsImportant=fields.IsImportant.value?true:false;
+              formState.IsTop=fields.IsTop.value*1==1?true:false;
+              formState.AttachRightCode=fields.AttachRightCode.value*1;
+              formState.EndTopDate=fields.EndTopDate.value?dayjs(fields.EndTopDate.value).format("YYYY-MM-DD hh:mm:ss"):'';
+              formState.ApprovedOn=fields.ApprovedOn.value?dayjs(fields.ApprovedOn.value).format("YYYY-MM-DD hh:mm:ss"):'';
+              formState.KeyWords=fields.KeyWords.value?(fields.KeyWords.value).split(','):[];
+              formState.IsPublic=fields.IsPublic.value*1==1?true:false;
+              formState.CoverDisplay=fields.CoverDisplay.value;
+              formState.FolderId=fields.FolderId.value;
+            }
+        })
+    }
+
   const handleSubmit = () => {
     formRef.value
       .validate()
       .then(() => {
         console.log("values", formState, toRaw(formState));
-        let obj = {
-          params: {
-            objTypeCode: props.objectTypeCode,
-            fields: {
-                ApprovedBy: {
-                    Id: ""
-                },
-                BusinessUnitId: {
-                    Id: data.BusinessUnitId
-                },
-                IsImportant: formState.IsImportant?1:0,
-                IsTop: formState.IsTop ? 1 : 0,
-                AttachRightCode: formState.AttachRightCode,
-                EndTopDate: dayjs(formState.EndTopDate).format("YYYY-MM-DD hh:mm:ss"),
-                ApprovedOn: dayjs(formState.ApprovedOn).format("YYYY-MM-DD hh:mm:ss"),
-                StateCode: 1,
-                KeyWords: formState.KeyWords.join(',') || '',
-                IsPublic: formState.IsPublic ? 1 : 0,
-                CoverDisplay: formState.CoverDisplay,
-                Title: "",
-                FolderId: {
-                    Id: props.FolderId
+        // let obj = {
+        //   params: {
+        //     objTypeCode: props.objectTypeCode,
+        //     fields: {
+        //         ApprovedBy: {
+        //             Id: ""
+        //         },
+        //         BusinessUnitId: {
+        //             Id: data.BusinessUnitId
+        //         },
+        //         IsImportant: formState.IsImportant?1:0,
+        //         IsTop: formState.IsTop ? 1 : 0,
+        //         AttachRightCode: formState.AttachRightCode,
+        //         EndTopDate: dayjs(formState.EndTopDate).format("YYYY-MM-DD hh:mm:ss"),
+        //         ApprovedOn: dayjs(formState.ApprovedOn).format("YYYY-MM-DD hh:mm:ss"),
+        //         StateCode: 1,
+        //         KeyWords: formState.KeyWords.join(',') || '',
+        //         IsPublic: formState.IsPublic ? 1 : 0,
+        //         CoverDisplay: formState.CoverDisplay,
+        //         Title: "",
+        //         FolderId: {
+        //             Id: props.FolderId
+        //         }
+        //     },
+        //     id: props.id,
+        //     ContentTypeCode: 1,
+        //   },
+        // };
+        // var messages = JSON.stringify(obj);
+        // proxy.$get(Interface.saveRecord, { message: messages }).then((res) => {
+        //   formRef.value.resetFields();
+        //   message.warning("保存成功！");
+        //   emit("cancel", false);
+        // });
+        let url=Interface.edit;
+        let d = {
+          actions:[{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                  recordInput: {
+                    allowSaveOnDuplicate: false,
+                    apiName: props.objectTypeCode=='100201'?'Content':'Notice',
+                    objTypeCode: props.objectTypeCode,
+                    fields: {
+                        ApprovedBy: data.ApprovedBy,
+                        BusinessUnitId: data.BusinessUnitId,
+                        IsImportant: formState.IsImportant,
+                        IsTop: formState.IsTop ? 1 : 0,
+                        AttachRightCode: formState.AttachRightCode,
+                        EndTopDate: dayjs(formState.EndTopDate).format("YYYY-MM-DD hh:mm:ss"),
+                        ApprovedOn: dayjs(formState.ApprovedOn).format("YYYY-MM-DD hh:mm:ss"),
+                        StateCode: 1,
+                        KeyWords: formState.KeyWords.join(',') || '',
+                        IsPublic: formState.IsPublic ? 1 : 0,
+                        CoverDisplay: formState.CoverDisplay,
+                        //Title: "",
+                        FolderId: formState.FolderId
+                    }
+                  }              
                 }
-            },
-            id: props.id,
-            ContentTypeCode: 1,
-          },
-        };
-        var messages = JSON.stringify(obj);
-        proxy.$get(Interface.saveRecord, { message: messages }).then((res) => {
-          formRef.value.resetFields();
-          message.warning("保存成功！");
-          emit("cancel", false);
-        });
+            }]
+          };
+          if(props.id){
+              d.actions[0].params.recordId=props.id;
+          }
+          let obj = {
+              message: JSON.stringify(d)
+          }
+          proxy.$post(url,obj).then(res=>{
+            formRef.value.resetFields();
+            message.success("发布成功！");
+            emit("cancel", false);
+          });
+
       })
       .catch((err) => {
         console.log("error", err);
@@ -512,6 +673,9 @@
                 }
             }
         }
+    }
+    .sectionItem .ApprovedByName{
+      border-radius: 4px !important;
     }
   </style>
   

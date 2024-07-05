@@ -50,7 +50,7 @@
     <div class="detail-scroll">
       <div class="detail-bd">
         <div class="tabContainer containerForm" v-if="activeKey == 0">
-          <div class="tableBox"></div>
+          <div class="tableBox" v-html="content"></div>
           <div class="rightAside">
             <div class="panel">
               <div class="panel-head">
@@ -234,6 +234,7 @@ const data = reactive({
   isUserModal: false,
   fileCategorys: [],
   files: [],
+  content:''
 });
 const {
   tabs,
@@ -248,6 +249,7 @@ const {
   isUserModal,
   fileCategorys,
   files,
+  content,
 } = toRefs(data);
 const changeTabs = (e) => {
   data.activeKey = e;
@@ -259,15 +261,37 @@ const handleClick = (event) => {
   event.stopPropagation();
 };
 const getDetail = () => {
-  proxy
-    .$get(Interface.information.detail, {
-      id: data.id,
-      objectTypeCode: data.objectTypeCode,
-    })
-    .then((res) => {
-      console.log("res", res);
-      data.detail = res.actions[0].returnValue.record;
-    });
+  // proxy
+  //   .$get(Interface.information.detail, {
+  //     id: data.id,
+  //     objectTypeCode: data.objectTypeCode,
+  //   })
+  //   .then((res) => {
+  //     console.log("res", res);
+  //     data.detail = res.actions[0].returnValue.record;
+  //   });
+  let d = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                recordId: data.id,
+                apiName:data.objectTypeCode=='100201'?'Content':'Notice',
+                objTypeCode: data.objectTypeCode
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.detail,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
+            let fields=res.actions[0].returnValue.fields;
+            data.detail.Title=fields.Title.value;
+            data.content=fields.ContentBody.value;
+            }
+        })
 };
 getDetail();
 const getFileClass = () => {

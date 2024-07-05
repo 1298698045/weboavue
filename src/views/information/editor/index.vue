@@ -3,7 +3,7 @@
         <div class="editorHeader">
             <div class="editPageHeadBd">
                 <div class="left">
-                    <input type="text" v-model="detail.Title" class="titleInp" autocomplete="off">
+                    <input type="text" v-model="detail.Title.value" class="titleInp" autocomplete="off">
                 </div>
                 <div class="right">
                     <div class="avatarGroup">
@@ -155,7 +155,7 @@
         height: 0,
         content: "",
         activeKey: '1',
-        detail: "",
+        detail: {Title:{value:""}},
         isRadioUser: false,
         fileList: [],
         searchVal: "",
@@ -189,7 +189,7 @@
         })
     })
     const getContent = (e) => {
-        console.log('e', e);
+        //console.log('e', e);
         data.content = e;
     }
     const handleInvitation = () => {
@@ -213,11 +213,34 @@
         })
     }
     const getDetail = () => {
-        proxy.$get(Interface.information.detail, {
-            id: data.id,
-            objectTypeCode: data.objectTypeCode
-        }).then(res => {
-            data.detail = res.actions[0].returnValue.record;
+        // proxy.$get(Interface.information.detail, {
+        //     id: data.id,
+        //     objectTypeCode: data.objectTypeCode
+        // }).then(res => {
+        //     data.detail = res.actions[0].returnValue.record;
+        // })
+        let d = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                recordId: data.id,
+                apiName:data.objectTypeCode=='100201'?'Content':'Notice',
+                objTypeCode: data.objectTypeCode
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.detail,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
+            let fields=res.actions[0].returnValue.fields;
+            data.detail=fields;
+            data.content=fields.ContentBody.value;
+            editorRef.value.content=fields.ContentBody.value;
+            }
         })
     }
     const onSearch = (e) => {
@@ -236,30 +259,60 @@
     getFiles();
     // 保存
     const handleSave = () => {
-        var obj = {
+        // var obj = {
+        //     params: {
+        //         recordRep: {
+        //             objTypeCode: data.objectTypeCode,
+        //             id: data.id,
+        //             ContentTypeCode: 1,
+        //             fields: {
+        //                 Title: data.detail.Title,
+        //                 FolderId:{
+        //                     Id: data.FolderId
+        //                 },
+        //                 ContentBody: data.content
+        //             }
+        //         }
+        //     }
+        // }
+        // var d = {
+        //     message: JSON.stringify(obj)
+        // }
+        // proxy.$get(Interface.saveRecord,d).then(res=>{
+        //     if (res.status == 1) {
+        //         message.success("保存成功！");
+        //     }
+        // })
+        let url=Interface.edit;
+        let d = {
+        actions:[{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
             params: {
-                recordRep: {
-                    objTypeCode: data.objectTypeCode,
-                    id: data.id,
-                    ContentTypeCode: 1,
-                    fields: {
-                        Title: data.detail.Title,
-                        FolderId:{
-                            Id: data.FolderId
-                        },
-                        ContentBody: data.content
-                    }
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName:data.objectTypeCode=='100201'?'Content':'Notice',
+                objTypeCode: data.objectTypeCode,
+                fields: {
+                    Title: data.detail.Title.value,
+                    //FolderId:data.FolderId,
+                    ContentBody: data.content
                 }
+              }              
             }
-        }
-        var d = {
-            message: JSON.stringify(obj)
-        }
-        proxy.$get(Interface.saveRecord,d).then(res=>{
-            if (res.status == 1) {
-                message.success("保存成功！");
-            }
-        })
+        }]
+    };
+    if(data.id){
+        d.actions[0].params.recordId=data.id;
+    }
+    let obj = {
+        message: JSON.stringify(d)
+    }
+        proxy.$post(url,obj).then(res=>{
+          //formRef.value.resetFields();
+          message.success("保存成功！");
+        });
     }
     const handleSubmit = () => {
         data.isRelaseInfo = true;

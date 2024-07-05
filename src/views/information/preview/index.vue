@@ -10,35 +10,39 @@
             </div>
             <div class="center">
                 <div class="leftBody">
-                    <h1 class="title">测试</h1>
-                    <div class="info">
-                         · jackliu3 | 评论<span class="num"> 0</span> · 阅读<span class="num"> 1</span> | 2023/11/6 11:18:32
-                    </div>
-                    <div class="article"></div>
-                    <div class="tagWrap">
-                        文章关键字
-                    </div>
-                    <div class="tagWrap">
-                        附件
-                        <span class="tag" v-for="(item,index) in detail.Attachments" :key="index">
-                            <i class="iconfont icon-file-tupian"></i>
-                            {{item.Name}}
-                            <a href="#">查看</a>
-                            <a :href="item.DownloadURL">下载</a>
-                        </span>
-                    </div>
-                    <div class="operation">
-                        <div class="like btnRadius" @click="handleLike">
-                            <i class="iconfont icon-zan2" :class="{'active':detail.IsLike==1}"></i>
-                            {{detail.LikeCount}}
-                        </div>
-                    </div>
+                    
                     <div class="tabContainer">
                         <a-tabs v-model:activeKey="activeKey">
-                            <a-tab-pane key="1" tab="阅读"></a-tab-pane>
-                            <a-tab-pane key="2" tab="评论"></a-tab-pane>
+                            <a-tab-pane key="1" tab="详情"></a-tab-pane>
+                            <a-tab-pane key="2" tab="阅读"></a-tab-pane>
+                            <a-tab-pane key="3" tab="评论"></a-tab-pane>
                         </a-tabs>
                         <div class="tabContent" v-if="activeKey=='1'">
+                            <h1 class="title">{{data.detail.Title||''}}</h1>
+                            <div class="info">
+                                · jackliu3 | 评论<span class="num"> 0</span> · 阅读<span class="num"> 1</span> | 2023/11/6 11:18:32
+                            </div>
+                            <div class="article" v-html="data.detail.ContentBody||''"></div>
+                            <div class="tagWrap">
+                                文章关键字
+                            </div>
+                            <div class="tagWrap">
+                                附件
+                                <span class="tag" v-for="(item,index) in detail.Attachments" :key="index">
+                                    <i class="iconfont icon-file-tupian"></i>
+                                    {{item.Name}}
+                                    <a href="#">查看</a>
+                                    <a :href="item.DownloadURL">下载</a>
+                                </span>
+                            </div>
+                            <div class="operation">
+                                <div class="like btnRadius" @click="handleLike">
+                                    <i class="iconfont icon-zan2" :class="{'active':detail.IsLike==1}"></i>
+                                    {{detail.LikeCount}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tabContent" v-if="activeKey=='2'">
                             <div class="readList">
                                 <div class="readItem" v-for="(item,index) in readList" :key="index">
                                     <div class="avatar">
@@ -54,12 +58,12 @@
                                 <a-pagination v-model:current="current" :total="50" show-less-items />
                             </div>
                         </div>
-                        <div class="tabContent" v-if="activeKey=='2'">
+                        <div class="tabContent" v-if="activeKey=='3'">
                             <Comment />
                         </div>
                     </div>
                 </div>
-                <div class="rightBody">
+                <!-- <div class="rightBody">
                     <div class="panel">
                         <div class="panel-head">
                             <div class="panel-title">
@@ -106,7 +110,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -133,7 +137,7 @@
     const data = reactive({
         id: route.query.id,
         objectTypeCode: route.query.objectTypeCode,
-        detail: {},
+        detail: {Title:''},
         activeKey: '1',
         pageNumber: 1,
         pageSize: 10,
@@ -146,15 +150,37 @@
         contentNotices } = toRefs(data);
 
     const getDetail = ()=> {
-        proxy.$get(Interface.information.detail,{
-            id: data.id,
-            objectTypeCode: data.objectTypeCode
-        }).then(res=>{
-            console.log("res",res);
-            data.detail =  res.actions[0].returnValue.record;
+        // proxy.$get(Interface.information.detail,{
+        //     id: data.id,
+        //     objectTypeCode: data.objectTypeCode
+        // }).then(res=>{
+        //     console.log("res",res);
+        //     data.detail =  res.actions[0].returnValue.record;
+        // })
+        let d = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    recordId: data.id,
+                    apiName:data.objectTypeCode=='100201'?'Content':'Notice',
+                    objTypeCode: data.objectTypeCode
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.detail,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]){
+                let record = res.actions[0].returnValue.fields;
+                data.detail.Title = record.Title.value;
+                data.detail.ContentBody=record.ContentBody.value;
+            }
         })
     }
-    // getDetail();
+    getDetail();
     const getReadList = () => {
         proxy.$get(Interface.information.readList,{
             NewsId: data.id,
@@ -174,7 +200,7 @@
             data.contentNotices = res.listData;
         })
     }
-    getNoticeNew();
+    //getNoticeNew();
     // 点赞
     const handleLike = () => {
         proxy.$get(Interface.information.like,{
@@ -220,6 +246,7 @@
                     font-size: 37px;
                     color: #1d2129;
                     font-weight: bold;
+                    margin-top: 25px;
                 }
                 .info{
                     margin-top: 15px;

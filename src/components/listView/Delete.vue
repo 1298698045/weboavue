@@ -166,8 +166,8 @@
   };
   //getQuery();
   onMounted(() => {
-    let h = modelContentRef.value.clientHeight;
-    data.top = (h + 126) / 2 + 'px';
+    //let h = modelContentRef.value.clientHeight;
+    //data.top = (h + 126) / 2 + 'px';
   })
   const setTop = computed(() => ({
     top: `calc(50% - ${data.top})`

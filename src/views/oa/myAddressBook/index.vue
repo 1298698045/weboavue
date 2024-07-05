@@ -3,14 +3,16 @@
         <div class="headerBar">
             <div class="headerLeft">
                 <div class="icon-circle-base" style="background: #893D86;">
-                    <img :src="require('@/assets/img/rightMenu/tongxunlu1.png')" alt="">
+                    <img :src="require('@/assets/img/rightMenu/daibanshiwu.png')" alt="">
                 </div>
-                <span class="headerTitle">通讯录</span>
+                <span class="headerTitle">个人通讯录</span>
             </div>
             <div class="headerRight" v-if="activeKey=='1'">
-                <a-button class="ml10">导入</a-button>
+                <!-- 
                 <a-button class="ml10">导出</a-button>
-                <a-button class="ml10">下载模板</a-button>
+                <a-button class="ml10">下载模板</a-button> -->
+                <a-button class="ml10">导入</a-button>
+                <a-button class="ml10" type="primary" @click="handleNew">新建</a-button>
                 <a-input-search class="ml10" v-model:value="searchVal" placeholder="请输入关键字" style="width: 150px;"
                     @search="onSearch" />
                 <a-dropdown class="ml10">
@@ -19,11 +21,11 @@
                             <a-menu-item key="1" @click="choiceSort('全部','')">
                                 全部
                             </a-menu-item>
-                            <a-menu-item key="2" @click="choiceSort('按名称(A-Z)','Pinyin')">
+                            <a-menu-item key="2" @click="choiceSort('按姓名(A-Z)','Pinyin')">
                                 按名称(A-Z)
                             </a-menu-item>
-                            <a-menu-item key="3" @click="choiceSort('按工号','EmployeeId')">
-                                按工号
+                            <a-menu-item key="3" @click="choiceSort('按编号','BusinessUnitId')">
+                                按编号
                             </a-menu-item>
                         </a-menu>
                     </template>
@@ -41,12 +43,12 @@
                         <a-tab-pane key="1" tab="单位联系人"></a-tab-pane>
                         <a-tab-pane key="2" tab="个人联系人"></a-tab-pane>
                     </a-tabs> -->
-                    <div class="switchWrap switchWrap-addressBook" v-if="leftTabCurrent==1">
+                    <!-- <div class="switchWrap switchWrap-addressBook" v-if="leftTabCurrent==1">
                         <span class="spaceWrap">
                             <span class="spaceItem" :class="{'active':typeCurrent==0}" @click="handleTab(0)">组织结构</span>
                             <span class="spaceItem" :class="{'active':typeCurrent==1}" @click="handleTab(1)">常用小组</span>
                         </span>
-                    </div>
+                    </div> -->
                     <div class="wea-left-tree-search wea-left-tree-search-addressBook">
                         <a-input-search
                         v-model:value="searchTreeVal"
@@ -62,7 +64,7 @@
                             <template v-else>{{ text }}</template>
                         </template>
                     </a-tree>
-                    <a-tree :tree-data="groupList" block-node v-else @select="onTreeNodeSelect">
+                    <a-tree :tree-data="groupList" block-node v-if="typeCurrent==1" @select="onTreeNodeSelect">
                         <template #title="{ Name, key }">
                             <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ Name }}</span>
                             <template v-else>{{ Name }}</template>
@@ -85,10 +87,10 @@
                 </div>
                 <div class="rightTab">
                     <a-tabs v-model:activeKey="activeKey" @change="changeRightTab">
-                        <a-tab-pane key="1" tab="全部人员"></a-tab-pane>
-                        <a-tab-pane key="2" tab="同部门"></a-tab-pane>
+                        <a-tab-pane key="1" tab="全部"></a-tab-pane>
+                        <!-- <a-tab-pane key="2" tab="同部门"></a-tab-pane>
                         <a-tab-pane key="3" tab="我的下属"></a-tab-pane>
-                        <a-tab-pane key="4" tab="最近联系人"></a-tab-pane>
+                        <a-tab-pane key="4" tab="最近联系人"></a-tab-pane> -->
                     </a-tabs>
                     <!-- <div class="rWrap" v-if="activeKey==2">
                         <a-button class="ml10">导入</a-button>
@@ -171,8 +173,14 @@
                                                 </a>
                                                 <template #overlay>
                                                     <a-menu>
-                                                        <a-menu-item>
+                                                        <!-- <a-menu-item>
                                                             <a href="javascript:;">发邮件</a>
+                                                        </a-menu-item> -->
+                                                        <a-menu-item>
+                                                            <a href="javascript:void(0);" @click="handleEdit(item.id)">编辑</a>
+                                                        </a-menu-item>
+                                                        <a-menu-item>
+                                                            <a href="javascript:void(0);" @click="handleDelete(item.id)">删除</a>
                                                         </a-menu-item>
                                                     </a-menu>
                                                 </template>
@@ -278,8 +286,14 @@
                                             </a>
                                             <template #overlay>
                                                 <a-menu>
-                                                    <a-menu-item>
+                                                    <!-- <a-menu-item>
                                                         <a href="javascript:;">发邮件</a>
+                                                    </a-menu-item> -->
+                                                    <a-menu-item>
+                                                        <a href="javascript:void(0);" @click="handleEdit(item.id)">编辑</a>
+                                                    </a-menu-item>
+                                                    <a-menu-item>
+                                                        <a href="javascript:void(0);" @click="handleDelete(item.id)">删除</a>
                                                     </a-menu-item>
                                                 </a-menu>
                                             </template>
@@ -363,6 +377,8 @@
                 </div>
             </div>
         </div>
+        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
+        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
     </div>
 </template>
 <script setup>
@@ -375,30 +391,39 @@
     import Interface from "@/utils/Interface.js";
     import { formTreeData } from "@/utils/common.js";
     import { message } from "ant-design-vue";
+    import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+    import Delete from "@/components/listView/Delete.vue";
     const { proxy } = getCurrentInstance();
     const data = reactive({
         activeKey: "1",
         deptTreeData:[],
         deptTreeDataAll:[],
         pageNumber: 1,
-        pageSize: 12,
+        pageSize: 20,
         listData: [],
         searchVal: "",
         total: 0,
         leftTabCurrent: "1",
-        typeCurrent: 0,
+        typeCurrent: 1,
         groupList: [],
         groupListAll:[],
         isLeft: true,
         sortField: {
-            id: 'EmployeeId',
+            id: '',
             name: '全部'
         },
         treeId:'',
-        searchTreeVal:''
+        searchTreeVal:'',
+        isCommon: false,
+        recordId:'',
+        objectTypeCode:'2',
+        sObjectName:'Contact',
+        isDelete: false,
+        deleteDesc: '确定要删除吗？',
+        external:false
     })
     const { activeKey, deptTreeData, pageNumber, pageSize, listData,
-        searchVal, total, leftTabCurrent, typeCurrent, groupList, isLeft, sortField,treeId,searchTreeVal,deptTreeDataAll,groupListAll} = toRefs(data);
+        searchVal, total, leftTabCurrent, typeCurrent, groupList, isLeft, sortField,treeId,searchTreeVal,deptTreeDataAll,groupListAll,isCommon,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external} = toRefs(data);
     const choiceSort = (name, id) => {
         data.sortField = {
             name,
@@ -427,35 +452,18 @@
             getGroupList();
         }
     }
-    //处理树
-    const formTree = (list) => {
-        list.forEach(item=>{
-            if(item.children){
-            formTree(item.children);
-            }
-            item.children=[];
-            item.id=item.businessUnitId;
-            item.key=item.businessUnitId;
-            item.text=item.name;
-        })
-        return list
-    }
     // 组织结构
     const getDeptTreeData = () => {
-        proxy.$get(Interface.deptTree, {
-            //entity: "organizationtree"
+        proxy.$get(Interface.treeList, {
+            entity: "organizationtree"
         }).then(res => {
-            let list=[];
-            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
-                list=res.actions[0].returnValue;
-            }else{return false}
-            list=formTree(list);   
-            data.deptTreeData = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
+            let list = res.rows;
+            data.deptTreeData = formTreeData(list, 'id', 'pid');
             data.deptTreeDataAll = list;
             //console.log("deptTreeData", data.deptTreeData);
         })
     }
-    getDeptTreeData();
+    //getDeptTreeData();
 
     const getGroupList = () => {
         proxy.$get(Interface.user.groupList, {
@@ -464,6 +472,7 @@
             data.groupListAll = res.listData;
         })
     }
+    getGroupList();
     const onSearch = (e) => {
         if (data.activeKey == 4) {
             getLastList();
@@ -476,8 +485,7 @@
             let list = data.deptTreeDataAll.filter(item=>{
                 return item.text.indexOf(data.searchTreeVal) !== -1;
             })
-            list=formTree(list);
-            data.deptTreeData = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
+            data.deptTreeData = formTreeData(list, 'id', 'pid');
         }
         else{
             data.groupList = data.groupListAll.filter(item=>{
@@ -517,6 +525,7 @@
     }
     //getLastList();
     const getQuery = () => {
+        //let filterQuery='\nAccountId\teq-userid';
         let filterQuery='';
         if(data.typeCurrent==0&&data.treeId){
             filterQuery+='\nBusinessUnitId\teq\t'+data.treeId;
@@ -526,15 +535,15 @@
         }
         proxy.$post(Interface.listView.node, {
             filterId:'',
-            objectTypeCode:'8',
-            entityName:'SystemUser',
+            objectTypeCode:data.objectTypeCode,
+            entityName:data.sObjectName,
             filterQuery:filterQuery,
             search:data.searchVal||'',
             page: data.pageNumber,
             rows: data.pageSize,
-            sort:data.sortField.id,
+            sort: data.sortField.id,
             order:'ASC',
-            displayColumns:'FullName,PhotoUrl,BusinessUnitId,WorkStatus,JobTitle,EmployeeId,MobilePhone,InternalEMailAddress'
+            displayColumns:'FullName,PhotoUrl,Department,WorkStatus,JobTitle,EmployeeNo,MobilePhone,EMailAddress1'
         }).then(res => {
             data.listData = res.nodes;
             data.total = res.pageInfo?res.pageInfo.total:0;
@@ -542,13 +551,13 @@
             for (var i = 0; i < res.nodes.length; i++) {
                 var item = res.nodes[i];
                 item.FullName=item.FullName?item.FullName.textValue:(item.fullName?item.fullName.textValue:'');
-                item.PhotoUrl=item.PhotoUrl?item.PhotoUrl.textValue:(item.Avatar?item.Avatar.textValue:'');
-                item.BusinessUnitIdName=item.BusinessUnitId?item.BusinessUnitId.lookupValue.displayName:'';
-                item.workStatus=item.WorkStatus?item.WorkStatus.name:'';
+                item.PhotoUrl=item.PhotoUrl?item.PhotoUrl.textValue:(item.photoUrl?item.photoUrl.textValue:(item.Avatar?item.Avatar.textValue:''));
+                item.BusinessUnitIdName=item.Department?item.Department.textValue:'';
+                item.workStatus=item.WorkStatus?item.WorkStatus.textValue:'';
                 item.JobTitle=item.JobTitle?item.JobTitle.textValue:'';
-                item.EmployeeNo=item.EmployeeId?item.EmployeeId.textValue:'';
-                item.MobilePhone=item.MobilePhone?item.MobilePhone.textValue:(item.mobilePhone?item.mobilePhone.textValue:'');
-                item.EMailAddress=item.EMailAddress?item.EMailAddress.textValue:(item.InternalEMailAddress?item.InternalEMailAddress.textValue:'');
+                item.EmployeeNo=item.EmployeeNo?item.EmployeeNo.textValue:'';
+                item.MobilePhone=item.MobilePhone?item.MobilePhone.textValue:(item.Telephone1?item.Telephone1.textValue:'');
+                item.EMailAddress=item.EMailAddress1?item.EMailAddress1.textValue:(item.EMailAddress?item.EMailAddress.textValue:'');
                 item.pinyin=item.Pinyin?item.Pinyin.textValue:'';
                 var isPinyin = list.some(function (v) {
                     if(item.pinyin){
@@ -593,6 +602,30 @@
     const handleMenuClick = (e) => {
         console.log("e", e);
     }
+    //新建
+    const handleNew = (e) => {
+      data.recordId='';
+      data.isCommon = true;
+    }
+    //编辑
+    const handleEdit = (key) => {
+      console.log(key,2222222)
+      data.recordId=key;
+      data.isCommon = true;
+    }
+    // 通用弹窗关闭
+    const handleCommonCancel = (params) => {
+        data.isCommon=false;
+    };
+    //删除
+    const handleDelete = (key) => {
+        data.recordId=key;
+        data.isDelete = true;
+    }
+    //删除关闭
+    const cancelDelete = (e) => {
+        data.isDelete = false;
+    };
 </script>
 <style lang="less" scoped>
     @import "@/style/addressBook.less";
@@ -600,7 +633,7 @@
         margin-top: 10px !important;
     }
     .addressBook .todoListWrap .leftTree .leftTreeWrap{
-        height: calc(~"100% - 100px") !important;
+        height: calc(~"100% - 50px") !important;
     }
     .wea-left-tree-search-addressBook{
         margin-top: 5px !important;

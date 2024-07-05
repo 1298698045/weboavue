@@ -157,5 +157,5 @@ watch(()=>props.height,(newVal,oldVal)=>{
 
   // }
 },{ deep: true, immediate: true })
-defineExpose({init})
+defineExpose({init,content})
 </script>

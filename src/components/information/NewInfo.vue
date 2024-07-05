@@ -50,10 +50,11 @@
     import { useRouter, useRoute } from "vue-router";
     const router = useRouter();
     const formRef = ref();
-    const labelCol = ref({ style: { width: '100px' } });
+    const labelCol = ref({ style: { width: '60px' } });
     const props = defineProps({
         isShow: Boolean,
-        treeData: Array
+        treeData: Array,
+        objectTypeCode: String
     })
     import { message } from "ant-design-vue";
 
@@ -109,40 +110,57 @@
     const handleSubmit = ()=> {
         formRef.value.validate().then(() => {
             console.log('values', formState, toRaw(formState));
-            var obj = {
-                params: {
-                    recordRep: {
-                        objTypeCode: 100201,
-                        fields: {
-                            ContentTypeCode: 1,
-                            Title: formState.name,
-                            FolderId: {
-                                Id: formState.column
-                            }
-                        }
-                    }
+            let url=Interface.create;
+        let d = {
+        actions:[{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName: props.objectTypeCode=='100201'?'Content':'Notice',
+                objTypeCode: props.objectTypeCode,
+                fields: {
+                    ContentTypeCode: 1,
+                    Title: formState.name,
+                    FolderId: formState.column
                 }
+              }              
             }
-            let messages = JSON.stringify(obj);
-            proxy.$get(Interface.saveRecord,{
-                message: messages
-            }).then(res=>{
-                message.success("保存成功！");
-                emit("cancel", false);
-                let url = router.resolve({
+        }]
+    };
+    if(props.id){
+        d.actions[0].params.recordInput.Id=props.id;
+        d.actions[0].params.recordId=props.id;
+        url='Interface.edit';
+    }
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    var formState1=formState;
+        proxy.$post(url,obj).then(res=>{
+          formRef.value.resetFields();
+          message.success("保存成功！");
+          emit("cancel", false);
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+            let reUrl = router.resolve({
                     name: "InformationEditor",
                     query: {
-                        id: 123,
-                        objectTypeCode: 100201,
-                        FolderId: "123131313"
+                        id: res.actions[0].returnValue.id,
+                        objectTypeCode: props.objectTypeCode,
+                        //FolderId: res.actions[0].returnValue&&res.actions[0].returnValue.fields&&res.actions[0].returnValue.fields.FolderId?res.actions[0].returnValue.fields.FolderId:''
+                        FolderId: formState1.column
                     }
                 })
-                window.open(url.href); 
-            })
-        }).catch(error => {
-            console.log('error', error);
+            window.open(reUrl.href); 
+          }
+          
         });
-    }
+    }).catch(error => {
+        console.log('error', error);
+    });
+}
 </script>
 <style lang="less" scoped>
     @import url('@/style/modal.less');

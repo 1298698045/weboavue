@@ -33,3 +33,25 @@ export const compareIgnoreCase = (str1, str2) => {
     console.log("str1", str1, str2)
     return str1.toLowerCase() === str2.toLowerCase();
 }
+export const girdFormatterValue = (key,row) => {
+    let val = '';
+    let typename = row[key] && row[key].__typeName;
+    if(typename == 'StatusField'){
+        val = row[key].name;
+    }else if(typename == 'LookupField'){
+        val = row[key].lookupValue.displayName;
+    } else if(typename == 'DateTimeField'){
+        val = row[key].dateTime;
+    } else if(typename=="UserField"){
+        val = row[key].userValue.DisplayName;
+    } else if(typename=="PicklistField"){
+        val = row[key].name;
+    } else if(typename=="DateField"){
+        val = row[key] && row[key].date;
+    } else if (typename == "TextField") {
+        val = row[key] && row[key].textValue;
+    } else {
+        val = row[key] && row[key].value;
+    }
+    return val;
+}

@@ -7,14 +7,14 @@
             <div class="editheadbg"></div>
             <div class="edithead"><EditOutlined />编辑头像</div>
             <img
-              :src="require('@/assets/img/avatar-r.png')"
+              :src="AvatarImg"
               alt=""
               class="d-panel-content-head-left default_avatar"
             />
           </div>
           <div class="d-panel-content-head-title">
-            <div class="title">统计日报组</div>
-            <div class="subtitle">公用</div>
+            <div class="title">{{detail.Name&&detail.Name.value?detail.Name.value:''}}</div>
+            <div class="subtitle">{{detail.IsPublic&&detail.IsPublic.value?'公用':'非公用'}}</div>
           </div>
         </div>
         <div class="tabContainer">
@@ -27,13 +27,9 @@
         </div>
       </div>
       <div class="rightBtns">
-        <a-button class="ml10" type="primary" @click="handleAddPeople"
-          >添加成员</a-button
-        >
-        <a-button class="ml10" type="primary" @click="handleAddAdmin"
-          >添加管理员</a-button
-        >
-        <a-button class="ml10" type="primary">编辑小组</a-button>
+        <a-button class="ml10" type="primary" @click="handleAddPeople">添加成员</a-button>
+        <a-button class="ml10" type="primary" @click="handleAddAdmin">添加管理员</a-button>
+        <a-button class="ml10" type="primary" @click="handleEdit">编辑小组</a-button>
         <a-button class="ml10" @click="handleDeleteGroup">删除小组</a-button>
         <a-dropdown :trigger="['hover']" class="ml10">
           <span class="btn-drop">
@@ -53,10 +49,10 @@
           <div class="tabContainer">
             <group-space v-if="activeKey == '1'" />
             <DetailInfo v-if="activeKey == '2'" />
-            <Personnel v-if="activeKey == '3'" />
+            <Personnel ref="PersonnelLst" :AddPeople="handleAddPeople" :AddAdmin="handleAddAdmin" v-if="activeKey == '3'" />
             <Statistics v-if="activeKey == '4'" />
           </div>
-          <div class="rightAside">
+          <div class="rightAside group-rightAside">
             <div class="panel">
               <div class="panel-head">
                 <div class="panel-title">管理员</div>
@@ -123,9 +119,10 @@
         </div>
       </div>
     </div>
-    <radio-user :isShow="isRadioUser" @selectVal="getUserData"></radio-user>
+    <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
     <Notes :isShow="isNotes" @cancel="closeNotes" />
-    <Delete :isShow="isDelete" @cancel="closeDelete" @ok="submitOk" />
+    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
+    <Delete :isShow="isDelete" :desc="deleteDesc" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" @cancel="closeDelete" @ok="deleteOk" />
   </div>
 </template>
 <script setup>
@@ -154,6 +151,7 @@ import Statistics from "@/components/groupDetail/Statistics.vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 // 备注
 import Notes from "@/components/groupDetail/Notes.vue";
+import CommonFormModal from "@/components/listView/CommonFormModal.vue";
 // 删除
 import Delete from "@/components/listView/Delete.vue";
 import Interface from "@/utils/Interface.js";
@@ -162,7 +160,7 @@ import { message } from "ant-design-vue";
 import { useStore } from "vuex";
 let store = useStore();
 store.commit("setGroupId", route.query.GroupId);
-
+const PersonnelLst = ref();
 const data = reactive({
   activeKey: "1",
   groudId: route.query.GroupId,
@@ -172,6 +170,14 @@ const data = reactive({
   isNotes: false,
   isDelete: false,
   RoleCode: 0,
+  isCommon: false,
+  recordId:route.query.GroupId,
+  objectTypeCode:'9',
+  sObjectName:'Group',
+  deleteDesc: '确定要删除吗？',
+  external:false,
+  detail: {Name:{value:""},IsPublic:{value:""}},
+  AvatarImg:require('@/assets/img/avatar-r.png')
 });
 const {
   activeKey,
@@ -181,6 +187,8 @@ const {
   isNotes,
   isDelete,
   isAdmin,
+  isCommon,
+  recordId,objectTypeCode,sObjectName,deleteDesc,external,detail,AvatarImg
 } = toRefs(data);
 const handleOpenNotes = () => {
   data.isNotes = true;
@@ -189,12 +197,12 @@ const closeNotes = (e) => {
   data.isNotes = e;
 };
 // 添加成员
-const handleAddPeople = () => {
+const handleAddPeople = (e) => {
   data.isRadioUser = true;
   data.RoleCode = 0;
 };
 // 添加管理员
-const handleAddAdmin = () => {
+const handleAddAdmin = (e) => {
   data.RoleCode = 2;
   data.isRadioUser = true;
 };
@@ -206,8 +214,19 @@ const closeDelete = (e) => {
   data.isDelete = e;
 };
 const submitOk = (e) => {
-  data.isDelete = e;
+  getDetail();
+};
+const refreshPeople=(e)=>{
+  getAdminData();
+  PersonnelLst.value.getQuery();
+}
+const deleteOk = (e) => {
+  data.isDelete = false;
   message.success("删除成功!");
+  window.location.href='/lightning/o/CollaborationGroup/list';
+};
+const closeUser = (e) => {
+  data.isRadioUser = false;
 };
 // 添加成员/管理员
 const getUserData = (params) => {
@@ -222,6 +241,7 @@ const getUserData = (params) => {
       .then((res) => {
         message.success(res.msg);
         data.isRadioUser = false;
+        refreshPeople();
       });
   }
 };
@@ -238,6 +258,41 @@ const getAdminData = () => {
     });
 };
 getAdminData();
+//编辑
+const handleEdit = (key) => {
+    data.isCommon = true;
+}
+// 通用弹窗关闭
+const handleCommonCancel = (params) => {
+    data.isCommon=false;
+};
+onMounted(() => {
+  getDetail();
+})
+const getDetail = () => {
+        let d = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                  recordId: data.recordId,
+                  apiName:data.sObjectName,
+                  objTypeCode: data.objectTypeCode
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.detail,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
+            let fields=res.actions[0].returnValue.fields;
+              data.detail=fields;
+              data.AvatarImg=fields.AvatarImg&&fields.AvatarImg.value?fields.AvatarImg.value:require('@/assets/img/avatar-r.png');
+            }
+        })
+    }
 </script>
 <style lang="less" scoped>
 @import "@/style/detail.less";
@@ -359,7 +414,7 @@ getAdminData();
         display: flex;
         justify-content: space-between;
         .tabContainer {
-          flex: 1;
+          width: 80%;
           background: #fff;
           border-radius: 4px;
           margin-right: 12px;
@@ -374,7 +429,10 @@ getAdminData();
 .rightAside {
   max-width: 20%;
 }
-
+.group-rightAside{
+  position: relative;
+  padding-right: 0;
+}
 .relevantList {
   height: calc(100% - 40px);
   overflow: hidden;
@@ -388,7 +446,7 @@ getAdminData();
 
     .peopleItem {
       padding-left: 20px;
-      padding: 13px 8px;
+      padding: 13px 7px;
 
       .d-avatar {
         width: 50px;

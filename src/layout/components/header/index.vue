@@ -178,7 +178,7 @@
       </div>
       <div class="app_popup" v-if="isShow" @click.stop>
         <div class="appList">
-          <div class="app_item" v-for="(item,index) in appList" :style="{background:item.BgColor}" :key="index" @click="handleGoModule(item)">
+          <div class="app_item" v-for="(item,index) in listApp" :style="{background:item.BgColor}" :key="index" @click="handleGoModule(item)">
             <div class="appBox">
               <div class="iconBox">
                 <img :src="'http://182.92.221.64:10000'+item.LogoUrl" alt="">
@@ -194,7 +194,7 @@
 </template>
 <script setup>
   import "@/style/header.less";
-import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance } from "vue";
+import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance, defineProps, defineEmits } from "vue";
 import { DownOutlined, SearchOutlined, BellOutlined, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
 import NoticeMessages from "@/components/NoticeMessages.vue";
@@ -212,16 +212,27 @@ const handleShowApp = () => {
   isShow.value = !isShow.value;
 };
 watch(searchVal, (newVal, oldVal) => {
-  console.log(newVal, oldVal);
+  // console.log(newVal, oldVal);
 });
+const props = defineProps({
+  listApp: Array
+});
+const emit = defineEmits(['changeCode']);
 const moduleName = ref(store.state.moduleName);
-watch(() => route.path,newRoute=> {
-  let matched = router.currentRoute.value.matched;
-  if(matched.length){
-    moduleName.value = matched[0].meta.name;
-  }
-  // moduleName.value = store.state.moduleName;
-},{immediate:true,deep:true})
+
+// watch(() => route.path,newRoute=> {
+//   let matched = router.currentRoute.value.matched;
+//   if(matched.length){
+//     moduleName.value = matched[0].meta.name;
+//   }
+//   // moduleName.value = store.state.moduleName;
+// },{immediate:true,deep:true});
+
+
+watch(() => store.state.moduleName, (newVal, oldVal) => {
+  moduleName.value = newVal;
+}, {immediate: true});
+
 const data = reactive({
   appList: [],
   isInfoPopup: false,
@@ -230,18 +241,19 @@ const data = reactive({
   currentAppName: ""
 })
 const { appList, isInfoPopup, isNotice, appCode, currentAppName } = toRefs(data);
-proxy.$get(Interface.applist,{
-  systemCode: 'OA'
-}).then((res)=>{
-  console.log("res",res) 
-  data.appList = res.actions[0].returnValue.apps;
-  let row = data.appList.find(item=>route.path.indexOf(item.StartUrl)!=-1);
-  if(row){
-    // data.appCode = row.AppCode;
-    // data.currentAppName =  row.Label;
-    getCurrentApp();
-  }
-})
+
+// proxy.$get(Interface.applist,{
+//   systemCode: 'OA'
+// }).then((res)=>{
+//   console.log("res",res) 
+//   data.appList = res.actions[0].returnValue.apps;
+//   let row = data.appList.find(item=>route.path.indexOf(item.StartUrl)!=-1);
+//   if(row){
+//     data.appCode = row.AppCode;
+//     data.currentAppName =  row.Label;
+//     getCurrentApp();
+//   }
+// })
 const getCurrentApp = () => {
   let obj = {
     actions:[{
@@ -257,7 +269,7 @@ const getCurrentApp = () => {
     message: JSON.stringify(obj)
   }
   proxy.$post(Interface.currentApp, d).then(res=>{
-    console.log("res", res);
+    // console.log("res", res);
     data.appTabs = res.actions[0].returnValue.tabs;
   })
 };
@@ -281,10 +293,13 @@ onMounted(() => {
 });
 const handleGoModule = (item) => {
   // console.log("item", item);
-  store.commit('setModuleName',item.Label)
-  router.push({
-      path:"/"+item.Name
-  });
+  store.commit('setModuleName',item.Label);
+  localStorage.setItem("appName", item.Label);
+  localStorage.removeItem("routePath");
+  emit("changeCode", item.AppCode);
+  // router.push({
+  //     path:"/"+item.Name
+  // });
   isShow.value = false;
 }
 const handleOpenInfo = () => {

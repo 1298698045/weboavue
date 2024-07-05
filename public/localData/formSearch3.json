@@ -1,0 +1,59 @@
+{
+  "id": "",
+  "state": "SUCCESS",
+  "returnValue": {
+    "SearchFields": [
+      {
+        "Name": "Title",
+        "Label": "标题",
+        "DataType": "S",
+        "ReferencedEntityObjectTypeCode": 0,
+        "PicklistValues": []
+      },
+      {
+        "Name": "BusinessUnitId",
+        "Label": "部门",
+        "DataType": "O",
+        "ReferencedEntityObjectTypeCode": 10,
+        "PicklistValues": []
+      },
+      {
+        "Name": "StatusCode",
+        "Label": "状态",
+        "DataType": "L",
+        "ReferencedEntityObjectTypeCode": 100201,
+        "PicklistValues": [
+          {
+            "label": "草稿",
+            "value": "0"
+          },
+          {
+            "label": "已发布",
+            "value": "1"
+          },
+          {
+            "label": "审批未通过",
+            "value": "2"
+          }
+        ]
+      },
+      {
+        "Name": "CreatedOn",
+        "Label": "创建时间",
+        "DataType": "F",
+        "ReferencedEntityObjectTypeCode": 0,
+        "PicklistValues": []
+      }
+    ],
+    "GridColumns": [
+      {
+        "Name": "Name",
+        "Title": "名称",
+        "Width": 80,
+        "Hidden": false,
+        "IsNameField": true
+      }
+    ]
+  },
+  "error": []
+}

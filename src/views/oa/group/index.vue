@@ -8,7 +8,7 @@
                 <span class="headerTitle">小组</span>
             </div>
             <div class="headerRight">
-                <a-button class="ml10" type="primary">新建</a-button>
+                <a-button class="ml10" type="primary" @click="handleNew">新建</a-button>
             </div>
         </div>
         <div class="todoListWrap">
@@ -39,14 +39,17 @@
                         />
                     </div>
                     <div class="rBtns">
-                        <a-button class="ml10" type="primary">查询</a-button>
-                        <a-button class="ml10">重置</a-button>
-                        <a-button class="ml10" type="primary">新建</a-button>
+                        <a-button class="ml10" type="primary" @click="onSearch">查询</a-button>
+                        <a-button class="ml10" @click="onClear">重置</a-button>
+                        <!-- <a-button class="ml10" type="primary">新建</a-button> -->
                     </div>
                 </div>
-                <div class="tableWrap">
-                    <a-table style="height: 100%;" :dataSource="dataSource" :columns="columns"  :pagination="{hideOnSinglePage:true}">
+                <div class="tableWrap" ref="tablelist">
+                    <a-table style="height: 100%;" :scroll="{ y:tableHeight }" :dataSource="dataSource" :columns="columns" :pagination="pagination" @change="handleTableChange">
                         <template #bodyCell="{ column, text, record }">
+                            <div v-if="column.key=='AvatarImg'">
+                                <img :src="text" alt="" class="group_list_avatar"/>
+                            </div>
                             <div v-if="column.key=='Name'">
                                 <a href="javascript:;" @click="handleDetail(record)" style="color:var(--textColor);">{{ text }}</a>
                             </div>
@@ -55,6 +58,8 @@
                 </div>
             </div>
         </div>
+        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
+        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
     </div>
 </template>
 <script setup>
@@ -65,8 +70,11 @@
     import { useRouter, useRoute } from "vue-router";
     import { SearchOutlined, MoreOutlined, CopyOutlined, SortAscendingOutlined,LeftOutlined, RightOutlined, PlusOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
-    import { formTreeData } from "@/utils/common.js";
+    import { formTreeData,girdFormatterValue } from "@/utils/common.js";
     import { message } from "ant-design-vue";
+    import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+    import Delete from "@/components/listView/Delete.vue";
+    const tablelist=ref();
     const { proxy } = getCurrentInstance();
     const router = useRouter();
     const data = reactive({
@@ -79,7 +87,7 @@
             key: 'join'
         },
         {
-            text: '全部小组',
+            text: '公共小组',
             key: 'public'
         }],
         pageNumber: 1,
@@ -91,6 +99,12 @@
         selectedKeys: ["owner"],
         dataSource: [],
         columns: [
+            {
+                title: '头像',
+                dataIndex: 'AvatarImg',
+                key: 'AvatarImg',
+                width: 150
+            },
             {
                 title: '名称',
                 dataIndex: 'Name',
@@ -108,45 +122,141 @@
             },
             {
                 title: '所有人',
-                dataIndex: 'CreatedByName',
-                key: 'CreatedByName',
+                dataIndex: 'OwningUser',
+                key: 'OwningUser',
             },
         ],
-        groupList: []
+        groupList: [],
+        isCommon: false,
+        recordId:'',
+        objectTypeCode:'9',
+        sObjectName:'Group',
+        isDelete: false,
+        deleteDesc: '确定要删除吗？',
+        external:false,
+        pagination:{
+            hideOnSinglePage:true,
+            showSizeChanger:true,
+            showQuickJumper:true,
+            total:0,//数据总数
+            pageSize:10,
+            current:1,
+            showTotal:((total)=>{
+                return `共${total}条`
+            })
+        },
+        tableHeight:0
     })
     const { treeData, pageNumber, pageSize, listData,
-         searchVal, total, isLeft, selectedKeys, dataSource, columns, groupList } = toRefs(data);
+         searchVal, total, isLeft, selectedKeys, dataSource, columns, groupList,isCommon,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,pagination,tableHeight } = toRefs(data);
     
     const handleTreeSelect = (e) => {
         data.selectedKeys = e;
+        getQuery();
     }
     const handleLeftShow = () => {
         data.isLeft = !data.isLeft;
     }
     const getQuery = () => {
-        proxy.$get(Interface.user.groupList, {
-            scope: data.selectedKeys[0],
-            search: data.searchVal
+        let filterQuery='';
+        if(data.selectedKeys[0]=='owner'){
+            filterQuery='\nOwningUser\teq-userid';
+        }else if(data.selectedKeys[0]=='join'){
+            filterQuery='';
+        }else if(data.selectedKeys[0]=='public'){
+            filterQuery='\nIsPublic\ttrue';
+        }
+        // proxy.$get(Interface.user.groupList, {
+        //     scope: data.selectedKeys[0],
+        //     search: data.searchVal
+        // }).then(res => {
+        //     data.dataSource = res.listData;
+        // })
+        proxy.$post(Interface.listView.node, {
+            filterId:'',
+            objectTypeCode:data.objectTypeCode,
+            entityName:data.sObjectName,
+            filterquery:filterQuery,
+            search:data.searchVal||'',
+            page: pagination.current,
+            rows: pagination.pageSize,
+            sort:'ImportSequenceNumber',
+            order:'ASC',
+            displayColumns:'Name,Quantity,CreatedOn,OwningUser,AvatarImg'
         }).then(res => {
-            data.dataSource = res.listData;
+            data.listData = res.nodes;
+            data.total = res.pageInfo?res.pageInfo.total:0;
+            pagination.total = res.pageInfo?res.pageInfo.total:0;
+            var list = [];
+            for (var i = 0; i < res.nodes.length; i++) {
+                var item = res.nodes[i];
+                for(var cell in item){
+                    if(cell!='id'&&cell!='nameField'&&cell!='AvatarImg'){
+                        item[cell]=girdFormatterValue(cell,item);
+                    }
+                    if(cell=='AvatarImg'){
+                        item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
+                    }
+                }
+                list.push(item)
+            }
+            data.dataSource = list;
         })
     }
     getQuery();
     const onSearch = (e)=> {
         getQuery();
     }
+    const onClear = (e)=> {
+        data.searchVal='';
+        getQuery();
+    }
     const handleMenuClick = (e) => {
         console.log("e",e);
     }
     const handleDetail = (row) => {
-        let GroupId = row.GroupId;
-        router.push({
+        let GroupId = row.id;
+        let routeData = router.resolve({
             name: 'GroupDetail',
             query: {
                 GroupId: GroupId
             }
         });
+        window.open(routeData.href, '_blank');
     }
+    //改变页码
+    const handleTableChange=(pag, filters, sorter)=>{
+      data.pagination.current=pag.current;
+      getQuery();
+    }
+    //新建
+    const handleNew = (e) => {
+      data.recordId='';
+      data.isCommon = true;
+    }
+    //编辑
+    const handleEdit = (key) => {
+      console.log(key,2222222)
+      data.recordId=key;
+      data.isCommon = true;
+    }
+    // 通用弹窗关闭
+    const handleCommonCancel = (params) => {
+        data.isCommon=false;
+    };
+    //删除
+    const handleDelete = (key) => {
+        data.recordId=key;
+        data.isDelete = true;
+    }
+    //删除关闭
+    const cancelDelete = (e) => {
+        data.isDelete = false;
+    };
+    onMounted(() => {
+        let h = tablelist.value.clientHeight;
+        data.tableHeight = h-100;
+    })
 </script>
 <style lang="less" scoped>
     @import "@/style/addressBook.less";
@@ -158,7 +268,10 @@
             margin: 20px 0;
         }
         .tableWrap{
-            height: calc(~"100% - 84px");
+            height: calc(~"100% - 80px");
         }
+    }
+    .group_list_avatar{
+        height: 40px;
     }
 </style>

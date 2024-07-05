@@ -10,28 +10,31 @@
                 :rules="[{ required: true, message: 'Please input your username!' }]">
                 <a-input v-model:value="formState.username" />
             </a-form-item> -->
-            <div class="searchItem" v-for="(item,index) in searchFields" :key="item.Name">
-                <a-form-item :name="item.Name" :label="item.Label" v-if="item.DataType=='S'">
-                    <a-input class="radiusNone" :placeholder="item.Label" v-model:value="formState[item.Name]" />
-                    <!-- <a-date-picker :locale="locale" @change="(e)=>{changeDate(e,item)}" valueFormat="YYYY-MM-DD" v-else-if="item.DataType=='F'" :placeholder="item.Label" v-model:value="formState[item.Name]" /> -->
+            <div class="searchItem" v-for="(item,index) in searchFields" :key="index">
+                <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='S'">
+                    <a-input class="radiusNone" :placeholder="item.label" v-model:value="formState[item.column]" />
                 </a-form-item>
-                <a-form-item :name="item.Name" :label="item.Label"
-                    v-else-if="item.DataType=='L'||item.DataType=='LT'||item.DataType=='DT'||item.DataType=='status'||item.DataType=='Priority'">
-                    <a-select v-model:value="formState[item.Name]" :placeholder="item.Label" @change="handleChange">
+                <!-- <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='N'">
+                    <a-input-number v-model:value="formState[item.column]" :min="1" :max="100" />
+                    <a-input-number v-model:value="formState[item.column]" :min="1" :max="100" />
+                </a-form-item> -->
+                <a-form-item :name="item.column" :label="item.label"
+                    v-else-if="item.dataType=='L'||item.dataType=='LT'||item.dataType=='DT'||item.dataType=='status'||item.dataType=='Priority'">
+                    <a-select v-model:value="formState[item.column]" :placeholder="item.label" @change="handleChange">
                         <!-- <a-select-option value="jack">Jack</a-select-option>
                         <a-select-option value="lucy">Lucy</a-select-option>
                         <a-select-option value="disabled" disabled>Disabled</a-select-option>
                         <a-select-option value="Yiminghe">yiminghe</a-select-option> -->
-                        <a-select-option v-for="(row, idx) in item.PicklistValues" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
+                        <a-select-option v-for="(row, idx) in item.picklistValues" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-form-item class="formTime" :name="item.Name" :label="item.Label" v-else-if="item.DataType=='F'">
-                    <!--  v-if="item.dateTypeCurrent.value=='default'" v-model:value="formState[item.Name]" -->
+                <a-form-item class="formTime" :name="item.column" :label="item.label" v-else-if="item.dataType=='F'">
+                    <!--  v-if="item.dateTypeCurrent.value=='default'" v-model:value="formState[item.column]" -->
                     <a-range-picker style="border-right: none;" class="radiusNone" valueFormat="YYYY-MM-DD" :disabled="item.dateTypeCurrent.value=='default'?false:true" @change="(e)=>{changeRangeDate(e,item)}" />
                     <a-dropdown class="radiusNone">
                         <template #overlay>
                           <a-menu>
-                            <a-menu-item v-for="(row,idx) in timeoperator" :key="row.value" @click="changeDateType(item,row)">
+                            <a-menu-item v-for="(row,idx) in timeoperator" :key="idx" @click="changeDateType(item,row)">
                                 {{row.label}}
                             </a-menu-item>
                           </a-menu>
@@ -42,10 +45,10 @@
                         </a-button>
                       </a-dropdown>
                 </a-form-item>
-                <a-form-item class="searchItem" :name="item.Name" :label="item.Label" v-else-if="['O', 'Y', 'U', 'Y_MD'].includes(item.DataType)">
-                    <a-select v-model:value="formState[item.Name]" @dropdownVisibleChange="(e)=>{searchlookup(e, item)}">
+                <a-form-item class="searchItem" :name="item.column" :label="item.label" v-else-if="['O', 'Y', 'U', 'Y_MD'].includes(item.dataType)">
+                    <a-select v-model:value="formState[item.column]" @dropdownVisibleChange="(e)=>{searchlookup(e, item)}">
                         <template #suffixIcon></template>
-                        <a-select-option v-for="(row, idx) in search[item.Name]" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
+                        <a-select-option v-for="(row, idx) in search[item.column]" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
                     </a-select>
                     <div class="selectSearchIcon" @click="handleOpenLook(item)">
                         <SearchOutlined class="lookupIcon" />
@@ -60,7 +63,8 @@
         <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
         <radio-user v-if="isRadioUser" :isShow="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams"
             :localId="fieldName"></radio-user>
-        <Lookup-filter v-if="isLookup" :isShow="isLookup"></Lookup-filter>
+        <Lookup-filter v-if="isLookup" :isShow="isLookup" :entityApiName="entityApiName" :objectTypeCode="objectTypeCode"
+        :field="fieldName" :lookEntityApiName="lookEntityApiName"  @cancel="isLookup=false;"></Lookup-filter>
     </div>
 </template>
 <script setup>
@@ -86,7 +90,12 @@
     
     const props = defineProps({
         isCollapsed: false,
-        objectTypeCode: [String, Number]
+        SearchFields:[Array],
+        objectTypeCode: [String, Number],
+        entityApiName: {
+            type: String,
+            default: "HREmployee"
+        }
     });
     watch(()=>props.isCollapsed,(newVal,oldVal)=>{
         nextTick(()=>{
@@ -98,17 +107,21 @@
         console.log('Success:', values);
         var filterQuery = "";
         data.searchFields.forEach(item=>{
-            if(item.DataType=='F'){
+            if(item.dataType=='F'){
                 if(item.dateTypeCurrent.value=='default'){
-                    filterQuery += "\n" + item.Name + "\tbetween\t" + values[item.Name];
+                    if(values[item.column]&&values[item.column].length){
+                        filterQuery += "\n" + item.column + "\tbetween\t" + values[item.column];
+                    }
                 }else {
-                    filterQuery += "\n" + item.Name + "\t" + values[item.Name];
+                    filterQuery += "\n" + item.column + "\t" + values[item.column];
                 }
+            }else if(item.dataType=='S'){
+                filterQuery += "\n" + item.column + "\tcontains\t" + values[item.column];
             }else {
-                filterQuery += "\n" + item.Name + "\teq\t" + values[item.Name];
+                filterQuery += "\n" + item.column + "\teq\t" + values[item.column];
             }
         })
-        console.log(filterQuery, "filterQuery");
+        // console.log("filterQuery:", filterQuery);
         // emit("search", values);
         emit("search", filterQuery);
     };
@@ -156,54 +169,103 @@
     }]
     const data = reactive({
         searchFields: [],
+        defaultSearchFields:[
+            {
+                "Name": "Title",
+                "Label": "标题",
+                "dataType": "S",
+                "ReferencedEntityObjectTypeCode": 0,
+                "PicklistValues": []
+            },
+            {
+                "Name": "BusinessUnitId",
+                "Label": "部门",
+                "dataType": "O",
+                "ReferencedEntityObjectTypeCode": 10,
+                "PicklistValues": []
+            },
+            {
+                "Name": "StatusCode",
+                "Label": "状态",
+                "dataType": "L",
+                "ReferencedEntityObjectTypeCode": 100201,
+                "PicklistValues": [
+                {
+                    "label": "草稿",
+                    "value": "0"
+                },
+                {
+                    "label": "已发布",
+                    "value": "1"
+                },
+                {
+                    "label": "审批未通过",
+                    "value": "2"
+                }
+                ]
+            },
+            {
+                "Name": "CreatedOn",
+                "Label": "创建时间",
+                "dataType": "F",
+                "ReferencedEntityObjectTypeCode": 0,
+                "PicklistValues": []
+            }
+        ],
         dateType: "default",
         dateText: "自定义",
         fieldName: "",
         isRadioUser: false,
         isRadioDept: false,
         isLookup: false,
-        search: {}
+        search: {},
+        lookEntityApiName: ""
     })
     
-    const { searchFields, dateType, dateText, isRadioUser, isRadioDept, isLookup, fieldName, search } = toRefs(data);
+    const { searchFields, dateType, dateText, isRadioUser, isRadioDept, isLookup, fieldName, search, lookEntityApiName } = toRefs(data);
     const formSearchRef = ref();
     const emit = defineEmits(['update-height', 'search'])
     const changeDateType = (item,row) => {
         console.log(item,row);
         item.dateTypeCurrent = row;
         if(row.value!='default'){
-            formState[item.Name] = row.value;
+            formState[item.column] = row.value;
         }else {
-            formState[item.Name] = [];
+            formState[item.column] = [];
         }
     }
 
     const changeRangeDate = (e,item) => {
-        console.log("e",e,item);
+        //console.log("e",e,item);
+        if(e){
+            formState[item.column]=e.join(',');
+        }
+        else{
+            formState[item.column]='';
+        }
     }
     const getSearchLayout = () => {
-        proxy.$get(Interface.formSearch, {
-            objectTypeCode: props.objectTypeCode
-        }).then(res => {
-            // console.log("SearchFields", res);
-            data.searchFields = res.returnValue.SearchFields;
+            if(props.SearchFields&&props.SearchFields.length){
+                data.searchFields = props.SearchFields;
+            }
+            else{
+                // data.searchFields = data.defaultSearchFields;
+            }
             nextTick(()=>{
                 emit("update-height", formSearchRef.value.clientHeight);
             })
             data.searchFields.forEach(item => {
-                formState[item.Name] = "";
-                if(item.DataType=='F'){
+                formState[item.column] = "";
+                if(item.dataType=='F'){
                     item.dateTypeCurrent = {
                         value: "default",
                         label: "自定义"
                     }
-                    formState[item.Name] = [];
-                }else if(['O', 'Y', 'U', 'Y_MD'].includes(item.DataType)){
-                    data.search[item.Name] = [];
+                    formState[item.column] = [];
+                }else if(['O', 'Y', 'U', 'Y_MD'].includes(item.dataType)){
+                    data.search[item.column] = [];
                 }
             })
-            // console.log("formState",formState)
-        })
     }
     const handleChange = () => {
 
@@ -215,34 +277,66 @@
     onMounted(() => {
         getSearchLayout();
     })
-    defineExpose({ resetForm })
+    defineExpose({ resetForm,getSearchLayout })
 
     const searchlookup = (e, item) => {
         console.log(e, item);
-        if(e){
-            proxy.$get(Interface.uilook,{
-                Lktp: item.ReferencedEntityObjectTypeCode,
-                Lksrch: ""
-            }).then(res=>{
-                console.log("res",res);
-                let list = res.listData.map(item=>{
-                    item.value = item.ID;
-                    item.label = item.Name;
-                    return item;
-                });
-                data.search[item.Name] = list;
-                // item.PicklistValues = item.PicklistValues.concat(list);
-            })
+        let obj = {
+            actions:[{
+                id: "6129;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    objectApiName: props.entityApiName,
+                    fieldApiName: item.column,
+                    pageParam: 1,
+                    pageSize: 25,
+                    q: "",
+                    searchType: "Recent",
+                    targetApiName: item.targetApiName,
+                    body: {
+                        sourceRecord: {
+                            apiName: props.entityApiName,
+                            fields: {
+                                Id: null,
+                                    RecordTypeId: ""
+                                }
+                            }
+                        }
+                    }
+                }]
         }
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.lookup, d).then((res) => {
+            let list = res.actions[0].returnValue.lookupResults.records;
+            let arr = [];
+            list.forEach(item=>{
+                arr.push({
+                    value: item.fields.Id.value,
+                    label: item.fields.Name.value
+                })
+            });
+            data.search[item.column] = arr;
+        });
     };
 
     const handleOpenLook = (item) => {
         console.log("item", item);
-        data.fieldName = item.Name;
-        let objTypeCode = item.ReferencedEntityObjectTypeCode;
-        if(objTypeCode==30020 || objTypeCode==8){
+        data.fieldName = item.column;
+        // let objTypeCode = item.ReferencedEntityObjectTypeCode;
+        // if(objTypeCode==30020 || objTypeCode==8){
+        //     data.isRadioUser = true;
+        // }else if(objTypeCode==10){
+        //     data.isRadioDept = true;
+        // }else {
+        //     data.isLookup = true;
+        // }
+        data.lookEntityApiName = item.targetApiName;
+        if(item.targetApiName=='SystemUser'){
             data.isRadioUser = true;
-        }else if(objTypeCode==10){
+        }else if(item.targetApiName == 'BusinessUnit'){
             data.isRadioDept = true;
         }else {
             data.isLookup = true;
@@ -341,5 +435,14 @@
 <style>
     .formSearch :where(.css-dev-only-do-not-override-kqecok).ant-select-single .ant-select-selector{
         border-radius: 0 !important;
+    }
+    .formSearch .ant-form .ant-form-item.formTime .ant-picker{
+        width: 210px;
+    }
+    .formSearch :where(.css-dev-only-do-not-override-kqecok).ant-picker-range .ant-picker-range-separator{
+        padding: 0 3px;
+    }
+    .formSearch :where(.css-dev-only-do-not-override-kqecok).ant-picker .ant-picker-input >input:placeholder-shown{
+        text-align: center;
     }
 </style>

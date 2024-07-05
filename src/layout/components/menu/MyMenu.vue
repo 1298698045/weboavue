@@ -6,7 +6,7 @@
       mode="inline"
       theme="dark"
       :inline-collapsed="props.collapsed"
-      :items="items"
+      :items="appTabs"
       @click="handleMenu"
       @openChange="onOpenChange"
     >
@@ -22,6 +22,7 @@ import {
   onMounted,
   defineProps,
   toRefs,
+  getCurrentInstance
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import {
@@ -31,9 +32,12 @@ import {
   InboxOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons-vue";
+import Interface from "@/utils/Interface.js";
+const { proxy } = getCurrentInstance();
 
 const props = defineProps({
   collapsed: Boolean,
+  appCode: String
 });
 const route = useRoute();
 const router = useRouter();
@@ -43,8 +47,50 @@ const currentRoutes = route.matched;
 
 const data = reactive({
   items: [],
+  appTabs: []
 });
-const { items } = toRefs(data);
+const { items, appTabs } = toRefs(data);
+
+const getCurrentApp = () => {
+  let obj = {
+    actions:[{
+      id: "4105;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        appCode: props.appCode
+      }
+    }]
+  };
+  let d = {
+    message: JSON.stringify(obj)
+  }
+  proxy.$post(Interface.currentApp, d).then(res=>{
+    data.appTabs = res.actions[0].returnValue.tabs.map(item=>{
+      item.label = item.navAction.label;
+      item.key = item.navAction.url;
+      item.icon = () => h("i", {
+        class: ["iconfont", "icon-tongxunlu1"],
+      });
+      return item;
+    });
+    let routePath = localStorage.getItem("routePath");
+    if(routePath){
+      router.push({
+        path: routePath
+      });
+    }else {
+      router.push({
+        path: data.appTabs[0].key
+      });
+    }
+  })
+};
+
+watch(()=> props.appCode, (newVal, oldVal) => {
+  // console.log("props.appCode", props.appCode);
+  getCurrentApp();
+}, { immediate: true });
 
 const state = reactive({
   collapsed: false,
@@ -57,7 +103,7 @@ const state = reactive({
 watch(
   () => data.items,
   (newVal, oldVal) => {
-    console.log("newVal", newVal);
+    // console.log("newVal", newVal);
     newVal.forEach((item) => {
       state.rootSubmenuKeys.push(item.key);
     });
@@ -73,9 +119,9 @@ watch(
 );
 
 const loadMenus = () => {
-  console.log(route.matched);
+  // console.log(route.matched);
   if(route.matched.length){
-  console.log(route.matched);
+  // console.log(route.matched);
 
     const routepath = route.matched[0].path;
     let list = [];
@@ -149,11 +195,12 @@ const toggleCollapsed = () => {
   state.openKeys = state.collapsed ? [] : state.preOpenKeys;
 };
 const handleMenu = (e) => {
-  console.log("e", e);
+  // console.log("e", e);
   router.push(e.key);
+  localStorage.setItem("routePath", e.key);
 };
 const onOpenChange = (openKeys) => {
-  console.log("openKeys", openKeys, state.openKeys);
+  // console.log("openKeys", openKeys, state.openKeys);
   const latestOpenKey = openKeys.find(
     (key) => state.openKeys.indexOf(key) === -1
   );
@@ -173,13 +220,13 @@ const handleData = (result) => {
       // console.log("item.path === route.path",item.key,'===', route.path)
       if (item.key === route.path) {
         // 如果路由path与item.router相等则直接返回当前路由的所有上级的router
-        console.log("itemkeys", item);
+        // console.log("itemkeys", item);
         // keys.concat(item.path)
         return [...keys];
       } else if (item.children && item.children.length) {
         // 如果item.router不等于当前$router.path则递归调用loop函数，传入item.children、[...keys, item.router]
         let tempResult = loop(item.children, [...keys, item.key]);
-        console.log("tempResult", tempResult);
+        // console.log("tempResult", tempResult);
         if (tempResult !== false) {
           return tempResult;
         }
@@ -188,7 +235,7 @@ const handleData = (result) => {
     return false;
   }
   let openKeys = loop(result);
-  console.log("openKeys88", openKeys);
+  // console.log("openKeys88", openKeys);
   state.openKeys = openKeys;
 };
 handleData(data.items);

@@ -10,16 +10,16 @@
           <div class="left">
             <a-input-search
               v-model:value="searchVal"
-              placeholder="搜索动态"
+              placeholder="请输入"
               style="width: 300px"
               @search="onSearch"
             />
           </div>
           <div class="rightOption">
-            <a-button class="ml10" type="primary">添加成员</a-button>
-            <a-button class="ml10" type="primary">添加管理员</a-button>
-            <a-button class="ml10" type="primary">查询</a-button>
-            <a-button class="ml10" type="default">重置</a-button>
+            <a-button class="ml10" type="primary" @click="AddPeople">添加成员</a-button>
+            <a-button class="ml10" type="primary" @click="AddAdmin">添加管理员</a-button>
+            <a-button class="ml10" type="primary" @click="onSearch">查询</a-button>
+            <a-button class="ml10" type="default" @click="onClear">重置</a-button>
             <a-button class="ml10" type="default">导出</a-button>
           </div>
         </div>
@@ -55,6 +55,8 @@ import {
   onMounted,
   watch,
   getCurrentInstance,
+  defineEmits,
+  defineExpose,
 } from "vue";
 import {
   SwapLeftOutlined,
@@ -105,6 +107,8 @@ var columns = [
     width: 150,
   },
 ];
+const emit = defineEmits(["AddPeople", "AddAdmin"]);
+
 const data = reactive({
   list: [],
   selectedRowKeys: [],
@@ -122,7 +126,20 @@ const getQuery = () => {
 const onSearch = (e) => {
   getQuery();
 };
+const onClear = (e) => {
+  data.searchVal='';
+  getQuery();
+};
 getQuery();
+// 添加成员
+const AddPeople = () => {
+  emit("AddPeople","")
+};
+// 添加管理员
+const AddAdmin = () => {
+  emit("AddAdmin","")
+};
+defineExpose({ getQuery });
 </script>
 <style lang="less">
 .relatedWrap {

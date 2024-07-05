@@ -26,7 +26,7 @@ const routes = [
     path: "/flow",
     name: "Flow",
     component: Layout,
-    redirect: "/flow/todoList",
+    redirect: "/lightning/worflow/instance/list",
     meta: {
       name: "流程管理"
     },
@@ -42,9 +42,9 @@ const routes = [
       //   },
       // },
       {
-        path: "/flow/new",
+        path: "/workflow/o/instance/add",
         component: () => import("../views/flow/new/index.vue"),
-        name: "NewFlow",
+        name: "WorkflowAdd",
         icon: "xinjianshiwu",
         meta: {
           name: "新建事务",
@@ -52,9 +52,9 @@ const routes = [
         },
       },
       {
-        path: "/flow/todoList",
+        path: "/lightning/o/workflow/doing",
         component: () => import("../views/flow/todoList/index.vue"),
-        name: "TodoListFlow",
+        name: "WorkflowDoinglist",
         icon: "daibanshiwu",
         meta: {
           name: "待办事务",
@@ -62,9 +62,9 @@ const routes = [
         },
       },
       {
-        path: "/flow/completed",
+        path: "/lightning/o/workflow/done/list",
         component: () => import("../views/flow/completed/index.vue"),
-        name: "CompletedFlow",
+        name: "WorkflowDonelist",
         icon: "yibanshiwu",
         meta: {
           name: "已办事务",
@@ -82,9 +82,9 @@ const routes = [
         },
       },
       {
-        path: "/flow/myStart",
+        path: "/lightning/workflow/mine",
         component: () => import("../views/flow/myStart/index.vue"),
-        name: "MyStartFlow",
+        name: "WorkflowMine",
         icon: "wodefaqi1",
         meta: {
           name: "我的发起",
@@ -132,9 +132,9 @@ const routes = [
         },
       },
       {
-        path: "/flow/seeting",
+        path: "/lightning/o/Workflow/Definition/home",
         component: () => import("../views/flow/seeting/index.vue"),
-        name: "SeetingFlow",
+        name: "wfdefinition",
         icon: "liuchengshezhi",
         meta: {
           name: "流程设置",
@@ -142,9 +142,9 @@ const routes = [
         },
       },
       {
-        path: "/flow/workAdmin",
+        path: "/lightning/worflow/instance/list",
         component: () => import("../views/flow/workAdmin/index.vue"),
-        name: "WorkAdmin",
+        name: "WFInstance",
         icon: "shiwuguanli",
         meta: {
           name: "事务管理",
@@ -162,9 +162,9 @@ const routes = [
         },
       },
       {
-        path: "/flow/formSearch",
+        path: "/process/instance/form/search",
         component: () => import("../views/flow/formSearch/index.vue"),
-        name: "FormSearchFlow",
+        name: "WFFormSearch",
         icon: "biaodanchaxun",
         meta: {
           name: "表单查询",
@@ -204,9 +204,9 @@ const routes = [
     },
     children: [
       {
-        path: "/workplan/calendar",
+        path: "/lightning/o/Event/home",
         component: () => import("../views/scheduleAdmin/calendar/index.vue"),
-        name: "CalendarSchedule",
+        name: "eventhome",
         icon: "rili",
         meta: {
           name: "日历",
@@ -214,9 +214,9 @@ const routes = [
         },
       },
       {
-        path: "/workplan/schedule",
+        path: "/calendar/people/ListView",
         component: () => import("../views/scheduleAdmin/schedule/index.vue"),
-        name: "ScheduleSchedule",
+        name: "WorkPlanPeopleListView",
         icon: "richengyilanbiao",
         meta: {
           name: "日程一览表",
@@ -224,9 +224,9 @@ const routes = [
         },
       },
       {
-        path: "/workplan/schedule/leader",
+        path: "/00U/m",
         component: () => import("../views/scheduleAdmin/leader/index.vue"),
-        name: "LeaderSchedule",
+        name: "LeaderCalendar",
         icon: "lingdaoricheng",
         meta: {
           name: "领导日程",
@@ -234,9 +234,9 @@ const routes = [
         },
       },
       {
-        path: "/workplan/schedule/search",
+        path: "/calendar/search",
         component: () => import("../views/scheduleAdmin/search/index.vue"),
-        name: "SearchSchedule",
+        name: "CalendarSearch",
         icon: "richengchaxun",
         meta: {
           name: "日程查询",
@@ -272,6 +272,26 @@ const routes = [
         meta: {
           name: "单位通讯录",
           icon: "tongxunlu1",
+        },
+      },
+      {
+        path: "/lightning/Addresslist/BusinessUnit/home",
+        component: () => import("../views/oa/deptAddressBook/index.vue"),
+        name: "deptAddressBook",
+        icon: "huiyishishiyongqingkuang",
+        meta: {
+          name: "部门通讯录",
+          icon: "huiyishishiyongqingkuang",
+        },
+      },
+      {
+        path: "/lightning/Addresslist/Contact/home",
+        component: () => import("../views/oa/myAddressBook/index.vue"),
+        name: "myAddressBook",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "个人通讯录",
+          icon: "huiyicanhuiren",
         },
       },
       {
@@ -337,7 +357,7 @@ const routes = [
       },
       {
         path: "/oa/information",
-        component: () => import("../views/information/list/index.vue"),
+        component: () => import("../views/information/list/Content.vue"),
         name: "Information",
         icon: "xinxiguanli1",
         meta: {
@@ -377,8 +397,8 @@ const routes = [
     },
     children: [
       {
-        path: "/meeting/calendar",
-        name: "CalendarMeeting",
+        path: "/lightning/o/Meeting/home",
+        name: "Meeting",
         component: () => import("../views/meeting/calendar/index.vue"),
         icon: "rili",
         meta: {
@@ -387,8 +407,8 @@ const routes = [
         },
       },
       {
-        path: "/meeting/room",
-        name: "RoomMeeting",
+        path: "/025/c",
+        name: "ResApply",
         component: () =>
           import("../views/meeting/meetingRoom/MeetingRoomUse.vue"),
         icon: "huiyishishiyongqingkuang",
@@ -398,8 +418,8 @@ const routes = [
         },
       },
       {
-        path: "/meeting/topics",
-        name: "TopicsMeeting",
+        path: "/00W/o",
+        name: "MeetingItem",
         component: () => import("../views/meeting/topics/index.vue"),
         icon: "yitiguanli",
         meta: {
@@ -411,7 +431,7 @@ const routes = [
         path: "/meeting/search",
         name: "SearchMeeting",
         component: () => import("../views/meeting/search/index.vue"),
-        icon: "huiyichaxun",
+        icon: "MeetingSearch",
         meta: {
           name: "会议查询",
           icon: "huiyichaxun",
@@ -428,8 +448,8 @@ const routes = [
         },
       },
       {
-        path: "/meeting/mettingRoomMaintenance",
-        name: "MettingRoomMaintenance",
+        path: "/023/o",
+        name: "ResourceOrg",
         component: () =>
           import("../views/meeting/mettingRoomMaintenance/index.vue"),
         icon: "huiyishiweihu",
@@ -449,8 +469,8 @@ const routes = [
         },
       },
       {
-        path: "/meeting/reportForms",
-        name: "ReportFormsMeeting",
+        path: "/meeting/report",
+        name: "MeetingReport",
         component: () => import("../views/meeting/reportForms/index.vue"),
         icon: "huiyibaobiao",
         meta: {
@@ -459,8 +479,8 @@ const routes = [
         },
       },
       {
-        path: "/meeting/activity",
-        name: "ActivityMeeting",
+        path: "/701/o",
+        name: "Campaign",
         component: () => import("../views/meeting/activity/index.vue"),
         icon: "huiyihuodong",
         meta: {
@@ -571,14 +591,24 @@ const routes = [
     path: "/OfficialDocument",
     name: "OfficialDocument",
     component: Layout,
-    redirect: "/OfficialDocument/myReceiving",
+    redirect: "/OfficeDocument/in/monitor",
     meta: {
       name: "公文管理"
     },
     children: [
       {
-        path: "/OfficialDocument/myReceiving",
-        name: "MyReceiving",
+        path: "/OfficialDocument/home",
+        name: "officialdocumenthome",
+        component: () => import("../views/documentAdmin/home/index.vue"),
+        icon: "wodeshouwen",
+        meta: {
+          name: "公文中心",
+          icon: "wodeshouwen",
+        },
+      },
+      {
+        path: "/OfficeDocument/in/monitor",
+        name: "DocInMonitor",
         component: () => import("../views/documentAdmin/myReceiving/index.vue"),
         icon: "wodeshouwen",
         meta: {
@@ -587,8 +617,8 @@ const routes = [
         },
       },
       {
-        path: "/OfficialDocument/myDispatch",
-        name: "MyDispatch",
+        path: "/OfficeDocument/out/monitor",
+        name: "DocOutMonitor",
         component: () => import("../views/documentAdmin/myDispatch/index.vue"),
         icon: "wodefawen",
         meta: {
@@ -597,8 +627,8 @@ const routes = [
         },
       },
       {
-        path: "/OfficialDocument/receivingAdmin",
-        name: "ReceivingAdmin",
+        path: "/OfficeDocument/in/home",
+        name: "DocInSearch",
         component: () =>
           import("../views/documentAdmin/receivingAdmin/index.vue"),
         icon: "shouwenguanli",
@@ -609,7 +639,7 @@ const routes = [
       },
       {
         path: "/OfficeDocument/out/home",
-        name: "OutgoingAdmin",
+        name: "DocOutSearch",
         component: () =>
           import("../views/documentAdmin/outgoingAdmin/index.vue"),
         icon: "fawenguanli",
@@ -620,7 +650,7 @@ const routes = [
       },
       {
         path: "/ui/RequestReport/search",
-        name: "RequestReport",
+        name: "OfficialRequestReport",
         component: () => import("../views/documentAdmin/report/index.vue"),
         icon: "qingshibaogao",
         meta: {
@@ -641,7 +671,7 @@ const routes = [
       },
       {
         path: "/o/ContentDocument/template/home",
-        name: "ContentDocument",
+        name: "TemplateFile",
         component: () =>
           import("../views/documentAdmin/textTemplate/index.vue"),
         icon: "zhengwenmoban",
@@ -652,7 +682,7 @@ const routes = [
       },
       {
         path: "/OfficeDocument/read/log",
-        name: "readLog",
+        name: "OfficialDocumentInReadlog",
         component: () => import("../views/documentAdmin/readingLog/index.vue"),
         icon: "yuedurizhi",
         meta: {
@@ -1789,7 +1819,60 @@ const routes = [
     path: "/mobileDesign",
     name: "MobileDesign",
     component: () => import("../views/mobileDesign/index.vue"),
-  }
+  },
+  {
+    path: "/knowledge",
+    name: "knowledge",
+    component: Layout,
+    redirect: "/lightning/o/Content/home",
+    meta: {
+      name: "知识管理"
+    },
+    children: [
+      {
+        path: "/lightning/o/Content/home",
+        component: () => import("../views/information/list/Content.vue"),
+        name: "info",
+        icon: "xinxiguanli1",
+        meta: {
+          name: "信息管理",
+          icon: "xinxiguanli1",
+        },
+      },
+      {
+        path: "/lightning/o/ContentNotice/home",
+        component: () => import("../views/information/list/Notice.vue"),
+        name: "Notification",
+        icon: "xinxiguanli1",
+        meta: {
+          name: "通知管理",
+          icon: "xinxiguanli1",
+        },
+      },
+    ],
+  },
+  {
+    path: "/portal",
+    name: "portal",
+    component: Layout,
+    redirect: "/home/Home.aspx",
+    meta: {
+      name: "门户"
+    },
+    children: [
+      {
+        path: "/home/Home.aspx",
+        component: () => import("../views/Home.vue"),
+        //component: () => import("../views/sys/home/index.vue"),
+        name: "home",
+        icon: "xinxiguanli1",
+        meta: {
+          name: "工作台",
+          icon: "xinxiguanli1",
+        },
+      },
+    ],
+  },
 ];
 
 const router = createRouter({

@@ -37,32 +37,25 @@
         <div class="todoListWrap">
             <div class="leftTree" v-if="isLeft">
                 <div>
-                    <!-- <a-tabs v-model:activeKey="leftTabCurrent">
+                    <a-tabs v-model:activeKey="leftTabCurrent">
                         <a-tab-pane key="1" tab="单位联系人"></a-tab-pane>
                         <a-tab-pane key="2" tab="个人联系人"></a-tab-pane>
-                    </a-tabs> -->
-                    <div class="switchWrap switchWrap-addressBook" v-if="leftTabCurrent==1">
+                    </a-tabs>
+                    <div class="switchWrap" v-if="leftTabCurrent==1">
                         <span class="spaceWrap">
                             <span class="spaceItem" :class="{'active':typeCurrent==0}" @click="handleTab(0)">组织结构</span>
                             <span class="spaceItem" :class="{'active':typeCurrent==1}" @click="handleTab(1)">常用小组</span>
                         </span>
                     </div>
-                    <div class="wea-left-tree-search wea-left-tree-search-addressBook">
-                        <a-input-search
-                        v-model:value="searchTreeVal"
-                        placeholder="输入查询"
-                        @search="onSearchTree"
-                        />
-                    </div>
                 </div>
                 <div class="leftTreeWrap" v-if="leftTabCurrent==1">
-                    <a-tree :tree-data="deptTreeData" block-node v-if="typeCurrent==0" @select="onTreeNodeSelect">
+                    <a-tree :tree-data="deptTreeData" block-node v-if="typeCurrent==0">
                         <template #title="{ text, key }">
                             <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ text }}</span>
                             <template v-else>{{ text }}</template>
                         </template>
                     </a-tree>
-                    <a-tree :tree-data="groupList" block-node v-else @select="onTreeNodeSelect">
+                    <a-tree :tree-data="groupList" block-node v-else>
                         <template #title="{ Name, key }">
                             <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ Name }}</span>
                             <template v-else>{{ Name }}</template>
@@ -127,7 +120,8 @@
                         <div class="pinyin">{{parentItem.pinyin.toLocaleUpperCase()}}</div>
                         <div class="businessWrap">
                             <div class="businessCartItem" v-for="(item,index) in parentItem.listData" :key="index">
-                                <div class="contactsWrap">
+                                <div class="contactsWrap"
+                                    v-if="item.employeeId && item.employeeId!='' || item.SystemUserId || item.Id">
                                     <div class="cartItemHead">
                                         <div class="cartAvatar">
                                             <img v-if="item.PhotoUrl || item.photoUrl || item.Avatar"
@@ -219,7 +213,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="departWrap" v-else>
+                                <div class="departWrap" v-else>
                                     <p class="name">{{item.businessUnitIdName || '无'}}</p>
                                     <div class="phoneBox">
                                         <p class="label">部门电话</p>
@@ -250,7 +244,7 @@
                                         </span>
                                         <span class="text">等{{item.deptEmpCount}}人</span>
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
 
                             <div class="fake_item"></div>
@@ -261,7 +255,8 @@
                 <div class="businessWrapper" v-else>
                     <div class="businessWrap">
                         <div class="businessCartItem" v-for="(item,index) in listData" :key="index">
-                            <div class="contactsWrap">
+                            <div class="contactsWrap"
+                                v-if="item.employeeId && item.employeeId!='' || item.SystemUserId || item.Id">
                                 <div class="cartItemHead">
                                     <div class="cartAvatar">
                                         <img class="img" :src="require('@/assets/img/avatar.png')" alt="">
@@ -320,7 +315,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="departWrap" v-else>
+                            <div class="departWrap" v-else>
                                 <p class="name">{{item.businessUnitIdName || '无'}}</p>
                                 <div class="phoneBox">
                                     <p class="label">部门电话</p>
@@ -352,13 +347,13 @@
                                     </span>
                                     <span class="text">等{{item.deptEmpCount}}人</span>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                         <div class="fake_item"></div>
                         <div class="fake_item"></div>
                     </div>
                     <div class="paginationWrap">
-                        <a-pagination v-model:current="pageNumber" :total="total" show-less-items :defaultPageSize="12" @change="changePagination" />
+                        <a-pagination v-model:current="pageNumber" :total="total" show-less-items />
                     </div>
                 </div>
             </div>
@@ -378,8 +373,7 @@
     const { proxy } = getCurrentInstance();
     const data = reactive({
         activeKey: "1",
-        deptTreeData:[],
-        deptTreeDataAll:[],
+        deptTreeData: [],
         pageNumber: 1,
         pageSize: 12,
         listData: [],
@@ -388,17 +382,14 @@
         leftTabCurrent: "1",
         typeCurrent: 0,
         groupList: [],
-        groupListAll:[],
         isLeft: true,
         sortField: {
             id: 'EmployeeId',
             name: '全部'
-        },
-        treeId:'',
-        searchTreeVal:''
+        }
     })
     const { activeKey, deptTreeData, pageNumber, pageSize, listData,
-        searchVal, total, leftTabCurrent, typeCurrent, groupList, isLeft, sortField,treeId,searchTreeVal,deptTreeDataAll,groupListAll} = toRefs(data);
+        searchVal, total, leftTabCurrent, typeCurrent, groupList, isLeft, sortField } = toRefs(data);
     const choiceSort = (name, id) => {
         data.sortField = {
             name,
@@ -427,32 +418,14 @@
             getGroupList();
         }
     }
-    //处理树
-    const formTree = (list) => {
-        list.forEach(item=>{
-            if(item.children){
-            formTree(item.children);
-            }
-            item.children=[];
-            item.id=item.businessUnitId;
-            item.key=item.businessUnitId;
-            item.text=item.name;
-        })
-        return list
-    }
     // 组织结构
     const getDeptTreeData = () => {
-        proxy.$get(Interface.deptTree, {
-            //entity: "organizationtree"
+        proxy.$get(Interface.treeList, {
+            entity: "organizationtree"
         }).then(res => {
-            let list=[];
-            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
-                list=res.actions[0].returnValue;
-            }else{return false}
-            list=formTree(list);   
-            data.deptTreeData = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
-            data.deptTreeDataAll = list;
-            //console.log("deptTreeData", data.deptTreeData);
+            let list = res.rows;
+            data.deptTreeData = formTreeData(list, 'id', 'pid');
+            console.log("deptTreeData", data.deptTreeData);
         })
     }
     getDeptTreeData();
@@ -461,42 +434,11 @@
         proxy.$get(Interface.user.groupList, {
         }).then(res => {
             data.groupList = res.listData;
-            data.groupListAll = res.listData;
         })
     }
     const onSearch = (e) => {
-        if (data.activeKey == 4) {
-            getLastList();
-        } else {
-            getQuery();
-        }
+
     }
-    const onSearchTree = (e) => {
-        if(data.typeCurrent==0){
-            let list = data.deptTreeDataAll.filter(item=>{
-                return item.text.indexOf(data.searchTreeVal) !== -1;
-            })
-            list=formTree(list);
-            data.deptTreeData = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
-        }
-        else{
-            data.groupList = data.groupListAll.filter(item=>{
-                return item.Name.indexOf(data.searchTreeVal) !== -1;
-            })
-        }
-    }
-    const changePagination = (e) => {
-        onSearch();
-    };
-    const onTreeNodeSelect= (value, option) => {
-        if(data.typeCurrent==0){
-            data.treeId=option.node.id;
-        }
-        else{
-            data.treeId=option.node.GroupId;
-        }
-        onSearch();
-    };
     // 右侧tab
     const changeRightTab = (e) => {
         if (e == 4) {
@@ -517,53 +459,28 @@
     }
     //getLastList();
     const getQuery = () => {
-        let filterQuery='';
-        if(data.typeCurrent==0&&data.treeId){
-            filterQuery+='\nBusinessUnitId\teq\t'+data.treeId;
-        }
-        else if(data.treeId){
-            filterQuery+='\nContactGroupId\teq\t'+data.treeId;
-        }
-        proxy.$post(Interface.listView.node, {
-            filterId:'',
-            objectTypeCode:'8',
-            entityName:'SystemUser',
-            filterQuery:filterQuery,
-            search:data.searchVal||'',
-            page: data.pageNumber,
-            rows: data.pageSize,
-            sort:data.sortField.id,
-            order:'ASC',
-            displayColumns:'FullName,PhotoUrl,BusinessUnitId,WorkStatus,JobTitle,EmployeeId,MobilePhone,InternalEMailAddress'
+        proxy.$get(Interface.addressBook.addresslist, {
+            pageNumber: data.pageNumber,
+            pageSize: data.pageSize,
+            sortField: data.sortField.id
         }).then(res => {
-            data.listData = res.nodes;
-            data.total = res.pageInfo?res.pageInfo.total:0;
+            data.listData = res.listData;
+            data.total = res.Rows;
             var list = [];
-            for (var i = 0; i < res.nodes.length; i++) {
-                var item = res.nodes[i];
-                item.FullName=item.FullName?item.FullName.textValue:(item.fullName?item.fullName.textValue:'');
-                item.PhotoUrl=item.PhotoUrl?item.PhotoUrl.textValue:(item.Avatar?item.Avatar.textValue:'');
-                item.BusinessUnitIdName=item.BusinessUnitId?item.BusinessUnitId.lookupValue.displayName:'';
-                item.workStatus=item.WorkStatus?item.WorkStatus.name:'';
-                item.JobTitle=item.JobTitle?item.JobTitle.textValue:'';
-                item.EmployeeNo=item.EmployeeId?item.EmployeeId.textValue:'';
-                item.MobilePhone=item.MobilePhone?item.MobilePhone.textValue:(item.mobilePhone?item.mobilePhone.textValue:'');
-                item.EMailAddress=item.EMailAddress?item.EMailAddress.textValue:(item.InternalEMailAddress?item.InternalEMailAddress.textValue:'');
-                item.pinyin=item.Pinyin?item.Pinyin.textValue:'';
+            for (var i = 0; i < res.listData.length; i++) {
+                var item = res.listData[i];
                 var isPinyin = list.some(function (v) {
-                    if(item.pinyin){
-                        return v.pinyin == (item.pinyin.textValue).slice(0, 1)
-                    }
+                    return v.pinyin == item.pinyin.slice(0, 1)
                 })
                 if (!isPinyin) {
                     list.push({
-                        pinyin: item.pinyin?(item.pinyin.textValue).slice(0, 1):'',
+                        pinyin: item.pinyin.slice(0, 1),
                         listData: []
                     });
                 }
                 for (var j = 0; j < list.length; j++) {
                     var row = list[j];
-                    if (item.pinyin&&row.pinyin == (item.pinyin.textValue).slice(0, 1)) {
+                    if (row.pinyin == item.pinyin.slice(0, 1)) {
                         row.listData.push(item);
                     }
                 }
@@ -596,19 +513,4 @@
 </script>
 <style lang="less" scoped>
     @import "@/style/addressBook.less";
-    .switchWrap-addressBook{
-        margin-top: 10px !important;
-    }
-    .addressBook .todoListWrap .leftTree .leftTreeWrap{
-        height: calc(~"100% - 100px") !important;
-    }
-    .wea-left-tree-search-addressBook{
-        margin-top: 5px !important;
-    }
-    .addressBook :deep .ant-tree-title{
-        white-space: nowrap !important;
-    }
-    .addressBook :deep .ant-input{
-        border-color: #d9d9d9 !important;
-    }
 </style>
