@@ -5,7 +5,7 @@
                 <div class="icon-circle-base">
                     <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
                 </div>
-                <span class="headerTitle">签名管理</span>
+                <span class="headerTitle">审批意见</span>
             </div>
             <div class="headerRight">
                 <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
@@ -13,7 +13,7 @@
         </div>
         <div class="todo-content">
             <a-row>
-                <a-col span="3" class="wea-left-right-layout-left" v-if="!isCollapsed">
+                <!-- <a-col span="3" class="wea-left-right-layout-left" v-if="!isCollapsed">
                     <div class="wea-left-tree">
                         <div class="wea-left-tree-search">
                             <a-input-search v-model:value="searchVal" placeholder="" @search="onSearch" />
@@ -26,7 +26,7 @@
                                     <CaretDownOutlined :class="switcherCls"
                                         style="color: rgb(163, 163, 163); font-size: 14px"></CaretDownOutlined>
                                 </template>
-                                <!-- <template #title="{ name, text, key }">
+                                <template #title="{ name, text, key }">
                                     <a-dropdown :trigger="['contextmenu']">
                                         <div class="treeRow">
                                             <span>{{ text }}</span>
@@ -39,16 +39,16 @@
                                             </a-menu>
                                         </template>
                                     </a-dropdown>
-                                </template> -->
+                                </template>
                             </a-tree>
                         </div>
                     </div>
-                </a-col>
+                </a-col> -->
                 <a-col :span="isCollapsed ? '24' : '21'" class="wea-left-right-layout-right">
-                    <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
-                        :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
+                    <!-- <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
+                        :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div> -->
                     <div style="height: 100%" ref="contentRef">
-                        <div class="wea-tab">
+                        <div class="wea-tab wea-tab1">
                             <a-tabs v-model:activeKey="activeKey" @change="changeTab">
                                 <a-tab-pane v-for="(item,index) in tabs" :key="index">
                                     <template #tab>
@@ -76,8 +76,8 @@
                 </a-col>
             </a-row>
         </div>
-        <SignatureUpload v-if="isSignature" :isShow="isSignature" :id="id" @cancel="cancelSignature" />
-        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="data.queryParams.entityName" :recordId="data.recordId" :objTypeCode="data.queryParams.objectTypeCode" :external="data.external" />
+        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onFresh" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
+        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
 
     </div>
 </template>
@@ -95,7 +95,7 @@
     import Ntable from "@/components/Ntable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
 
-    import SignatureUpload from "@/components/workflow/SignatureUpload.vue";
+    import CommonFormModal from "@/components/listView/CommonFormModal.vue";
     import Delete from "@/components/listView/Delete.vue";
     import { formTreeData,girdFormatterValue } from "@/utils/common.js";
     import { useRouter, useRoute } from "vue-router";
@@ -159,10 +159,10 @@
             gDataAll.value = list;
         })
     }
-    getDeptTreeData();
+    //getDeptTreeData();
     
     let data = reactive({
-        isCollapsed: false,
+        isCollapsed: true,
         tableHeight: '',
         fieldNames: {
             children: 'children', title: 'name', key: 'id'
@@ -176,13 +176,15 @@
         activeKey: 0,
         queryParams: {
             filterId:'',
-            objectTypeCode:'20040',
-            entityName:'WFUserSignature',
+            objectTypeCode:'130',
+            entityName:'WFSuggestionLibrary',
             filterQuery:'',
-            displayColumns:'SignName,SystemUserID,CreatedON,SignatureId',
-            sort:'CreatedON',
-            order:'desc'
+            displayColumns:'Name,SuggestionType,SortNumber,CreatedBy,ModifiedBy,ModifiedOn',
+            sort:'SortNumber',
+            order:'ASC'
         },
+        objectTypeCode:'130',
+        sObjectName:'WFSuggestionLibrary',
         isModal: false,
         isCirculation: false,
         isNew: false,
@@ -191,37 +193,47 @@
         treeId: "",
         isEditFlow: false,
         id: "",
-        isSignature: false,
+        isCommon: false,
         isDelete: false,
         deleteDesc: "是否确定要删除？",
         formSearchFilterquery:'',
         SearchFields:[
             {
-                "column": "SignName",
-                "label": "名称",
-                "dataType": "S",
-                "ReferencedEntityObjectTypeCode": 0,
+                "column": "SuggestionType",
+                "label": "公用",
+                "dataType": "L",
+                "ReferencedEntityObjectTypeCode": 130,
+                "picklistValues": [
+                {
+                    "label": "个人",
+                    "value": "0"
+                },
+                {
+                    "label": "公用",
+                    "value": "1"
+                }
+                ],
                 "sObjectName": "",
                 "targetApiName": "",
             },
             {
-                "column": "SystemUserID",
-                "label": "用户",
-                "dataType": "O",
-                "ReferencedEntityObjectTypeCode": 8,
-                "picklistValues": [],
-                "sObjectName": "SystemUser",
-                "targetApiName": "SystemUser",
-            },
-            {
-                "column": "CreatedON",
+                "column": "CreatedOn",
                 "label": "创建时间",
                 "dataType": "F",
                 "ReferencedEntityObjectTypeCode": 0,
                 "picklistValues": [],
                 "sObjectName": "",
                 "targetApiName": "",
-            }
+            },
+            {
+                "column": "CreatedBy",
+                "label": "创建人",
+                "dataType": "O",
+                "ReferencedEntityObjectTypeCode": 8,
+                "picklistValues": [],
+                "sObjectName": "SystemUser",
+                "targetApiName": "SystemUser",
+            },
         ],
         recordId:'',
         external:false
@@ -231,7 +243,7 @@
         changeHeight();
     };
     const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, searchVal,
-        isCategory, treeId, isEditFlow, id, isSignature, isDelete, deleteDesc, SearchFields } = toRefs(data);
+        isCategory, treeId, isEditFlow, id, isCommon, isDelete, deleteDesc, SearchFields,objectTypeCode,sObjectName,external,recordId } = toRefs(data);
     const tabContent = ref(null);
     const contentRef = ref(null);
     let formSearchHeight = ref(null);
@@ -261,12 +273,12 @@
         console.log('data', data.tableHeight);
         console.log("gridRef", gridRef.value.loadGrid(data.queryParams))
     }
-    const cancelSignature = (e) => {
-        data.isSignature = e;
-    }
-    const handleEditSignature = (id) => {
-        data.id = id;
-        data.isSignature = true;
+    const handleCommonCancel = (params) => {
+        data.isCommon=false;
+    };
+    const handleEdit = (id) => {
+        data.recordId = id;
+        data.isCommon = true;
     }
     const handleDelete = (id) => {
         //console.log("id",id);
@@ -286,7 +298,7 @@
         //     data.isDelete = false;
         //     gridRef.value.loadGrid({});
         // });
-        gridRef.value.loadGrid(data.queryParams);
+        onFresh();
     }
     // 获取tabs
     const getTabs = () => {
@@ -349,14 +361,20 @@
       if(filterQuery){
         data.queryParams.filterQuery+=filterQuery;
       }
-      if(data.treeId){
-        data.queryParams.filterQuery+='\nBusinessUnitId\tin\t'+data.treeId;
-      }
+    //   if(data.treeId){
+    //     data.queryParams.filterQuery+='\nBusinessUnitId\tin\t'+data.treeId;
+    //   }
       gridRef.value.loadGrid(data.queryParams);
   }
-
+const onFresh =()=>{
+    data.queryParams.filterQuery='';
+    if(data.formSearchFilterquery){
+        data.queryParams.filterQuery+=data.formSearchFilterquery;
+    }
+    gridRef.value.loadGrid(data.queryParams);
+}
     window.data = data;
-    window.handleEditSignature = handleEditSignature;
+    window.handleEdit = handleEdit;
     window.handleDelete = handleDelete;
 
     const imgUrl = require("@/assets/flow/checkbox_checked.gif");
@@ -371,12 +389,11 @@
                 field: "Action",
                 title: "操作",
                 formatter: function formatter(value, row, index) {
-                    var SignatureId=row.SignatureId?row.SignatureId.textValue:'';
                     var str = `
                 <div class="iconBox">
                   <div class="popup">
-                    <div class="option-item" onclick="handleEditSignature('${SignatureId}')">编辑签名</div>
-                    <div class="option-item" onclick="handleDelete('${SignatureId}')">删除</div>  
+                    <div class="option-item" onclick="handleEdit('${row.id}')">编辑</div>
+                    <div class="option-item" onclick="handleDelete('${row.id}')">删除</div>  
                   </div>
                   <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
               `
@@ -384,34 +401,50 @@
                 }
             },
             {
-                field: 'SignName',
-                title: '名称',
+                field: 'Name',
+                title: '意见',
                 sortable: true,
                 formatter: function formatter(value, row, index) {
-                    return girdFormatterValue('SignName',row);
+                    return girdFormatterValue('Name',row);
                 }
             },  {
-                field: 'SystemUserID',
-                title: '用户名',
+                field: 'SuggestionType',
+                title: '公用',
                 sortable: true,
                 formatter: function formatter(value, row, index) {
-                    return girdFormatterValue('SystemUserID',row);
+                    return girdFormatterValue('SuggestionType',row);
                 }
-            }, {
-                field: 'SignatureId',
-                title: '签名',
+            }, 
+            {
+                field: 'SortNumber',
+                title: '序号',
                 sortable: true,
                 formatter: function formatter(value, row, index) {
-                    var SignatureId=row.SignatureId?row.SignatureId.textValue:'';
-                    var action = '<img width="150" height="80" style="margin-top:8px;" src="/apps/wf/GetUSignature.ashx?id=' + SignatureId + '" />'
-                    return action;
+                    return girdFormatterValue('SortNumber',row);
                 }
-            }, {
-                field: 'CreatedON',
-                title: '创建时间',
+            }, 
+            {
+                field: 'CreatedBy',
+                title: '创建人',
                 sortable: true,
                 formatter: function formatter(value, row, index) {
-                    return girdFormatterValue('CreatedON',row);
+                    return girdFormatterValue('CreatedBy',row);
+                }
+            }, 
+            {
+                field: 'ModifiedBy',
+                title: '修改人',
+                sortable: true,
+                formatter: function formatter(value, row, index) {
+                    return girdFormatterValue('ModifiedBy',row);
+                }
+            }, 
+            {
+                field: 'ModifiedOn',
+                title: '修改时间',
+                sortable: true,
+                formatter: function formatter(value, row, index) {
+                    return girdFormatterValue('ModifiedOn',row);
                 }
             }
         ]
@@ -423,7 +456,8 @@
         gridRef.value.loadGrid(data.queryParams);
     }
     const handleNew = (e) => {
-        data.isSignature = true
+        data.recordId='';
+        data.isCommon = true;
     }
     // 添加分类
     const handleAddCategory = (key) => {
@@ -456,5 +490,8 @@
       .num{
           color: #aaa;
       }
+    }
+    .wea-tab1 :where(.css-dev-only-do-not-override-kqecok).ant-tabs{
+        padding-left: 5px;
     }
   </style>

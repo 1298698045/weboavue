@@ -57,7 +57,7 @@
             </div>
             <a-form-item class="formitembtn">
                 <a-button type="primary"  class="radiusNone" html-type="submit">搜索</a-button>
-                <a-button style="margin-left: 10px"  class="radiusNone" @click="resetForm">重置</a-button>
+                <a-button style="margin-left: 10px" class="radiusNone" @click="resetForm">重置</a-button>
             </a-form-item>
         </a-form>
         <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
@@ -107,18 +107,20 @@
         console.log('Success:', values);
         var filterQuery = "";
         data.searchFields.forEach(item=>{
-            if(item.dataType=='F'){
-                if(item.dateTypeCurrent.value=='default'){
-                    if(values[item.column]&&values[item.column].length){
-                        filterQuery += "\n" + item.column + "\tbetween\t" + values[item.column];
+            if(values[item.column]!=''&&values[item.column]!='undefined'&&values[item.column]!=undefined){
+                if(item.dataType=='F'){
+                    if(item.dateTypeCurrent.value=='default'){
+                        if(values[item.column].length){
+                            filterQuery += "\n" + item.column + "\tbetween\t" + values[item.column];
+                        }
+                    }else {
+                        filterQuery += "\n" + item.column + "\t" + values[item.column];
                     }
+                }else if(item.dataType=='S'){
+                    filterQuery += "\n" + item.column + "\tcontains\t" + values[item.column];
                 }else {
-                    filterQuery += "\n" + item.column + "\t" + values[item.column];
+                    filterQuery += "\n" + item.column + "\teq\t" + values[item.column];
                 }
-            }else if(item.dataType=='S'){
-                filterQuery += "\n" + item.column + "\tcontains\t" + values[item.column];
-            }else {
-                filterQuery += "\n" + item.column + "\teq\t" + values[item.column];
             }
         })
         // console.log("filterQuery:", filterQuery);

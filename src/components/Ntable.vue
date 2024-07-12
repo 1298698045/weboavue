@@ -44,7 +44,7 @@
               if (data.nodes) {
                 data0.rows = data.nodes;
               }
-              data0.total = data&&data.totalCount ? Number(data.totalCount) : data0.nodes.length;
+              data0.total = data&&data.totalCount ? Number(data.totalCount) : data0.rows.length;
           }
           return data0
       },

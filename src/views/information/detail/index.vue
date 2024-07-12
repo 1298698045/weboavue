@@ -20,10 +20,9 @@
         </div>
       </div>
       <div class="rightBox">
-        <a-button type="primary" class="ml10" @click="handleEdit"
-          >编辑</a-button
+        <a-button type="primary" class="ml10" @click="handleEdit">编辑</a-button
         >
-        <a-button type="primary" class="ml10">删除</a-button>
+        <a-button type="primary" class="ml10" @click="handleDelete">删除</a-button>
         <a-button type="primary" class="ml10" @click="changeStatus"
           >更改状态</a-button
         >
@@ -118,6 +117,11 @@
             </div>
           </div>
         </div>
+        <div class="tabContainer" v-if="activeKey == 1">
+          <div class="detailContent">
+            <DetailInfo  :id="id" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
+          </div>
+        </div>
         <div class="tabContainer" v-if="activeKey == 2">
           <PersonnelList :id="id" :objectTypeCode="objectTypeCode" />
         </div>
@@ -165,6 +169,7 @@
       @cancel="cancelUser"
       @selectVal="getUserData"
     />
+    <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
   </div>
 </template>
 <script setup>
@@ -197,6 +202,8 @@ import PersonnelList from "@/components/information/PersonnelList.vue";
 import AffiliatedColumn from "@/components/information/AffiliatedColumn.vue";
 import Comment from "@/components/detail/Comment.vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
+import DetailInfo from "@/components/detail/DetailInfo.vue";
+import Delete from "@/components/listView/Delete.vue";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
 
@@ -226,6 +233,7 @@ const data = reactive({
   activeKey: 0,
   id: route.query.id,
   objectTypeCode: route.query.objectTypeCode,
+  sObjectName:route.query.objectTypeCode=='100201'?'Content':'Notice',
   detail: {},
   isNotes: false,
   isStatus: false,
@@ -234,7 +242,10 @@ const data = reactive({
   isUserModal: false,
   fileCategorys: [],
   files: [],
-  content:''
+  content:'',
+  isDelete: false,
+  deleteDesc: '确定要删除吗？',
+  external:false,
 });
 const {
   tabs,
@@ -250,6 +261,10 @@ const {
   fileCategorys,
   files,
   content,
+  sObjectName,
+  isDelete,
+  deleteDesc,
+  external
 } = toRefs(data);
 const changeTabs = (e) => {
   data.activeKey = e;
@@ -331,15 +346,40 @@ const cancelAddClass = (e) => {
 const changeStatus = () => {
   data.isStatus = true;
 };
-const handleEdit = () => {
-  let url = router.resolve({
-    name: "informationEditor",
-    query: {
-      id: data.id,
-      objectTypeCode: data.objectTypeCode,
-    },
-  });
-  window.open(url.href);
+const handleEdit = () =>{
+    // router.push({
+    //     path:"/informationEditor",
+    //     query: {
+    //       id: id
+    //     }
+    // });
+    let reUrl = router.resolve({
+            name: "InformationEditor",
+            query: {
+                id: data.id,
+                objectTypeCode: data.objectTypeCode,
+                //FolderId: res.actions[0].returnValue&&res.actions[0].returnValue.fields&&res.actions[0].returnValue.fields.FolderId?res.actions[0].returnValue.fields.FolderId:''
+                FolderId: ''
+            }
+        })
+    window.open(reUrl.href); 
+  }
+const handleDelete= (e) => {
+  data.isDelete = true;
+}
+const deleteOk = (e) => {
+  let path='/lightning/o/Content/home';
+  if(data.objectTypeCode=='100202'){
+    path='/lightning/o/ContentNotice/home'
+  }
+  router.push({
+        path:path,
+        query: {
+        }
+    });
+};
+const cancelDelete = (e) => {
+  data.isDelete = false;
 };
 // 预览
 const handlePreview = () => {
@@ -448,5 +488,15 @@ const getUserData = (params) => {
       }
     }
   }
+}
+.detailWrap .detail-scroll{
+  height: calc(~"100% - 70px");
+}
+.detailWrap .detailContent{
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    border-radius: 4px;
+    overflow: auto;
 }
 </style>

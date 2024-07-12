@@ -55,7 +55,6 @@ const Interface = {
       chartItems: baseUrl + "/aura/ObjectHomeChart/getChartItems", // 获取图表数据
       getFilter: "", // 
       saveFilter: baseUrl + "/aura/listViewManager/updateListView", // 保存筛选器
-      node: baseUrl + "listview/data/getNodes",//通用列表接口2
   },
   uilook: "/localData/ui.entity.lookup.json",
   entityFilter: "/localData/entity.filter.get.json",
@@ -286,6 +285,7 @@ const Interface = {
   lookupObj: {
       column: baseUrl + "/aura/Lookup/getTopMetada", // 查找对话框 - 获查找字段和列表显示字段
       list: baseUrl + "/aura/Lookup/getItems", // 查找对话框 - 获查找数据
-  }
+  },
+  list2: baseUrl + "/listview/data/getNodes",
 };
 export default Interface;

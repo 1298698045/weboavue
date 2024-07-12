@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="tableWrap" ref="tablelist">
-                    <a-table style="height: 100%;" :scroll="{ y:tableHeight }" :dataSource="dataSource" :columns="columns" :pagination="pagination" @change="handleTableChange">
+                    <a-table style="height: 100%;" :scroll="{ y:tableHeight }" :dataSource="dataSource" :columns="columns" :pagination="data.pagination" @change="handleTableChange">
                         <template #bodyCell="{ column, text, record }">
                             <div v-if="column.key=='AvatarImg'">
                                 <img :src="text" alt="" class="group_list_avatar"/>
@@ -58,7 +58,8 @@
                 </div>
             </div>
         </div>
-        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
+        <!-- <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal> -->
+        <add-group :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" ></add-group>
         <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
     </div>
 </template>
@@ -72,8 +73,9 @@
     import Interface from "@/utils/Interface.js";
     import { formTreeData,girdFormatterValue } from "@/utils/common.js";
     import { message } from "ant-design-vue";
-    import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+    //import CommonFormModal from "@/components/listView/CommonFormModal.vue";
     import Delete from "@/components/listView/Delete.vue";
+    import AddGroup from "@/components/groupDetail/AddGroup.vue";
     const tablelist=ref();
     const { proxy } = getCurrentInstance();
     const router = useRouter();
@@ -164,7 +166,7 @@
         }else if(data.selectedKeys[0]=='join'){
             filterQuery='';
         }else if(data.selectedKeys[0]=='public'){
-            filterQuery='\nIsPublic\ttrue';
+            filterQuery='\nIsPublic\teq\ttrue';
         }
         // proxy.$get(Interface.user.groupList, {
         //     scope: data.selectedKeys[0],
@@ -172,21 +174,23 @@
         // }).then(res => {
         //     data.dataSource = res.listData;
         // })
-        proxy.$post(Interface.listView.node, {
+        data.dataSource=[];
+        data.pagination.total = 0;
+        proxy.$post(Interface.list2, {
             filterId:'',
             objectTypeCode:data.objectTypeCode,
             entityName:data.sObjectName,
-            filterquery:filterQuery,
+            filterQuery:filterQuery,
             search:data.searchVal||'',
-            page: pagination.current,
-            rows: pagination.pageSize,
+            page: data.pagination.current,
+            rows: data.pagination.pageSize,
             sort:'ImportSequenceNumber',
             order:'ASC',
             displayColumns:'Name,Quantity,CreatedOn,OwningUser,AvatarImg'
         }).then(res => {
             data.listData = res.nodes;
             data.total = res.pageInfo?res.pageInfo.total:0;
-            pagination.total = res.pageInfo?res.pageInfo.total:0;
+            data.pagination.total = res.pageInfo?res.pageInfo.total:0;
             var list = [];
             for (var i = 0; i < res.nodes.length; i++) {
                 var item = res.nodes[i];

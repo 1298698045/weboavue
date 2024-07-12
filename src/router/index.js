@@ -152,7 +152,7 @@ const routes = [
         },
       },
       {
-        path: "/flow/signatureAdmin",
+        path: "/lightning/o/Workflow/UserSignature/home",
         component: () => import("../views/flow/signatureAdmin/index.vue"),
         name: "SignatureAdmin",
         icon: "qianmingguanli",
@@ -161,6 +161,16 @@ const routes = [
           icon: "qianmingguanli",
         },
       },
+      // {
+      //   path: "/lightning/o/Workflow/CommentLib/home",
+      //   component: () => import("../views/flow/CommentLib/index.vue"),
+      //   name: "CommentLib",
+      //   icon: "qianmingguanli",
+      //   meta: {
+      //     name: "审批意见",
+      //     icon: "qianmingguanli",
+      //   },
+      // },
       {
         path: "/process/instance/form/search",
         component: () => import("../views/flow/formSearch/index.vue"),
@@ -627,7 +637,7 @@ const routes = [
         },
       },
       {
-        path: "/OfficeDocument/in/home",
+        path: "/lightning/o/OfficeDocumentIn/home",
         name: "DocInSearch",
         component: () =>
           import("../views/documentAdmin/receivingAdmin/index.vue"),
@@ -638,7 +648,7 @@ const routes = [
         },
       },
       {
-        path: "/OfficeDocument/out/home",
+        path: "/lightning/o/OfficeDocumentOut/home",
         name: "DocOutSearch",
         component: () =>
           import("../views/documentAdmin/outgoingAdmin/index.vue"),
@@ -649,7 +659,7 @@ const routes = [
         },
       },
       {
-        path: "/ui/RequestReport/search",
+        path: "/lightning/o/RequestReport",
         name: "OfficialRequestReport",
         component: () => import("../views/documentAdmin/report/index.vue"),
         icon: "qingshibaogao",

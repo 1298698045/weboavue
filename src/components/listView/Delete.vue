@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div ref="modelContentRef">
     <a-modal v-model:open="props.isShow" width="800px" :style="setTop" :maskClosable="false" @cancel="handleCancel"
       @ok="handleSubmit">
       <template #title>
         <div class="modal_title">删除</div>
       </template>
-      <div class="modalContainer" ref="modelContentRef">
+      <div class="modalContainer">
         <p style="text-align: center;padding: 16px 0;" v-if="desc">
           {{ desc }}
         </p>
@@ -166,8 +166,8 @@
   };
   //getQuery();
   onMounted(() => {
-    //let h = modelContentRef.value.clientHeight;
-    //data.top = (h + 126) / 2 + 'px';
+    let h = modelContentRef.value.clientHeight;
+    data.top = (h + 260) / 2 + 'px';
   })
   const setTop = computed(() => ({
     top: `calc(50% - ${data.top})`

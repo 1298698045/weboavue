@@ -389,7 +389,8 @@
       let reUrl = router.resolve({
           path:"/informationDetail",
           query: {
-            id: id
+            id: id,
+            objectTypeCode:'100202'
           }
       })
       window.open(reUrl.href); 
@@ -466,7 +467,7 @@ const cancelDelete = (e) => {
   window.data = data;
 
   const imgUrl = require("@/assets/flow/checkbox_checked.gif");
-    const gridUrl = ref(Interface.listView.node);
+    const gridUrl = ref(Interface.list2);
     const columns = ref(
       [
         {

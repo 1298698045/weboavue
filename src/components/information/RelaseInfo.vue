@@ -76,22 +76,15 @@
                         </a-form-item>
                     </div>
                     <div class="sectionItem">
-                        <a-form-item name="IsPublic" label="查看范围">
-                            <a-checkbox v-model:checked="formState.IsPublic">所有人可以查看</a-checkbox>
-                        </a-form-item>
+                      <a-form-item name="StateCode" label="发布状态" :rules="[{ required: true, message: '请选择发布状态' }]">
+                          <a-select v-model:value="formState.StateCode" placeholder="请选择发布状态">
+                              <a-select-option v-for="(item,index) in StateCodeList" :value="item.value" :key="index">{{item.label}}</a-select-option>
+                          </a-select>
+                      </a-form-item>
                     </div>
                 </div>
                 <div class="sectionRow">
-                    <div class="sectionItem">
-                        <a-form-item name="KeyWords" label="移动标签">
-                            <a-checkbox-group v-model:value="formState.KeyWords" style="width: 100%">
-                                <a-checkbox :value="item" v-for="(item,index) in keywords" :key="index">{{item}}</a-checkbox>
-                            </a-checkbox-group>
-                        </a-form-item>
-                    </div>
-                </div>
-                <div class="sectionRow">
-                    <div class="sectionItem">
+                  <div class="sectionItem">
                         <a-form-item name="FolderId" label="栏目" :rules="[{ required: true, message: '请选择栏目' }]">
                             <a-tree-select
                                 v-model:value="formState.FolderId"
@@ -108,6 +101,20 @@
                                     <span>{{ name }}</span>
                                 </template>
                             </a-tree-select>
+                        </a-form-item>
+                    </div>
+                </div>
+                <div class="sectionRow">
+                  <div class="sectionItem">
+                        <a-form-item name="KeyWords" label="移动标签">
+                            <a-checkbox-group v-model:value="formState.KeyWords" style="width: 100%">
+                                <a-checkbox :value="item" v-for="(item,index) in keywords" :key="index">{{item}}</a-checkbox>
+                            </a-checkbox-group>
+                        </a-form-item>
+                    </div>
+                    <div class="sectionItem">
+                        <a-form-item name="IsPublic" label="查看范围">
+                            <a-checkbox v-model:checked="formState.IsPublic">所有人可以查看</a-checkbox>
                         </a-form-item>
                     </div>
                 </div>
@@ -244,7 +251,7 @@
     AttachRightCode:'',
     EndTopDate: '',
     ApprovedOn: '',
-    StateCode: '',
+    StateCode: 1,
     KeyWords: [],
     IsPublic: false,
     CoverDisplay: '',
@@ -265,6 +272,20 @@
         {
             label: '可下载',
             value: 8
+        }
+    ],
+    StateCodeList: [
+        {
+            label: '草稿',
+            value: 0
+        },
+        {
+            label: '已发布',
+            value: 1
+        },
+        {
+            label: '审批不通过',
+            value: 2
         }
     ],
     keywords: [],
@@ -300,7 +321,7 @@
   const {
     title,
     height, AttachRightCodeList, keywords, treeData, CoverDisplayList,
-     fileList, isRadioDept, BusinessUnitId,ApprovedBy,listData
+     fileList, isRadioDept, BusinessUnitId,ApprovedBy,listData,StateCodeList
   } = toRefs(data);
 
   const cancelDeptModal = (e) => {
@@ -456,6 +477,7 @@
               formState.IsImportant=fields.IsImportant.value?true:false;
               formState.IsTop=fields.IsTop.value*1==1?true:false;
               formState.AttachRightCode=fields.AttachRightCode.value*1;
+              formState.StateCode=fields.StateCode.value*1;
               formState.EndTopDate=fields.EndTopDate.value?dayjs(fields.EndTopDate.value).format("YYYY-MM-DD hh:mm:ss"):'';
               formState.ApprovedOn=fields.ApprovedOn.value?dayjs(fields.ApprovedOn.value).format("YYYY-MM-DD hh:mm:ss"):'';
               formState.KeyWords=fields.KeyWords.value?(fields.KeyWords.value).split(','):[];
@@ -524,7 +546,7 @@
                         AttachRightCode: formState.AttachRightCode,
                         EndTopDate: dayjs(formState.EndTopDate).format("YYYY-MM-DD hh:mm:ss"),
                         ApprovedOn: dayjs(formState.ApprovedOn).format("YYYY-MM-DD hh:mm:ss"),
-                        StateCode: 1,
+                        StateCode: formState.StateCode,
                         KeyWords: formState.KeyWords.join(',') || '',
                         IsPublic: formState.IsPublic ? 1 : 0,
                         CoverDisplay: formState.CoverDisplay,

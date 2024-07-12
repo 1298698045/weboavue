@@ -264,7 +264,7 @@
       filterId:'',
       objectTypeCode:'122',
       entityName:'WFProcessInstances',
-      //filterquery:'',
+      filterQuery:'',
       //displayColumns:'ProcessInstanceNumber,Name,ProcessId,StateCode,ExpiredOn,AttachQty,CreatedBy,CurrentStepName,CreatedOn,BusinessUnitId,ModifiedOn,Priority,ProcessInstanceId,WFRuleLogId,ExecutorIdentityName',
       sort:'CreatedOn',
       order:'desc'
@@ -328,13 +328,13 @@
     data.isRelease = e;
   }
   const handleSearch=(filterquery)=>{
-      data.queryParams.filterquery='';
+      data.queryParams.filterQuery='';
       data.formSearchFilterquery=filterquery;
       if(filterquery){
-        data.queryParams.filterquery+=filterquery;
+        data.queryParams.filterQuery+=filterquery;
       }
       if(data.treeId){
-        data.queryParams.filterquery+='\nProcessId\tin\t'+data.treeId;
+        data.queryParams.filterQuery+='\nProcessId\tin\t'+data.treeId;
       }
       gridRef.value.loadGrid(data.queryParams);
   }
@@ -504,7 +504,7 @@ const getColumns = (id) => {
   window.data = data;
   window.DelegateFn = DelegateFn;
   const imgUrl = require("@/assets/flow/checkbox_checked.gif");
-  const gridUrl = ref(Interface.listView.node);
+  const gridUrl = ref(Interface.list2);
   // const columns = ref(
   //     [
   //       {
@@ -639,15 +639,15 @@ const getColumns = (id) => {
   const columns = ref([]);
   const changeTab = (e) => {
       data.activeKey = e;
-      
+      data.queryParams.filterQuery='';
       let filterColumnsList=(data.tabs)[e].filterableColumns;
       data.SearchFields=filterColumnsList;
       data.queryParams.filterId=data.tabs[e].filterId||'';
       if(data.formSearchFilterquery){
-        data.queryParams.filterquery+=data.formSearchFilterquery;
+        data.queryParams.filterQuery+=data.formSearchFilterquery;
       }
       if(data.treeId){
-        data.queryParams.filterquery+='\nProcessId\tin\t'+data.treeId;
+        data.queryParams.filterQuery+='\nProcessId\tin\t'+data.treeId;
       }
       getColumns(data.queryParams.filterId);
   }

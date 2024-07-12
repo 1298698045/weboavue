@@ -36,27 +36,26 @@
                     <div class="tabContainer" v-if="currentTab==3">
                         <div class="deptTreeBox">
                             <div class="deptTree">
-                                <a-tree :tree-data="deptTreeList" v-model:selectedKeys="deptIdCurrent" block-node @select="handleSelectTree">
-                                    <template #title="{ text, key }">
-                                        <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ text }}</span>
-                                        <template v-else>{{ text }}</template>
+                                <a-tree :tree-data="deptTreeList" block-node @select="handleSelectTree">
+                                    <template  #title="{name, key }">
+                                        <span>{{name}}</span>
                                     </template>
                                 </a-tree>
                             </div>
                             <div class="rightUserList">
                                 <ul class="userBox">
-                                    <li class="userItem" v-for="(item,index) in deptUserList" :key="index" @click="handleSelectRow(item.systemUserId,item.fullName, item.businessUnitIdName)">
+                                    <li class="userItem" v-for="(item,index) in deptUserList" :key="index" @click="handleSelectRow(item.id,item.FullName.textValue, item.BusinessUnitIdName.textValue)">
                                         <div class="avatar"></div>
                                         <div class="info">
                                             <div>
-                                                <span class="name">{{item.fullName}}</span>/{{item.userName}}/{{ item.employeeNo }}
+                                                <span class="name">{{item.FullName.textValue}}</span>/{{item.UserName.textValue}}/{{ item.EmployeeId.textValue }}
                                             </div>
-                                            <p class="dept">{{item.OrganizationName}}</p>
+                                            <p class="dept">{{item.BusinessUnitIdName.textValue}}</p>
                                         </div>
                                     </li>
                                 </ul>
                                 <div class="pageWrap">
-                                    <a-pagination v-model:current="currentPage" :total="50" :show-total="total => `共 ${total} 条`" />
+                                    <a-pagination v-model:current="pageNumber" :total="pageTotal" :show-total="total => `共 ${total} 条`" @change="changePagin" />
                                 </div>
                             </div>
                         </div>
@@ -64,44 +63,57 @@
                     <div class="tabContainer" v-if="currentTab==4">
                         <div class="deptTreeBox">
                             <div class="deptTree">
-                                <a-tree :tree-data="groupList" block-node  v-model:selectedKeys="groupIdCurrent" @select="handleNodeGroup">
+                                <a-tree :tree-data="groupList" block-node @select="handleNodeGroup">
                                     <template #title="{ Name, key }">
                                         <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ Name }}</span>
-                                        <template v-else>{{ Name }}</template>
+                                        <template v-else>{{ Name.textValue }}</template>
                                     </template>
                                 </a-tree>
                             </div>
                             <div class="rightUserList">
                                 <ul class="userBox rightUserList">
-                                    <li class="userItem" v-for="(item,index) in groupUserList" :key="index" @click="handleSelectRow(item.SystemUserId,item.FullName,item.BusinessUnitIdName)">
+                                    <li class="userItem" v-for="(item,index) in groupUserList" :key="index" @click="handleSelectRow(item.id,item.FullName.textValue, item.BusinessUnitIdName.textValue)">
                                         <div class="avatar"></div>
                                         <div class="info">
                                             <div>
-                                                <span class="name">{{item.FullName}}</span>/{{item.UserName}}/{{ item.EmployeeId }}
+                                                <span class="name">{{item.FullName.textValue}}</span>/{{item.UserName.textValue}}/{{ item.EmployeeId.textValue }}
                                             </div>
-                                            <p class="dept">{{item.BusinessUnitIdName}}</p>
+                                            <p class="dept">{{item.BusinessUnitIdName.textValue}}</p>
                                         </div>
                                     </li>
                                 </ul>
                                 <div class="pageWrap">
-                                    <a-pagination v-model:current="currentPage" :total="50" :show-total="total => `共 ${total} 条`" />
+                                    <a-pagination v-model:current="pageNumber" :total="pageTotal" :show-total="total => `共 ${total} 条`" @change="changePagin" />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="tabContainer" v-if="currentTab==5">
-                        <ul class="userBox">
-                            <li class="userItem" v-for="(item,index) in roleList" :key="index" @click="handleSelectRow(item.RoleId,item.Name,item.BusinessUnitIdName)">
-                                <div class="avatar"></div>
-                                <div class="info">
-                                    <div>
-                                        <span class="name">{{item.Name}}</span>
-                                    </div>
+                        <div class="deptTreeBox">
+                            <div class="deptTree">
+                                <a-tree :tree-data="roleList" block-node @select="handleNodeRole">
+                                    <template #title="{ Name, key }">
+                                        <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ Name }}</span>
+                                        <template v-else>{{ Name.textValue }}</template>
+                                    </template>
+                                </a-tree>
+                            </div>
+                            <div class="rightUserList">
+                                <ul class="userBox rightUserList">
+                                    <li class="userItem" v-for="(item,index) in roleUserList" :key="index" @click="handleSelectRow(item.id,item.FullName.textValue, item.BusinessUnitIdName.textValue)">
+                                        <div class="avatar"></div>
+                                        <div class="info">
+                                            <div>
+                                                <span class="name">{{item.FullName.textValue}}</span>/{{item.UserName.textValue}}/{{ item.EmployeeId.textValue }}
+                                            </div>
+                                            <p class="dept">{{item.BusinessUnitIdName.textValue}}</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="pageWrap">
+                                    <a-pagination v-model:current="pageNumber" :total="pageTotal" :show-total="total => `共 ${total} 条`" @change="changePagin" />
                                 </div>
-                            </li>
-                        </ul>
-                        <div class="pageWrap">
-                            <a-pagination v-model:current="currentPage" :total="50" :show-total="total => `共 ${total} 条`" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -122,6 +134,7 @@
         defineEmits, toRaw
     } from "vue";
     import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
+    import { formTreeData } from "@/utils/common.js";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const labelCol = ref({ style: { width: '100px' } });
@@ -144,8 +157,13 @@
         groupList: [],
         groupUserList: [],
         deptIdCurrent: [],
-        groupIdCurrent: [],
-        currentPage: 1
+        groupIdCurrent: "",
+        currentPage: 1,
+        roleUserList: [],
+        pageNumber: 1,
+        pageSize: 20,
+        pageTotal: 0,
+        roleIdCurrent: ""
     })
     const tabs = toRaw([
         {
@@ -174,7 +192,8 @@
         }
     ])
     const { currentTab, deptTreeList, deptList, selectData, sameDeptUserList, 
-        roleList, deptUserList, groupList, groupUserList, deptIdCurrent, groupIdCurrent, currentPage } = toRefs(data);
+        roleList, deptUserList, groupList, groupUserList, deptIdCurrent, groupIdCurrent, currentPage,
+         roleUserList, pageNumber, pageSize, pageTotal, roleIdCurrent } = toRefs(data);
 
     const getSameDeptUser = () => {
         proxy.$get(Interface.user.mybusinessUser,{}).then(res=>{
@@ -186,13 +205,21 @@
 
     // 角色
     const getRoleList = () => {
-        proxy.$get(Interface.user.roleUser,{}).then(res=>{
+        let d = {
+            filterId: "",
+            entityType: "Role",
+            // filterQuery: "\nBusinessUnitId\teq\t" + deptId
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
             // console.log("res",res);
-            data.roleList = res.listData;
+            let nodes = res.nodes;
+            data.roleList = nodes;
+            getRoleUser(data.roleList[0].id);
         })
     }
     const changeTab = (e) => {
         console.log("e",e);
+        data.pageNumber = 1;
         switch(e){
             case 3:
                 getTreeDept();
@@ -206,83 +233,123 @@
         }
     }
     const getTreeDept = () => {
-        proxy.$get(Interface.treeList, {
-            entity: "organizationtree",
-            search: ""
-        }).then(res => {
+        proxy.$get(Interface.deptTree, {}).then(res => {
             console.log("res", res);
-            data.deptList = res.rows;
-            let rows = res.rows.map(item=>{
+            let listData = res.actions[0].returnValue;
+            data.deptList = listData;
+            let rows = listData.map(item=>{
                 item.key = item.id;
                 return item;
             });
-            data.deptTreeList = formTreeData(rows);
+            data.deptTreeList = formTreeData(rows, 'id', 'parentId');
             console.log("deptTreeList", data.deptTreeList);
-            data.deptIdCurrent = [data.deptList[0].id];
+            data.deptIdCurrent = data.deptList[0].id;
             getDeptUser(data.deptList[0].id);
         })
     }
 
-    const formTreeData = (list) => {
-        var result = [];
-        if (!Array.isArray(list)) {
-            return result;
-        }
-        var map = {};
-        list.forEach(function (item) {
-            map[item.id] = item;
-        });
-        list.forEach(function (item) {
-            var parent = map[item.pid];
-            if (parent) {
-                parent.children = parent.children || [];
-                parent.children.push(item);
-            } else {
-                result.push(item);
-            }
-        });
-        return result;
-    }
+    // const formTreeData = (list) => {
+    //     var result = [];
+    //     if (!Array.isArray(list)) {
+    //         return result;
+    //     }
+    //     var map = {};
+    //     list.forEach(function (item) {
+    //         map[item.id] = item;
+    //     });
+    //     list.forEach(function (item) {
+    //         var parent = map[item.pid];
+    //         if (parent) {
+    //             parent.children = parent.children || [];
+    //             parent.children.push(item);
+    //         } else {
+    //             result.push(item);
+    //         }
+    //     });
+    //     return result;
+    // }
 
     const handleSelectTree = (selectedKeys,selectedNodes) => {
         console.log("e",selectedKeys,selectedNodes);
         var deptId = selectedNodes.node.id;
-        getDeptUser(deptId);
+        data.deptIdCurrent = deptId;
+        getDeptUser();
     }
 
     // 获取部门用户
-    const getDeptUser = (deptId) => {
-        proxy.$get(Interface.user.sysUser,{
-            businessUnitId: deptId
-        }).then(res=>{
-            var list = res.listData;
-            data.deptUserList = list;
+    const getDeptUser = () => {
+        let d = {
+            filterId: "",
+            entityType: "SystemUser",
+            displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
+            // filterQuery: "\nBusinessUnitId\teq\t" + data.deptIdCurrent,
+            page: data.pageNumber,
+            rows: data.pageSize
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            let nodes = res.nodes;
+            data.deptUserList = nodes;
+            data.pageTotal = res.totalCount;
         })
     }
 
     // 获取小组
     const getGroup = () => {
-        proxy.$get(Interface.user.groupList,{
+        let d = {
+            filterId: "",
+            entityType: "Group",
+            filterQuery: ""
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            let nodes = res.nodes;
 
-        }).then(res=>{
-            data.groupList = res.listData.map(item=>{
-                item.key = item.GroupId;
+            data.groupList = nodes.map(item=>{
+                item.key = item.id;
                 return item;
             });
-            data.groupIdCurrent = [data.groupList[0].GroupId];
-            getGroupUser(data.groupList[0].GroupId);
+            data.groupIdCurrent = data.groupList[0].id;
+            getGroupUser(data.groupList[0].id);
         })
     }
     const handleNodeGroup = (selectedKeys,selectedNodes) => {
-        let groupId = selectedNodes.node.GroupId;
-        getGroupUser(groupId);
+        let groupId = selectedNodes.node.id;
+        data.groupIdCurrent = groupId;
+        getGroupUser();
     }
     // 获取小组用户
-    const getGroupUser = (groupId) => {
-        proxy.$get(Interface.user.groupUser,{
-            GroupId: groupId
-        }).then(res=>{
-            data.groupUserList = res.listData;
+    const getGroupUser = () => {
+        let d = {
+            filterId: "",
+            entityType: "SystemUser",
+            displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
+            // filterQuery: "\nGroupId\teq\t" + data.groupIdCurrent,
+            page: data.pageNumber,
+            rows: data.pageSize,
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            data.pageTotal = res.totalCount;
+            let nodes = res.nodes;
+            data.groupUserList = nodes;
+        })
+    }
+    const handleNodeRole = (selectedKeys,selectedNodes) => {
+        let roleId = selectedNodes.node.id;
+        data.roleIdCurrent = roleId;
+        getRoleUser();
+    }
+    const getRoleUser = () => {
+        let d = {
+            filterId: "",
+            entityType: "SystemUser",
+            displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
+            // filterQuery: "\nRoleId\teq\t" + data.roleIdCurrent,
+            page: data.pageNumber,
+            rows: data.pageSize
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            data.pageTotal = res.totalCount;
+            let nodes = res.nodes;
+            data.roleUserList = nodes;
         })
     }
     const clearData = () => {
@@ -305,7 +372,22 @@
         }else {
             alert("请选择部门!")
         }
-    }
+    };
+    const changePagin = (e) => {
+        console.log("e",e);
+        data.pageNumber = e;
+        switch(data.currentTab){
+            case 3:
+                getDeptUser();
+                break;
+            case 4:
+                getGroupUser();
+                break;
+            case 5:
+                getRoleUser();
+                break;
+        }
+    } 
 </script>
 <style lang="less" scoped>
     @import url('@/style/modal.less');

@@ -383,7 +383,7 @@
   window.data = data;
 
   const imgUrl = require("@/assets/flow/checkbox_checked.gif");
-    const gridUrl = ref(Interface.listView.node);
+    const gridUrl = ref(Interface.list2);
     const columns = ref(
       [
         {

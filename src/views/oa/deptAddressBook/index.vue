@@ -618,7 +618,7 @@
         else if(data.treeId){
             filterQuery+='\nContactGroupId\teq\t'+data.treeId;
         }
-        proxy.$post(Interface.listView.node, {
+        proxy.$post(Interface.list2, {
             filterId:'',
             objectTypeCode:data.objectTypeCode,
             entityName:data.sObjectName,

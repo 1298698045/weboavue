@@ -10,13 +10,13 @@
           @input="getInputContent"
         />
         <div class="sendWrap">
-          <a-button type="primary" :disabled="!isSend">发布</a-button>
+          <a-button type="primary" :disabled="!isSend" @click="sendContent">发布</a-button>
         </div>
       </div>
     </div>
     <div class="panel">
       <div class="panel-head">
-        <div class="panel-title">群主动态</div>
+        <div class="panel-title">群组动态</div>
         <div class="panel-search">
           <a-input-search
             v-model:value="searchVal"
@@ -35,11 +35,11 @@
           >
             <div class="trendsItemBox">
               <div class="avatar">
-                <img :src="require('@/assets/img/avatar-r.png')" alt="" />
+                <img :src="item.ImageUrls" alt="" />
               </div>
               <div class="trends-info">
                 <div class="info-name">
-                  {{ item.OwningUserName }}
+                  {{ item.OwningUser }}
                   <svg
                     viewBox="0 0 24 24"
                     aria-label="认证账号"
@@ -52,17 +52,27 @@
                       ></path>
                     </g>
                   </svg>
-                  <span class="name2">@{{ item.OwningUserName }}</span>
+                  <span class="name2">@{{ item.OwningUser }}</span>
                 </div>
                 <div class="info-time">
                   {{ item.CreatedOn }}
                 </div>
-                <div class="info-desc">
-                  {{ item.Description }}
+                <div class="info-desc" v-html="item.Description">
                 </div>
               </div>
               <div class="trends-more">
-                <EllipsisOutlined />
+                <a-dropdown>
+                      <a class="ant-dropdown-link" @click.prevent>
+                        <EllipsisOutlined />
+                      </a>
+                      <template #overlay>
+                          <a-menu>
+                              <a-menu-item>
+                                  <a href="javascript:void(0);" @click="handleDelete(item.id)">删除</a>
+                              </a-menu-item>
+                          </a-menu>
+                      </template>
+                  </a-dropdown>
               </div>
             </div>
             <div class="trendsItemBottom">
@@ -114,6 +124,7 @@
         </div>
       </div>
     </div>
+    <Delete :isShow="isDelete" :desc="deleteDesc" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" @cancel="closeDelete" @ok="deleteOk" />
   </div>
 </template>
 <script setup>
@@ -139,16 +150,26 @@ import {
 import { useStore } from "vuex";
 let store = useStore();
 import Interface from "@/utils/Interface.js";
+import { girdFormatterValue } from "@/utils/common.js";
 const { proxy } = getCurrentInstance();
 import { message } from "ant-design-vue";
 import TEditor from "@/components/TEditor.vue";
-
+import Delete from "@/components/listView/Delete.vue";
 const data = reactive({
   adminList: [],
   peopleList: [],
   searchVal: "",
   spaceList: [],
   content: "",
+  isDelete: false,
+  recordId:'',
+  objectTypeCode:'6000',
+  sObjectName:'Chatter',
+  deleteDesc: '确定要删除吗？',
+  external:false,
+});
+const props = defineProps({
+  id: String,
 });
 const isSend = computed(() => {
   return data.content ? true : false;
@@ -156,18 +177,98 @@ const isSend = computed(() => {
 const getInputContent = (e) => {
   data.content = e;
 };
-const { adminList, peopleList, searchVal, spaceList, content } = toRefs(data);
-const onSearch = (e) => {};
-const getSpace = () => {
-  proxy
-    .$get(Interface.group.statusList, {
-      objectId: store.state.groupId,
-    })
-    .then((res) => {
-      data.spaceList = res.listData;
+const { adminList, peopleList, searchVal, spaceList, content,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external } = toRefs(data);
+const sendContent= () => {
+  let url=Interface.create;
+        let d = {
+        actions:[{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName: 'Chatter',
+                objTypeCode: '6000',
+                fields: {
+                    RegardingObjectId: props.id,
+                    Description:data.content,
+                    RegardingObjectTypeCode:9
+                }
+              }              
+            }
+        }]
+    };
+    
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(url,obj).then(res=>{
+      if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+        message.success("发送成功！");
+        getSpace();
+      }
+      
     });
 };
+const onSearch = (e) => {
+  getSpace();
+};
+const getSpace = () => {
+  // proxy
+  //   .$get(Interface.group.statusList, {
+  //     objectId: store.state.groupId,
+  //   })
+  //   .then((res) => {
+  //     data.spaceList = res.listData;
+  //   });
+  let filterQuery='\nRegardingObjectId\teq\t'+props.id;
+  if(data.searchVal){
+    filterQuery+='\nDescription\tcontains\t'+data.searchVal;
+  }
+        proxy.$post(Interface.list2, {
+            filterId:'',
+            objectTypeCode:'6000',
+            entityName:'Chatter',
+            filterQuery:filterQuery,
+            search:'',
+            page: 1,
+            rows: 1000,
+            sort:'CreatedOn',
+            order:'desc',
+            displayColumns:'OwningUser,CreatedOn,Description,NumOfComment,NumOfLike,ImageUrls'
+        }).then(res => {
+            var list = [];
+            //console.log(pagination)
+            for (var i = 0; i < res.nodes.length; i++) {
+                var item = res.nodes[i];
+                for(var cell in item){
+                    if(cell!='id'&&cell!='nameField'&&cell!='ImageUrls'){
+                        item[cell]=girdFormatterValue(cell,item);
+                    }
+                    if(cell=='ImageUrls'){
+                        item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
+                    }
+                }
+                list.push(item)
+            }
+            data.spaceList = list;
+            
+        })
+};
 getSpace();
+// 删除
+const handleDelete = (e) => {
+    data.recordId=e;
+    data.isDelete = true;
+};
+const closeDelete = (e) => {
+    data.recordId='';
+    data.isDelete = false;
+};
+const deleteOk = (e) => {
+    getSpace();
+};
 </script>
 <style lang="less">
 .GroupSpace {

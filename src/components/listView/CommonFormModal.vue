@@ -290,12 +290,12 @@ const props = defineProps({
 });
 console.log("props.entityId", props.entityId);
 const formRef = ref();
-const emit = defineEmits(["cancel"]);
+const emit = defineEmits(["cancel","load"]);
 const handleCancel = () => {
   emit("cancel", false);
 };
 const data = reactive({
-  title: "新建部门变动",
+  title: "新建",
   layoutList: [],
   list: {},
   select: {},
@@ -694,7 +694,8 @@ const handleSubmit = () => {
       }
       proxy.$post(url, obj).then((res) => {
         message.success("保存成功！");
-        emit("success", false);
+        emit("cancel", false);
+        emit("load", false);
       });
     })
     .catch((err) => {

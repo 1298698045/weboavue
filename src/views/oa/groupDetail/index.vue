@@ -3,7 +3,7 @@
     <div class="header">
       <div class="leftBox">
         <div class="leftBox-top">
-          <div class="d-panel-content-head-avatar">
+          <div class="d-panel-content-head-avatar" @click="ChangeGroupImage">
             <div class="editheadbg"></div>
             <div class="edithead"><EditOutlined />编辑头像</div>
             <img
@@ -47,9 +47,9 @@
       <div class="detail-bd">
         <div class="container">
           <div class="tabContainer">
-            <group-space v-if="activeKey == '1'" />
-            <DetailInfo v-if="activeKey == '2'" />
-            <Personnel ref="PersonnelLst" :AddPeople="handleAddPeople" :AddAdmin="handleAddAdmin" v-if="activeKey == '3'" />
+            <group-space v-if="activeKey == '1'" :id="groudId" />
+            <DetailInfo  v-if="activeKey == '2'" :id="groudId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
+            <Personnel ref="PersonnelLst" :load="refreshPeople" :id="groudId" v-if="activeKey == '3'" />
             <Statistics v-if="activeKey == '4'" />
           </div>
           <div class="rightAside group-rightAside">
@@ -71,8 +71,9 @@
                       :key="index"
                     >
                       <div class="editheadbg"></div>
+                      <div class="edithead" @click="handleDeletePeople(item.id)"><DeleteOutlined />删除</div>
                       <img
-                        :src="require('@/assets/img/avatar.png')"
+                        :src="item.PhotoUrl||require('@/assets/img/avatar.png')"
                         alt=""
                         class="d-avatar"
                       />
@@ -102,8 +103,9 @@
                       :key="index"
                     >
                       <div class="editheadbg"></div>
+                      <div class="edithead" @click="handleDeletePeople(item.id)"><DeleteOutlined />删除</div>
                       <img
-                        :src="require('@/assets/img/avatar.png')"
+                        :src="item.PhotoUrl||require('@/assets/img/avatar.png')"
                         alt=""
                         class="d-avatar"
                       />
@@ -121,8 +123,10 @@
     </div>
     <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
     <Notes :isShow="isNotes" @cancel="closeNotes" />
-    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
-    <Delete :isShow="isDelete" :desc="deleteDesc" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" @cancel="closeDelete" @ok="deleteOk" />
+    <!-- <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal> -->
+    <add-group :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" type="1"></add-group>
+    <update-group-image :isShow="isUpdateGroupImage" v-if="isUpdateGroupImage" @cancel="isUpdateGroupImage=false" title="更新照片" @load="submitOk" :id="recordId"></update-group-image>
+    <Delete :isShow="isDelete" :desc="deleteDesc" :sObjectName="deleteInfo.sObjectName" :recordId="deleteInfo.recordId" :objTypeCode="deleteInfo.objectTypeCode" :external="external" @cancel="closeDelete" @ok="deleteOk" />
   </div>
 </template>
 <script setup>
@@ -139,11 +143,11 @@ import {
   defineEmits,
   h,
 } from "vue";
-import { EditOutlined, UnorderedListOutlined } from "@ant-design/icons-vue";
+import { EditOutlined, UnorderedListOutlined,DeleteOutlined } from "@ant-design/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
 import GroupSpace from "@/components/groupDetail/GroupSpace.vue";
-import DetailInfo from "@/components/groupDetail/DetailInfo.vue";
+import DetailInfo from "@/components/detail/DetailInfo.vue";
 import Personnel from "@/components/groupDetail/Personnel.vue";
 import Statistics from "@/components/groupDetail/Statistics.vue";
 
@@ -151,11 +155,15 @@ import Statistics from "@/components/groupDetail/Statistics.vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 // 备注
 import Notes from "@/components/groupDetail/Notes.vue";
-import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+//import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+// 编辑
+import AddGroup from "@/components/groupDetail/AddGroup.vue";
+import UpdateGroupImage from "@/components/groupDetail/UpdateGroupImage.vue";
 // 删除
 import Delete from "@/components/listView/Delete.vue";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
+import { girdFormatterValue } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import { useStore } from "vuex";
 let store = useStore();
@@ -171,13 +179,19 @@ const data = reactive({
   isDelete: false,
   RoleCode: 0,
   isCommon: false,
+  isUpdateGroupImage:false,
   recordId:route.query.GroupId,
   objectTypeCode:'9',
   sObjectName:'Group',
   deleteDesc: '确定要删除吗？',
   external:false,
   detail: {Name:{value:""},IsPublic:{value:""}},
-  AvatarImg:require('@/assets/img/avatar-r.png')
+  AvatarImg:require('@/assets/img/avatar-r.png'),
+  deleteInfo:{
+    recordId:'',
+    objectTypeCode:'',
+    sObjectName:''
+  }
 });
 const {
   activeKey,
@@ -188,7 +202,8 @@ const {
   isDelete,
   isAdmin,
   isCommon,
-  recordId,objectTypeCode,sObjectName,deleteDesc,external,detail,AvatarImg
+  isUpdateGroupImage,
+  recordId,objectTypeCode,sObjectName,deleteDesc,external,detail,AvatarImg,groudId,deleteInfo
 } = toRefs(data);
 const handleOpenNotes = () => {
   data.isNotes = true;
@@ -208,9 +223,15 @@ const handleAddAdmin = (e) => {
 };
 // 删除小组
 const handleDeleteGroup = () => {
-  data.isDelete = true;
+  data.deleteInfo={
+    recordId:route.query.GroupId,
+    objectTypeCode:'9',
+    sObjectName:'Group'
+  }
+  data.isDelete=true;
 };
 const closeDelete = (e) => {
+  data.deleteInfo.recordId='';
   data.isDelete = e;
 };
 const submitOk = (e) => {
@@ -218,12 +239,19 @@ const submitOk = (e) => {
 };
 const refreshPeople=(e)=>{
   getAdminData();
-  PersonnelLst.value.getQuery();
+  if(PersonnelLst.value&&PersonnelLst.value.getQuery){
+    PersonnelLst.value.getQuery();
+  }
 }
 const deleteOk = (e) => {
   data.isDelete = false;
   message.success("删除成功!");
-  window.location.href='/lightning/o/CollaborationGroup/list';
+  if(data.deleteInfo.objectTypeCode=='9'){
+    window.location.href='/lightning/o/CollaborationGroup/list';
+  }
+  else{
+    refreshPeople();
+  }
 };
 const closeUser = (e) => {
   data.isRadioUser = false;
@@ -232,30 +260,96 @@ const closeUser = (e) => {
 const getUserData = (params) => {
   console.log("params:", params);
   if (!data.isAdmin) {
-    proxy
-      .$get(Interface.group.addPeople, {
-        groupId: store.state.groupId,
-        userIds: params.id,
-        RoleCode: data.RoleCode,
-      })
-      .then((res) => {
-        message.success(res.msg);
-        data.isRadioUser = false;
+    // proxy
+    //   .$get(Interface.group.addPeople, {
+    //     groupId: store.state.groupId,
+    //     userIds: params.id,
+    //     RoleCode: data.RoleCode,
+    //   })
+    //   .then((res) => {
+    //     message.success(res.msg);
+    //     data.isRadioUser = false;
+    //     refreshPeople();
+    //   });
+
+        let url=Interface.create;
+        let d = {
+        actions:[{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName: 'GroupMembership',
+                objTypeCode: '90',
+                fields: {
+                    GroupId: data.groudId,
+                    RegardingObjectIdName: params.name,
+                    RegardingObjectId: params.id,
+                    RoleCode: data.RoleCode,
+                    RegardingObjectTypeCode:8
+                }
+              }              
+            }
+        }]
+    };
+    
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(url,obj).then(res=>{
+      data.isRadioUser = false;
+      if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+        message.success("添加成功！");
         refreshPeople();
-      });
+      }
+      
+    });
+
   }
 };
 const getAdminData = () => {
-  proxy
-    .$get(Interface.group.list, {
-      groupid: data.groudId,
-    })
-    .then((res) => {
-      data.peopleList = res.listData;
-      data.adminList = res.listData.filter((item) => {
-        return item.RoleCode == "2";
-      });
-    });
+  // proxy.$get(Interface.group.list, {
+  //     groupid: data.groudId,
+  //   }).then((res) => {
+  //       data.peopleList = res.listData;
+  //       data.adminList = res.listData.filter((item) => {
+  //       return item.RoleCode == "2";
+  //     });
+  //   });
+        let filterQuery='\nGroupId\teq\t'+data.groudId;
+        proxy.$post(Interface.list2, {
+            filterId:'',
+            objectTypeCode:'90',
+            entityName:'GroupMembership',
+            filterQuery:filterQuery,
+            search:'',
+            page: 1,
+            rows: 1000,
+            sort:'',
+            order:'',
+            displayColumns:'RegardingObjectIdName,PhotoUrl,FullName,BusinessUnitIdName,RoleCode,MobilePhone,EMailAddress,WorkStatus'
+        }).then(res => {
+            var list = [];
+            for (var i = 0; i < res.nodes.length; i++) {
+                var item = res.nodes[i];
+                for(var cell in item){
+                    if(cell!='id'&&cell!='nameField'&&cell!='PhotoUrl'){
+                        item[cell]=girdFormatterValue(cell,item);
+                    }
+                    if(cell=='RegardingObjectIdName'){
+                        item['FullName']=item[cell];
+                    }
+                }
+                list.push(item)
+                //console.log(item['PhotoUrl'])
+            }
+            data.peopleList = list;
+            data.adminList = list.filter((item) => {
+               return item.RoleCode == '管理员';
+            });
+        })
 };
 getAdminData();
 //编辑
@@ -266,6 +360,10 @@ const handleEdit = (key) => {
 const handleCommonCancel = (params) => {
     data.isCommon=false;
 };
+//更新头像
+const ChangeGroupImage=()=>{
+  data.isUpdateGroupImage= true;
+}
 onMounted(() => {
   getDetail();
 })
@@ -293,6 +391,16 @@ const getDetail = () => {
             }
         })
     }
+    
+// 删除成员
+const handleDeletePeople = (e) => {
+  data.deleteInfo={
+    recordId:e,
+    objectTypeCode:'90',
+    sObjectName:'GroupMembership'
+  }
+  data.isDelete = true;
+};
 </script>
 <style lang="less" scoped>
 @import "@/style/detail.less";
@@ -447,7 +555,7 @@ const getDetail = () => {
     .peopleItem {
       padding-left: 20px;
       padding: 13px 7px;
-
+      position: relative;
       .d-avatar {
         width: 50px;
         height: 50px;
@@ -466,7 +574,37 @@ const getDetail = () => {
         color: #1d2129;
         text-align: center;
       }
+
+      .editheadbg {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          border: 4px solid #fff;
+          margin: 0;
+          display: none;
+          background: #000;
+          opacity: 0.3;
+          position: absolute;
+          top: 14px;
+          left: 7px;
+        }
+
+        .edithead {
+          display: none;
+          position: absolute;
+          top: 30px;
+          left: 14px;
+          color: #fff;
+          font-size: 12px;
+        }
     }
   }
 }
+.peopleItem:hover {
+        .editheadbg,
+        .edithead {
+          display: block !important;
+        }
+      }
+
 </style>
