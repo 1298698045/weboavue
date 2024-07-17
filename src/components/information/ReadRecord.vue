@@ -15,10 +15,11 @@
                             <div class="leftAvatar">
                                 <a-avatar :size="37">
                                     <template #icon><UserOutlined /></template>
+                                    <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
                                 </a-avatar>
                             </div>
                             <div class="rightReadRecord">
-                                <div class="ReadRecordName">{{item.DeptName}} / {{item.ReaderName}}</div>
+                                <div class="ReadRecordName">{{item.DeptId?item.DeptId+' / ':''}}{{item.ReaderId}}</div>
                                 <div class="ReadRecordTime">
                                     {{item.CreatedOn}}
                                 </div>
@@ -26,7 +27,7 @@
                         </div>
                     </div>
                     <div class="pagination">
-                        <a-pagination v-model:current="page" :total="total" show-less-items />
+                        <a-pagination v-model:current="page" :total="total" show-less-items @change="ChangePage" :show-total="total => `共 ${total} 条`" />
                     </div>
                 </div>
             </div>
@@ -38,12 +39,15 @@
     import { UserOutlined } from "@ant-design/icons-vue";
     import { notification } from 'ant-design-vue';
     import Interface from "@/utils/Interface.js";
+    import { girdFormatterValue } from "@/utils/common.js";
+    import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
     const props = defineProps({
         isTitle: {
             default: true,
             type: Boolean
-        }
+        },
+        id:String
     })
     const data = reactive({
         listData: [],
@@ -51,19 +55,49 @@
         rows: 10,
         total: 0,
         ReadRecord: "",
+        searchVal:''
     })
     const { listData, page, rows, total, ReadRecord } = toRefs(data);
     const getReadRecordList = () => {
-        proxy.$get(Interface.information.readList,{
-            NewsId: data.id,
-            pageNumber: data.pageNumber,
-            pageSize: data.pageSize
-        }).then(res=>{
-            data.listData = res.listData;
-            data.total = res.total;
+        data.listData = [];
+        data.total = 0;
+        let filterQuery='\nContentId\teq\t'+props.id;
+        proxy.$post(Interface.list2, {
+            filterId:'',
+            objectTypeCode:'20023',
+            entityName:'ContentReaders',
+            filterQuery:filterQuery,
+            search:data.searchVal,
+            page: data.page,
+            rows: data.rows,
+            sort:'CreatedOn',
+            order:'desc',
+            displayColumns:'ReaderId,CreatedOn,DeptId,ImageUrls'
+        }).then(res => {
+            var list = [];
+            data.total = res.pageInfo?res.pageInfo.total:0;
+            for (var i = 0; i < res.nodes.length; i++) {
+                var item = res.nodes[i];
+                for(var cell in item){
+                    if(cell!='id'&&cell!='nameField'&&cell!='ImageUrls'){
+                        item[cell]=girdFormatterValue(cell,item);
+                    }
+                    if(cell=='ImageUrls'){
+                        item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
+                    }
+                }
+                list.push(item)
+            }
+            data.listData = list;
+            
         })
     }
-    getReadRecordList();    
+    getReadRecordList();
+    //改变页码
+    const ChangePage=(page, pageSize)=>{
+        data.page=page;
+        getCommentList();
+    }
 </script>
 <style lang="less">
     .ReadRecordWrap{

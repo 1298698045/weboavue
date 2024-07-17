@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="calendarBody">
-            <div class="leftMenuWrapper">
+            <!-- <div class="leftMenuWrapper">
                 <div class="leftTabMenu" :class="{'active':current==0}" @click="current=0">
                     <div class="menuIcon">
                         <i class="iconfont icon-rililiebiao"></i>
@@ -30,7 +30,7 @@
                         日历
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="calendarRight">
                 <ListView v-if="current==0" />
                 <CalendarVue v-if="current==1" />

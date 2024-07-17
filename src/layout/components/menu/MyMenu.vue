@@ -75,6 +75,7 @@ const getCurrentApp = () => {
       return item;
     });
     let routePath = localStorage.getItem("routePath");
+    //routePath=''
     if(routePath){
       router.push({
         path: routePath

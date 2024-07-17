@@ -15,11 +15,11 @@
                     <tbody>
                         <tr v-for="(item,index) in roomList" :key="index">
                             <td>
-                                <div class="roomName">{{item.Name}}</div>
+                                <div class="roomName">{{item.meetingRoom?item.meetingRoom.Name:''}}</div>
                             </td>
                             <td v-for="(row, idx) in weekList" :key="idx" :class="{'active':isToDay(row)}">
                                 <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
-                                v-for="(col, colIdx) in item.Reserves" :key="colIdx">
+                                v-for="(col, colIdx) in item.meetingItems" :key="colIdx">
                                     <template #icon></template>
                                     <template #title>
                                         <div class="meetingMessageWrap">
@@ -27,13 +27,13 @@
                                                 <div class="meetingLogo">
                                                     <img :src="require('@/assets/img/meeting.png')" alt="">
                                                 </div>
-                                                <p class="meetingName">{{col.Name}}</p>
+                                                <p class="meetingName">{{col.Subject}}</p>
                                             </div>
                                             <div class="meetingBody">
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
                                                         召集人：
-                                                        <span class="OwningUserName">{{col.CreatedByName}}</span>
+                                                        <span class="OwningUserName">{{col.Who}}</span>
                                                     </div>
                                                     <div class="meetingInfoItem">
                                                         联系电话：
@@ -43,23 +43,23 @@
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
                                                         会议室：
-                                                        <span class="OwningUserName">{{ col.RoomIdName }}</span>
+                                                        <span class="OwningUserName">{{ item.meetingRoom?item.meetingRoom.Name:'' }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
                                                         会议设备：
-                                                        <span class="OwningUserName">jackliu3</span>
+                                                        <span class="OwningUserName"></span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
                                                         开始：
-                                                        <span class="OwningUserName">{{col.ScheduledStart}}</span>
+                                                        <span class="OwningUserName">{{col.StartDateTime}}</span>
                                                     </div>
                                                     <div class="meetingInfoItem">
                                                         结束：
-                                                        <span class="TelePhone">{{col.ScheduledEnd}}</span>
+                                                        <span class="TelePhone">{{col.EndDateTime}}</span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
@@ -76,8 +76,8 @@
                                     </template>
                                     <div class="meetingBox" v-if="showMeeting(col, row)">
                                         <div class="meetingItem">
-                                            <p class="name">{{col.Name}}</p>
-                                            <p>{{col.ScheduledStartTime}}-{{col.ScheduledEndTime}} {{col.CreatedByName}}预约</p>
+                                            <p class="name">{{col.Subject}}</p>
+                                            <p>{{col.StartDateTime}}-{{col.EndDateTime}} {{col.Who}}预约</p>
                                         </div>
                                     </div>
                                 </a-popconfirm>
@@ -122,7 +122,10 @@
     const { proxy } = getCurrentInstance();
 
     const props = defineProps({
-        week: Array
+        week: Array,
+        startDateTime:String,
+        endDateTime:String,
+        calendarType:String
     })
     const data = reactive({
         height: "",
@@ -134,7 +137,8 @@
 
     });
     const showMeeting = (col, row) => {
-        return col.ScheduledStartDate == row ? true : false;
+        var date = dayjs(col.StartDateTime).format("YYYY-MM-DD");
+        return date == row ? true : false;
     }
     const weeks = toRaw(['周日', '周一', '周二', '周三', '周四', '周五', '周六']);
     const { height, weekList, meetingList, times, roomList } = toRefs(data);
@@ -171,15 +175,38 @@
         data.weekList = newVal;
     },{deep: true, immediate: true})
     const countTop = (row) => {
-        let index = data.times.findIndex(item => item == row.ScheduledStartTime);
+        var time = dayjs(row.StartDateTime).format("HH:mm");
+        let index = data.times.findIndex(item => item == time);
         // console.log("index",index);
         return (index + 1) * 2 * 30 + "px";
     }
 
     const getMeetingRoom = () => {
-        proxy.$get(Interface.meetingRoom.roomList,{}).then(res=>{
-            console.log("res",res);
-            data.roomList = res.listData;
+        // proxy.$get(Interface.meetingRoom.roomList,{}).then(res=>{
+        //     console.log("res",res);
+        //     data.roomList = res.listData;
+        // })
+        let d = {
+            actions:[{
+                "id": "5764;a",
+                "descriptor": "",
+                "callingDescriptor": "UNKNOWN",
+                "params": {
+                    "startDateTime": props.startDateTime,
+                    "endDateTime": props.endDateTime,
+                    "calendarType": 'week',
+                    "queryMeetings": true
+                }
+
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.meetingRoom.roomList,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
+                data.roomList=res.actions[0].returnValue;
+            }
         })
     }
     getMeetingRoom();
@@ -208,7 +235,7 @@
             console.log("obj", obj)
         })
     }
-    getQuery();
+    //getQuery();
 </script>
 <style lang="less" scoped>
     .weekWrap {

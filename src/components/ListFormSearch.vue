@@ -11,7 +11,7 @@
                 <a-input v-model:value="formState.username" />
             </a-form-item> -->
             <div class="searchItem" v-for="(item,index) in searchFields" :key="index">
-                <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='S'">
+                <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='S'||item.dataType=='X'">
                     <a-input class="radiusNone" :placeholder="item.label" v-model:value="formState[item.column]" />
                 </a-form-item>
                 <!-- <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='N'">
@@ -28,9 +28,9 @@
                         <a-select-option v-for="(row, idx) in item.picklistValues" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-form-item class="formTime" :name="item.column" :label="item.label" v-else-if="item.dataType=='F'">
+                <a-form-item class="formTime" :name="item.column" :label="item.label" v-else-if="item.dataType=='F'||item.dataType=='D'">
                     <!--  v-if="item.dateTypeCurrent.value=='default'" v-model:value="formState[item.column]" -->
-                    <a-range-picker style="border-right: none;" class="radiusNone" valueFormat="YYYY-MM-DD" :disabled="item.dateTypeCurrent.value=='default'?false:true" @change="(e)=>{changeRangeDate(e,item)}" />
+                    <a-range-picker style="border-right: none;" class="radiusNone" valueFormat="YYYY-MM-DD" :disabled="item.dateTypeCurrent&&item.dateTypeCurrent.value=='default'?false:true" @change="(e)=>{changeRangeDate(e,item)}" />
                     <a-dropdown class="radiusNone">
                         <template #overlay>
                           <a-menu>
@@ -40,7 +40,7 @@
                           </a-menu>
                         </template>
                         <a-button class="downBtn">
-                          {{item.dateTypeCurrent.label}}
+                          {{item.dateTypeCurrent?item.dateTypeCurrent.label:'自定义'}}
                           <DownOutlined />
                         </a-button>
                       </a-dropdown>
@@ -108,15 +108,15 @@
         var filterQuery = "";
         data.searchFields.forEach(item=>{
             if(values[item.column]!=''&&values[item.column]!='undefined'&&values[item.column]!=undefined){
-                if(item.dataType=='F'){
-                    if(item.dateTypeCurrent.value=='default'){
+                if(item.dataType=='F'||item.dataType=='D'){
+                    if(item.dateTypeCurrent&&item.dateTypeCurrent.value=='default'){
                         if(values[item.column].length){
                             filterQuery += "\n" + item.column + "\tbetween\t" + values[item.column];
                         }
                     }else {
                         filterQuery += "\n" + item.column + "\t" + values[item.column];
                     }
-                }else if(item.dataType=='S'){
+                }else if(item.dataType=='S'||item.dataType=='X'){
                     filterQuery += "\n" + item.column + "\tcontains\t" + values[item.column];
                 }else {
                     filterQuery += "\n" + item.column + "\teq\t" + values[item.column];
@@ -258,7 +258,7 @@
             })
             data.searchFields.forEach(item => {
                 formState[item.column] = "";
-                if(item.dataType=='F'){
+                if(item.dataType=='F'||item.dataType=='D'){
                     item.dateTypeCurrent = {
                         value: "default",
                         label: "自定义"

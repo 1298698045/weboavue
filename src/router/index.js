@@ -417,6 +417,26 @@ const routes = [
         },
       },
       {
+        path: "/lightning/o/MyMeeting/list",
+        name: "MeetingList",
+        component: () => import("../views/meeting/list/index.vue"),
+        icon: "rili",
+        meta: {
+          name: "我的会议",
+          icon: "rili",
+        },
+      },
+      {
+        path: "/lightning/o/Meeting/Approve",
+        name: "MeetingApprove",
+        component: () => import("../views/meeting/approve/index.vue"),
+        icon: "rili",
+        meta: {
+          name: "会议审批",
+          icon: "rili",
+        },
+      },
+      {
         path: "/025/c",
         name: "ResApply",
         component: () =>
@@ -438,7 +458,7 @@ const routes = [
         },
       },
       {
-        path: "/meeting/search",
+        path: "/lightning/o/Meeting/search",
         name: "SearchMeeting",
         component: () => import("../views/meeting/search/index.vue"),
         icon: "MeetingSearch",

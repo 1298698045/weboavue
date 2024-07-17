@@ -13,7 +13,7 @@
       </div>
       <div class="todo-content">
         <a-row>
-          <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">
+          <!-- <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">
             <div class="wea-left-tree">
               <div class="wea-left-tree-search">
                 <a-input-search v-model:value="data.searchVal" placeholder="" @search="onSearch" />
@@ -28,25 +28,15 @@
                     </CaretDownOutlined>
                   </template>
                   <template v-slot:title="{ name, data, isLeaf, text, quantity }">
-                    <!-- <span v-if="name.indexOf(searchValue) > -1">
-                      {{ name.substr(0, name.indexOf(searchValue)) }}
-                      {{
-                      name.substr(
-                      name.indexOf(searchValue) + searchValue.length
-                      )
-                      }}
-                      <span class="tree-num">{{ quantity }}</span>
-                    </span>
-                    <span v-else>{{ name }}</span> -->
                     <span>{{ name }}<span class="tree-num">{{ quantity }}</span></span>
                   </template>
                 </a-tree>
               </div>
             </div>
-          </a-col>
+          </a-col> -->
           <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
-            <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
-              :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
+            <!-- <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
+              :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div> -->
             <div style="height: 100%" ref="contentRef">
               <div class="wea-tab">
                 <a-tabs v-model:activeKey="activeKey" @change="changeTab">
@@ -199,24 +189,24 @@
     //   gData.value = listData;
     //   gDataAll.value = listData;
     // })
-    proxy.$get(Interface.documentAdmin.tree,{
-        entity: "docouttype"
-    }).then((res)=>{
-        let listData = formTreeData(res.rows,'id','pid');
-        let formTree = (list) => {
-            list.forEach(item => {
-            if (item.children) {
-                formTree(item.children);
-            }
-            item.key = item.id;
-            item.value = item.id;
-            item.name = item.text;
-            })
-        }
-        formTree(listData);
-        gData.value = listData;
-        gDataAll.value = listData;
-    })
+    // proxy.$get(Interface.documentAdmin.tree,{
+    //     entity: "docouttype"
+    // }).then((res)=>{
+    //     let listData = formTreeData(res.rows,'id','pid');
+    //     let formTree = (list) => {
+    //         list.forEach(item => {
+    //         if (item.children) {
+    //             formTree(item.children);
+    //         }
+    //         item.key = item.id;
+    //         item.value = item.id;
+    //         item.name = item.text;
+    //         })
+    //     }
+    //     formTree(listData);
+    //     gData.value = listData;
+    //     gDataAll.value = listData;
+    // })
     // console.log("genData",genData,treeList)
   
     const onExpand = (keys) => {
@@ -238,7 +228,7 @@
     // });
   
     let data = reactive({
-      isCollapsed: false,
+      isCollapsed: true,
       tableHeight: '',
       fieldNames: {
         children: 'children', title: 'name', key: 'id'
@@ -725,6 +715,12 @@
         :where(.css-dev-only-do-not-override-kqecok).ant-col-19{
             max-width:100% !important;
             flex: 1;
+        }
+        :where(.css-dev-only-do-not-override-kqecok).ant-input{
+            border-color: #d9d9d9;
+        }
+        .ant-row .wea-left-right-layout-left .wea-left-tree .wea-left-tree-scroll .ant-tree-treenode:hover .tree-num{
+            display: none;
         }
     }
   </style>

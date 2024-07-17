@@ -81,13 +81,13 @@
                                             <div class="meetingLogo">
                                                 <img :src="require('@/assets/img/meeting.png')" alt="">
                                             </div>
-                                            <p class="meetingName">{{row.Name}}</p>
+                                            <p class="meetingName">{{row.Subject}}</p>
                                         </div>
                                         <div class="meetingBody">
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
                                                     召集人：
-                                                    <span class="OwningUserName">{{row.CreatedByName}}</span>
+                                                    <span class="OwningUserName">{{row.Who}}</span>
                                                 </div>
                                                 <div class="meetingInfoItem">
                                                     联系电话：
@@ -97,23 +97,23 @@
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
                                                     会议室：
-                                                    <span class="OwningUserName">{{ row.RoomIdName }}</span>
+                                                    <span class="OwningUserName">{{ row.Where }}</span>
                                                 </div>
                                             </div>
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
                                                     会议设备：
-                                                    <span class="OwningUserName">jackliu3</span>
+                                                    <span class="OwningUserName"></span>
                                                 </div>
                                             </div>
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
                                                     开始：
-                                                    <span class="OwningUserName">{{row.ScheduledStart}}</span>
+                                                    <span class="OwningUserName">{{row.StartDateTime}}</span>
                                                 </div>
                                                 <div class="meetingInfoItem">
                                                     结束：
-                                                    <span class="TelePhone">{{row.ScheduledEnd}}</span>
+                                                    <span class="TelePhone">{{row.EndDateTime}}</span>
                                                 </div>
                                             </div>
                                             <div class="meetingInfo">
@@ -129,8 +129,8 @@
                                     </div>
                                 </template>
                                 <div class="eventItem" :style="{top:countTop(row)}">
-                                    <p>{{row.Name}}</p>
-                                    <p>{{row.ScheduledStartTime}}-{{row.ScheduledEndTime}} {{row.CreatedByName}}预约</p>
+                                    <p>{{row.Subject}}</p>
+                                    <p>{{row.StartDateTime}}-{{row.EndDateTime}} {{row.Who}}预约</p>
                                 </div>
                             </a-popconfirm>
                         </div>
@@ -192,7 +192,10 @@
     const emit = defineEmits(['openWeekNew']);
 
     const props = defineProps({
-        week: Array
+        week: Array,
+        startDateTime:String,
+        endDateTime:String,
+        calendarType:String
     })
     const data = reactive({
         height: "",
@@ -275,7 +278,8 @@
         data.weekList = newVal;
     },{deep: true, immediate: true})
     const countTop = (row) => {
-        let index = data.times.findIndex(item => item == row.ScheduledStartTime);
+        var time = dayjs(row.StartDateTime).format("HH:mm");
+        let index = data.times.findIndex(item => item == time);
         // console.log("index",index);
         return (index + 1) * 2 * 30 + "px";
     }
@@ -283,30 +287,42 @@
 
 
     const getQuery = () => {
-        let startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
-        let endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
-        proxy.$get(Interface.meeting.getall, {
-            startTime: startTime,
-            endTime: endTime,
-            MeetingType: "",
-            employeeId: "",
-            StatusCode: ""
-        }).then(res => {
-            let meetingItems = res.returnValue.meetings[0].meetingItems;
-            let obj = {};
-            meetingItems.forEach(item => {
-                let daydate = dayjs(item.ScheduledStartDate).format('YYYY-MM-DD');
-                console.log("daydate", daydate);
-                if (!obj[daydate]) {
-                    obj[daydate] = [];
+        let d = {
+            actions:[{
+                "id": "5764;a",
+                "descriptor": "",
+                "callingDescriptor": "UNKNOWN",
+                "params": {
+                    "startDateTime": props.startDateTime,
+                    "endDateTime": props.endDateTime,
+                    "calendarType": 'week',
+                    "queryMeetings": true
                 }
-                obj[daydate].push(item);
-            })
-            data.meetingList = obj;
-            console.log("obj", obj)
+
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.meeting.getall,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
+                        let meetingItems = res.actions[0].returnValue;
+                        let obj = {};
+                        meetingItems.forEach(item=>{
+                            let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
+                            console.log("daydate",daydate);
+                            if(!obj[daydate]){
+                                obj[daydate] = [];
+                            }
+                            obj[daydate].push(item);
+                        })
+                        data.meetingList = obj;
+                        console.log("obj",obj)
+            }
         })
     }
     getQuery();
+    defineExpose({getQuery})
 </script>
 <style lang="less">
     .weekWrap {

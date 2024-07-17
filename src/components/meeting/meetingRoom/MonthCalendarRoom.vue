@@ -12,7 +12,7 @@
             <div class="monthCalendarBody">
                 <div class="calendarFixed" :style="{height:height+'px'}" ref="leftRef">
                     <strong v-for="(item,index) in roomList" :key="index" :style="{height: item.height+'px'}">
-                        <span>{{item.Name}}</span>
+                        <span>{{item.meetingRoom?item.meetingRoom.Name:''}}</span>
                     </strong>
                 </div>
                 <div class="tableWrap" ref="contentRef">
@@ -22,7 +22,7 @@
                                 <tr v-for="(item,index) in roomList" :key="index"  :ref="(el) => setItemRefs(el, item, index)">
                                     <td v-for="(row,idx) in monthDayList" :key="idx">
                                         <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
-                                            v-for="(col, colIdx) in item.Reserves" :key="colIdx">
+                                            v-for="(col, colIdx) in item.meetingItems" :key="colIdx">
                                             <template #icon></template>
                                             <template #title>
                                                 <div class="meetingMessageWrap">
@@ -30,14 +30,14 @@
                                                         <div class="meetingLogo">
                                                             <img :src="require('@/assets/img/meeting.png')" alt="">
                                                         </div>
-                                                        <p class="meetingName">{{col.Name}}</p>
+                                                        <p class="meetingName">{{col.Subject}}</p>
                                                     </div>
                                                     <div class="meetingBody">
                                                         <div class="meetingInfo">
                                                             <div class="meetingInfoItem">
                                                                 召集人：
                                                                 <span
-                                                                    class="OwningUserName">{{col.CreatedByName}}</span>
+                                                                    class="OwningUserName">{{col.Who}}</span>
                                                             </div>
                                                             <div class="meetingInfoItem">
                                                                 联系电话：
@@ -47,24 +47,24 @@
                                                         <div class="meetingInfo">
                                                             <div class="meetingInfoItem">
                                                                 会议室：
-                                                                <span class="OwningUserName">{{ col.RoomIdName }}</span>
+                                                                <span class="OwningUserName">{{ item.meetingRoom?item.meetingRoom.Name:'' }}</span>
                                                             </div>
                                                         </div>
                                                         <div class="meetingInfo">
                                                             <div class="meetingInfoItem">
                                                                 会议设备：
-                                                                <span class="OwningUserName">jackliu3</span>
+                                                                <span class="OwningUserName"></span>
                                                             </div>
                                                         </div>
                                                         <div class="meetingInfo">
                                                             <div class="meetingInfoItem">
                                                                 开始：
                                                                 <span
-                                                                    class="OwningUserName">{{col.ScheduledStart}}</span>
+                                                                    class="OwningUserName">{{col.StartDateTime}}</span>
                                                             </div>
                                                             <div class="meetingInfoItem">
                                                                 结束：
-                                                                <span class="TelePhone">{{col.ScheduledEnd}}</span>
+                                                                <span class="TelePhone">{{col.EndDateTime}}</span>
                                                             </div>
                                                         </div>
                                                         <div class="meetingInfo">
@@ -81,9 +81,9 @@
                                             </template>
                                             <div class="meetingBox" v-if="showMeeting(col,row)">
                                                 <div class="meetingItem">
-                                                    <p class="name">{{col.Name}}</p>
-                                                    <p>{{col.ScheduledStartTime}}-{{col.ScheduledEndTime}}
-                                                        {{col.CreatedByName}}预约</p>
+                                                    <p class="name">{{col.Subject}}</p>
+                                                    <p>{{col.StartDateTime}}-{{col.EndDateTime}}
+                                                        {{col.Who}}预约</p>
                                                 </div>
                                             </div>
                                         </a-popconfirm>
@@ -136,7 +136,10 @@
         height: 0
     });
     const props = defineProps({
-        width: [String, Number]
+        width: [String, Number],
+        startDateTime:String,
+        endDateTime:String,
+        calendarType:String
     })
     const { monthDayList, roomList, width, height } = toRefs(data);
     const contentRef = ref(null);
@@ -161,17 +164,48 @@
         }
     }
     const getMeetingRoom = () => {
-        proxy.$get(Interface.meetingRoom.roomList, {}).then(res => {
-            data.roomList = res.listData.map(item=>{
-                item.height = 0;
-                return item;
-            });
-            nextTick(()=>{
-                data.roomList.forEach((item,index)=>{
-                    console.log('itemRefs', itemRefs[index].el.clientHeight);
-                    item.height = itemRefs[index].el.clientHeight;
-                })
-            })
+        // proxy.$get(Interface.meetingRoom.roomList, {}).then(res => {
+        //     data.roomList = res.listData.map(item=>{
+        //         item.height = 0;
+        //         return item;
+        //     });
+        //     nextTick(()=>{
+        //         data.roomList.forEach((item,index)=>{
+        //             console.log('itemRefs', itemRefs[index].el.clientHeight);
+        //             item.height = itemRefs[index].el.clientHeight;
+        //         })
+        //     })
+        // })
+        let d = {
+            actions:[{
+                "id": "5764;a",
+                "descriptor": "",
+                "callingDescriptor": "UNKNOWN",
+                "params": {
+                    "startDateTime": props.startDateTime,
+                    "endDateTime": props.endDateTime,
+                    "calendarType": 'month',
+                    "queryMeetings": true
+                }
+
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.meetingRoom.roomList,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
+                    data.roomList = res.actions[0].returnValue.map(item=>{
+                        item.height = 0;
+                        return item;
+                    });
+                    nextTick(()=>{
+                        data.roomList.forEach((item,index)=>{
+                            console.log('itemRefs', itemRefs[index].el.clientHeight);
+                            item.height = itemRefs[index].el.clientHeight;
+                        })
+                    })
+            }
         })
     }
     getMeetingRoom();
@@ -210,9 +244,9 @@
 
     const showMeeting = (col,row) => {
         // console.log(col,row);
-        // var date = dayjs(col.ScheduledStartDate).format("YYYY-MM-DD");
+        var date = dayjs(col.StartDateTime).format("YYYY-MM-DD");
         // console.log("date",date, row);
-        return col.ScheduledStartDate == row ? true : false;
+        return date == row ? true : false;
     }
 </script>
 <style lang="less" scoped>

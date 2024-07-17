@@ -159,7 +159,7 @@
         emit("cancel", false);
     };
     const data = reactive({
-        title: "新建部门变动",
+        title: "",
         layoutList: [],
         list: {},
         select: {},

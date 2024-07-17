@@ -12,9 +12,9 @@
                     </div>
                     <div class="calendar-selectlist">
                         <div class="calendar-typechook">
-                            <li :class="{'active':calendarType==0}" @click="calendarType=0">日</li>
-                            <li :class="{'active':calendarType==1}" @click="calendarType=1">周</li>
-                            <li :class="{'active':calendarType==2}" @click="calendarType=2">月</li>
+                            <li :class="{'active':calendarType==0}" @click="calendarTypeChnage(0)">日</li>
+                            <li :class="{'active':calendarType==1}" @click="calendarTypeChnage(1)">周</li>
+                            <li :class="{'active':calendarType==2}" @click="calendarTypeChnage(2)">月</li>
                         </div>
                     </div>
                     <div class="formItem ml10" v-if="calendarType==0">
@@ -47,9 +47,9 @@
                 </div>
             </div>
             <div class="calendarBody" ref="contentRef">
-                <DayCalendar v-if="calendarType==0"/>
-                <WeekVue v-if="calendarType==1" :week="week" />
-                <MonthCalendar v-if="calendarType==2" :width="width" />
+                <DayCalendar v-if="calendarType==0" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" />
+                <WeekVue v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" />
+                <MonthCalendar v-if="calendarType==2" :width="width" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" />
             </div>
         </div>
         <NewMeeting :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" />
@@ -126,23 +126,40 @@
         userListTree: [],
         meetingList: {},
         monthValue: dayjs(new Date(), monthFormat),
-        calendarType: 0,
+        calendarType: 2,
         currentTime: dayjs(),
         startWeekTime: "",
         endWeekTime: "",
         week: [],
         isNewMeeting: false,
         isRepeatMeeting: false,
-        width: 0
+        width: 0,
+        startTime:'',
+        endTime:''
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
-         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, width} = toRefs(data);
+         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, width,startTime,endTime} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const contentRef = ref(null);
     onMounted(()=>{
         console.log("contentRef",contentRef.value.clientWidth)
         data.width = contentRef.value.clientWidth;
     })
+    const calendarTypeChnage=(e)=>{
+        data.calendarType=e;
+        if(e==2){
+            data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
+            data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
+        }
+        else if(e==1){
+            data.startTime = dayjs(data.startWeekTime).format("YYYY-MM-DD");
+            data.endTime = dayjs(data.endWeekTime).format("YYYY-MM-DD");
+        }
+        else if(e==0){
+            data.startTime = dayjs(data.currentTime || new Date()).startOf("day").format("YYYY-MM-DD");
+            data.endTime = dayjs(data.currentTime || new Date()).endOf('day').format('YYYY-MM-DD');
+        }
+    }
     const backFn = (list) => {
         var len = list.length;
         var index = Math.floor(Math.random() * len);
@@ -297,28 +314,28 @@
         getQuery();
     }
     const getQuery = ()=> {
-        let startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
-        let endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
-        proxy.$get(Interface.meeting.getall,{
-            startTime: startTime,
-            endTime: endTime,
-            MeetingType: "",
-            employeeId: "",
-            StatusCode: ""
-        }).then(res=>{
-            let meetingItems = res.returnValue.meetings[0].meetingItems;
-            let obj = {};
-            meetingItems.forEach(item=>{
-                let daydate = dayjs(item.ScheduledStartDate).format('DD');
-                console.log("daydate",daydate);
-                if(!obj[daydate]){
-                    obj[daydate] = [];
-                }
-                obj[daydate].push(item);
-            })
-            data.meetingList = obj;
-            console.log("obj",obj)
-        })
+        data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
+        data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
+        // proxy.$get(Interface.meeting.getall,{
+        //     startTime: startTime,
+        //     endTime: endTime,
+        //     MeetingType: "",
+        //     employeeId: "",
+        //     StatusCode: ""
+        // }).then(res=>{
+        //     let meetingItems = res.returnValue.meetings[0].meetingItems;
+        //     let obj = {};
+        //     meetingItems.forEach(item=>{
+        //         let daydate = dayjs(item.ScheduledStartDate).format('DD');
+        //         console.log("daydate",daydate);
+        //         if(!obj[daydate]){
+        //             obj[daydate] = [];
+        //         }
+        //         obj[daydate].push(item);
+        //     })
+        //     data.meetingList = obj;
+        //     console.log("obj",obj)
+        // })
     }
     getQuery();
     // 关闭新建

@@ -217,8 +217,10 @@
     columns: [],
     actionList: [],
     listViewActions: [],
-    entityType: "a1K",
+    entityType: "00W",
     filterQuery: "",
+    objectTypeCode:'5001',
+    entityName:'MeetingItem',
     isNewModal: false,
     isExportModal: false,
     isCopyModal: false,
@@ -279,6 +281,8 @@
       columns: [columns],
       queryParams: {
         filterQuery: data.filterQuery,
+        entityType: data.entityType,
+        objectTypeCode: data.objectTypeCode
       },
       // data: tableList,
       singleSelect: false,

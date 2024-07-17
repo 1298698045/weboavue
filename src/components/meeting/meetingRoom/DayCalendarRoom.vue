@@ -6,7 +6,7 @@
                     时间
                 </div>
                 <div class="calendarDayHeaders">
-                    <div class="weekDayHeadItem" v-for="(item,index) in roomList" :key="index">{{item.Name}}</div>
+                    <div class="weekDayHeadItem" v-for="(item,index) in roomList" :key="index">{{item.meetingRoom?item.meetingRoom.Name:''}}</div>
                 </div>
             </div>
             <div class="weekCalendarBody" ref="weekRef">
@@ -72,7 +72,7 @@
                     <div class="calendarDay" v-for="(item,index) in roomList" :key="index">
                         <div class="eventList"  :style="{height: height+'px'}">
                             <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
-                                v-for="(row,idx) in item.Reserves" :key="idx">
+                                v-for="(row,idx) in item.meetingItems" :key="idx">
                                 <template #icon></template>
                                 <template #title>
                                     <div class="meetingMessageWrap">
@@ -80,13 +80,13 @@
                                             <div class="meetingLogo">
                                                 <img :src="require('@/assets/img/meeting.png')" alt="">
                                             </div>
-                                            <p class="meetingName">{{row.Name}}</p>
+                                            <p class="meetingName">{{row.Subject}}</p>
                                         </div>
                                         <div class="meetingBody">
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
                                                     召集人：
-                                                    <span class="OwningUserName">{{row.CreatedByName}}</span>
+                                                    <span class="OwningUserName">{{row.Who}}</span>
                                                 </div>
                                                 <div class="meetingInfoItem">
                                                     联系电话：
@@ -96,23 +96,23 @@
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
                                                     会议室：
-                                                    <span class="OwningUserName">{{ row.RoomIdName }}</span>
+                                                    <span class="OwningUserName">{{ item.meetingRoom?item.meetingRoom.Name:'' }}</span>
                                                 </div>
                                             </div>
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
                                                     会议设备：
-                                                    <span class="OwningUserName">jackliu3</span>
+                                                    <span class="OwningUserName"></span>
                                                 </div>
                                             </div>
                                             <div class="meetingInfo">
                                                 <div class="meetingInfoItem">
                                                     开始：
-                                                    <span class="OwningUserName">{{row.ScheduledStart}}</span>
+                                                    <span class="OwningUserName">{{row.StartDateTime}}</span>
                                                 </div>
                                                 <div class="meetingInfoItem">
                                                     结束：
-                                                    <span class="TelePhone">{{row.ScheduledEnd}}</span>
+                                                    <span class="TelePhone">{{row.EndDateTime}}</span>
                                                 </div>
                                             </div>
                                             <div class="meetingInfo">
@@ -128,8 +128,8 @@
                                     </div>
                                 </template>
                                 <div class="eventItem" :style="{top:countTop(row)}">
-                                    <p>{{row.Name}}</p>
-                                    <p>{{row.ScheduledStartTime}}-{{row.ScheduledEndTime}} {{row.CreatedByName}}预约</p>
+                                    <p>{{row.Subject}}</p>
+                                    <p>{{row.StartDateTime}}-{{row.EndDateTime}} {{row.Who}}预约</p>
                                 </div>
                             </a-popconfirm>
                         </div>
@@ -172,7 +172,10 @@
     const { proxy } = getCurrentInstance();
 
     const props = defineProps({
-        week: Array
+        week: Array,
+        startDateTime:String,
+        endDateTime:String,
+        calendarType:String
     })
     const data = reactive({
         height: "",
@@ -189,9 +192,31 @@
     })
 
     const getMeetingRoom = () => {
-        proxy.$get(Interface.meetingRoom.roomList,{}).then(res=>{
-            console.log("res",res);
-            data.roomList = res.listData;
+        // proxy.$get(Interface.meetingRoom.roomList,{}).then(res=>{
+        //     console.log("res",res);
+        //     data.roomList = res.listData;
+        // })
+        let d = {
+            actions:[{
+                "id": "5764;a",
+                "descriptor": "",
+                "callingDescriptor": "UNKNOWN",
+                "params": {
+                    "startDateTime": props.startDateTime,
+                    "endDateTime": props.endDateTime,
+                    "calendarType": 'day',
+                    "queryMeetings": true
+                }
+
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.meetingRoom.roomList,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
+                data.roomList=res.actions[0].returnValue;
+            }
         })
     }
     getMeetingRoom();
@@ -203,7 +228,8 @@
         return currentTime == time ? true : false;
     }
     const countTop = (row) => {
-        let index = data.times.findIndex(item => item == row.ScheduledStartTime);
+        var time = dayjs(row.StartDateTime).format("HH:mm");
+        let index = data.times.findIndex(item => item == time);
         return (index + 1) * 2 * 30 + "px";
     }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="AddGroup" ref="AddGroup">
-    <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+    <a-modal v-model:open="props.isShow" width="650px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit" class="AddGroupModel">
       <template #title>
         <div v-if="step==0">
           {{ title }}
@@ -14,15 +14,40 @@
       </template>
       <div class="modalContainer">
         <div class="modalCenter" :style="{ height: height + 'px!important' }" v-if="step==0">
+          <div class="form-legend-desktop">
+            <abbr class="required">*</abbr>
+            = 必填信息
+          </div>
           <a-form :model="formState" ref="formRef" class="formRef">
             <div class="section">
-              <div class="sectionTitle">基本信息</div>
+              <div class="sectionTitle">小组详细信息</div>
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="Name" label="名称" :rules="[{ required: true, message: '请输入' }]">
                       <a-input v-model:value="formState.Name"></a-input>
                   </a-form-item>
                 </div>
+              </div>
+              <div class="sectionRow">
+                  <div class="sectionItem">
+                      <a-form-item name="Description" label="描述">
+                          <a-textarea :rows="4" placeholder="请输入" v-model:value="formState.Description" />
+                      </a-form-item>
+                  </div>
+              </div>
+              <div class="sectionRow">
+                  <div class="sectionItem">
+                      <a-form-item name="Notice" label="信息">
+                        <TEditor
+                          :placeholder="'请输入'"
+                          @input="getInputContent"
+                          ref="editorRef"
+                        />
+                          <!-- <a-textarea :rows="4" placeholder="请输入" v-model:value="formState.Notice" /> -->
+                      </a-form-item>
+                  </div>
+              </div>
+              <!-- <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="BusinessUnitId" label="部门" :rules="[{ required: true, message: '请选择' }]">
                       <a-select v-model:value="formState.BusinessUnitId.Id" 
@@ -35,7 +60,7 @@
                       </div>
                   </a-form-item>
                 </div>
-              </div>
+              </div> -->
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="OwningUser" label="所有人" :rules="[{ required: true, message: '请选择' }]">
@@ -49,8 +74,11 @@
                       </div>
                   </a-form-item>
                 </div>
+                
+              </div>
+              <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="ImportSequenceNumber" label="顺序" :rules="[{ required: true, message: '请输入' }]">
+                  <a-form-item name="ImportSequenceNumber" label="顺序">
                       <a-input v-model:value="formState.ImportSequenceNumber"></a-input>
                   </a-form-item>
                 </div>
@@ -71,6 +99,9 @@
                   </a-form-item>
                 </div>
               </div> -->
+            </div>
+            <div class="section">
+              <div class="sectionTitle">小组访问权限</div>
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="IsPublic" label="是否公开">
@@ -83,16 +114,6 @@
 
                   </a-form-item> -->
                 </div>
-              </div>
-            </div>
-            <div class="section">
-              <div class="sectionTitle">备注</div>
-              <div class="sectionRow">
-                  <div class="sectionItem">
-                      <a-form-item name="Description" label="描述">
-                          <a-textarea :rows="4" placeholder="请输入" v-model:value="formState.Description" />
-                      </a-form-item>
-                  </div>
               </div>
             </div>
           </a-form>
@@ -164,6 +185,9 @@
                             {{ index + 1 }}
                           </div>
                         </template>
+                        <div v-if="column.key=='AvatarImg'">
+                            <img :src="text||require('@/assets/img/avatar-r.png')" alt="" class="AddGroup_list_avatar"/>
+                        </div>
                       </template>
                     </a-table>
                 </div>
@@ -215,6 +239,7 @@
   import RadioUser from "@/components/commonModal/MultipleUser.vue";
   import Delete from "@/components/listView/Delete.vue";
   import { useRouter, useRoute } from "vue-router";
+  import TEditor from "@/components/TEditor.vue";
   const router = useRouter();
   const { proxy } = getCurrentInstance();
   console.log(document.documentElement.clientHeight);
@@ -225,6 +250,7 @@
     id: String,
     type: String,
   });
+  const editorRef = ref();
   const formRef = ref();
   const formRef2 = ref();
   const formRef3 = ref();
@@ -313,7 +339,8 @@
     },
     Description: '',
     StateCode: '',
-    Priority: ''
+    Priority: '',
+    Notice:''
   });
 
   const onSearch = (e) => {
@@ -442,10 +469,12 @@
           let record = res.actions[0].returnValue.fields;
           formState.Name = record.Name?record.Name.displayValue:'';
           formState.OwningUser.Id = record.OwningUser?record.OwningUser.value:'';
-          formState.BusinessUnitId.Id = record.BusinessUnitId?record.BusinessUnitId.value : '';
+          //formState.BusinessUnitId.Id = record.BusinessUnitId?record.BusinessUnitId.value : '';
           formState.ImportSequenceNumber = record.ImportSequenceNumber?record.ImportSequenceNumber.value:'';
           formState.IsPublic = record.IsPublic?record.IsPublic.value : false;
           formState.Description = record.Description?record.Description.value : '';
+          formState.Notice=record.Notice?record.Notice.value : '';
+          editorRef.value.content=record.Notice?record.Notice.value : '';
         }
     })
     
@@ -474,8 +503,9 @@
                     fields: {
                         Name: item.Name,
                         OwningUser: item.OwningUser.Id,
-                        BusinessUnitId: item.BusinessUnitId.Id,
+                        //BusinessUnitId: item.BusinessUnitId.Id,
                         Description: item.Description,
+                        Notice:item.Notice,
                         ImportSequenceNumber:item.ImportSequenceNumber||item.ImportSequenceNumber==0?item.ImportSequenceNumber*1:'',
                         IsPublic:item.IsPublic
                     }
@@ -567,14 +597,14 @@ const getQuery = () => {
             rows: data.pagination.pageSize,
             sort:'DisplayOrder',
             order:'ASC',
-            displayColumns:'RegardingObjectIdName,PhotoUrl,FullName,BusinessUnitIdName,RoleCode,MobilePhone,EMailAddress,WorkStatus'
+            displayColumns:'RegardingObjectIdName,AvatarImg,FullName,BusinessUnitId,RoleCode,MobilePhone,EMailAddress,WorkStatus'
         }).then(res => {
             var list = [];
             data.pagination.total = res.pageInfo?res.pageInfo.total:0;
             for (var i = 0; i < res.nodes.length; i++) {
                 var item = res.nodes[i];
                 for(var cell in item){
-                    if(cell!='id'&&cell!='nameField'&&cell!='PhotoUrl'){
+                    if(cell!='id'&&cell!='nameField'&&cell!='AvatarImg'){
                         item[cell]=girdFormatterValue(cell,item);
                     }
                     if(cell=='RegardingObjectIdName'){
@@ -674,8 +704,17 @@ var columns = [
     key: "index",
   },
   {
+    title: "头像",
+    dataIndex: "AvatarImg",
+    key:'AvatarImg'
+  },
+  {
     title: "姓名",
     dataIndex: "FullName",
+  },
+  {
+    title: "部门",
+    dataIndex: "BusinessUnitId",
   },
   {
     title: "角色",
@@ -693,6 +732,9 @@ const handleTableChange=(pag, filters, sorter)=>{
   data.pagination.current=pag.current;
   getQuery();
 }
+const getInputContent = (e) => {
+  formState.Notice = e;
+};
 </script>
 <style lang="less">
   @import url("@/style/modal.less");
@@ -775,6 +817,20 @@ const handleTableChange=(pag, filters, sorter)=>{
   }
   .ant-select-selector{
     border-radius: 2px;
+  }
+}
+.AddGroup_list_avatar{
+    width: 40px !important;
+    position: relative;
+    right: 5px;
+}
+.form-legend-desktop {
+    text-align: right;
+    margin-bottom: 8px;
+}
+.AddGroupModel{
+  .ant-input {
+    border-radius: 4px !important;
   }
 }
 </style>

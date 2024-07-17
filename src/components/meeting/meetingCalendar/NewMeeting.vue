@@ -24,7 +24,7 @@
                     <Topics v-if="currentTab==3" />
                     <AttendUserList v-if="currentTab==4" />
                     <Service v-if="currentTab==5" />
-                    <MeetingNotice :isShow="isNotice" @selectVal="handleRead" />
+                    <MeetingNotice :isShow="isNotice" @selectVal="handleRead" @cancel="isNotice=false" />
                 </div>
             </div>
             <template #footer>
@@ -86,6 +86,7 @@
         data.title = '编辑会议';
     }
     const handleSubmit = () => {
+        configRef.value.handleSubmit();
         emit("select-val", '');
     }
     onMounted(() => {

@@ -726,5 +726,11 @@ const getColumns = (id) => {
           max-width:100% !important;
           flex: 1;
       }
+      :where(.css-dev-only-do-not-override-kqecok).ant-input{
+        border-color: #d9d9d9;
+      }
+      .ant-row .wea-left-right-layout-left .wea-left-tree .wea-left-tree-scroll .ant-tree-treenode:hover .tree-num{
+            display: none;
+        }
   }
 </style>

@@ -217,8 +217,10 @@
     columns: [],
     actionList: [],
     listViewActions: [],
-    entityType: "a1K",
+    entityType: "023",
     filterQuery: "",
+    objectTypeCode:'20034',
+    entityName:'ResourceOrg',
     isNewModal: false,
     isExportModal: false,
     isCopyModal: false,
@@ -279,6 +281,8 @@
       columns: [columns],
       queryParams: {
         filterQuery: data.filterQuery,
+        entityType: data.entityType,
+        objectTypeCode: data.objectTypeCode
       },
       // data: tableList,
       singleSelect: false,

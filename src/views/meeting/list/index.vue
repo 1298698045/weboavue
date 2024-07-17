@@ -5,7 +5,7 @@
         <div class="icon-circle-base">
           <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
         </div>
-        <span class="headerTitle">收文管理</span>
+        <span class="headerTitle">我的会议</span>
       </div>
       <div class="headerRight">
         <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
@@ -13,7 +13,7 @@
     </div>
     <div class="todo-content">
       <a-row>
-        <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">
+        <!-- <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">
           <div class="wea-left-tree">
             <div class="wea-left-tree-search">
               <a-input-search v-model:value="data.searchVal" placeholder="" @search="onSearch" />
@@ -28,25 +28,15 @@
                   </CaretDownOutlined>
                 </template>
                 <template v-slot:title="{ name, data, isLeaf, text, quantity }">
-                  <!-- <span v-if="name.indexOf(searchValue) > -1">
-                    {{ name.substr(0, name.indexOf(searchValue)) }}
-                    {{
-                    name.substr(
-                    name.indexOf(searchValue) + searchValue.length
-                    )
-                    }}
-                    <span class="tree-num">{{ quantity }}</span>
-                  </span>
-                  <span v-else>{{ name }}</span> -->
                   <span>{{ name }}<span class="tree-num">{{ quantity }}</span></span>
                 </template>
               </a-tree>
             </div>
           </div>
-        </a-col>
+        </a-col> -->
         <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
-          <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
-            :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
+          <!-- <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
+            :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div> -->
           <div style="height: 100%" ref="contentRef">
             <div class="wea-tab">
               <a-tabs v-model:activeKey="activeKey" @change="changeTab">
@@ -66,7 +56,7 @@
                   <a-button class="ml10">批量取消发布</a-button> -->
               </div>
             </div>
-            <list-form-search ref="searchRef" @search="handleSearch" entityApiName="OfficialDocumentIn" :SearchFields="SearchFields"
+            <list-form-search ref="searchRef" @search="handleSearch" entityApiName="MeetingRec" :SearchFields="SearchFields"
               @update-height="changeHeight"></list-form-search>
             <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
               <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
@@ -199,24 +189,53 @@
   //   gData.value = listData;
   //   gDataAll.value = listData;
   // })
-  proxy.$get(Interface.documentAdmin.tree,{
-      entity: "docouttype"
-  }).then((res)=>{
-      let listData = formTreeData(res.rows,'id','pid');
-      let formTree = (list) => {
-          list.forEach(item => {
-          if (item.children) {
-              formTree(item.children);
+  // proxy.$get(Interface.documentAdmin.tree,{
+  //     entity: "docouttype"
+  // }).then((res)=>{
+  //     let listData = formTreeData(res.rows,'id','pid');
+  //     let formTree = (list) => {
+  //         list.forEach(item => {
+  //         if (item.children) {
+  //             formTree(item.children);
+  //         }
+  //         item.key = item.id;
+  //         item.value = item.id;
+  //         item.name = item.text;
+  //         })
+  //     }
+  //     formTree(listData);
+  //     gData.value = listData;
+  //     gDataAll.value = listData;
+  // })
+  //处理树
+  const formTree = (list) => {
+      list.forEach(item=>{
+          if(item.children){
+          formTree(item.children);
           }
-          item.key = item.id;
-          item.value = item.id;
-          item.name = item.text;
-          })
-      }
-      formTree(listData);
-      gData.value = listData;
-      gDataAll.value = listData;
-  })
+          item.children=[];
+          item.id=item.businessUnitId;
+          item.key=item.businessUnitId;
+          item.text=item.name;
+      })
+      return list
+  }
+  // 组织结构
+  const getDeptTreeData = () => {
+      proxy.$get(Interface.deptTree, {
+          //entity: "organizationtree"
+      }).then(res => {
+          let list=[];
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+              list=res.actions[0].returnValue;
+          }else{return false}
+          list=formTree(list);   
+          gData.value = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
+          gDataAll.value = list;
+          //console.log("deptTreeData", data.deptTreeData);
+      })
+  }
+  //getDeptTreeData();
   // console.log("genData",genData,treeList)
 
   const onExpand = (keys) => {
@@ -238,7 +257,7 @@
   // });
 
   let data = reactive({
-    isCollapsed: false,
+    isCollapsed: true,
     tableHeight: '',
     fieldNames: {
       children: 'children', title: 'name', key: 'id'
@@ -280,8 +299,8 @@
     activeKey: 0,
     queryParams: {
       filterId:'',
-      objectTypeCode:'100108',
-      entityName:'OfficialDocumentIn',
+      objectTypeCode:'5000',
+      entityName:'MeetingRec',
       filterQuery:'',
       //filterQuery:'\nCreatedBy\teq-userid',
       //displayColumns:'ProcessInstanceNumber,Name,ProcessId,StateCode,ExpiredOn,AttachQty,CreatedBy,CurrentStepName,CreatedOn,BusinessUnitId,ModifiedOn,Priority,ProcessInstanceId,WFRuleLogId,ExecutorIdentityName',
@@ -316,9 +335,14 @@
   let formSearchHeight = ref(null);
   const gridRef = ref(null);
   const onSearch = (e) => {
-    gData.value = gDataAll.value.filter(item=>{
-      return item.name.indexOf(data.searchVal) != -1;
-    })
+  //   gData.value = gDataAll.value.filter(item=>{
+  //     return item.name.indexOf(data.searchVal) != -1;
+  //   })
+      let list = gDataAll.value.filter(item=>{
+          return item.text.indexOf(data.searchVal) !== -1;
+      })
+      list=formTree(list);
+      gData.value = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
   }
   const onSelect = (keys) => {
     data.treeId=keys[0];
@@ -354,7 +378,7 @@
         data.queryParams.filterQuery+=filterquery;
       }
       if(data.treeId){
-        data.queryParams.filterQuery+='\nDocumentTypeCode\tin\t'+data.treeId;
+        data.queryParams.filterQuery+='\nOwningBusinessUnit\tin\t'+data.treeId;
       }
       gridRef.value.loadGrid(data.queryParams);
   }
@@ -398,8 +422,8 @@ const getColumns = (id) => {
             }
         },];
   proxy.$get(Interface.listView.getFilterInfo, {
-    entityType: 'A08',
-    objectTypeCode: '100108',
+    entityType: '00V',
+    objectTypeCode: '5000',
     search: "",
     filterId: id
   }).then(res => {
@@ -429,8 +453,8 @@ const getColumns = (id) => {
   // 获取tabs
   const getTabs = () => {
     proxy.$get(Interface.getTabs, {
-      entityName:'OfficialDocumentIn',
-      layoutName:'DocumentInAdmin'
+      entityName:'MeetingRec',
+      layoutName:'MyMeetingAdmin'
     }).then(res => {
       //console.log("tabs", res)
       if(res&&res.tabs&&res.tabs.length){
@@ -675,7 +699,7 @@ const getColumns = (id) => {
         data.queryParams.filterQuery+=data.formSearchFilterquery;
       }
       if(data.treeId){
-        data.queryParams.filterQuery+='\nDocumentTypeCode\tin\t'+data.treeId;
+        data.queryParams.filterQuery+='\nOwningBusinessUnit\tin\t'+data.treeId;
       }
       getColumns(data.queryParams.filterId);
   }
@@ -730,7 +754,7 @@ const getColumns = (id) => {
         border-color: #d9d9d9;
       }
       .ant-row .wea-left-right-layout-left .wea-left-tree .wea-left-tree-scroll .ant-tree-treenode:hover .tree-num{
-            display: none;
-        }
+          display: none;
+      }
   }
 </style>

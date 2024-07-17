@@ -219,6 +219,8 @@
     listViewActions: [],
     entityType: "a1K",
     filterQuery: "",
+    objectTypeCode:'100105',
+    entityName:'TemplateFile',
     isNewModal: false,
     isExportModal: false,
     isCopyModal: false,
@@ -279,6 +281,8 @@
       columns: [columns],
       queryParams: {
         filterQuery: data.filterQuery,
+        entityType: data.entityType,
+        objectTypeCode: data.objectTypeCode
       },
       // data: tableList,
       singleSelect: false,

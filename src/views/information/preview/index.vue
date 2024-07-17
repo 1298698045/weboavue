@@ -80,7 +80,7 @@
             </div>
           </div>
           <div class="tabContainer" v-if="activeKey == 3">
-            <ReadRecord />
+            <ReadRecord :id="id" />
           </div>
           <div class="tabContainer" v-if="activeKey == 4">
             <Comment :id="id" />

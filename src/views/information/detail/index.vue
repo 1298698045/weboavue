@@ -126,7 +126,7 @@
           <PersonnelList :id="id" :objectTypeCode="objectTypeCode" />
         </div>
         <div class="tabContainer" v-if="activeKey == 3">
-          <Comment />
+          <Comment :id="id" />
         </div>
         <div class="tabContainer" v-if="activeKey == 4">
           <AffiliatedColumn

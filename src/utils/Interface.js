@@ -94,7 +94,8 @@ const Interface = {
   },
   meeting: {
     userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织
-    getall: "localData/meeting/meeting.getall.json", // 日历月数据
+    //getall: "localData/meeting/meeting.getall.json", // 日历月数据
+    getall: baseUrl + "/ui.meeting.components/getAllCalendars", // 日历月/周/日数据
     config: "localData/meeting/config.json",
     relatedrecords: "/localData/meeting/entity.relatedrecords.get.json", // 相关列表数据
     relatedrecords2: "/localData/meeting/entity.relatedrecords.get2.json", // 相关列表数据
@@ -106,7 +107,9 @@ const Interface = {
     detail: "/localData/meeting/entity.recordandlayout.get.json"
   },
   meetingRoom: {
-    roomList: "/localData/meetingRoom/meetingroom.reservation.getlist2.json",
+    //roomList: "/localData/meetingRoom/meetingroom.reservation.getlist2.json",
+    roomList: baseUrl + "/ui.meetingroom.components/getAllCalendars",
+    meeting: baseUrl + "/ui.meeting.components/getAllCalendars",
   },
   file: {
     list: "/localData/fileAdmin/file.files.search.json",
