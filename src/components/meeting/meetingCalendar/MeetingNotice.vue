@@ -10,7 +10,7 @@
             <div class="modalContainer">
                 <div class="modalCenter" :style="{ height: height + 'px' }">
                     <div class="confirmIframe">
-                        <p style="text-align: center;font-size:18px;font-weight:bold;margin-bottom: 10px; ">管理办法</p>
+                        <p style="text-align: center;font-size:18px;font-weight:bold;margin-bottom: 10px; padding-left: 11px;">管理办法</p>
                         <p style="text-indent:28px;">第一条&nbsp;&nbsp;&nbsp;会议室由院办公室统一管理和安排，负责使用登记、设备维护、卫生清洁等相关事宜。会议室中的多媒体
                         </p>
                         <p>设备和桌椅等设施由专人负责保管、管理与调试，未经允许不得擅自使用、挪动、接拉电源，不得操作标示告知勿动的</p>
@@ -93,5 +93,8 @@
     :deep :where(.css-dev-only-do-not-override-kqecok).ant-tabs>.ant-tabs-nav,
     :where(.css-dev-only-do-not-override-kqecok).ant-tabs>div>.ant-tabs-nav {
         margin: 0 !important;
+    }
+    .confirmIframe p{
+        padding-left: 35px;
     }
 </style>

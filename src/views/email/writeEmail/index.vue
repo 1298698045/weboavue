@@ -17,9 +17,16 @@
                                     :rules="[{ required: activeKey==1?true:false, message: '请选择收件人' }]">
                                     <a-select :default-active-first-option="false"
                                     allowClear :filter-option="false" showSearch
+                                    @dropdownVisibleChange="getUserList"
                                     @search="getUserList" ref="select" v-model:value="formState.addressee" mode="multiple"
                                         placeholder="请选择收件人">
-                                        <a-select-option v-for="(item, index) in selectConcatsList" :key="index" :value="item.systemUserId">{{item.fullName}}</a-select-option>
+                                        <a-select-option v-for="(item, index) in selectConcatsList" :key="index" :value="item.systemUserId">
+                                            <a-avatar :size="37">
+                                                <template #icon><UserOutlined /></template>
+                                                <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
+                                            </a-avatar>
+                                            {{item.Name}}
+                                        </a-select-option>
                                     </a-select>
                                 </a-form-item>
                                 <a-form-item label="群组" name="group"
@@ -50,7 +57,7 @@
                                             </div>
                                             <div class="rightFileInfo">
                                                 <div class="fileName rowEllipsis">
-                                                    u=3315324068,1694602888&fm=26&gp=0.jpg..jpg
+                                                    测试文件.jpg
                                                 </div>
                                                 <div class="fileSize"></div>
                                                 <div class="fileOptionShow">
@@ -112,7 +119,7 @@
             <div class="footerOption">
                 <a-button class="mr10" type="primary" @click="handleSendEmail">发送</a-button>
                 <a-button class="mr10">存草稿</a-button>
-                <a-button class="mr10">取消</a-button>
+                <a-button class="mr10" @click="cancelWriteEmail">取消</a-button>
             </div>
         </div>
     </div>
@@ -142,7 +149,10 @@
     import Delete from "@/components/listView/Delete.vue";
     import Editor from "@/components/TEditor.vue"
     import { formTreeData } from "@/utils/common.js";
+    import { useRouter, useRoute } from "vue-router";
     const { proxy } = getCurrentInstance();
+    const route = useRoute();
+    const router = useRouter();
     const activeKey = ref('1');
     const labelCol = ref({ style: { width: '100px' } });
     const formRef = ref();
@@ -220,11 +230,19 @@
 
     }
     const getUserList = (e) => {
-        proxy.$get(Interface.user.sysUser,{
-            searchVal: e
-        }).then(res=>{
-            data.selectConcatsList = res.listData;
-        })
+        // proxy.$get(Interface.user.sysUser,{
+        //     searchVal: e
+        // }).then(res=>{
+        //     data.selectConcatsList = res.listData;
+        // })
+        proxy.$get(Interface.uilook, {
+                Lktp: 30020,
+                Lksrch: e,
+            })
+            .then((res) => {
+                let listData = res.listData;
+                data.selectConcatsList = listData;
+            });
     }
     // 获取最近联系人
     const getLately = () => {
@@ -399,11 +417,25 @@
         });
         
     }
+    const cancelWriteEmail= () => {
+        let url = router.resolve({
+            path:'/email',
+            name: "Email",
+            query: {
+                
+            },
+        });
+        //window.open(url.href);
+        window.location.href=url.href;
+    }
 </script>
 <style lang="less" scoped>
     .writeEmail {
         height: 100vh;
         background: #f0f2f6;
+        .ant-select-selection-item-content .ant-avatar{
+            display: none !important;
+        }
     }
 
     .whitemailHeader {

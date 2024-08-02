@@ -1,6 +1,6 @@
 <template>
   <div ref="modelContentRef">
-    <a-modal v-model:open="props.isShow" width="800px" :style="setTop" :maskClosable="false" @cancel="handleCancel"
+    <a-modal v-model:open="props.isShow" width="800px" :style="setTop" :maskClosable="false" @cancel="handleCancel" class="deleteContent"
       @ok="handleSubmit">
       <template #title>
         <div class="modal_title">删除</div>
@@ -167,7 +167,15 @@
   //getQuery();
   onMounted(() => {
     let h = modelContentRef.value.clientHeight;
-    data.top = (h + 260) / 2 + 'px';
+    let h0=document.documentElement.clientHeight;
+    //data.top = (h + 260) / 2 + 'px';
+    if(h){
+      data.top = (h0 - h + 160) / 2 + 'px';
+    }
+    else{
+      data.top = (h + 260) / 2 + 'px';
+    }
+    //console.log(h,h0)
   })
   const setTop = computed(() => ({
     top: `calc(50% - ${data.top})`
@@ -175,4 +183,7 @@
 </script>
 <style lang="less">
   @import url("@/style/modal.less");
+  .deleteContent{
+    z-index: 1000000;
+  }
 </style>

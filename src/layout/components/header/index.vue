@@ -38,10 +38,15 @@
         <div class="search-content">
           <input
             class="inp"
-            v-model="searchVal"
+            v-model="data.searchVal"
+            @keydown.enter="search()"
             placeholder="请输入关键词搜索"
             type="text"
           />
+        </div>
+        <div class="search-searchIcon" @click="clearInput()">
+          <!-- <SearchOutlined style="font-size: 12px" /> -->
+          <i class="iconfont icon-guanbi" style="font-size: 10px"></i>
         </div>
         <div class="search-searchIcon">
           <!-- <SearchOutlined style="font-size: 12px" /> -->
@@ -109,6 +114,10 @@
             <span>考勤</span>
           </a-popover>
         </div>
+        <div class="header-toobar-plugin" @click="handleOpenEmail">
+          <!-- <BellOutlined style="font-size: 18px;" /> -->
+          <i class="iconfont icon-youjian" style="font-size: 18px;"></i>
+        </div>
         <div class="header-toobar-plugin" @click="hanldeOpenNotice">
           <!-- <BellOutlined style="font-size: 18px;" /> -->
           <i class="iconfont icon-xiaoxizhongxin" style="font-size: 18px;"></i>
@@ -136,7 +145,7 @@
             </div>
             <div class="header-account-splitter"></div> -->
             <div class="header-account-list">
-              <div v-for="item in 2">
+              <div v-for="item in 2" :key="item">
                 <div class="header-account-item">
                   <div class="header-account-item-avatar">
                     <img
@@ -193,7 +202,7 @@
   </div>
 </template>
 <script setup>
-  import "@/style/header.less";
+import "@/style/header.less";
 import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance, defineProps, defineEmits } from "vue";
 import { DownOutlined, SearchOutlined, BellOutlined, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
@@ -206,14 +215,14 @@ let store = useStore();
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
-const searchVal = ref("");
+//const searchVal = ref("");
 const isShow = ref(false);
 const handleShowApp = () => {
   isShow.value = !isShow.value;
 };
-watch(searchVal, (newVal, oldVal) => {
+//watch(searchVal, (newVal, oldVal) => {
   // console.log(newVal, oldVal);
-});
+//});
 const props = defineProps({
   listApp: Array
 });
@@ -238,9 +247,10 @@ const data = reactive({
   isInfoPopup: false,
   isNotice: false,
   appCode: "02u90000110",
-  currentAppName: ""
+  currentAppName: "",
+  searchVal:route.query.searchVal
 })
-const { appList, isInfoPopup, isNotice, appCode, currentAppName } = toRefs(data);
+const { appList, isInfoPopup, isNotice, appCode, currentAppName,searchVal } = toRefs(data);
 
 // proxy.$get(Interface.applist,{
 //   systemCode: 'OA'
@@ -276,6 +286,17 @@ const getCurrentApp = () => {
 const hanldeOpenNotice = () => {
   data.isNotice = true;
 }
+const handleOpenEmail= () => {
+    let url = router.resolve({
+        path:'/email',
+        name: "Email",
+        query: {
+            
+        },
+    });
+    //window.open(url.href);
+    window.location.href=url.href;
+}
 const handlePersonal = () => {
   data.isInfoPopup = false;
   router.push({
@@ -305,6 +326,26 @@ const handleGoModule = (item) => {
 const handleOpenInfo = () => {
   data.isInfoPopup = !data.isInfoPopup;
 }
+const search = () => {
+  //window.open('https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=' + data.searchVal);
+  router.push({
+    path: "/Search/SearchResult",
+    query: {
+      searchVal: data.searchVal
+    }
+  })
+}  
+const clearInput= () => {
+  data.searchVal = '';
+  let url = router.resolve({
+      path:'/Search/SearchResult',
+      name: "SearchResult",
+      query: {
+        searchVal: data.searchVal
+      },
+  });
+  window.location.href=url.href;
+}  
 </script>
 <style lang="less">
 /* @import "./header.less"; */
@@ -334,5 +375,8 @@ const handleOpenInfo = () => {
 }
 .leftLogo{
   width: 197px;
+}
+.header .header-search .search-searchIcon{
+  margin-left: 0;
 }
 </style>

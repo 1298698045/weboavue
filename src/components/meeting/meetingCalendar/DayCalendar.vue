@@ -70,68 +70,69 @@
                 <div class="weekRightDay">
 
                     <div class="calendarDay">
-                        <div class="eventList"  @click="(e)=>{handleSelectTime(e,currentDate)}" :class="{'active':isToDay(currentDate)}" :style="{height: height+'px'}">
-                            <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"  @cancel="handleEditMeeting(currentDate, row)"
-                                v-for="(row,idx) in meetingList[currentDate]" :key="idx">
-                                <template #icon></template>
-                                <template #title>
-                                    <div class="meetingMessageWrap">
-                                        <div class="meetingHead">
-                                            <div class="meetingLogo">
-                                                <img :src="require('@/assets/img/meeting.png')" alt="">
+                        <div class="eventList"  @click="(e)=>{openNew(e,currentDate)}" :class="{'active':isToDay(currentDate)}" :style="{height: height+'px'}">
+                            <template v-for="(row,idx) in meetingList[currentDate]" :key="idx">
+                                <a-popconfirm trigger="hover" cancelText="删除" okText="编辑" @confirm="openEdit(row)" @cancel="handleDelete(row)">
+                                    <template #icon></template>
+                                    <template #title>
+                                        <div class="meetingMessageWrap">
+                                            <div class="meetingHead">
+                                                <div class="meetingLogo">
+                                                    <img :src="require('@/assets/img/meeting.png')" alt="">
+                                                </div>
+                                                <p class="meetingName">{{row.Subject}}</p>
                                             </div>
-                                            <p class="meetingName">{{row.Subject}}</p>
+                                            <div class="meetingBody">
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        召集人：
+                                                        <span class="OwningUserName">{{row.Who}}</span>
+                                                    </div>
+                                                    <div class="meetingInfoItem">
+                                                        联系电话：
+                                                        <span class="TelePhone">{{row.TelePhone || ''}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        会议室：
+                                                        <span class="OwningUserName">{{ row.Where }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        会议设备：
+                                                        <span class="OwningUserName"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        开始：
+                                                        <span class="OwningUserName">{{row.StartDateTime}}</span>
+                                                    </div>
+                                                    <div class="meetingInfoItem">
+                                                        结束：
+                                                        <span class="TelePhone">{{row.EndDateTime}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        备注：
+                                                        <span class="OwningUserName">{{row.Description}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <a-button type="link" @click.stop="handleDetail(row,currentDate)">更多详细信息</a-button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="meetingBody">
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    召集人：
-                                                    <span class="OwningUserName">{{row.Who}}</span>
-                                                </div>
-                                                <div class="meetingInfoItem">
-                                                    联系电话：
-                                                    <span class="TelePhone">{{row.TelePhone || ''}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    会议室：
-                                                    <span class="OwningUserName">{{ row.Where }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    会议设备：
-                                                    <span class="OwningUserName"></span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    开始：
-                                                    <span class="OwningUserName">{{row.StartDateTime}}</span>
-                                                </div>
-                                                <div class="meetingInfoItem">
-                                                    结束：
-                                                    <span class="TelePhone">{{row.EndDateTime}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    备注：
-                                                    <span class="OwningUserName">{{row.Description}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <a-button type="link">更多详细信息</a-button>
-                                            </div>
-                                        </div>
+                                    </template>
+                                    <div class="eventItem" :style="{top:countTop(row),height:countHeight(row)}" @click.stop="handleDetail(row,currentDate)">
+                                        <p>{{row.Subject}}</p>
+                                        <p>{{row.StartDateTime}}-{{row.EndDateTime}} {{row.Who}}预约</p>
                                     </div>
-                                </template>
-                                <div class="eventItem" :style="{top:countTop(row),height:countHeight(row)}">
-                                    <p>{{row.Subject}}</p>
-                                    <p>{{row.StartDateTime}}-{{row.EndDateTime}} {{row.Who}}预约</p>
-                                </div>
-                            </a-popconfirm>
+                                </a-popconfirm>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -170,7 +171,7 @@
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-    const emit = defineEmits(['openWeekNew']);
+    const emit = defineEmits(['openNew','handleDetail','openEdit','handleDelete']);
 
     const props = defineProps({
         currentTime: String,
@@ -188,14 +189,15 @@
         paramsTime: {
             date: "",
             time: ""
-        }
+        },
+        meetingId: ""
     });
     watch(()=>props.currentTime,(newVal,oldVal)=>{
         data.currentDate = dayjs(newVal).format("YYYY-MM-DD");
-        console.log("data.currentDate",data.currentDate);
+        //console.log("data.currentDate",data.currentDate);
     },{deep: true, immediate: true})
     const weeks = toRaw(['周日', '周一', '周二', '周三', '周四', '周五', '周六']);
-    const { height, weekList, meetingList, times, currentDate, paramsTime } = toRefs(data);
+    const { height, weekList, meetingList, times, currentDate, paramsTime,meetingId } = toRefs(data);
     const weekRef = ref(null);
     onMounted(() => {
         data.height = weekRef.value.scrollHeight;
@@ -209,20 +211,16 @@
         var time = date.format("YYYY-MM-DD");
         week.push(time);
     }
-    const handleEditMeeting = (item,row) => {
-        console.log(item,row);
-        data.paramsTime.date = row.ScheduledStartDate;
-        data.paramsTime.time = row.ScheduledStartTime;
-        data.paramsTime.meetingId = row.MeetingId;
-        emit("openWeekNew", data.paramsTime);
+    // 删除会议
+    const handleDelete = (item) => {
+        emit("handleDelete", item);
     }
-    const handleSelectTime = (e, item) => {
-        console.log('e',e,item);
+    const openEdit = (item) => {
+        emit("openEdit", item);
+    }
+    const openNew = (e, item) => {
         let layerY = e.layerY;
-        console.log("layerY",layerY, data.height);
-        console.log("counth", Math.floor(layerY/30/2));
         let index = Math.floor(layerY/30/2);
-        console.log("datatime", data.times[index > 0 ?  index-1 : index]);
         let startTime = data.times[index > 0 ?  index-1 : index];
         data.paramsTime.date = item;
         data.paramsTime.time = startTime;
@@ -230,8 +228,7 @@
             date: item,
             time: startTime
         }
-        // console.log("paramsTime",data.paramsTime);
-        emit("openWeekNew", obj);
+        emit("openNew", obj);
     }
     // 判断是否是今天
     const isToDay = (time) => {
@@ -248,7 +245,7 @@
     //     }
     // });
 
-    console.log("week", week);
+    //console.log("week", week);
     data.weekList = week;
     const countTop = (row) => {
         var time = dayjs(row.StartDateTime).format("HH:mm");
@@ -284,25 +281,31 @@
         let obj = {
             message: JSON.stringify(d)
         }
+        data.meetingList =[];
         proxy.$post(Interface.meeting.getall,obj).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
                         let meetingItems = res.actions[0].returnValue;
                         let obj = {};
                         meetingItems.forEach(item=>{
                             let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
-                            console.log("daydate",daydate);
+                            //console.log("daydate",daydate);
                             if(!obj[daydate]){
                                 obj[daydate] = [];
                             }
+                            item.StartDateTime=item.StartDateTime?dayjs(item.StartDateTime).format("YYYY-MM-DD HH:mm"):'';
+                            item.EndDateTime=item.EndDateTime?dayjs(item.EndDateTime).format("YYYY-MM-DD HH:mm"):'';
                             obj[daydate].push(item);
                         })
                         data.meetingList = obj;
-                        console.log("obj",obj)
+                        //console.log("obj",obj)
             }
         })
     }
-    getQuery();
-    defineExpose({getQuery})
+    //getQuery();
+    defineExpose({getQuery});
+    const handleDetail= (e) => {
+        emit("handleDetail", e);
+    }
 </script>
 <style lang="less" scoped>
     .weekWrap {

@@ -83,6 +83,7 @@
         toRaw,
         inject
     } from "vue";
+    import { useRouter, useRoute } from "vue-router";
     import {
         AlignCenterOutlined, SearchOutlined, RightOutlined
     } from "@ant-design/icons-vue";
@@ -91,7 +92,7 @@
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
     import AddApplication from "@/components/workspace/AddApplication.vue";
-
+    const router = useRouter();
     const data = reactive({
         currentTab: 0,
         searchVal: "",
@@ -127,18 +128,30 @@
     }
     getQuery();
     const getImagePath = (imagePath) => {
-        try {
-            return require(`@/assets${imagePath}`);
-        } catch (error) {
-            console.error(`Error loading image: ${error.message}`);
-            return '';
+        if(imagePath){
+            try {
+                return require(`@/assets${imagePath}`);
+            } catch (error) {
+                console.error(`Error loading image: ${error.message}`);
+                return '';
+            }
         }
     }
     const handleOpenModal = () => {
         data.isModal = true;
     }
     const handleDetail = (item) => {
-
+        if(item.Label=='邮件'){
+            let url = router.resolve({
+                path:'/email',
+                name: "Email",
+                query: {
+                    
+                },
+            });
+            //window.open(url.href);
+            window.location.href=url.href;
+        }
     }
     const cancelApplication = (e, params) => {
         if(params) {

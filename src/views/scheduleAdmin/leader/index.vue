@@ -39,7 +39,7 @@
                 </div>
             </div> -->
             <div class="calendarRight">
-                <ListView v-if="current==0" />
+                <ListView v-if="current==0" :layoutName="layoutName" />
                 <CalendarVue v-if="current==1" @openDateNew="handleOpenDateNew" />
             </div>
         </div>
@@ -63,7 +63,7 @@
     } from "vue";
     import "@/style/schedule/icon/iconfont.css";
     import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
-    import ListView from "@/components/meeting/meetingCalendar/List.vue";
+    import ListView from "@/components/schedule/list/index.vue";
     import CalendarVue from "@/components/leaderSchedule/LeaderCalendar.vue";
 
     import NewSchedule from "@/components/schedule/NewSchedule.vue";
@@ -80,9 +80,10 @@
         paramsTime: {
             date: "",
             time: ""
-        }
+        },
+        layoutName:'LeaderActivityPointer'
     });
-    const { current, isSchedule, isAddSchedule, paramsTime } = toRefs(data);
+    const { current, isSchedule, isAddSchedule, paramsTime,layoutName } = toRefs(data);
     const handleAddSchedule = () => {
         // data.isSchedule =  true;
         data.isAddSchedule = true;

@@ -42,12 +42,12 @@
                 </div>
             </div> -->
             <div class="calendarRight">
-                <ListView v-if="current==0" />
+                <ListView v-if="current==0" :layoutName="layoutName" />
                 <CalendarVue v-if="current==1" />
             </div>
         </div>
         <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" />
+        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
         <ExportSchedule :isShow="isExport"  @cancel="cancelExport" />
         <ShareCalendar :isShow="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
     </div>
@@ -69,7 +69,7 @@
         h
     } from "vue";
     import "@/style/schedule/icon/iconfont.css";
-    import ListView from "@/components/meeting/meetingCalendar/List.vue";
+    import ListView from "@/components/schedule/list/index.vue";
     import CalendarVue from "@/components/schedule/calendar/ScheduleCalendar.vue";
 
 
@@ -88,9 +88,17 @@
         isShare: false,
         isExport: false,
         fileParams: {},
-        size: "large"
+        size: "large",
+        id:'',
+        paramsTime: {
+            date: "",
+            time: ""
+        },
+        objectTypeCode:'4200',
+        sObjectName:'ActivityPointer',
+        layoutName:'MyActivityPointer'
     });
-    const { current, isSchedule, isAddSchedule, isShare, isExport, fileParams, size } = toRefs(data);
+    const { current, isSchedule, isAddSchedule, isShare, isExport, fileParams, size,id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
     const changeRadioGroup = (e) => {
         data.current = e;
     }
@@ -117,6 +125,10 @@
     }
     const openExport = () => {
         data.isExport = true;
+    }
+    const handleNewMeetingVal = (e) => {
+        data.isAddSchedule = false;
+        //onSearch();
     }
 </script>
 <style lang="less" scoped>

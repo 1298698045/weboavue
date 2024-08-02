@@ -12,7 +12,7 @@
             {{ title }}
           </div>
         </template>
-        <div class="modalContainer">
+        <div class="modalContainer scheduleModalContainer">
           <div class="modalCenter" :style="{ height: height + 'px!important' }">
             <a-form :model="formState" ref="formRef">
               <div class="section">
@@ -109,7 +109,7 @@
                                     </a-button>
                                 </a-dropdown>
                                 <a-select
-                                    class="aselect"
+                                    class="aselect aselect1"
                                     v-model:value="formState.RegardingObjectId.Id"
                                     show-search
                                     :placeholder="'搜索'+currentMenu"
@@ -468,5 +468,20 @@ const getSearchLook = (val) => {
             right: 5px;
         }
     }
+    .scheduleModalContainer{
+      .section .sectionRow .sectionItem :deep .ant-row{
+        display: block !important;
+      }
+      .aselect1{
+        margin-left: 10px;
+      }
+      .timeWrap{
+        width: 100%;
+        .timeItem{
+          flex: 1;
+        }
+      }
+    }
+    
   </style>
   

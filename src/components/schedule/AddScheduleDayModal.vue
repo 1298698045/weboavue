@@ -1,12 +1,21 @@
 <template>
-    <div class="weekWrap">
+    <div class="weekWrap AddScheduleDayModal">
         <div class="weekCalendar">
             <div class="weekCalendarHead">
                 <div class="timeZone">
                     时间
                 </div>
                 <div class="calendarDayHeaders">
-                    <div class="weekDayHeadItem">{{currentDate}}</div>
+                    <div class="weekDayHeadItem">
+                        <span class="arrowIcon" @click="handlePrevDay">
+                            <LeftOutlined />
+                        </span>
+                        <!-- <a-date-picker v-model:value="currentDate" @change="changeTime" format="YYYY-MM-DD" picker="date" /> -->
+                        &nbsp;{{ currentDate }}&nbsp;
+                        <span class="arrowIcon" @click="handleNextDay">
+                            <RightOutlined />
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="weekCalendarBody" ref="weekRef">
@@ -70,69 +79,14 @@
                 <div class="weekRightDay">
 
                     <div class="calendarDay">
-                        <div class="eventList"  @click="(e)=>{openNew(e,currentDate)}" :class="{'active':isToDay(currentDate)}" :style="{height: height+'px'}">
+                        <div class="eventList"  @click="(e)=>{calendarDayChange(e,currentDate)}" :class="{'active':isToDay(currentDate)}" :style="{height: height+'px'}">
                             <template v-for="(row,idx) in scheduleList[currentDate]" :key="idx">
-                                <a-popconfirm trigger="hover" cancelText="删除" okText="编辑" @confirm="openEdit(row)" @cancel="handleDelete(row)">
-                                    <template #icon></template>
-                                    <template #title>
-                                        <div class="meetingMessageWrap">
-                                            <div class="meetingHead">
-                                                <div class="meetingLogo">
-                                                    <img :src="require('@/assets/img/meeting.png')" alt="">
-                                                </div>
-                                                <p class="meetingName">{{row.Subject}}</p>
-                                            </div>
-                                            <div class="meetingBody">
-                                                <div class="meetingInfo">
-                                                    <div class="meetingInfoItem">
-                                                        被分配人：
-                                                        <span class="OwningUserName">{{row.Who}}</span>
-                                                    </div>
-                                                    <div class="meetingInfoItem">
-                                                        地址：
-                                                        <span class="TelePhone">{{row.Location || ''}}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="meetingInfo">
-                                                    <div class="meetingInfoItem">
-                                                        联系电话：
-                                                        <span class="OwningUserName">{{ row.Phone }}</span>
-                                                    </div>
-                                                    <div class="meetingInfoItem">
-                                                        分配人：
-                                                        <span class="TelePhone">{{row.CreatedByName || ''}}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="meetingInfo">
-                                                    <div class="meetingInfoItem">
-                                                        开始：
-                                                        <span class="OwningUserName">{{row.StartDateTime}}</span>
-                                                    </div>
-                                                    <div class="meetingInfoItem">
-                                                        结束：
-                                                        <span class="TelePhone">{{row.EndDateTime}}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="meetingInfo">
-                                                    <div class="meetingInfoItem">
-                                                        备注：
-                                                        <span class="OwningUserName">{{row.Description}}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="meetingInfo">
-                                                    <a-button type="link" @click.stop="handleDetail(row,currentDate)">更多详细信息</a-button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </template>
-                                    <div class="eventItem" :style="{top:countTop(row),height:countHeight(row)}" @click.stop="handleDetail(row,currentDate)">
-                                        <p>{{row.Subject}}</p>
-                                        <p>{{row.StartDateTime}}-{{row.EndDateTime}}</p>
-                                        <p>{{row.CreatedByName}}</p>
-                                    </div>
-                                </a-popconfirm>
+                                <div class="eventItem" :style="{top:countTop(row),height:countHeight(row)}">
+                                    <!-- <p>{{row.Subject}}</p> -->
+                                    <p>{{row.StartDateTime_time}}-{{row.EndDateTime_time}}</p>
+                                    <!-- <p>{{row.CreatedByName}}</p> -->
+                                </div>
                             </template>
-                            
                         </div>
                     </div>
                 </div>
@@ -167,17 +121,17 @@
     dayjs.extend(weekday);
     dayjs.extend(localeData);
 
-    import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
+    import { SearchOutlined, DeleteOutlined,LeftOutlined,RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-    const emit = defineEmits(['openNew','handleDetail','openEdit','handleDelete']);
+    const emit = defineEmits(['calendarDayChange']);
 
     const props = defineProps({
         currentTime: String,
         startDateTime:String,
         endDateTime:String,
-        calendarType:String
+        calendarType:String,
     })
 
     const data = reactive({
@@ -186,7 +140,7 @@
         scheduleList: {},
         times: ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
             "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],
-        currentDate: "",
+        currentDate: '',
         paramsTime: {
             date: "",
             time: ""
@@ -201,6 +155,7 @@
     const weekRef = ref(null);
     onMounted(() => {
         data.height = weekRef.value.scrollHeight;
+        data.currentDate=props.currentTime;
     })
 
     const today = dayjs();
@@ -212,24 +167,46 @@
         week.push(time);
     }
 
-    // 删除
-    const handleDelete = (item) => {
-        emit("handleDelete", item);
-    }
-    const openEdit = (item) => {
-        emit("openEdit", item);
-    }
-    const openNew = (e, item) => {
+    const calendarDayChange = (e, item) => {
         let layerY = e.layerY;
         let index = Math.floor(layerY/30/2);
         let startTime = data.times[index > 0 ?  index-1 : index];
         data.paramsTime.date = item;
-        data.paramsTime.time = startTime;
         let obj = {
             date: item,
             time: startTime
         }
-        emit("openNew", obj);
+        emit("calendarDayChange", obj);
+    }
+    // 日-切换日期
+    const changeTime = (e) => {
+        data.currentDate=dayjs(e).format("YYYY-MM-DD");
+        nextTick(()=>{
+            let startTime = data.paramsTime.time;
+            data.paramsTime.date = data.currentDate;
+            let obj = {
+                date: data.currentDate,
+                time: startTime
+            }
+            emit("calendarDayChange", obj);
+        })
+    }
+    
+    const handleNextDay = () => {
+        var date = new Date(data.currentDate);
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        var day = date.getDate();
+        data.currentDate=(dayjs(new Date(year, month, day + 1)).format("YYYY-MM-DD"));
+        changeTime(data.currentDate);
+    }
+    const handlePrevDay = () => {
+        var date = new Date(data.currentDate);
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        var day = date.getDate();
+        data.currentDate=(dayjs(new Date(year, month, day - 1)).format("YYYY-MM-DD"));
+        changeTime(data.currentDate);
     }
     // 判断是否是今天
     const isToDay = (time) => {
@@ -267,55 +244,53 @@
         let num = endIndex - index;
         return num * 60 + 'px';
     }
-    const getQuery = () => {
-        let d = {
-            actions:[{
-                "id": "5764;a",
-                "descriptor": "",
-                "callingDescriptor": "UNKNOWN",
-                "params": {
-                    "startDateTime": props.startDateTime,
-                    "endDateTime": props.endDateTime,
-                    "calendarType": 'day',
-                    "queryEvents": true
-                }
-
-            }]
-        };
-        let obj = {
-            message: JSON.stringify(d)
-        }
-        data.scheduleList =[];
-        proxy.$post(Interface.schedule.list,obj).then(res=>{
-            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
-                        let scheduleItems = res.actions[0].returnValue[0].calendarItems;
-                        let obj = {};
-                        scheduleItems.forEach(item=>{
-                            let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
-                            //console.log("daydate",daydate);
-                            if(!obj[daydate]){
-                                obj[daydate] = [];
-                            }
-                            item.StartDateTime=item.StartDateTime?dayjs(item.StartDateTime).format("YYYY-MM-DD HH:mm"):'';
-                            item.EndDateTime=item.EndDateTime?dayjs(item.EndDateTime).format("YYYY-MM-DD HH:mm"):'';
-                            obj[daydate].push(item);
-                        })
-                        data.scheduleList = obj;
-                        //console.log("obj",obj)
+    const getQuery = (calendarItem) => {
+        if(calendarItem){}else{
+            let StartDateTime = dayjs(new Date()).startOf("day").format("YYYY-MM-DD");
+            let EndDateTime = dayjs(new Date()).endOf("day").format("YYYY-MM-DD");
+            let hour = (new Date()).getHours() + 1;
+            hour = hour < 10 ? '0' + hour : hour;
+            let StartDateTime_time = hour+':00';
+            let hour2 = (new Date()).getHours() + 2;
+            hour2 = hour2 < 10 ? '0' + hour2 : hour2;
+            let EndDateTime_time = hour2+':00';
+            calendarItem={
+                Id:'',
+                Subject: '',
+                What: '',
+                Who: '',
+                StartDateTime: StartDateTime+' '+StartDateTime_time,
+                EndDateTime: EndDateTime+' '+EndDateTime_time,
+                IsAllDayEvent: false,
+                IsPrivate: false,
+                IsRecurrence2:false,
+                sobjectType: "Event"
             }
-        })
+        }
+        let obj = {};
+        let daydate = dayjs(calendarItem.StartDateTime).format('YYYY-MM-DD');
+        if(!obj[daydate]){
+            obj[daydate] = [];
+        }
+        calendarItem.StartDateTime=calendarItem.StartDateTime?dayjs(calendarItem.StartDateTime).format("YYYY-MM-DD HH:mm"):'';
+        calendarItem.EndDateTime=calendarItem.EndDateTime?dayjs(calendarItem.EndDateTime).format("YYYY-MM-DD HH:mm"):'';
+        calendarItem.StartDateTime_time=calendarItem.StartDateTime?dayjs(calendarItem.StartDateTime).format("HH:mm"):'';
+        calendarItem.EndDateTime_time=calendarItem.EndDateTime?dayjs(calendarItem.EndDateTime).format("HH:mm"):'';
+        data.paramsTime.date = props.currentTime;
+        data.paramsTime.time = calendarItem.StartDateTime_time;
+        obj[daydate].push(calendarItem);
+        data.scheduleList = obj;
     }
-    //getQuery();
+    getQuery();
     defineExpose({getQuery});
-    const handleDetail= (e) => {
-        emit("handleDetail", e);
-    }
 </script>
 <style lang="less" scoped>
     .weekWrap {
         width: 100%;
         height: 100%;
-
+.arrowIcon{
+    cursor: pointer;
+}
         .weekCalendar {
             height: 100%;
 

@@ -149,7 +149,8 @@ const Interface = {
       like: "/localData/information/chatter.like.post.json"
   },
   schedule: {
-    list:"/localData/schedule/calendar.getlist.json",
+    //list:"/localData/schedule/calendar.getlist.json",
+    list: baseUrl + "/ui.calendar.components/getAllCalendars",//日程日历
     pickList: "/localData/schedule/layout.picklistvalues.get.json",
     save: "/localData/schedule/calendar.event.edit.json", // 保存
     sharedList: "/localData/schedule/calendar.shared.mylist.json",
@@ -290,5 +291,14 @@ const Interface = {
       list: baseUrl + "/aura/Lookup/getItems", // 查找对话框 - 获查找数据
   },
   list2: baseUrl + "/listview/data/getNodes",
+  detailObj: {
+      actions: baseUrl + "/aura/ActionsController/getRecordActions",
+      relatedActions: baseUrl + "/aura/ui/global/components/ActionsManager/RelatedList/handleAction", // 详情页 - 相关列表操作按钮
+      relatedListInfo: baseUrl + "/aura/RelatedListUiController/getRelatedListInfoCollection", // 获取对象相关列表信息集合
+      relatedListColumn: baseUrl + "/aura/RelatedListUiController/getRelatedListInfoByApiName", // 获取单个相关列表 - 列表显示列
+      relatedListActions: baseUrl + "/aura/ui/global/components/ActionsManager/RelatedListRecord/handleAction", // 获取单个相关列表 - 操作按钮
+      relatedListData: baseUrl + "/aura/RelatedListUiController/postRelatedListRecords", // 获取单个相关列表 - 数据
+      compact: baseUrl + "/aura/RecordUi/Layout/getCompact", // 详情标题 - 紧凑布局
+  },
 };
 export default Interface;

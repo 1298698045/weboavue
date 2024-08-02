@@ -234,7 +234,7 @@ const routes = [
         },
       },
       {
-        path: "/00U/m",
+        path: "/lightning/o/Event/leader",
         component: () => import("../views/scheduleAdmin/leader/index.vue"),
         name: "LeaderCalendar",
         icon: "lingdaoricheng",
@@ -244,7 +244,7 @@ const routes = [
         },
       },
       {
-        path: "/calendar/search",
+        path: "/lightning/o/calendar/search",
         component: () => import("../views/scheduleAdmin/search/index.vue"),
         name: "CalendarSearch",
         icon: "richengchaxun",
@@ -396,6 +396,37 @@ const routes = [
     path: "/email/write",
     name: "WriteEmail",
     component: () => import("../views/email/writeEmail/index.vue"),
+  },
+  {
+    path: "/lightning/o/dynamicSign",
+    name: "DynamicSign",
+    component: () => import("../views/meeting/dynamicSign/index.vue"),
+  },
+  {
+    path: "/lightning/o/printMeetingPeoplelst",
+    name: "PrintMeetingPeoplelst",
+    component: () => import("../views/meeting/printMeetingPeoplelst/index.vue"),
+  },
+  {
+    path: "/Search",
+    name: "Search",
+    component: Layout,
+    redirect: "/Search/SearchResult",
+    meta: {
+      name: "全局搜索"
+    },
+    children: [
+      {
+        path: "/Search/SearchResult",
+        name: "SearchResult",
+        component: () => import("../views/searchResult/index.vue"),
+        icon: "search",
+        meta: {
+          name: "搜索结果",
+          icon: "search",
+        },
+      },
+    ]
   },
   {
     path: "/meeting",
@@ -1902,6 +1933,11 @@ const routes = [
         },
       },
     ],
+  },
+  {
+    path: "/detailCommon",
+    name: "DetailCommon",
+    component: () => import("../views/detail/detailCommon.vue"),
   },
 ];
 

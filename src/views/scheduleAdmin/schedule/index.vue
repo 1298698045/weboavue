@@ -37,7 +37,7 @@
     import CalendarVue from "@/components/schedule/calendar/ScheduleCalendar.vue";
     import NewSchedule from "@/components/schedule/NewSchedule.vue";
     import AddSchedule from "@/components/schedule/AddSchedule.vue";
-    import TableCalendar from "@/components/schedule/table/TableCalendar.vue";
+    import TableCalendar from "@/components/scheduleTable/TableCalendar.vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();

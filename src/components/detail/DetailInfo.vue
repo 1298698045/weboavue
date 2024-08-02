@@ -11,8 +11,8 @@
                         <div class="sectionCol_body">
                             <div class="ownerName">
                                 <span v-if="attr.attributes.type=='B'">{{list[attr.localId].displayValue=='true'||list[attr.localId].displayValue==true?'是':'否'}}</span>
-                                <span v-else-if="attr.attributes.type=='z'||attr.attributes.type=='X'"><span v-html="list[attr.localId].displayValue"></span></span>
-                                <span v-else>{{list[attr.localId].displayValue}}</span>
+                                <span v-else-if="attr.attributes.type=='z'||attr.attributes.type=='X'"><span v-html="list[attr.localId]?.displayValue"></span></span>
+                                <span v-else>{{list[attr.localId]?.displayValue}}</span>
                             </div>
                         </div>
                     </div>

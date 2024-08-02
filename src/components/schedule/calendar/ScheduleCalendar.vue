@@ -42,9 +42,9 @@
                     </div>
                     <div class="calendar-selectlist">
                         <div class="calendar-typechook">
-                            <li :class="{'active':calendarType==0}" @click="calendarType=0">日</li>
-                            <li :class="{'active':calendarType==1}" @click="calendarType=1">周</li>
-                            <li :class="{'active':calendarType==2}" @click="calendarType=2">月</li>
+                            <li :class="{'active':calendarType==0}" @click="calendarTypeChange(0)">日</li>
+                            <li :class="{'active':calendarType==1}" @click="calendarTypeChange(1)">周</li>
+                            <li :class="{'active':calendarType==2}" @click="calendarTypeChange(2)">月</li>
                         </div>
                     </div>
                     <div class="formItem ml10" v-if="calendarType==0">
@@ -64,102 +64,28 @@
                     <div class="formItem ml10" v-if="calendarType==2">
                         <a-date-picker v-model:value="monthValue" :format="monthFormat" picker="month" @change="changeMonth" />
                     </div>
-                    <a-button disabled class="ml10" v-if="calendarType==0">今天</a-button>
-                    <a-button disabled class="ml10" v-if="calendarType==1">本周</a-button>
-                    <a-button disabled class="ml10" v-if="calendarType==2">本月</a-button>
+                    <a-button :disabled="currentTimeNow==dayjs(currentTime).format('YYYY-MM-DD')" class="ml10" v-if="calendarType==0" @click="backNowTime(0)">今天</a-button>
+                    <a-button :disabled="currentStartWeekTime==dayjs(startWeekTime).format('YYYY-MM-DD')&&currentEndWeekTime==dayjs(endWeekTime).format('YYYY-MM-DD')" class="ml10" v-if="calendarType==1" @click="backNowTime(1)">本周</a-button>
+                    <a-button :disabled="currentMonthValue==dayjs(monthValue).format('YYYY-MM')" class="ml10" v-if="calendarType==2" @click="backNowTime(2)">本月</a-button>
 
-                    <a-button class="ml10" :icon="h(RedoOutlined)"></a-button>
+                    <a-button class="ml10" :icon="h(RedoOutlined)" @click="calendarTypeChange(calendarType);" title="刷新"></a-button>
                 </div>
                
                 <div class="btnOptions">
                 </div>
             </div>
             <div class="calendarBody">
-                <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2" @select="selectCalendar">
-                    <template #headerRender>
-                        <div>
-                            
-                        </div>
-                    </template>
-                    <template #dateCellRender="{ current }">
-                        <p class="lunar" style="text-align: right;" :class="{'lunarDisabled':getlunarClass(current)}"><span class="holiday" v-if="getHolidayVal(current)">{{ getHolidayVal(current) }}</span><span class="festivals" v-if="getFestivals(current)">{{getFestivals(current)}}</span>{{ getlunarVal(current) }}</p>
-                        <ul class="events">
-                            <a-popconfirm
-                                trigger="hover"
-                                cancelText="编辑"
-                                okText="删除"
-                                v-for="(item,index) in getListData(current)" :key="index"
-                            >   
-                                <template #icon></template>
-                                <template #title>
-                                    <div class="meetingMessageWrap">
-                                        <div class="meetingHead">
-                                            <div class="meetingLogo">
-                                                <img :src="require('@/assets/img/meeting.png')" alt="">
-                                            </div>
-                                            <p class="meetingName">{{item.Subject}}</p>
-                                        </div>
-                                        <div class="meetingBody">
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    被分配人：
-                                                    <span class="OwningUserName">{{item.OwningUserName}}</span>
-                                                </div>
-                                                <div class="meetingInfoItem">
-                                                    地址：
-                                                    <span class="TelePhone">{{item.Location || ''}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    联系电话：
-                                                    <span class="OwningUserName">{{ item.Phone }}</span>
-                                                </div>
-                                                <div class="meetingInfoItem">
-                                                    分配人：
-                                                    <span class="TelePhone">{{item.CreatedByName || ''}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    开始：
-                                                    <span class="OwningUserName">{{item.StartDateTime}}</span>
-                                                </div>
-                                                <div class="meetingInfoItem">
-                                                    结束：
-                                                    <span class="TelePhone">{{item.EndDateTime}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <div class="meetingInfoItem">
-                                                    备注：
-                                                    <span class="OwningUserName">{{item.Description}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="meetingInfo">
-                                                <a-button type="link">更多详细信息</a-button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>                                
-                                <li class="messageItem" :style="{background:backFn(getListData(current))}">
-                                    <p class="time">
-                                        {{dayjs(item.StartDateTime).format("hh:mm")}}
-                                        &nbsp; {{item.Subject}} 
-                                    </p>
-                                </li>
-                            </a-popconfirm>
-                        </ul>
-                    </template>
-                </a-calendar>
-                <DayCalendar v-if="calendarType==0" :currentTime="currentTime"  @openWeekNew="openWeekNew"/>
-                <WeekVue v-if="calendarType==1" :week="week" @openWeekNew="openWeekNew" />
+                <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :currentDate="currentDate" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleSelectCalendar" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
+                <DayCalendar ref="DayCalendarWrap" v-if="calendarType==0" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
+                <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
             </div>
         </div>
-        <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" v-if="isAddSchedule" :paramsTime="paramsTime" @cancel="cancelAddSchedule" />
+        <NewSchedule :isShow="isSchedule" v-if="isSchedule" @cancel="cancelNewSchedule" />
+        <AddSchedule :isShow="isAddSchedule" :id="id" v-if="isAddSchedule" :paramsTime="paramsTime" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" @selectVal="handleNewScheduleVal" :calendarType="formState.type" />
         <ExportSchedule :isShow="isExport"  @cancel="cancelExport" />
         <ShareCalendar :isShow="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
+        <ScheduleDetailModal :isShow="isScheduleDetail" v-if="isScheduleDetail" :id="id" @cancel="isScheduleDetail=false" @selectVal="handleNewScheduleVal" @handleDelete="handleDelete" @edit="handleOpenEdit" />
+        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
     </div>
 </template>
 <script setup>
@@ -189,6 +115,7 @@
     dayjs.extend(weekday);
     dayjs.extend(localeData);
 
+    import MonthCalendar from "@/components/schedule/calendar/ScheduleMonth.vue";
     import WeekVue from "@/components/schedule/calendar/ScheduleWeek.vue";
     import DayCalendar from "@/components/schedule/calendar/ScheduleDay.vue";
 
@@ -197,14 +124,24 @@
     import AddSchedule from "@/components/schedule/AddSchedule.vue";
     import ShareCalendar from "@/components/schedule/ShareCalendar.vue";
     import ExportSchedule from "@/components/schedule/ExportSchedule.vue";
-
+    // 详情
+    import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal.vue";
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     import { getLunar } from 'chinese-lunar-calendar'
     // console.log('getLunar', getLunar(2023, 6, 27)); 
-
+    import Delete from "@/components/listView/Delete.vue";
     import { Lunar, Solar, HolidayUtil } from "lunar-javascript";
+
+    const MonthCalendarWrap=ref(null);
+    const DayCalendarWrap=ref(null);
+    const WeekVueWrap=ref(null);
+    onMounted(()=>{
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
+    })
 
     // 是否调休
     console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,29));
@@ -335,12 +272,45 @@
             date: "",
             time: ""
         },
-        isCollapsed: false
+        isCollapsed: false,
+        isScheduleDetail: false,
+        id: "",
+        startTime:'',
+        endTime:'',
+        objectTypeCode:'4200',
+        sObjectName:'ActivityPointer',
+        isDelete: false,
+        deleteDesc: '确定要删除吗？',
+        external:false,
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isRepeatMeeting, isAddSchedule,
-         isShare, isExport, fileParams, paramsTime, isCollapsed} = toRefs(data);
-    const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
+         isShare, isExport, fileParams, paramsTime, isCollapsed,isScheduleDetail,id,startTime,endTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external} = toRefs(data);
+    const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"];
+    const calendarTypeChange=(e)=>{
+        data.calendarType=e;
+        if(e==2){
+            data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
+            data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
+            nextTick(()=>{
+                MonthCalendarWrap.value.getQuery();
+            })
+        }
+        else if(e==1){
+            data.startTime = dayjs(data.startWeekTime).format("YYYY-MM-DD");
+            data.endTime = dayjs(data.endWeekTime).format("YYYY-MM-DD");
+            nextTick(()=>{
+                WeekVueWrap.value.getQuery();
+            })
+        }
+        else if(e==0){
+            data.startTime = dayjs(data.currentTime || new Date()).startOf("day").format("YYYY-MM-DD");
+            data.endTime = dayjs(data.currentTime || new Date()).endOf('day').format('YYYY-MM-DD');
+            nextTick(()=>{
+                DayCalendarWrap.value.getQuery();
+            })
+        }
+    }
     const backFn = (list) => {
         var len = list.length;
         var index = Math.floor(Math.random() * len);
@@ -349,9 +319,27 @@
     const formState = reactive({
         type: ""
     })
+    // 周/日历 点击单元格新建
+    const handleOpenNew = (params) => {
+        data.id='';
+        data.paramsTime = params;
+        data.isAddSchedule = true;
+    }
+    // 月历 点击单元格新建
+    const handleSelectCalendar = (e,info) => {
+        data.id='';
+        data.paramsTime={
+            date: e.format("YYYY-MM-DD"),
+            time: ""
+        }
+        data.isAddSchedule = true;
+    }
     // 日-切换日期
     const changeTime = (e) => {
         data.currentTime = dayjs(e);
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     const today = dayjs();
     for (let i = 0; i < 7; i++) {
@@ -362,16 +350,45 @@
     }
     data.startWeekTime = dayjs(data.week[0]);
     data.endWeekTime = dayjs(data.week[data.week.length-1]);
+
+    const currentMonthValue=dayjs(new Date()).format("YYYY-MM");
+    const currentTimeNow = dayjs(new Date()).format("YYYY-MM-DD");
+    const week0 = data.week;
+    const currentStartWeekTime = dayjs(data.week[0]).format("YYYY-MM-DD");
+    const currentEndWeekTime = dayjs(data.week[data.week.length-1]).format("YYYY-MM-DD");
+    
+    const backNowTime=(e)=>{
+        if(e==2){
+            currentDate.value = dayjs(new Date());
+            data.monthValue=dayjs(new Date(), monthFormat);
+        }
+        else if(e==1){
+            data.week=week0;
+            data.startWeekTime = dayjs(week0[0]).format("YYYY-MM-DD");
+            data.endWeekTime = dayjs(week0[week0.length-1]).format("YYYY-MM-DD");
+        }
+        else if(e==0){
+            data.currentTime=dayjs(new Date());
+        }
+        nextTick(()=>{
+            calendarTypeChange(e);
+        })
+    }
+
     watch(week,(newVal,oldVal)=>{
         data.startWeekTime = dayjs(newVal[0]);
         data.endWeekTime = dayjs(newVal[newVal.length-1]);
     },{deep: true, immediate: true})
     // 周-切换日期
     const changeStartTime = (e) => {
-        
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     const changeEndTime = (e) => {
-
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     // 周-上周
     const handlePrevWeek = () => {
@@ -381,8 +398,11 @@
             var time = date.format("YYYY-MM-DD");
             temp.push(time);
         }
-        console.log("temp",temp);
+        //console.log("temp",temp);
         data.week = temp;
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     // 周-下周
     const handleNextWeek = () => {
@@ -392,14 +412,20 @@
             var time = date.format("YYYY-MM-DD");
             temp.push(time);
         }
-        console.log("temp",temp);
+        //console.log("temp",temp);
         data.week = temp;
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     const handleStatus = (item, index) => {
         data.statusCurrent = index;
     }
     const onSearch = (e) => {
-
+        data.isScheduleDetail = false;
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     const getPeople = () => {
         proxy.$get(Interface.meeting.userTree, {}).then(res => {
@@ -432,32 +458,13 @@
         window.dayjs = dayjs;
         currentDate.value = dayjs(e);
         getQuery();
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     const getQuery = ()=> {
-        let startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
-        let endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
-        proxy.$get(Interface.schedule.list,{
-            startTime: startTime,
-            endTime: endTime,
-            showMine: 1,
-            search: "",
-            CanlendarType: "",
-            calendarId: ""
-        }).then(res=>{
-            let calendarItems = res.returnValue.calendars[0].calendarItems;
-            console.log("calendarItems",calendarItems);
-            let obj = {};
-            calendarItems.forEach(item=>{
-                let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
-                console.log("daydate",daydate); 
-                if(!obj[daydate]){
-                    obj[daydate] = [];
-                }
-                obj[daydate].push(item);
-            })
-            data.meetingList = obj;
-            console.log("obj",obj)
-        })
+        data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
+        data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
     }
     getQuery();
     // 关闭新建
@@ -478,12 +485,6 @@
         data.paramsTime.date = date.format("YYYY-MM-DD");
         data.isAddSchedule = true;
     };
-    // 周-编辑
-    const openWeekNew = (e) => {
-        console.log("e",e);
-        data.paramsTime = e;
-        data.isAddSchedule = true;
-    };
     const cancelExport = (e) => {
         data.isExport = e;
     }
@@ -498,6 +499,35 @@
     }
     const handleCollapsed = () => {
         data.isCollapsed = !data.isCollapsed;
+    }
+    //详情
+    const handleDetail = (item, date) => {
+        data.id=item.Id;
+        nextTick(()=>{
+            data.isScheduleDetail = true;
+        })
+    }
+    // 编辑
+    const handleOpenEdit = (e) => {
+        data.paramsTime={
+            date: "",
+            time: ""
+        }
+        data.id=e.Id;
+        data.isAddSchedule = true;
+    }
+    //删除
+    const handleDelete = (e) => {
+        data.id=e.Id;
+        data.isDelete = true;
+    }
+    //删除关闭
+    const cancelDelete = (e) => {
+        data.isDelete = false;
+    };
+    const handleNewScheduleVal = (e) => {
+        data.isAddSchedule = false;
+        onSearch();
     }
 </script>
 <style lang="less" scoped>
@@ -688,7 +718,7 @@
                 }
             }
             .meetingName{
-                margin-left: 20px;
+                margin-left: 15px;
                 font-size: 16px;
                 font-weight: bold;
             }

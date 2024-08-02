@@ -27,24 +27,22 @@
                                             <div class="meetingBody">
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
-                                                        召集人：
+                                                        被分配人：
                                                         <span class="OwningUserName">{{item.Who}}</span>
                                                     </div>
                                                     <div class="meetingInfoItem">
+                                                        地址：
+                                                        <span class="TelePhone">{{item.Location || ''}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
                                                         联系电话：
-                                                        <span class="TelePhone">{{item.TelePhone || ''}}</span>
+                                                        <span class="OwningUserName">{{ item.Phone }}</span>
                                                     </div>
-                                                </div>
-                                                <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
-                                                        会议室：
-                                                        <span class="OwningUserName">{{ item.Where }}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="meetingInfo">
-                                                    <div class="meetingInfoItem">
-                                                        会议设备：
-                                                        <span class="OwningUserName"></span>
+                                                        分配人：
+                                                        <span class="TelePhone">{{item.CreatedByName || ''}}</span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
@@ -70,15 +68,14 @@
                                         </div>
                                     </template>                                
                                     <li class="messageItem" :style="{background:backFn(getListData(current))}" @click.stop="handleDetail(item, current)">
-                                        <!-- <a-badge status="success" :text="item.Subject" /> -->
-                                        <p class="name123">{{item.Subject}}</p>
                                         <p class="time">
-                                            {{item.StartDateTime}}~{{item.EndDateTime}}
-                                            &nbsp; {{item.Who}} 预约
+                                            {{dayjs(item.StartDateTime).format("hh:mm")}}
+                                            &nbsp; {{item.Subject}} 
                                         </p>
                                     </li>
                                 </a-popconfirm>
                             </template>
+                            
                         </ul>
                     </template>
                 </a-calendar>
@@ -110,12 +107,48 @@
     dayjs.extend(weekday);
     dayjs.extend(localeData);
 
+    import WeekVue from "@/components/schedule/calendar/ScheduleWeek.vue";
+    import DayCalendar from "@/components/schedule/calendar/ScheduleDay.vue";
+
+    // 新建
+    import NewSchedule from "@/components/schedule/NewSchedule.vue";
+    import AddSchedule from "@/components/schedule/AddSchedule.vue";
+    import ShareCalendar from "@/components/schedule/ShareCalendar.vue";
+    import ExportSchedule from "@/components/schedule/ExportSchedule.vue";
+
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
-    const { proxy } = getCurrentInstance();
+    import { getLunar } from 'chinese-lunar-calendar'
+    // console.log('getLunar', getLunar(2023, 6, 27)); 
 
     import { Lunar, Solar, HolidayUtil } from "lunar-javascript";
+
+    // 是否调休
+    console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,29));
+
+    console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,18).isWork());
+
+
+    // var d = HolidayUtil.getHoliday(2024,2,29);
+    // console.log('isWork', d.isWork());
+
+    console.log('Solar', Solar.fromDate(new Date("2024-12-24")).getFestivals());
+
+    // 转阴历
+    // console.log("转阴历", Solar.fromDate(new Date('2024-2-10')).getLunar());
+
+    let lunar2 = Solar.fromDate(new Date('2024-2-9')).getLunar();
+    console.log("lunar2", lunar2)
+    let year = lunar2.getYear();
+    let month = lunar2.getMonth();
+    let day = lunar2.getDay();
+    console.log(year, month ,day)
+    // 获取农历节日
+    let festival = Lunar.fromYmd(year, month, day).getFestivals();
+    console.log('Lunar', festival);
+    // 节气
+    console.log("Lunar.fromYmd-getJieQi", Lunar.fromYmd(2024, 3, 1).getJieQi())
     // 获取农历日期
     const getlunarVal = (date) => {
         // console.log("val", date.format("YYYY-MM-DD"));
@@ -134,7 +167,6 @@
         let day = lunar2.getDay();
         let LunarFestival = Lunar.fromYmd(year, month, day).getFestivals();
         let LunarJieQi = Lunar.fromYmd(year, month, day).getJieQi();
-
         if(SolarFestival && SolarFestival.length){
             SolarFestival.forEach(item=>{
                 festival += item;
@@ -144,7 +176,7 @@
             LunarFestival.forEach(item=>{
                 festival += item;
             });
-        } 
+        }
         if(LunarJieQi){
             festival += LunarJieQi;
         }
@@ -175,9 +207,18 @@
         let currentMonth = data.monthValue.format('MM');
         return month != currentMonth ? true : false;
     }
+    const { proxy } = getCurrentInstance();
     const formRef = ref();
     const monthFormat = 'YYYY/MM';
+    const props = defineProps({
+        currentDate:String,
+        startDateTime:String,
+        endDateTime:String,
+        calendarType:String
+    })
+    const emit = defineEmits(['openNew','handleDetail','openEdit','handleDelete']);
     const data = reactive({
+        activeKey: "1",
         statusList: [
             {
                 label: "全部",
@@ -202,32 +243,28 @@
         ],
         statusCurrent: 0,
         searchVal: "",
-        meetingList: {},
+        userListTree: [],
+        scheduleList: {},
         monthValue: dayjs(new Date(), monthFormat),
         calendarType: 2,
         currentTime: dayjs(),
         startWeekTime: "",
         endWeekTime: "",
         week: [],
-        isNewMeeting: false,
-        isRepeatMeeting: false,
+        isSchedule: false,
+        isAddSchedule: false,
+        isShare: false,
+        isExport: false,
+        fileParams: {},
         paramsTime: {
             date: "",
             time: ""
         },
-        meetingId: "",
-        isMeetingDetail: false
+        isCollapsed: false
     });
-    const props = defineProps({
-        currentDate:String,
-        startDateTime:String,
-        endDateTime:String,
-        calendarType:String
-    })
-    const emit = defineEmits(['openNew','handleDetail','openEdit','handleDelete']);
-    const { activeKey, statusList, statusCurrent, searchVal, meetingList,
-         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime,
-         meetingId, isMeetingDetail} = toRefs(data);
+    const { activeKey, statusList, statusCurrent, searchVal, userListTree, scheduleList,
+         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isRepeatMeeting, isAddSchedule,
+         isShare, isExport, fileParams, paramsTime, isCollapsed} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const backFn = (list) => {
         var len = list.length;
@@ -251,74 +288,15 @@
     const handleDetail= (e) => {
         emit("handleDetail", e);
     }
+
     const today = dayjs();
 
     const currentDate = ref(dayjs());
     const getListData = value => {
-        // console.log("value:", value.date());
-        // let listData;
-        // switch (value.date()) {
-        //     case 8:
-        //         listData = [
-        //             {
-        //                 type: 'warning',
-        //                 content: 'This is warning event.',
-        //             },
-        //             {
-        //                 type: 'success',
-        //                 content: 'This is usual event.',
-        //             },
-        //         ];
-        //         break;
-        //     case 10:
-        //         listData = [
-        //             {
-        //                 type: 'warning',
-        //                 content: 'This is warning event.',
-        //             },
-        //             {
-        //                 type: 'success',
-        //                 content: 'This is usual event.',
-        //             },
-        //             {
-        //                 type: 'error',
-        //                 content: 'This is error event.',
-        //             },
-        //         ];
-        //         break;
-        //     case 15:
-        //         listData = [
-        //             {
-        //                 type: 'warning',
-        //                 content: 'This is warning event',
-        //             },
-        //             {
-        //                 type: 'success',
-        //                 content: 'This is very long usual event。。....',
-        //             },
-        //             {
-        //                 type: 'error',
-        //                 content: 'This is error event 1.',
-        //             },
-        //             {
-        //                 type: 'error',
-        //                 content: 'This is error event 2.',
-        //             },
-        //             {
-        //                 type: 'error',
-        //                 content: 'This is error event 3.',
-        //             },
-        //             {
-        //                 type: 'error',
-        //                 content: 'This is error event 4.',
-        //             },
-        //         ];
-        //         break;
-        //     default:
-        // }
-        // return listData || [];
+        //let date = value.format('YYYY-MM-DD');
+        // console.log("date",date);
         let date = value.date();
-        return data.meetingList[date] || [];
+        return data.scheduleList[date] || [];
     };
     const getQuery = ()=> {
         let d = {
@@ -330,7 +308,7 @@
                     "startDateTime": props.startDateTime,
                     "endDateTime": props.endDateTime,
                     "calendarType": 'month',
-                    "queryMeetings": true
+                    "queryEvents": true
                 }
 
             }]
@@ -338,12 +316,12 @@
         let obj = {
             message: JSON.stringify(d)
         }
-        data.meetingList =[];
-        proxy.$post(Interface.meeting.getall,obj).then(res=>{
+        data.scheduleList =[];
+        proxy.$post(Interface.schedule.list,obj).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
-                        let meetingItems = res.actions[0].returnValue;
+                        let scheduleItems = res.actions[0].returnValue[0].calendarItems;
                         let obj = {};
-                        meetingItems.forEach(item=>{
+                        scheduleItems.forEach(item=>{
                             let daydate = dayjs(item.StartDateTime).format('DD');
                             //console.log("daydate",daydate);
                             if(!obj[daydate]){
@@ -353,7 +331,7 @@
                             item.EndDateTime=item.EndDateTime?dayjs(item.EndDateTime).format("YYYY-MM-DD HH:mm"):'';
                             obj[daydate].push(item);
                         })
-                        data.meetingList = obj;
+                        data.scheduleList = obj;
                         //console.log("obj",obj)
             }
         })
@@ -362,8 +340,16 @@
     defineExpose({getQuery});
 </script>
 <style lang="less" scoped>
+    .headerCalendar{
+        border-bottom: 1px solid #e5e6eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 10px;
+    }
     .calendarWrap {
         width: 100%;
+        /* height: calc(~"100% - 49px"); */
         height: 100%;
         display: flex;
 
@@ -413,7 +399,7 @@
 
         .rightBox {
             flex: 1;
-
+            position: relative;
             .calendarHeader {
                 width: 100%;
                 padding: 12px;
@@ -541,7 +527,7 @@
                 }
             }
             .meetingName{
-                margin-left: 20px;
+                margin-left: 15px;
                 font-size: 16px;
                 font-weight: bold;
             }
@@ -580,10 +566,9 @@
         padding-right: 10px;
         color: red;
     }
-    .calendarWrap :deep .ant-tabs-nav-operations{
-        display: none !important;
-    }
-    .calendarWrap :deep .ant-tabs-nav-wrap{
-        display: block !important;
+</style>
+<style>
+    .ant-tabs .ant-tabs-tab{
+        padding: 12px 12px !important;
     }
 </style>

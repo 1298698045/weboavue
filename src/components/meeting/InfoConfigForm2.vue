@@ -1,13 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="1200px" :maskClosable="false" @cancel="handleCancel"
-            @ok="handleSubmit">
-            <template #title>
-                <div>
-                    {{ title }}
-                </div>
-            </template>
-            <div class="modalContainer AddScheduleModalContainer">
+        <div class="modalContainer">
                 <div class="modalCenter" :style="{ height: height + 'px!important' }">
                     <div class="tabPanel">
                         <div class="barContainer">
@@ -232,16 +225,11 @@
                                                     :default-active-first-option="false" :filter-option="false"
                                                     showSearch @search=" (e) => { searchlookup(e, '30020'); } "
                                                     @dropdownVisibleChange=" (e) => { searchlookup('', '30020'); } "
-                                                    :placeholder="'选择被分配人'">
+                                                    :placeholder="'邀请可选与会者'">
                                                     <template #suffixIcon></template>
                                                     <a-select-option v-for="(option, optionIdx) in OwningUserList"
-                                                        :key="optionIdx" :value="option.ID">
-                                                        <a-avatar :size="37">
-                                                            <template #icon><UserOutlined /></template>
-                                                            <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
-                                                        </a-avatar>
-                                                        {{ option.Name }}
-                                                    </a-select-option>
+                                                        :key="optionIdx" :value="option.ID">{{ option.Name
+                                                        }}</a-select-option>
                                                 </a-select>
                                                 <div class="selectIcon">
                                                     <SearchOutlined class="ant-select-suffix"
@@ -348,7 +336,7 @@
                                                 <FormOutlined />
                                             </div>
                                             <div class="rVal">
-                                                <TEditor ref="editorRef" mode="middle" :placeholder="'添加描述或附件文档'" :height=500
+                                                <TEditor ref="editorRef" mode="simple" :placeholder="'添加描述或附件文档'" :height=500
                                                     @input="getEditorContent" />
                                             </div>
                                         </div>
@@ -362,13 +350,6 @@
                     </div>
                 </div>
             </div>
-            <template #footer>
-                <div>
-                    <a-button @click="handleCancel">取消</a-button>
-                    <a-button type="primary" @click.prevent="handleSubmit">保存</a-button>
-                </div>
-            </template>
-        </a-modal>
     </div>
 </template>
 <script setup>
@@ -441,7 +422,7 @@
     };
     const editorRef = ref();
     const data = reactive({
-        title: "新建日程",
+        title: "新建会议",
         height: document.documentElement.clientHeight - 300,
         menuTimes: [
             '不要提醒我', '在事件发生时', '5 分钟 钱', '30分钟 前', '1小时 前',
@@ -473,9 +454,7 @@
                 label: "紫色类别"
             }
         ],
-        OwningUserList: [],
-        calendarItem:{},
-        OwningUserName:''
+        OwningUserList: []
     });
     const {
         title,
@@ -516,8 +495,7 @@
         let hour = new Date(props.paramsTime.date +' '+ props.paramsTime.time).getHours() + 1;
         hour = hour < 10 ? '0' + hour : hour;
         formState.EndDateTime_time = hour+':00';
-    }
-    else{
+    }else{
         formState.StartDateTime = dayjs(new Date()).startOf("day").format("YYYY-MM-DD");
         formState.EndDateTime = dayjs(new Date()).endOf("day").format("YYYY-MM-DD");
         let hour = (new Date()).getHours() + 1;
@@ -536,18 +514,15 @@
         calendarGetData();
     }, {deep: true})
     watch(()=>formState.StartDateTime_time,(newVal,oldVal)=>{
-        formState.startTime = formState.StartDateTime + ' ' + newVal;
-        // let hour = (new Date(formState.startTime)).getHours() + 1;
-        // hour = hour < 10 ? '0' + hour : hour;
-        // formState.EndDateTime_time=hour+':00';
+        formState.startTime = formState.StartDateTime + '' + newVal;
         calendarGetData();
     }, {deep: true})
     watch(()=>formState.EndDateTime,(newVal,oldVal)=>{
-        formState.endTime = newVal + ' ' + formState.EndDateTime_time;
+        formState.endTime = newVal + '' + formState.EndDateTime_time;
         calendarGetData();
     }, {deep: true})
     watch(()=>formState.EndDateTime_time,(newVal,oldVal)=>{
-        formState.endTime = formState.EndDateTime + ' ' + newVal;
+        formState.endTime = formState.EndDateTime + '' + newVal;
         calendarGetData();
     }, {deep: true})
     const searchlookup = (search, Lktp) => {
@@ -623,7 +598,7 @@
         if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
             let fields=res.actions[0].returnValue.fields;
             formState.Location=fields.Location&&fields.Location.value?fields.Location.value:'';
-            formState.Subject=fields.Subject&&fields.Subject.value?fields.Subject.value:'';
+            formState.Subject=fields.Name&&fields.Name.value?fields.Name.value:'';
             formState.Description=fields.Description&&fields.Description.value?fields.Description.value:'';
 
             formState.StartDateTime=fields.ScheduledStart&&fields.ScheduledStart.value?dayjs(fields.ScheduledStart.value).format("YYYY-MM-DD"):'';
@@ -644,12 +619,13 @@
     
   }
   if(props.id){
-      data.title = '编辑日程';
+      data.title = '编辑会议';
       getDetail();
   }
   else{
       calendarGetData();
   }
+
     const handleSubmit = () => {
     formRef.value.validate().then(() => {
         // console.log("values", formState, toRaw(formState));
@@ -667,11 +643,10 @@
                         objTypeCode: props.objectTypeCode,
                         fields: {
                             Location: formState.Location,
-                            Subject: formState.Subject,
+                            Name: formState.Subject,
                             Description: formState.Description,
                             ScheduledStart: formState.StartDateTime+' '+formState.StartDateTime_time,
                             ScheduledEnd: formState.EndDateTime+' '+formState.EndDateTime_time,
-                            IsAllDayEvent: formState.IsAllDayEvent
                         }
                     }
                 }
@@ -680,29 +655,15 @@
         if(props.id){
             url = Interface.edit;
             d.actions[0].params.recordId = props.id;
-            d.actions[0].params.recordInput.fields.CalendarType=formState.CalendarType||'';
         }
-        else{
-            d.actions[0].params.recordInput.fields.CalendarType=props.calendarType||'';
-            d.actions[0].params.recordInput.fields.ActivityTypeCode=4201;
+        let obj = {
+            message: JSON.stringify(d)
         }
-        var ids=formState.OwningUser&&formState.OwningUser.Id&&formState.OwningUser.Id.length?formState.OwningUser.Id:[];
-        if(ids&&ids.length){
-            for(var i=0;i<ids.length;i++){
-                d.actions[0].params.recordInput.fields.OwningUser=ids[i];
-                let obj = {
-                    message: JSON.stringify(d)
-                }
-                proxy.$post(url, obj).then((res) => {
-                    //if(i==ids.length-1){
-                        message.success("保存成功！");
-                        //emit("cancel", false);
-                        emit("select-val", '');
-                    //}
-                });
-            }
-        }
-        
+        proxy.$post(url, obj).then((res) => {
+          message.success("保存成功！");
+          emit("select-val", '');
+          //emit("success", false);
+        });
       })
       .catch((err) => {
         console.log("error", err);
@@ -886,7 +847,7 @@
     }
 
     .formContent {
-        height: calc(~"100% - 60px");
+        height: calc(~"100% - 100px");
         margin-top: 12px;
         display: flex;
 
@@ -976,12 +937,4 @@
         border: none !important;
         outline: 0 !important;
     }
-    .AddScheduleModalContainer{
-        .ant-select-selection-item-content .ant-avatar{
-            display: none !important;
-        }
-    }
-    .ant-select-item-option-content .ant-avatar{
-            margin-right: 8px !important;
-        }
 </style>

@@ -1,16 +1,5 @@
 <template>
     <div class="todoList documentAdmin">
-      <div class="headerBar">
-        <div class="headerLeft">
-          <div class="icon-circle-base" style="background: #217346;">
-                  <img :src="require('@/assets/img/rightMenu/xiaozu.png')" alt="">
-              </div>
-          <span class="headerTitle">日程查询</span>
-        </div>
-        <div class="headerRight">
-          <a-button type="primary" class="ml10" @click="handleAddSchedule">新建日程</a-button>
-        </div>
-      </div>
       <div class="todo-content">
         <a-row>
           <!-- <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">
@@ -88,7 +77,7 @@
       CaretDownOutlined,
       UserOutlined
     } from "@ant-design/icons-vue";
-    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated,nextTick } from "vue";
+    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated,nextTick,defineProps } from "vue";
     import Interface from "@/utils/Interface.js";
     import { message } from "ant-design-vue";
     // import Dtable from "@/components/Dtable.vue";
@@ -114,6 +103,9 @@
     const y = 2;
     const z = 1;
     const { proxy } = getCurrentInstance();
+    const props = defineProps({
+      layoutName: String,
+    });
     const genData = [];
     const generateData = (_level, _preKey, _tns) => {
       const preKey = _preKey || "0";
@@ -364,8 +356,8 @@
       }
       let contentHeight = contentRef.value.clientHeight;
       let tabsHeight = 46;
-      let height = contentHeight - tabsHeight - formSearchHeight.value;
-      data.tableHeight = height;
+      let height = contentHeight - formSearchHeight.value;
+      data.tableHeight = height-46;
       console.log('data', data.tableHeight);
       //console.log("gridRef", gridRef.value.loadGrid())
       //handleSearch();
@@ -457,7 +449,7 @@
     const getTabs = () => {
       proxy.$get(Interface.getTabs, {
         entityName:'ActivityPointer',
-        layoutName:'ActivityPointerSearch'
+        layoutName:props.layoutName
       }).then(res => {
         //console.log("tabs", res)
         if(res&&res.tabs&&res.tabs.length){
@@ -748,6 +740,9 @@
       }
     }
     .documentAdmin{
+        .todo-content{
+          height: calc(~'100% - 0px');
+        }
         .todo-content .ant-row .wea-left-right-layout-left .wea-left-tree .wea-left-tree-search{
             padding-left: 14px;
         }

@@ -6,13 +6,13 @@
                 <span class="logoText">邮件</span>
             </div>
             <div class="emailSearch"></div>
-            <div class="return">返回OA</div>
+            <div class="return" @click="backToOA">返回OA</div>
         </div>
         <div class="emailBd">
             <div class="emailContainer">
                 <div class="leftContainer">
                     <div class="leftNavPaneWrap" v-if="isFold">
-                        <a-button type="primary" block> 写邮件 </a-button>
+                        <a-button type="primary" block @click="openWriteEmail"> 写邮件 </a-button>
                         <div class="leftEmailScroll">
                             <ul class="emailMenuWrap">
                                 <li class="emailItem" v-for="(item, index) in navList" :key="index">
@@ -214,7 +214,7 @@
                                     v-for="(item,index) in inboxList" :key="index" @mouseenter="handleMouseover(item,index)"
                                     @mouseleave="handleMouseout(item,index)" @click="handleRowEmail(item,index)">
                                     <p @click.stop v-if="item.isBook">
-                                        <el-checkbox class="checkbox" :label="item.emailId"
+                                        <el-checkbox class="checkbox" 
                                             :value="item.emailId"></el-checkbox>
                                     </p>
                                     <a-tooltip placement="top" title="点击标记未读">
@@ -295,8 +295,9 @@
     import { message } from "ant-design-vue";
     import EmailDetail from "@/components/email/EmailDetail.vue";
     import Interface from "@/utils/Interface.js";
-
+    import { useRouter, useRoute } from "vue-router";
     const { proxy } = getCurrentInstance();
+    const router = useRouter();
     const data = reactive({
         navList: [
             {
@@ -561,6 +562,28 @@
             data.emailIndex = index;
             data.isDetail = true;
         }
+    }
+    const backToOA = () => {
+        let url = router.resolve({
+            path:'/workspace/personal/home',
+            name: "PersonalHome",
+            query: {
+                
+            },
+        });
+        //window.open(url.href);
+        window.location.href=url.href;
+    }
+    const openWriteEmail= () => {
+        let url = router.resolve({
+            path:'/email/write',
+            name: "WriteEmail",
+            query: {
+                
+            },
+        });
+        //window.open(url.href);
+        window.location.href=url.href;
     }
 </script>
 <style lang="less" scoped>
@@ -1020,8 +1043,8 @@
                 }
                 .checkbox{
                     position: absolute;
-                    left: 12px;
-                    top: 8px;
+                    left: 8px;
+                    top: 0px;
                     margin-left: 0 !important;
                     margin-top: 0 !important;
                     border: none !important;

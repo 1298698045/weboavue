@@ -96,7 +96,7 @@
                   >
                     <a-select
                       allowClear
-                      v-model:value="formState[attribute.targetValue].value"
+                      v-model:value="formState[attribute.targetValue]"
                       :default-active-first-option="false"
                       :filter-option="false"
                       showSearch
@@ -231,7 +231,7 @@
             @selectVal="handleUserParams"
             :localId="localId"
           ></radio-user>
-          <Lookup-filter v-if="isLookup" :isShow="isLookup" :objectTypeCode="sObjectType" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
+          <Lookup-filter v-if="isLookup" :isShow="isLookup" :field="localId" :entityApiName="entityApiName" :lookEntityApiName="lookEntityApiName" :objectTypeCode="sObjectType" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
           <!-- <multiple-user :isShow="isMultipleUser" @cancel="cancelMuUserModal"  @selectVal="handleMuUserParams" /> -->
         </div>
       </div>
@@ -286,16 +286,18 @@ const props = defineProps({
   objectTypeCode: String,
   id: String,
   entityId: String,
-  entityApiName: String
+  entityApiName: String,
+  relatedObjectAttributeName: String, // 默认值name
+  relatedObjectAttributeValue: Object // 默认值value
 });
 console.log("props.entityId", props.entityId);
 const formRef = ref();
-const emit = defineEmits(["cancel","load"]);
+const emit = defineEmits(["cancel"]);
 const handleCancel = () => {
   emit("cancel", false);
 };
 const data = reactive({
-  title: "新建",
+  title: "新建部门变动",
   layoutList: [],
   list: {},
   select: {},
@@ -305,12 +307,13 @@ const data = reactive({
   isMultipleDept: false,
   isRadioUser: false,
   localId: "",
-  isMultipleUser: true,
+  isMultipleUser: false,
   isLookup: false,
   sObjectType: "",
   recordObj: {}, // 记录当前点击的数据
   picklistFieldMap: {}, // 依赖字段关联关系
   selectFixed: {}, // select 固定不变的数据
+  lookEntityApiName: ""
 });
 if(props.title){
   data.title = props.title;
@@ -331,7 +334,7 @@ const {
   sObjectType,
   recordObj,
   picklistFieldMap,
-  selectFixed
+  selectFixed, lookEntityApiName
 } = toRefs(data);
 const formState = reactive({});
 const handleData = (res) => {
@@ -347,15 +350,33 @@ const handleData = (res) => {
     //   Name: data.list[item.name].Name,
     // };
   });
-  for (var key in data.list) {
-    formState[key] = data.list[key].value;
-  }
+  // 赋值list
+  // for (var key in data.list) {
+  //   formState[key] = data.list[key].value;
+  // }
+
   data.layoutList.forEach(item=>{
     item.rows.forEach(row=>{
       row.attributes.forEach(col=>{
+        formState[col.localId] = data.list[col.localId]?.value;
         if(['O', 'Y', 'U', 'Y_MD'].includes(col.attributes.type)){
           console.log("data.list[col.localId]",data.list[col.localId]);
-          formState[col.localId] = data.list[col.localId]
+          // formState[col.localId] = data.list[col.localId];
+          console.log("data.search[col.localId]", data.search[col.localId]);
+          if(data.search[col.localId]==undefined){
+            data.search[col.localId] = [];
+          }
+          data.search[col.localId].push({
+            ID: data.list[col.localId].value,
+            Name: data.list[col.localId].displayValue
+          })
+          if(props.relatedObjectAttributeName == col.localId){
+            formState[col.localId] = props.relatedObjectAttributeValue.value;
+            data.search[col.localId].push({
+              ID: props.relatedObjectAttributeValue.value,
+              Name: props.relatedObjectAttributeValue.name
+            })
+          }
         }
       })
     })
@@ -384,6 +405,9 @@ const getLayoutInterface = () => {
     }
   if(props.id){
     d.actions[0].params.recordId = props.id;
+  }
+  if(props.relatedObjectAttributeName){
+    d.actions[0].params.defaultFieldValues[props.relatedObjectAttributeName] = props.relatedObjectAttributeValue.value;
   }
   let obj = {
     message: JSON.stringify(d)
@@ -419,7 +443,7 @@ const getPickerList = () => {
       descriptor: "",
       callingDescriptor: "UNKNOWN",
       params: {
-        objectApiName: "HREmployee",
+        objectApiName: props.entityApiName,
         recordTypeId: ""
       }
     }]
@@ -555,7 +579,7 @@ const searchlookup = (search, attribute) => {
         pageSize: 25,
         q: "",
         searchType: "Recent",
-        targetApiName: "",
+        targetApiName: attribute.attributes.referencedEntityName,
         body: {
           sourceRecord: {
             apiName: props.entityApiName,
@@ -638,12 +662,13 @@ const handleMuUserParams = (params) => {};
 const handleOpenLook = (attribute) => {
   let localId = attribute.localId;
   data.localId = localId;
-  let sObjectType = attribute.attributes.sObjectType;
+  let sObjectType = attribute.attributes.referencedEntityObjectTypeCode;
   if (sObjectType == 30020) {
     data.isRadioUser = true;
   } else if (sObjectType == 10) {
     data.isRadioDept = true;
   }else {
+    data.lookEntityApiName = attribute.attributes.referencedEntityName;
     data.recordObj = attribute;
     data.sObjectType = sObjectType;
     data.isLookup = true;
@@ -662,8 +687,11 @@ const handleSelectData = (e) => {
       Name: e.Name
     })
   }
-  formState[localId].Id = e.LIST_RECORD_ID;
-  formState[localId].Name = e.Name;
+  formState[localId] = e.LIST_RECORD_ID;
+  // formState[localId].Id = e.LIST_RECORD_ID;
+  // formState[localId].value = e.LIST_RECORD_ID;
+  // formState[localId].Name = e.Name;
+  // formState[localId].displayValue = e.Name;
 };
 const handleSubmit = () => {
   formRef.value.validate().then(() => {
@@ -678,7 +706,7 @@ const handleSubmit = () => {
                   // recordId: props.id,
                   recordInput:{
                       allowSaveOnDuplicate: false,
-                      apiName: "",
+                      apiName: props.entityApiName,
                       objTypeCode: props.objectTypeCode,
                       fields: formState
                   }
@@ -694,8 +722,7 @@ const handleSubmit = () => {
       }
       proxy.$post(url, obj).then((res) => {
         message.success("保存成功！");
-        emit("cancel", false);
-        emit("load", false);
+        emit("success", false);
       });
     })
     .catch((err) => {

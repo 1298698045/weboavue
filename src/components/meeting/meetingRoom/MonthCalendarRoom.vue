@@ -4,7 +4,7 @@
             <div class="monthCalendarHead">
                 <div class="timeZone">会议室</div>
                 <div class="calendarDayHeaders" ref="headRef">
-                    <div class="monthDayHeadItem" v-for="(item,index) in monthDayList" :key="index">
+                    <div class="monthDayHeadItem" v-for="(item,index) in monthDayList" :key="index" :class="{'active':isWeekendDay(item)}">
                         {{item}}
                     </div>
                 </div>
@@ -20,73 +20,74 @@
                         <table>
                             <tbody>
                                 <tr v-for="(item,index) in roomList" :key="index"  :ref="(el) => setItemRefs(el, item, index)">
-                                    <td v-for="(row,idx) in monthDayList" :key="idx">
-                                        <a-popconfirm trigger="hover" cancelText="编辑" okText="删除"
-                                            v-for="(col, colIdx) in item.meetingItems" :key="colIdx">
-                                            <template #icon></template>
-                                            <template #title>
-                                                <div class="meetingMessageWrap">
-                                                    <div class="meetingHead">
-                                                        <div class="meetingLogo">
-                                                            <img :src="require('@/assets/img/meeting.png')" alt="">
+                                    <td v-for="(row,idx) in monthDayList" :key="idx" :class="{'active':isToDay(row)}" @click="(e)=>{openNew(e,row)}">
+                                        <template v-for="(col, colIdx) in item.meetingItems" :key="colIdx">
+                                            <a-popconfirm trigger="hover" cancelText="删除" okText="编辑" @confirm="openEdit(col)" @cancel="handleDelete(col)">
+                                                <template #icon></template>
+                                                <template #title>
+                                                    <div class="meetingMessageWrap">
+                                                        <div class="meetingHead">
+                                                            <div class="meetingLogo">
+                                                                <img :src="require('@/assets/img/meeting.png')" alt="">
+                                                            </div>
+                                                            <p class="meetingName">{{col.Subject}}</p>
                                                         </div>
-                                                        <p class="meetingName">{{col.Subject}}</p>
+                                                        <div class="meetingBody">
+                                                            <div class="meetingInfo">
+                                                                <div class="meetingInfoItem">
+                                                                    召集人：
+                                                                    <span
+                                                                        class="OwningUserName">{{col.Who}}</span>
+                                                                </div>
+                                                                <div class="meetingInfoItem">
+                                                                    联系电话：
+                                                                    <span class="TelePhone">{{col.TelePhone || ''}}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="meetingInfo">
+                                                                <div class="meetingInfoItem">
+                                                                    会议室：
+                                                                    <span class="OwningUserName">{{ item.meetingRoom?item.meetingRoom.Name:'' }}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="meetingInfo">
+                                                                <div class="meetingInfoItem">
+                                                                    会议设备：
+                                                                    <span class="OwningUserName"></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="meetingInfo">
+                                                                <div class="meetingInfoItem">
+                                                                    开始：
+                                                                    <span
+                                                                        class="OwningUserName">{{col.StartDateTime}}</span>
+                                                                </div>
+                                                                <div class="meetingInfoItem">
+                                                                    结束：
+                                                                    <span class="TelePhone">{{col.EndDateTime}}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="meetingInfo">
+                                                                <div class="meetingInfoItem">
+                                                                    备注：
+                                                                    <span class="OwningUserName">{{col.Description}}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="meetingInfo">
+                                                                <a-button type="link" @click.stop="handleDetail(col, row)">更多详细信息</a-button>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="meetingBody">
-                                                        <div class="meetingInfo">
-                                                            <div class="meetingInfoItem">
-                                                                召集人：
-                                                                <span
-                                                                    class="OwningUserName">{{col.Who}}</span>
-                                                            </div>
-                                                            <div class="meetingInfoItem">
-                                                                联系电话：
-                                                                <span class="TelePhone">{{col.TelePhone || ''}}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="meetingInfo">
-                                                            <div class="meetingInfoItem">
-                                                                会议室：
-                                                                <span class="OwningUserName">{{ item.meetingRoom?item.meetingRoom.Name:'' }}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="meetingInfo">
-                                                            <div class="meetingInfoItem">
-                                                                会议设备：
-                                                                <span class="OwningUserName"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="meetingInfo">
-                                                            <div class="meetingInfoItem">
-                                                                开始：
-                                                                <span
-                                                                    class="OwningUserName">{{col.StartDateTime}}</span>
-                                                            </div>
-                                                            <div class="meetingInfoItem">
-                                                                结束：
-                                                                <span class="TelePhone">{{col.EndDateTime}}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="meetingInfo">
-                                                            <div class="meetingInfoItem">
-                                                                备注：
-                                                                <span class="OwningUserName">{{col.Description}}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="meetingInfo">
-                                                            <a-button type="link">更多详细信息</a-button>
-                                                        </div>
+                                                </template>
+                                                <div class="meetingBox" v-if="showMeeting(col,row)">
+                                                    <div class="meetingItem" @click.stop="handleDetail(col, row)">
+                                                        <p class="name">{{col.Subject}}</p>
+                                                        <p>{{col.StartDateTime}}-{{col.EndDateTime}}
+                                                            {{col.Who}}预约</p>
                                                     </div>
                                                 </div>
-                                            </template>
-                                            <div class="meetingBox" v-if="showMeeting(col,row)">
-                                                <div class="meetingItem">
-                                                    <p class="name">{{col.Subject}}</p>
-                                                    <p>{{col.StartDateTime}}-{{col.EndDateTime}}
-                                                        {{col.Who}}预约</p>
-                                                </div>
-                                            </div>
-                                        </a-popconfirm>
+                                            </a-popconfirm>
+                                        </template>
                                     </td>
                                 </tr>
                             </tbody>
@@ -133,7 +134,12 @@
         monthDayList: [],
         roomList: [],
         width: 0,
-        height: 0
+        height: 0,
+        paramsTime: {
+            date: "",
+            time: ""
+        },
+        meetingId: ""
     });
     const props = defineProps({
         width: [String, Number],
@@ -141,12 +147,13 @@
         endDateTime:String,
         calendarType:String
     })
-    const { monthDayList, roomList, width, height } = toRefs(data);
+    const emit = defineEmits(['openNew','handleDetail','openEdit','handleDelete']);
+    const { monthDayList, roomList, width, height, paramsTime, meetingId } = toRefs(data);
     const contentRef = ref(null);
     const headRef = ref(null);
     const leftRef = ref(null);
     onMounted(() => {
-        console.log("contentRef", contentRef.value.clientWidth);
+        //console.log("contentRef", contentRef.value.clientWidth);
         data.height = contentRef.value.clientHeight;
         contentRef.value.addEventListener("scroll", (e) => {
             let left = e.target.scrollLeft;
@@ -164,6 +171,9 @@
         }
     }
     const getMeetingRoom = () => {
+        const schedule = getDaysArrayByMonth(new Date(props.startDateTime).getFullYear(), new Date(props.startDateTime).getMonth()+1);
+        data.monthDayList = schedule;
+        data.width = data.monthDayList.length * 145;
         // proxy.$get(Interface.meetingRoom.roomList, {}).then(res => {
         //     data.roomList = res.listData.map(item=>{
         //         item.height = 0;
@@ -197,18 +207,33 @@
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
                     data.roomList = res.actions[0].returnValue.map(item=>{
                         item.height = 0;
+                        item.meetingItems.forEach((item1,index)=>{
+                            item1.StartDateTime=item1.StartDateTime?dayjs(item1.StartDateTime).format("YYYY-MM-DD HH:mm"):'';
+                            item1.EndDateTime=item1.EndDateTime?dayjs(item1.EndDateTime).format("YYYY-MM-DD HH:mm"):'';
+                        })
                         return item;
                     });
                     nextTick(()=>{
                         data.roomList.forEach((item,index)=>{
-                            console.log('itemRefs', itemRefs[index].el.clientHeight);
+                            //console.log('itemRefs', itemRefs[index].el.clientHeight);
                             item.height = itemRefs[index].el.clientHeight;
                         })
                     })
             }
         })
     }
-    getMeetingRoom();
+    //getMeetingRoom();
+    defineExpose({getMeetingRoom});
+    //判断是否为周六日
+    const isWeekendDay= (time) => {
+        const weekday = (new Date(time)).getDay();
+        return weekday == 6||weekday == 0 ? true : false;
+    }
+    // 判断是否是今天
+    const isToDay = (time) => {
+        const currentTime = dayjs(new Date()).format("YYYY-MM-DD");
+        return currentTime == time ? true : false;
+    }
     const getDaysArrayByMonth = (year,month) => {
         // //获取当前月份包含的天数
         // var daysInMonth = dayjs().daysInMonth();
@@ -232,21 +257,43 @@
         return daysInMonth;
 
     }
-    const schedule = getDaysArrayByMonth(new Date().getFullYear(), new Date().getMonth()+1);
-    console.log("schedule",schedule);
+    //const schedule = getDaysArrayByMonth(new Date().getFullYear(), new Date().getMonth()+1);
+    //console.log("schedule",schedule);
     // let temp = [];
     // schedule.forEach(function (item) {
     //     console.log(item.format("DD/MM"));
     //     temp.unshift(item.format("MM-DD"));
     // });
-    data.monthDayList = schedule;
-    data.width = data.monthDayList.length * 145;
+    //data.monthDayList = schedule;
+    //data.width = data.monthDayList.length * 145;
 
     const showMeeting = (col,row) => {
         // console.log(col,row);
         var date = dayjs(col.StartDateTime).format("YYYY-MM-DD");
         // console.log("date",date, row);
         return date == row ? true : false;
+    }
+    // 删除会议
+    const handleDelete = (item) => {
+        emit("handleDelete", item);
+    }
+    const openEdit = (item) => {
+        emit("openEdit", item);
+    }
+    const openNew = (e, item) => {
+        let layerY = e.layerY;
+        let index = Math.floor(layerY/30/2);
+        let startTime = dayjs(item).format("HH:mm");
+        data.paramsTime.date = item;
+        data.paramsTime.time = '';
+        let obj = {
+            date: item,
+            time: ''
+        }
+        emit("openNew", obj);
+    }
+    const handleDetail= (e) => {
+        emit("handleDetail", e);
     }
 </script>
 <style lang="less" scoped>
@@ -283,6 +330,9 @@
                     .monthDayHeadItem {
                         min-width: 145px;
                         text-align: center;
+                    }
+                    .monthDayHeadItem.active{
+                        color: red;
                     }
                 }
 
@@ -358,6 +408,7 @@
                                 min-width: 145px;
                                 height: 71px;
                                 border: 1px solid rgb(221, 219, 218);
+                                cursor: pointer;
                                 .meetingItem {
                                     width: 100%;
                                     background: var(--backColor);
@@ -370,7 +421,9 @@
                                     margin-top: 2px;
                                 }
                             }
-
+                            td.active{
+                                background: #fefae6;
+                            }
                             &:first-child {
                                 td {
                                     border-top: none;

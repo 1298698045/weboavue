@@ -1,5 +1,5 @@
 <template>
-    <div class="relatedWrap">
+    <div class="relatedWrap infoPersonnelList">
         <div class="panel">
             <div class="panel-head">
                 <div class="panel-title">
@@ -119,14 +119,16 @@
     .ant-btn.ant-btn-text,.ant-btn.ant-btn-text:hover{
         color: var(--textColor);
     }
-    .formWrap{
-        display: flex;
-        justify-content: space-between;
-        .ant-form{
+    .infoPersonnelList{
+        .formWrap{
             display: flex;
-            .ant-form-item{
-                width: 150px;
-                margin-right: 10px;
+            justify-content: space-between;
+            .ant-form{
+                display: flex;
+                .ant-form-item{
+                    width: 150px;
+                    margin-right: 10px;
+                }
             }
         }
     }
