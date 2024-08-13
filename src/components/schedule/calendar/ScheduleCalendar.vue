@@ -75,9 +75,10 @@
                 </div>
             </div>
             <div class="calendarBody">
-                <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :currentDate="currentDate" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleSelectCalendar" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
-                <DayCalendar ref="DayCalendarWrap" v-if="calendarType==0" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
-                <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
+                <!-- <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :currentDate="currentDate" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleSelectCalendar" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
+                <DayCalendar ref="DayCalendarWrap" v-if="calendarType==0" :id="id" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
+                <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" /> -->
+                <ScheduleFullCalendar ref="FullCalendarWrap" :calendarView="calendarView" :id="id" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewScheduleVal" />
             </div>
         </div>
         <NewSchedule :isShow="isSchedule" v-if="isSchedule" @cancel="cancelNewSchedule" />
@@ -117,8 +118,9 @@
 
     import MonthCalendar from "@/components/schedule/calendar/ScheduleMonth.vue";
     import WeekVue from "@/components/schedule/calendar/ScheduleWeek.vue";
-    import DayCalendar from "@/components/schedule/calendar/ScheduleDay.vue";
+    import DayCalendar from "@/components/schedule/calendar/ScheduleDay2.vue";
 
+    import ScheduleFullCalendar from "@/components/schedule/calendar/ScheduleFullCalendar.vue";
     // 新建
     import NewSchedule from "@/components/schedule/NewSchedule.vue";
     import AddSchedule from "@/components/schedule/AddSchedule.vue";
@@ -142,90 +144,6 @@
             calendarTypeChange(data.calendarType);
         })
     })
-
-    // 是否调休
-    console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,29));
-
-    console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,18).isWork());
-
-
-    // var d = HolidayUtil.getHoliday(2024,2,29);
-    // console.log('isWork', d.isWork());
-
-    console.log('Solar', Solar.fromDate(new Date("2024-12-24")).getFestivals());
-
-    // 转阴历
-    // console.log("转阴历", Solar.fromDate(new Date('2024-2-10')).getLunar());
-
-    let lunar2 = Solar.fromDate(new Date('2024-2-9')).getLunar();
-    console.log("lunar2", lunar2)
-    let year = lunar2.getYear();
-    let month = lunar2.getMonth();
-    let day = lunar2.getDay();
-    console.log(year, month ,day)
-    // 获取农历节日
-    let festival = Lunar.fromYmd(year, month, day).getFestivals();
-    console.log('Lunar', festival);
-    // 节气
-    console.log("Lunar.fromYmd-getJieQi", Lunar.fromYmd(2024, 3, 1).getJieQi())
-    // 获取农历日期
-    const getlunarVal = (date) => {
-        // console.log("val", date.format("YYYY-MM-DD"));
-        let dateStr = date.format("YYYY-MM-DD");
-        let lunarDay = Lunar.fromDate(new Date(dateStr)).getDayInChinese();
-        return lunarDay;
-    };
-    // 获取节日
-    const getFestivals = (date) => {
-        let festival = '';
-        let dateStr = date.format("YYYY-MM-DD");
-        let SolarFestival = Solar.fromDate(new Date(dateStr)).getFestivals();
-        let lunar2 = Solar.fromDate(new Date(dateStr)).getLunar();
-        let year = lunar2.getYear();
-        let month = lunar2.getMonth();
-        let day = lunar2.getDay();
-        let LunarFestival = Lunar.fromYmd(year, month, day).getFestivals();
-        let LunarJieQi = Lunar.fromYmd(year, month, day).getJieQi();
-        if(SolarFestival && SolarFestival.length){
-            SolarFestival.forEach(item=>{
-                festival += item;
-            });
-        };
-        if(LunarFestival && LunarFestival.length){
-            LunarFestival.forEach(item=>{
-                festival += item;
-            });
-        }
-        if(LunarJieQi){
-            festival += LunarJieQi;
-        }
-        return festival;
-    };
-    // 假期
-    const getHolidayVal = (date) => {
-        let holiday = '';
-        let dateStr = date.format("YYYY-MM-DD");
-        let d = HolidayUtil.getHoliday(dateStr);
-        if(d && d!=null){
-            let isWork = d.isWork();
-            if (isWork) {
-                holiday = '班';
-            }else {
-                holiday = '休';
-            }
-        }else {
-            let weekend = new Date(dateStr).getDay();
-            // if (weekend == 0 || weekend == 6) {
-            //     holiday = '休';
-            // }
-        }
-        return holiday;
-    };
-    const getlunarClass = (date) => {
-        let month = date.format("MM");
-        let currentMonth = data.monthValue.format('MM');
-        return month != currentMonth ? true : false;
-    }
     const { proxy } = getCurrentInstance();
     const formRef = ref();
     const monthFormat = 'YYYY/MM';
@@ -259,6 +177,7 @@
         meetingList: {},
         monthValue: dayjs(new Date(), monthFormat),
         calendarType: 2,
+        calendarView:'dayGridMonth',
         currentTime: dayjs(),
         startWeekTime: "",
         endWeekTime: "",
@@ -270,7 +189,9 @@
         fileParams: {},
         paramsTime: {
             date: "",
-            time: ""
+            time: "",
+            end:"",
+            endDate:""
         },
         isCollapsed: false,
         isScheduleDetail: false,
@@ -285,31 +206,38 @@
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isRepeatMeeting, isAddSchedule,
-         isShare, isExport, fileParams, paramsTime, isCollapsed,isScheduleDetail,id,startTime,endTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external} = toRefs(data);
+         isShare, isExport, fileParams, paramsTime, isCollapsed,isScheduleDetail,id,startTime,endTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,calendarView} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"];
+    const FullCalendarWrap=ref(null);
     const calendarTypeChange=(e)=>{
         data.calendarType=e;
         if(e==2){
             data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
             data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
-            nextTick(()=>{
-                MonthCalendarWrap.value.getQuery();
-            })
+            data.calendarView='dayGridMonth';
+            // nextTick(()=>{
+            //     MonthCalendarWrap.value.getQuery();
+            // })
         }
         else if(e==1){
             data.startTime = dayjs(data.startWeekTime).format("YYYY-MM-DD");
             data.endTime = dayjs(data.endWeekTime).format("YYYY-MM-DD");
-            nextTick(()=>{
-                WeekVueWrap.value.getQuery();
-            })
+            data.calendarView='timeGridWeek';
+            // nextTick(()=>{
+            //     WeekVueWrap.value.getQuery();
+            // })
         }
         else if(e==0){
             data.startTime = dayjs(data.currentTime || new Date()).startOf("day").format("YYYY-MM-DD");
             data.endTime = dayjs(data.currentTime || new Date()).endOf('day').format('YYYY-MM-DD');
-            nextTick(()=>{
-                DayCalendarWrap.value.getQuery();
-            })
+            data.calendarView='timeGridDay';
+            // nextTick(()=>{
+            //     DayCalendarWrap.value.getQuery();
+            // })
         }
+        nextTick(()=>{
+            FullCalendarWrap.value.getQuery();
+        })
     }
     const backFn = (list) => {
         var len = list.length;
@@ -481,7 +409,7 @@
     }
     // 日历-点击日期创建
     const selectCalendar = (date, {source}) => {
-        console.log("e", date.format("YYYY-MM-DD"), source);
+        //console.log("e", date.format("YYYY-MM-DD"), source);
         data.paramsTime.date = date.format("YYYY-MM-DD");
         data.isAddSchedule = true;
     };
@@ -512,6 +440,9 @@
         data.paramsTime={
             date: "",
             time: ""
+        }
+        if(e.paramsTime){
+            data.paramsTime=e.paramsTime
         }
         data.id=e.Id;
         data.isAddSchedule = true;
@@ -751,8 +682,6 @@
         padding-right: 10px;
         color: red;
     }
-</style>
-<style>
     .ant-tabs .ant-tabs-tab{
         padding: 12px 12px !important;
     }

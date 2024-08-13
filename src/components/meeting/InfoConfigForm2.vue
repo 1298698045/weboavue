@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modalContainer">
+        <div class="modalContainer InfoConfigForm2Container">
                 <div class="modalCenter" :style="{ height: height + 'px!important' }">
                     <div class="tabPanel">
                         <div class="barContainer">
@@ -228,8 +228,13 @@
                                                     :placeholder="'邀请可选与会者'">
                                                     <template #suffixIcon></template>
                                                     <a-select-option v-for="(option, optionIdx) in OwningUserList"
-                                                        :key="optionIdx" :value="option.ID">{{ option.Name
-                                                        }}</a-select-option>
+                                                        :key="optionIdx" :value="option.ID">
+                                                        <a-avatar :size="37">
+                                                            <template #icon><UserOutlined /></template>
+                                                            <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
+                                                        </a-avatar>
+                                                        {{ option.Name}}
+                                                    </a-select-option>
                                                 </a-select>
                                                 <div class="selectIcon">
                                                     <SearchOutlined class="ant-select-suffix"
@@ -335,8 +340,8 @@
                                             <div class="lIcon">
                                                 <FormOutlined />
                                             </div>
-                                            <div class="rVal">
-                                                <TEditor ref="editorRef" mode="simple" :placeholder="'添加描述或附件文档'" :height=500
+                                            <div class="rVal rVal2">
+                                                <TEditor ref="editorRef" mode="simple" :placeholder="'添加描述或附件文档'" :height=180
                                                     @input="getEditorContent" />
                                             </div>
                                         </div>
@@ -345,7 +350,7 @@
                             </div>
                         </div>
                         <div class="rightCalendar">
-                            <DayCalendar ref="DayCalendarWrap" :currentTime="formState.StartDateTime" :startDateTime="formState.startTime" :endDateTime="formState.endTime" :calendarType="formState.CalendarType||props.calendarType" @calendarDayChange="calendarDayChange" />
+                            <DayCalendar ref="DayCalendarWrap" :id="props.id" :currentTime="formState.StartDateTime" :startDateTime="formState.startTime" :endDateTime="formState.endTime" :calendarType="formState.CalendarType||props.calendarType" @calendarDayChange="calendarDayChange" />
                         </div>
                     </div>
                 </div>
@@ -400,7 +405,7 @@
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import TEditor from "@/components/TEditor.vue";
-    import DayCalendar from "@/components/schedule/AddScheduleDayModal.vue";
+    import DayCalendar from "@/components/schedule/AddScheduleDayModal2.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const DayCalendarWrap=ref(null);
@@ -423,7 +428,7 @@
     const editorRef = ref();
     const data = reactive({
         title: "新建会议",
-        height: document.documentElement.clientHeight - 300,
+        height: document.documentElement.clientHeight - 380,
         menuTimes: [
             '不要提醒我', '在事件发生时', '5 分钟 钱', '30分钟 前', '1小时 前',
             '2小时 前', '12小时 前', '1天 前', '1周 前', '添加电子邮件提醒'
@@ -487,14 +492,35 @@
         formState.StartDateTime = props.paramsTime.date;
         formState.StartDateTime_time = "08:00";
         formState.EndDateTime_time = "09:00";
-        formState.EndDateTime = props.paramsTime.date;
+        if(props.paramsTime.endDate){
+            formState.EndDateTime = props.paramsTime.endDate;
+        }
+        else{
+            formState.EndDateTime = props.paramsTime.date;
+        }
     }else if(props.paramsTime && props.paramsTime.date && props.paramsTime.time){
         formState.StartDateTime = props.paramsTime.date;
         formState.StartDateTime_time = props.paramsTime.time;
-        formState.EndDateTime = props.paramsTime.date;
-        let hour = new Date(props.paramsTime.date +' '+ props.paramsTime.time).getHours() + 1;
-        hour = hour < 10 ? '0' + hour : hour;
-        formState.EndDateTime_time = hour+':00';
+        // if(props.paramsTime.time=='00:00'){
+        //     formState.StartDateTime_time = "08:00";
+        // }
+        if(props.paramsTime.endDate){
+            formState.EndDateTime = props.paramsTime.endDate;
+        }
+        else{
+            formState.EndDateTime = props.paramsTime.date;
+        }
+        if(props.paramsTime.end){
+            formState.EndDateTime_time = props.paramsTime.end;
+            // if(props.paramsTime.end=='00:00'){
+            //     formState.EndDateTime_time = "09:00";
+            // }
+        }
+        else{
+            let hour = new Date(props.paramsTime.date +' '+ props.paramsTime.time).getHours() + 1;
+            hour = hour < 10 ? '0' + hour : hour;
+            formState.EndDateTime_time = hour+':00';
+        }
     }else{
         formState.StartDateTime = dayjs(new Date()).startOf("day").format("YYYY-MM-DD");
         formState.EndDateTime = dayjs(new Date()).endOf("day").format("YYYY-MM-DD");
@@ -510,7 +536,6 @@
     }
     watch(()=>formState.StartDateTime,(newVal,oldVal)=>{
         formState.startTime = newVal + ' ' + formState.StartDateTime_time;
-        formState.EndDateTime=newVal;
         calendarGetData();
     }, {deep: true})
     watch(()=>formState.StartDateTime_time,(newVal,oldVal)=>{
@@ -519,7 +544,7 @@
     }, {deep: true})
     watch(()=>formState.EndDateTime,(newVal,oldVal)=>{
         formState.endTime = newVal + '' + formState.EndDateTime_time;
-        calendarGetData();
+        //calendarGetData();
     }, {deep: true})
     watch(()=>formState.EndDateTime_time,(newVal,oldVal)=>{
         formState.endTime = formState.EndDateTime + '' + newVal;
@@ -546,6 +571,7 @@
     // }
     // getPickerList();
     const calendarGetData=()=>{
+        //console.log("props1", props.paramsTime);
         data.calendarItem={
             Id:props.id||'',
             Subject: formState.Subject,
@@ -568,13 +594,25 @@
         formState.StartDateTime = e.date;
         formState.StartDateTime_time = e.time;
         formState.EndDateTime = e.date;
-        let hour = new Date(e.date +' '+ e.time).getHours() + 1;
-        hour = hour < 10 ? '0' + hour : hour;
-        formState.EndDateTime_time = hour+':00';
+        if(e.endDate){
+            formState.EndDateTime = e.endDate;
+        }
+        else{
+            formState.EndDateTime = e.date;
+        }
+        if(e.end){
+            formState.EndDateTime_time = e.end;
+        }
+        else{
+            let hour = new Date(e.date +' '+ e.time).getHours() + 1;
+            hour = hour < 10 ? '0' + hour : hour;
+            formState.EndDateTime_time = hour+':00';
+        }
     }
     onMounted(() => {
+        data.height = document.documentElement.clientHeight - 370;
         window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 300;
+            data.height = document.documentElement.clientHeight - 370;
         });
     });
 
@@ -606,6 +644,12 @@
             formState.EndDateTime=fields.ScheduledEnd&&fields.ScheduledEnd.value?dayjs(fields.ScheduledEnd.value).format("YYYY-MM-DD"):'';
             formState.EndDateTime_time=fields.ScheduledEnd&&fields.ScheduledEnd.value?dayjs(fields.ScheduledEnd.value).format("HH:mm"):'';
 
+            if(props.paramsTime.end&&props.paramsTime.end!=props.paramsTime.time){
+                formState.StartDateTime = props.paramsTime.date;
+                formState.StartDateTime_time = props.paramsTime.time;
+                formState.EndDateTime = props.paramsTime.endDate;
+                formState.EndDateTime_time = props.paramsTime.end;
+            }
             editorRef.value.content=formState.Description;
 
             formState.CalendarType=fields.CalendarType&&fields.CalendarType.value?fields.CalendarType.value:'';
@@ -847,7 +891,8 @@
     }
 
     .formContent {
-        height: calc(~"100% - 100px");
+        height: calc(~"100% - 60px");
+        // height: auto;
         margin-top: 12px;
         display: flex;
 
@@ -893,8 +938,11 @@
                         flex: 1;
                         height: 32px;
                         border-bottom: 1px solid #e0e0e0;
+                        height: auto;
                     }
-
+                    .rVal2{
+                        border-bottom: none;
+                    }
                     .timeBox {
                         .rowTime {
                             display: flex;
@@ -937,4 +985,12 @@
         border: none !important;
         outline: 0 !important;
     }
+    .InfoConfigForm2Container{
+        .ant-select-selection-item-content .ant-avatar{
+            display: none !important;
+        }
+    }
+    .ant-select-item-option-content .ant-avatar{
+            margin-right: 8px !important;
+        }
 </style>

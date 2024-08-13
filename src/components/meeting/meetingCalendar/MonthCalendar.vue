@@ -171,8 +171,8 @@
         return holiday;
     };
     const getlunarClass = (date) => {
-        let month = date.format("MM");
-        let currentMonth = data.monthValue.format('MM');
+        let month = dayjs(date).format('MM');
+        let currentMonth = dayjs(props.currentDate).format('MM');
         return month != currentMonth ? true : false;
     }
     const formRef = ref();
@@ -317,7 +317,7 @@
         //     default:
         // }
         // return listData || [];
-        let date = value.date();
+        let date = dayjs(value).format('YYYY-MM-DD');
         return data.meetingList[date] || [];
     };
     const getQuery = ()=> {
@@ -344,7 +344,7 @@
                         let meetingItems = res.actions[0].returnValue;
                         let obj = {};
                         meetingItems.forEach(item=>{
-                            let daydate = dayjs(item.StartDateTime).format('DD');
+                            let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
                             //console.log("daydate",daydate);
                             if(!obj[daydate]){
                                 obj[daydate] = [];

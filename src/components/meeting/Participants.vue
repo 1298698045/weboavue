@@ -83,7 +83,7 @@
   import Interface from "@/utils/Interface.js";
   import { girdFormatterValue } from "@/utils/common.js";
   import { message } from "ant-design-vue";
-  import RadioUser from "@/components/commonModal/MultipleUser.vue";
+  import RadioUser from "@/components/commonModal/RadioUser.vue";
   import Delete from "@/components/listView/Delete.vue";
   const { proxy } = getCurrentInstance();
   const PersonnelLst = ref();

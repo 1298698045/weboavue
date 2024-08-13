@@ -72,13 +72,13 @@
                             </div>
                             <div class="rightUserList">
                                 <ul class="userBox rightUserList">
-                                    <li class="userItem" v-for="(item,index) in groupUserList" :key="index" @click="handleSelectRow(item.id,item.FullName.textValue, item.BusinessUnitIdName.textValue)">
+                                    <li class="userItem" v-for="(item,index) in groupUserList" :key="index" @click="handleSelectRow(item.id,item.RegardingObjectIdName.textValue, item.BusinessUnitId.lookupValue.displayName)">
                                         <div class="avatar"></div>
                                         <div class="info">
                                             <div>
-                                                <span class="name">{{item.FullName.textValue}}</span>/{{item.UserName.textValue}}/{{ item.EmployeeId.textValue }}
+                                                <span class="name">{{item.RegardingObjectIdName.textValue}}</span>
                                             </div>
-                                            <p class="dept">{{item.BusinessUnitIdName.textValue}}</p>
+                                            <p class="dept">{{item.BusinessUnitId.lookupValue.displayName}}</p>
                                         </div>
                                     </li>
                                 </ul>
@@ -239,6 +239,7 @@
             data.deptList = listData;
             let rows = listData.map(item=>{
                 item.key = item.id;
+                item.children = [];
                 return item;
             });
             data.deptTreeList = formTreeData(rows, 'id', 'parentId');
@@ -282,7 +283,7 @@
             filterId: "",
             entityType: "SystemUser",
             displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
-            // filterQuery: "\nBusinessUnitId\teq\t" + data.deptIdCurrent,
+            filterQuery: "\nBusinessUnitId\teq\t" + data.deptIdCurrent,
             page: data.pageNumber,
             rows: data.pageSize
         };
@@ -298,7 +299,7 @@
         let d = {
             filterId: "",
             entityType: "Group",
-            filterQuery: ""
+            filterQuery: "\nIsPublic\teq\ttrue"
         };
         proxy.$get(Interface.list2, d).then(res=>{
             let nodes = res.nodes;
@@ -320,9 +321,9 @@
     const getGroupUser = () => {
         let d = {
             filterId: "",
-            entityType: "SystemUser",
-            displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
-            // filterQuery: "\nGroupId\teq\t" + data.groupIdCurrent,
+            entityType: "GroupMembership",
+            displayColumns: "id,RegardingObjectIdName,BusinessUnitId",
+            filterQuery: "\nGroupId\teq\t" + data.groupIdCurrent,
             page: data.pageNumber,
             rows: data.pageSize,
         };
@@ -342,7 +343,7 @@
             filterId: "",
             entityType: "SystemUser",
             displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
-            // filterQuery: "\nRoleId\teq\t" + data.roleIdCurrent,
+            filterQuery: "\nDefaultRoleId\teq\t" + data.roleIdCurrent,
             page: data.pageNumber,
             rows: data.pageSize
         };
@@ -467,6 +468,9 @@
             bottom: 0;
             padding: 10px 0;
             text-align: center;
+        }
+        :deep .ant-tree-title{
+            white-space: nowrap;
         }
     }
 </style>

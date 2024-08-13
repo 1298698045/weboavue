@@ -75,7 +75,6 @@ const getCurrentApp = () => {
       return item;
     });
     let routePath = localStorage.getItem("routePath");
-    //routePath=''
     if(routePath){
       router.push({
         path: routePath
@@ -186,6 +185,7 @@ watch(
   () => route.path,
   (newRoute) => {
     state.selectedKeys = [newRoute];
+    localStorage.setItem("routePath", newRoute);
     loadMenus();
   },
   { deep: true, immediate: true }
@@ -198,7 +198,7 @@ const toggleCollapsed = () => {
 const handleMenu = (e) => {
   // console.log("e", e);
   router.push(e.key);
-  localStorage.setItem("routePath", e.key);
+  //localStorage.setItem("routePath", e.key);
 };
 const onOpenChange = (openKeys) => {
   // console.log("openKeys", openKeys, state.openKeys);

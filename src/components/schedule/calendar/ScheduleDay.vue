@@ -174,7 +174,7 @@
     const emit = defineEmits(['openNew','handleDetail','openEdit','handleDelete']);
 
     const props = defineProps({
-        currentTime: String,
+        currentTime: [Object],
         startDateTime:String,
         endDateTime:String,
         calendarType:String

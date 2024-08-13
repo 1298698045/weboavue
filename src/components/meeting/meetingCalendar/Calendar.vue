@@ -65,9 +65,10 @@
                 </div>
             </div>
             <div class="calendarBody">
-                <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :currentDate="currentDate" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleSelectCalendar" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
-                <DayCalendar ref="DayCalendarWrap" v-if="calendarType==0" :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
-                <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
+                <!-- <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :currentDate="currentDate" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleSelectCalendar" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
+                <DayCalendar ref="DayCalendarWrap" :id="meetingId" v-if="calendarType==0" :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
+                <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" /> -->
+                <MeetingFullCalendar ref="FullCalendarWrap" :calendarView="calendarView" :id="meetingId" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
             </div>
         </div>
         <NewMeeting :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" :calendarType="formState.type" />
@@ -104,8 +105,11 @@
     dayjs.extend(localeData);
 
     import WeekVue from "@/components/meeting/meetingCalendar/Week.vue";
-    import DayCalendar from "@/components/meeting/meetingCalendar/DayCalendar.vue";
+    import DayCalendar from "@/components/meeting/meetingCalendar/DayCalendar2.vue";
     import MonthCalendar from "@/components/meeting/meetingCalendar/MonthCalendar.vue";
+
+    import MeetingFullCalendar from "@/components/meeting/meetingCalendar/MeetingFullCalendar.vue";
+
     // 会议详情
     import MeetingDetailModal from "@/components/meeting/MeetingDetailModal2.vue";
 
@@ -127,65 +131,6 @@
             calendarTypeChange(data.calendarType);
         })
     })
-    // 获取农历日期
-    const getlunarVal = (date) => {
-        // console.log("val", date.format("YYYY-MM-DD"));
-        let dateStr = date.format("YYYY-MM-DD");
-        let lunarDay = Lunar.fromDate(new Date(dateStr)).getDayInChinese();
-        return lunarDay;
-    };
-    // 获取节日
-    const getFestivals = (date) => {
-        let festival = '';
-        let dateStr = date.format("YYYY-MM-DD");
-        let SolarFestival = Solar.fromDate(new Date(dateStr)).getFestivals();
-        let lunar2 = Solar.fromDate(new Date(dateStr)).getLunar();
-        let year = lunar2.getYear();
-        let month = lunar2.getMonth();
-        let day = lunar2.getDay();
-        let LunarFestival = Lunar.fromYmd(year, month, day).getFestivals();
-        let LunarJieQi = Lunar.fromYmd(year, month, day).getJieQi();
-
-        if(SolarFestival && SolarFestival.length){
-            SolarFestival.forEach(item=>{
-                festival += item;
-            });
-        };
-        if(LunarFestival && LunarFestival.length){
-            LunarFestival.forEach(item=>{
-                festival += item;
-            });
-        } 
-        if(LunarJieQi){
-            festival += LunarJieQi;
-        }
-        return festival;
-    };
-    // 假期
-    const getHolidayVal = (date) => {
-        let holiday = '';
-        let dateStr = date.format("YYYY-MM-DD");
-        let d = HolidayUtil.getHoliday(dateStr);
-        if(d && d!=null){
-            let isWork = d.isWork();
-            if (isWork) {
-                holiday = '班';
-            }else {
-                holiday = '休';
-            }
-        }else {
-            let weekend = new Date(dateStr).getDay();
-            // if (weekend == 0 || weekend == 6) {
-            //     holiday = '休';
-            // }
-        }
-        return holiday;
-    };
-    const getlunarClass = (date) => {
-        let month = date.format("MM");
-        let currentMonth = data.monthValue.format('MM');
-        return month != currentMonth ? true : false;
-    }
     const formRef = ref();
     const monthFormat = 'YYYY/MM';
     const data = reactive({
@@ -218,6 +163,7 @@
         meetingList: {},
         monthValue: dayjs(new Date(), monthFormat),
         calendarType: 2,
+        calendarView:'dayGridMonth',
         currentTime: dayjs(),
         startWeekTime: "",
         endWeekTime: "",
@@ -226,7 +172,9 @@
         isRepeatMeeting: false,
         paramsTime: {
             date: "",
-            time: ""
+            time: "",
+            end:"",
+            endDate:""
         },
         meetingId: "",
         isMeetingDetail: false,
@@ -240,32 +188,38 @@
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime,
-         meetingId, isMeetingDetail,startTime,endTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external} = toRefs(data);
+         meetingId, isMeetingDetail,startTime,endTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,calendarView} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
-
+    const FullCalendarWrap=ref(null);
     const calendarTypeChange=(e)=>{
         data.calendarType=e;
         if(e==2){
             data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
             data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
-            nextTick(()=>{
-                MonthCalendarWrap.value.getQuery();
-            })
+            data.calendarView='dayGridMonth';
+            // nextTick(()=>{
+            //     MonthCalendarWrap.value.getQuery();
+            // })
         }
         else if(e==1){
             data.startTime = dayjs(data.startWeekTime).format("YYYY-MM-DD");
             data.endTime = dayjs(data.endWeekTime).format("YYYY-MM-DD");
-            nextTick(()=>{
-                WeekVueWrap.value.getQuery();
-            })
+            data.calendarView='timeGridWeek';
+            // nextTick(()=>{
+            //     WeekVueWrap.value.getQuery();
+            // })
         }
         else if(e==0){
             data.startTime = dayjs(data.currentTime || new Date()).startOf("day").format("YYYY-MM-DD");
             data.endTime = dayjs(data.currentTime || new Date()).endOf('day').format('YYYY-MM-DD');
-            nextTick(()=>{
-                DayCalendarWrap.value.getQuery();
-            })
+            data.calendarView='timeGridDay';
+            // nextTick(()=>{
+            //     DayCalendarWrap.value.getQuery();
+            // })
         }
+        nextTick(()=>{
+            FullCalendarWrap.value.getQuery();
+        })
     }
 
     const backFn = (list) => {
@@ -545,6 +499,9 @@
         data.paramsTime={
             date: "",
             time: ""
+        }
+        if(e.paramsTime){
+            data.paramsTime=e.paramsTime
         }
         data.meetingId=e.Id;
         data.isNewMeeting = true;

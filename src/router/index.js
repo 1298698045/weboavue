@@ -276,7 +276,8 @@ const routes = [
     children: [
       {
         path: "/lightning/Addresslist/Org/home",
-        component: () => import("../views/oa/addressBook/index.vue"),
+        //component: () => import("../views/oa/addressBook/index.vue"),
+        component: () => import("../views/oa/deptAddressBook/index.vue"),
         name: "AddressBook1",
         icon: "tongxunlu1",
         meta: {

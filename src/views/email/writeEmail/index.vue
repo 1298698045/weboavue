@@ -1,5 +1,13 @@
 <template>
     <div class="writeEmail">
+        <!-- <div class="emailHeader">
+            <div class="emailLogo">
+                <MailOutlined />
+                <span class="logoText">写邮件</span>
+            </div>
+            <div class="emailSearch"></div>
+            <div class="return" @click="backToOA">返回OA</div>
+        </div> -->
         <div class="whitemailHeader">
             <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane key="1" tab="普通邮件"></a-tab-pane>
@@ -17,10 +25,10 @@
                                     :rules="[{ required: activeKey==1?true:false, message: '请选择收件人' }]">
                                     <a-select :default-active-first-option="false"
                                     allowClear :filter-option="false" showSearch
-                                    @dropdownVisibleChange="getUserList"
-                                    @search="getUserList" ref="select" v-model:value="formState.addressee" mode="multiple"
+                                    @dropdownVisibleChange="(e) => {getUserList('');}"
+                                    @search="(e) => {getUserList(e);}" ref="select" v-model:value="formState.addressee" mode="multiple"
                                         placeholder="请选择收件人">
-                                        <a-select-option v-for="(item, index) in selectConcatsList" :key="index" :value="item.systemUserId">
+                                        <a-select-option v-for="(item, index) in selectConcatsList" :key="index" :value="item.ID">
                                             <a-avatar :size="37">
                                                 <template #icon><UserOutlined /></template>
                                                 <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
@@ -33,8 +41,9 @@
                                     v-if="activeKey=='2'"
                                     :rules="[{ required: activeKey==2?true:false, message: '请选择群组' }]">
                                     <a-select v-model:value="formState.group" mode="multiple"
-                                        placeholder="请选择群组">
-                                        <a-select-option v-for="(item, index) in selectGroupList" :key="index" :value="item.key">{{item.value}}</a-select-option>
+                                    @dropdownVisibleChange="(e) => {getGroupList('');}"
+                                    @search="(e) => {getGroupList(e);}" placeholder="请选择群组">
+                                        <a-select-option v-for="(item, index) in selectGroupList" :key="index" :value="item.ID">{{item.Name}}</a-select-option>
                                     </a-select>
                                 </a-form-item>
                                 <a-form-item label="主题" name="theme" :rules="[{ required: true, message: '请输入主题' }]">
@@ -92,7 +101,7 @@
                     <div class="rightFixedHead">
                         <a-input-search v-model:value="searchVal" placeholder="请输入" style="width: 200px"
                             @search="onSearch" />
-                        <a-button class="ml10" :icon="h(PlusOutlined)"></a-button>
+                        <a-button class="ml10" :icon="h(PlusOutlined)" @click="openPeopleModel"></a-button>
                     </div>
                     <div class="treePeopleWrap">
                         <a-tree blockNode  @select="selectPeople"  v-model:expandedKeys="latelyexpandedKeys" v-model:selectedKeys="latelySelectedKeys" :tree-data="latelyTreeData">
@@ -122,6 +131,7 @@
                 <a-button class="mr10" @click="cancelWriteEmail">取消</a-button>
             </div>
         </div>
+        <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
     </div>
 </template>
 <script setup>
@@ -148,6 +158,7 @@
     import Interface from "@/utils/Interface.js";
     import Delete from "@/components/listView/Delete.vue";
     import Editor from "@/components/TEditor.vue"
+    import RadioUser from "@/components/commonModal/RadioUser.vue";
     import { formTreeData } from "@/utils/common.js";
     import { useRouter, useRoute } from "vue-router";
     const { proxy } = getCurrentInstance();
@@ -162,6 +173,10 @@
         chkSms: false,
         group: [],
         mailBody: ""
+    })
+    const emit = defineEmits(['cancel','refresh']);
+    const props = defineProps({
+        ltags:String,
     })
     const previewIcon = h("i",{
         class: "iconfont icon-yulanwenjian"
@@ -213,13 +228,31 @@
         ],
         latelyexpandedKeys: [],
         latelySelectedKeys: [],
-        height: 600
-        
+        height: 600,
+        isRadioUser:false,
+        defaultExpandAll:false
     })
     const { fileList, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
         deptSelectedKeys, deptTreeData, departListTree, selectConcatsList, selectGroupList, departListTree2, groupTreeData2, latelyTreeData,
-        latelyexpandedKeys, latelySelectedKeys, height
+        latelyexpandedKeys, latelySelectedKeys, height,isRadioUser,defaultExpandAll
     } = toRefs(data);
+    if(route.query.Id){
+        if(route.query.type*1==1){
+            activeKey.value='1';
+            data.selectConcatsList.push({
+                ID: route.query.Id,
+                Name: route.query.Name
+            });
+            formState.addressee.push(route.query.Id);
+        }else if(route.query.type*1==2){
+            activeKey.value='2';
+            data.selectGroupList.push({
+                ID: route.query.Id,
+                Name: route.query.Name
+            });
+            formState.group.push(route.query.Id);
+        }
+    }
     const getContent = (e) => {
         formState.mailBody = e;
     }
@@ -227,51 +260,155 @@
 
     }
     const onSearch = (e) => {
-
+        data.latelyexpandedKeys=[1];
+        data.latelyTreeData[0].children = data.selectConcatsList.filter(item=>{
+            item.title = item.Name;
+            item.key = item.ID;
+            item.id = item.ID;
+            item.isExpanded=true;
+           return item.Name.indexOf(data.searchVal) != -1;
+        })
     }
     const getUserList = (e) => {
-        // proxy.$get(Interface.user.sysUser,{
-        //     searchVal: e
-        // }).then(res=>{
-        //     data.selectConcatsList = res.listData;
-        // })
-        proxy.$get(Interface.uilook, {
-                Lktp: 30020,
-                Lksrch: e,
-            })
-            .then((res) => {
-                let listData = res.listData;
-                data.selectConcatsList = listData;
-            });
+        let obj = {
+      actions:[{
+        id: "6129;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          objectApiName: 'MailInbox',
+          fieldApiName: 'ToUserIds',
+          pageParam: 1,
+          pageSize: 25,
+          q: e,
+          searchType: "Recent",
+          targetApiName: 'SystemUser',
+          body: {
+            sourceRecord: {
+              apiName: 'MailInbox',
+              fields: {
+                Id: null,
+                RecordTypeId: ""
+              }
+            }
+          }
+        }
+      }]
     }
+    let d = {
+      message: JSON.stringify(obj)
+    }
+        proxy.$post(Interface.lookup,d).then(res=>{
+            let list = res.actions[0].returnValue.lookupResults.records;
+            let arr = [];
+            list.forEach(item=>{
+                arr.push({
+                    ID: item.fields.Id.value,
+                    Name: item.fields.Name.value
+                })
+            });
+            data.selectConcatsList = data.selectConcatsList.concat(arr);
+            data.selectConcatsList = uniqu(data.selectConcatsList,'ID');
+            //console.log(data.selectConcatsList)
+        })
+        
+    }
+    const getGroupList = (e) => {
+        let obj = {
+      actions:[{
+        id: "6129;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          objectApiName: 'MailInbox',
+          fieldApiName: 'ToGroupIds',
+          pageParam: 1,
+          pageSize: 25,
+          q: e,
+          searchType: "Recent",
+          targetApiName: 'Group',
+          body: {
+            sourceRecord: {
+              apiName: 'MailInbox',
+              fields: {
+                Id: null,
+                RecordTypeId: ""
+              }
+            }
+          }
+        }
+      }]
+    }
+    let d = {
+      message: JSON.stringify(obj)
+    }
+        proxy.$post(Interface.lookup,d).then(res=>{
+            let list = res.actions[0].returnValue.lookupResults.records;
+            let arr = [];
+            list.forEach(item=>{
+                arr.push({
+                    ID: item.fields.Id.value,
+                    Name: item.fields.Name.value
+                })
+            });
+            data.selectGroupList = data.selectGroupList.concat(arr);
+            data.selectGroupList = uniqu(data.selectGroupList,'ID');
+            //console.log(data.selectGroupList)
+        })
+        
+    }
+
     // 获取最近联系人
     const getLately = () => {
-        proxy.$get(Interface.addressBook.lastList,{}).then(res=>{
-            let rows = res.listData.map(item=>{
-                item.title = item.FullName;
-                item.key = item.SystemUserId;
-                return item;
-            })
-            data.latelyTreeData[0].children = rows;
-
+        // proxy.$get(Interface.addressBook.lastList,{}).then(res=>{
+        //     let rows = res.listData.map(item=>{
+        //         item.title = item.FullName;
+        //         item.key = item.SystemUserId;
+        //         return item;
+        //     })
+        //     data.latelyTreeData[0].children = rows;
+        // })
+        let rows = data.selectConcatsList.map(item=>{
+            item.title = item.Name;
+            item.key = item.ID;
+            item.id = item.ID;
+            return item;
         })
+        data.latelyTreeData[0].children = rows;
     }
     getLately();
     // 公共小组
-    const getGroupList = () => {
-        proxy.$get(Interface.user.groupList, {}).then(res => {
-            data.groupDataList = res.listData.map(function (item) {
-                item.title = item.Name;
-                item.key = item.GroupId;
+    const getRightGroupList = () => {
+        // proxy.$get(Interface.user.groupList, {}).then(res => {
+        //     data.groupDataList = res.listData.map(function (item) {
+        //         item.title = item.Name;
+        //         item.key = item.GroupId;
+        //         item.children = [];
+        //         return item;
+        //     });
+        //     data.groupTreeData2[0].children = data.groupDataList;
+        // })
+        let d = {
+            filterId: "",
+            entityType: "Group",
+            filterQuery: "\nIsPublic\teq\ttrue",
+            page: 1,
+            rows: 100,
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            let nodes = res.nodes;
+            data.groupDataList = nodes.map(item=>{
+                item.title = item.Name&&item.Name.textValue?item.Name.textValue:'';
+                item.key = item.id;
                 item.children = [];
                 return item;
             });
             data.groupTreeData2[0].children = data.groupDataList;
         })
     }
-    getGroupList();
+    getRightGroupList();
     const loadGroupNode = treeNode => {
-        console.log("treeNode",treeNode);
+        //console.log("treeNode",treeNode);
         return new Promise(resolve => {
             // if (treeNode.dataRef.children) {
             //     resolve();
@@ -282,12 +419,12 @@
                 data.groupTreeData = [...data.groupTreeData];
                 resolve();
             }
-            if(treeNode.GroupId && treeNode.GroupId!=""){
-                loadGroupPeople(treeNode.groupId).then(res=>{
-                    console.log("list", res.listData)
-                    let temp = res.listData.map(item=>{
-                        item.title = item.FullName;
-                        item.key = item.SystemUserId;
+            if(treeNode.id && treeNode.id!=""){
+                loadGroupPeople(treeNode.id).then(res=>{
+                    //console.log("list", res)
+                    let temp = res.nodes.map(item=>{
+                        item.title = item.RegardingObjectIdName&&item.RegardingObjectIdName.textValue?item.RegardingObjectIdName.textValue:'';
+                        item.key = item.id;
                         item.isLeaf = true
                         return item;
                     })
@@ -301,24 +438,35 @@
     };
     const loadGroupPeople = (groupId) => {
         return new Promise((resolve,reject)=>{
-            proxy.$get(Interface.group.list,{
-                groupId: groupId
-            }).then(res=>{
+            // proxy.$get(Interface.group.list,{
+            //     groupId: groupId
+            // }).then(res=>{
+            //     resolve(res);
+            // })
+            let d = {
+                filterId: "",
+                entityType: "GroupMembership",
+                displayColumns: "id,RegardingObjectIdName,BusinessUnitId",
+                filterQuery: "\nGroupId\teq\t" + groupId,
+                page: 1,
+                rows: 100,
+            };
+            proxy.$get(Interface.list2, d).then(res=>{
                 resolve(res);
             })
         })
     }
     const selectPeople = (e,selectedNodes) => {
-        console.log("e",e, selectedNodes);
+        //console.log("e",e, selectedNodes);
         let row = selectedNodes.node;
-        console.log(row);
-        let index = data.selectConcatsList.findIndex(item=>item.systemUserId==row.SystemUserId);
-        if(index==-1 && row.SystemUserId){
+        //console.log(row);
+        let index = data.selectConcatsList.findIndex(item=>item.ID==row.id);
+        if(index==-1 && row.id){
             data.selectConcatsList.push({
-                systemUserId: row.SystemUserId,
-                fullName: row.FullName
+                ID: row.id,
+                Name: row.title
             });
-            formState.addressee.push(row.SystemUserId);
+            formState.addressee.push(row.id);
         }
         if(index>=0){
             message.error("不能重复添加收件人！");
@@ -327,16 +475,29 @@
 
     
     const getDeptTree = () => {
-        proxy.$get(Interface.treeList,{
-            entity: "organizationtree"
-        }).then(res=>{
-            console.log("res",res);
-            let rows = res.rows.map(item=>{
+        // proxy.$get(Interface.treeList,{
+        //     entity: "organizationtree"
+        // }).then(res=>{
+        //     console.log("res",res);
+        //     let rows = res.rows.map(item=>{
+        //         item.key = item.id
+        //         item.title = item.text;
+        //         return item;
+        //     });
+        //     let list = formTreeData(rows, 'id', 'pid');
+        //     data.deptTreeData = list;
+        //     data.departListTree2[0].children = list;
+        // })
+        proxy.$get(Interface.deptTree, {}).then(res => {
+            //console.log("res", res);
+            let listData = res.actions[0].returnValue;
+            let rows = listData.map(item=>{
                 item.key = item.id
-                item.title = item.text;
+                item.title = item.name;
+                item.children=[];
                 return item;
             });
-            let list = formTreeData(rows, 'id', 'pid');
+            let list = formTreeData(rows, 'id', 'parentId');
             data.deptTreeData = list;
             data.departListTree2[0].children = list;
         })
@@ -344,7 +505,7 @@
     getDeptTree();
     // 加载部门下面联系人
     const loadDeptNode = treeNode => {
-        console.log("treeNode",treeNode);
+        //console.log("treeNode",treeNode);
         return new Promise(resolve=>{
             if(treeNode.key==1){
                 treeNode.dataRef.children = data.deptTreeData;
@@ -352,15 +513,15 @@
                 resolve();
             }
             if(treeNode.id){
-                loadGroupPeople(treeNode.groupId).then(res=>{
-                    console.log("list", res.listData)
-                    let temp = res.listData.map(item=>{
-                        item.title = item.FullName;
-                        item.key = item.SystemUserId;
-                        item.isLeaf = true;
+                loadDeptUser(treeNode.id).then(res=>{
+                    //console.log("list", res)
+                    let temp = res.nodes.map(item=>{
+                        item.title = item.FullName&&item.FullName.textValue?item.FullName.textValue:'';
+                        item.key = item.id;
+                        item.isLeaf = true
                         return item;
                     })
-                    console.log("treeNode.dataRef.children",treeNode.dataRef.children);
+                    //console.log("treeNode.dataRef.children",treeNode.dataRef.children);
                     if(treeNode.dataRef.children==undefined){
                         treeNode.dataRef.children = [];
                     }
@@ -370,26 +531,37 @@
             }
         })
     }
-    const getDeptUser = (deptId) => {
+    const loadDeptUser = (deptId) => {
         return new Promise(resolve=>{
-            proxy.$get(Interface.user.sysUser,{
-                businessUnitId: deptId
-            }).then(res=>{
+            // proxy.$get(Interface.user.sysUser,{
+            //     businessUnitId: deptId
+            // }).then(res=>{
+            //     resolve(res);
+            // })
+            let d = {
+                filterId: "",
+                entityType: "SystemUser",
+                displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
+                filterQuery: "\nBusinessUnitId\teq\t" + deptId,
+                page: 1,
+                rows: 100
+            };
+            proxy.$get(Interface.list2, d).then(res=>{
                 resolve(res);
             })
         })
     }
     // 选择群组
     const selectGroup = (e,node)=>{
-        console.log(e,node);
+        //console.log(e,node);
         let row = node.node;
-        let index = data.selectGroupList.findIndex(item=>item.key == row.id);
+        let index = data.selectGroupList.findIndex(item=>item.ID == row.id);
         if(index==-1){
             data.selectGroupList.push({
-                value: row.title,
-                key: row.key
+                ID: row.id,
+                Name: row.title
             });
-            formState.group.push(row.key);
+            formState.group.push(row.id);
         }
         if(index>=0){
             message.error("不能重复添加群组！");
@@ -403,14 +575,17 @@
                 id: "",
                 subject: formState.theme,
                 mailBody: formState.mailBody,
-                toUserIds: "",
+                ToUserIds:activeKey.value=='1'?formState.addressee:'',
+                ToGroupIds:activeKey.value=='1'?'':formState.group,
                 emailStatus: 1,
                 priority: 0,
                 Forward: "",
-                IsGroupmail: false,
+                IsGroupmail: activeKey.value=='1'?false:true,
                 chkSms: formState.chkSms
             }).then(res=>{
                 console.log("res",res);
+                emit("cancel", props.ltags);
+                emit("refresh", '');
             })
         }).catch(err => {
             console.log('error', err);
@@ -418,9 +593,30 @@
         
     }
     const cancelWriteEmail= () => {
+        emit("cancel", props.ltags);
+        // let url = router.resolve({
+        //     path:'/email',
+        //     name: "Email",
+        //     query: {
+                
+        //     },
+        // });
+        //window.open(url.href);
+        //window.location.href=url.href;
+    }
+    const uniqu=(array, name)=>{
+        var arr = []
+        for (var j = 0; j < array.length; j++) {
+            if (JSON.stringify(arr).indexOf(array[j][name]) == -1) {
+                arr.push(array[j])
+            }
+        }
+        return arr
+    }
+    const backToOA = () => {
         let url = router.resolve({
-            path:'/email',
-            name: "Email",
+            path:'/workspace/personal/home',
+            name: "PersonalHome",
             query: {
                 
             },
@@ -428,10 +624,37 @@
         //window.open(url.href);
         window.location.href=url.href;
     }
+    const openPeopleModel=(e)=>{
+        data.isRadioUser = true;
+    }
+    const refreshPeople=(e)=>{
+       
+    }
+    const closeUser = (e) => {
+        data.isRadioUser = false;
+    };
+    const getUserData = (params) => {
+      //console.log("params:", params);
+      data.isRadioUser = false;
+      if(params.id){
+        let index = data.selectConcatsList.findIndex(item=>item.ID==params.id);
+        if(index==-1 && params.id){
+            data.selectConcatsList.push({
+                ID: params.id,
+                Name: params.name
+            });
+            formState.addressee.push(params.id);
+        }
+        if(index>=0){
+            message.error("不能重复添加收件人！");
+        }
+      }
+    };
 </script>
 <style lang="less" scoped>
     .writeEmail {
         height: 100vh;
+        width: 100%;
         background: #f0f2f6;
         .ant-select-selection-item-content .ant-avatar{
             display: none !important;
@@ -439,14 +662,14 @@
     }
 
     .whitemailHeader {
-        padding-top: 16px;
+        // padding-top: 70px;
         border-bottom: 1px solid #e5e6eb;
         background: #fff;
     }
 
     .whitemailCenter {
         width: 100%;
-        height: calc(~"100% - 121px");
+        height: calc(~"100% - 180px");
         background: #fff;
         /* overflow: hidden; */
         .containerWrap {
@@ -560,4 +783,57 @@
             box-sizing: border-box;
         }
     }
+    .emailHeader {
+        width: 100%;
+        height: 64px;
+        background: var(--backColor);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-right: 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        color: #fff;
+        .emailLogo {
+            width: 175px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            padding: 19px 25px;
+            box-sizing: border-box;
+            cursor: pointer;
+            position: relative;
+            color: #fff;
+
+            &:hover {
+                background: #fff;
+
+                svg {
+                    fill: var(--textColor);
+                }
+
+                color: var(--textColor);
+            }
+
+            svg {
+                width: 26px;
+                height: 26px;
+            }
+
+            .logoText {
+                font-size: 20px;
+                font-weight: bold;
+                padding-left: 13px;
+            }
+        }
+
+        .return {
+            cursor: pointer;
+        }
+    }
+    :deep .ant-tree-title{
+            white-space: nowrap;
+        }
 </style>

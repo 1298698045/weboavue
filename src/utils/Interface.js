@@ -300,5 +300,7 @@ const Interface = {
       relatedListData: baseUrl + "/aura/RelatedListUiController/postRelatedListRecords", // 获取单个相关列表 - 数据
       compact: baseUrl + "/aura/RecordUi/Layout/getCompact", // 详情标题 - 紧凑布局
   },
+  login:baseUrl + "/auth/doLogin",
+  validate:baseUrl + "/auth/captcha",
 };
 export default Interface;

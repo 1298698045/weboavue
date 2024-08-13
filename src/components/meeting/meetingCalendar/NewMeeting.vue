@@ -60,17 +60,11 @@
     const configRef = ref();
     const props = defineProps({
         isShow: Boolean,
-        paramsTime: {
-            date: "",
-            time: ""
-        },
-        meetingId: {
-            type: String,
-            default: ""
-        },
+        paramsTime: [Object],
+        meetingId: String,
         calendarType:String,
     })
-    console.log("props", props.paramsTime);
+    // console.log("props", props.paramsTime);
     const emit = defineEmits(['cancel', 'select-val']);
     const handleCancel = () => {
         emit("cancel", false);
@@ -135,5 +129,8 @@
     :deep :where(.css-dev-only-do-not-override-kqecok).ant-tabs>.ant-tabs-nav,
     :where(.css-dev-only-do-not-override-kqecok).ant-tabs>div>.ant-tabs-nav {
         margin: 0 !important;
+    }
+    :where(.css-dev-only-do-not-override-kqecok).ant-modal .ant-modal-footer{
+        margin-top: 0 !important;
     }
 </style>

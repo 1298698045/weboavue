@@ -5,7 +5,17 @@
                 <MailOutlined />
                 <span class="logoText">邮件</span>
             </div>
-            <div class="emailSearch"></div>
+            <div class="emailSearch">
+                <div class="navSearch" :class="{active:isFocus}">
+                    <SearchOutlined class="SearchOutlined" />
+                    <el-input placeholder="搜索" v-model="searchText" @input="searchEmailInbox"
+                    @blur="handleBlurSearch"
+                    @focus="handleFocusSearch"
+                    clearable
+                    >
+                    </el-input>
+                </div>
+            </div>
             <div class="return" @click="backToOA">返回OA</div>
         </div>
         <div class="emailBd">
@@ -175,7 +185,7 @@
                         </a-tooltip>
                     </div>
                 </div>
-                <div class="rightContainer">
+                <div class="rightContainer" v-if="!isWriteEmail">
                     <div class="mailListWrap">
                         <div class="mailHeader">
                             <a-tooltip class="foldIcon" placement="top" :title="isFold?'收起文件夹栏':'展开文件夹栏'">
@@ -268,6 +278,9 @@
                         <email-detail :emailId="emailId"></email-detail>
                     </div>
                 </div>
+                <div class="rightContainer" v-if="isWriteEmail">
+                    <writeEmail :ltags="ltagsRecord" @cancel="closeWriteEmail" @refresh="getInboxList" />
+                </div>
             </div>
         </div>
     </div>
@@ -294,10 +307,12 @@
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import EmailDetail from "@/components/email/EmailDetail.vue";
+    import writeEmail from "@/views/email/writeEmail/index.vue";
     import Interface from "@/utils/Interface.js";
     import { useRouter, useRoute } from "vue-router";
     const { proxy } = getCurrentInstance();
     const router = useRouter();
+    const route = useRoute();
     const data = reactive({
         navList: [
             {
@@ -374,11 +389,15 @@
         isDetail: false,
         emailIndex: 0,
         pageNumber: 1,
-        pageSize: 20
+        pageSize: 20,
+        searchText:'',
+        isFocus:false,
+        isWriteEmail:false,
+        ltagsRecord:''
     });
     const { navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
          folderList, folderText, renameFolderId, isEdit, checkList, checkAll, isIndeterminate, isFold, 
-         isDetail, emailIndex, pageNumber, pageSize } = toRefs(data);
+         isDetail, emailIndex, pageNumber, pageSize,searchText,isFocus,isWriteEmail,ltagsRecord } = toRefs(data);
     let itemRefs = [];
     const handleTypeEmail = (item, index) => {
         console.log(item, index);
@@ -387,18 +406,20 @@
         if (data.ltags.indexOf("folder") != -1) {
             data.folderId = item.Id;
         }
+        data.isWriteEmail=false;
         getInboxList();
     };
     const handleOpen = (item, index) => {
         item.isBook = !item.isBook;
         item.isAddTabs = false;
+        data.isWriteEmail=false;
     }
 
     // 获取邮件列表
     const getInboxList = () => {
         proxy.$get(Interface.email.inboxList, {
             ltags: data.ltags,
-            search: '',
+            search: data.searchText,
             pageNumber: data.pageNumber,
             pageSize: data.pageSize
         }).then(res => {
@@ -575,19 +596,47 @@
         window.location.href=url.href;
     }
     const openWriteEmail= () => {
-        let url = router.resolve({
-            path:'/email/write',
-            name: "WriteEmail",
-            query: {
+        // let url = router.resolve({
+        //     path:'/email/write',
+        //     name: "WriteEmail",
+        //     query: {
                 
-            },
-        });
+        //     },
+        // });
         //window.open(url.href);
-        window.location.href=url.href;
+        //window.location.href=url.href;
+        data.ltagsRecord=data.ltags;
+        data.isWriteEmail=true;
+        nextTick(()=>{
+            data.ltags='';
+        })
     }
+    const searchEmailInbox = (e) => {
+        data.searchText = e;
+        if(data.searchText.length>=2 || data.searchText == ''){
+            getInboxList();
+        }
+    }
+    const handleFocusSearch= (e)=>{
+        data.isFocus = true
+    }
+    const handleBlurSearch= (e)=>{
+        data.isFocus = false
+    }
+    const closeWriteEmail=(e)=>{
+        console.log(e)
+        data.isWriteEmail=false;
+        data.ltags=e;
+    }
+    onMounted(() => {
+        if(route.query.Id){
+            openWriteEmail();
+        }
+    })
 </script>
 <style lang="less" scoped>
     @import url("@/style/email.less");
+    @import "~@/style/icon/header/iconfont.css";
     .el-checkbox-group{
         font-size: 14px !important;
         line-height: unset !important;
@@ -598,6 +647,31 @@
         background: #f0f2f6;
         overflow: hidden;
         font-size: 14px;
+        .emailSearch{
+            height: 64px;
+            flex: 1;
+        }
+        .navSearch {
+            padding: 13px 170px 13px 0;
+            position: relative;
+            .el-input{
+                height: 39px;
+                :deep .el-input__inner{
+                    background: rgba(255, 255, 255, .4) !important;
+                    border: 1px solid transparent !important;
+                    color: #000 !important;
+                    text-indent: 18px;
+                }
+            }
+            .SearchOutlined{
+                position: absolute;
+                left: 10px;
+                top: 25px;
+                color: #aaa;
+                z-index: 1;
+                font-size: 16px;
+            }
+        }
     }
 
     .emailHeader {

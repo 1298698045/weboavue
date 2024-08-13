@@ -125,30 +125,30 @@
     import { Lunar, Solar, HolidayUtil } from "lunar-javascript";
 
     // 是否调休
-    console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,29));
+    //console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,29));
 
-    console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,18).isWork());
+    //console.log('HolidayUtil', HolidayUtil.getHoliday(2024,2,18).isWork());
 
 
     // var d = HolidayUtil.getHoliday(2024,2,29);
     // console.log('isWork', d.isWork());
 
-    console.log('Solar', Solar.fromDate(new Date("2024-12-24")).getFestivals());
+    //console.log('Solar', Solar.fromDate(new Date("2024-12-24")).getFestivals());
 
     // 转阴历
     // console.log("转阴历", Solar.fromDate(new Date('2024-2-10')).getLunar());
 
     let lunar2 = Solar.fromDate(new Date('2024-2-9')).getLunar();
-    console.log("lunar2", lunar2)
+    //console.log("lunar2", lunar2)
     let year = lunar2.getYear();
     let month = lunar2.getMonth();
     let day = lunar2.getDay();
-    console.log(year, month ,day)
+    //console.log(year, month ,day)
     // 获取农历节日
     let festival = Lunar.fromYmd(year, month, day).getFestivals();
-    console.log('Lunar', festival);
+    //console.log('Lunar', festival);
     // 节气
-    console.log("Lunar.fromYmd-getJieQi", Lunar.fromYmd(2024, 3, 1).getJieQi())
+    //console.log("Lunar.fromYmd-getJieQi", Lunar.fromYmd(2024, 3, 1).getJieQi())
     // 获取农历日期
     const getlunarVal = (date) => {
         // console.log("val", date.format("YYYY-MM-DD"));
@@ -203,15 +203,15 @@
         return holiday;
     };
     const getlunarClass = (date) => {
-        let month = date.format("MM");
-        let currentMonth = data.monthValue.format('MM');
+        let month = dayjs(date).format('MM');
+        let currentMonth = dayjs(props.currentDate).format('MM');
         return month != currentMonth ? true : false;
     }
     const { proxy } = getCurrentInstance();
     const formRef = ref();
     const monthFormat = 'YYYY/MM';
     const props = defineProps({
-        currentDate:String,
+        currentDate:[Object],
         startDateTime:String,
         endDateTime:String,
         calendarType:String
@@ -295,7 +295,7 @@
     const getListData = value => {
         //let date = value.format('YYYY-MM-DD');
         // console.log("date",date);
-        let date = value.date();
+        let date = dayjs(value).format('YYYY-MM-DD');
         return data.scheduleList[date] || [];
     };
     const getQuery = ()=> {
@@ -322,7 +322,7 @@
                         let scheduleItems = res.actions[0].returnValue[0].calendarItems;
                         let obj = {};
                         scheduleItems.forEach(item=>{
-                            let daydate = dayjs(item.StartDateTime).format('DD');
+                            let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
                             //console.log("daydate",daydate);
                             if(!obj[daydate]){
                                 obj[daydate] = [];

@@ -130,7 +130,7 @@
               alt=""
             />
           </div>
-          <div class="info-name" @click.stop="handleOpenInfo">张三（演示账号）</div>
+          <div class="info-name" @click.stop="handleOpenInfo">{{ currentAccountName }}</div>
           <div class="info-icon" @click.stop="handleOpenInfo">
             <!-- <DownOutlined style="font-size: 10px" /> -->
             <i class="iconfont icon-xiala"  style="font-size: 12px;font-weight: 400;"></i>
@@ -145,8 +145,8 @@
             </div>
             <div class="header-account-splitter"></div> -->
             <div class="header-account-list">
-              <div v-for="item in 2" :key="item">
-                <div class="header-account-item">
+              <div v-for="item in accountList" :key="item">
+                <div class="header-account-item" @click="ChangeAccount(item)">
                   <div class="header-account-item-avatar">
                     <img
                     class="img"
@@ -155,12 +155,13 @@
                   />
                   </div>
                   <div class="header-account-item-info">
+                    <span v-if="currentAccountName==item.FullName" class="header-account-item-current-text">主</span>
                     <span class="header-account-item-username">
-                      张三（演示账号）
+                      {{ item.FullName }}
                     </span>
-                    <span class="header-account-item-jobs">董事长</span>
+                    <span class="header-account-item-jobs">{{item.JobTitle}}</span><span class="header-account-item-current-icon" v-if="currentAccountName==item.FullName"><CheckCircleFilled /></span>
                     <br/>
-                    <div class="header-account-item-deptName rowEllipsis">维森集团股份有限公司/董事长办公室</div>
+                    <div class="header-account-item-deptName rowEllipsis">{{item.DeptName}}</div>
                   </div>
                 </div>
                 <div class="header-account-splitter"></div>
@@ -176,7 +177,7 @@
                 <i class="iconfont icon-zhutizhongxin" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">主题中心</span>
               </div>
-              <div class="header-account-seeting-item">
+              <div class="header-account-seeting-item" @click="loginOut">
                 <!-- <ScheduleOutlined class="icon" /> -->
                 <i class="iconfont icon-tuichu" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">退出</span>
@@ -204,7 +205,7 @@
 <script setup>
 import "@/style/header.less";
 import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance, defineProps, defineEmits } from "vue";
-import { DownOutlined, SearchOutlined, BellOutlined, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined } from "@ant-design/icons-vue";
+import { DownOutlined, SearchOutlined, BellOutlined, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined,CheckCircleFilled } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
 import NoticeMessages from "@/components/NoticeMessages.vue";
 import Logo from "../header/components/logo.vue";
@@ -248,10 +249,18 @@ const data = reactive({
   isNotice: false,
   appCode: "02u90000110",
   currentAppName: "",
-  searchVal:route.query.searchVal
+  searchVal:route.query.searchVal,
+  accountList:[
+    {FullName:'张三（演示账号）',JobTitle:'院长',DeptName:'院领导'},
+    {FullName:'李四（演示账号）',JobTitle:'科主任',DeptName:'信息科'}
+  ],
+  currentAccountName:'张三（演示账号）'
 })
-const { appList, isInfoPopup, isNotice, appCode, currentAppName,searchVal } = toRefs(data);
-
+const { appList, isInfoPopup, isNotice, appCode, currentAppName,searchVal,accountList,currentAccountName } = toRefs(data);
+const ChangeAccount= (item) => {
+  data.isInfoPopup = false;
+  data.currentAccountName=item.FullName;
+}
 // proxy.$get(Interface.applist,{
 //   systemCode: 'OA'
 // }).then((res)=>{
@@ -305,6 +314,10 @@ const handlePersonal = () => {
       name: "123"
     }
   })
+}
+const loginOut= () => {
+  sessionStorage.clear();
+  router.push('/');
 }
 onMounted(() => {
   window.addEventListener("click", function (e) {
@@ -378,5 +391,34 @@ const clearInput= () => {
 }
 .header .header-search .search-searchIcon{
   margin-left: 0;
+}
+.header-account-item-current-icon{
+  color:#1055BC;
+  font-size: 18px;
+  position: absolute;
+  top: 17px;
+  right: 23px;
+}
+.header-account-item-current-text{
+    margin-right: 6px;
+    color: #fff;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: rgb(232, 169, 5);
+    border-radius: 3px;
+    line-height: 18px;
+    text-align: center;
+    font-size: 11px;
+}
+.header .header-end .header-info-popup .header-account-splitter{
+  margin: 0;
+}
+.header .header-end .header-info-popup .header-account-item .header-account-item-avatar{
+  height: 54px;
+}
+.header .header-end .header-info-popup .header-account-item{
+  height: 60px;
+  padding-top: 4px;
 }
 </style>

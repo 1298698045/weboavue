@@ -18,11 +18,15 @@
                             </a-input>
                         </a-form-item>
                         <a-form-item name="password" :rules="[{ required: true, message: '请输入密码!' }]">
-                            <a-input v-model:value="formState.password" type="password" placeholder="密码" allow-clear>
+                            <a-input v-model:value="formState.password" :type="passwordType" placeholder="密码" allow-clear>
                                 <template #prefix>
                                     <LockOutlined />
                                 </template>
                             </a-input>
+                            <div class="passwordTypeChange">
+                                <EyeOutlined @click="passwordTypeChange('password')" title="隐藏密码" v-if="passwordType=='text'" />
+                                <EyeInvisibleOutlined @click="passwordTypeChange('text')" title="显示密码" v-if="passwordType=='password'" />
+                            </div>
                         </a-form-item>
                         <a-form-item name="captureId" :rules="[{ required: true, message: '请输入验证码!' }]">
                             <a-input v-model:value="formState.captureId" placeholder="验证码">
@@ -73,39 +77,56 @@
         toRaw,
         toRef
     } from "vue";
-    import { UserOutlined, LockOutlined, CheckCircleOutlined } from "@ant-design/icons-vue";
+    import { UserOutlined, LockOutlined, CheckCircleOutlined,EyeOutlined,EyeInvisibleOutlined } from "@ant-design/icons-vue";
     const { proxy } = getCurrentInstance();
     import { message } from "ant-design-vue";
     import { compareIgnoreCase } from "@/utils/common.js";
     import { useRouter, useRoute } from "vue-router";
+    import Interface from "@/utils/Interface.js";
     const router = useRouter();
     import md5 from "js-md5";
+    const data = reactive({
+        passwordType:'password'
+    });
+    const { passwordType } = toRefs(data);
+    const passwordTypeChange=(e)=>{
+        data.passwordType=e;
+    }
     const formRef = ref(null);
     const formState = reactive({
         userName: "",
         password: "",
         captureId: ""
     });
-    const validateImg = ref(require("@/assets/img/twoDimensionalStats-thumb.png"));
+    //const validateImg = ref(require("@/assets/img/twoDimensionalStats-thumb.png"));
+    const validateImg = ref(null);
     const captchaId = ref();
     const changeValidate = () => {
-        console.log('更换验证码');
+        //console.log('更换验证码');
         getValidate();
     }
     const handleLogin = () => {
-        console.log("123", md5(formState.password));
+        //console.log("123", md5(formState.password));
         formRef.value.validate().then(()=>{
-            console.log('values', formState, toRaw(formState));
+            //console.log('values', formState, toRaw(formState));
             if(compareIgnoreCase(formState.captureId, captchaId.value)){
-                proxy.$get("api/auth/doLogin", {
+                proxy.$post(Interface.login, {
                     userName: formState.userName,
                     password: md5(formState.password),
-                    captureId: formState.captureId
+                    //captureId: formState.captureId
                 }).then(res=>{
-                    if(res.state===200){
+                    if(res&&res.state===200){
                         let token = res.token;
-                        // sessionStorage.setItem('token', token);
-                        router.push('/lightning/setup/SetupOneHome/home')
+                        window.sessionStorage.setItem('token', token);
+                        router.push('/home/Home.aspx?t=home&dboardName=workspace');
+                    }else {
+                        if(res&&res.msg){
+                            message.error(res.msg);
+                        }
+                        else{
+                            message.error('登录失败！');
+                        }
+                        changeValidate();
                     }
                 })
             }else {
@@ -117,8 +138,7 @@
         })
     };
     const getValidate = () => {
-        proxy.$get("api/auth/captcha", {
-
+        proxy.$get(Interface.validate, {
         }).then(res=>{
             // console.log('res', res.image)
             // console.log("validateImg", validateImg);
@@ -218,6 +238,14 @@
                 color: #999;
             }
         }
+    }
+    .passwordTypeChange{
+        position: absolute;
+        right: 35px;
+        top: 10px;
+        font-size: 15px;
+        color: #999;
+        z-index: 10000;
     }
     .validate{
         width: 105px;

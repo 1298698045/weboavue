@@ -173,9 +173,9 @@
                                                 </a>
                                                 <template #overlay>
                                                     <a-menu>
-                                                        <!-- <a-menu-item>
-                                                            <a href="javascript:;">发邮件</a>
-                                                        </a-menu-item> -->
+                                                        <a-menu-item>
+                                                            <a href="javascript:void(0);" @click="openSendEmail(item)">发邮件</a>
+                                                        </a-menu-item>
                                                         <a-menu-item>
                                                             <a href="javascript:void(0);" @click="handleEdit(item.id)">编辑</a>
                                                         </a-menu-item>
@@ -286,9 +286,9 @@
                                             </a>
                                             <template #overlay>
                                                 <a-menu>
-                                                    <!-- <a-menu-item>
-                                                        <a href="javascript:;">发邮件</a>
-                                                    </a-menu-item> -->
+                                                    <a-menu-item>
+                                                            <a href="javascript:void(0);" @click="openSendEmail(item)">发邮件</a>
+                                                        </a-menu-item>
                                                     <a-menu-item>
                                                         <a href="javascript:void(0);" @click="handleEdit(item.id)">编辑</a>
                                                     </a-menu-item>
@@ -393,7 +393,10 @@
     import { message } from "ant-design-vue";
     import CommonFormModal from "@/components/listView/CommonFormModal.vue";
     import Delete from "@/components/listView/Delete.vue";
+    import { useRouter, useRoute } from "vue-router";
     const { proxy } = getCurrentInstance();
+    const router = useRouter();
+    const route = useRoute();
     const data = reactive({
         activeKey: "1",
         deptTreeData:[],
@@ -543,7 +546,7 @@
             rows: data.pageSize,
             sort: data.sortField.id,
             order:'ASC',
-            displayColumns:'FullName,PhotoUrl,Department,WorkStatus,JobTitle,EmployeeNo,MobilePhone,EMailAddress1'
+            displayColumns:'FullName,PhotoUrl,Department,WorkStatus,JobTitle,EmployeeNo,MobilePhone,EMailAddress1,OwningUser'
         }).then(res => {
             data.listData = res.nodes;
             data.total = res.pageInfo?res.pageInfo.total:0;
@@ -625,6 +628,19 @@
     //删除关闭
     const cancelDelete = (e) => {
         data.isDelete = false;
+    };
+    //发送邮件
+    const openSendEmail= (item) => {
+        let url = router.resolve({
+            path:'/email',
+            name: "Email",
+            query: {
+                Id:item.id,
+                Name:item.FullName,
+                type:1
+            },
+        });
+        window.open(url.href);
     };
 </script>
 <style lang="less" scoped>

@@ -144,6 +144,9 @@
                                                 <template #overlay>
                                                     <a-menu>
                                                         <a-menu-item>
+                                                            <a href="javascript:void(0);" @click="openSendEmail(item)">发邮件</a>
+                                                        </a-menu-item>
+                                                        <a-menu-item>
                                                             <a href="javascript:void(0);" @click="handleEdit(item.id)">编辑</a>
                                                         </a-menu-item>
                                                         <a-menu-item>
@@ -300,6 +303,9 @@
                                             </a>
                                             <template #overlay>
                                                 <a-menu>
+                                                    <a-menu-item>
+                                                        <a href="javascript:void(0);" @click="openSendEmail(item)">发邮件</a>
+                                                    </a-menu-item>
                                                     <a-menu-item>
                                                         <a href="javascript:void(0);" @click="handleEdit(item.id)">编辑</a>
                                                     </a-menu-item>
@@ -461,7 +467,10 @@
     import { message } from "ant-design-vue";
     import CommonFormModal from "@/components/listView/CommonFormModal.vue";
     import Delete from "@/components/listView/Delete.vue";
+    import { useRouter, useRoute } from "vue-router";
     const { proxy } = getCurrentInstance();
+    const router = useRouter();
+    const route = useRoute();
     const data = reactive({
         activeKey: "1",
         deptTreeData:[],
@@ -628,7 +637,7 @@
             rows: data.pageSize,
             sort:data.sortField.id,
             order:'ASC',
-            displayColumns:'BusinessUnitId,Location1,TelPhone1,Location2,TelPhone2,Location3,TelPhone3,Location4,TelPhone4,Location5,TelPhone5,Location6,TelPhone6'
+            displayColumns:'BusinessUnitId,Location1,TelPhone1,Location2,TelPhone2,Location3,TelPhone3,Location4,TelPhone4,Location5,TelPhone5,Location6,TelPhone6,OwningUser'
         }).then(res => {
             data.listData = res.nodes;
             data.total = res.pageInfo?res.pageInfo.total:0;
@@ -720,6 +729,28 @@
     //删除关闭
     const cancelDelete = (e) => {
         data.isDelete = false;
+    };
+    //发送邮件
+    const openSendEmail= (item) => {
+        // let url = router.resolve({
+        //     path:'/email/write',
+        //     name: "WriteEmail",
+        //     query: {
+        //         Id:item.id,
+        //         Name:item.BusinessUnitIdName,
+        //         type:2
+        //     },
+        // });
+        let url = router.resolve({
+            path:'/email',
+            name: "Email",
+            query: {
+                Id:item.id,
+                Name:item.BusinessUnitIdName,
+                type:2
+            },
+        });
+        window.open(url.href);
     };
 </script>
 <style lang="less" scoped>

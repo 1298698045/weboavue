@@ -277,7 +277,7 @@
   onMounted(() => {
       let h = PersonnelLst.value.clientHeight;
       h=document.documentElement.clientHeight;
-      data.tableHeight = h-490;
+      data.tableHeight = h-550;
   })
   </script>
   <style lang="less">

@@ -12,9 +12,9 @@
                     </div>
                     <div class="calendar-selectlist">
                         <div class="calendar-typechook">
-                            <li :class="{'active':calendarType==0}" @click="calendarType=0">日</li>
-                            <li :class="{'active':calendarType==1}" @click="calendarType=1">周</li>
-                            <li :class="{'active':calendarType==2}" @click="calendarType=2">月</li>
+                            <li :class="{'active':calendarType==0}" @click="calendarTypeChange(0)">日</li>
+                            <li :class="{'active':calendarType==1}" @click="calendarTypeChange(1)">周</li>
+                            <li :class="{'active':calendarType==2}" @click="calendarTypeChange(2)">月</li>
                         </div>
                     </div>
                     <div class="formItem ml10" v-if="calendarType==0">
@@ -34,11 +34,11 @@
                     <div class="formItem ml10" v-if="calendarType==2">
                         <a-date-picker v-model:value="monthValue" :format="monthFormat" picker="month" @change="changeMonth" />
                     </div>
-                    <a-button disabled class="ml10" v-if="calendarType==0">今天</a-button>
-                    <a-button disabled class="ml10" v-if="calendarType==1">本周</a-button>
-                    <a-button disabled class="ml10" v-if="calendarType==2">本月</a-button>
+                    <a-button :disabled="currentTimeNow==dayjs(currentTime).format('YYYY-MM-DD')" class="ml10" v-if="calendarType==0" @click="backNowTime(0)">今天</a-button>
+                    <a-button :disabled="currentStartWeekTime==dayjs(startWeekTime).format('YYYY-MM-DD')&&currentEndWeekTime==dayjs(endWeekTime).format('YYYY-MM-DD')" class="ml10" v-if="calendarType==1" @click="backNowTime(1)">本周</a-button>
+                    <a-button :disabled="currentMonthValue==dayjs(monthValue).format('YYYY-MM')" class="ml10" v-if="calendarType==2" @click="backNowTime(2)">本月</a-button>
 
-                    <a-button class="ml10" :icon="h(RedoOutlined)"></a-button>
+                    <a-button class="ml10" :icon="h(RedoOutlined)" @click="calendarTypeChange(calendarType);" title="刷新"></a-button>
                     <div class="statusWrap">
                         <div class="statusItem">
                             <span class="statusColor" style="background: #0070d2;"></span>
@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div class="calendarBody">
-                <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2">
+                <!-- <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2">
                     <template #headerRender>
                         <div>
                             
@@ -133,7 +133,6 @@
                                     </div>
                                 </template>                                
                                 <li class="messageItem" :style="{background:backFn(getListData(current))}">
-                                    <!-- <a-badge status="success" :text="item.Name" /> -->
                                     <p class="name123">{{dayjs(item.ProposedStart).format('HH:mm')}} {{item.Name}}</p>
                                 </li>
                             </a-popconfirm>
@@ -141,9 +140,13 @@
                     </template>
                 </a-calendar>
                 <DayCalendar v-if="calendarType==0" :currentTime="currentTime"/>
-                <WeekVue v-if="calendarType==1" :week="week" />
+                <WeekVue v-if="calendarType==1" :week="week" /> -->
+                <ActivityFullCalendar ref="FullCalendarWrap" :calendarView="calendarView" :id="meetingId" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
             </div>
         </div>
+        <NewMeeting :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" :calendarType="formState.type" />
+        <MeetingDetailModal :isShow="isMeetingDetail" v-if="isMeetingDetail" :meetingId="meetingId" @cancel="isMeetingDetail=false" @edit="handleOpenEdit" @handleDelete="handleDelete" />
+        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="meetingId" :objTypeCode="objectTypeCode" :external="external" />
     </div>
 </template>
 <script setup>
@@ -176,70 +179,22 @@
     import WeekVue from "@/components/meeting/activity/WeekCalendayActivity.vue";
     import DayCalendar from "@/components/meeting/activity/DayCalendayActivity.vue";
 
+    import ActivityFullCalendar from "@/components/meeting/activity/ActivityFullCalendar.vue";
+    // 详情
+    import MeetingDetailModal from "@/components/meeting/MeetingDetailModal2.vue";
+    // 新建
+    import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
+
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     import { Lunar, Solar, HolidayUtil } from "lunar-javascript";
-    // 获取农历日期
-    const getlunarVal = (date) => {
-        // console.log("val", date.format("YYYY-MM-DD"));
-        let dateStr = date.format("YYYY-MM-DD");
-        let lunarDay = Lunar.fromDate(new Date(dateStr)).getDayInChinese();
-        return lunarDay;
-    };
-    // 获取节日
-    const getFestivals = (date) => {
-        let festival = '';
-        let dateStr = date.format("YYYY-MM-DD");
-        let SolarFestival = Solar.fromDate(new Date(dateStr)).getFestivals();
-        let lunar2 = Solar.fromDate(new Date(dateStr)).getLunar();
-        let year = lunar2.getYear();
-        let month = lunar2.getMonth();
-        let day = lunar2.getDay();
-        let LunarFestival = Lunar.fromYmd(year, month, day).getFestivals();
-        let LunarJieQi = Lunar.fromYmd(year, month, day).getJieQi();
-
-        if(SolarFestival && SolarFestival.length){
-            SolarFestival.forEach(item=>{
-                festival += item;
-            });
-        };
-        if(LunarFestival && LunarFestival.length){
-            LunarFestival.forEach(item=>{
-                festival += item;
-            });
-        } 
-        if(LunarJieQi){
-            festival += LunarJieQi;
-        }
-        return festival;
-    };
-    // 假期
-    const getHolidayVal = (date) => {
-        let holiday = '';
-        let dateStr = date.format("YYYY-MM-DD");
-        let d = HolidayUtil.getHoliday(dateStr);
-        if(d && d!=null){
-            let isWork = d.isWork();
-            if (isWork) {
-                holiday = '班';
-            }else {
-                holiday = '休';
-            }
-        }else {
-            let weekend = new Date(dateStr).getDay();
-            // if (weekend == 0 || weekend == 6) {
-            //     holiday = '休';
-            // }
-        }
-        return holiday;
-    };
-    const getlunarClass = (date) => {
-        let month = date.format("MM");
-        let currentMonth = data.monthValue.format('MM');
-        return month != currentMonth ? true : false;
-    }
+    onMounted(()=>{
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
+    })
     const formRef = ref();
     const monthFormat = 'YYYY/MM';
     const data = reactive({
@@ -271,15 +226,66 @@
         userListTree: [],
         meetingList: {},
         monthValue: dayjs(new Date(), monthFormat),
-        calendarType: 0,
+        calendarType: 2,
+        calendarView:'dayGridMonth',
         currentTime: dayjs(),
         startWeekTime: "",
         endWeekTime: "",
-        week: []
+        week: [],
+        isNewMeeting: false,
+        isRepeatMeeting: false,
+        paramsTime: {
+            date: "",
+            time: "",
+            end:"",
+            endDate:""
+        },
+        meetingId: "",
+        isMeetingDetail: false,
+        startTime:'',
+        endTime:'',
+        objectTypeCode:'5000',
+        sObjectName:'MeetingRec',
+        isDelete: false,
+        deleteDesc: '确定要删除吗？',
+        external:false,
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
-         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week } = toRefs(data);
+         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime,
+         meetingId, isMeetingDetail,startTime,endTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,calendarView } = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
+    const FullCalendarWrap=ref(null);
+    const calendarTypeChange=(e)=>{
+        data.calendarType=e;
+        if(e==2){
+            data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
+            data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
+            data.calendarView='dayGridMonth';
+            // nextTick(()=>{
+            //     MonthCalendarWrap.value.getQuery();
+            // })
+        }
+        else if(e==1){
+            data.startTime = dayjs(data.startWeekTime).format("YYYY-MM-DD");
+            data.endTime = dayjs(data.endWeekTime).format("YYYY-MM-DD");
+            data.calendarView='timeGridWeek';
+            // nextTick(()=>{
+            //     WeekVueWrap.value.getQuery();
+            // })
+        }
+        else if(e==0){
+            data.startTime = dayjs(data.currentTime || new Date()).startOf("day").format("YYYY-MM-DD");
+            data.endTime = dayjs(data.currentTime || new Date()).endOf('day').format('YYYY-MM-DD');
+            data.calendarView='timeGridDay';
+            // nextTick(()=>{
+            //     DayCalendarWrap.value.getQuery();
+            // })
+        }
+        nextTick(()=>{
+            FullCalendarWrap.value.getQuery();
+        })
+    }
+
     const backFn = (list) => {
         var len = list.length;
         var index = Math.floor(Math.random() * len);
@@ -288,9 +294,27 @@
     const formState = reactive({
         type: ""
     })
+    // 周/日历 点击单元格新建
+    const handleOpenNew = (params) => {
+        data.meetingId='';
+        data.paramsTime = params;
+        data.isNewMeeting =  true;
+    }
+    // 月历 点击单元格新建
+    const handleSelectCalendar = (e,info) => {
+        data.meetingId='';
+        data.paramsTime={
+            date: e.format("YYYY-MM-DD"),
+            time: ""
+        }
+        data.isNewMeeting = true;
+    }
     // 日-切换日期
     const changeTime = (e) => {
         data.currentTime = dayjs(e);
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     const today = dayjs();
     for (let i = 0; i < 7; i++) {
@@ -301,16 +325,45 @@
     }
     data.startWeekTime = dayjs(data.week[0]);
     data.endWeekTime = dayjs(data.week[data.week.length-1]);
+
+    const currentMonthValue=dayjs(new Date()).format("YYYY-MM");
+    const currentTimeNow = dayjs(new Date()).format("YYYY-MM-DD");
+    const week0 = data.week;
+    const currentStartWeekTime = dayjs(data.week[0]).format("YYYY-MM-DD");
+    const currentEndWeekTime = dayjs(data.week[data.week.length-1]).format("YYYY-MM-DD");
+    
+    const backNowTime=(e)=>{
+        if(e==2){
+            currentDate.value = dayjs(new Date());
+            data.monthValue=dayjs(new Date(), monthFormat);
+        }
+        else if(e==1){
+            data.week=week0;
+            data.startWeekTime = dayjs(week0[0]).format("YYYY-MM-DD");
+            data.endWeekTime = dayjs(week0[week0.length-1]).format("YYYY-MM-DD");
+        }
+        else if(e==0){
+            data.currentTime=dayjs(new Date());
+        }
+        nextTick(()=>{
+            calendarTypeChange(e);
+        })
+    }
+
     watch(week,(newVal,oldVal)=>{
         data.startWeekTime = dayjs(newVal[0]);
         data.endWeekTime = dayjs(newVal[newVal.length-1]);
     },{deep: true, immediate: true})
     // 周-切换日期
     const changeStartTime = (e) => {
-        
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     const changeEndTime = (e) => {
-
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     // 周-上周
     const handlePrevWeek = () => {
@@ -320,8 +373,11 @@
             var time = date.format("YYYY-MM-DD");
             temp.push(time);
         }
-        console.log("temp",temp);
+        //console.log("temp",temp);
         data.week = temp;
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     // 周-下周
     const handleNextWeek = () => {
@@ -331,14 +387,20 @@
             var time = date.format("YYYY-MM-DD");
             temp.push(time);
         }
-        console.log("temp",temp);
+        //console.log("temp",temp);
         data.week = temp;
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     const handleStatus = (item, index) => {
         data.statusCurrent = index;
     }
     const onSearch = (e) => {
-
+        data.isMeetingDetail = false;
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
     }
     const getPeople = () => {
         proxy.$get(Interface.meeting.userTree, {}).then(res => {
@@ -368,37 +430,95 @@
         window.dayjs = dayjs;
         currentDate.value = dayjs(e);
         getQuery();
-    }
-    const getQuery = ()=> {
-        let startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
-        let endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
-        proxy.$get(Interface.meetingActivity.calendarList,{
-            startTime: startTime,
-            endTime: endTime,
-            MeetingType: "",
-            employeeId: "",
-            StatusCode: ""
-        }).then(res=>{
-            let listData = res.listData;
-            let obj = {};
-            listData.forEach(item=>{
-                item.CampaignActivityList.forEach(row=>{
-                    let daydate = dayjs(row.ProposedStart).format('DD');
-                    console.log("daydate",daydate);
-                    if(!obj[daydate]){
-                        obj[daydate] = [];
-                    }
-                    row.BusinessunitId = item.BusinessunitId;
-                    row.BusinessunitName = item.Name;
-                    obj[daydate].push(row);
-                })
-            })
-            data.meetingList = obj;
-            console.log("obj",obj)
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
         })
     }
+    const getQuery = ()=> {
+        data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
+        data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
+        // proxy.$get(Interface.meetingActivity.calendarList,{
+        //     startTime: startTime,
+        //     endTime: endTime,
+        //     MeetingType: "",
+        //     employeeId: "",
+        //     StatusCode: ""
+        // }).then(res=>{
+        //     let listData = res.listData;
+        //     let obj = {};
+        //     listData.forEach(item=>{
+        //         item.CampaignActivityList.forEach(row=>{
+        //             let daydate = dayjs(row.ProposedStart).format('DD');
+        //             console.log("daydate",daydate);
+        //             if(!obj[daydate]){
+        //                 obj[daydate] = [];
+        //             }
+        //             row.BusinessunitId = item.BusinessunitId;
+        //             row.BusinessunitName = item.Name;
+        //             obj[daydate].push(row);
+        //         })
+        //     })
+        //     data.meetingList = obj;
+        //     console.log("obj",obj)
+        // })
+    }
     getQuery();
-
+// 关闭新建
+const cancelNewMeeting = (e) => {
+        data.isNewMeeting = false;
+    }
+    const handleNewMeetingVal = (e) => {
+        data.isNewMeeting = false;
+        onSearch();
+    }
+    // 新建会议
+    const handleAddMeeting = () => {
+        data.isNewMeeting =  true;
+    }
+    // 新建重复会议
+    const handleAddRepeatMeeting = () => {
+        data.isRepeatMeeting =  true;
+    }
+    // 关闭重复会议弹窗
+    const cancelRepeatMeeting = (e) => {
+        data.isRepeatMeeting = e;
+    }
+    const handleRepeatMeetingVal = (e) => {
+        data.isRepeatMeeting = false;
+    }
+    // 编辑日历会议
+    const handleEditMeeting = (item,e) => {
+        data.paramsTime.date = e.format('YYYY-MM-DD');
+        data.meetingId = item.MeetingId;
+        data.isNewMeeting = true;
+    }
+    const handleDetail = (item, date) => {
+        data.meetingId=item.Id;
+        nextTick(()=>{
+            data.isMeetingDetail = true;
+        })
+    }
+    // 编辑
+    const handleOpenEdit = (e) => {
+        data.paramsTime={
+            date: "",
+            time: ""
+        }
+        if(e.paramsTime){
+            data.paramsTime=e.paramsTime
+        }
+        data.meetingId=e.Id;
+        data.isNewMeeting = true;
+    }
+    //删除
+    const handleDelete = (e) => {
+        data.meetingId=e.Id;
+        data.isDelete = true;
+    }
+    //删除关闭
+    const cancelDelete = (e) => {
+        data.isDelete = false;
+    };
 </script>
 <style lang="less" scoped>
     .calendarWrap {

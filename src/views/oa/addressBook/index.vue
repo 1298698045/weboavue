@@ -172,7 +172,7 @@
                                                 <template #overlay>
                                                     <a-menu>
                                                         <a-menu-item>
-                                                            <a href="javascript:;">发邮件</a>
+                                                            <a href="javascript:void(0);" @click="openSendEmail(item)">发邮件</a>
                                                         </a-menu-item>
                                                     </a-menu>
                                                 </template>
@@ -279,7 +279,7 @@
                                             <template #overlay>
                                                 <a-menu>
                                                     <a-menu-item>
-                                                        <a href="javascript:;">发邮件</a>
+                                                        <a href="javascript:void(0);" @click="openSendEmail(item)">发邮件</a>
                                                     </a-menu-item>
                                                 </a-menu>
                                             </template>
@@ -375,7 +375,10 @@
     import Interface from "@/utils/Interface.js";
     import { formTreeData } from "@/utils/common.js";
     import { message } from "ant-design-vue";
+    import { useRouter, useRoute } from "vue-router";
     const { proxy } = getCurrentInstance();
+    const router = useRouter();
+    const route = useRoute();
     const data = reactive({
         activeKey: "1",
         deptTreeData:[],
@@ -534,7 +537,7 @@
             rows: data.pageSize,
             sort:data.sortField.id,
             order:'ASC',
-            displayColumns:'FullName,PhotoUrl,BusinessUnitId,WorkStatus,JobTitle,EmployeeId,MobilePhone,InternalEMailAddress'
+            displayColumns:'FullName,PhotoUrl,BusinessUnitId,WorkStatus,JobTitle,EmployeeId,MobilePhone,InternalEMailAddress,OwningUser'
         }).then(res => {
             data.listData = res.nodes;
             data.total = res.pageInfo?res.pageInfo.total:0;
@@ -593,6 +596,19 @@
     const handleMenuClick = (e) => {
         console.log("e", e);
     }
+    //发送邮件
+    const openSendEmail= (item) => {
+        let url = router.resolve({
+            path:'/email',
+            name: "Email",
+            query: {
+                Id:item.id,
+                Name:item.FullName,
+                type:1
+            },
+        });
+        window.open(url.href);
+    };
 </script>
 <style lang="less" scoped>
     @import "@/style/addressBook.less";

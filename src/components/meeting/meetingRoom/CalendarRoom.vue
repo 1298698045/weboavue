@@ -12,9 +12,9 @@
                     </div>
                     <div class="calendar-selectlist">
                         <div class="calendar-typechook">
-                            <li :class="{'active':calendarType==0}" @click="calendarTypeChnage(0)">日</li>
-                            <li :class="{'active':calendarType==1}" @click="calendarTypeChnage(1)">周</li>
-                            <li :class="{'active':calendarType==2}" @click="calendarTypeChnage(2)">月</li>
+                            <li :class="{'active':calendarType==0}" @click="calendarTypeChange(0)">日</li>
+                            <li :class="{'active':calendarType==1}" @click="calendarTypeChange(1)">周</li>
+                            <li :class="{'active':calendarType==2}" @click="calendarTypeChange(2)">月</li>
                         </div>
                     </div>
                     <div class="formItem ml10" v-if="calendarType==0">
@@ -38,7 +38,7 @@
                     <a-button :disabled="currentStartWeekTime==dayjs(startWeekTime).format('YYYY-MM-DD')&&currentEndWeekTime==dayjs(endWeekTime).format('YYYY-MM-DD')" class="ml10" v-if="calendarType==1" @click="backNowTime(1)">本周</a-button>
                     <a-button :disabled="currentMonthValue==dayjs(monthValue).format('YYYY-MM')" class="ml10" v-if="calendarType==2" @click="backNowTime(2)">本月</a-button>
 
-                    <a-button class="ml10" :icon="h(RedoOutlined)" @click="calendarTypeChnage(calendarType);" title="刷新"></a-button>
+                    <a-button class="ml10" :icon="h(RedoOutlined)" @click="calendarTypeChange(calendarType);" title="刷新"></a-button>
                 </div>
                
                 <div class="btnOptions">
@@ -47,9 +47,10 @@
                 </div>
             </div>
             <div class="calendarBody" ref="contentRef">
-                <DayCalendar ref="DayCalendarWrap" v-if="calendarType==0" :currentTime="currentTime" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
+                <!-- <DayCalendar ref="DayCalendarWrap" v-if="calendarType==0" :currentTime="currentTime" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
                 <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
-                <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :width="width" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
+                <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :width="width" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" /> -->
+                <MeetingRoomFullCalendar ref="FullCalendarWrap" :calendarView="calendarView" :id="meetingId" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
             </div>
         </div>
         <NewMeeting :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" :calendarType="formState.type" />
@@ -88,6 +89,7 @@
     import WeekVue from "@/components/meeting/meetingRoom/WeekRoom.vue";
     import DayCalendar from "@/components/meeting/meetingRoom/DayCalendarRoom.vue";
     import MonthCalendar from "@/components/meeting/meetingRoom/MonthCalendarRoom.vue";
+    import MeetingRoomFullCalendar from "@/components/meeting/meetingRoom/MeetingRoomFullCalendar.vue";
     import {getMeetingRoom} from "@/components/meeting/meetingRoom/MonthCalendarRoom.vue";
     // 会议详情
     import MeetingDetailModal from "@/components/meeting/MeetingDetailModal2.vue";
@@ -100,6 +102,17 @@
     import Interface from "@/utils/Interface.js";
     import Delete from "@/components/listView/Delete.vue";
     const { proxy } = getCurrentInstance();
+    const contentRef = ref(null);
+    const MonthCalendarWrap=ref(null);
+    const DayCalendarWrap=ref(null);
+    const WeekVueWrap=ref(null);
+    onMounted(()=>{
+        //console.log("contentRef",contentRef.value.clientWidth)
+        data.width = contentRef.value.clientWidth;
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+        })
+    })
     const formRef = ref();
     const monthFormat = 'YYYY/MM';
     const data = reactive({
@@ -131,7 +144,8 @@
         userListTree: [],
         meetingList: {},
         monthValue: dayjs(new Date(), monthFormat),
-        calendarType: 2,
+        calendarType: 0,
+        calendarView:'resourceTimeGridDay',
         currentTime: dayjs(),
         startWeekTime: "",
         endWeekTime: "",
@@ -156,42 +170,38 @@
 
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, width,startTime,endTime, paramsTime,
-         meetingId,isMeetingDetail,objectTypeCode,sObjectName,isDelete,deleteDesc,external} = toRefs(data);
+         meetingId,isMeetingDetail,objectTypeCode,sObjectName,isDelete,deleteDesc,external,calendarView} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
-    const contentRef = ref(null);
-    const MonthCalendarWrap=ref(null);
-    const DayCalendarWrap=ref(null);
-    const WeekVueWrap=ref(null);
-    onMounted(()=>{
-        //console.log("contentRef",contentRef.value.clientWidth)
-        data.width = contentRef.value.clientWidth;
-        nextTick(()=>{
-            calendarTypeChnage(data.calendarType);
-        })
-    })
-    const calendarTypeChnage=(e)=>{
+    const FullCalendarWrap=ref(null);
+    const calendarTypeChange=(e)=>{
         data.calendarType=e;
         if(e==2){
             data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
             data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
-            nextTick(()=>{
-                MonthCalendarWrap.value.getMeetingRoom();
-            })
+            data.calendarView='resourceTimelineMonth';
+            // nextTick(()=>{
+            //     MonthCalendarWrap.value.getQuery();
+            // })
         }
         else if(e==1){
             data.startTime = dayjs(data.startWeekTime).format("YYYY-MM-DD");
             data.endTime = dayjs(data.endWeekTime).format("YYYY-MM-DD");
-            nextTick(()=>{
-                WeekVueWrap.value.getMeetingRoom();
-            })
+            data.calendarView='resourceTimelineWeek';
+            // nextTick(()=>{
+            //     WeekVueWrap.value.getQuery();
+            // })
         }
         else if(e==0){
             data.startTime = dayjs(data.currentTime || new Date()).startOf("day").format("YYYY-MM-DD");
             data.endTime = dayjs(data.currentTime || new Date()).endOf('day').format('YYYY-MM-DD');
-            nextTick(()=>{
-                DayCalendarWrap.value.getMeetingRoom();
-            })
+            data.calendarView='resourceTimeGridDay';
+            // nextTick(()=>{
+            //     DayCalendarWrap.value.getQuery();
+            // })
         }
+        nextTick(()=>{
+            FullCalendarWrap.value.getQuery();
+        })
     }
     const backFn = (list) => {
         var len = list.length;
@@ -201,11 +211,26 @@
     const formState = reactive({
         type: ""
     })
+    // 周/日历 点击单元格新建
+    const handleOpenNew = (params) => {
+        data.meetingId='';
+        data.paramsTime = params;
+        data.isNewMeeting =  true;
+    }
+    // 月历 点击单元格新建
+    const handleSelectCalendar = (e,info) => {
+        data.meetingId='';
+        data.paramsTime={
+            date: e.format("YYYY-MM-DD"),
+            time: ""
+        }
+        data.isNewMeeting = true;
+    }
     // 日-切换日期
     const changeTime = (e) => {
         data.currentTime = dayjs(e);
         nextTick(()=>{
-            calendarTypeChnage(data.calendarType);
+            calendarTypeChange(data.calendarType);
         })
     }
     const today = dayjs();
@@ -237,7 +262,7 @@
             data.currentTime=dayjs(new Date());
         }
         nextTick(()=>{
-            calendarTypeChnage(e);
+            calendarTypeChange(e);
         })
     }
 
@@ -248,12 +273,12 @@
     // 周-切换日期
     const changeStartTime = (e) => {
         nextTick(()=>{
-            calendarTypeChnage(data.calendarType);
+            calendarTypeChange(data.calendarType);
         })
     }
     const changeEndTime = (e) => {
         nextTick(()=>{
-            calendarTypeChnage(data.calendarType);
+            calendarTypeChange(data.calendarType);
         })
     }
     // 周-上周
@@ -267,7 +292,7 @@
         //console.log("temp",temp);
         data.week = temp;
         nextTick(()=>{
-            calendarTypeChnage(data.calendarType);
+            calendarTypeChange(data.calendarType);
         })
     }
     // 周-下周
@@ -281,7 +306,7 @@
         //console.log("temp",temp);
         data.week = temp;
         nextTick(()=>{
-            calendarTypeChnage(data.calendarType);
+            calendarTypeChange(data.calendarType);
         })
     }
     const handleStatus = (item, index) => {
@@ -290,7 +315,7 @@
     const onSearch = (e) => {
         data.isMeetingDetail = false;
         nextTick(()=>{
-            calendarTypeChnage(data.calendarType);
+            calendarTypeChange(data.calendarType);
         })
     }
     const getPeople = () => {
@@ -306,7 +331,7 @@
     getPeople();
 
 
-    const currentDate = ref(null);
+    const currentDate = ref(dayjs());
     const getListData = value => {
         // console.log("value:", value.date());
         // let listData;
@@ -386,15 +411,10 @@
         currentDate.value = dayjs(e);
         getQuery();
         nextTick(()=>{
-            calendarTypeChnage(data.calendarType);
+            calendarTypeChange(data.calendarType);
         })
     }
-    //点击单元格新建
-    const handleOpenNew = (params) => {
-        data.meetingId='';
-        data.paramsTime = params;
-        data.isNewMeeting =  true;
-    }
+
     const getQuery = ()=> {
         data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
         data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
@@ -443,6 +463,12 @@
     const handleRepeatMeetingVal = (e) => {
         data.isRepeatMeeting = false;
     }
+    // 编辑日历会议
+    const handleEditMeeting = (item,e) => {
+        data.paramsTime.date = e.format('YYYY-MM-DD');
+        data.meetingId = item.MeetingId;
+        data.isNewMeeting = true;
+    }
     const handleDetail = (item, date) => {
         data.meetingId=item.Id;
         nextTick(()=>{
@@ -454,6 +480,9 @@
         data.paramsTime={
             date: "",
             time: ""
+        }
+        if(e.paramsTime){
+            data.paramsTime=e.paramsTime
         }
         data.meetingId=e.Id;
         data.isNewMeeting = true;

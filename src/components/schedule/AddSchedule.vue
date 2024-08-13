@@ -347,8 +347,9 @@
                                             <div class="lIcon">
                                                 <FormOutlined />
                                             </div>
-                                            <div class="rVal">
-                                                <TEditor ref="editorRef" mode="middle" :placeholder="'添加描述或附件文档'" :height=500
+                                            <div class="rVal rVal2">
+                                                <TEditor ref="editorRef" mode="middle" :placeholder="'添加描述或附件文档'" 
+                                                :height=250
                                                     @input="getEditorContent" />
                                             </div>
                                         </div>
@@ -357,7 +358,7 @@
                             </div>
                         </div>
                         <div class="rightCalendar">
-                            <DayCalendar ref="DayCalendarWrap" :currentTime="formState.StartDateTime" :startDateTime="formState.startTime" :endDateTime="formState.endTime" :calendarType="formState.CalendarType||props.calendarType" @calendarDayChange="calendarDayChange" />
+                            <DayCalendar ref="DayCalendarWrap" :id="props.id" :currentTime="formState.StartDateTime" :startDateTime="formState.startTime" :endDateTime="formState.endTime" :calendarType="formState.CalendarType||props.calendarType" @calendarDayChange="calendarDayChange" />
                         </div>
                     </div>
                 </div>
@@ -419,7 +420,7 @@
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import TEditor from "@/components/TEditor.vue";
-    import DayCalendar from "@/components/schedule/AddScheduleDayModal.vue";
+    import DayCalendar from "@/components/schedule/AddScheduleDayModal2.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const DayCalendarWrap=ref(null);
@@ -508,14 +509,35 @@
         formState.StartDateTime = props.paramsTime.date;
         formState.StartDateTime_time = "08:00";
         formState.EndDateTime_time = "09:00";
-        formState.EndDateTime = props.paramsTime.date;
+        if(props.paramsTime.endDate){
+            formState.EndDateTime = props.paramsTime.endDate;
+        }
+        else{
+            formState.EndDateTime = props.paramsTime.date;
+        }
     }else if(props.paramsTime && props.paramsTime.date && props.paramsTime.time){
         formState.StartDateTime = props.paramsTime.date;
         formState.StartDateTime_time = props.paramsTime.time;
-        formState.EndDateTime = props.paramsTime.date;
-        let hour = new Date(props.paramsTime.date +' '+ props.paramsTime.time).getHours() + 1;
-        hour = hour < 10 ? '0' + hour : hour;
-        formState.EndDateTime_time = hour+':00';
+        // if(props.paramsTime.time=='00:00'){
+        //     formState.StartDateTime_time = "08:00";
+        // }
+        if(props.paramsTime.endDate){
+            formState.EndDateTime = props.paramsTime.endDate;
+        }
+        else{
+            formState.EndDateTime = props.paramsTime.date;
+        }
+        if(props.paramsTime.end){
+            formState.EndDateTime_time = props.paramsTime.end;
+            // if(props.paramsTime.end=='00:00'){
+            //     formState.EndDateTime_time = "09:00";
+            // }
+        }
+        else{
+            let hour = new Date(props.paramsTime.date +' '+ props.paramsTime.time).getHours() + 1;
+            hour = hour < 10 ? '0' + hour : hour;
+            formState.EndDateTime_time = hour+':00';
+        }
     }
     else{
         formState.StartDateTime = dayjs(new Date()).startOf("day").format("YYYY-MM-DD");
@@ -532,14 +554,10 @@
     }
     watch(()=>formState.StartDateTime,(newVal,oldVal)=>{
         formState.startTime = newVal + ' ' + formState.StartDateTime_time;
-        formState.EndDateTime=newVal;
         calendarGetData();
     }, {deep: true})
     watch(()=>formState.StartDateTime_time,(newVal,oldVal)=>{
         formState.startTime = formState.StartDateTime + ' ' + newVal;
-        // let hour = (new Date(formState.startTime)).getHours() + 1;
-        // hour = hour < 10 ? '0' + hour : hour;
-        // formState.EndDateTime_time=hour+':00';
         calendarGetData();
     }, {deep: true})
     watch(()=>formState.EndDateTime,(newVal,oldVal)=>{
@@ -592,14 +610,24 @@
     const calendarDayChange=(e)=>{
         formState.StartDateTime = e.date;
         formState.StartDateTime_time = e.time;
-        formState.EndDateTime = e.date;
-        let hour = new Date(e.date +' '+ e.time).getHours() + 1;
-        hour = hour < 10 ? '0' + hour : hour;
-        formState.EndDateTime_time = hour+':00';
+        if(e.endDate){
+            formState.EndDateTime = e.endDate;
+        }
+        else{
+            formState.EndDateTime = e.date;
+        }
+        if(e.end){
+            formState.EndDateTime_time = e.end;
+        }
+        else{
+            let hour = new Date(e.date +' '+ e.time).getHours() + 1;
+            hour = hour < 10 ? '0' + hour : hour;
+            formState.EndDateTime_time = hour+':00';
+        }
     }
     onMounted(() => {
         window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 300;
+            data.height = document.documentElement.clientHeight - 500;
         });
     });
 
@@ -631,6 +659,13 @@
             formState.EndDateTime=fields.ScheduledEnd&&fields.ScheduledEnd.value?dayjs(fields.ScheduledEnd.value).format("YYYY-MM-DD"):'';
             formState.EndDateTime_time=fields.ScheduledEnd&&fields.ScheduledEnd.value?dayjs(fields.ScheduledEnd.value).format("HH:mm"):'';
 
+            if(props.paramsTime.end&&props.paramsTime.end!=props.paramsTime.time){
+                formState.StartDateTime = props.paramsTime.date;
+                formState.StartDateTime_time = props.paramsTime.time;
+                formState.EndDateTime = props.paramsTime.endDate;
+                formState.EndDateTime_time = props.paramsTime.end;
+            }
+            
             editorRef.value.content=formState.Description;
 
             formState.CalendarType=fields.CalendarType&&fields.CalendarType.value?fields.CalendarType.value:'';
@@ -887,6 +922,7 @@
 
     .formContent {
         height: calc(~"100% - 60px");
+        // height: auto;
         margin-top: 12px;
         display: flex;
 
@@ -932,8 +968,11 @@
                         flex: 1;
                         height: 32px;
                         border-bottom: 1px solid #e0e0e0;
+                        height: auto;
                     }
-
+                    .rVal2{
+                        border-bottom: none;
+                    }
                     .timeBox {
                         .rowTime {
                             display: flex;

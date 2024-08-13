@@ -8,7 +8,7 @@
                 <span class="headerTitle">会议活动</span>
             </div>
             <div class="headerRight">
-                <a-button type="primary">新建活动</a-button>
+                <a-button type="primary" @click="handleAddActivity">新建活动</a-button>
             </div>
         </div>
         <div class="calendarBody">
@@ -35,6 +35,7 @@
                 <CalendarVue v-if="current==1" />
             </div>
         </div>
+        <NewActivity :isShow="isNewActivity" @cancel="cancelNewActivity" @selectVal="handleNewActivityVal" />
     </div>
 </template>
 <script setup>
@@ -56,11 +57,25 @@
     import CalendarVue from "@/components/meeting/activity/CalendarActivity.vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
+    // 新建
+    import NewActivity from "@/components/meeting/meetingCalendar/NewMeeting.vue";
     const { proxy } = getCurrentInstance();
     const data = reactive({
-        current: 1
+        current: 1,
+        isNewActivity: false,
     });
-    const { current } = toRefs(data);
+    const { current,isNewActivity } = toRefs(data);
+    // 关闭新建
+    const cancelNewActivity = (e) => {
+        data.isNewActivity = e;
+    }
+    const handleNewActivityVal = (e) => {
+        data.isNewActivity = false;
+    }
+    // 新建会议
+    const handleAddActivity = () => {
+        data.isNewActivity =  true;
+    }
 </script>
 <style lang="less" scoped>
     .wrappper{
