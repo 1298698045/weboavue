@@ -231,7 +231,7 @@
   
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
-  console.log(document.documentElement.clientHeight);
+  //console.log(document.documentElement.clientHeight);
   const labelCol = ref({ style: { width: "100px" } });
   const props = defineProps({
     isShow: Boolean,

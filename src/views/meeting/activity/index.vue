@@ -8,11 +8,19 @@
                 <span class="headerTitle">会议活动</span>
             </div>
             <div class="headerRight">
-                <a-button type="primary" @click="handleAddActivity">新建活动</a-button>
+                <dRadioGroup :current="current" @change="changeRadioGroup">
+                    <a-radio-button :value="0">
+                        <i class="iconfont icon-liebiaoshitu"></i>
+                    </a-radio-button>
+                    <a-radio-button :value="1">
+                        <i class="iconfont icon-rilishitu"></i>
+                    </a-radio-button>
+                </dRadioGroup>
+                <a-button type="primary" class="ml10" @click="handleAddActivity">新建活动</a-button>
             </div>
         </div>
         <div class="calendarBody">
-            <div class="leftMenuWrapper">
+            <!-- <div class="leftMenuWrapper">
                 <div class="leftTabMenu" :class="{'active':current==0}" @click="current=0">
                     <div class="menuIcon">
                         <i class="iconfont icon-rililiebiao"></i>
@@ -29,9 +37,9 @@
                         日历
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="calendarRight">
-                <ListView v-if="current==0" />
+                <ListView :layoutName="layoutName" v-if="current==0" />
                 <CalendarVue v-if="current==1" />
             </div>
         </div>
@@ -52,19 +60,22 @@
         defineExpose,
         defineEmits,
     } from "vue";
+    import "@/style/schedule/icon/iconfont.css";
     import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
     import ListView from "@/components/meeting/activity/ActivityList.vue";
     import CalendarVue from "@/components/meeting/activity/CalendarActivity.vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
+    import dRadioGroup from "@/components/antDefault/Dradio-group.vue"
     // 新建
     import NewActivity from "@/components/meeting/meetingCalendar/NewMeeting.vue";
     const { proxy } = getCurrentInstance();
     const data = reactive({
         current: 1,
         isNewActivity: false,
+        layoutName:'CampaignSearch'
     });
-    const { current,isNewActivity } = toRefs(data);
+    const { current,isNewActivity,layoutName } = toRefs(data);
     // 关闭新建
     const cancelNewActivity = (e) => {
         data.isNewActivity = e;
@@ -75,6 +86,9 @@
     // 新建会议
     const handleAddActivity = () => {
         data.isNewActivity =  true;
+    }
+    const changeRadioGroup = (e) => {
+        data.current = e;
     }
 </script>
 <style lang="less" scoped>

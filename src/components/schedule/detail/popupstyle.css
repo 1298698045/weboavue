@@ -1,0 +1,26 @@
+.popup-title {
+    font-size: 18px;
+    color: #000;
+  }
+  .popup-head {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .popup-body {
+    height: calc(95vh - 195px);
+    overflow: auto;
+    padding: 10px 25px;
+    box-sizing: border-box;
+  }
+  .popup-footer {
+    text-align: right;
+    padding: 20px;
+  }
+  .el-form--label-top >>> .el-form-item__label {
+    padding-bottom: 0;
+    line-height: 30px;
+  }
+  .line {
+    text-align: center;
+  }

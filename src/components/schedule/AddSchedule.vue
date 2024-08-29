@@ -15,166 +15,138 @@
                                 <a-dropdown>
                                     <div class="groupBtn">
                                         <span class="icon">
-                                            <ControlOutlined />
+                                            <!-- <ControlOutlined /> -->
+                                            <Icon name="Options" fill="rgb(97, 97, 97)" width="22" hight="22" />
                                         </span>
-                                        <span class="text">答复选项</span>
+                                        <span class="text">{{Reply||'答复选项'}}</span>
                                         <span class="arrowIcon">
                                             <DownOutlined />
                                         </span>
                                     </div>
                                     <template #overlay>
                                         <a-menu>
-                                            <a-menu-item>
-                                                <div class="menu-row">
+                                            <a-menu-item v-for="(item,index) in ReplyList" :key="index">
+                                                <div class="menu-row" @click="selectOption('Reply',item.value)" :class="{'selectOptionActive':formState.Reply==item.value}">
                                                     <span class="icon">
-                                                        <CheckOutlined />
-                                                    </span>
-                                                    <span class="menuText">请求答复</span>
-                                                </div>
-                                            </a-menu-item>
-                                            <a-menu-item>
-                                                <div class="menu-row">
-                                                    <span class="icon">
-                                                        <CheckOutlined />
-                                                    </span>
-                                                    <span class="menuText">允许转发</span>
-                                                </div>
-                                            </a-menu-item>
-                                            <a-menu-item>
-                                                <div class="menu-row">
-                                                    <span class="icon"></span>
-                                                    <span class="menuText">隐藏与会者列表</span>
-                                                </div>
-                                            </a-menu-item>
-                                        </a-menu>
-                                    </template>
-                                </a-dropdown>
-                                <div class="ribbon">
-                                    <span class="ribbon-bottom-bar-divider"></span>
-                                </div>
-                                <a-dropdown>
-                                    <div class="groupBtn">
-                                        <span class="icon">
-                                            <ProjectOutlined/>
-                                        </span>
-                                        <span class="text">忙碌</span>
-                                        <span class="arrowIcon">
-                                            <DownOutlined />
-                                        </span>
-                                    </div>
-                                    <template #overlay>
-                                        <a-menu>
-                                            <a-menu-item>
-                                                <div class="menu-row">
-                                                    <span class="icon">
-                                                        <CheckOutlined />
-                                                    </span>
-                                                    <span class="menuText">空闲</span>
-                                                </div>
-                                            </a-menu-item>
-                                            <a-menu-item>
-                                                <div class="menu-row">
-                                                    <span class="icon">
-                                                        <CheckOutlined />
-                                                    </span>
-                                                    <span class="menuText">在其他地方工作</span>
-                                                </div>
-                                            </a-menu-item>
-                                            <a-menu-item>
-                                                <div class="menu-row">
-                                                    <span class="icon">
-                                                        <CheckOutlined />
-                                                    </span>
-                                                    <span class="menuText">暂定</span>
-                                                </div>
-                                            </a-menu-item>
-                                            <a-menu-item>
-                                                <div class="menu-row">
-                                                    <span class="icon">
-                                                        <CheckOutlined />
-                                                    </span>
-                                                    <span class="menuText">忙碌</span>
-                                                </div>
-                                            </a-menu-item>
-                                            <a-menu-item>
-                                                <div class="menu-row">
-                                                    <span class="icon">
-                                                        <CheckOutlined />
-                                                    </span>
-                                                    <span class="menuText">外出</span>
-                                                </div>
-                                            </a-menu-item>
-                                        </a-menu>
-                                    </template>
-                                </a-dropdown>
-                                <a-dropdown>
-                                    <div class="groupBtn">
-                                        <span class="icon">
-                                            <ClockCircleOutlined />
-                                        </span>
-                                        <span class="text">15分钟前</span>
-                                        <span class="arrowIcon">
-                                            <DownOutlined />
-                                        </span>
-                                    </div>
-                                    <template #overlay>
-                                        <a-menu>
-                                            <a-menu-item v-for="(item,index) in menuTimes" :key="index">
-                                                <div class="menu-row">
-                                                    <span class="icon">
-                                                        <CheckOutlined />
-                                                    </span>
-                                                    <span class="menuText">{{item}}</span>
-                                                </div>
-                                            </a-menu-item>
-                                        </a-menu>
-                                    </template>
-                                </a-dropdown>
-                                <div class="ribbon">
-                                    <span class="ribbon-bottom-bar-divider"></span>
-                                </div>
-                                <a-dropdown>
-                                    <div class="groupBtn">
-                                        <span class="icon">
-                                            <TagOutlined />
-                                        </span>
-                                        <span class="text">分类</span>
-                                        <span class="arrowIcon">
-                                            <DownOutlined />
-                                        </span>
-                                    </div>
-                                    <template #overlay>
-                                        <a-menu>
-                                            <a-menu-item v-for="(item,index) in categoryList" :key="index">
-                                                <div class="menu-row">
-                                                    <span class="icon">
-                                                        <CheckOutlined />
+                                                        <template v-if="formState.Reply==item.value">
+                                                            <CheckOutlined />
+                                                        </template>
                                                     </span>
                                                     <span class="menuText">{{item.label}}</span>
                                                 </div>
                                             </a-menu-item>
-                                            <a-menu-item
-                                                style="border-top: 1px solid #e2e3e5;border-radius: 0 4px 0px 4px;">
-                                                <div class="menu-row">
-                                                    <span class="icon">
+                                        </a-menu>
+                                    </template>
+                                </a-dropdown>
+                                <div class="ribbon">
+                                    <span class="ribbon-bottom-bar-divider"></span>
+                                </div>
+                                <a-dropdown>
+                                    <div class="groupBtn">
+                                        <span class="icon">
+                                            <!-- <ProjectOutlined/> -->
+                                            <Icon name="CalendarPattern" fill="rgb(97, 97, 97)" width="22" hight="22" />
+                                        </span>
+                                        <span class="text">{{ DisplayStatus }}</span>
+                                        <span class="arrowIcon">
+                                            <DownOutlined />
+                                        </span>
+                                    </div>
+                                    <template #overlay>
+                                        <a-menu>
+                                            <a-menu-item v-for="(item,index) in DisplayStatusList" :key="index">
+                                                <div class="menu-row" @click="selectOption('DisplayStatus',item.value)">
+                                                    <span class="icon DisplayStatusIcon">
+                                                        <i data-icon-name="ShowAsFreeIcon" aria-hidden="true" class="icon-520" v-if="item.value*1==1">
+                                                            <div class="nvdEP iJ4J5" style="background-color: rgb(255, 255, 255);border-color: rgba(15, 108, 189, 0.9);z-index: 1;border-style: solid;border-width: 1px;"></div>
+                                                        </i>
+                                                        <i data-icon-name="ShowAsWorkingElsewhereIcon" aria-hidden="true" class="icon-507" v-if="item.value*1==2">
+                                                            <div class="nvdEP f7wT9" style="background-color: rgba(15, 108, 189, 0.9); border-color: rgba(15, 108, 189, 0.9); z-index: 1; border-style: solid; border-width: 1px;"></div>
+                                                        </i>
+                                                        <i data-icon-name="ShowAsTentativeIcon" aria-hidden="true" class="icon-507" v-if="item.value*1==3">
+                                                            <div class="nvdEP MtAE4" style="background-color: rgba(15, 108, 189, 0.9); border-color: rgba(15, 108, 189, 0.9); z-index: 1; border-style: solid; border-width: 1px;"></div>
+                                                        </i>
+                                                        <i data-icon-name="ShowAsBusyIcon" aria-hidden="true" class="icon-520" v-if="item.value*1==0">
+                                                            <div class="nvdEP Zn9Tu" style="background-color: rgba(15, 108, 189, 0.9); border-color: rgba(15, 108, 189, 0.9); z-index: 1; border-style: solid; border-width: 1px;"></div>
+                                                        </i>
+                                                        <i data-icon-name="ShowAsOOFIcon" aria-hidden="true" class="icon-507" v-if="item.value*1==4">
+                                                            <div class="nvdEP wvzTD" style="background-color: rgba(180, 0, 158, 0.9); border-color: rgba(180, 0, 158, 0.9); background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.8) 0px, rgba(255, 255, 255, 0.8) 1px, transparent 0px, transparent 50%), repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.8) 0px, rgba(255, 255, 255, 0.8) 1px, transparent 0px, transparent 50%); z-index: 1; border-style: solid; border-width: 1px;"></div>
+                                                        </i>
                                                     </span>
-                                                    <span class="menuText">新建类别</span>
-                                                </div>
-                                            </a-menu-item>
-                                            <a-menu-item
-                                                style="border-top: 1px solid #e2e3e5;border-radius: 0 4px 0px 4px;">
-                                                <div class="menu-row">
-                                                    <span class="icon">
-                                                    </span>
-                                                    <span class="menuText">管理类别</span>
+                                                    <span class="menuText">{{item.label}}</span>
                                                 </div>
                                             </a-menu-item>
                                         </a-menu>
                                     </template>
                                 </a-dropdown>
-                                <div class="groupBtn">
-                                    <span class="icon">
-                                        <UnlockOutlined />
+                                <a-dropdown>
+                                    <div class="groupBtn">
+                                        <span class="icon">
+                                            <!-- <ClockCircleOutlined /> -->
+                                            <Icon name="ClockAlarm" fill="rgb(97, 97, 97)" width="20" hight="20" />
+                                        </span>
+                                        <span class="text">{{ReminderTime}}</span>
+                                        <span class="arrowIcon">
+                                            <DownOutlined />
+                                        </span>
+                                    </div>
+                                    <template #overlay>
+                                        <a-menu>
+                                            <a-menu-item v-for="(item,index) in ReminderTimeList" :key="index">
+                                                <div class="menu-row" @click="selectOption('ReminderTime',item.value)" :class="{'selectOptionActive':formState.ReminderTime==item.value}">
+                                                    <span class="icon">
+                                                        <template v-if="formState.ReminderTime==item.value">
+                                                            <CheckOutlined />
+                                                        </template>
+                                                    </span>
+                                                    <span class="menuText">{{item.label}}</span>
+                                                </div>
+                                            </a-menu-item>
+                                        </a-menu>
+                                    </template>
+                                </a-dropdown>
+                                <div class="ribbon">
+                                    <span class="ribbon-bottom-bar-divider"></span>
+                                </div>
+                                <a-dropdown>
+                                    <div class="groupBtn">
+                                        <span class="icon">
+                                            <!-- <TagOutlined /> -->
+                                            <Icon name="Tag" fill="rgb(0, 120, 212)" width="16" hight="20" v-if="formState.CalendarType*1==0" />
+                                            <Icon name="Tag" fill="rgb(14, 122, 11)" width="16" hight="20" v-if="formState.CalendarType*1==1" />
+                                        </span>
+                                        <span class="text">{{CalendarType||'分类'}}</span>
+                                        <span class="arrowIcon">
+                                            <DownOutlined />
+                                        </span>
+                                    </div>
+                                    <template #overlay>
+                                        <a-menu>
+                                            <a-menu-item v-for="(item,index) in CalendarTypeList" :key="index">
+                                                <div class="menu-row" @click="selectOption('CalendarType',item.value)" :class="{'selectOptionActive':formState.CalendarType==item.value}">
+                                                    <span class="icon">
+                                                        <template v-if="formState.CalendarType==item.value">
+                                                            <CheckOutlined />
+                                                        </template>
+                                                    </span>
+                                                    <span class="icon">
+                                                        <Icon name="Tag" fill="rgb(0, 120, 212)" width="16" hight="20" v-if="item.value*1==0" />
+                                                        <Icon name="Tag" fill="rgb(14, 122, 11)" width="16" hight="20" v-if="item.value*1==1" />
+                                                    </span>
+                                                    <span class="menuText">{{item.label}}</span>
+                                                </div>
+                                            </a-menu-item>
+                                        </a-menu>
+                                    </template>
+                                </a-dropdown>
+                                <div class="groupBtn" @click="formState.IsPrivate=!formState.IsPrivate">
+                                    <span class="icon" v-if="!formState.IsPrivate">
+                                        <!-- <UnlockOutlined /> -->
+                                        <Icon name="LockOpen" fill="rgb(170, 132, 19)" width="22" hight="22" />
+                                    </span>
+                                    <span class="icon" v-if="formState.IsPrivate">
+                                        <!-- <LockOutlined /> -->
+                                        <Icon name="LockClosed" fill="rgb(170, 132, 19)" width="22" hight="22" />
                                     </span>
                                     <span class="text">私人</span>
                                 </div>
@@ -210,31 +182,38 @@
                                     <a-form-item name="Subject">
                                         <div class="formRow">
                                             <div class="lIcon">
-                                                <a-button :icon="h(EditOutlined)" />
+                                                <!-- <a-button :icon="h(EditOutlined)" /> -->
+                                                <a-button>
+                                                    <template #icon>
+                                                        <Icon name="EmojiTabSymbols" width="14" hight="14" />
+                                                    </template>
+                                                </a-button>
                                             </div>
-                                            <div class="rVal">
+                                            <div class="rVal rVal3">
                                                 <input type="text" v-model="formState.Subject" class="title"
                                                     placeholder="添加标题">
                                             </div>
-                                            <div class="lIcon">
-                                                <LockOutlined />
+                                            <div class="lIcon" v-if="formState.IsPrivate">
+                                                <!-- <LockOutlined /> -->
+                                                <Icon name="LockClosed" width="22" hight="22" />
                                             </div>
                                         </div>
                                     </a-form-item>
                                     <a-form-item name="OwningUser">
                                         <div class="formRow">
                                             <div class="lIcon">
-                                                <UserAddOutlined />
+                                                <!-- <UserAddOutlined /> -->
+                                                <Icon name="PeopleAdd" fill="rgb(97, 97, 97)" width="22" hight="22" />
                                             </div>
                                             <div class="rVal">
                                                 <a-select mode="multiple" allowClear
                                                     v-model:value="formState.OwningUser.Id"
                                                     :default-active-first-option="false" :filter-option="false"
-                                                    showSearch @search=" (e) => { searchlookup(e, '30020'); } "
-                                                    @dropdownVisibleChange=" (e) => { searchlookup('', '30020'); } "
-                                                    :placeholder="'选择被分配人'">
+                                                    showSearch @search=" (e) => { searchlookup(e, '8','OwningUser'); } "
+                                                    @dropdownVisibleChange=" (e) => { searchlookup('', '8','OwningUser'); } "
+                                                    :placeholder="'请选择被分配人'">
                                                     <template #suffixIcon></template>
-                                                    <a-select-option v-for="(option, optionIdx) in OwningUserList"
+                                                    <a-select-option v-for="(option, optionIdx) in OwningUser"
                                                         :key="optionIdx" :value="option.ID">
                                                         <a-avatar :size="37">
                                                             <template #icon><UserOutlined /></template>
@@ -245,14 +224,15 @@
                                                 </a-select>
                                                 <div class="selectIcon">
                                                     <SearchOutlined class="ant-select-suffix"
-                                                        @click="handleOpenLook(attribute)" />
+                                                        @click="handleOpenLook('8','OwningUser')" />
                                                 </div>
                                             </div>
                                         </div>
                                     </a-form-item>
                                     <div class="formRow" style="align-items: self-start;">
                                         <div class="lIcon">
-                                            <ClockCircleOutlined />
+                                            <!-- <ClockCircleOutlined /> -->
+                                            <Icon name="Clock" fill="#424242" width="21" hight="21" />
                                         </div>
                                         <div class="timeBox">
                                             <div class="rowTime">
@@ -282,47 +262,24 @@
                                                     <a-dropdown>
                                                         <div class="groupBtn show">
                                                             <span class="icon">
-                                                                <SyncOutlined />
+                                                                <!-- <SyncOutlined /> -->
+                                                                <Icon name="ArrowRepeatAll" fill="#808080" width="20" hight="20" />
                                                             </span>
-                                                            <span class="text">不重复</span>
+                                                            <span class="text">{{RecurrenceType}}</span>
                                                             <span class="arrowIcon">
                                                                 <DownOutlined />
                                                             </span>
                                                         </div>
                                                         <template #overlay>
                                                             <a-menu>
-                                                                <a-menu-item>
-                                                                    <div class="menu-row">
+                                                                <a-menu-item v-for="(item,index) in RecurrenceTypeList" :key="index">
+                                                                    <div class="menu-row" @click="selectOption('RecurrenceType',item.value)" :class="{'selectOptionActive':formState.RecurrenceType==item.value}">
                                                                         <span class="icon">
-                                                                            <CheckOutlined />
+                                                                            <template v-if="formState.RecurrenceType==item.value">
+                                                                                <CheckOutlined />
+                                                                            </template>
                                                                         </span>
-                                                                        <span class="menuText">不重复</span>
-                                                                    </div>
-                                                                </a-menu-item>
-                                                                <a-menu-item>
-                                                                    <div class="menu-row">
-                                                                        <span class="icon">
-                                                                            <CheckOutlined />
-                                                                        </span>
-                                                                        <span class="menuText">每天</span>
-                                                                    </div>
-                                                                </a-menu-item>
-                                                                <a-menu-item>
-                                                                    <div class="menu-row">
-                                                                        <span class="icon"></span>
-                                                                        <span class="menuText">每周</span>
-                                                                    </div>
-                                                                </a-menu-item>
-                                                                <a-menu-item>
-                                                                    <div class="menu-row">
-                                                                        <span class="icon"></span>
-                                                                        <span class="menuText">每月</span>
-                                                                    </div>
-                                                                </a-menu-item>
-                                                                <a-menu-item>
-                                                                    <div class="menu-row">
-                                                                        <span class="icon"></span>
-                                                                        <span class="menuText">每年</span>
+                                                                        <span class="menuText">{{item.label}}</span>
                                                                     </div>
                                                                 </a-menu-item>
                                                             </a-menu>
@@ -335,7 +292,8 @@
                                     <a-form-item name="Location">
                                         <div class="formRow">
                                             <div class="lIcon">
-                                                <EnvironmentOutlined />
+                                                <!-- <EnvironmentOutlined /> -->
+                                                <Icon name="Location" fill="rgb(97, 97, 97)" width="22" hight="22" />
                                             </div>
                                             <div class="rVal">
                                                 <input type="text" v-model="formState.Location" placeholder="搜索位置">
@@ -345,7 +303,8 @@
                                     <a-form-item name="Description">
                                         <div class="formRow" style="align-items: self-start;">
                                             <div class="lIcon">
-                                                <FormOutlined />
+                                                <!-- <FormOutlined /> -->
+                                                <Icon name="TextDescription" fill="rgb(97, 97, 97)" width="22" hight="22" />
                                             </div>
                                             <div class="rVal rVal2">
                                                 <TEditor ref="editorRef" mode="middle" :placeholder="'添加描述或附件文档'" 
@@ -358,7 +317,7 @@
                             </div>
                         </div>
                         <div class="rightCalendar">
-                            <DayCalendar ref="DayCalendarWrap" :id="props.id" :currentTime="formState.StartDateTime" :startDateTime="formState.startTime" :endDateTime="formState.endTime" :calendarType="formState.CalendarType||props.calendarType" @calendarDayChange="calendarDayChange" />
+                            <DayCalendar ref="DayCalendarWrap" :id="props.id" :currentTime="formState.StartDateTime" :startDateTime="formState.startTime" :endDateTime="formState.endTime" :calendarType="formState.CalendarType" @calendarDayChange="calendarDayChange" :objectTypeCode="props.objectTypeCode" />
                         </div>
                     </div>
                 </div>
@@ -370,6 +329,7 @@
                 </div>
             </template>
         </a-modal>
+        <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
     </div>
 </template>
 <script setup>
@@ -394,7 +354,7 @@
     import calendar from 'dayjs/plugin/calendar';
     import weekday from 'dayjs/plugin/weekday';
     import localeData from 'dayjs/plugin/localeData';
-
+    import RadioUser from "@/components/commonModal/RadioUser.vue";
     dayjs.extend(calendar);
     dayjs.extend(weekday);
     dayjs.extend(localeData);
@@ -422,6 +382,7 @@
     import TEditor from "@/components/TEditor.vue";
     import DayCalendar from "@/components/schedule/AddScheduleDayModal2.vue";
     import Interface from "@/utils/Interface.js";
+    import Icon from '@/components/icon/index.vue';
     const { proxy } = getCurrentInstance();
     const DayCalendarWrap=ref(null);
     const labelCol = ref({ style: { width: "100px" } });
@@ -444,44 +405,121 @@
     const data = reactive({
         title: "新建日程",
         height: document.documentElement.clientHeight - 300,
-        menuTimes: [
-            '不要提醒我', '在事件发生时', '5 分钟 钱', '30分钟 前', '1小时 前',
-            '2小时 前', '12小时 前', '1天 前', '1周 前', '添加电子邮件提醒'
+        ReplyList: [
+            {
+                value: "0",
+                label: "请求答复"
+            },
+            {
+                value: "1",
+                label: "允许转发"
+            },
+            {
+                value: "2",
+                label: "隐藏与会者列表"
+            },
         ],
-        categoryList: [
+        DisplayStatusList:[
             {
-                value: "#ff8c00",
-                label: "橙色类别"
+                value: "1",
+                label: "空闲"
             },
             {
-                value: "#e74856",
-                label: "红色类别"
+                value: "2",
+                label: "在其他地方工作"
             },
             {
-                value: "#fff100",
-                label: "黄色类别"
+                value: "3",
+                label: "暂定"
             },
             {
-                value: "#00bcf2",
-                label: "蓝色类别"
+                value: "0",
+                label: "忙碌"
             },
             {
-                value: "#47d041",
-                label: "绿色类别"
+                value: "4",
+                label: "外出"
             },
-            {
-                value: "#8764b8",
-                label: "紫色类别"
-            }
         ],
-        OwningUserList: [],
+        ReminderTimeList: [
+            {
+                value: "5m",
+                label: "5 分钟 前"
+            },
+            {
+                value: "15m",
+                label: "15 分钟 前"
+            },
+            {
+                value: "30m",
+                label: "30 分钟 前"
+            },
+            {
+                value: "1h",
+                label: "1 小时 前"
+            },
+            {
+                value: "2h",
+                label: "2 小时 前"
+            },
+            {
+                value: "12h",
+                label: "12 小时 前"
+            },
+            {
+                value: "1d",
+                label: "1 天 前"
+            },
+            {
+                value: "7d",
+                label: "1 周 前"
+            },
+        ],
+        CalendarTypeList: [
+            {
+                value: "0",
+                label: "工作安排"
+            },
+            {
+                value: "1",
+                label: "个人"
+            },
+        ],
+        RecurrenceTypeList:[
+            {
+                value: "",
+                label: "不重复"
+            },
+            {
+                value: "day",
+                label: "每天"
+            },
+            {
+                value: "week",
+                label: "每周"
+            },
+            {
+                value: "month",
+                label: "每月"
+            },
+            {
+                value: "year",
+                label: "每年"
+            },
+        ],
+        OwningUser: [],
         calendarItem:{},
-        OwningUserName:''
+        isRadioUser:false,
+        Reply:'',
+        DisplayStatus:'忙碌',
+        ReminderTime:'15 分钟 前',
+        CalendarType: '工作安排',
+        RecurrenceType:'不重复'
     });
     const {
         title,
         height,
-        menuTimes, categoryList, OwningUserList
+        menuTimes, categoryList, OwningUser,isRadioUser,Reply,ReplyList,DisplayStatus,DisplayStatusList,ReminderTime,ReminderTimeList,CalendarType,CalendarTypeList,RecurrenceType,RecurrenceTypeList
     } = toRefs(data);
     const formState = reactive({
         RegardingObjectTypeCode: 20290,
@@ -497,13 +535,17 @@
         IsAllDayEvent: false,
         Location: '',
         Description: '',
-        CalendarType: '',
         RegardingObjectIdName: '',
         BgColor: '',
-        IsPrivate: false,
         Reminder: false,
         startTime: "",
         endTime: "",
+        Reply:'',
+        DisplayStatus:'0',
+        ReminderTime:'15m',
+        CalendarType: '0',
+        IsPrivate: false,
+        RecurrenceType:''
     });
     if(props.paramsTime && props.paramsTime.date && props.paramsTime.time == ''){
         formState.StartDateTime = props.paramsTime.date;
@@ -529,9 +571,15 @@
         }
         if(props.paramsTime.end){
             formState.EndDateTime_time = props.paramsTime.end;
-            // if(props.paramsTime.end=='00:00'){
-            //     formState.EndDateTime_time = "09:00";
-            // }
+            if(props.paramsTime.time=='00:00'&&props.paramsTime.end=='00:00'){
+                formState.StartDateTime_time = "08:00";
+                formState.EndDateTime_time = "09:00";
+                var date = new Date(formState.EndDateTime);
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                var day = date.getDate();
+                formState.EndDateTime=(dayjs(new Date(year, month, day - 1)).format("YYYY-MM-DD"));
+            }
         }
         else{
             let hour = new Date(props.paramsTime.date +' '+ props.paramsTime.time).getHours() + 1;
@@ -568,16 +616,71 @@
         formState.endTime = formState.EndDateTime + ' ' + newVal;
         calendarGetData();
     }, {deep: true})
-    const searchlookup = (search, Lktp) => {
-        proxy
-            .$get(Interface.uilook, {
-                Lktp: Lktp,
-                Lksrch: search,
-            })
-            .then((res) => {
-                let listData = res.listData;
-                data.OwningUserList = listData;
+    const uniqu=(array, name)=>{
+        var arr = []
+        for (var j = 0; j < array.length; j++) {
+            if (JSON.stringify(arr).indexOf(array[j][name]) == -1) {
+                arr.push(array[j])
+            }
+        }
+        return arr
+    }
+    const searchlookup = (search, Lktp, fieldApiName) => {
+        let obj = {
+        actions:[{
+                id: "6129;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    objectApiName: 'ActivityPointer',
+                    fieldApiName: fieldApiName,
+                    pageParam: 1,
+                    pageSize: 25,
+                    q: search,
+                    searchType: "Recent",
+                    targetApiName: 'SystemUser',
+                    body: {
+                        sourceRecord: {
+                        apiName: 'ActivityPointer',
+                            fields: {
+                                Id: null,
+                                RecordTypeId: ""
+                            }
+                        }
+                    }
+                }
+            }]
+        }
+        if(Lktp=='8'){
+            obj.actions[0].params.targetApiName='SystemUser';
+        }
+        if(Lktp=='20034'){
+            obj.actions[0].params.targetApiName='ResourceOrg';
+        }
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.lookup,d).then(res=>{
+            let list = res.actions[0].returnValue.lookupResults.records;
+            let arr = [];
+            list.forEach(item=>{
+                arr.push({
+                    ID: item.fields.Id.value,
+                    Name: item.fields.Name.value
+                })
             });
+            data[fieldApiName] = data[fieldApiName].concat(arr);
+            data[fieldApiName] = uniqu(data[fieldApiName],'ID');
+            //console.log(data[fieldApiName])
+        })
+        // proxy.$get(Interface.uilook, {
+        //         Lktp: Lktp,
+        //         Lksrch: search,
+        //     })
+        //     .then((res) => {
+        //         let listData = res.listData;
+        //         data.OwningUserList = listData;
+        //     });
     };
     // const getPickerList = () => {
     //     proxy.$get(Interface.schedule.pickList, {
@@ -590,15 +693,16 @@
     // getPickerList();
     const calendarGetData=()=>{
         data.calendarItem={
-            Id:props.id||'',
+            Id:props.id||'001',
             Subject: formState.Subject,
             What: formState.Description,
-            Who: data.OwningUserName,
+            Who: formState.OwningUser?formState.OwningUser.Name:'',
             StartDateTime: formState.StartDateTime+' '+formState.StartDateTime_time,
             EndDateTime: formState.EndDateTime+' '+formState.EndDateTime_time,
             IsAllDayEvent: formState.IsAllDayEvent,
             IsPrivate: formState.IsPrivate,
             IsRecurrence2:false,
+            Where:formState.RoomId?formState.RoomId.Name:(formState.Location||''),
             sobjectType: "Event"
         }
         nextTick(()=>{
@@ -623,6 +727,18 @@
             let hour = new Date(e.date +' '+ e.time).getHours() + 1;
             hour = hour < 10 ? '0' + hour : hour;
             formState.EndDateTime_time = hour+':00';
+        }
+    }
+    const selectOption=(name,value)=>{
+        if(value!='undefined'&&value!=null&&value!=''){
+            formState[name]=value;
+            let index = data[name+'List'].findIndex(item=>item.value==value);
+            data[name]=(data[name+'List'][index]).label;
+        }
+        else if(name=='RecurrenceType'&&value==''){
+            formState[name]=value;
+            let index = data[name+'List'].findIndex(item=>item.value==value);
+            data[name]=(data[name+'List'][index]).label;
         }
     }
     onMounted(() => {
@@ -650,6 +766,13 @@
     proxy.$post(Interface.detail,obj).then(res=>{
         if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
             let fields=res.actions[0].returnValue.fields;
+            selectOption('Reply',(fields.Reply?fields.Reply.value:''));
+            selectOption('DisplayStatus',(fields.DisplayStatus?fields.DisplayStatus.value:''));
+            selectOption('ReminderTime',(fields.ReminderTime?fields.ReminderTime.value:''));
+            selectOption('CalendarType',(fields.CalendarType?fields.CalendarType.value:'0'));
+            selectOption('RecurrenceType',(fields.RecurrenceType?fields.RecurrenceType.value:''));
+            formState.IsPrivate=fields.IsPrivate&&fields.IsPrivate.value?fields.IsPrivate.value:false;
+
             formState.Location=fields.Location&&fields.Location.value?fields.Location.value:'';
             formState.Subject=fields.Subject&&fields.Subject.value?fields.Subject.value:'';
             formState.Description=fields.Description&&fields.Description.value?fields.Description.value:'';
@@ -668,11 +791,17 @@
             
             editorRef.value.content=formState.Description;
 
-            formState.CalendarType=fields.CalendarType&&fields.CalendarType.value?fields.CalendarType.value:'';
             formState.IsAllDayEvent=fields.IsAllDayEvent?fields.IsAllDayEvent.value:'';
-            formState.OwningUser=fields.OwningUser&&fields.OwningUser.value?{Id:[fields.OwningUser.value]}:{};
-            data.OwningUserName=fields.OwningUser&&fields.OwningUser.displayValue?fields.OwningUser.displayValue:'';
-            searchlookup('', '30020');
+            if(fields.OwningUser&&fields.OwningUser.value){
+                let OwningUserName=fields.OwningUser.displayValue||'';
+                let OwningUserId=fields.OwningUser.value;
+                formState.OwningUser={Id:[OwningUserId],Name:OwningUserName};
+                data.OwningUser.push({
+                    ID: OwningUserId,
+                    Name: OwningUserName
+                });
+            }
+            searchlookup('', '8','OwningUser');
             calendarGetData();
         }
     })
@@ -683,6 +812,22 @@
       getDetail();
   }
   else{
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(props.paramsTime&&props.paramsTime.resourceId){
+            data.OwningUser.push({
+                ID: props.paramsTime.resourceId,
+                Name: props.paramsTime.resourceName
+            });
+            formState.OwningUser.Id=[props.paramsTime.resourceId];
+        }
+        else if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.OwningUser.push({
+                ID: userInfo.userId,
+                Name: userInfo.fullName
+            });
+            formState.OwningUser.Id=[userInfo.userId];
+        }
       calendarGetData();
   }
     const handleSubmit = () => {
@@ -706,7 +851,13 @@
                             Description: formState.Description,
                             ScheduledStart: formState.StartDateTime+' '+formState.StartDateTime_time,
                             ScheduledEnd: formState.EndDateTime+' '+formState.EndDateTime_time,
-                            IsAllDayEvent: formState.IsAllDayEvent
+                            IsAllDayEvent: formState.IsAllDayEvent,
+                            Reply:formState.Reply,
+                            DisplayStatus:formState.DisplayStatus,
+                            ReminderTime:formState.ReminderTime,
+                            CalendarType:formState.CalendarType,
+                            IsPrivate:formState.IsPrivate,
+                            RecurrenceType:formState.RecurrenceType
                         }
                     }
                 }
@@ -715,15 +866,18 @@
         if(props.id){
             url = Interface.edit;
             d.actions[0].params.recordId = props.id;
-            d.actions[0].params.recordInput.fields.CalendarType=formState.CalendarType||'';
+            //d.actions[0].params.recordInput.fields.CalendarType=formState.CalendarType||'';
         }
         else{
-            d.actions[0].params.recordInput.fields.CalendarType=props.calendarType||'';
+            //d.actions[0].params.recordInput.fields.CalendarType=props.calendarType||'';
             d.actions[0].params.recordInput.fields.ActivityTypeCode=4201;
         }
         var ids=formState.OwningUser&&formState.OwningUser.Id&&formState.OwningUser.Id.length?formState.OwningUser.Id:[];
         if(ids&&ids.length){
             for(var i=0;i<ids.length;i++){
+                if(ids[i]=='jackliu'){
+                    ids[i]='2ec00cf2-a484-4136-8fef-e2a2719c5ed6';
+                }
                 d.actions[0].params.recordInput.fields.OwningUser=ids[i];
                 let obj = {
                     message: JSON.stringify(d)
@@ -743,7 +897,34 @@
         console.log("error", err);
       });
   };
-    
+    const handleOpenLook= (Lktp, fieldApiName) => {
+        if(Lktp=='8'){
+            data.isRadioUser = true;
+        }
+    }
+    const closeUser = (e) => {
+        data.isRadioUser = false;
+    };
+    const getUserData = (params) => {
+      //console.log("params:", params);
+      data.isRadioUser = false;
+      if(params.id){
+        let index = data.OwningUser.findIndex(item=>item.ID==params.id);
+        if(index==-1 && params.id){
+            data.OwningUser.push({
+                ID: params.id,
+                Name: params.name
+            });
+            formState.OwningUser.Id.push(params.id);
+        }
+        if(index>=0){
+            message.error("不能重复添加！");
+        }
+      }
+    };
+    const refreshPeople=(e)=>{
+       
+    }
     const clearForm = () => {
             formRef.value.resetFields();
     }
@@ -751,10 +932,6 @@
 </script>
 <style lang="less" scoped>
     @import url("@/style/modal.less");
-
-    .ant-modal-content .modalContainer .modalCenter {
-        /* height: 500px !important; */
-    }
 
     .section {
         .sectionTitle {
@@ -861,6 +1038,8 @@
 
             .icon {
                 font-size: 16px;
+                position: relative;
+                top: 5px;
             }
 
             .arrowIcon {
@@ -868,11 +1047,14 @@
                 line-height: 12px;
                 width: 12px;
                 fill: #242424;
+                color: #242424;
                 margin-left: 4px;
                 margin-right: 2px;
                 font-size: 12px;
+                position: relative;
+                top: -1px;
             }
-
+            
             &:hover {
                 background: #fafafa;
                 color: #242424;
@@ -950,8 +1132,6 @@
                     color: #424242;
                 }
 
-                input::placeholder {}
-
                 .formRow {
                     display: flex;
                     min-height: 48px;
@@ -962,6 +1142,10 @@
                         height: 32px;
                         margin-right: 9px;
                         text-align: center;
+                        padding-top: 5px;
+                        :deep .ant-btn{
+                            height: 30px !important;
+                        }
                     }
 
                     .rVal {
@@ -972,6 +1156,9 @@
                     }
                     .rVal2{
                         border-bottom: none;
+                    }
+                    .rVal3{
+                        margin-top: 15px
                     }
                     .timeBox {
                         .rowTime {
@@ -1023,4 +1210,110 @@
     .ant-select-item-option-content .ant-avatar{
             margin-right: 8px !important;
         }
+        :deep .ant-dropdown-menu-item{
+            padding: 0 1px !important;
+        }
+        .menu-row{
+            width: 100%;
+            cursor: pointer;
+            height: 32px;
+            padding: 5px 12px;
+            .icon{
+                position: relative;
+                top: 1px;
+            }
+        }
+        .selectOptionActive{
+            font-weight: bolder !important;
+            background-color: #F0F0F0;
+            box-sizing: border-box;
+            border: 1px solid #A6A6A6;
+            border-radius: 4px;
+        }
+        .DisplayStatusIcon{
+            .icon-520 {
+                display: inline-block;
+                vertical-align: middle;
+                flex-shrink: 0;
+                width: 20px;
+                height: 20px;
+                font-size: 20px;
+                line-height: 20px;
+                margin: 0px;
+                padding: 0px 10px 0px 0px;
+                fill: rgb(15, 108, 189);
+                color: rgb(15, 108, 189);
+                position: relative;
+                top: -4px;
+            }
+            .MtAE4, .f7wT9, .iJ4J5, .r3Aus {
+                --fbBackgroundColor: transparent;
+                --fbHighlightColor: #FFFFFF;
+            }
+            .f7wT9 {
+    background-image: linear-gradient(0deg, transparent 25%, #FFFFFF 25%, #FFFFFF 50%, transparent 50%, transparent 75%, #FFFFFF 75%, #FFFFFF), linear-gradient(90deg, transparent 25%, #FFFFFF 25%, #FFFFFF 50%, transparent 50%, transparent 75%, #FFFFFF 75%, #FFFFFF), linear-gradient(45deg, #FFFFFF 38%, transparent 38%), linear-gradient(45deg, #FFFFFF 38%, transparent 38%);
+    background-position: 0 0, 1px 0, 0 0, 2px 2px;
+    background-size: 4px 4px;
+    border-style: solid;
+    border-width: 1px;
+}
+.MtAE4 {
+    background-image: linear-gradient(-45deg, #FFFFFF 19%, transparent 19%, transparent 50%, #FFFFFF 50%, #FFFFFF 69%, transparent 69%, transparent);
+    border-image-source: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+            .iJ4J5 {
+                background: #FFFFFF;
+                border-width: 1px;
+            }
+            .Zn9Tu, .iJ4J5 {
+                border-style: solid;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+            .f7wT9, .wvzTD {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.MtAE4, .r3Aus {
+    background-size: 6px 6px;
+}
+.Zn9Tu {
+    border-width: 1px;
+}
+.wvzTD {
+    background-position-x: -1px;
+    background-size: 6px 6px;
+}
+            .nvdEP {
+                display: inline-block;
+                height: 100%;
+                margin-left: 10px;
+                margin-right: 10px;
+                margin-top: -4px;
+                vertical-align: middle;
+                width: 6px;
+            }
+            .icon-507 {
+                display: inline-block;
+                vertical-align: middle;
+                flex-shrink: 0;
+                width: 20px;
+                height: 20px;
+                font-size: 20px;
+                line-height: 20px;
+                margin: 0px;
+                padding: 0px 10px 0px 0px;
+                fill: #242424;
+                position: relative;
+                top: -4px;
+            }
+
+        }
+        .barContainer .arrowIcon {
+                font-size: 8px !important;
+                position: relative;
+                top: -1px;
+            }
 </style>

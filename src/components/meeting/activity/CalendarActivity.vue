@@ -4,10 +4,10 @@
             <div class="calendarHeader">
                 <div class="form">
                     <div class="formItem">
-                        <span class="label">会议类型：</span>
+                        <span class="label">活动类型：</span>
                         <a-select v-model:value="formState.type" style="width: 200px;">
-                            <a-select-option value="0">例会</a-select-option>
-                            <a-select-option value="1">学术会议</a-select-option>
+                            <a-select-option value="0">志愿者活动</a-select-option>
+                            <a-select-option value="1">其他</a-select-option>
                         </a-select>
                     </div>
                     <div class="calendar-selectlist">
@@ -184,7 +184,7 @@
     import MeetingDetailModal from "@/components/meeting/MeetingDetailModal2.vue";
     // 新建
     import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
-
+    import Delete from "@/components/listView/Delete.vue";
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";

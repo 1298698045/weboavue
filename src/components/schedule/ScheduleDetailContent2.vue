@@ -1,707 +1,795 @@
 <template>
-    <div class="meetingDetailWrap">
-      <div class="detail-header">
-        <div class="detail-header-left">
-          <div class="">
-              
-          </div>
+<div class="project-detail" :class="{'onearrange':twoarrange}">
+<div class="head-container">
+    <div class="head-breadcrumb">
+        <div class="breadcrumb">
+            <el-breadcrumb>
+                <el-breadcrumb-item class="breadcrumbitem"><a @click="openprojectlist" title="点击打开所有项目列表">项目</a></el-breadcrumb-item>
+                <el-breadcrumb-item class="breadcrumbitem">
+                    <img v-if="projectname" :src="(informationdata&&informationdata.record&&informationdata.record.RegardingObjectId&&informationdata.record.RegardingObjectId.content&&informationdata.record.RegardingObjectId.content.avatarValue&&informationdata.record.RegardingObjectId.content.avatarValue.large?informationdata.record.RegardingObjectId.content.avatarValue.large:'/static/img/images/icons/project/project00026.svg')" alt="">
+                    <a class="breadcrumbitema" @click="openproject" :title="'点击打开'+(projectname||'暂无')+'面板'">{{ projectname||'暂无' }}</a>
+                </el-breadcrumb-item>
+                <el-breadcrumb-item class="breadcrumbitem">
+                    <!-- <a-tooltip class="item" effect="dark" title="更改项目类型" placement="bottom"> -->
+                        <div class="dropbtn" :class="{'showmenu':isshowmenu}">
+                            <a-dropdown>
+                                <span class="a-dropdown-link" title="点击更改事务类型">
+                                    <span class="a-dropdown-link-text">
+                                        <img v-if="informationdata.record.IssueType&&informationdata.record.IssueType.content&&informationdata.record.IssueType.content.id" :src="'/static/img'+(informationdata&&informationdata.record&&informationdata.record.IssueType&&informationdata.record.IssueType.content&&informationdata.record.IssueType.content.iconUrl?informationdata.record.IssueType.content.iconUrl:'/images/icons/issuetypes/task.svg')" alt="">
+                                    </span>
+                                </span>
+                                <template #overlay>
+                                    <a-menu ref="elDropdown" class="lang-select-dropdown">
+                                        <div class="a-menu-title">更改事务类型</div>
+                                        <a-menu-item v-for="item,k in IssueTypeList" :key="k" class="a-menu-item" @click="changeIssueType(item.ID)">
+                                            <div class="checkbox-img"><img :src="item.IconUrl?('/static/img'+item.IconUrl):(item.Name=='任务'?'/static/img/images/icons/issuetypes/task.svg':'/static/img/images/icons/issuetypes/subtask.png')" alt=""></div>
+                                            <div>{{item.Name||'暂无'}}</div>
+                                        </a-menu-item>
+                                    </a-menu>
+                                </template>
+                             </a-dropdown>
+                        </div>
+                        
+                    <!-- </a-tooltip> -->
+                    <div class="task-title" v-if="informationdata.record.IssueKey">
+                        <a @click="opendetail" title="点击打开事务详情页">
+                            <span>{{informationdata.record.IssueKey.content||'暂无'}}</span>
+                        </a>
+                        <!-- <copylink :copy="itemid"/> -->
+                    </div>
+                </el-breadcrumb-item>
+            </el-breadcrumb>
         </div>
-        <div class="detail-header-right">
-          
-          
+        <div class="head-operate">
+                <a-tooltip title="关注" effect="dark"  placement="bottom">
+                    <guanzhu />
+                </a-tooltip>
+                <a-tooltip title="表决" effect="dark"  placement="bottom">
+                    <biaojue :itemid="itemid" />
+                </a-tooltip>
+                <a-tooltip title="分享" effect="dark"  placement="bottom">
+                    <sharepopup class="sharepopup" />
+                </a-tooltip>
+
+            <div class="head-operate-item svgiconbtn">
+                <a-dropdown>
+                    <div class="groupBtn">
+                        <a-tooltip title="更多" effect="dark" placement="bottom">
+                            <icon name="gengduo" />
+                        </a-tooltip>
+                    </div>
+                    <template #overlay>
+                      <a-menu>
+                        <a-menu-item @click="addworklog">记录工作</a-menu-item>
+                        <a-menu-item>Connect Slack channel</a-menu-item>
+                        <a-menu-item divided>转换为子任务</a-menu-item>
+                        <a-menu-item command="move">移动</a-menu-item>
+                        <a-menu-item command="copy">克隆</a-menu-item>
+                        <a-menu-item command="delete">删除</a-menu-item>
+                        <a-menu-item divided>查找字段</a-menu-item>
+                        <a-menu-item divided>打印</a-menu-item>
+                        <a-menu-item >打印</a-menu-item>
+                        <a-menu-item >导出 XML</a-menu-item>
+                        <a-menu-item >导出 Word</a-menu-item>
+                    </a-menu>
+                    </template>
+                    
+                </a-dropdown>
+            </div>
+            <div class="head-operate-item hover-iconbtn" @click="$emit('cancel')" v-if="popup!=false">
+                <a-tooltip title="关闭" effect="dark"  placement="bottom">
+                    <icon name="guanbi" />
+                </a-tooltip>
+            </div>
         </div>
-      </div>
-      <div class="detail-content">
-        <div class="leftBox">
-          <div class="title">
-              <span>{{ detail.Title }}&nbsp;</span>
-          </div>
-          
-        </div>
-        <div class="rightBox">
-          
-          
-        </div>
-      </div>
-      <RadioUser :isShow="isUserModal" @cancel="cancelUser" @selectVal="getUserData" />
-      <AddSchedule :isShow="isAddSchedule" :id="props.id" v-if="isAddSchedule" @cancel="cancelAddSchedule" @selectVal="handleAddScheduleVal" :paramsTime="paramsTime" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :calendarType="formState.type" />
-      <DeleteModal :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="props.id" :objTypeCode="objectTypeCode" :external="external" />
     </div>
-  </template>
-  <script setup>
-  import {
-    ref,
-    watch, 
-    reactive,
-    toRefs, 
-    onMounted,
-    getCurrentInstance, onUpdated, defineProps, defineExpose,
-    defineEmits,provide,
-    toRaw,
-  } from "vue";
-  import {
-    UnorderedListOutlined,
-    DownOutlined,
-    CaretDownOutlined,
-    DeleteFilled,
-    DeleteOutlined,
-    PlusOutlined,
-  } from "@ant-design/icons-vue";
-  import { useRouter, useRoute } from "vue-router";
-  import Related from "@/components/detail/Related.vue";
-  import Info from "@/components/detail/Info.vue";
-  import InfoNotes from "@/components/information/InfoNotes.vue";
-  import ChangeStatus from "@/components/information/ChangeStatus.vue";
-  import InfoRemind from "@/components/information/InfoRemind.vue";
-  import InfoAddClass from "@/components/information/InfoAddClass.vue";
-  import AffiliatedColumn from "@/components/information/AffiliatedColumn.vue";
-  import RadioUser from "@/components/commonModal/RadioUser.vue";
-  import DeleteModal from "@/components/listView/Delete.vue";
-  import Interface from "@/utils/Interface.js";
-  
-  // 基本信息
-  import DetailInfo from "@/components/detail/DetailInfo.vue";
-  // 相关讨论
-  import Comment from "@/components/detail/Comment.vue";
-  // 共享
-  import ScheduleShare from "@/components/meeting/MeetingShare.vue";
-  import AddSchedule from "@/components/schedule/AddSchedule.vue";
-  const { proxy } = getCurrentInstance();
-  
-  const route = useRoute();
-  const router = useRouter();
-  const emit = defineEmits(['handleDelete','cancel']);
-  const props = defineProps({
-      id: {
-          type: String,
-          default: ""
-      }
-  });
-  provide("id", props.id);
-  const PersonnelLst = ref();
-  const formState = reactive({
-        type: ""
-  })
-  const data = reactive({
-    tabs: [
-      {
-        label: "基本信息",
-      },
-      {
-        label: "相关讨论",
-      },
-      {
-        label: "共享权限",
-      },
-    ],
-    activeKey: 0,
-    id: route.query.id,
-    objectTypeCode:'4200',
-    sObjectName:'ActivityPointer',
-    detail: {},
-    isNotes: false,
-    isStatus: false,
-    isRemind: false,
-    isAddClass: false,
-    isUserModal: false,
-    fileCategorys: [],
-    files: [],
-    content:'',
-    isDelete: false,
-    deleteDesc: '确定要删除吗？',
-    external:false,
-    paramsTime:{
-        date: "",
-        time: ""
+    
+    
+</div>
+
+<div class="box detail-body" :style="{height:detailheight}" ref="box">
+    <div class="left detail-left">
+        <div class="head-title">
+        <div class="head-name" style="width:100%" @click="editsubject">
+            <div v-show="!edittitle" >
+            {{informationdata.record.Subject||'测试标题'}}
+            </div>
+            <div v-show="edittitle" style="width:100%">
+                <el-input 
+                class="searchinput"
+                style="width:100%" 
+                 ref="subject"
+                v-model="informationdata.record.Subject" 
+                @blur="edittitle=false" @change="savedetail('Subject');edittitle=false"></el-input>
+            </div>
+        </div>
+
+        
+        </div>
+        <div class="head-operate">
+            <div class="head-operate-item btn"  @click="addfile">
+                <a-tooltip title="添加附件" effect="dark"  placement="bottom">
+                    <i class="el-icon-link">添加附件</i>
+                </a-tooltip>
+            </div>
+            <div class="head-operate-item btn"  @click="newrelated">
+                <a-tooltip title="添加子事务" effect="dark"  placement="bottom">
+                    <div  class="addsubtask">
+                        <icon name="subtasknumber"></icon>添加子事务</div>
+                </a-tooltip>
+            </div>
+            <div class="head-operate-item btn" @click="newrelated">
+                <a-tooltip title="链接事务" effect="dark"  placement="bottom">
+                    <i class="el-icon-connection">链接事务</i>
+                </a-tooltip>
+            </div>
+        </div>
+
+        <div class="detail-section detail-describe">
+            <div class="section-title">描述</div>
+            <div class="section-body">
+                <div v-show="!editdescribe.show" @click="editdescribe.show=true">
+                    <div class="descriptioncontainer" 
+                        v-if="informationdata.record.Description!=''" 
+                        v-html="informationdata.record.Description">
+                    </div>
+                    <div v-else class="placeholder">
+                        <span >添加描述...</span>
+                    </div>
+                </div>
+                <div class="editorcontent" v-show="editdescribe.show">
+                    <!-- <Editor v-model="informationdata.record.Description"></Editor> -->
+                    <TEditor ref="editorRef" mode="middle" :placeholder="'添加描述或附件文档'"  :height=250
+                            @input="getEditorContent" />
+                    <div class="edit-foot">
+                        <a-button @click="savedetail('Description')" type="primary" size="mini">保存</a-button>
+                        <a-button @click="editdescribe.show=false" size="mini">取消</a-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detail-section detail-describe">
+            <div class="section-title">附件</div>
+            <div class="section-body">
+                <fileupload :autoupload="true" :itemid="itemid" ref="fileupload" />
+            </div>
+        </div>
+        <div class="detail-section detail-related" v-if="informationdata.record.subtask">
+            <Subtask  :relatedlist="informationdata.record.subtask&&informationdata.record.subtask.content?informationdata.record.subtask.content:[]" :priorities="informationdata.record.PriorityCode.priorities" :statuss="informationdata.record.StateCode.statuss" ref="Subtask" :itemid="itemid" @reload="reloadinformation();$emit('reload')" />
+        </div>
+        <information v-if="twoarrange" :informationdata='informationdata'></information>
+        <div class="detail-section detail-active">
+            <Common :itemid="itemid"/>
+        </div>
+    </div>
+    <div class="resize" title="拖动左右宽度">
+        ⋮
+    </div>
+    <div class="right detail-right">
+        <information @reload="reloadinformation" :informationdata='informationdata' :showWorkflow="showWorkflow"></information>
+    </div>
+</div>
+    <movetask ref="movetask" v-if="isShowMovetask" :project="informationdata.record.RegardingObjectId" :itemid="itemid" />
+    <copytask ref="copytask" v-if="isShowCopytask" :Subject="informationdata.record.Subject" :itemid="itemid" />
+    <div v-show="worklog">
+        <Worklog v-model="worklog" />
+    </div>
+    <div v-show="isShowWorkflow">
+        <ManageWorkflow v-model="isShowWorkflow" :ShowEditWorkflow="ShowEditWorkflow" />
+    </div>
+    <div class="popup-container" v-show="isShowEditWorkflow">
+        <div class="editworkflowbox">
+            <EditWorkflow v-if="isShowEditWorkflow" />
+        </div>
+    </div>
+</div>
+</template>
+<script>
+import commonapi from '@/utils/commonapi.js';
+import { IssueDataGet } from "@/utils/projectapi.js";
+// import copylink from "@/components/schedule/detail/copylink.vue";
+//import Editor from "@/components/schedule/detail/editor.vue";
+import TEditor from "@/components/TEditor.vue";
+ import fileupload from '@/components/schedule/detail/fileupload.vue';
+ import biaojue from "@/components/schedule/detail/popup/biaojue.vue";
+ import guanzhu from "@/components/schedule/detail/popup/guanzhu.vue";
+ import sharepopup from "@/components/schedule/detail/popup/share.vue";
+ import Common from '@/components/schedule/detail/sectioncomponents/common.vue';
+ import information from "@/components/schedule/detail/sectioncomponents/information";
+ import Subtask from '@/components/schedule/detail/sectioncomponents/Subtask.vue';
+// import Userhead from '@/components/schedule/detail/Userheadphoto.vue';
+ import icon from '@/components/schedule/detail/icon.vue';
+
+ import copytask from "@/components/schedule/detail/copytask.vue";
+ import EditWorkflow from "@/components/schedule/detail/EditWorkflow.vue";
+ import ManageWorkflow from "@/components/schedule/detail/ManageWorkflow.vue";
+ import movetask from "@/components/schedule/detail/movetask.vue";
+ import Worklog from '@/components/schedule/detail/Worklog.vue';
+import { getprojectboardtask } from "@/utils/projectapi.js";
+export default {
+    inject:['reload'],
+    data(){
+        return {
+            id:'',
+            projectname:'',
+            projectid:'',
+            title:'任务详情',
+            edittitle:false,
+            fileList:[],
+            editdescribe:{
+                show:false
+            },
+            informationdata:{
+                record:{subtask:[],PriorityCode:{priorities:{}},StateCode:{statuss:[]},subtask:{content:[]}}
+            },
+            relatedlist:[
+            ],
+            priorities:[],
+            dialogImageUrl: '',
+            dialogVisible: false,
+            disabled: false,
+            IssueTypeList:[],
+            isshowmenu:false,
+            changeurl:'',
+            worklog:false,
+            isShowWorkflow:false,
+            isShowEditWorkflow:false,
+            isShowMovetask:false,
+            isShowCopytask:false
+        }
     },
-    isAddSchedule: false,
-    actionList:[]
-  });
-  const {
-    tabs,
-    activeKey,
-    id,
-    objectTypeCode,
-    detail,
-    isNotes,
-    isStatus,
-    isRemind,
-    isAddClass,
-    isUserModal,
-    fileCategorys,
-    files,
-    content,
-    sObjectName,
-    isDelete,
-    deleteDesc,
-    external,
-    paramsTime,
-    isAddSchedule,
-    actionList
-  } = toRefs(data);
-  const changeTabs = (e) => {
-    data.activeKey = e;
-  };
-  const current = ref([]);
-  const expandIconPosition = ref("start");
-  const handleClick = (event) => {
-    // If you don't want click extra trigger collapse, you can prevent this:
-    event.stopPropagation();
-  };
-  const getDetail = () => {
-    // proxy
-    //   .$get(Interface.information.detail, {
-    //     id: data.id,
-    //     objectTypeCode: data.objectTypeCode,
-    //   })
-    //   .then((res) => {
-    //     console.log("res", res);
-    //     data.detail = res.actions[0].returnValue.record;
-    //   });
-    let d = {
-              actions:[{
-                  id: "4270;a",
-                  descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
-                  callingDescriptor: "UNKNOWN",
-                  params: {
-                  recordId: props.id,
-                  apiName:data.sObjectName,
-                  objTypeCode: data.objectTypeCode
-                  }
-              }]
-          };
-          let obj = {
-              message: JSON.stringify(d)
-          }
-          proxy.$post(Interface.detail,obj).then(res=>{
-              if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
-              let fields=res.actions[0].returnValue.fields;
-              data.detail.Title=fields.Subject.value;
-              }
-          })
-  };
-  getDetail();
-  // const getActions = () => {
-  //     proxy.$get(Interface.listView.actions, {
-  //       entityApiName: data.sObjectName,
-  //       entityType: data.entityType
-  //     }).then(res=>{
-  //       let actions = [{devNameOrId:'handleEdit',label:'编辑'},{devNameOrId:'handleDelete',label:'删除'},{devNameOrId:'openFullSign0',label:'大屏签到'},{devNameOrId:'openFullSign1',label:'大屏签退'}];
-  //       if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
-  //          actions = res.actions[0].returnValue;
-  //       }
-  //       data.actionList = actions;
-  //     })
-  // }
-  const getActions = () => {
-          let obj = {
-              actions: [{
-                  id: "13285;a",
-                  descriptor: "",
-                  callingDescriptor: "UNKNOWN",
-                  params: {
-                      recordId: props.id,
-                      entityApiName: data.sObjectName,
-                      sections: ["PAGE"]
-                  }
-              }]
-          }
-          let d = {
-              message: JSON.stringify(obj)
-          }
-          proxy.$post(Interface.detailObj.actions, d).then(res => {
-              data.actions = res.actions[0].returnValue;
-              let actionList = res.actions[0].returnValue;
-              var temp = [];
-              for (var i = 0; i < actionList.length; i++) {
-                  let item = actionList[i];
-                  if (item.isSeparator) {
-                      temp.push([item]);
-                  } else {
-                      if (Array.isArray(temp[temp.length - 1])) {
-                          temp[temp.length - 1].push(item);
-                      } else {
-                          temp.push(item);
-                      }
-                  }
-              }
-              let temp1 = [{devNameOrId:'handleEdit',label:'编辑'},{devNameOrId:'handleDelete',label:'删除'},{devNameOrId:'openFullSign0',label:'大屏签到'},{devNameOrId:'openFullSign1',label:'大屏签退'}];
-              data.actionList = temp;
-          })
-      }
-  getActions();
-  const getFileClass = () => {
-    proxy
-      .$get(Interface.information.attachmentCategory, {
-        ObjectTypeCode: data.objectTypeCode,
-      })
-      .then((res) => {
-        data.fileCategorys = res.returnValue.records;
-      });
-  };
-  getFileClass();
-  const getFiles = () => {
-    proxy
-      .$get(Interface.information.files, {
-        id: data.id,
-      })
-      .then((res) => {
-        data.files = res.listData;
-      });
-  };
-  getFiles();
-  // 关闭更改状态
-  const cancelStatus = (e) => {
-    data.isStatus = e;
-  };
-  const cancelNotes = (e) => {
-    data.isNotes = e;
-  };
-  const cancelRemind = (e) => {
-    data.isRemind = e;
-  };
-  const cancelAddClass = (e) => {
-    data.isAddClass = e;
-  };
-  // 更改状态
-  const changeStatus = () => {
-    data.isStatus = true;
-  };
-  const handleEdit = () =>{
-      data.isAddSchedule=true;
+    props:['twoarrange','detailheight','itemid','popup'],
+    watch:{
+        // itemid(){
+        //     this.getdata()
+        // }
+    },
+    computed:{
+    },
+    created(){
+        // if(this.$route.params.projectname){
+        //     this.projectname = this.$route.params.projectname
+        // }
+        // this.itemid = this.$route.query.id
+        //this.getdata()
+    },
+    mounted() {
+        //tinymce.init({});
+        //const dropdownMenu = this.$refs['elDropdown']
+        //dropdownMenu.$data.currentPlacement = 'bottom-start'
+
+        let me=this;
+        me.dragControllerDiv();
+    },
+    components:{
+        // Userhead,
+         //Editor,
+         TEditor,
+         information,
+         fileupload,
+         icon,
+         Subtask,
+         Common,
+         sharepopup,
+         guanzhu,
+         biaojue,
+        // copylink,
+         movetask,
+         copytask,
+         Worklog,
+         ManageWorkflow,
+         EditWorkflow
+    },
+    methods:{
+        getEditorContent(e){
+            this.informationdata.record.Description = e;
+        },
+        changeDropdown(bool){
+            if(bool){
+                this.isshowmenu=true;                       
+                var that=this;
+                getprojectboardtask({
+                    projectId:this.projectid,
+                    search:'',
+                    OwningUser:'',
+                    filterQuery:''
+                }).then((res)=>{
+                    if(res&&res.data&&res.data.boardScope){
+                        that.IssueTypeList=[];
+                        const datalist=res.data.boardScope.projectLocation.issueTypes;
+                        datalist.find(function(item,index){
+                            that.IssueTypeList.push({
+                                ID:item.id,
+                                IconUrl:item.iconUrl,
+                                Name:item.name
+                            })
+                        })
+                    }
+                })
+            }
+            else{
+                this.isshowmenu=false;
+            }
+        },
+        changeIssueType(id){
+            //console.log(id)
+            this.informationdata.record['IssueType']=id
+            this.savedetail('IssueType')
+        },
+        addfile(){
+            this.$refs.fileupload.$el.childNodes[0].childNodes[1].click()
+        },
+        addworklog(){
+            this.worklog = true
+        },
+        showWorkflow(){
+            this.isShowWorkflow = true;
+            this.isShowEditWorkflow = false;
+        },
+        ShowEditWorkflow(){
+            this.isShowEditWorkflow = true;
+            this.isShowWorkflow = false;
+        },
+        opendetail(){
+            const url = this.$router.resolve({
+                path:'/projects/detail/'+this.projectname,
+                query:{
+                    id:this.projectid,
+                    itemid:this.itemid
+                }
+            })
+            window.open(url.href)
+        },
+        openproject(){
+            const url = this.$router.resolve({
+                path:'/projects/board/'+this.projectname,
+                query:{
+                    id:this.projectid,
+                }
+            })
+            window.open(url.href)
+        },
+        openprojectlist(){
+            const url = this.$router.resolve({
+                path:'/projects/list',
+                query:{
+                }
+            })
+            window.open(url.href)
+        },
+        handleCommand(command){
+            if(command=='move'){
+                //this.$refs.movetask.show()
+                this.isShowMovetask=true;
+            }
+            if(command=='copy'){
+                //this.$refs.copytask.show()
+                this.isShowCopytask=true;
+            }
+            if(command=='delete'){
+                this.$confirm('<p>您将永久删除此事务及其所有子任务、评论、附件以及所有数据。您应该将您不想删除的全部子任务移动到另一个父事务中。</p><p>如果不确定，可以解决或关闭此事务。</p>', '删除 '+this.informationdata.record.IssueKey.content+' 及其子任务?', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                confirmButtonClass:'warningbtn',
+                type: 'warning',
+                dangerouslyUseHTMLString: true
+            }).then(() => {
+                commonapi.entitydelete(4200,this.itemid).then(()=>{
+                    this.reload()
+                })
+            })
+            }
+        },
+        titlechange(){
+            console.log(123)
+        },
+        reloadinformation(){
+            this.$emit('reload')
+            this.getdetail()
+        },
+        newrelated(){
+            this.$refs.Subtask.newrelated()
+        },
+        savedetail(column){
+            const fields = {}
+            fields[column] = this.informationdata.record[column]
+            commonapi.entitysaverecord(fields,4200,this.informationdata.id).then(()=>{
+                this.$message.success('保存成功')
+                this.getdetail()
+                this.$emit('reload')
+                this.editdescribe.show = false
+            })
+        },
+        getdata(){
+            this.getdetail()
+        },
+        getdetail(){
+            return IssueDataGet(this.itemid).then((res)=>{
+                let record = {}
+                if(res&&res.data&&res.data.issue&&res.data.issue.fields){}else{return}
+                res.data.issue.fields.forEach(item => {
+                    record[item.key]=item
+                });
+                this.informationdata.id = res.data.issue.id
+                this.projectid=record.RegardingObjectId.content.id
+                this.projectname=record.RegardingObjectId.content.name
+                this.informationdata.record = {
+                    Subject:record.Subject.content,
+                    Description:record.Description.content,
+                    OwningUser:{
+                        Id:record.OwningUser.content.id,
+                        Name:record.OwningUser.content.displayName
+                    },
+                    CreatedBy:{
+                        Id:record.OwningUser.content.id,
+                        Name:record.OwningUser.content.displayName,
+                        Icon:record.OwningUser.content.self
+                    },
+                    PriorityCode:record.PriorityCode,
+                    ScheduledStart:record.ScheduledStart.content,
+                    ScheduledEnd:record.ScheduledEnd.content,
+                    IssueType:record.IssueType,
+                    IssueKey:record.IssueKey,
+                    StateCode:record.StateCode,
+                    RegardingObjectId:{
+                        id:record.RegardingObjectId.content.id,
+                        name:record.RegardingObjectId.content.name,
+                        avatarValue:{
+                            large:record.RegardingObjectId.content.avatarValue.large
+                        }
+                    },
+                    subtask:record.subtask,
+                    id:this.itemid,
+                    TimeOriginalEstimate:record.TimeOriginalEstimate.content
+                }
+            })
+            // commonapi.entitygetdetail(4200,this.itemid).then((res)=>{
+            //     this.informationdata = res
+            // })
+        },
+        dragControllerDiv: function () {
+    var resize = document.getElementsByClassName('resize');
+    var left = document.getElementsByClassName('detail-left');
+    var mid = document.getElementsByClassName('detail-right');
+    var box = document.getElementsByClassName('box');
+    for (let i = 0; i < resize.length; i++) {
+        // 鼠标按下事件
+        resize[i].onmousedown = function (e) {
+            //色彩扭转揭示
+            resize[i].style.background = '#818181';
+            var startX = e.clientX;
+            resize[i].left = resize[i].offsetLeft-160;
+            // 鼠标拖动事件
+            document.onmousemove = function (e) {
+                var endX = e.clientX;
+                var moveLen = resize[i].left + (endX - startX); // （endx-startx）=挪动的间隔。resize[i].left+挪动的间隔=右边区域最初的宽度
+                var maxT = box[i].clientWidth - resize[i].offsetWidth; // 容器宽度 - 右边区域的宽度 = 左边区域的宽度
+                if (moveLen < 150) moveLen = 150; // 右边区域的最小宽度为32px
+                if (moveLen > maxT - 150) moveLen = maxT - 150; //左边区域最小宽度为150px
+                //resize[i].style.left = moveLen; // 设置左侧区域的宽度
+                for (let j = 0; j < left.length; j++) {
+                    left[j].style.width = (moveLen/document.body.clientWidth)*100 + '%';
+                    mid[j].style.width = ((box[i].clientWidth - moveLen)/document.body.clientWidth)*100 + '%';
+                }
+            };
+            // 鼠标松开事件
+            document.onmouseup = function (evt) {
+                //色彩复原
+                resize[i].style.background = '#d6d6d6';
+                document.onmousemove = null;
+                document.onmouseup = null;
+                resize[i].releaseCapture && resize[i].releaseCapture(); //当你不在须要持续取得鼠标音讯就要应该调用ReleaseCapture()开释掉
+            };
+            resize[i].setCapture && resize[i].setCapture(); //该函数在属于以后线程的指定窗口里设置鼠标捕捉
+            return false;
+        };
     }
-    const Edit = () =>{
-      data.isAddSchedule=true;
+},
+        editsubject(){
+            this.edittitle = true
+            this.$nextTick(()=>{    
+                this.$refs.subject.focus()
+            })
+        }
     }
-    const cancelAddSchedule = (e) => {
-        data.isAddSchedule = false;
-    }
-    const handleAddScheduleVal = (e) => {
-        data.isAddSchedule = false;
-        data.activeKey=7;
-        setTimeout(function(){
-          data.activeKey=0;
-        },10)
-    }
-  const handleDelete= (e) => {
-    //data.isDelete = true;
-    emit('handleDelete', {Id:props.id});
-  }
-  const Delete= (e) => {
-    //data.isDelete = true;
-    emit('handleDelete', {Id:props.id});
-  }
-  const deleteOk = (e) => {
-    emit('handleDelete', {Id:props.id});
-  };
-  const cancelDelete = (e) => {
-    data.isDelete = false;
-  };
-  // 预览
-  const handlePreview = () => {
-    let url = router.resolve({
-      name: "PreviewContent",
-      query: {
-        id: data.id,
-        objectTypeCode: data.objectTypeCode,
-      },
-    });
-    window.open(url.href);
-  };
-  // 提醒
-  const handleRemind = () => {
-    data.isRemind = true;
-  };
-  // 备注
-  const handleNotes = () => {
-    data.isNotes = true;
-  };
-  // 添加分类
-  const handleAddClass = () => {
-    data.isAddClass = true;
-  };
-  const cancelUser = (e) => {
-    data.isUserModal = e;
-  };
-  const getUserData = (params) => {
-    console.log("params", params);
-    cancelUser(false);
-  };
-  
-  const openFullSign= (num) => {
-          //window.open('http://192.168.1.200:82/apps/meetings/dynamicSign.aspx?id=8f9c33e1-52a4-4dcd-9ade-9e95484a6f1a');
-          let url = router.resolve({
-              path:'/lightning/o/dynamicSign',
-              name: "DynamicSign",
-              query: {
-                  id: props.id,
-                  exitQcode:num
-              },
-          });
-          window.open(url.href);
-  }
-  const openFullSign0=()=>{
-    openFullSign(0);
-  }
-  const openFullSign1=()=>{
-    openFullSign(1);
-  }
-  const printMeetingPeoplelst= (type) => {
-          let url = router.resolve({
-              path:'/lightning/o/printMeetingPeoplelst',
-              name: "PrintMeetingPeoplelst",
-              query: {
-                  id: props.id,
-                  type:type
-              },
-          });
-          window.open(url.href);
-    }
-  const printMeetingPeoplelst0=()=>{
-    printMeetingPeoplelst(0);
-  }
-  const printMeetingPeoplelst1=()=>{
-    printMeetingPeoplelst(1);
-  }
-  const refreshPeople=(e)=>{
-      if(PersonnelLst.value&&PersonnelLst.value.getQuery){
-          PersonnelLst.value.getQuery();
-      }
-  }
-  const handleClickBtn = (devNameOrId) => {
-    if (typeof (eval(devNameOrId)) == "function") {
-        var result = eval(devNameOrId + "();");
-    }else {
-  
-    }
-  }
-  const handleCancel = () => {
-      emit("cancel", false);
-  }
-  </script>
-  <style lang="less" scoped>
-  .meetingDetailWrap{
-      width: 100%;
-      height: 100%;
-      background: #f0f2f6;
-      overflow: auto;
-      .detail-header{
-          width: 100%;
-          height: 50px;
-          // background: #fff;
-          // display: flex;
-          justify-content: space-between;
-          box-sizing: border-box;
-          border-bottom: 1px solid #e5e6eb;
-          box-shadow: 0px 2px 8px 0px rgba(237, 239, 243, 1);
-          z-index: 99 !important;
-          padding: 6px 20px 0 20px;
-          .ant-tabs-nav{
-              margin: 0;
-          }
-          .leftBox {
-              min-width: 695px;
-              .backText{
-                  color: var(--textColor);
-                  font-weight: bold;
-                  font-size: 14px;
-                  cursor: pointer;
-                  padding-right: 10px;
-              }
-              .title{
-                  // margin-top: 5px;
-                  // height: 48px;
-                  display: flex;
-                  align-items: center;
-                  color: #1d2129;
-                  font-size: 18px;
-                  font-weight: bold;
-                  margin-left: 5px;
-              }
-              .ant-tabs .ant-tabs-nav::before{
-                  display: none;
-              }
-              .ant-tabs-tab{
-                  padding: 9px 8px !important;
-                  margin-right: 24px !important;
-              }
-          }
-          
-      }
-      .detail-scroll{
-          //overflow: auto;
-          height: calc(~"100% - 159px");
-          margin-top: 71px;
-          // overflow: auto;
-          .detail-bd{
-              // padding: 24px;
-              height: 100%;
-          }
-          .tabContainer{
-              min-height: 197px;
-              height: auto;
-              display: flex;
-              padding-bottom: 20px;
-              position: relative;
-              padding: 24px;
-              .tableBox{
-                  // flex: 1;
-                  background: #fff;
-                  border-radius: 4px;
-                  margin-right: 12px;
-                  width: calc(~"80% - 5px");
-                  overflow: hidden;
-                  padding: 20px 15px;
-                  margin-right: 5px;
-              }
-              .tableBox.active{
-                  width: 100%;
-              }
-          }
-      }
-      .detail-footer{
-          width: 100%;
-          position: fixed;
-          bottom: 0;
-          background: #fff;
-          height: 64px;
-          box-shadow: 0px -2px 6px 0px rgba(0, 0, 0, 0.1);
-          z-index: 99;
-          .flexEnd{
-              display: flex;
-              justify-content: flex-end;
-              padding-right: 10px;
-          }
-      }
-  }
-  .meetingDetailWrap .rightBox{
-      display: flex;
-      .btn-drop{
-          width: 32px;
-          height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          margin-top: 12px;
-          color: #999999;
-      }
-      .btn-drop:hover{
-          color: rgb(78,89,105);
-          background: #f2f3f5;
-      }
-      .ant-btn{
-          margin-top: 12px;
-      }
-  }
-  
-  .meetingDetailWrap .rightAside{
-      min-width: 20%;
-      max-width: 20%;
-      position: absolute;
-      height: 100%;
-      right: 0;
-      // background: #fff;
-      padding: 0 10px;
-      // overflow-y: auto;
-      .panel{
-          padding: 20px;
-          background: #fff;
-          border-radius: 4px;
-          margin-bottom: 16px;
-          cursor: pointer;
-          overflow: auto;
-          .panel-head{
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-bottom: 19px;
-              .panel-title{
-                  font-size: 16px;
-                  color: #1d2129;
-                  font-weight: bold;
-              }
-          }
-          .panel-bd{
-              .empty {
-                  height: 100%;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  flex-direction: column;
-                  text-align: center;
-                  color: #666;
-                  img{
-                      width: 50px;
-                  }
-                  .emptyDesc{
-                      font-size: 14px;
-                  }
-              }
-              .relevantList{
-                  .relevantItem{
-                      width: 100%;
-                      position: relative;
-                      padding: 13px 8px;
-                      border-bottom: 1px solid #e5e6eb;
-                      .relevantTitle{
-                          width: 75%;
-                          font-size: 14px;
-                          color: #1d2129;
-                      }
-                      .relevantTimerInfo{
-                          font-size: 12px;
-                          color: #86909c;
-                          padding-top: 10px;
-                      }
-                      .anticon-delete{
-                          position: absolute;
-                          right: 10px;
-                          top: 25px;
-                          font-size: 16px;
-                      }
-                  }
-                  .relevantItem:hover{
-                      background: #f2f3f5 !important;
-                  }
-              }
-          }
-      }
-      .asideScroll{
-          height: 100%;
-          overflow-y: auto;
-      }
-      .arrowIcon{
-          position: absolute;
-          top: 50%;
-          z-index: 999;
-          width: 16px;
-          height: 60px;
-          background: url("~@/assets/img/right.png") center center no-repeat;
-          cursor: pointer;
-          left: 1px;
-      }
-      .arrowIcon.rightIcon:hover{
-          background: url("~@/assets/img/right_hover.png") center center no-repeat;
-      }
-      .arrowIcon.leftIcon{
-          top: 50%;
-          left: inherit !important;
-          right: 0;
-          background: url("~@/assets/img/left.png") center center no-repeat;
-          &:hover{
-              background: url("~@/assets/img/left_hover.png") center center no-repeat;
-          }
-      }
-  }
-  .meetingDetailWrap .leftContent{
-      width: calc(~"80% - 5px");
-      height: 100%;
-      border-right: 1px solid #e2e3e5;
-      overflow: hidden;
-      overflow-y: auto;
-      &.active{
-          width: calc(~"100% - 24px");
-      }
-  }
-  :where(.css-dev-only-do-not-override-kqecok).ant-collapse {
-    border: none !important;
-    background: #fff;
-  }
-  :where(.css-dev-only-do-not-override-kqecok).ant-collapse > .ant-collapse-item {
-    border-bottom: none !important;
-    background: #f3f2f2;
-    margin-bottom: 8px;
-  }
-  :deep
-    :where(.css-dev-only-do-not-override-kqecok).ant-collapse
-    .ant-collapse-content {
-    border-top: none !important;
-  }
-  :deep
-    :where(.css-dev-only-do-not-override-kqecok).ant-collapse
-    > .ant-collapse-item
-    > .ant-collapse-header {
-    padding: 6px 16px !important;
-  }
-  :deep
-    :where(.css-dev-only-do-not-override-kqecok).ant-collapse
-    .ant-collapse-content
-    > .ant-collapse-content-box {
-    padding: 0 !important;
-  }
-  :deep
-    :where(.css-dev-only-do-not-override-kqecok).ant-collapse
-    > .ant-collapse-item:last-child,
-  :where(.css-dev-only-do-not-override-kqecok).ant-collapse
-    > .ant-collapse-item:last-child
-    > .ant-collapse-header {
-    border-radius: 0 !important;
-  }
-  .panel {
-    overflow: hidden;
-  }
-  .files {
+}
+</script>
+<style scoped>
+.head-operate{
+    display: flex;
+}
+.head-container{
+    padding: 15px 15px 0 34px;
+}
+.head-title{
+    font-size: 22px;
+    color: #172b4d;
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.head-name{
+display: flex;
+    justify-content: space-between;
+    height: 40px;
+    align-items: center;
+}
+.el-dropdown{
+    display: block;
+}
+.detail-left{
+    width: 60%;
+    padding-right: 20px;
+    box-sizing: border-box;
+}
+.detail-left .head-operate{
+    padding: 0 5px;
+}
+.onearrange .detail-left {
     width: 100%;
-    .fileItem {
-      width: 100%;
-      display: flex;
-      padding: 10px 5px;
-      &:hover {
+    padding-right: 10px;
+}
+.onearrange .detail-body{
+  height: calc(100vh - 220px);
+}
+.onearrange .head-container{
+  padding-left: 15px;
+}
+.onearrange .detail-body{
+  padding-left: 15px;
+}
+.detail-body{
+    padding: 0 0 0 35px;
+    display: flex;
+    justify-content: space-between;
+    height: calc(95vh - 150px);
+}
+.detail-body>div{
+    overflow: auto;
+    height: 100%;
+}
+.detail-section {
+    margin: 15px 0;
+}
+.section-title{
+    font-weight: 700;
+    padding: 0 5px;
+}
+.section-body{
+    margin: 5px 0;
+    padding: 0 5px;
+}
+.detail-describe .section-body{
+    padding: 0;
+}
+.placeholder{
+    color: #777;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 7px 5px;
+}
+.placeholder:hover{
+    background-color: rgb(231, 231, 233);
+}
+.detail-right{
+    width: 40%;
+    box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+.detail-right .section-body{
+    padding: 0 5px;
+}
+.edit-foot{
+    margin-top: 10px;
+}
+.el-dropdown-menu__item{
+    padding: 0 30px 0 10px;
+}
+.sharepopup>>>.title{
+    display: none;
+}
+.sharepopup>>>.icon{
+    margin: 0;
+}
+.sharepopup>>>svg{
+    width: 22px;
+    height: 22px;
+}
+.breadcrumbitem>>>.el-breadcrumb__inner{
+    display: flex;
+    align-items: center;
+}
+.breadcrumbitem img{
+    margin-right: 5px;
+    cursor: pointer !important;
+}
+.breadcrumbitem a{
+    text-decoration:underline;
+    cursor: pointer !important;
+}
+.head-breadcrumb{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.head-breadcrumb img{
+    width: 16px;
+    height: 16px;
+}
+.task-title{
+    display: flex;
+    align-items: center;
+}
+.task-title>>>svg{
+    width: 18px;
+    height: 18px;
+    margin-left: 3px;
+}
+.copylink{
+    visibility: hidden;
+    cursor: pointer;
+}
+.task-title:hover .copylink{
+    visibility: initial;
+}
+.descriptioncontainer{
+    padding: 5px;
+}
+.head-name{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.head-name:hover{
+    background-color: #f2f2f2;
+}
+.addsubtask{
+    display: flex;
+    align-items: center;
+    color: #42526e ;
+}
+.addsubtask>>>svg{
+    width: 16px;
+    height: 16px;
+    margin-right: 3px;
+}
+.lang-select-dropdown {
+    margin-left: -10px !important;
+}
+.dropbtn {
+    padding: 5px 5px;
+    padding-right: 6px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    color: rgb(66, 82, 110) !important;
+    margin-right: 0px;
+    position: relative;
+    top: -1px;
+    left: -3px;
+}
+.showmenu{
+    background:#253858 !important;
+}
+.showmenu .el-dropdown{
+    color: #F4F5F7 !important;
+}
+.lang-select-dropdown{
+    min-width: 115px;
+}
+.el-dropdown-item{
+    display: flex;
+    padding-left: 15px;
+    align-items: center;
+}
+.checkbox-img{
+    line-height: 0px;
+    margin-right: 5px;
+}
+.checkbox-img img{
+    width: 16px;
+    height: 16px;
+}
+.el-dropdown-title{
+    font-size: 14px;
+    font-weight: bold;
+    color:#172b4d;
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
+
+.el-dropdown{
+    top:-2px;
+}
+.el-breadcrumb__item{
+    display: flex;
+    height: 26px;
+    line-height: 26px;
+}
+.breadcrumbitem a{
+    text-decoration: none;
+    color: #606266;
+    font-weight: normal;
+}
+.breadcrumbitem a:hover{
+    text-decoration: underline;
+}
+.breadcrumbitema{
+    margin-left: 4px;
+}
+.popup-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+}
+.editworkflowbox{
+    width: 100%;
+    height: 100%;
+}
+
+.left {
+    /* width: 49.2%;
+    height:100%; */
+    /* overflow-y:auto;
+    overflow-x:hidden; */
+    float: left;
+    flex: 1;
+}
+.resize {
+    cursor: col-resize;
+    float: left;
+    position: relative;
+    top: -3%;
+    background-color: #d6d6d6;
+    border-radius: 5px;
+    width: 3px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+    font-size: 0.32rem;
+    color: white;
+}
+/*拖拽区鼠标悬停款式*/
+.resize:hover {
+    color: #444444;
+}
+.right {
+    /* height:7.8rem; */
+    float: left;
+    /* width:50%; */
+}
+:deep .head-operate .svgiconbtn{
+  display: flex !important;
+  cursor: pointer;
+}
+:deep .head-operate .svgiconbtn .groupBtn,:deep .head-operate-item.hover-iconbtn{
+    padding: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.project-detail .btn,.project-detail .hoverbtn{
+        padding: 6px 10px;
         cursor: pointer;
-        background: #eee;
-      }
-      .lImg {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-      .rInfo {
-        flex: 1;
-        margin-left: 10px;
-        overflow: hidden;
-        .name {
-          width: 60%;
-          font-size: 14px;
-        }
-        .optionLink {
-          .link {
-            color: var(--textColor);
-          }
-        }
-        .time {
-          font-size: 12px;
-          color: #b8bbcc;
-        }
-      }
-    }
-  }
-  .meetingDetailWrap{
-    .detail-scroll{
-      height: calc(~"100% - 70px");
-    }
-    .detailContent{
-      width: 100%;
-      padding: 20px;
-      background: #fff;
-      border-radius: 4px;
-      overflow: auto;
-    }
-    :deep .ant-tabs-tab{
-      padding: 9px 8px !important;
-      margin-right: 24px !important;
-    }
-    .detail-header{
-      border: none !important;
-      .leftBox .title{
-        line-height: 25px !important;
-      }
-    }
-  }
-  
-  </style>
-  
+        color: #42526e !important;
+        border-radius: 4px;
+        display: inline-block;
+}
+.project-detail i{
+    font-style: normal;
+}
+.project-detail .btn{
+    background-color: #f3f3f5;
+    margin-right: 10px;
+}
+.project-detail .ant-btn{
+    margin-right: 10px;
+}
+</style>

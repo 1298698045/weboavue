@@ -6,14 +6,14 @@
         <div class="headerRight"> -->
             <!-- <a-button type="primary" @click="handleAddSchedule">新建日程</a-button>
             <a-button class="ml10" @click="openShare">共享日历</a-button>
-            <a-button class="ml10" @click="openExport">导入日历</a-button> -->
+            <a-button class="ml10" @click="openImport">导入日历</a-button> -->
         <!-- </div>
     </div> -->
     <div class="calendarWrap">
         <div class="leftBox" v-if="!isCollapsed">
             <div class="tabsWrap">
                 <a-tabs v-model:activeKey="activeKey">
-                    <a-tab-pane key="1" tab="我的关注"></a-tab-pane>
+                    <a-tab-pane key="1" tab="我的日历"></a-tab-pane>
                     <a-tab-pane key="2" tab="人员组织"></a-tab-pane>
                 </a-tabs>
             </div>
@@ -37,7 +37,7 @@
                         <span class="label">日程类型：</span>
                         <a-select v-model:value="formState.type" style="width: 200px;">
                             <a-select-option value="0">工作安排</a-select-option>
-                            <a-select-option value="1">个人便笺</a-select-option>
+                            <a-select-option value="1">个人</a-select-option>
                         </a-select>
                     </div>
                     <div class="calendar-selectlist">
@@ -83,8 +83,8 @@
         </div>
         <NewSchedule :isShow="isSchedule" v-if="isSchedule" @cancel="cancelNewSchedule" />
         <AddSchedule :isShow="isAddSchedule" :id="id" v-if="isAddSchedule" :paramsTime="paramsTime" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" @selectVal="handleNewScheduleVal" :calendarType="formState.type" />
-        <ExportSchedule :isShow="isExport"  @cancel="cancelExport" />
-        <ShareCalendar :isShow="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
+        <ImportSchedule :isShow="isImport"  @cancel="cancelImport" />
+        <ShareCalendar :isShow="isShare"  @cancel="cancelShare" :id="id" />
         <ScheduleDetailModal :isShow="isScheduleDetail" v-if="isScheduleDetail" :id="id" @cancel="isScheduleDetail=false" @selectVal="handleNewScheduleVal" @handleDelete="handleDelete" @edit="handleOpenEdit" />
         <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
     </div>
@@ -125,9 +125,9 @@
     import NewSchedule from "@/components/schedule/NewSchedule.vue";
     import AddSchedule from "@/components/schedule/AddSchedule.vue";
     import ShareCalendar from "@/components/schedule/ShareCalendar.vue";
-    import ExportSchedule from "@/components/schedule/ExportSchedule.vue";
+    import ImportSchedule from "@/components/schedule/ImportSchedule.vue";
     // 详情
-    import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal.vue";
+    import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal2.vue";
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
@@ -185,7 +185,7 @@
         isSchedule: false,
         isAddSchedule: false,
         isShare: false,
-        isExport: false,
+        isImport: false,
         fileParams: {},
         paramsTime: {
             date: "",
@@ -205,8 +205,8 @@
         external:false,
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
-         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isRepeatMeeting, isAddSchedule,
-         isShare, isExport, fileParams, paramsTime, isCollapsed,isScheduleDetail,id,startTime,endTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,calendarView} = toRefs(data);
+         monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isAddSchedule,
+         isShare, isImport, fileParams, paramsTime, isCollapsed,isScheduleDetail,id,startTime,endTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,calendarView} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"];
     const FullCalendarWrap=ref(null);
     const calendarTypeChange=(e)=>{
@@ -413,8 +413,8 @@
         data.paramsTime.date = date.format("YYYY-MM-DD");
         data.isAddSchedule = true;
     };
-    const cancelExport = (e) => {
-        data.isExport = e;
+    const cancelImport = (e) => {
+        data.isImport = e;
     }
     const cancelShare = (e) => {
         data.isShare = e;
@@ -422,8 +422,8 @@
     const openShare = () => {
         data.isShare = true;
     }
-    const openExport = () => {
-        data.isExport = true;
+    const openImport = () => {
+        data.isImport = true;
     }
     const handleCollapsed = () => {
         data.isCollapsed = !data.isCollapsed;

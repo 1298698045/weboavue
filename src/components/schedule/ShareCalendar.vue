@@ -19,13 +19,19 @@
                                                 <template #overlay>
                                                     <a-menu @click="handleMenu">
                                                         <a-menu-item v-for="(item,index) in menus" :key="item.key">
-                                                            <UserOutlined />
+                                                            <UserOutlined v-if="item.name=='用户'" />
+                                                            <UserSwitchOutlined v-if="item.name=='角色'" />
+                                                            <TeamOutlined v-if="item.name=='小组'" />
+                                                            <ApartmentOutlined v-if="item.name=='部门'" />
                                                             {{item.name}}
                                                         </a-menu-item>
                                                     </a-menu>
                                                 </template>
                                                 <a-button>
-                                                    <UserOutlined />
+                                                    <UserOutlined v-if="currentMenu=='用户'" />
+                                                    <UserSwitchOutlined v-if="currentMenu=='角色'" />
+                                                    <TeamOutlined v-if="currentMenu=='小组'" />
+                                                    <ApartmentOutlined v-if="currentMenu=='部门'" />
                                                     <DownOutlined />
                                                 </a-button>
                                             </a-dropdown>
@@ -106,17 +112,21 @@
         SearchOutlined,
         DownOutlined,
         UserOutlined,
+        TeamOutlined,
+        ApartmentOutlined,
+        UserSwitchOutlined,
         CloseOutlined
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
 
     import Interface from "@/utils/Interface.js";
+    import { girdFormatterValue } from "@/utils/common.js";
     const { proxy } = getCurrentInstance();
-    console.log(document.documentElement.clientHeight);
+    //console.log(document.documentElement.clientHeight);
     const labelCol = ref({ style: { width: "100px" } });
     const props = defineProps({
         isShow: Boolean,
-        fileParams: Object
+        id: String
     });
     const formRef = ref();
     const emit = defineEmits(["cancel"]);
@@ -148,7 +158,8 @@
         listData: [],
         rightCode: '2',
         users: [],
-        peoples: []
+        peoples: [],
+        userInfoId:''
     });
     const {
         title,
@@ -158,7 +169,8 @@
         listData,
         rightCode,
         users,
-        peoples
+        peoples,
+        userInfoId
     } = toRefs(data);
     const formState = reactive({
         name: "",
@@ -168,29 +180,125 @@
         window.addEventListener("resize", (e) => {
             data.height = document.documentElement.clientHeight - 300;
         });
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.userInfoId=userInfo.userId;
+            if(data.userInfoId=='jackliu'){
+                data.userInfoId='2ec00cf2-a484-4136-8fef-e2a2719c5ed6';
+            }
+        }
+        getAccess();
     });
     // 添加权限
     const handleAddPrem = () => {
-        console.log("data",data.users, data.rightCode);
-        var objecsts = "";
-        proxy.$get(Interface.schedule.addAccess,{
-            objecsts: data.users.join(","),
-            rightCode: data.rightCode
-        }).then(res=>{
-            message.success("添加成功！");
-        })
+        // console.log("data",data.users, data.rightCode);
+        // var objecsts = "";
+        // proxy.$get(Interface.schedule.addAccess,{
+        //     objecsts: data.users.join(","),
+        //     rightCode: data.rightCode
+        // }).then(res=>{
+        //     message.success("添加成功！");
+        //     getAccess();
+        // })
+        let ObjectType='';
+        if(data.currentMenu=='用户'){
+            ObjectType='8';
+        }else if(data.currentMenu=='角色'){
+            ObjectType='1036';
+        }else if(data.currentMenu=='小组'){
+            ObjectType='9';
+        }else if(data.currentMenu=='部门'){
+            ObjectType='10';
+        }
+        if(data.users&&data.users.length){
+            let ObjectName=[];
+            data.peoples.map((item) => {
+                for(var i=0;i<data.users.length;i++){
+                    if(data.users[i]&&item.ID&&data.users[i]==item.ID&&item.Name&&item.Name!='undefined'){
+                        ObjectName.push(item.Name)
+                    }
+                }
+            });
+            ObjectName=ObjectName.join(",");
+            let url = Interface.create;
+            let d = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        // recordId: props.id,
+                        recordInput:{
+                            allowSaveOnDuplicate: false,
+                            apiName: 'CalendarShare',
+                            objTypeCode: '20376',
+                            fields: {
+                                ObjectId: data.users.join(","),
+                                ObjectName: ObjectName,
+                                SharedRights: data.rightCode,
+                                ObjectTypeName: data.currentMenu,
+                                ObjectType:ObjectType,
+                                CalendarId:(data.userInfoId&&data.userInfoId!='undefined'?data.userInfoId:'')
+                            }
+                        }
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url, obj).then((res) => {
+                message.success("添加成功！");
+                getAccess();
+            });
+        }
+        else{
+            message.error("请选择需要添加的用户、角色、小组或者部门");
+        }
     }
     const handleMenu = (e)=> {
         data.currentMenu = data.menus.find(item=>item.key==e.key).name;
     }
 
     const getAccess = () => {
-        proxy.$get(Interface.schedule.sharedList,{
-        }).then(res=>{
-            data.listData = res.rows;
+        // proxy.$get(Interface.schedule.sharedList,{
+        // }).then(res=>{
+        //     data.listData = res.rows;
+        // })
+        data.listData = [];
+        let filterQuery='\nCalendarId\teq\t'+(data.userInfoId&&data.userInfoId!='undefined'?data.userInfoId:'');
+        proxy.$post(Interface.list2, {
+            filterId:'',
+            objectTypeCode:'20376',
+            entityName:'CalendarShare',
+            filterQuery:filterQuery,
+            search:'',
+            page: 1,
+            rows: 100,
+            sort:'CreatedOn',
+            order:'desc',
+            displayColumns:'CalendarShareId,CreatedOn,ObjectName,SharedRights,ImageUrls'
+        }).then(res => {
+            var list = [];
+            data.total = res.pageInfo?res.pageInfo.total:0;
+            for (var i = 0; i < res.nodes.length; i++) {
+                var item = res.nodes[i];
+                for(var cell in item){
+                    if(cell!='id'&&cell!='nameField'&&cell!='ImageUrls'){
+                        item[cell]=girdFormatterValue(cell,item);
+                    }
+                    if(cell=='ImageUrls'){
+                        item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
+                    }
+                }
+                list.push(item)
+            }
+            data.listData = list;
+            
         })
     }
-    getAccess();
+    //getAccess();
     const handleSubmit = () => {
         
     };
@@ -210,32 +318,86 @@
     }
     // 删除已添加人
     const handleItemDelete = (item) => {
-        proxy.$get(Interface.file.removecontentaccess,{
-            id: item.Id
-        }).then(res=>{
-            message.success(res.msg);
-            getAccess();
+        // proxy.$get(Interface.file.removecontentaccess,{
+        //     id: item.id
+        // }).then(res=>{
+        //     message.success(res.msg);
+        //     getAccess();
+        // })
+        let obj = {
+            actions: [{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+                recordId: item.id,
+                apiName: 'CalendarShare',
+                objTypeCode: '20376',
+            }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.delete, d).then(res => {
+            if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+                message.success("删除成功");
+                getAccess();
+            } else {
+            if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+                message.error(res.actions[0].errorMessage);
+            }
+            else {
+                message.error("删除失败");
+            }
+            }
         })
     }
     const changeItemPerm = (e,item) => {
-        console.log(e,item);
-        let obj = {
-            actions: [
-                {
+        // console.log(e,item);
+        // let obj = {
+        //     actions: [
+        //         {
+        //             params: {
+        //                 CalendarId: props.id,
+        //                 SharedRights: item.SharedRights
+        //             }
+        //         }
+        //     ]
+        // }
+        // let messages = JSON.stringify(obj);
+        // proxy.$get(Interface.schedule.updatecontentaccess,{
+        //     message: messages
+        // }).then(res=>{
+        //     message.success("设置成功");
+        //     getAccess();
+        // })
+            let url = Interface.edit;
+            let d = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
                     params: {
-                        CalendarShareId: item.CalendarShareId,
-                        SharedRights: item.SharedRights
+                        recordId: item.id,
+                        recordInput:{
+                            allowSaveOnDuplicate: false,
+                            apiName: 'CalendarShare',
+                            objTypeCode: '20376',
+                            fields: {
+                                SharedRights: item.SharedRights,
+                            }
+                        }
                     }
-                }
-            ]
-        }
-        let messages = JSON.stringify(obj);
-        proxy.$get(Interface.schedule.updatecontentaccess,{
-            message: messages
-        }).then(res=>{
-            message.success("设置成功");
-            getAccess();
-        })
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url, obj).then((res) => {
+                message.success("设置成功！");
+                getAccess();
+            });
     }
 </script>
 <style lang="less" scoped>

@@ -9,7 +9,7 @@
               </div>
           </template>
           <div class="modalContainer scheduleModalContainer" :style="{ height: height + 'px' }">
-              <ScheduleDetailContent :id="props.id" @handleDelete="handleDelete" @cancel="handleCancel" />
+              <ScheduleDetailContent :id="props.id" @handleDelete="handleDelete" @cancel="handleCancel" @reload="handleSubmit" />
           </div>
           <template #footer>
               <div>
@@ -44,8 +44,8 @@
           default: ""
       }
   });
-  provide("id", props.id);
-  console.log("props", props.paramsTime);
+  
+  //console.log("props", props.paramsTime);
   const emit = defineEmits(['cancel', 'select-val', 'edit','handleDelete']);
   const handleCancel = () => {
       // configRef.value.clearForm();
@@ -69,6 +69,14 @@
   const handleDelete = (e) => {
       emit('handleDelete', {Id:e.Id});
   }
+  const itemid=props.id;
+  const reload=()=>{
+    handleSubmit();
+  }
+  provide('reload', {
+    itemid,
+    reload
+  })
   onMounted(() => {
       window.addEventListener("resize", (e) => {
           data.height = document.documentElement.clientHeight - 100;
@@ -82,7 +90,7 @@
         else{
         data.top = (h - 20) / 2 + 'px';
         }
-        console.log(data.top)
+        //console.log(data.top)
   });
   const setTop = computed(() => ({
     top: data.top

@@ -18,21 +18,21 @@
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
                                                         被分配人：
-                                                        <span class="OwningUserName">{{arg.event.Who}}</span>
+                                                        <span class="OwningUserName">{{arg.event.extendedProps.Who}}</span>
                                                     </div>
                                                     <div class="meetingInfoItem">
                                                         地址：
-                                                        <span class="TelePhone">{{arg.event.Location || ''}}</span>
+                                                        <span class="TelePhone">{{arg.event.extendedProps.Location || ''}}</span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
                                                         联系电话：
-                                                        <span class="OwningUserName">{{ arg.event.Phone }}</span>
+                                                        <span class="OwningUserName">{{ arg.event.extendedProps.Phone }}</span>
                                                     </div>
                                                     <div class="meetingInfoItem">
                                                         分配人：
-                                                        <span class="TelePhone">{{arg.event.CreatedByName || ''}}</span>
+                                                        <span class="TelePhone">{{arg.event.extendedProps.CreatedByName || ''}}</span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
@@ -48,7 +48,7 @@
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
                                                         备注：
-                                                        <span class="OwningUserName">{{arg.event.Description}}</span>
+                                                        <span class="OwningUserName" v-html="arg.event.extendedProps.Description||''"></span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
@@ -253,9 +253,6 @@
                   hour12: false
                 },
             // eventContent: event => {},
-            eventRender: function(event, element) {
-                element.css('background-color', event.backgroundColor);
-            },
             views:{
                 dayGridMonth:{
                     dayCellContent(item){
@@ -387,7 +384,7 @@
         }
         if(start&&end&&start!=end){
             if(text=='滑动选择时触发'&&info.start){
-                getQuery2(obj2);
+                //getQuery2(obj2);
                 openNew(obj);
             }
             if(text=='移动事件或者拓展事件'&&info[0]){
@@ -395,8 +392,8 @@
                   paramsTime:obj,
                   Id:info[0].id
                 }
-                if(info.event.id=='001'){
-                    getQuery2(obj2);
+                if(!info[0].id){
+                    //getQuery2(obj2);
                     openNew(obj);
                 }
                 else{
@@ -408,8 +405,8 @@
                     paramsTime:obj,
                     Id:info.event.id
                 }
-                if(info.event.id=='001'){
-                    getQuery2(obj2);
+                if(!info.event.id){
+                    //getQuery2(obj2);
                     openNew(obj);
                 }
                 else{
@@ -420,7 +417,7 @@
                 let e={
                   Id:info.event.id
                 }
-                if(info.event.id=='001'){
+                if(!info.event.id){
                     openNew(obj);
                 }
                 else{
@@ -470,8 +467,13 @@
             message: JSON.stringify(d)
         }
         proxy.$post(url, obj).then((res) => {
-            message.success("保存成功！");
-            emit("select-val", '');
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].state=='SUCCESS'){
+                message.success("保存成功！");
+                //emit("select-val", '');
+            }
+            else{
+                message.success("保存失败！");
+            }
         });
     }
     //新建
@@ -606,7 +608,12 @@
                                 id: item.Id,
                                 title: item.Subject||'',
                                 start: item.StartDateTime,
-                                end: item.EndDateTime, // 这里要注意，end为可选参数，无end参数时该事件仅在当天展示
+                                end: item.EndDateTime,
+                                Who:item.Who||'11111',
+                                Location:item.Location||item.Where||'',
+                                Phone:item.Phone||'',
+                                CreatedByName:item.CreatedByName||'',
+                                Description:item.Description||item.What||'',
                                 backgroundColor: colors[remainder], // 该事件的背景颜色
                                 borderColor: colors[remainder], // 该事件的边框颜色
                                 textColor: '#FFF' // 该事件的文字颜色
@@ -949,6 +956,9 @@
         :deep .fc-more-popover-misc {
             display: flex;
             float: right;
+        }
+        :deep .fc .fc-timeline-slot-cushion{
+            padding-left: 10px;
         }
     }
 </style>

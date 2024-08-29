@@ -11,7 +11,6 @@
                 <dRadioGroup :current="current" @change="changeRadioGroup">
                     <a-radio-button :value="0">
                         <i class="iconfont icon-liebiaoshitu"></i>
-                        
                     </a-radio-button>
                     <a-radio-button :value="1">
                         <i class="iconfont icon-rilishitu"></i>
@@ -19,7 +18,7 @@
                 </dRadioGroup>
                 <a-button type="primary" class="ml10" @click="handleAddSchedule">新建日程</a-button>
                 <a-button class="ml10" @click="openShare">共享日历</a-button>
-                <a-button class="ml10" @click="openExport">导入日程</a-button>
+                <a-button class="ml10" @click="openImport">导入日程</a-button>
             </div>
         </div>
         <div class="calendarBody">
@@ -47,8 +46,8 @@
             </div>
         </div>
         <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
-        <ExportSchedule :isShow="isExport"  @cancel="cancelExport" />
+        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal" :paramsTime="paramsTime" />
+        <ImportSchedule :isShow="isImport"  @cancel="cancelImport" />
         <ShareCalendar :isShow="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
     </div>
 </template>
@@ -76,7 +75,7 @@
     import NewSchedule from "@/components/schedule/NewSchedule.vue";
     import AddSchedule from "@/components/schedule/AddSchedule.vue";
     import ShareCalendar from "@/components/schedule/ShareCalendar.vue";
-    import ExportSchedule from "@/components/schedule/ExportSchedule.vue";
+    import ImportSchedule from "@/components/schedule/ImportSchedule.vue";
     import dRadioGroup from "@/components/antDefault/Dradio-group.vue"
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
@@ -86,7 +85,7 @@
         isSchedule: false,
         isAddSchedule: false,
         isShare: false,
-        isExport: false,
+        isImport: false,
         fileParams: {},
         size: "large",
         id:'',
@@ -98,7 +97,7 @@
         sObjectName:'ActivityPointer',
         layoutName:'MyActivityPointer'
     });
-    const { current, isSchedule, isAddSchedule, isShare, isExport, fileParams, size,id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
+    const { current, isSchedule, isAddSchedule, isShare, isImport, fileParams, size,id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
     const changeRadioGroup = (e) => {
         data.current = e;
     }
@@ -114,8 +113,8 @@
         // data.isSchedule =  true;
         data.isAddSchedule = true;
     }
-    const cancelExport = (e) => {
-        data.isExport = e;
+    const cancelImport = (e) => {
+        data.isImport = e;
     }
     const cancelShare = (e) => {
         data.isShare = e;
@@ -123,10 +122,10 @@
     const openShare = () => {
         data.isShare = true;
     }
-    const openExport = () => {
-        data.isExport = true;
+    const openImport = () => {
+        data.isImport = true;
     }
-    const handleNewMeetingVal = (e) => {
+    const handleNewScheduleVal = (e) => {
         data.isAddSchedule = false;
         //onSearch();
     }

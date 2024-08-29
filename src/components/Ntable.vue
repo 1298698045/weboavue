@@ -20,10 +20,10 @@
     $("#"+props.name).datagrid("reload");
   })
   const loadGrid = (queryParams) => {
-    console.log('loadGrid:queryParams', queryParams)
+    //console.log('loadGrid:queryParams', queryParams)
     var height = props.tableHeight;
     var singleSelect = props.singleSelect || false;
-    console.log('height',height);
+    //console.log('height',height);
     var columns = props.columns;
     
     if ($.fn.pagination.defaults != undefined) {//分页工具栏处理
@@ -69,7 +69,7 @@
   
   const getCheckList = () => {
     let list = $('#'+props.name).datagrid("getChecked");
-    console.log("list",list);
+    //console.log("list",list);
     return list;
   }
   defineExpose({loadGrid,getCheckList})

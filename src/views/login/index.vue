@@ -112,12 +112,16 @@
             if(compareIgnoreCase(formState.captureId, captchaId.value)){
                 proxy.$post(Interface.login, {
                     userName: formState.userName,
-                    password: md5(formState.password),
+                    //password: md5(formState.password),
+                    password: btoa(formState.password),
                     //captureId: formState.captureId
                 }).then(res=>{
                     if(res&&res.state===200){
                         let token = res.token;
-                        window.sessionStorage.setItem('token', token);
+                        let userInfo=res.user?JSON.stringify(res.user):'';
+                        window.localStorage.setItem('token', token);
+                        window.localStorage.setItem('userInfo', userInfo);
+                        message.success(res.msg||'登录成功！');
                         router.push('/home/Home.aspx?t=home&dboardName=workspace');
                     }else {
                         if(res&&res.msg){

@@ -220,14 +220,14 @@
                                                 <UserAddOutlined />
                                             </div>
                                             <div class="rVal">
-                                                <a-select mode="multiple" allowClear
+                                                <a-select mode="single" allowClear
                                                     v-model:value="formState.OwningUser.Id"
                                                     :default-active-first-option="false" :filter-option="false"
-                                                    showSearch @search=" (e) => { searchlookup(e, '30020'); } "
-                                                    @dropdownVisibleChange=" (e) => { searchlookup('', '30020'); } "
-                                                    :placeholder="'邀请可选与会者'">
+                                                    showSearch @search=" (e) => { searchlookup(e, '8','OwningUser'); } "
+                                                    @dropdownVisibleChange=" (e) => { searchlookup('', '8','OwningUser'); } "
+                                                    :placeholder="'选择会议预约人'">
                                                     <template #suffixIcon></template>
-                                                    <a-select-option v-for="(option, optionIdx) in OwningUserList"
+                                                    <a-select-option v-for="(option, optionIdx) in OwningUser"
                                                         :key="optionIdx" :value="option.ID">
                                                         <a-avatar :size="37">
                                                             <template #icon><UserOutlined /></template>
@@ -238,7 +238,7 @@
                                                 </a-select>
                                                 <div class="selectIcon">
                                                     <SearchOutlined class="ant-select-suffix"
-                                                        @click="handleOpenLook(attribute)" />
+                                                        @click="handleOpenLook('8','OwningUser')" />
                                                 </div>
                                             </div>
                                         </div>
@@ -325,6 +325,35 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <a-form-item name="RoomId">
+                                        <div class="formRow">
+                                            <div class="lIcon">
+                                                <HomeOutlined />
+                                            </div>
+                                            <div class="rVal">
+                                                <a-select mode="single" allowClear
+                                                    v-model:value="formState.RoomId.Id"
+                                                    :default-active-first-option="false" :filter-option="false"
+                                                    showSearch @search=" (e) => { searchlookup(e, '20034','RoomId'); } "
+                                                    @dropdownVisibleChange=" (e) => { searchlookup('', '20034','RoomId'); } "
+                                                    :placeholder="'请选择会议室'">
+                                                    <template #suffixIcon></template>
+                                                    <a-select-option v-for="(option, optionIdx) in RoomId"
+                                                        :key="optionIdx" :value="option.ID">
+                                                        <a-avatar :size="37">
+                                                            <template #icon><HomeOutlined /></template>
+                                                            <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
+                                                        </a-avatar>
+                                                        {{ option.Name}}
+                                                    </a-select-option>
+                                                </a-select>
+                                                <div class="selectIcon">
+                                                    <SearchOutlined class="ant-select-suffix"
+                                                        @click="handleOpenLook('20034','RoomId')" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a-form-item>
                                     <a-form-item name="Location">
                                         <div class="formRow">
                                             <div class="lIcon">
@@ -335,14 +364,25 @@
                                             </div>
                                         </div>
                                     </a-form-item>
+                                    <!-- <a-form-item name="MeetingSummary">
+                                        <div class="formRow" style="align-items: self-start;">
+                                            <div class="lIcon">
+                                                <FormOutlined />
+                                            </div>
+                                            <div class="rVal rVal2">
+                                                <TEditor ref="editorRef" mode="middle" :placeholder="'会议内容'" :height=180
+                                                    @input="getEditorContent" />
+                                            </div>
+                                        </div>
+                                    </a-form-item> -->
                                     <a-form-item name="Description">
                                         <div class="formRow" style="align-items: self-start;">
                                             <div class="lIcon">
                                                 <FormOutlined />
                                             </div>
                                             <div class="rVal rVal2">
-                                                <TEditor ref="editorRef" mode="simple" :placeholder="'添加描述或附件文档'" :height=180
-                                                    @input="getEditorContent" />
+                                                <TEditor ref="editorRef2" mode="middle" :placeholder="'备注'" :height=180
+                                                    @input="getEditorContent2" />
                                             </div>
                                         </div>
                                     </a-form-item>
@@ -350,11 +390,12 @@
                             </div>
                         </div>
                         <div class="rightCalendar">
-                            <DayCalendar ref="DayCalendarWrap" :id="props.id" :currentTime="formState.StartDateTime" :startDateTime="formState.startTime" :endDateTime="formState.endTime" :calendarType="formState.CalendarType||props.calendarType" @calendarDayChange="calendarDayChange" />
+                            <DayCalendar ref="DayCalendarWrap" :id="props.id" :currentTime="formState.StartDateTime" :startDateTime="formState.startTime" :endDateTime="formState.endTime" :calendarType="formState.CalendarType||props.calendarType" @calendarDayChange="calendarDayChange" :objectTypeCode="props.objectTypeCode" />
                         </div>
                     </div>
                 </div>
             </div>
+            <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
     </div>
 </template>
 <script setup>
@@ -379,7 +420,7 @@
     import calendar from 'dayjs/plugin/calendar';
     import weekday from 'dayjs/plugin/weekday';
     import localeData from 'dayjs/plugin/localeData';
-
+    import RadioUser from "@/components/commonModal/RadioUser.vue";
     dayjs.extend(calendar);
     dayjs.extend(weekday);
     dayjs.extend(localeData);
@@ -399,6 +440,7 @@
         ControlOutlined,
         DownOutlined,
         UserOutlined,
+        HomeOutlined,
         SwapOutlined,
         CheckOutlined,
         EllipsisOutlined
@@ -426,6 +468,7 @@
         emit("cancel", false);
     };
     const editorRef = ref();
+    const editorRef2 = ref();
     const data = reactive({
         title: "新建会议",
         height: document.documentElement.clientHeight - 380,
@@ -459,12 +502,15 @@
                 label: "紫色类别"
             }
         ],
-        OwningUserList: []
+        OwningUser: [],
+        RoomId:[],
+        calendarItem:{},
+        isRadioUser:false,
     });
     const {
         title,
         height,
-        menuTimes, categoryList, OwningUserList
+        menuTimes, categoryList, OwningUser,RoomId,isRadioUser
     } = toRefs(data);
     const formState = reactive({
         RegardingObjectTypeCode: 20290,
@@ -477,9 +523,11 @@
         EndDateTime: '',
         EndDateTime_time: '',
         OwningUser: {},
+        RoomId:{},
         IsAllDayEvent: false,
         Location: '',
         Description: '',
+        MeetingSummary:'',
         CalendarType: '',
         RegardingObjectIdName: '',
         BgColor: '',
@@ -515,6 +563,15 @@
             // if(props.paramsTime.end=='00:00'){
             //     formState.EndDateTime_time = "09:00";
             // }
+            if(props.paramsTime.time=='00:00'&&props.paramsTime.end=='00:00'){
+                formState.StartDateTime_time = "08:00";
+                formState.EndDateTime_time = "09:00";
+                var date = new Date(formState.EndDateTime);
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                var day = date.getDate();
+                formState.EndDateTime=(dayjs(new Date(year, month, day - 1)).format("YYYY-MM-DD"));
+            }
         }
         else{
             let hour = new Date(props.paramsTime.date +' '+ props.paramsTime.time).getHours() + 1;
@@ -532,6 +589,9 @@
         formState.EndDateTime_time = hour2+':00';
     }
     const getEditorContent = (e) => {
+        formState.MeetingSummary = e;
+    }
+    const getEditorContent2 = (e) => {
         formState.Description = e;
     }
     watch(()=>formState.StartDateTime,(newVal,oldVal)=>{
@@ -550,16 +610,79 @@
         formState.endTime = formState.EndDateTime + '' + newVal;
         calendarGetData();
     }, {deep: true})
-    const searchlookup = (search, Lktp) => {
-        proxy
-            .$get(Interface.uilook, {
-                Lktp: Lktp,
-                Lksrch: search,
-            })
-            .then((res) => {
-                let listData = res.listData;
-                data.OwningUserList = listData;
+    const uniqu=(array, name)=>{
+        var arr = []
+        for (var j = 0; j < array.length; j++) {
+            if (JSON.stringify(arr).indexOf(array[j][name]) == -1) {
+                arr.push(array[j])
+            }
+        }
+        return arr
+    }
+    const searchlookup = (search, Lktp,fieldApiName) => {
+        let obj = {
+        actions:[{
+                id: "6129;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    objectApiName: 'MeetingRec',
+                    fieldApiName: fieldApiName,
+                    pageParam: 1,
+                    pageSize: 25,
+                    q: search,
+                    searchType: "Recent",
+                    targetApiName: 'SystemUser',
+                    body: {
+                        sourceRecord: {
+                        apiName: 'MeetingRec',
+                            fields: {
+                                Id: null,
+                                RecordTypeId: ""
+                            }
+                        }
+                    }
+                }
+            }]
+        }
+        if(Lktp=='8'){
+            obj.actions[0].params.targetApiName='SystemUser';
+        }
+        if(Lktp=='20034'){
+            obj.actions[0].params.targetApiName='ResourceOrg';
+        }
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.lookup,d).then(res=>{
+            let list = res.actions[0].returnValue.lookupResults.records;
+            let arr = [];
+            list.forEach(item=>{
+                arr.push({
+                    ID: item.fields.Id.value,
+                    Name: item.fields.Name.value
+                })
             });
+            data[fieldApiName] = data[fieldApiName].concat(arr);
+            data[fieldApiName] = uniqu(data[fieldApiName],'ID');
+            //console.log(data[fieldApiName])
+        })
+
+        // proxy.$get(Interface.uilook, {
+        //         Lktp: Lktp,
+        //         Lksrch: search,
+        //     })
+        //     .then((res) => {
+        //         let listData = res.listData;
+        //         if(Lktp=='30020'){
+        //             data.OwningUser = listData;
+        //         }
+        //         else{
+        //             data.RoomId = listData;
+        //         }
+                
+        //     });
+            
     };
     // const getPickerList = () => {
     //     proxy.$get(Interface.schedule.pickList, {
@@ -573,15 +696,16 @@
     const calendarGetData=()=>{
         //console.log("props1", props.paramsTime);
         data.calendarItem={
-            Id:props.id||'',
+            Id:props.id||'001',
             Subject: formState.Subject,
             What: formState.Description,
-            Who: data.OwningUserName,
+            Who: formState.OwningUser?formState.OwningUser.Name:'',
             StartDateTime: formState.StartDateTime+' '+formState.StartDateTime_time,
             EndDateTime: formState.EndDateTime+' '+formState.EndDateTime_time,
             IsAllDayEvent: formState.IsAllDayEvent,
             IsPrivate: formState.IsPrivate,
             IsRecurrence2:false,
+            Where:formState.RoomId?formState.RoomId.Name:(formState.Location||''),
             sobjectType: "Event"
         }
         nextTick(()=>{
@@ -638,7 +762,7 @@
             formState.Location=fields.Location&&fields.Location.value?fields.Location.value:'';
             formState.Subject=fields.Name&&fields.Name.value?fields.Name.value:'';
             formState.Description=fields.Description&&fields.Description.value?fields.Description.value:'';
-
+            formState.MeetingSummary=fields.MeetingSummary&&fields.MeetingSummary.value?fields.MeetingSummary.value:'';
             formState.StartDateTime=fields.ScheduledStart&&fields.ScheduledStart.value?dayjs(fields.ScheduledStart.value).format("YYYY-MM-DD"):'';
             formState.StartDateTime_time=fields.ScheduledStart&&fields.ScheduledStart.value?dayjs(fields.ScheduledStart.value).format("HH:mm"):'';
             formState.EndDateTime=fields.ScheduledEnd&&fields.ScheduledEnd.value?dayjs(fields.ScheduledEnd.value).format("YYYY-MM-DD"):'';
@@ -650,13 +774,33 @@
                 formState.EndDateTime = props.paramsTime.endDate;
                 formState.EndDateTime_time = props.paramsTime.end;
             }
-            editorRef.value.content=formState.Description;
-
+            //editorRef.value.content=formState.MeetingSummary;
+            editorRef2.value.content=formState.Description;
             formState.CalendarType=fields.CalendarType&&fields.CalendarType.value?fields.CalendarType.value:'';
             formState.IsAllDayEvent=fields.IsAllDayEvent?fields.IsAllDayEvent.value:'';
-            formState.OwningUser=fields.OwningUser&&fields.OwningUser.value?{Id:[fields.OwningUser.value]}:{};
-            data.OwningUserName=fields.OwningUser&&fields.OwningUser.displayValue?fields.OwningUser.displayValue:'';
-            searchlookup('', '30020');
+            
+            if(fields.OwningUser&&fields.OwningUser.value){
+                let OwningUserName=fields.OwningUser.displayValue||'';
+                let OwningUserId=fields.OwningUser.value;
+                formState.OwningUser={Id:OwningUserId,Name:OwningUserName};
+                data.OwningUser.push({
+                    ID: OwningUserId,
+                    Name: OwningUserName
+                });
+            }
+            searchlookup('', '8','OwningUser');
+
+            if(fields.RoomId&&fields.RoomId.value){
+                let RoomIdName=fields.RoomId.displayValue||'';
+                let RoomIdValue=fields.RoomId.value;
+                formState.RoomId={Id:RoomIdValue,Name:RoomIdName};
+                data.RoomId.push({
+                    ID: RoomIdValue,
+                    Name: RoomIdName
+                });
+            }
+            searchlookup('', '20034','RoomId');
+            
             calendarGetData();
         }
     })
@@ -667,7 +811,23 @@
       getDetail();
   }
   else{
-      calendarGetData();
+        if(props.paramsTime&&props.paramsTime.resourceId){
+            data.RoomId.push({
+                ID: props.paramsTime.resourceId,
+                Name: props.paramsTime.resourceName
+            });
+            formState.RoomId.Id=props.paramsTime.resourceId;
+        }
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.OwningUser.push({
+                ID: userInfo.userId,
+                Name: userInfo.fullName
+            });
+            formState.OwningUser.Id=userInfo.userId;
+        }
+        calendarGetData();
   }
 
     const handleSubmit = () => {
@@ -686,11 +846,40 @@
                         apiName: props.entityApiName,
                         objTypeCode: props.objectTypeCode,
                         fields: {
-                            Location: formState.Location,
                             Name: formState.Subject,
-                            Description: formState.Description,
                             ScheduledStart: formState.StartDateTime+' '+formState.StartDateTime_time,
+                            ScheduledStartTime:formState.StartDateTime_time,
                             ScheduledEnd: formState.EndDateTime+' '+formState.EndDateTime_time,
+                            ScheduledEndTime:formState.EndDateTime_time,
+                            Location: formState.Location,
+                            // Telephone:'',
+                            // IsPublic:false,
+                            // AllowInviteeCheckin:false,
+                            // Attachs:'',
+                            // ReminderTime:"",
+                            // ReminderTimeTime:'',
+                            // InviteQty:'',
+                            // AcceptQty:'',
+                            // SpeakQty:'',
+                            // layTableCheckbox:false,
+                            // MeetingService_Name_1:'',
+                            // MeetingItem_SortNumber_1:'',
+                            // MeetingItem_Name_1:'',
+                            // MeetingItem_ScheduledMeeting_1:'',
+                            // MeetingType:'',
+                            // StateCode:'',
+                            StatusCode:1,
+                            //MeetingSummary:formState.MeetingSummary,
+                            Description: formState.Description,
+                            RoomId:formState.RoomId.Id,
+                            // OwningBusinessUnit:'',
+                            // ContactUser:'',
+                            // HostName:'',
+                            // MeetingMgrId:'',
+                            // OwningUser:formState.OwningUser.Id,
+                            // MeetingService_HandleBy_1:'',
+                            // MeetingItem_ApplyBy_1:'',
+                            // MeetingItem_OwningBusinessUnit_1:''
                         }
                     }
                 }
@@ -713,7 +902,34 @@
         console.log("error", err);
       });
   };
-    
+    const handleOpenLook= (Lktp, fieldApiName) => {
+        if(Lktp=='8'){
+            data.isRadioUser = true;
+        }
+    }
+    const closeUser = (e) => {
+        data.isRadioUser = false;
+    };
+    const getUserData = (params) => {
+      //console.log("params:", params);
+      data.isRadioUser = false;
+      if(params.id){
+        let index = data.OwningUser.findIndex(item=>item.ID==params.id);
+        if(index==-1 && params.id){
+            data.OwningUser.push({
+                ID: params.id,
+                Name: params.name
+            });
+            formState.OwningUser.Id=params.id;
+        }
+        if(index>=0){
+            message.error("不能重复添加！");
+        }
+      }
+    };
+    const refreshPeople=(e)=>{
+       
+    }
     const clearForm = () => {
             formRef.value.resetFields();
     }
@@ -987,6 +1203,9 @@
     }
     .InfoConfigForm2Container{
         .ant-select-selection-item-content .ant-avatar{
+            display: none !important;
+        }
+        .ant-select-selection-item .ant-avatar{
             display: none !important;
         }
     }

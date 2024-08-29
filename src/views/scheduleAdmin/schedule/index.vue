@@ -9,14 +9,14 @@
             </div>
             <div class="headerRight">
                 <a-button type="primary" @click="handleAddSchedule">新建日程</a-button>
-                <a-button class="ml10" @click="openShare">导出</a-button>
+                <a-button class="ml10" @click="exportSchedule">导出</a-button>
             </div>
         </div>
         <div class="calendarBody">
             <TableCalendar />
         </div>
         <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" />
+        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal" :paramsTime="paramsTime" />
     </div>
 </template>
 <script setup>
@@ -46,14 +46,23 @@
         isSchedule: false,
         isAddSchedule: false,
         isShare: false,
-        isExport: false,
-        fileParams: {}
+        fileParams: {},
+        id:'',
+        paramsTime: {
+            date: "",
+            time: ""
+        },
+        objectTypeCode:'4200',
+        sObjectName:'ActivityPointer',
     });
-    const { current, isSchedule, isAddSchedule, isShare, isExport, fileParams } = toRefs(data);
+    const { current, isSchedule, isAddSchedule, fileParams,id,paramsTime,objectTypeCode,sObjectName } = toRefs(data);
 
     const handleAddSchedule = () => {
         // data.isSchedule =  true;
         data.isAddSchedule = true;
+    }
+    const exportSchedule= () => {
+        
     }
     // 关闭新建
     const cancelNewSchedule = (e) => {
@@ -61,6 +70,9 @@
     }
     const cancelAddSchedule = (e) => {
         data.isAddSchedule = e;
+    }
+    const handleNewScheduleVal = (e) => {
+        data.isAddSchedule = false;
     }
 </script>
 <style lang="less" scoped>

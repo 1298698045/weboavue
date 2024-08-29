@@ -114,7 +114,7 @@
     import NewSchedule from "@/components/schedule/NewSchedule.vue";
     import AddSchedule from "@/components/schedule/AddSchedule.vue";
     import ShareCalendar from "@/components/schedule/ShareCalendar.vue";
-    import ExportSchedule from "@/components/schedule/ExportSchedule.vue";
+    import ImportSchedule from "@/components/schedule/ImportSchedule.vue";
 
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
@@ -254,7 +254,7 @@
         isSchedule: false,
         isAddSchedule: false,
         isShare: false,
-        isExport: false,
+        isImport: false,
         fileParams: {},
         paramsTime: {
             date: "",
@@ -264,7 +264,7 @@
     });
     const { activeKey, statusList, statusCurrent, searchVal, userListTree, scheduleList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isRepeatMeeting, isAddSchedule,
-         isShare, isExport, fileParams, paramsTime, isCollapsed} = toRefs(data);
+         isShare, isImport, fileParams, paramsTime, isCollapsed} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const backFn = (list) => {
         var len = list.length;

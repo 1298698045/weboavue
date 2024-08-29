@@ -316,10 +316,22 @@ const handlePersonal = () => {
   })
 }
 const loginOut= () => {
-  sessionStorage.clear();
+  localStorage.clear();
   router.push('/');
 }
 onMounted(() => {
+  let userInfo=window.localStorage.getItem('userInfo');
+  if(userInfo){
+    userInfo=JSON.parse(userInfo);
+    data.currentAccountName=userInfo.fullName;
+    data.accountList=[
+      {
+        FullName:userInfo.fullName,
+        JobTitle:userInfo.JobTitle,
+        DeptName:userInfo.DeptName||'信息科'
+      }
+    ]
+  }
   window.addEventListener("click", function (e) {
     isShow.value = false;
     data.isInfoPopup  = false;

@@ -208,7 +208,7 @@ const routes = [
     path: "/workplan",
     name: "Workplan",
     component: Layout,
-    redirect: "/workplan/calendar",
+    redirect: "/lightning/o/Event/home",
     meta: {
       name: "日程管理"
     },
@@ -276,8 +276,7 @@ const routes = [
     children: [
       {
         path: "/lightning/Addresslist/Org/home",
-        //component: () => import("../views/oa/addressBook/index.vue"),
-        component: () => import("../views/oa/deptAddressBook/index.vue"),
+        component: () => import("../views/oa/addressBook/index.vue"),
         name: "AddressBook1",
         icon: "tongxunlu1",
         meta: {

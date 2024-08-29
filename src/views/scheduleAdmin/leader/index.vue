@@ -44,7 +44,7 @@
             </div>
         </div>
         <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" v-if="isAddSchedule" :paramsTime="paramsTime" @cancel="cancelAddSchedule" />
+        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal" :paramsTime="paramsTime" />
     </div>
 </template>
 <script setup>
@@ -77,13 +77,16 @@
         current: 1,
         isSchedule: false,
         isAddSchedule: false,
+        id:'',
         paramsTime: {
             date: "",
             time: ""
         },
+        objectTypeCode:'4200',
+        sObjectName:'ActivityPointer',
         layoutName:'LeaderActivityPointer'
     });
-    const { current, isSchedule, isAddSchedule, paramsTime,layoutName } = toRefs(data);
+    const { current, isSchedule, isAddSchedule, id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
     const handleAddSchedule = () => {
         // data.isSchedule =  true;
         data.isAddSchedule = true;
@@ -102,6 +105,9 @@
     }
     const changeRadioGroup = (e) => {
         data.current = e;
+    }
+    const handleNewScheduleVal = (e) => {
+        data.isAddSchedule = false;
     }
 </script>
 <style lang="less" scoped>

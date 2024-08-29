@@ -1,5 +1,5 @@
 <template>
-  <div id="nav" v-cloak>
+  <div id="app" v-cloak>
     <!-- <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> -->
     <a-config-provider :locale="locale">

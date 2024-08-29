@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="1100px" :maskClosable="false" @cancel="handleCancel"
+        <a-modal v-model:open="props.isShow" width="1230px" :maskClosable="false" @cancel="handleCancel"
             @ok="handleSubmit">
             <template #title>
                 <div>

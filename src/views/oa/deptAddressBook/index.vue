@@ -143,9 +143,9 @@
                                                 </a>
                                                 <template #overlay>
                                                     <a-menu>
-                                                        <a-menu-item>
+                                                        <!-- <a-menu-item>
                                                             <a href="javascript:void(0);" @click="openSendEmail(item)">发邮件</a>
-                                                        </a-menu-item>
+                                                        </a-menu-item> -->
                                                         <a-menu-item>
                                                             <a href="javascript:void(0);" @click="handleEdit(item.id)">编辑</a>
                                                         </a-menu-item>
@@ -303,9 +303,9 @@
                                             </a>
                                             <template #overlay>
                                                 <a-menu>
-                                                    <a-menu-item>
+                                                    <!-- <a-menu-item>
                                                         <a href="javascript:void(0);" @click="openSendEmail(item)">发邮件</a>
-                                                    </a-menu-item>
+                                                    </a-menu-item> -->
                                                     <a-menu-item>
                                                         <a href="javascript:void(0);" @click="handleEdit(item.id)">编辑</a>
                                                     </a-menu-item>

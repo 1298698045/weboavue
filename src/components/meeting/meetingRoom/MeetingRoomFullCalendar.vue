@@ -18,21 +18,21 @@
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
                                                         被分配人：
-                                                        <span class="OwningUserName">{{arg.event.Who}}</span>
+                                                        <span class="OwningUserName">{{arg.event.extendedProps.Who}}</span>
                                                     </div>
                                                     <div class="meetingInfoItem">
                                                         地址：
-                                                        <span class="TelePhone">{{arg.event.Location || ''}}</span>
+                                                        <span class="TelePhone">{{arg.event.extendedProps.Location || ''}}</span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
                                                         联系电话：
-                                                        <span class="OwningUserName">{{ arg.event.Phone }}</span>
+                                                        <span class="OwningUserName">{{ arg.event.extendedProps.Phone }}</span>
                                                     </div>
                                                     <div class="meetingInfoItem">
                                                         分配人：
-                                                        <span class="TelePhone">{{arg.event.CreatedByName || ''}}</span>
+                                                        <span class="TelePhone">{{arg.event.extendedProps.CreatedByName || ''}}</span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
@@ -48,7 +48,7 @@
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
                                                         备注：
-                                                        <span class="OwningUserName">{{arg.event.Description}}</span>
+                                                        <span class="OwningUserName" v-html="arg.event.extendedProps.Description||''"></span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
@@ -190,11 +190,13 @@
             date: "",
             time: ""
         },
+        resources:[],
         calendarOptions:{
             plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin,resourceTimeGridPlugin,resourceTimelinePlugin], //需要加载的插件 
             initialView: props.calendarView, //初始视图
             //initialDate:props.currentTime,
             height: "auto",
+            contentHeight: 100,
             locale: zhCnLocale, //语言汉化
             selectable: true,
             editable: true,
@@ -202,7 +204,7 @@
             forceEventDuration: true,
             droppable: true,
             // dropAccept: ".eventListItems", //可被拖进
-            dayMaxEventRows: 99, //事件最大展示列数
+            // dayMaxEventRows: 99, //事件最大展示列数
             nowIndicator: true,
             fixedWeekCount: false, //因为每月起始日是星期几不固定，导致一个月的行数会不固定，是否固定行数
             // drop: null, //外部拖拽进的事件方法
@@ -272,17 +274,38 @@
                 // },
                 resourceTimelineWeek:{
                     //type:'resourceTimeline',
+                    nowIndicator: false,
                     duration: { week: 1 },
                     slotDuration: { days: 1 },
                     buttonText: '周',
-                    slotLabelFormat: [
-                    {day:'2-digit', weekday:'short'},
-                    ],
+                    // slotLabelFormat: [
+                    // {day:'2-digit', weekday:'short',month:'2-digit'},
+                    // ],
+                    slotLabelFormat: function (date)
+                    {
+                        //console.log(date)
+                        var dtime=date.date.year+'-'+(date.date.month+1)+'-'+date.date.day;
+                        let weektext=weeks[(new Date(dtime)).getDay()];
+                        var time=(date.date.month+1)+'月'+date.date.day+'日'+'（'+weektext+'）';
+                        return time;
+                    },
                 },
                 resourceTimelineMonth:{
-                    slotLabelFormat: [
-                    { day: '2-digit'}
-                    ],
+                    nowIndicator: false,
+                    duration: { month: 1 },
+                    slotDuration: { days: 1 },
+                    buttonText: '月',
+                    // slotLabelFormat: [
+                    // {day:'2-digit', weekday:'short',month:'2-digit'},
+                    // ],
+                    slotLabelFormat: function (date)
+                    {
+                        //console.log(date)
+                        var dtime=date.date.year+'-'+(date.date.month+1)+'-'+date.date.day;
+                        let weektext=weeks[(new Date(dtime)).getDay()];
+                        var time=(date.date.month+1)+'月'+date.date.day+'日'+'（'+weektext+'）';
+                        return time;
+                    },
                 },
             },
             resources:[],
@@ -371,36 +394,46 @@
         console.log(text,info)
         let start='';
         let end='';
+        let resourceId='';
         if(text=='滑动选择时触发'&&info.start){
             start=info.start;
             end=info.end;
+            resourceId=info.resource.id;
         }
-        if(text=='移动事件或者拓展事件'&&info[0]){
-            start=info[0].startStr;
-            end=info[0].endStr;
-        }
+        // if(text=='移动事件或者拓展事件'&&info[0]){
+        //     start=info[0].startStr;
+        //     end=info[0].endStr;
+        //     resourceId=info[0]._def.resourceIds[0];
+        // }
         if((text=='事件的点击'||text=='拖动会议触发'||text=='时间调整结束后触发')&&info.event){
             start=info.event.startStr;
             end=info.event.endStr;
+            resourceId=info.event._def.resourceIds[0];
         }
         let startDate=dayjs(start).format("YYYY-MM-DD");
         let endDate=dayjs(end).format("YYYY-MM-DD");
         let startTime=dayjs(start).format("HH:mm");
         let endTime=dayjs(end).format("HH:mm");
         data.paramsTime.date = startDate;
+        let resources=(data.resources).filter(item=>{
+            return item.id==resourceId;
+        });
         let obj = {
             date: startDate,
             time: startTime,
             end:endTime,
-            endDate:endDate
+            endDate:endDate,
+            resourceId:resourceId,
+            resourceName:resources&&resources[0]?resources[0].title:''
         }
         let obj2={
+            resourceId:resourceId,
             StartDateTime:dayjs(start).format("YYYY-MM-DD HH:mm:ss"),
             EndDateTime:dayjs(end).format("YYYY-MM-DD HH:mm:ss")
         }
         if(start&&end&&start!=end){
             if(text=='滑动选择时触发'&&info.start){
-                getQuery2(obj2);
+                //getQuery2(obj2);
                 openNew(obj);
             }
             if(text=='移动事件或者拓展事件'&&info[0]){
@@ -408,8 +441,8 @@
                   paramsTime:obj,
                   Id:info[0].id
                 }
-                if(info.event.id=='001'){
-                    getQuery2(obj2);
+                if(!info[0].id){
+                    //getQuery2(obj2);
                     openNew(obj);
                 }
                 else{
@@ -421,8 +454,8 @@
                     paramsTime:obj,
                     Id:info.event.id
                 }
-                if(info.event.id=='001'){
-                    getQuery2(obj2);
+                if(!info.event.id){
+                    //getQuery2(obj2);
                     openNew(obj);
                 }
                 else{
@@ -433,7 +466,7 @@
                 let e={
                   Id:info.event.id
                 }
-                if(info.event.id=='001'){
+                if(!info.event.id){
                     openNew(obj);
                 }
                 else{
@@ -482,8 +515,13 @@
             message: JSON.stringify(d)
         }
         proxy.$post(url, obj).then((res) => {
-            message.success("保存成功！");
-            emit("select-val", '');
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].state=='SUCCESS'){
+                message.success("保存成功！");
+                //emit("select-val", '');
+            }
+            else{
+                message.success("保存失败！");
+            }
         });
     }
     //新建
@@ -570,7 +608,7 @@
                 "params": {
                     "startDateTime": props.startDateTime,
                     "endDateTime": props.endDateTime,
-                    "calendarType": 'month',
+                    "calendarType": 'week',
                     "queryMeetings": true
                 }
 
@@ -588,6 +626,7 @@
             message: JSON.stringify(d)
         }
         data.meetingList =[];
+        data.resources=[];
         proxy.$post(Interface.meetingRoom.roomList,obj).then(res=>{
             fullCalendarRef.value.getApi().view.calendar.changeView(data.calendarOptions.initialView);
             setTimeout(function(){
@@ -606,14 +645,11 @@
                         let roomList = res.actions[0].returnValue;
                         let obj = {};
                         roomList.forEach((item,index)=>{
-                            // data.calendarOptions.resources.push({
-                            //     id:item.meetingRoom?item.meetingRoom.Id:'',
-                            //     title:item.meetingRoom?item.meetingRoom.Name:''
-                            // });
                             let roomitem={
                                 id:item.meetingRoom?item.meetingRoom.Id:'',
                                 title:item.meetingRoom?item.meetingRoom.Name:''
                             }
+                            data.resources.push(roomitem);
                             fullCalendarRef.value.getApi().view.calendar.addResource(roomitem);
                             item.meetingItems.forEach((item1,index1)=>{
                                 let daydate = dayjs(item1.StartDateTime).format('YYYY-MM-DD');
@@ -629,7 +665,12 @@
                                     resourceId:item.meetingRoom?item.meetingRoom.Id:'',
                                     title: item1.Subject||'',
                                     start: item1.StartDateTime,
-                                    end: item1.EndDateTime, // 这里要注意，end为可选参数，无end参数时该事件仅在当天展示
+                                    end: item1.EndDateTime,
+                                    Who:item1.Who||'',
+                                    Location:item1.Location||item1.Where||'',
+                                    Phone:item1.Phone||'',
+                                    CreatedByName:item1.CreatedByName||'',
+                                    Description:item1.Description||item1.What||'',
                                     backgroundColor: colors[remainder], // 该事件的背景颜色
                                     borderColor: colors[remainder], // 该事件的边框颜色
                                     textColor: '#FFF' // 该事件的文字颜色
@@ -652,9 +693,10 @@
     const getQuery2 = (obj) => {
         let event={
             id: '001',
+            resourceId:obj.resourceId,
             title: '',
             start: obj.StartDateTime,
-            end: obj.EndDateTime, // 这里要注意，end为可选参数，无end参数时该事件仅在当天展示
+            end: obj.EndDateTime,
             backgroundColor: '#1055BC', // 该事件的背景颜色
             borderColor: '#1055BC', // 该事件的边框颜色
             textColor: '#FFF' // 该事件的文字颜色
@@ -1007,6 +1049,12 @@
         }
         :deep .fc-scrollgrid-section.fc-scrollgrid-section-header.fc-scrollgrid-section-sticky>th:last-child{
             width: 100%;
+        }
+        :deep td.fc-day-today{
+            background: rgba(255,220,40,.15) !important;
+        }
+        :deep .fc .fc-timeline-slot-cushion{
+            padding-left: 10px;
         }
     }
 </style>
