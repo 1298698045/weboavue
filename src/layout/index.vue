@@ -98,4 +98,9 @@ const changeCode = (e) => {
 .fade-enter, .fade-leave-to {
   opacity: 0; /* 初始状态透明度为0 */
 }
+
+.el-popper{
+    -webkit-transform: none !important;
+    transform: none !important;
+}
 </style>

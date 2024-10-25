@@ -94,18 +94,32 @@ const initializeEditor = () => {
     // 设置本地语言
     language: "zh_CN",
     // 设置工具栏
-    toolbar: props.mode == 'simple' ? false : [
-      "bold italic hr | fontsize forecolor backcolor | blocks blockquote removeformat | undo redo ",
-      "bullist table insertdatetime | link charmap wordcount searchreplace code | codesample visualblocks image fullscreen preview",
-    ],
+    // toolbar: props.mode == 'simple' ? false : [
+    //   "bold italic hr | fontsize forecolor backcolor | blocks blockquote removeformat | undo redo ",
+    //   "bullist table insertdatetime | link charmap wordcount searchreplace code | codesample visualblocks image fullscreen preview",
+    // ],
+    toolbar: props.mode == 'simple' ? false :'blocks | bold italic forecolor backcolor bullist numlist | undo redo | link image table fontsize',
     menubar: props.mode == 'simple' ? 'edit custom' : '',
     // 设置插件
-    plugins:
-      "codesample lists advlist link autolink charmap fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
+    plugins:"codesample lists advlist link autolink charmap fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
     placeholder: props.placeholder,
     statusbar: false,
     promotion: false,
-    height: height.value
+    height: height.value,
+    //emoticons_database_url: '/tinymce/plugins/emoticons/js/emojis.js',
+    images_upload_url: 'https://wx.phxinfo.com.cn/rest',
+    paste_data_images:true,
+    images_upload_handler:function(blobInfo,success,failure){
+      // let reader = new FileReader()
+      // reader.readAsDataURL(blobInfo.blob())
+      // reader.onload=function(){
+      //   success(this.result)
+      // }
+    },
+    paste_preprocess(editor, args){
+      console.log(editor)
+      console.log(args)
+    }
   });
 };
 let init = initializeEditor();

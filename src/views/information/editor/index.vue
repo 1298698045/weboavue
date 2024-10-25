@@ -200,7 +200,7 @@
         data.isRadioUser = e;
     }
     const cancelRelaseInfo = (e) => {
-        data.isRelaseInfo = e;
+        data.isRelaseInfo = false;
     }
     const handleSelectUser = (params) => {
         console.log("params", params);
@@ -305,6 +305,11 @@
     };
     if(data.id){
         d.actions[0].params.recordId=data.id;
+    }
+    if(route.query.RegardingObjectId){
+        d.actions[0].params.recordInput.fields.RegardingObjectId=route.query.RegardingObjectId;
+        d.actions[0].params.recordInput.fields.RegardingObjectTypeCode=route.query.RegardingObjectTypeCode;
+        d.actions[0].params.recordInput.fields.FolderId=route.query.FolderId;
     }
     let obj = {
         message: JSON.stringify(d)

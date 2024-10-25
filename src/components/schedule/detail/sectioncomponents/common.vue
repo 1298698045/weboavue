@@ -38,7 +38,7 @@
                                 </div>
                             <div class="common-editor" v-show="control.writecommon">
                                 <!-- <editor v-model="commoneditdescribe.value" :init="commoneditdescribe.init"></editor> -->
-                                <TEditor ref="editorRef" mode="middle" :placeholder="'添加评论'"  :height=250
+                                <TEditor ref="editorRef" mode="middle" :placeholder="'点击添加评论'"  :height=250
                                 @input="getEditorContent" />
                                 <div class="edit-foot">
                             <a-button type="primary" size="mini" @click="savecommon">保存</a-button>
@@ -48,12 +48,18 @@
                         </div>
                     </div>
                    
-                    <div v-if="commonlist.length==0&&activebtn.commontabactive!=3" class="el-empty">
-                        <el-empty :image-size="140"></el-empty>
+                    <div v-if="commonlist.length==0&&activebtn.commontabactive==0" class="el-empty">
+                        <a-empty :image-size="140"></a-empty>
                     </div>
-                    <div v-if="commonlist.length==0&&activebtn.commontabactive==3" class="el-empty">
+                    <div v-if="commonlist.length==0&&activebtn.commontabactive==1" class="el-empty">
+                        <a-empty :image-size="140"></a-empty>
+                    </div>
+                    <div v-if="activebtn.commontabactive==2" class="el-empty">
+                        <a-empty :image-size="140"></a-empty>
+                    </div>
+                    <div v-if="activebtn.commontabactive==3" class="el-empty">
                         <div class="css-1lmg9rr">
-                            <img width="auto" height="auto" alt="" src="/static/img/images/icons/issuedetail/stopwatch.svg" class="css-1marach" style="--max-width:160px; --max-height:160px;">
+                            <img alt="" :src="require('@/assets/img/taskdetail/images/icons/issuedetail/stopwatch.svg')" class="css-1marach" style="width:auto;height:auto;--max-width:160px; --max-height:160px;">
                             <h4 class="css-ra4am"></h4>
                             <p class="css-10p4ort">还没有为此事务记录任何工作。记录工作可让您跟踪和报告花在事务上的时间。</p>
                             <div class="css-shyucn">
@@ -67,36 +73,43 @@
                         </div>
                     </div>
                     <div class="manipulate-list" v-for="item in commonlist" :key="item.id">
-                        <div class="manipulate-item" v-if="item.__typename=='CommentItem'">
+                        <div class="manipulate-item" v-if="item.__typename=='CommentItem'&&(activebtn.commontabactive==0||activebtn.commontabactive==1)">
                             <div class="manipulate-left">
-                                <Userhead :width="'32px'" :height="'32px'" :popover="true" 
-                                :userid="item.commentItem.createdBy.accountId"
-                                :url="item.commentItem.createdBy.picture"/>
+                                <!-- <Userhead :width="'32px'" :height="'32px'" :popover="true" 
+                                :userid="item.id"
+                                :url="item.ImageUrls||require('@/assets/img/avatar-r.png')"/> -->
+                                <div class="common-container-left">
+                                    <Userhead :width="'32px'" :height="'32px'" />
+                                </div>
                             </div>
                             <div class="manipulate-right">
                                 <div class="manipulate-head">
-                                    <span class="name">{{item.commentItem.createdBy.name}}</span>
+                                    <span class="name">{{item.OwningUser}}</span>
                                     <!-- <span class="type">已更新描述</span> -->
-                                    <span class="time">{{item.commentItem.createdOn}}</span>
+                                    <span class="time">{{item.CreatedOn}}</span>
                                     <el-tag effect="dark" type="info" size="mini">评论</el-tag></div>
-                                    <div class="manipulate-body" v-html="item.commentItem.body">
+                                    <div class="manipulate-body" v-html="item.Description">
                                     </div>
                             </div>
                         </div>
-                        <div class="manipulate-item" v-else>
+                        <div class="manipulate-item" v-if="item.__typename=='HistoryItem'&&(activebtn.commontabactive==0||activebtn.commontabactive==2)">
                             <div class="manipulate-left">
-                                <Userhead :width="'32px'" :height="'32px'" :popover="true" 
-                                :userid="item.historyItem.actor.accountId"
-                                :url="item.historyItem.actor.avatarUrl"/>
+                                <!-- <Userhead :width="'32px'" :height="'32px'" 
+                                :popover="true" 
+                                :userid="item.id"
+                                :url="item.ImageUrls||require('@/assets/img/avatar-r.png')"/> -->
+                                <div class="common-container-left">
+                                    <Userhead :width="'32px'" :height="'32px'" />
+                                </div>
                             </div>
                             <div class="manipulate-right">
                                 <div class="manipulate-head">
-                                    <span class="name">{{item.historyItem.actor.displayName}}</span>
-                                    <span class="type">已更新 {{item.historyItem.fieldDisplayName}}</span>
-                                    <span class="time">{{item.historyItem.created}}</span>
+                                    <span class="name">{{item.OwningUser}}</span>
+                                    <span class="type">已更新 {{item.Description}}</span>
+                                    <span class="time">{{item.CreatedOn}}</span>
                                     <el-tag effect="dark" type="info" size="mini">历史记录</el-tag></div>
                                     <div class="manipulate-body">
-                                        {{item.historyItem.from.value}} -> {{item.historyItem.to.value}}
+                                        {{item.from||''}} -> {{item.to||''}}
                                     </div>
                             </div>
                         </div>
@@ -109,6 +122,7 @@
             </div>
 </template>
 <script>
+import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw, defineProps } from "vue";
 import Worklog from '@/components/schedule/detail/Worklog.vue';
 import commonapi from '@/utils/commonapi';
 import { projectcommentgetlist } from '@/utils/projectapi.js';
@@ -119,7 +133,10 @@ import icon from '@/components/schedule/detail/icon.vue';
 import TEditor from "@/components/TEditor.vue";
 // import 'tinymce/icons/default';
 // import 'tinymce/themes/silver/theme';
-
+import Interface from "@/utils/Interface.js";
+import { girdFormatterValue } from "@/utils/common.js";
+import { message } from "ant-design-vue";
+import dayjs from 'dayjs';
 export default {
     data(){
         return{
@@ -137,6 +154,7 @@ export default {
             },
             commonlist:[],
             worklog:false,
+            proxy:null
         }
     },
     props:['itemid'],
@@ -149,11 +167,13 @@ export default {
     },
     watch:{
         itemid(){
-          //this.getcommon()
+          this.getcommon()
         }
     },
     created(){
-        //this.getcommon()
+        const { proxy } = getCurrentInstance();
+        this.proxy=proxy;
+        this.getcommon()
     },
     methods:{
         getEditorContent(e){
@@ -163,40 +183,115 @@ export default {
             this.worklog = true
         },
         getcommon(){
-            return
+            // return
             // var filterQuery = 'RegardingObjectId\teq\t'+this.itemid
-            var filterQuery = ''
-            if(this.activebtn.commontabactive!=''){
-                filterQuery += 'CommentType\teq\t'+this.activebtn.commontabactive
-            }
-            projectcommentgetlist({
-                // filterQuery:filterQuery,
-                type:this.activebtn.commontabactive,
-                regardingObjectId:this.itemid,
-                sort:this.sort,
-                entityType: "10C",
-                pageSize:1000,
-                pageNumber:1
-            }).then((res)=>{
-                this.commonlist = res.actions[0].returnValue.Data
+            // var filterQuery = ''
+            // if(this.activebtn.commontabactive!=''){
+            //     filterQuery += 'CommentType\teq\t'+this.activebtn.commontabactive
+            // }
+            // projectcommentgetlist({
+            //     // filterQuery:filterQuery,
+            //     type:this.activebtn.commontabactive,
+            //     regardingObjectId:this.itemid,
+            //     sort:this.sort,
+            //     entityType: "10C",
+            //     pageSize:1000,
+            //     pageNumber:1
+            // }).then((res)=>{
+            //     this.commonlist = res.actions[0].returnValue.Data
+            // })
+            var that=this;
+            let filterQuery='\nRegardingObjectId\teq\t'+this.itemid;
+            this.proxy.$post(Interface.list2, {
+                filterId:'',
+                objectTypeCode:'6000',
+                entityName:'Chatter',
+                filterQuery:filterQuery,
+                search:'',
+                page: 1,
+                rows: 1000,
+                sort:'CreatedOn',
+                order:this.sort=='down'?'desc':'asc',
+                displayColumns:'OwningUser,CreatedOn,Description,NumOfComment,NumOfLike,ImageUrls'
+            }).then(res => {
+                var list = [];
+                if(res&&res.nodes){
+                    for (var i = 0; i < res.nodes.length; i++) {
+                        var item = res.nodes[i];
+                        for(var cell in item){
+                            if(cell!='id'&&cell!='nameField'&&cell!='ImageUrls'){
+                                item[cell]=girdFormatterValue(cell,item);
+                            }
+                            if(cell=='ImageUrls'){
+                                item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
+                            }
+                            if(cell=='CreatedOn'){
+                                item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm:ss"):'';
+                            }
+                            item.__typename='CommentItem';
+                        }
+                        list.push(item)
+                    }
+                }
+                that.commonlist = list;
             })
         },
         commontabchange(type){
             this.activebtn.commontabactive = type
-            this.getcommon()
+            if(type==1){
+                this.getcommon()
+            }
         },
         savecommon(){
-            commonapi.entitysaverecord({
-                Body:this.commoneditdescribe.value,
-                RegardingObjectId:{
-                    Id:this.itemid
-                },
-                CommentType:1,
-                RegardingObjectTypeCode:4212
-            },20310).then(()=>{
-                this.control.writecommon = false
-                this.getcommon()
-            })
+            // commonapi.entitysaverecord({
+            //     Body:this.commoneditdescribe.value,
+            //     RegardingObjectId:{
+            //         Id:this.itemid
+            //     },
+            //     CommentType:1,
+            //     RegardingObjectTypeCode:4212
+            // },20310).then(()=>{
+            //     this.control.writecommon = false
+            //     this.getcommon()
+            // })
+            var that=this;
+            if(this.commoneditdescribe.value==""){
+                message.error("评论内容不能为空！");
+            }else {
+                let url=Interface.create;
+                    let d = {
+                    actions:[{
+                        id: "2919;a",
+                        descriptor: "",
+                        callingDescriptor: "UNKNOWN",
+                        params: {
+                            recordInput: {
+                                allowSaveOnDuplicate: false,
+                                apiName: 'Chatter',
+                                objTypeCode: '6000',
+                                fields: {
+                                    RegardingObjectId: this.itemid,
+                                    Description:this.commoneditdescribe.value,
+                                    RegardingObjectTypeCode:9
+                                }
+                            }              
+                        }
+                    }]
+                };
+                
+                let obj = {
+                    message: JSON.stringify(d)
+                }
+                this.proxy.$post(url,obj).then(res=>{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                        message.success("评论成功！");
+                        that.getcommon();
+                        that.commoneditdescribe.value='';
+                        that.$refs.editorRef.content='';
+                        that.control.writecommon=false;
+                    }
+                });
+            }
         },
         sortchange(){
             const sort = this.sort=='up'?'down':'up'
@@ -377,5 +472,12 @@ export default {
 }
 .common-container-right .ant-btn{
     margin-right: 10px;
+}
+:deep .manipulate-left img{
+    height: 32px;
+    width: 32px;
+}
+:deep .el-tag--dark.el-tag--info{
+    margin-left: 10px;
 }
 </style>

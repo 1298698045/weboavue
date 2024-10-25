@@ -12,7 +12,7 @@
                                                 <div class="meetingLogo">
                                                     <img :src="require('@/assets/img/meeting.png')" alt="">
                                                 </div>
-                                                <p class="meetingName">{{arg.event.title}}</p>
+                                                <p class="meetingName" :title="arg.event.title||''">{{arg.event.title}}</p>
                                             </div>
                                             <div class="meetingBody">
                                                 <div class="meetingInfo">
@@ -58,7 +58,7 @@
                                         </div>
                                     </template>
                                     <div class="eventItem">
-                                        <p>{{dayjs(arg.event.start).format("HH:mm")}}-{{dayjs(arg.event.end).format("HH:mm")}}&nbsp;&nbsp;&nbsp;{{arg.event.title}}</p>
+                                        <p :title="arg.event.title||''">{{dayjs(arg.event.start).format("HH:mm")}}-{{dayjs(arg.event.end).format("HH:mm")}}&nbsp;&nbsp;&nbsp;{{arg.event.title}}</p>
                                         <!-- <p>{{dayjs(arg.event.start).format("HH:mm")}}-{{dayjs(arg.event.end).format("HH:mm")}}</p>
                                         <p>{{arg.event.CreatedByName}}</p> -->
                                     </div>
@@ -165,8 +165,18 @@
         return month != currentMonth ? true : false;
     }
     const { proxy } = getCurrentInstance();
-    const emit = defineEmits(['openNew','handleDetail','openEdit','handleDelete','select-val','calendarDayChange']);
-    const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
+    const emit = defineEmits(['openNew','handleDetail','openEdit','handleDelete','select-val','calendarDayChange','getCalendarList']);
+    const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"];
+    const textColors=[
+        {
+            bgColor:'#CFEBFE',
+            textColor:'rgb(3, 45, 96)'
+        },
+        {
+            bgColor:'#d2f1ec',
+            textColor:'rgb(3, 45, 96)'
+        }
+    ]
     const props = defineProps({
         id:String,
         currentTime: [Object],
@@ -577,7 +587,7 @@
         let obj = {
             message: JSON.stringify(d)
         }
-        data.scheduleList =[];
+        //data.scheduleList =[];
         proxy.$post(Interface.schedule.list,obj).then(res=>{
             fullCalendarRef.value.getApi().view.calendar.changeView(data.calendarOptions.initialView);
             setTimeout(function(){
@@ -593,35 +603,23 @@
                 }
             },200)
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
-                        let scheduleItems = res.actions[0].returnValue[0].calendarItems;
-                        let obj = {};
-                        scheduleItems.forEach((item,index)=>{
-                            let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
-                            if(!obj[daydate]){
-                                obj[daydate] = [];
-                            }
-                            item.StartDateTime=item.StartDateTime?dayjs(item.StartDateTime).format("YYYY-MM-DD HH:mm:ss"):'';
-                            item.EndDateTime=item.EndDateTime?dayjs(item.EndDateTime).format("YYYY-MM-DD HH:mm:ss"):'';
-                            obj[daydate].push(item);
-                            let remainder = index % 4;
-                            let event={
-                                id: item.Id,
-                                title: item.Subject||'',
-                                start: item.StartDateTime,
-                                end: item.EndDateTime,
-                                Who:item.Who||'11111',
-                                Location:item.Location||item.Where||'',
-                                Phone:item.Phone||'',
-                                CreatedByName:item.CreatedByName||'',
-                                Description:item.Description||item.What||'',
-                                backgroundColor: colors[remainder], // 该事件的背景颜色
-                                borderColor: colors[remainder], // 该事件的边框颜色
-                                textColor: '#FFF' // 该事件的文字颜色
-                            }
-                            data.calendarOptions.events.push(event);
-                        })
-                        
-                        data.scheduleList = obj;      
+                //data.scheduleList=res.actions[0].returnValue;
+                let CalendarsData=[];
+                res.actions[0].returnValue.forEach((item,index)=>{
+                    item.calendar.id=item.calendar.Id;
+                    if(item.calendar.Type=='MY_EVENTS'){
+                        let userInfo=window.localStorage.getItem('userInfo');
+                        userInfo=JSON.parse(userInfo);
+                        if(userInfo&&userInfo.userId){
+                            item.calendar.id=userInfo.userId;
+                        }
+                    }
+                    item.calendar.Color='#'+item.calendar.Color;
+                    item.calendar.checked=item.calendar.CalendarItemsAccessible;
+                    CalendarsData.push(item)
+                })
+                emit("getCalendarList", CalendarsData);
+                refreshShow(CalendarsData);
             }
         })
         
@@ -642,7 +640,75 @@
         }
         fullCalendarRef.value.getApi().view.calendar.addEvent(event);
     }
-    defineExpose({getQuery});
+    const getComplementaryColor=(color)=>{
+        let textColor='#fff';
+        textColors.forEach((item,index)=>{
+            if(item.bgColor==color){
+                textColor=item.textColor;
+            }
+        })
+        return textColor
+        // var red = 255;
+        // var green = 255;
+        // var blue = 255;
+        // if(color&&color.indexOf('#')!=-1){
+        //     color = color.replace('#', '');
+        //     const decimal = parseInt(color, 16);
+        //     // 提取出Red、Green和Blue分量的值
+        //     red = (decimal >> 16) & 255;
+        //     green = (decimal >> 8) & 255;
+        //     blue = decimal & 255;
+        // }
+        // else{
+        //     const regex = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/;
+        //     const match = color.match(regex);
+        //     if (match) {
+        //         // 提取出Red、Green和Blue分量的值
+        //         red = parseInt(match[1], 10);
+        //         green = parseInt(match[2], 10);
+        //         blue = parseInt(match[3], 10)
+        //     }
+        // }
+        // red = red-204<0?(red-204)*-1:red-204;
+        // green = green-190<0?(green-190)*-1:green-190;
+        // blue = blue-158<0?(blue-158)*-1:blue-158;
+        // console.log(red,green,blue)
+        // return `rgb(${red}, ${green}, ${blue})`;
+    }
+    const refreshShow=(CalendarsData)=>{
+        if(CalendarsData&&CalendarsData.length){
+            //console.log(CalendarsData,111111111111)
+            data.calendarOptions.events=[];
+            CalendarsData.forEach((ite,idx)=>{
+                if(ite.calendar.checked){
+                    let scheduleItems = ite.calendarItems;
+                    scheduleItems.forEach((item,index)=>{
+                        let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
+                        item.StartDateTime=item.StartDateTime?dayjs(item.StartDateTime).format("YYYY-MM-DD HH:mm:ss"):'';
+                        item.EndDateTime=item.EndDateTime?dayjs(item.EndDateTime).format("YYYY-MM-DD HH:mm:ss"):'';
+                        //let remainder = index % 4;
+                        let event={
+                            id: item.Id,
+                            title: item.Subject||'',
+                            start: item.StartDateTime,
+                            end: item.EndDateTime,
+                            Who:item.Who||'暂无',
+                            Location:item.Location||item.Where||'',
+                            Phone:item.Phone||'',
+                            CreatedByName:item.CreatedByName||'',
+                            Description:item.Description||item.What||'',
+                            backgroundColor: ite.calendar.Color?ite.calendar.Color:colors[0], // 该事件的背景颜色
+                            borderColor: ite.calendar.Color?ite.calendar.Color:colors[0], // 该事件的边框颜色
+                            textColor: getComplementaryColor(ite.calendar.Color?ite.calendar.Color:colors[0]), // 该事件的文字颜色
+                            editable:ite.calendar.CalendarActionsConfig.canDragAndDropItems,//是否允许拖拽
+                        }
+                        data.calendarOptions.events.push(event);
+                    })
+                }
+            })
+        }
+    }
+    defineExpose({getQuery,refreshShow});
 </script>
 <style lang="less" scoped>
     .ScheduleFullCalendarWrap {
@@ -780,6 +846,11 @@
                 margin-left: 15px;
                 font-size: 16px;
                 font-weight: bold;
+                width: 95% !important;
+                text-overflow: ellipsis !important;
+                display: inline-block !important;
+                overflow: hidden !important;
+                white-space: nowrap !important;
             }
         }
         .meetingBody{
@@ -860,9 +931,7 @@
         :deep .fc .fc-scrollgrid{
             border: 0 !important;
         }
-        :deep .fc .fc-scrollgrid-section-sticky > *{
-            // position: relative;
-        }
+        
         :deep .fc .fc-button:disabled {
             opacity: 0.3 !important;
         }
@@ -922,6 +991,12 @@
                 margin-left: 6px;
                 p{
                     margin-top: 0px;
+                    width: 95%;
+                    text-overflow: ellipsis;
+                    display: block;
+                    overflow: hidden;
+                    font-weight: bold;
+                    opacity: 0.9;
                 }
             }
         }
@@ -929,7 +1004,7 @@
             min-height: 96px !important;
         }
         :deep .fc-daygrid-dot-event{
-            padding: 1px 0px !important;
+            padding: 1px 1px !important;
             margin-top: 0px !important;
             background: transparent !important;
         }
@@ -960,5 +1035,8 @@
         :deep .fc .fc-timeline-slot-cushion{
             padding-left: 10px;
         }
+    }
+    :deep .fc .fc-daygrid-day.fc-day-today,:deep .fc-theme-standard td.fc-day-today{
+        background-color:rgba(255,220,40,.15) !important;
     }
 </style>

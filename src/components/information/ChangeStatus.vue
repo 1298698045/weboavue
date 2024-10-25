@@ -1,11 +1,11 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel"
+        <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel" :style="setTop"
             @ok="handleSubmit">
             <template #title>
                 <div>更改状态</div>
             </template>
-            <div class="modalContainer">
+            <div class="modalContainer" ref="ChangeStatusModelContentRef">
                 <div class="modalCenter">
                     <a-form :model="formState" ref="formRef">
                         <div class="section">
@@ -47,6 +47,7 @@
         defineExpose,
         defineEmits,
         toRaw,
+        computed
     } from "vue";
     import {
         SearchOutlined,
@@ -65,14 +66,16 @@
         objectTypeCode: [String, Number]
     });
     const formRef = ref();
+    const ChangeStatusModelContentRef= ref(null);
     const emit = defineEmits(["cancel"]);
     const handleCancel = () => {
         emit("cancel", false);
     };
     const data = reactive({
         height: "",
+        top:""
     });
-    const { height } = toRefs(data);
+    const { height,top } = toRefs(data);
     const formState = reactive({
         StateCode: "0"
     });
@@ -82,8 +85,12 @@
         window.addEventListener("resize", (e) => {
             data.height = document.documentElement.clientHeight - 300;
         });
-    });
-
+        let h = ChangeStatusModelContentRef.value.clientHeight;
+            data.top = (h + 180) / 2 + 'px';
+        });
+    const setTop = computed(() => ({
+        top: `calc(50% - ${data.top})`
+    }));
     const handleSubmit = () => {
         formRef.value
             .validate()

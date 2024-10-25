@@ -447,7 +447,7 @@
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import TEditor from "@/components/TEditor.vue";
-    import DayCalendar from "@/components/schedule/AddScheduleDayModal2.vue";
+    import DayCalendar from "@/components/meeting/AddMeetingDayModal.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const DayCalendarWrap=ref(null);
@@ -699,14 +699,16 @@
             Id:props.id||'001',
             Subject: formState.Subject,
             What: formState.Description,
-            Who: formState.OwningUser?formState.OwningUser.Name:'',
+            OwningUserName: formState.OwningUser?formState.OwningUser.Name:'',
             StartDateTime: formState.StartDateTime+' '+formState.StartDateTime_time,
             EndDateTime: formState.EndDateTime+' '+formState.EndDateTime_time,
             IsAllDayEvent: formState.IsAllDayEvent,
             IsPrivate: formState.IsPrivate,
             IsRecurrence2:false,
             Where:formState.RoomId?formState.RoomId.Name:(formState.Location||''),
-            sobjectType: "Event"
+            sobjectType: "Event",
+            Telephone:formState.Telephone||'',
+            StatusCodeName:formState.StatusCodeName||'',
         }
         nextTick(()=>{
             if(typeof DayCalendarWrap !='undefined'&&DayCalendarWrap&&DayCalendarWrap.value){
@@ -799,6 +801,8 @@
                     Name: RoomIdName
                 });
             }
+            formState.Telephone=fields.Telephone?fields.Telephone.value:'';
+            formState.StatusCodeName=fields.StatusCode?fields.StatusCode.displayValue:'';
             searchlookup('', '20034','RoomId');
             
             calendarGetData();
@@ -1207,6 +1211,13 @@
         }
         .ant-select-selection-item .ant-avatar{
             display: none !important;
+        }
+        .barContainer{
+            display: none;
+        }
+        .formContent{
+            margin-top: 0;
+            height: 100%;
         }
     }
     .ant-select-item-option-content .ant-avatar{

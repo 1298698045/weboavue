@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="550px" :maskClosable="false" @cancel="handleCancel"
+        <a-modal v-model:open="props.isShow" width="800px" :maskClosable="false" @cancel="handleCancel"
             @ok="handleSubmit">
             <template #title>
                 <div>
@@ -17,7 +17,7 @@
                         <a-input placeholder="请输入关键字搜索"></a-input>
                     </div>
                 </div>
-                <div class="modalCenter">
+                <div class="modalCenter" :style="{ height: height + 'px!important' }">
                     <div class="tabContainerTree" v-if="currentTab==1">
                         <a-tree :tree-data="deptTreeList" block-node @select="handleSelectTree">
                             <template #title="{ text, key }">
@@ -68,9 +68,10 @@
         currentTab: '1',
         deptTreeList: [],
         deptList: [],
-        selectData: {}
+        selectData: {},
+        height: document.documentElement.clientHeight - 380,
     })
-    const { currentTab, deptTreeList, deptList, selectData } = toRefs(data);
+    const { currentTab, deptTreeList, deptList, selectData,height } = toRefs(data);
     const getTreeDept = () => {
         proxy.$get(Interface.treeList, {
             entity: "organizationtree",
@@ -123,6 +124,11 @@
             message.error('请选择部门!');
         }
     }
+    onMounted(() => {
+        window.addEventListener("resize", (e) => {
+            data.height = document.documentElement.clientHeight - 380;
+        });
+    });
 </script>
 <style lang="less" scoped>
     @import url('@/style/modal.less');

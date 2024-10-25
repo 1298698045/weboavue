@@ -37,13 +37,17 @@
             </template>
             <a-button type="primary" class="ml10" @click="handleClickBtn(item.devNameOrId)" v-else>{{ item.label }}</a-button>
         </template>
-        <a-dropdown :trigger="['hover']" class="ml10">
+        <a-dropdown :trigger="['hover']" class="ml10" :getPopupContainer="getPopupContainer">
           <span class="btn-drop">
             <UnorderedListOutlined style="color: #1d2129" />
           </span>
           <template #overlay>
             <a-menu>
-              <a-menu-item key="4" @click="handleNotes"> 备注 </a-menu-item>
+              <a-menu-item @click="handleNotes"> 备注 </a-menu-item>
+              <a-menu-item @click="openFullSign0"> 大屏签到 </a-menu-item>
+              <a-menu-item @click="openFullSign1"> 大屏签退 </a-menu-item>
+              <a-menu-item @click="printMeetingPeoplelst0"> 打印参会人员 </a-menu-item>
+              <a-menu-item @click="printMeetingPeoplelst1"> 打印未参会人员 </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
@@ -51,11 +55,26 @@
     </div>
     <div class="detail-scroll">
       <div class="detail-bd">
-        <div class="tabContainer containerForm" v-if="activeKey == 0">
+        <div class="tabContainer" v-if="activeKey == 0">
+            <Topics v-if="TopicsShow" :id="data.id" :type="'modal'" :detailData="detailData" />
+        </div>
+        <div class="tabContainer" v-if="activeKey == 1">
+            <MeetingSummary :id="data.id" :type="'modal'" :RegardingObjectName="detail.Title" />
+        </div>
+        <div class="tabContainer" v-if="activeKey == 2">
+            <Participants ref="PersonnelLst" :load="refreshPeople" :id="data.id" :type="'modal'" />
+        </div>
+        <div class="tabContainer" v-if="activeKey == 3">
+            <MeetingResolution :id="data.id" :type="'modal'" />
+        </div>
+        <div class="tabContainer" v-if="activeKey == 4">
+          <Task :id="data.id" :type="'modal'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="'5000'" />
+        </div>
+        <div class="tabContainer containerForm" v-if="activeKey == 5">
           <div class="tableBox">
-            <DetailInfo class="DetailInfo" :id="props.meetingId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
+            <DetailInfo class="DetailInfo" :id="data.id" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
           </div>
-          <div class="rightAside">
+          <!-- <div class="rightAside">
             <div class="panel">
               <div class="panel-head">
                 <div class="panel-title">附件 (0)</div>
@@ -73,13 +92,8 @@
                     v-for="(item, index) in fileCategorys"
                     :key="index"
                   >
-                    <!-- <p>{{ text }}</p> -->
                     <template #extra><PlusOutlined /></template>
                   </a-collapse-panel>
-                  <!-- <a-collapse-panel key="3" header="This is panel header 3" collapsible="disabled">
-                                        <p>{{ text }}</p>
-                                        <template #extra><PlusOutlined /></template>
-                                    </a-collapse-panel> -->
                 </a-collapse>
                 <div class="files">
                   <div class="fileItem">
@@ -120,37 +134,22 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="tabContainer" v-if="activeKey == 1">
-          <div class="detailContent">
-            <Participants ref="PersonnelLst" :load="refreshPeople" :id="props.meetingId" />
-          </div>
-        </div>
-        <div class="tabContainer" v-if="activeKey == 2">
-          <div class="detailContent">
-            <Topics :id="props.meetingId" />
-          </div>
-        </div>
-        <div class="tabContainer" v-if="activeKey == 3">
-          <div class="detailContent">
-            <Service :id="props.meetingId" />
-          </div>
-        </div>
-        <div class="tabContainer" v-if="activeKey == 4">
-          <div class="detailContent">
-            <MeetingResolution :id="props.meetingId" />
-          </div>
-        </div>
-        <div class="tabContainer" v-if="activeKey == 5">
-          <div class="detailContent">
-            <Comment :isTitle="false" :id="props.meetingId" />
-          </div>
+          </div> -->
         </div>
         <div class="tabContainer" v-if="activeKey == 6">
+            <RelatedAttachment :type="'modal'" :id="data.id" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="'5000'" />
+        </div>
+        <div class="tabContainer" v-if="activeKey == 7">
           <div class="detailContent">
-            <MeetingShare :id="props.meetingId" />
+            <Comment :title="'会议讨论'" :id="data.id" :RegardingObjectTypeCode="'5000'" />
           </div>
+        </div>
+        <div class="tabContainer" v-if="activeKey == 8">
+          <div class="detailContent">
+          </div>
+        </div>
+        <div class="tabContainer" v-if="activeKey == 9">
+            <MeetingShare :id="data.id" :type="'modal'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="'5000'" />
         </div>
       </div>
     </div>
@@ -160,18 +159,28 @@
       :objectTypeCode="objectTypeCode"
       @cancel="cancelNotes"
     />
-    <ChangeStatus
+    <MeetingRemind 
+      v-if="isRemind"
+      :isShow="isRemind"
+      :id="data.id"
+      @cancel="cancelRemind"
+      :RegardingObjectIdName="detail.Title"
+      :type="'modal'"
+    />
+    <MeetingRelease 
+      v-if="isRelease"
+      :isShow="isRelease"
+      :id="data.id"
+      @cancel="isRelease=false"
+      :RegardingObjectIdName="detail.Title"
+      :type="'modal'"
+    />
+    <!-- <ChangeStatus
       :isShow="isStatus"
       :id="id"
       :objectTypeCode="objectTypeCode"
       @cancel="cancelStatus"
-    />
-    <InfoRemind
-      :isShow="isRemind"
-      :id="id"
-      :objectTypeCode="objectTypeCode"
-      @cancel="cancelRemind"
-    />
+    /> -->
     <InfoAddClass
       :isShow="isAddClass"
       :id="id"
@@ -211,7 +220,6 @@ import Related from "@/components/detail/Related.vue";
 import Info from "@/components/detail/Info.vue";
 import InfoNotes from "@/components/information/InfoNotes.vue";
 import ChangeStatus from "@/components/information/ChangeStatus.vue";
-import InfoRemind from "@/components/information/InfoRemind.vue";
 import InfoAddClass from "@/components/information/InfoAddClass.vue";
 import AffiliatedColumn from "@/components/information/AffiliatedColumn.vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
@@ -220,19 +228,29 @@ import Interface from "@/utils/Interface.js";
 
 //基本信息
 import DetailInfo from "@/components/detail/DetailInfo.vue";
+//会议纪要
+import MeetingSummary from "@/components/meeting/MeetingSummary.vue";
 // 参会人员
-import Participants from "@/components/meeting/Participants.vue";
+import Participants from "@/components/meeting/Participants2.vue";
 // 会议议题
-import Topics from "@/components/meeting/meetingCalendar/Topics.vue";
+import Topics from "@/components/meeting/meetingCalendar/Topics2.vue";
+// 会议任务
+import Task from "@/components/meeting/meetingCalendar/Task.vue";
 // 会议服务
 import Service from "@/components/meeting/Service.vue";
 // 会议决议
-import MeetingResolution from "@/components/meeting/MeetingResolution.vue";
+import MeetingResolution from "@/components/meeting/MeetingResolution2.vue";
 // 相关讨论
-import Comment from "@/components/detail/Comment.vue";
+import Comment from "@/components/detail/Comment2.vue";
 //会议共享
-import MeetingShare from "@/components/meeting/MeetingShare.vue";
+import MeetingShare from "@/components/meeting/MeetingShare2.vue";
 import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
+//会议提醒
+import MeetingRemind from "@/components/meeting/MeetingRemind.vue";
+//会议发布
+import MeetingRelease from "@/components/meeting/MeetingRelease.vue";
+//附件
+import RelatedAttachment from "@/components/meeting/RelatedAttachment.vue";
 const { proxy } = getCurrentInstance();
 
 const route = useRoute();
@@ -248,26 +266,35 @@ provide("meetingId", props.meetingId);
 const PersonnelLst = ref();
 const data = reactive({
   tabs: [
+  {
+      label: "会议概况",
+    },
     {
-      label: "基本信息",
+      label: "会议纪要",
     },
     {
       label: "参会人员",
     },
     {
-      label: "会议议题",
-    },
-    {
-      label: "会议服务",
-    },
-    {
       label: "会议决议",
     },
     {
-      label: "相关讨论",
+      label: "会议任务",
     },
     {
-      label: "会议共享",
+      label: "详细信息",
+    },
+    {
+      label:'附件',
+    },
+    {
+      label: "会议讨论",
+    },
+    {
+      label: "相关",
+    },
+    {
+      label: "共享",
     },
   ],
   activeKey: 0,
@@ -291,7 +318,10 @@ const data = reactive({
       time: ""
   },
   isNewMeeting: false,
-  actionList:[]
+  actionList:[],
+  detailData:{},
+  TopicsShow:false,
+  isRelease:false
 });
 const {
   tabs,
@@ -299,6 +329,7 @@ const {
   id,
   objectTypeCode,
   detail,
+  detailData,
   isNotes,
   isStatus,
   isRemind,
@@ -313,7 +344,9 @@ const {
   external,
   paramsTime,
   isNewMeeting,
-  actionList
+  actionList,
+  TopicsShow,
+  isRelease
 } = toRefs(data);
 const changeTabs = (e) => {
   data.activeKey = e;
@@ -324,6 +357,9 @@ const handleClick = (event) => {
   // If you don't want click extra trigger collapse, you can prevent this:
   event.stopPropagation();
 };
+onMounted(() => {
+  data.id=props.meetingId;
+})
 const getDetail = () => {
   // proxy
   //   .$get(Interface.information.detail, {
@@ -352,7 +388,12 @@ const getDetail = () => {
         proxy.$post(Interface.detail,obj).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
             let fields=res.actions[0].returnValue.fields;
-            data.detail.Title=fields.Name.value;
+            data.detailData=fields;
+            data.TopicsShow=true;
+            if(fields.Name.value){
+                data.detail.Title=fields.Name.value;
+                data.deleteDesc="确定要删除 "+fields.Name.value+" 吗";
+              }
             }
         })
 };
@@ -401,8 +442,8 @@ const getActions = () => {
                     }
                 }
             }
-            let temp1 = [{devNameOrId:'handleEdit',label:'编辑'},{devNameOrId:'handleDelete',label:'删除'},{devNameOrId:'openFullSign0',label:'大屏签到'},{devNameOrId:'openFullSign1',label:'大屏签退'}];
-            data.actionList = temp;
+            let temp1 = [{devNameOrId:'handleEdit',label:'编辑'},{devNameOrId:'handleRelease',label:'发布'},{devNameOrId:'handleRemind',label:'提醒'},{devNameOrId:'handleDelete',label:'删除'}];
+            data.actionList = temp1;
         })
     }
 getActions();
@@ -434,7 +475,7 @@ const cancelNotes = (e) => {
   data.isNotes = e;
 };
 const cancelRemind = (e) => {
-  data.isRemind = e;
+  data.isRemind = false;
 };
 const cancelAddClass = (e) => {
   data.isAddClass = e;
@@ -473,6 +514,10 @@ const deleteOk = (e) => {
 const cancelDelete = (e) => {
   data.isDelete = false;
 };
+//发布
+const handleRelease=()=>{
+  data.isRelease=true;
+}
 // 预览
 const handlePreview = () => {
   let url = router.resolve({
@@ -506,9 +551,15 @@ const getUserData = (params) => {
 
 const openFullSign= (num) => {
         //window.open('http://192.168.1.200:82/apps/meetings/dynamicSign.aspx?id=8f9c33e1-52a4-4dcd-9ade-9e95484a6f1a');
+        let link='/lightning/o/Meeting/signin/screen';
+        let name='SigninScreen';
+        if(num*1==1){
+          link='/lightning/o/Meeting/signoff/screen';
+          name='SignoffScreen';
+        }
         let url = router.resolve({
-            path:'/lightning/o/dynamicSign',
-            name: "DynamicSign",
+            path:link,
+            name: name,
             query: {
                 id: props.meetingId,
                 exitQcode:num
@@ -551,6 +602,9 @@ const handleClickBtn = (devNameOrId) => {
 
   }
 }
+const getPopupContainer= (triggerNode) => {
+  return triggerNode.parentNode || document.body;
+}
 </script>
 <style lang="less" scoped>
 .meetingDetailWrap{
@@ -559,10 +613,10 @@ const handleClickBtn = (devNameOrId) => {
     background: #f0f2f6;
     overflow: auto;
     .detail-header{
-        width: 100%;
+        width: calc(~'100% - 45px');
         height: 71px;
         position: fixed;
-        top: 0;
+        // top: 74.5px !important;
         background: #fff;
         display: flex;
         justify-content: space-between;
@@ -606,7 +660,7 @@ const handleClickBtn = (devNameOrId) => {
     .detail-scroll{
         //overflow: auto;
         height: calc(~"100% - 159px");
-        margin-top: 71px;
+        margin-top: 65px;
         // overflow: auto;
         .detail-bd{
             // padding: 24px;
@@ -614,7 +668,7 @@ const handleClickBtn = (devNameOrId) => {
         }
         .tabContainer{
             min-height: 197px;
-            height: auto;
+            height: 100% !important;
             display: flex;
             padding-bottom: 20px;
             position: relative;
@@ -624,7 +678,7 @@ const handleClickBtn = (devNameOrId) => {
                 background: #fff;
                 border-radius: 4px;
                 margin-right: 12px;
-                width: calc(~"80% - 5px");
+                width: calc(~"100% - 5px");
                 overflow: hidden;
                 padding: 20px 15px;
                 margin-right: 5px;
@@ -880,5 +934,11 @@ const handleClickBtn = (devNameOrId) => {
     }
   }
 }
-
+.ant-dropdown .ant-dropdown-menu {
+    padding: 0 !important;
+    right: 0px;
+    position: absolute;
+    top: -2px;
+    width: max-content;
+}
 </style>

@@ -10,22 +10,22 @@
             <div class="left">
               <a-input
                 v-model:value="searchVal"
-                placeholder="请输入姓名"
+                placeholder="姓名"
                 class="searchitem"
                 @search="onSearch"
               ></a-input>
-              <a-select v-model:value="StatusCode" placeholder="请选择接受状态" class="searchitem">
+              <a-select v-model:value="StatusCode" placeholder="接受状态" class="searchitem">
                     <a-select-option value="">全部</a-select-option>
                     <a-select-option value="0">未接受</a-select-option>
                     <a-select-option value="1">已接受</a-select-option>
                     <a-select-option value="2">已拒绝</a-select-option>
               </a-select>
-              <a-select v-model:value="CheckinStatus" placeholder="请选择签到状态" class="searchitem">
+              <a-select v-model:value="CheckinStatus" placeholder="签到状态" class="searchitem">
                 <a-select-option value="">全部</a-select-option>
                 <a-select-option value="1">未签到</a-select-option>
                 <a-select-option value="2">已签到</a-select-option>
               </a-select>
-              <!-- <a-date-picker show-time autoclear valueFormat="YYYY-MM-DD HH:mm" placeholder="请选择签到时间" v-model:value="Checkin"></a-date-picker> -->
+              <!-- <a-date-picker show-time autoclear valueFormat="YYYY-MM-DD HH:mm" placeholder="签到时间" v-model:value="Checkin"></a-date-picker> -->
               <a-range-picker show-time class="radiusNone" valueFormat="YYYY-MM-DD HH:mm:ss" @change="(e)=>{changeRangeDate(e)}" />
             </div>
             <div class="rightOption">
@@ -38,7 +38,7 @@
           <a-table :columns="columns" :dataSource="listData" :scroll="{ y:tableHeight }" :pagination="data.pagination" @change="handleTableChange">
             <template #bodyCell="{ column, index,record }">
               <template v-if="column.key === 'Action'">
-                <a-button type="text" size="small" @click="handleDelete(record.id)">删除</a-button>
+                <a-button type="text" size="small" @click="handleDelete(record.id)" :num="index">删除</a-button>
               </template>
               <!-- <template v-if="column.key === 'index'">
                 <div>
@@ -53,6 +53,7 @@
               </template> -->
             </template>
           </a-table>
+          
         </div>
       </div>
       <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>

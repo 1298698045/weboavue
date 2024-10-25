@@ -45,10 +45,10 @@
                 <CalendarVue v-if="current==1" />
             </div>
         </div>
-        <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal" :paramsTime="paramsTime" />
-        <ImportSchedule :isShow="isImport"  @cancel="cancelImport" />
-        <ShareCalendar :isShow="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
+        <NewSchedule :isShow="isSchedule" v-if="isSchedule" @cancel="cancelNewSchedule" />
+        <AddSchedule :isShow="isAddSchedule" v-if="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal" :paramsTime="paramsTime" />
+        <ImportSchedule :isShow="isImport" v-if="isImport"  @cancel="cancelImport" />
+        <ShareCalendar :isShow="isShare" v-if="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
     </div>
 </template>
 <script setup>
@@ -111,6 +111,7 @@
     // 新建
     const handleAddSchedule = () => {
         // data.isSchedule =  true;
+        data.id='';
         data.isAddSchedule = true;
     }
     const cancelImport = (e) => {

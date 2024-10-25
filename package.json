@@ -41,9 +41,10 @@
     "unplugin-auto-import": "^0.17.2",
     "v3-easyui": "^3.0.14",
     "vue": "^3.2.36",
+    "vue-draggable-next": "^2.2.1",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^4.0.0-0",
-    "vuedraggable": "4.1.0",
+    "vuedraggable": "^2.24.3",
     "vuex": "^4.0.0-0",
     "vx-easyui": "^1.2.57"
   },
@@ -73,7 +74,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,vue}": [
+    "*.{js,jsx,vue,mjs,bcmap,ftl}": [
       "vue-cli-service lint",
       "git add"
     ]

@@ -211,7 +211,7 @@
   };
   const handleEdit = () => {
     let url = router.resolve({
-      name: "informationEditor",
+      name: "visualEditor",
       query: {
         id: data.id,
         objectTypeCode: data.objectTypeCode,

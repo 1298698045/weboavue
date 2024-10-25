@@ -1,11 +1,11 @@
 <template>
-    <div class="todoList">
+    <div class="ContentWrap">
       <div class="headerBar">
           <div class="headerLeft">
               <div class="icon-circle-base">
                 <img :src="require('@/assets/img/rightMenu/youcemoren.png')" alt="">
               </div>
-              <span class="headerTitle">信息管理</span>
+              <span class="headerTitle">文档中心</span>
           </div>
           <div class="headerRight">
             <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
@@ -16,17 +16,30 @@
       <div class="todo-content">
         <a-row>
           <a-col
-            span="3"
+            span="4"
             class="wea-left-right-layout-left"
             v-if="!isCollapsed"
           >
             <div class="wea-left-tree">
+              <div class="wea-left-tree-select">
+                <div class="wea-left-tree-select-icon">
+                  <ApartmentOutlined />
+                </div>
+                <a-select v-model:value="data.leftTreeTop" @change="leftTreeTopChange">
+                  <a-select-option key="0" value="我的收藏">我的收藏</a-select-option>
+                  <a-select-option key="1" value="全部目录">全部目录</a-select-option>
+                </a-select>
+              </div>
               <div class="wea-left-tree-search">
-                <a-input-search
+                <span class="wea-left-tree-search-label alltype">全部类型</span>
+                <a-input
                   v-model:value="searchVal"
-                  placeholder="输入查询"
-                  @search="onSearch"
+                  placeholder=""
+                  @change="onSearch"
                 />
+                <div class="wea-left-tree-search-icon">
+                  <SearchOutlined />
+                </div>
               </div>
               <div class="wea-left-tree-scroll information-tree">
                 <a-tree
@@ -53,7 +66,7 @@
             </div>
           </a-col>
           <a-col
-            :span="isCollapsed ? '24' : '21'"
+            :span="isCollapsed ? '24' : '20'"
             class="wea-left-right-layout-right"
           >
             <div
@@ -98,7 +111,9 @@
     UnorderedListOutlined,
     DownOutlined,
     CaretDownOutlined,
-    UserOutlined
+    UserOutlined,
+    ApartmentOutlined,
+    SearchOutlined
   } from "@ant-design/icons-vue";
   import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated  } from "vue";
   import Interface from "@/utils/Interface.js";
@@ -212,6 +227,7 @@
   // });
   
   let data = reactive({
+    leftTreeTop:'全部目录',
     isCollapsed: false,
     tableHeight: '',
     fieldNames:{
@@ -310,11 +326,14 @@
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
-  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields} = toRefs(data);
+  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields,leftTreeTop} = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
   let formSearchHeight = ref(null);
   const gridRef = ref(null);
+  const leftTreeTopChange= (e) => {
+    console.log(e)
+  }
   const onSearch = (e) => {
     gData.value = gDataAll.value.filter(item=>{
       return item.name.indexOf(data.searchVal) !== -1;
@@ -365,7 +384,7 @@
   }
   // 获取tabs
   const getTabs = () => {
-    proxy.$get(Interface.todoList.tabs,{
+    proxy.$get(Interface.ContentWrap.tabs,{
       a: 1
     }).then(res=>{
       console.log("tabs",res)
@@ -397,14 +416,14 @@
   }
   function handlePreview(id) {
     // router.push({
-    //     path:"/previewContent",
+    //     path:"/lightning/r/Content/view",
     //     query: {
     //       id: id,
     //       objectTypeCode:'100201'
     //     }
     // });
     let reUrl = router.resolve({
-        path:"/previewContent",
+        path:"/lightning/r/Content/view",
         query: {
           id: id,
           objectTypeCode:'100201'
@@ -414,13 +433,13 @@
   }
   function handleEdit(id,FolderId){
     // router.push({
-    //     path:"/informationEditor",
+    //     path:"/content/visualEditor",
     //     query: {
     //       id: id
     //     }
     // });
     let reUrl = router.resolve({
-            name: "InformationEditor",
+            name: "visualEditor",
             query: {
                 id: id,
                 objectTypeCode: 100201,
@@ -481,19 +500,19 @@ const cancelDelete = (e) => {
               var str = `
                 <div class="iconBox">
                   <div class="popup">
-                    <div class="option-item" onclick="handleDetail('${row.id}')">查看</div>
-                    <div class="option-item" onclick="handlePreview('${row.id}')">预览</div>  
+                    <div class="option-item" onclick="handlePreview('${row.id}')">查看详情</div>  
                     <div class="option-item" onclick="handleEdit('${row.id}','${row.FolderId.lookupValue.value}')">编辑</div>  
                     <div class="option-item" onclick="handleDelete('${row.id}')">删除</div>
                   </div>
-                  <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
+                  <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
               `
               return str;
             }
         },
         { field: 'Title', title: '标题', sortable: true,
           formatter: function formatter(value, row, index) {
-              return girdFormatterValue('Title',row);
+              let val=girdFormatterValue('Title',row);
+              return '<a style="text-decoration: none;color:#1677ff;" href="/#/lightning/r/Content/view?id='+row.id+'&objectTypeCode=100201" target="_blank">'+val+'</a>';
           } 
         },
         {
@@ -591,7 +610,7 @@ const cancelDelete = (e) => {
     }
   </script>
   <style lang="less" scoped>
-  .todoList {
+  .ContentWrap {
     width: 100%;
     height: 100%;
     background: #fff;
@@ -742,5 +761,75 @@ const cancelDelete = (e) => {
   .information-tree :deep .ant-tree-title{
         white-space: nowrap !important;
     }
+:deep .iconBox{
+  text-align: center;
+  .popup{
+    text-align: left;
+    top: 20px;
+  }
+  .moreaction{
+    padding: 0px 1px;
+    width: 18px;
+    border: 1px solid #dedede;
+    border-radius: 4px;
+    position: relative;
+    top: 1px;
+  }
+}
+.ContentWrap{
+  .headerBar .headerLeft .icon-circle-base{
+    background: rgb(223, 88, 58);
+  }
+  .alltype{
+    padding-left:0 !important;
+    min-width: 60px !important;
+  }
+  .wea-left-tree-select{
+    position: relative;
+    .ant-select{
+      width: 100%;
+      :deep .ant-select-selector{
+        border-radius: 0 !important;
+        border:0 !important;
+        border-bottom: 1px solid #dedede !important;
+        height: 46px;
+        line-height: 46px;
+        display: block;
+        padding-left: 35px;
+        border-color:#dedede !important;
+        box-shadow: none !important;
+        .ant-select-selection-item{
+          font-size: 13px;
+          color: #494949;
+        }
+      }
+    }
+    .wea-left-tree-select-icon{
+      color: #494949;
+      position: absolute;
+      left: 12px;
+      top: 13px;
+      z-index: 1;
+    }
+  }
+  .wea-left-tree-search{
+    margin-top: 3px;
+    position: relative;
+    .wea-left-tree-search-icon{
+      color: #bbb;
+      position: absolute;
+      right: 21px;
+      top: 1px;
+      z-index: 1;
+    }
+  }
+  .wea-left-tree-scroll{
+      height: calc(~'100% - 100px') !important;
+    }
+    :deep .ant-tabs .ant-tabs-tab{
+      padding: 12px 24px !important;
+      margin-right: 6px !important;
+    }
+}
   </style>
   

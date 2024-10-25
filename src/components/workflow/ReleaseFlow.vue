@@ -16,7 +16,7 @@
           <div class="modalCenter" :style="{ height: height + 'px!important' }">
             <a-form :model="formState" ref="formRef">
               <div class="section">
-                <div class="sectionTitle">请假信息</div>
+                <div class="sectionTitle">基本信息</div>
                 <div class="sectionRow">
                     <div class="sectionItem">
                         <a-form-item name="Name" label="标题" :rules="[{ required: true, message: '请输入标题' }]">
@@ -100,7 +100,7 @@
   };
   const data = reactive({
     title: "发布信息",
-    height: document.documentElement.clientHeight - 300,
+    height: document.documentElement.clientHeight - 360,
     treeData: []
   });
   const {
@@ -142,7 +142,7 @@
   };
   onMounted(() => {
     window.addEventListener("resize", (e) => {
-      data.height = document.documentElement.clientHeight - 300;
+      data.height = document.documentElement.clientHeight - 360;
     });
   });
   

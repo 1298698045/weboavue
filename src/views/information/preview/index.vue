@@ -85,7 +85,7 @@
           <div class="tabContainer" v-if="activeKey == 4">
             <Comment :id="id" />
           </div>
-          
+          <span class="wea-doc-detail-content-text-sub"><span>最后由 </span><span> jackliu </span><span> 编辑于2024-10-16 15:49:17 </span><span> 阅读 (0)</span></span>
         </div>
       </div>
       <InfoNotes
@@ -298,13 +298,13 @@
   };
   const handleEdit = () =>{
       // router.push({
-      //     path:"/informationEditor",
+      //     path:"/content/visualEditor",
       //     query: {
       //       id: id
       //     }
       // });
       let reUrl = router.resolve({
-              name: "InformationEditor",
+              name: "visualEditor",
               query: {
                   id: data.id,
                   objectTypeCode: data.objectTypeCode,
@@ -460,6 +460,13 @@
             .tableBox.active{
                 width: 100%;
             }
+        }
+        .wea-doc-detail-content-text-sub {
+            color: #999;
+            position: absolute;
+            bottom: 13px;
+            right: 40px;
+            font-size: 13px;
         }
     }
     .detail-footer{
@@ -653,8 +660,9 @@
     > .ant-collapse-header {
     border-radius: 0 !important;
   }
-  .panel {
+  :deep .panel {
     overflow: hidden;
+    height: 100%;
   }
   .files {
     width: 100%;
@@ -696,7 +704,7 @@
     }
   }
   .previewWrap .detail-scroll{
-    height: calc(~"100% - 70px");
+    height: calc(~"100% - 90px");
   }
   .previewWrap .detailContent{
       width: 100%;

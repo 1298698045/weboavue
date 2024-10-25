@@ -14,7 +14,7 @@
                             </div>
                             <div class="imgviewdialog-head-right">
                                     <div class="hover-iconbtn" @click="handleDownload(dialogImageitem)"><icon name="xiazai"/></div>
-                                    <div class="hover-iconbtn" @click="$emit('input',false)"><icon name="guanbi"/></div>                                    
+                                    <div class="hover-iconbtn" @click="$emit('cancel',false)"><icon name="guanbi"/></div>                                    
                             </div>
                         </div>
                         <div class="imgviewdialog-bottom" v-if="showimg">
@@ -245,5 +245,9 @@ export default {
 }
 .imgviewdialog-bottom>div{
     pointer-events: initial;
+}
+.hover-iconbtn{
+    height: 24px;
+    margin-right: 5px;
 }
 </style>

@@ -88,12 +88,12 @@
                         <span class="require">*</span>
                     </div>
                     <div class="form-value">
-                        <el-date-picker
+                        <a-date-picker
                         v-model="value2"
                         type="datetime"
                         value-format="yyyy:MM:dd HH:mm:ss"
                         placeholder="选择日期时间">
-                        </el-date-picker>
+                        </a-date-picker>
                     </div>
                 </div>
             </div>
@@ -288,9 +288,16 @@ padding-left: 30px;
 .tipsli{
     margin: 10px 0;
 }
+body .el-button.el-button--primary{
+    opacity: 0.8;
+    color: #666 !important;
+}
 </style>
 <style>
-.el-overlay-dialog1 .el-dialog__body{
+:deep .el-overlay-dialog1 .el-dialog__body{
     padding: 0 !important;
+}
+.tox.tox-tinymce-aux,:where(.css-dev-only-do-not-override-kqecok).ant-picker-dropdown{
+    z-index: 9999 !important;
 }
 </style>

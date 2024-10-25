@@ -108,7 +108,7 @@
                 message.success("保存成功！");
                 emit("cancel", false);
                 let url = router.resolve({
-                    name: "InformationEditor",
+                    name: "visualEditor",
                     query: {
                         id: 123,
                         objectTypeCode: 100201,

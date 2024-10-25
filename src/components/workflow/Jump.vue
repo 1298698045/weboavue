@@ -1,13 +1,13 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="550px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+        <a-modal v-model:open="props.isShow" width="800px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
                     跳转
                  </div>
             </template>
             <div class="modalContainer">
-                <div class="modalCenter">
+                <div class="modalCenter" :style="{ height: height + 'px!important' }">
                     <a-form
                         ref="formRef"
                         :label-col="labelCol"
@@ -21,19 +21,19 @@
                                     :value="row.StepID">{{row.Name}}</a-select-option>
                             </a-select>
                         </a-form-item>
-                        <a-form-item name="BusinessUnitId" label="办理人员：">
+                        <a-form-item label="办理人员：">
                             <div class="flex">
                                 <a-input placeholder="请输入搜索字符"></a-input>
                                 <a-button type="link" @click="handleAddPeople">添加人员</a-button>
                             </div>
                             <div class="peopleBox">
-                                <a-table :row-selection="rowSelection" size="small" :pagination="{hideOnSinglePage:true}" style="height: 100%;" :dataSource="dataSource" :columns="columns">
-                                    <template #bodyCell="{ column }">
+                                <a-table :row-selection="rowSelection" size="small" :pagination="pagination" style="height: 100%;" :dataSource="dataSource" :columns="columns">
+                                    <template #bodyCell="{ column,index }">
                                         <template v-if="column.key === 'operation'">
-                                            <span class="iconTop">
+                                            <span class="iconTop" @click="arrowup(index)">
                                                 <ArrowUpOutlined />
                                             </span>
-                                            <span class="iconTop">
+                                            <span class="iconTop" @click="arrowdown(index)">
                                                 <ArrowDownOutlined />
                                             </span>
                                         </template>
@@ -46,8 +46,7 @@
                         </a-form-item>
                     </a-form>
                 </div>
-                <radio-user :isShow="isRadioUser" v-if="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams"
-            :localId="localId"></radio-user>
+                <radio-user :isShow="isRadioUser" v-if="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams"></radio-user>
             </div>
             <template #footer>
                 <div>
@@ -73,8 +72,8 @@
         defineEmits,
         toRaw
     } from "vue";
-    import { PieChartOutlined } from "@ant-design/icons-vue";
-  import { message } from "ant-design-vue";
+    import { PieChartOutlined, ArrowUpOutlined, ArrowDownOutlined  } from "@ant-design/icons-vue";
+    import { message } from "ant-design-vue";
 
     import Interface from "@/utils/Interface.js";
     import RadioUser from "@/components/commonModal/RadioUser.vue";
@@ -97,12 +96,14 @@
         {
             title: "姓名",
             dataIndex: "userName",
-            align: "center"
+            align: "center",
+            width: 100,
         },
         {
             title: "部门",
             dataIndex: "BusinessUnitIdName",
-            align: "center"
+            align: "center",
+            width: 100,
         },
         {
             title: '操作',
@@ -119,9 +120,16 @@
     const data = reactive({
         nodes: [],
         isRadioUser: false,
-        selectedRowKeys: []
+        selectedRowKeys: [],
+        height: document.documentElement.clientHeight - 340,
+        pagination: {
+            pageIndex: 1,
+            pageSize: 5,
+            total: 0,
+            showTotal: (total) => `共 ${total} 条数据`, // 展示总共有几条数据
+        },
     })
-    const { nodes, isRadioUser, selectedRowKeys } = toRefs(data);
+    const { nodes, isRadioUser, selectedRowKeys,height,pagination } = toRefs(data);
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -146,6 +154,26 @@
         })
         data.isRadioUser = false;
     }
+    const arrowup=(index)=>{
+        if(index!=0){
+            let list=dataSource.value;
+            let a=list[index];
+            let b=list[index-1];
+            list[index-1]=a;
+            list[index]=b;
+            dataSource.value=list;
+        }
+    }
+    const arrowdown=(index)=>{
+        if(index!=dataSource.value.length-1){
+            let list=dataSource.value;
+            let a=list[index];
+            let b=list[index+1];
+            list[index+1]=a;
+            list[index]=b;
+            dataSource.value=list;
+        }
+    }
     const getProcessNodes = () => {
         proxy.$get(Interface.flow.processNodes,{
             ProcessId: props.paramsData.ProcessId,
@@ -156,6 +184,9 @@
     getProcessNodes();
     onMounted(()=>{
         // formState.ProcessName = props.paramsData.InstanceIdName;
+        window.addEventListener("resize", (e) => {
+            data.height = document.documentElement.clientHeight - 340;
+        });
     })
     defineExpose({isModal})
     const handleSubmit = () => {
@@ -240,7 +271,18 @@
             :where(.css-dev-only-do-not-override-kqecok).ant-form-item{
                 margin-bottom: 10px;
             }
+            :where(.css-dev-only-do-not-override-kqecok).ant-form-item .ant-form-item-control-input-content p{
+                width: auto;
+                font-size: 14px;
+                display: inline-block;
+                flex: unset;
+                padding: 0 !important;
+            }
         }
     }
 }
+.ant-modal div[aria-hidden="true"] {
+		display: none !important
+}
+
 </style>

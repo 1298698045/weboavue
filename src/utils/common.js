@@ -33,7 +33,7 @@ export const compareIgnoreCase = (str1, str2) => {
     console.log("str1", str1, str2)
     return str1.toLowerCase() === str2.toLowerCase();
 }
-export const girdFormatterValue = (key,row) => {
+export const girdFormatterValue = (key,row,nameField) => {
     let val = '';
     let typename = row[key] && row[key].__typeName;
     if(typename == 'StatusField'){
@@ -50,8 +50,19 @@ export const girdFormatterValue = (key,row) => {
         val = row[key] && row[key].date;
     } else if (typename == "TextField") {
         val = row[key] && row[key].textValue;
+    } else if (typename == "CheckboxField") {
+        if(row[key] && row[key].img){
+            let imglink=require('@/assets'+row[key].img);
+            val = '<img style="height:18px;width:24px;margin-left:7px;" src="'+imglink+'">';
+        }
+        else{
+            val = row[key] && row[key].selected;
+        }
     } else {
         val = row[key] && row[key].value;
+    }
+    if(nameField&&nameField==key&&row['viewUrl']){
+        val = '<a style="text-decoration: none;color:#1677ff;" href="/#'+row['viewUrl']+'" target="_blank">'+val+'</a>'
     }
     return val;
 }

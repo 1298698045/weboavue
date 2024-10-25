@@ -1,79 +1,153 @@
 <template>
-    <div class="wrappper">
+    <div class="wrappper reportFormWrap">
         <div class="headerBar">
             <div class="headerLeft">
-                <div class="icon-circle-base"></div>
+                <div class="icon-circle-base">
+                    <img :src="require('@/assets/img/rightMenu/youcemoren.png')" alt="">
+                </div>
                 <span class="headerTitle">会议报表</span>
             </div>
             <div class="headerRight">
-
+                <div class="panel-head-top-right">
+                    年份：&nbsp;&nbsp;<a-date-picker picker="year"  @change="changeYear" :format="yearFormat" v-model:value="year" />
+                </div>
             </div>
         </div>
         <div class="center">
-            <div class="panel">
-                <div class="panel-head">
-                    <div>
-                        请选择年份&nbsp;&nbsp;<a-date-picker picker="year"  @change="changeYear" :format="yearFormat" v-model:value="year" />
-                    </div>
-                </div>
-                <div class="panel-bd">
-                    <ul class="uls">
-                        <li class="countItem">
-                            <div class="countItemTitle">
-                                会议室预约次数
+            <!-- <div class="panel panel-top">
+                    <div class="panel-head">
+                        <div class="panel-head-top-left">
+                            <div class="tabWrap">
+                                <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
+                                    <a-tab-pane v-for="(item, index) in tabs" :key="index">
+                                        <template #tab>
+                                            <span>{{ item.label }}</span>
+                                        </template>
+                                    </a-tab-pane>
+                                </a-tabs>
                             </div>
-                            <p>总预约次数：{{countObj.ResTotalNum}}</p>
-                            <p>我的预约次数:{{countObj.MyResNum}}</p>
-                        </li>
-                        <li class="countItem">
-                            <div class="countItemTitle">
-                                会议室数量
-                            </div>
-                            <p>会议室数量：{{countObj.OrgNum}}</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="panel">
-                <div class="room">
-                    <div class="roomHead">
-                        <div class="roomTitle">会议室</div>
-                        <div class="roomCheck">
-                            <div class="roomCheckItem" :class="{'active':item.checkbox==true}" @click="handleSelectRoom(item)" v-for="(item,index) in rooms" :key="index">
-                                {{item.Name}}
-                            </div>
-                            <div class="roomCheckItem default" @click="clearRoomSelect">清除选择</div>
+                        </div>
+                        <div class="panel-head-top-right">
+                            选择年份：&nbsp;&nbsp;<a-date-picker picker="year"  @change="changeYear" :format="yearFormat" v-model:value="year" />
                         </div>
                     </div>
-                    <div class="roomBody">
-                        <div id="canvas" ref="chartMain" style="width: 100%; height: 400px"></div>
+                </div> -->
+            <div class="panel-all">
+                    <div class="panel panel-abstract">
+                        <div class="panel-bd">
+                            <ul class="uls">
+                                <li class="countItem">
+                                    <div class="statistics-left">
+                                        <PieChartOutlined style="color: #108def;" />
+                                    </div>      
+                                    <div class="statistics-right">
+                                        <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.ResTotalNum}}</div>      
+                                        <div class="statistics-name">总预约次数</div> 
+                                    </div> 
+                                    <!-- <div>
+                                        <div class="countItemTitle">
+                                        会议室预约次数
+                                        </div>
+                                        <p>总预约次数：{{countObj.ResTotalNum}}</p>
+                                        <p>我的预约次数：{{countObj.MyResNum}}</p>
+                                    </div> -->
+                                </li>
+                                <li class="countItem">
+                                    <div class="statistics-left">
+                                        <UserOutlined style="color: rgb(141, 193, 57);" />
+                                    </div>      
+                                    <div class="statistics-right">
+                                        <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.MyResNum}}</div>      
+                                        <div class="statistics-name">我的预约次数</div> 
+                                    </div> 
+                                </li>
+                                <li class="countItem">
+                                    <div class="statistics-left">
+                                        <FundProjectionScreenOutlined style="color: rgb(58, 200, 210);" />
+                                    </div>      
+                                    <div class="statistics-right">
+                                        <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.OrgNum}}</div>      
+                                        <div class="statistics-name">会议室数量</div> 
+                                    </div> 
+                                    <!-- <div>
+                                        <div class="countItemTitle">
+                                            会议室数量
+                                        </div>
+                                        <p>会议室数量：{{countObj.OrgNum}}</p>
+                                    </div> -->
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="panel">
-                <div class="panel-head">
-                    <div class="panel-title">会议室预约次数统计</div>
-                    <div class="panel-btn">
-                        <a-button :icon="h(UndoOutlined)"></a-button>
-                        <a-button class="ml10" :icon="h(UndoOutlined)"></a-button>
+                    <div class="panel">
+                        <div class="panel-head">
+                            <div class="panel-title">预约次数统计折线图：</div>
+                            <div class="panel-btn">
+                            </div>
+                        </div>
+                        <div class="room">
+                            <div class="roomHead">
+                                <div class="roomTitle">会议室：</div>
+                                <div class="roomCheck">
+                                    <div class="roomCheckItem" :class="{'active':item.checkbox==true}" @click="handleSelectRoom(item)" v-for="(item,index) in rooms" :key="index">
+                                        {{item.Name}}
+                                    </div>
+                                    <div class="roomCheckItem default" @click="clearRoomSelect">清除选择</div>
+                                </div>
+                            </div>
+                            <div class="roomBody">
+                                <div id="canvas" ref="chartMain" style="width: 100%; height: 400px"></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="panel-bd">
-                    <table class="roomTable">
-                        <thead>
-                            <tr>
-                                <th>会议室</th>
-                                <th v-for="(item,index) in xData" :key="index">{{item}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(item,index) in seriesData" :key="index">
-                                <td>{{item.name}}</td>
-                                <td v-for="(row,idx) in item.data" :key="idx">{{row}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="panel">
+                        <div class="panel-head">
+                            <div class="panel-title">预约次数统计列表：</div>
+                            <div class="panel-btn">
+                                <!-- <a-button :icon="h(UndoOutlined)"></a-button> -->
+                                <a-button class="ml10" :icon="h(UndoOutlined)"></a-button>
+                            </div>
+                        </div>
+                        <div class="panel-bd">
+                            <div class="tabWrap panel-bd-tabWrap">
+                                <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
+                                    <a-tab-pane v-for="(item, index) in tabs" :key="index">
+                                        <template #tab>
+                                            <span>{{ item.label }}</span>
+                                        </template>
+                                    </a-tab-pane>
+                                </a-tabs>
+                            </div>
+                            <table class="roomTable" v-if="activeKey==0">
+                                <thead>
+                                    <tr>
+                                        <th>会议室</th>
+                                        <th v-for="(item,index) in xData" :key="index">{{item}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) in seriesData" :key="index">
+                                        <td>{{item.name}}</td>
+                                        <td v-for="(row,idx) in item.data" :key="idx">{{row}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="roomTable" v-if="activeKey==1">
+                                <thead>
+                                    <tr>
+                                        <th>姓名</th>
+                                        <th v-for="(item,index) in xData" :key="index">{{item}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,index) in seriesData" :key="index">
+                                        <td>{{'管理员'}}</td>
+                                        <td v-for="(row,idx) in item.data" :key="idx">{{row}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -96,7 +170,7 @@
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
 
-    import { SearchOutlined, UndoOutlined } from "@ant-design/icons-vue";
+    import { SearchOutlined, UndoOutlined,InfoCircleOutlined,FundProjectionScreenOutlined,UserOutlined,PieChartOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     import * as echarts from "echarts";
@@ -112,9 +186,25 @@
         year: dayjs(new Date(), yearFormat),
         countObj: {},
         rooms: [],
-        selectRoom: []
+        selectRoom: [],
+        tabs: [
+            {
+            label: "会议室",
+            },
+            {
+            label: "人员",
+            },
+        ],
+        activeKey: 0,
     });
-    const { current, xData, lineData, seriesData, listData, year, countObj, rooms, selectRoom } = toRefs(data);
+    const { current, xData, lineData, seriesData, listData, year, countObj, rooms, selectRoom,tabs,activeKey } = toRefs(data);
+    const changeTabs = (e) => {
+        data.activeKey = e;
+        if(e==0){
+            getQuery();
+            getChartData();
+        }
+    };
     onMounted(() => {
        
     });
@@ -130,7 +220,12 @@
         console.log('data.selectRoom',data.selectRoom);
         let index = data.selectRoom.findIndex(row=>row==item.Id);
         if(index==-1){
-            item.checkbox = true;
+            if(item.checkbox==false){
+                item.checkbox = true;
+            }
+            else{
+                item.checkbox = false;
+            }
             data.selectRoom.push(item.Id);
         }else {
             item.checkbox = false;
@@ -149,7 +244,7 @@
         }).then(res=>{
             data.listData = res.data;
             data.rooms = data.listData.map(item=>{
-                item.checkbox = false;
+                item.checkbox = true;
                 return item;
             });
         })
@@ -196,7 +291,7 @@
         var option;
         var option = {
             title: {
-                text: '会议室预约次数统计'
+                text: ''
             },
             tooltip: {
                 trigger: 'axis'
@@ -232,13 +327,66 @@
     .wrappper {
         width: 100%;
         height: 100%;
-
+        .panel-all{
+            // background: #e8edf4;
+            // padding: 10px;
+            height: calc(~'100% - 0px');
+            background: #fff;
+            //padding: 10px;
+            overflow: auto;
+        }
+        .panel{
+            box-shadow: none !important;
+            // margin: 0;
+            // padding: 0 10px;
+            // padding-top: 16px;
+            padding-bottom: 5px;
+        }
+        .roomBody{
+            padding-top: 10px;
+            padding-right: 10px;
+        }
+        .roomCheckItem{
+            margin-top: 0 !important;
+        }
+        .countItemTitle{
+            font-size: 16px !important;
+        }
+        .panel-top{
+            padding: 5px 10px;
+            .panel-head{
+                margin-bottom: 0;
+                position: relative;
+            }
+            .panel-head-top-right{
+                display: flex;
+                width: 200px;
+                line-height: 30px;
+                position: absolute;
+                right: 5px;
+                top:2px;
+                .ant-picker{
+                    width: 120px;
+                }
+            }
+            .panel-head-top-left{
+                width: 100%;
+            }
+        }
+        .panel-abstract{
+            //padding: 0 !important;
+            //padding-top: 6px !important;
+            .countItem{
+                box-shadow: 0 1px 6px 0px #dedede;
+            }
+        }
         .center {
             height: calc(~"100% - 52px");
             background: #fff;
             padding: 10px;
-            overflow: auto;
-
+            //overflow: auto;
+            overflow: hidden;
+            padding-bottom: 20px;
             .panel {
                 box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 
@@ -298,12 +446,18 @@
                                     color: #fff;
                                     background-color: var(--backColor);
                                     border-color: var(--backColor);
+                                    color: #fff;
+                                    background-color: #409eff;
+                                    border-color: #409eff;
                                 }
 
                                 &.active {
                                     color: #fff;
                                     background-color: var(--backColor);
                                     border-color: var(--backColor);
+                                    background-color: #ecf5ff;
+                                    color: #409eff;
+                                    border-color: #b3d8ff;
                                 }
                             }
                         }
@@ -332,6 +486,99 @@
                     }
                 }
             }
+        }
+    }
+    .panel-bd{
+        .panel-bd-tabWrap{
+            margin-bottom: 15px;
+        }
+    }
+    
+    .headerBar{
+        position: relative;
+        background: transparent;
+        .headerLeft{
+            display: none;
+        }
+        .headerRight{
+            .panel-head-top-right{
+                    display: flex;
+                    width: 200px;
+                    line-height: 30px;
+                    position: absolute;
+                    right: 14px;
+                    top:7px;
+                    .ant-picker{
+                        width: 130px;
+                        //background: rgb(243, 245, 248);
+                        background: #fff;
+                        border: none;
+                    }
+                }
+        }
+    }
+    .wrappper .center{
+        background: transparent;
+        padding: 0px 10px 0 10px;
+    }
+    .wrappper .panel-all{
+        background: transparent;
+        .panel-abstract{
+            padding: 0;
+            background: transparent;
+            .countItem{
+                background: #fff;
+                padding: 15px 16px !important;
+                box-shadow: none !important;
+                border: none !important;
+                .statistics-left{
+                    float: left !important;
+                    position: relative;
+                    left: 4px;
+                    top: 4px;
+                    .anticon {
+                        font-size: 48px;
+                        position: relative;
+                        top: 6px;
+                        color: #108def;
+                    }
+                }
+                .statistics-right{
+                    float: right !important;
+                    width: calc(~'100% - 75px') !important;
+                    .statistics-name {
+                        font-size: 14px;
+                        position: relative;
+                        top: 8px;
+                        color: #aaa;
+                    }
+                    .statistics-count {
+                        font-weight: 700;
+                        font-size: 26px;
+                        color: #555;
+                        position: relative;
+                        top: 4px;
+                    }
+                }
+            }
+        }
+    }
+    .wrappper .panel{
+        padding-bottom: 15px;
+        padding-top: 15px;
+    }
+    .wrappper .center .panel .room .roomHead .roomTitle{
+        width: 80px;
+        background: transparent;
+    }
+    .reportFormWrap{
+        overflow: auto;
+        .panel-all{
+            overflow: hidden;
+            height: auto;
+        }
+        .center{
+            height: auto;
         }
     }
 </style>

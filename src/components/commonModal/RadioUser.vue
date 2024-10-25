@@ -16,7 +16,7 @@
                         <a-input placeholder="请输入关键字搜索"></a-input>
                     </div>
                 </div>
-                <div class="modalCenter">
+                <div class="modalCenter" :style="{ height: height + 'px!important' }">
                     <div class="tabContainer" v-if="currentTab==1">
                         <ul class="userBox">
                             <li class="userItem" v-for="(item,index) in sameDeptUserList" :key="index" @click="handleSelectRow(item.SystemUserId,item.FullName, item.BusinessUnitIdName)">
@@ -163,7 +163,8 @@
         pageNumber: 1,
         pageSize: 20,
         pageTotal: 0,
-        roleIdCurrent: ""
+        roleIdCurrent: "",
+        height: document.documentElement.clientHeight - 380,
     })
     const tabs = toRaw([
         {
@@ -193,7 +194,7 @@
     ])
     const { currentTab, deptTreeList, deptList, selectData, sameDeptUserList, 
         roleList, deptUserList, groupList, groupUserList, deptIdCurrent, groupIdCurrent, currentPage,
-         roleUserList, pageNumber, pageSize, pageTotal, roleIdCurrent } = toRefs(data);
+         roleUserList, pageNumber, pageSize, pageTotal, roleIdCurrent,height } = toRefs(data);
 
     const getSameDeptUser = () => {
         proxy.$get(Interface.user.mybusinessUser,{}).then(res=>{
@@ -388,7 +389,12 @@
                 getRoleUser();
                 break;
         }
-    } 
+    }
+    onMounted(() => {
+        window.addEventListener("resize", (e) => {
+            data.height = document.documentElement.clientHeight - 380;
+        });
+    }); 
 </script>
 <style lang="less" scoped>
     @import url('@/style/modal.less');

@@ -4,20 +4,19 @@
             <!-- {{showicon}} -->
             <div v-if="type=='group'">
                 <img v-if="checkeditem" :class="{'borderradius':borderradius}" 
-                :src="checkeditem.avatarValue.large||checkeditem.avatarValue.large
-                " alt="">
+                :src="require('@/assets/img/taskdetail'+(checkeditem.avatarValue.large||checkeditem.avatarValue.large))" alt="">
             </div>
             <div v-else-if="type=='groups'">
                 <img v-if="checkeditem" :class="{'borderradius':borderradius}" 
-                :src="'/static/img'+(checkeditem.iconUrl||'')" alt="">
+                :src="require('@/assets/img/taskdetail'+(checkeditem.iconUrl||''))" alt="">
             </div>
             <div v-else-if="objtypecode==8||objtypecode==30020">
                 <div v-if="checkeditem">
-                    <Userhead :url="(checkeditem.Icon!=''?checkeditem.Icon:false)" />
+                    <Userhead :url="(checkeditem.Icon!=''?require('@/assets/img/taskdetail'+checkeditem.Icon):false)" class="optionimg" />
                 </div>
             </div>
-            <img v-else-if="filterables" :class="{'borderradius':borderradius}"  :src="checkeditem&&checkeditem.Icon?checkeditem.Icon:''" alt="" />
-            <img v-else :class="{'borderradius':borderradius}"  :src="'/static/img'+(checkeditem&&checkeditem.iconUrl?checkeditem.iconUrl:'')" alt="" />
+            <img v-else-if="filterables" :class="{'borderradius':borderradius}"  :src="require('@/assets/img/taskdetail'+(checkeditem&&checkeditem.Icon?checkeditem.Icon:''))" alt="" />
+            <img v-else :class="{'borderradius':borderradius}"  :src="require('@/assets/img/taskdetail'+(checkeditem&&checkeditem.iconUrl?checkeditem.iconUrl:''))" alt="" />
         </div>
         <el-select
         :disabled="disabled"
@@ -26,7 +25,7 @@
           ref="select"
           :size="size"
           @blur="blur"
-          @input="change"
+          @change="change"
           :value="value"
           :placeholder="placeholder?placeholder:'请选择'"
           :multiple="multiple"
@@ -76,7 +75,7 @@
                     :label="item.name"
                     :value="item.id">
                     <div class="option">
-                        <img :class="{'borderradius':borderradius}" :src="'/static/img'+(item.iconUrl||'')" alt="">
+                        <img :class="{'borderradius':borderradius}" :src="require('@/assets/img/taskdetail'+(item.iconUrl||''))" alt="">
                         <div class="item-label" :title="item.name">{{item.name}}</div>
                     </div>
                 </el-option>
@@ -88,6 +87,7 @@
                 :key="item.ID+index"
                 :label="item.Name"
                 :value="item.ID"
+                :class="{'selected':value==item.ID}"
             >
             <div class="option" >
                 <Userhead v-if="objtypecode==8||objtypecode==30020" :url="item.Icon!=''?item.Icon:false" />
@@ -105,7 +105,7 @@
           ref="select"
           :size="size"
           @blur="blur"
-          @input="change"
+          @change="change"
           :value="value"
           :placeholder="(placeholder?placeholder:'请选择')"
           :multiple="multiple"
@@ -122,14 +122,14 @@
             </div>
             </el-option>
         </el-select>
-        <el-select
-          v-else
-          :disabled="disabled"
+        <el-select v-else :disabled="disabled"
           :popper-class="optionsize"
           ref="select"
+          filterable
           :size="size"
           @blur="blur"
-          @input="change"
+          @change="change"
+          v-model="value"
           :value="value"
           :placeholder="placeholder?placeholder:'请选择'"
           :multiple="multiple"
@@ -142,7 +142,7 @@
                 :value="item.id"
             >
             <div class="option">
-                <img :class="{'borderradius':borderradius}" :src="'/static/img'+(item.iconUrl||'')" alt="">
+                <img :class="{'borderradius':borderradius}" :src="require('@/assets/img/taskdetail'+(item.iconUrl||''))" alt="">
                 <div>{{item.name}}</div>
             </div>
             </el-option>
@@ -150,15 +150,19 @@
     </div>
 </template>
 <script>
-import Userhead from '@/components/schedule/detail/Userheadphoto.vue'
+import {getCurrentInstance} from "vue";
+import Userhead from '@/components/schedule/detail/Userheadphoto.vue';
 import { getToken } from '@/utils/auth'
+import { getprojectboardtask } from "@/utils/projectapi.js";
+import Interface from "@/utils/Interface.js";
 export default {
     data(){
         return {
             search:{},
             defaultsearch:{},
             checkedid:'',
-            userid:''
+            userid:'',
+            proxy:null
         }
     },
     props:['value','name','objtypecode','defaultdata',
@@ -183,7 +187,7 @@ export default {
                 if(this.filterables){
                     return this.search[this.name].find((item)=>{return (item.id||item.ID)==this.checkedid})
                 }else{
-                    return this.selectoptions.find((item)=>{return (item.id||item.Id||item.value)==this.checkedid})
+                    return this.selectoptions.find((item)=>{return (item.id*1==this.checkedid*1)})
                 }
             }
         }
@@ -208,7 +212,7 @@ export default {
                     })
                 }else {
                     if(this.checkeditem){
-                        this.$emit('change',val,this.checkeditem.Name||this.checkeditem.name||'',this.checkeditem.Icon||this.checkeditem.iconUrl||'')
+                        this.$emit('change',this.name,val,this.checkeditem.Name||this.checkeditem.name||'',this.checkeditem.Icon||this.checkeditem.iconUrl||'')
                     }
                 }
             }
@@ -217,6 +221,77 @@ export default {
             setTimeout(() => {
                 this.$emit('blur')
             },200);
+        },
+        uniqu(array, name){
+            var arr = []
+            for (var j = 0; j < array.length; j++) {
+                if (JSON.stringify(arr).indexOf(array[j][name]) == -1) {
+                    arr.push(array[j])
+                }
+            }
+            return arr
+        },
+        getlookup(objtypecode,name){
+            this.searchlookup('', objtypecode, name);
+        },
+        searchlookup(search, Lktp, fieldApiName){
+            var that=this;
+            let obj = {
+            actions:[{
+                    id: "6129;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        objectApiName: 'ActivityPointer',
+                        fieldApiName: fieldApiName,
+                        pageParam: 1,
+                        pageSize: 25,
+                        q: search,
+                        searchType: "Recent",
+                        targetApiName: 'SystemUser',
+                        body: {
+                            sourceRecord: {
+                            apiName: 'ActivityPointer',
+                                fields: {
+                                    Id: null,
+                                    RecordTypeId: ""
+                                }
+                            }
+                        }
+                    }
+                }]
+            }
+            if(Lktp=='8'){
+                obj.actions[0].params.targetApiName='SystemUser';
+            }
+            if(Lktp=='30020'){
+                obj.actions[0].params.targetApiName='HREmployee';
+            }
+            let d = {
+                message: JSON.stringify(obj)
+            }
+            this.proxy.$post(Interface.lookup,d).then(res=>{
+                let list = res.actions[0].returnValue.lookupResults.records;
+                let arr = [];
+                list.forEach(item=>{
+                    arr.push({
+                        ID: item.fields.Id.value=='jackliu'?'2EC00CF2-A484-4136-8FEF-E2A2719C5ED6':item.fields.Id.value,
+                        Name: item.fields.Name.value,
+                        Icon:''
+                    })
+                });
+                that.search[fieldApiName] = that.search[fieldApiName].concat(arr);
+                that.search[fieldApiName] = that.uniqu(that.search[fieldApiName],'ID');
+                //console.log(that.search[fieldApiName],that.checkedid,that.userid)
+            })
+            // proxy.$get(Interface.uilook, {
+            //         Lktp: Lktp,
+            //         Lksrch: search,
+            //     })
+            //     .then((res) => {
+            //         let listData = res.listData;
+            //         data.OwningUserList = listData;
+            //     });
         }
     },
     watch:{
@@ -225,10 +300,20 @@ export default {
         }
     },
     created(){
-        this.userid=getToken()
+        const { proxy } = getCurrentInstance();
+        this.proxy=proxy;
+        // this.userid=getToken()
         // console.log(this.selectoptions)
         // console.log(this.value,'this.value')
         // console.log(this.name)
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            this.userid=userInfo.userId?(userInfo.userId).toUpperCase():'';
+            if(this.userid=='JACKLIU'){
+                this.userid='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+            }
+        }
         this.checkedid = this.value
         if(this.type=='group'){
             this['search'][this.name]={
@@ -323,16 +408,23 @@ export default {
     .detail-left-list{
         cursor:pointer;
     }
-    .el-select-dropdown__item{
+    :deep .el-select-dropdown__item{
         color:#172B4D !important;
         display:flex !important;
         align-items: center !important;
     }
-    .el-select-dropdown__item.selected{
-        color:#172B4D;
-        font-weight: normal;
+    .el-select-dropdown__item:hover,.el-select-dropdown__item.selected,.el-select-dropdown__item.hover{
+        color:#606266;
+        font-weight: normal !important;
+        background-color: #ecf5ff !important;
+        border-left: 2px solid #0052cc !important;
+        padding-left: 18px !important;
     }
     .tome{
         color:#C1C7D0;
+    }
+    .optionimg{
+        position: relative !important;
+        top: -2px !important;
     }
 </style>

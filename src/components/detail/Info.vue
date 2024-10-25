@@ -6,11 +6,11 @@
                     详细信息
                 </div>
                 <div class="panel-btn">
-                    <a-button type="default">催办</a-button>
+                    <a-button type="default" @click="handleUrging">催办</a-button>
                 </div>
             </div>
             <div class="panel-bd">
-                
+                <DetailInfo class="DetailInfo" :id="id" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
             </div>
         </div>
         <div class="panel">
@@ -34,9 +34,14 @@
     </div>
 </template>
 <script setup>
-    import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance } from "vue";
+    import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance,defineEmits } from "vue";
     import Interface from "@/utils/Interface.js";
     import Dtable from "@/components/Dtable.vue";
+    import DetailInfo from "@/components/detail/DetailInfo.vue";
+    import { useRouter, useRoute } from "vue-router";
+    import { message } from "ant-design-vue";
+    const route = useRoute();
+    const router = useRouter();
     const { proxy } = getCurrentInstance();
     const columns = ref([
         {
@@ -94,12 +99,17 @@
     ]);
     const gridRef = ref(null);
     const data = reactive({
-        list: []
+        list: [],
+        id: route.query.id,
+        objectTypeCode:'122',
+        sObjectName:'WFProcessInstance',
     })
-    const { list } = toRefs(data);
+    const { list,id,objectTypeCode,sObjectName } = toRefs(data);
     // const columnList = toRaw(columns);
-
-
+    const emit = defineEmits(['handleUrging']);
+    const handleUrging=()=>{
+        emit("handleUrging");
+    }
     const getList = async () => {
         await proxy.$get(Interface.rulelogList,{
             processInstanceId: "9fd5ec7f-86c8-44e2-b7ee-aa73f7730c2c",

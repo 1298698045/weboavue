@@ -1,12 +1,12 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="550px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+        <a-modal v-model:open="props.isShow" width="600px" :style="setTop" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
                     催办提醒
                  </div>
             </template>
-            <div class="modalContainer">
+            <div class="modalContainer" ref="modelContentRef">
                 <div class="modalCenter">
                     <a-form
                         ref="formRef"
@@ -46,7 +46,8 @@
         toRefs,
         getCurrentInstance,
         defineExpose,
-        defineEmits
+        defineEmits,
+        computed
     } from "vue";
     import { PieChartOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
@@ -64,6 +65,12 @@
     const handleCancel = () => {
         emit("update-status",false);
     }
+    const data = reactive({
+        top:0,
+    });
+    const {
+        top
+    } = toRefs(data);
     const formState = reactive({
         ProcessName: "",
         BusinessUnitId:"",
@@ -73,9 +80,15 @@
         BusinessUnitList: [],
         noticeMethod: []
     })
+    const modelContentRef = ref(null);
     onMounted(()=>{
         formState.ProcessName = props.paramsData.InstanceIdName;
+        let h = modelContentRef.value.clientHeight;
+        data.top = (h + 180) / 2 + 'px';
     })
+    const setTop = computed(() => ({
+        top: `calc(50% - ${data.top})`
+    }));
     defineExpose({isModal})
 </script>
 <style lang="less">

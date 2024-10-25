@@ -1,21 +1,21 @@
 <template>
     <div>
-        <div class="section-title">
-            <span>子任务</span>
-            <div class="edit">
-            <div class="hover-iconbtn" @click="newrelated">
-                <a-tooltip  title="添加" effect="dark"  placement="bottom">
-                    <icon  name="add" />
-                </a-tooltip>
-            </div>
-            </div>
+            <div class="section-title">
+                <span>子任务</span>
+                <div class="edit">
+                    <div class="hover-iconbtn" @click="newrelated">
+                        <a-tooltip  title="添加" effect="dark"  placement="bottom">
+                            <icon  name="add" />
+                        </a-tooltip>
+                    </div>
+                </div>
             </div>
             <div class="progress" v-if="relatedlist.length>0">
                 <el-progress :stroke-width="10" :percentage="percentage?Number(percentage):0" :format="format"></el-progress>
             </div>
             <div class="section-body" >
                 <div class="detail-related-list" v-if="relatedlist.length>0">
-                    <draggable
+                    <VueDraggableNext
                     class="contentlist"
                     v-model="relatedlistmove"
                     animation="300"
@@ -28,15 +28,15 @@
                     <div class="detail-related-item" v-for="(item,index) in relatedlistmove" :key="item.id">
                         <div class="relateditem-left">
                             <div class="relateditem-icon">
-                                <img :src='"/static/img"+item.fields.issuetype.iconUrl' alt="">
+                                <img :src="require('@/assets/img/taskdetail'+item.fields.issuetype.iconUrl)" alt="">
                             </div>
                             <div class="relateditem-name">
-                                <span class="keytext" @click="opendetail(item.id||'')">{{item.key||''}}</span>
+                                <span class="keytext" @click="opendetail(item.id,index)">{{item.key||'key_'+(item.DisplayOrder||index)}}</span>
                             </div>
                             <div class="relateditem-title">
                                 <div v-show="!item.edit">
-                                    <span v-html="item.fields.summary"></span>
-                                    <i class="el-icon-edit"  @click="openedit(index,item)"></i>
+                                    <span v-html="item.fields.summary" @click="openedit(index,item)"></span>
+                                    <EditOutlined title="编辑" class="relateditem-icon-edit"  @click="openedit(index,item)" />
                                 </div>
                                 <div v-show="item.edit">
                                     <input
@@ -53,17 +53,18 @@
                         <div class="relateditem-right">
                             <div class="relateditem-priorityCode" @click="item['editPriorityCode']=true">
                                 <div v-if="!item.editPriorityCode" class="relateditem-icon">
-                                    <img :src='"/static/img"+item.fields.priority.iconUrl' alt="">
+                                    <img :src="require('@/assets/img/taskdetail'+item.fields.priority.iconUrl)" alt="">
                                 </div>
                                 <div v-else>
                                     <researchelselect 
                                     :focus="true"
                                     @blur="item.editPriorityCode = false"
-                                    size="mini"
-                                    @change="edited(item)"
+                                    :size="'mini'"
+                                    @change="(name,id,icon)=>PriorityCodeChange(item,id,name,icon)"
                                     :selectoptions="priorities.nodes"
                                     v-model="item.fields.priority.id"
-                                    name="PriorityCode" />
+                                    :value="item.fields.priority.id"
+                                    :name="'PriorityCode'" />
                                 </div>
                             </div>
                             <div class="relateditem-user" @click="item['edituser']=true">
@@ -78,25 +79,27 @@
                                     :borderradius="true"
                                     @blur="item.edituser = false"
                                     :defaultdata="[{ID:item.fields.assignee.accountId,Name:item.fields.assignee.displayName,Icon:''}]"
-                                    @change="(id,name,icon)=>OwningUserchange(item,id,name,icon)"
+                                    @change="(name,id,icon)=>OwningUserChange(item,id,name,icon)"
                                     v-model="item.fields.assignee.accountId"
-                                    name="OwningUser"
-                                    size="mini"
-                                    optionsize="medium"
-                                    objtypecode="8" />
+                                    :value="item.fields.assignee.accountId"
+                                    :name="'OwningUser'"
+                                    :size="'mini'"
+                                    :optionsize="'medium'"
+                                    :objtypecode="'8'" />
                                 </div>
                             </div>
-                            <div class="relateditem-status" @click="item['editstatus']=true">
+                            <div class="relateditem-status" @click="openeditstatus(item)">
                                 <div v-if="!item.editstatus">
-                                    <el-tag type="info" v-if="item.fields.status.statusCategory.id == 1" size="mini">{{item.fields.status.name||''}}<i class="el-icon-arrow-down el-icon--right"></i></el-tag>
-                                    <el-tag size="small" v-if="item.fields.status.statusCategory.id == 2">{{item.fields.status.name||''}}<i class="el-icon-arrow-down el-icon--right"></i></el-tag>
-                                    <el-tag type="success" v-if="item.fields.status.statusCategory.id == 3" size="mini">{{item.fields.status.name||''}}<i class="el-icon-arrow-down el-icon--right"></i></el-tag>
+                                    <el-tag type="info" v-if="item.fields.status.statusCategory.id*1 == 1" size="mini">{{item.fields.status.name||''}}<i class="el-icon-arrow-down el-icon--right"></i></el-tag>
+                                    <el-tag size="small" v-if="item.fields.status.statusCategory.id*1 == 2">{{item.fields.status.name||''}}<i class="el-icon-arrow-down el-icon--right"></i></el-tag>
+                                    <el-tag type="success" v-if="item.fields.status.statusCategory.id*1 == 3" size="mini">{{item.fields.status.name||''}}<i class="el-icon-arrow-down el-icon--right"></i></el-tag>
                                 </div>
                                 <div v-else>
                                     <el-select
+                                        ref="relateditemstatus"
                                         filterable
                                         v-model="item.fields.status.id"
-                                        @blur="closeedited(item)"
+                                        @blur="closeeditstatus(item)"
                                         @change="edited(item)"
                                         placeholder="请选择"
                                         x-placement="bottom-start"
@@ -107,14 +110,15 @@
                                         <el-tag v-if="item.fields.status.statusCategory.id == 3" type="success" size="mini">{{item.fields.status.name||''}}</el-tag>
                                         </template> -->
                                         <el-option
-                                        v-for="options in statuss.nodes"
-                                        :key="options.statusId"
+                                        v-for="(options,index) in statuss.nodes"
+                                        :key="index"
                                         :label="options.name"
                                         :value="options.statusId"
+                                        :class="{'selected':item.fields.status.id==options.statusId}"
                                         >
-                                        <el-tag v-if="options.statusCategoryId == 1" type="info" size="mini">{{options.name}}</el-tag>
-                                        <el-tag v-if="options.statusCategoryId == 2" size="mini">{{options.name}}</el-tag>
-                                        <el-tag v-if="options.statusCategoryId == 3" type="success" size="mini">{{options.name}}</el-tag>
+                                        <el-tag v-if="options.statusCategoryId*1 == 1" type="info" size="mini">{{options.name}}</el-tag>
+                                        <el-tag v-if="options.statusCategoryId*1 == 2" size="mini">{{options.name}}</el-tag>
+                                        <el-tag v-if="options.statusCategoryId*1 == 3" type="success" size="mini">{{options.name}}</el-tag>
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -122,12 +126,12 @@
                             </div>
                         </div>
                     </div>
-                    </draggable>
+                    </VueDraggableNext>
 
                 </div>
                 <div class="newtask" v-show="shownewtask">
                     <div class="searchinput">
-                    <input  @keydown="savetask" ref="newtaskcontainer" class="el-input__inner" v-model="newtasksubject" placeholder="需要做什么"/>
+                    <input ref="newtaskcontainer" class="el-input__inner" v-model="newtasksubject" placeholder="需要做什么"/>
 
                     </div>
 
@@ -137,34 +141,48 @@
                     </div>
                 </div>
             </div>
-            <el-dialog title="子任务详情" v-model="subdetaildialog" width="80%" top="5vh" append-to-body>
-                <subitemdetail :itemid="subdetailtaskid" @close="subdetaildialog=false" ></subitemdetail>
-            </el-dialog>
+            <!-- <el-dialog title="子任务详情" v-model="subdetaildialog" width="80%" top="5vh" append-to-body>
+                
+            </el-dialog> -->
+            <ScheduleDetailModal ref="ScheduleDetailModala" :isShow="subdetaildialog" v-if="subdetaildialog" :id="subdetailtaskid" @cancel="subdetaildialog=false" @handleDelete="handleDelete" />
     </div>
 </template>
 <script>
+import { getCurrentInstance } from "vue";
+import { EditOutlined } from "@ant-design/icons-vue";
 import commonapi from '@/utils/commonapi.js'
 import { ListViewRankAfter, ListViewRankBefore } from '@/utils/projectapi.js'
 import researchelselect from '@/components/schedule/detail/dropbtn/researchelselect.vue'
 import Userhead from '@/components/schedule/detail/Userheadphoto.vue'
 import icon from '@/components/schedule/detail/icon.vue'
-import draggable from "vuedraggable"
-
+import { VueDraggableNext } from 'vue-draggable-next'
+import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal3.vue";
+import Interface from "@/utils/Interface.js";
+import { girdFormatterValue } from "@/utils/common.js";
+import { message } from "ant-design-vue";
 export default {
     data(){
         return{
             subdetaildialog:false,
             subdetailtaskid:'',
+            subdetaildialog1:true,
             clicktime:false,
             newtasksubject:'',
             shownewtask:false,
-            relatedlistmove:[]
+            relatedlistmove:[],
+            relatedlist:[],
+            proxy:null,
+            StateCodeList:[{"statusId":"1","name":"打开","statusCategoryId":2,"iconUrl":null},{"statusId":"3","name":"进行中","statusCategoryId":2,"iconUrl":null},{"statusId":"4","name":"已重新打开","statusCategoryId":1,"iconUrl":null},{"statusId":"5","name":"已解决","statusCategoryId":3,"iconUrl":null},{"statusId":"6","name":"已关闭","statusCategoryId":3,"iconUrl":null},{"statusId":"10006","name":"Pending","statusCategoryId":3,"iconUrl":null},{"statusId":"10007","name":"已取消","statusCategoryId":3,"iconUrl":null},{"statusId":"10025","name":"待办","statusCategoryId":1,"iconUrl":null},{"statusId":"10011","name":"已完成","statusCategoryId":3,"iconUrl":null},{"statusId":"10050","name":"正在进行","statusCategoryId":2,"iconUrl":null}],
+            PriorityCodeList:[{"iconUrl":"/images/icons/priorities/highest.svg","id":"5","name":"最高","__typename":null},{"iconUrl":"/images/icons/priorities/high.svg","id":"4","name":"高","__typename":null},{"iconUrl":"/images/icons/priorities/medium.svg","id":"3","name":"中等","__typename":null},{"iconUrl":"/images/icons/priorities/low.svg","id":"2","name":"低","__typename":null},{"iconUrl":"/images/icons/priorities/lowest.svg","id":"1","name":"最低","__typename":null}],
         }
     },
-    props:['itemid','relatedlist','priorities','statuss'],
+    props:['itemid','priorities','statuss'],
     watch:{
-        relatedlist(){
-            this.relatedlistmove = this.relatedlist||[]
+        itemid(){
+            // this.relatedlistmove = this.relatedlist||[]
+            // this.StateCodeList=this.statuss.nodes;
+            // this.PriorityCodeList=this.priorities.nodes;
+            // this.getdata()
         }
     },
     computed:{
@@ -184,26 +202,65 @@ export default {
         commonapi,
         researchelselect,
         icon,
-        subitemdetail: () => import('@/components/schedule/detail/detail.vue'),
-        draggable
+        ScheduleDetailModal,
+        EditOutlined,
+        VueDraggableNext
     },
     created(){
-        this.relatedlistmove = this.relatedlist
-        // this.getdata()
+        const { proxy } = getCurrentInstance();
+        this.proxy=proxy;
+        this.getdata();
     },
     methods:{
-        opendetail(id){
-            this.subdetaildialog=true
+        opendetail(id,index){
+            //console.log(id,1111)
+            var that=this;
             this.subdetailtaskid=id
+            this.$nextTick(()=>{
+                that.subdetaildialog=true
+            })
+            //console.log(this.subdetaildialog)
         },
         onStart(){},
         onEnd(e){
             const rowid = e.item._underlying_vm_.id
             if(e.newIndex==0){
-                ListViewRankBefore({relativeIssueId:this.relatedlistmove[1].id,issueId:rowid})
+                //ListViewRankBefore({relativeIssueId:this.relatedlistmove[1].id,issueId:rowid})
+                this.DisplayOrderChange(rowid,0);
+                this.DisplayOrderChange(this.relatedlistmove[1].id,1);
             }else{
-                ListViewRankAfter({relativeIssueId:this.relatedlistmove[e.newIndex-1].id,issueId:rowid})
+                //ListViewRankAfter({relativeIssueId:this.relatedlistmove[e.newIndex-1].id,issueId:rowid})
+                this.DisplayOrderChange(rowid,e.newIndex);
+                this.DisplayOrderChange(this.relatedlistmove[e.newIndex-1].id,e.newIndex-1);
             }
+        },
+        DisplayOrderChange(id,num){
+            var that=this;
+            let url = Interface.edit;
+            let d = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId: id,
+                        recordInput:{
+                            allowSaveOnDuplicate: false,
+                            apiName: 'ActivityPointer',
+                            objTypeCode: '4200',
+                            fields: {
+                                DisplayOrder:num
+                            }
+                        }
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            this.proxy.$post(url, obj).then((res) => {
+                that.$message.success('移动成功')
+            });
         },
         reload(){
             // this.getdata()
@@ -212,18 +269,30 @@ export default {
         format(percentage) {
             return `${percentage}%已完成` ;
         },
-        OwningUserchange(item,id,name,icon){
-            item.edituser = false
+        PriorityCodeChange(item,id,name,icon){
+            item.fields.priority.id=id;
+            item.edituser = false;
             this.edited(item)
         },
-        closeedited(item){
+        OwningUserChange(item,id,name,icon){
+            item.fields.assignee.accountId=id;
+            item.edituser = false;
+            this.edited(item)
+        },
+        closeeditstatus(item){
             var that=item;
             setTimeout(function(){
                 that.editstatus=false
             },100)
         },
+        openeditstatus(item){
+            item.editstatus=true;
+            this.$nextTick(()=>{
+                this.$refs.relateditemstatus[0].focus()
+            })
+        },
         openedit(index,item){
-            this[item]['edit']=true;
+            item['edit']=true;
             this.$nextTick(()=>{
                 this.$refs.relateditem[index].focus()
             })
@@ -243,21 +312,55 @@ export default {
         },
         edited(item){
             //console.log(item)
+            var that=this;
             if(item.fields.summary!=''){
-                const fields = {
-                    ParentActivityId:{Id:this.itemid},
-                    Subject:item.fields.summary,
-                    RegardingObjectId:{Id:this.$route.query.id},
-                    ActivityTypeCode:4212,
-                    StateCode:item.fields.status.id,
-                    PriorityCode:item.fields.priority.id,
-                    OwningUser:{Id:item.fields.assignee.accountId},
-                    IssueType:10010
+                // const fields = {
+                //     ParentActivityId:{Id:this.itemid},
+                //     Subject:item.fields.summary,
+                //     RegardingObjectId:{Id:this.$route.query.id},
+                //     ActivityTypeCode:4212,
+                //     StateCode:item.fields.status.id,
+                //     PriorityCode:item.fields.priority.id,
+                //     OwningUser:{Id:item.fields.assignee.accountId},
+                //     IssueType:10010
+                // }
+                // commonapi.entitysaverecord(fields,4200,item.id).then(()=>{
+                //     this.$message.success('保存成功')
+                //     this.reload()
+                // })
+                let url = Interface.edit;
+                let d = {
+                    actions:[{
+                        id: "2919;a",
+                        descriptor: "",
+                        callingDescriptor: "UNKNOWN",
+                        params: {
+                            recordId: item.id,
+                            recordInput:{
+                                allowSaveOnDuplicate: false,
+                                apiName: 'ActivityPointer',
+                                objTypeCode: '4200',
+                                fields: {
+                                    Subject:item.fields.summary,
+                                    StateCode:item.fields.status.id,
+                                    PriorityCode:item.fields.priority.id,
+                                    OwningUser:item.fields.assignee.accountId,
+                                }
+                            }
+                        }
+                    }]
+                };
+                let obj = {
+                    message: JSON.stringify(d)
                 }
-                commonapi.entitysaverecord(fields,4200,item.id).then(()=>{
-                    this.$message.success('保存成功')
-                    this.reload()
-                })
+                this.proxy.$post(url, obj).then((res) => {
+                    that.$message.success('保存成功')
+                    that.reload()
+                    //that.newrelated()
+                    that.getdata()
+                });
+            }else{
+                this.$message.error('标题不能为空')
             }
         },
         newrelated(){
@@ -267,25 +370,175 @@ export default {
             })
         },
         getdata(){
-            const filterQuery = 'ParentActivityId\teq\t'+this.itemid
-            commonapi.entitygridsearch('00U',filterQuery).then((res)=>{
-                this.relatedlist = res.rows
+            var that=this;
+            var filterQuery = 'ParentActivityId\teq\t'+this.itemid
+            this.proxy.$post(Interface.list2, {
+                filterId:'',
+                objectTypeCode:'4200',
+                entityName:'ActivityPointer',
+                filterQuery:filterQuery,
+                search:'',
+                page: 1,
+                rows: 100,
+                sort:'DisplayOrder',
+                order:'asc',
+                displayColumns:'IssueKey,Subject,StateCode,PriorityCode,IssueType,OwningUser,DisplayOrder'
+            }).then(res => {
+                var list = [];
+                for (var i = 0; i < res.nodes.length; i++) {
+                    var item = res.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'&&cell!='OwningUser'&&cell!='StateCode'){
+                            item[cell]=girdFormatterValue(cell,item);
+                        }
+                    }
+                    var item0={
+                        "id":item.id||"",
+                        "issueid":null,
+                        "key":item.IssueKey||"",
+                        "fields":{
+                            "description":null,
+                            "summary":item.Subject||"暂无标题",
+                            "status":{
+                                "iconUrl":null,
+                                "self":null,
+                                "statusCategory":{
+                                    "self":null,
+                                    "id":"1",
+                                    "name":null,
+                                    "colorName":null
+                                },
+                                "description":null,
+                                "id":item.StateCode.statusId||'10025',
+                                "name":"待办"
+                            },
+                            "priority":{
+                                "iconUrl":"/images/icons/priorities/medium.svg",
+                                "self":null,
+                                "description":null,
+                                "id":(item.PriorityCode||"3"),
+                                "name":"中等"
+                            },
+                            "issuetype":{
+                                "avatarId":0,
+                                "description":null,
+                                "id":(item.IssueType||"10010"),
+                                "name":"子任务",
+                                "iconUrl":"/images/icons/issuetypes/subtask.png",
+                                "hierarchyLevel":0,
+                                "subtask":true
+                            },
+                            "assignee":{
+                                "accountId":item.OwningUser.userValue.Value||(item.OwningUser.lookupValue?item.OwningUser.lookupValue.Value:'')||'',
+                                "accountType":null,
+                                "timeZone":null,
+                                "active":false,
+                                "displayName":item.OwningUser.userValue.DisplayName||(item.OwningUser.lookupValue?item.OwningUser.lookupValue.DisplayName:'')||'',
+                                "emailAddress":null,
+                                "self":null,
+                                "description":null,
+                                "id":null,
+                                "name":null
+                            },
+                            "reporter":{
+                                "accountId":item.OwningUser.userValue.Value||(item.OwningUser.lookupValue?item.OwningUser.lookupValue.Value:'')||'',
+                                "accountType":null,
+                                "timeZone":null,
+                                "active":false,
+                                "displayName":item.OwningUser.userValue.DisplayName||(item.OwningUser.lookupValue?item.OwningUser.lookupValue.DisplayName:'')||'',
+                                "emailAddress":null,
+                                "self":null,
+                                "description":null,
+                                "id":null,
+                                "name":null
+                            }
+                        }
+                    }
+                    //console.log(that.StateCodeList,that.PriorityCodeList,8888)
+                    that.StateCodeList.forEach(item =>{
+                        if(item0.fields.status.id==item.statusId){
+                            item0.fields.status.statusCategory.id=item.statusCategoryId
+                            item0.fields.status.name=item.name
+                            that.$forceUpdate();
+                        }
+                    })
+                    that.PriorityCodeList.forEach(item =>{
+                        if(item0.fields.priority.id==item.id){
+                            item0.fields.priority.iconUrl=item.iconUrl
+                        }
+                    })
+                    list.push(item0)
+                }
+                
+                that.relatedlist=list;
+                that.relatedlistmove = that.relatedlist
+                
             })
+
+        },
+        handleDelete(){
+            this.$emit('handleDelete', {Id:this.subdetailtaskid})
         },
         savetask(){
+            var that=this;
             if(this.newtasksubject!=''){
-                commonapi.entitysaverecord({
-                    Subject:this.newtasksubject,
-                    RegardingObjectId:{Id:this.$route.query.id},
-                    ActivityTypeCode:4212,
-                    ParentActivityId:{Id:this.itemid},
-                    IssueType:10010
-                },4200).then(()=>{
-                    this.newtasksubject = ''
-                    this.$message.success('保存成功')
-                    this.reload()
-                    this.newrelated()
-                })
+                // commonapi.entitysaverecord({
+                //     Subject:this.newtasksubject,
+                //     RegardingObjectId:{Id:this.$route.query.id},
+                //     ActivityTypeCode:4212,
+                //     ParentActivityId:{Id:this.itemid},
+                //     IssueType:10010
+                // },4200).then(()=>{
+                //     this.newtasksubject = ''
+                //     this.$message.success('保存成功')
+                //     this.reload()
+                //     this.newrelated()
+                // })
+                let userInfo=window.localStorage.getItem('userInfo');
+                let userId='';
+                if(userInfo){
+                    userInfo=JSON.parse(userInfo);
+                    if(userInfo.userId=='jackliu'){
+                        userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+                    }
+                }
+                let url = Interface.create;
+                let d = {
+                    actions:[{
+                        id: "2919;a",
+                        descriptor: "",
+                        callingDescriptor: "UNKNOWN",
+                        params: {
+                            recordInput:{
+                                allowSaveOnDuplicate: false,
+                                apiName: 'ActivityPointer',
+                                objTypeCode: '4200',
+                                fields: {
+                                    Subject:that.newtasksubject,
+                                    //RegardingObjectId:{Id:this.$route.query.id},
+                                    ActivityTypeCode:4212,
+                                    ParentActivityId:that.itemid,
+                                    OwningUser:userId,
+                                    DisplayOrder:that.relatedlistmove.length+1,
+                                    IssueType:10010
+                                }
+                            }
+                        }
+                    }]
+                };
+                let obj = {
+                    message: JSON.stringify(d)
+                }
+                this.proxy.$post(url, obj).then((res) => {
+                    that.$message.success('保存成功')
+                    that.newtasksubject = ''
+                    that.reload()
+                    //that.newrelated()
+                    that.getdata()
+                });
+            }
+            else{
+                this.$message.error('标题不能为空')
             }
         }
     }
@@ -361,8 +614,8 @@ export default {
 .relateditem-title input{
     border: 2px solid rgb(76,144,255);
     outline: none;
-    height: 22px;
-    line-height: 22px;
+    height: 30px;
+    line-height: 30px;
     text-indent: 5px;
     border-radius: 4px;
     width: 200px;
@@ -456,6 +709,7 @@ export default {
 .relateditem-icon{
     display: flex;
     align-items: center;
+    margin-left: 5px;
 }
 .relateditem-title{
     flex: 1;
@@ -496,8 +750,15 @@ export default {
 .relateditem-right>>>.item-img{
     margin-top: 4px !important;
 }
-.relateditem-right>>>.checkedimg{
-    margin-top: 4px !important;
+
+.relateditem-user .container{
+    margin-top: 1px !important;
+}
+.relateditem-priorityCode .container{
+    margin-top: -3px !important;
+}
+.relateditem-user>>>.optionimg{
+    top: 2px !important;
 }
 .relateditem-right>>>.relateditem-icon{
     position: relative;
@@ -538,4 +799,22 @@ export default {
     border-radius: 4px;
     display: inline-block;
 }
+.relateditem-icon-edit{
+    margin-left: 5px;
+    color: #333;
+    visibility: hidden;
+}
+.relateditem-title :hover .relateditem-icon-edit{
+    visibility:unset;
+}
+:deep .el-tag{
+    padding: 0 7px !important;
+}
+.el-select-dropdown__item:hover,.el-select-dropdown__item.selected,.el-select-dropdown__item.hover{
+        color:#606266;
+        font-weight: normal !important;
+        background-color: #ecf5ff !important;
+        border-left: 2px solid #0052cc !important;
+        padding-left: 18px !important;
+    }
 </style>

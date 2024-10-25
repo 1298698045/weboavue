@@ -14,7 +14,7 @@ import STable from '@surely-vue/table';
 // import 'easyui/dist/css/easyui.css'
 // import 'easyui/dist/css/icon.css'
 // import 'easyui/dist/js/jquery.easyui.min.js'
-
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
@@ -35,7 +35,7 @@ app.use(router);
 app.use(Axios);
 // app.use(EasyUI);
 app.use(Antd);
-app.use(ElementPlus);
+app.use(ElementPlus, { locale: zhCn });
 app.use(STable);
 // app.use(cors());
 app.mount("#app");

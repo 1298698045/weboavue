@@ -348,13 +348,13 @@ const changeStatus = () => {
 };
 const handleEdit = () =>{
     // router.push({
-    //     path:"/informationEditor",
+    //     path:"/content/visualEditor",
     //     query: {
     //       id: id
     //     }
     // });
     let reUrl = router.resolve({
-            name: "InformationEditor",
+            name: "visualEditor",
             query: {
                 id: data.id,
                 objectTypeCode: data.objectTypeCode,

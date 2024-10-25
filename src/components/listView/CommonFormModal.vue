@@ -424,7 +424,7 @@ const getLayout = () => {
   if (sessionStorage.getItem("entityApiName") && (props.id==''||props.id=='undefined')) {
     let res = JSON.parse(sessionStorage.getItem("entityApiName"));
     console.log('res', res);
-    if(res.entityApiName == props.entityApiName){
+    if(res.entityApiName&&props.entityApiName&&res.entityApiName == props.entityApiName){
       handleData(res);
     }else {
       getLayoutInterface();

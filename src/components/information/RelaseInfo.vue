@@ -228,7 +228,7 @@
   import dayjs from 'dayjs';
 
   const { proxy } = getCurrentInstance();
-  console.log(document.documentElement.clientHeight);
+  //console.log(document.documentElement.clientHeight);
   const labelCol = ref({ style: { width: "100px" } });
   const props = defineProps({
     isShow: Boolean,
@@ -259,7 +259,7 @@
   });
   const data = reactive({
     title: "发布信息",
-    height: document.documentElement.clientHeight - 300,
+    height: document.documentElement.clientHeight - 350,
     AttachRightCodeList: [
         {
             label: '所有',
@@ -442,7 +442,7 @@
   }
   onMounted(() => {
     window.addEventListener("resize", (e) => {
-      data.height = document.documentElement.clientHeight - 300;
+      data.height = document.documentElement.clientHeight - 350;
     });
     getDetail();
   });
@@ -484,6 +484,17 @@
               formState.IsPublic=fields.IsPublic.value*1==1?true:false;
               formState.CoverDisplay=fields.CoverDisplay.value;
               formState.FolderId=fields.FolderId.value;
+              let userInfo=window.localStorage.getItem('userInfo');
+    if(userInfo){
+          userInfo=JSON.parse(userInfo);
+          var userId=userInfo.userId;
+          var userName=userInfo.fullName;
+          if(userId=='jackliu'){
+              userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+          }
+          formState.ApprovedBy=userName;
+          data.ApprovedBy=userId;
+      }
             }
         })
     }

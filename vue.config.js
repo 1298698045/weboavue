@@ -24,5 +24,21 @@ module.exports = {
         },
       },
     }
-  }
+  },
+  chainWebpack: config => {
+    config.resolve.extensions.add('.bcmap');
+    config.resolve.extensions.add('.mjs');
+    config.resolve.extensions.add('.ftl');
+  },
+  configureWebpack:{
+    resolve:{
+      extensions:['.js','.vue','.json','.bcmap','.mjs','.ftl'],
+      //设置文件查找路径
+      // alias:{
+      //   'vue$':'vue/dist/vue.esm.js',
+      //   '@':resolve('src'),
+      //   'components':resolve('src/components'),
+      // }
+    },
+  },
 };

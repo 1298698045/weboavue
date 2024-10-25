@@ -3,7 +3,7 @@
         <a-modal v-model:open="props.isShow" width="550px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
-                    新建信息
+                    {{ModalTitle}}
                  </div>
             </template>
             <div class="modalContainer">
@@ -23,6 +23,7 @@
                                 tree-default-expand-all
                                 :tree-data="treeData"
                                 tree-node-filter-prop="name"
+                                :disabled="formState.column=='00000000-0000-0000-0000-000000002000'"
                             >
                                 <template #title="{ value: val, name }">
                                     <span>{{ name }}</span>
@@ -54,7 +55,11 @@
     const props = defineProps({
         isShow: Boolean,
         treeData: Array,
-        objectTypeCode: String
+        objectTypeCode: String,
+        RegardingObjectId:String,
+        RegardingObjectTypeCode:String,
+        FolderId:String,
+        RegardingObjectName:String
     })
     import { message } from "ant-design-vue";
 
@@ -82,9 +87,10 @@
                 name: "用户"
             }
         ],
-        currentMenu: "角色"
+        currentMenu: "角色",
+        ModalTitle:'新建信息'
     })
-    const { listData, menus, currentMenu } = toRefs(data);
+    const { listData, menus, currentMenu,ModalTitle } = toRefs(data);
     const formState = reactive({
         name: "",
         column: ""
@@ -135,6 +141,10 @@
         d.actions[0].params.recordId=props.id;
         url='Interface.edit';
     }
+    if(props.RegardingObjectId){
+        d.actions[0].params.recordInput.fields.RegardingObjectId=props.RegardingObjectId;
+        d.actions[0].params.recordInput.fields.RegardingObjectTypeCode=props.RegardingObjectTypeCode;
+    }
     let obj = {
         message: JSON.stringify(d)
     }
@@ -145,12 +155,14 @@
           emit("cancel", false);
           if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
             let reUrl = router.resolve({
-                    name: "InformationEditor",
+                    name: "visualEditor",
                     query: {
                         id: res.actions[0].returnValue.id,
                         objectTypeCode: props.objectTypeCode,
                         //FolderId: res.actions[0].returnValue&&res.actions[0].returnValue.fields&&res.actions[0].returnValue.fields.FolderId?res.actions[0].returnValue.fields.FolderId:''
-                        FolderId: formState1.column
+                        FolderId: formState1.column,
+                        RegardingObjectId:props.RegardingObjectId||'',
+                        RegardingObjectTypeCode:props.RegardingObjectTypeCode||''
                     }
                 })
             window.open(reUrl.href); 
@@ -160,6 +172,11 @@
     }).catch(error => {
         console.log('error', error);
     });
+}
+if(props.RegardingObjectId){
+    data.ModalTitle='新建会议纪要'
+    formState.column=props.FolderId,
+    formState.name=props.RegardingObjectName
 }
 </script>
 <style lang="less" scoped>

@@ -3,7 +3,7 @@
         <div class="detail-header">
             <div class="leftBox">
                 <div class="title">
-                    <span class="backText"> « 返回列表</span>
+                    <span class="backText" @click="backToList"> « 返回列表</span>
                     <span>02 差旅费报销流程 院领导 jackliu3 2023-09-22&nbsp;</span>
                 </div>
                 <div class="tabWrap">
@@ -19,8 +19,8 @@
                 </div>
             </div>
             <div class="rightBox">
-                <a-button class="ml10">正文</a-button>
-                <a-button type="primary" class="ml10">保存表单</a-button>
+                <a-button class="ml10" @click="openZW">正文</a-button>
+                <a-button type="primary" class="ml10" @click="handSave">保存表单</a-button>
                 <a-button type="primary" danger class="ml10" @click="handleRejection">审批拒绝</a-button>
                 <a-button type="primary" class="ml10" @click="handleSubmitProcess">提交流程</a-button>
                 <a-dropdown :trigger="['hover']" class="ml10">
@@ -38,10 +38,10 @@
                         <a-menu-item key="3" @click="handleDelegate">
                           委托
                         </a-menu-item>
-                        <a-menu-item key="4">
+                        <a-menu-item key="4" @click="printForm">
                             打印审批单
                         </a-menu-item>
-                        <a-menu-item key="5">
+                        <a-menu-item key="5" @click="printForm">
                             PDF
                         </a-menu-item>
                       </a-menu>
@@ -63,7 +63,7 @@
                             </div>
                             <div class="reqBd">
                                 <div class="reqSignList">
-                                    <div class="reqSignListCont" v-for="item in 3">
+                                    <div class="reqSignListCont" v-for="item in 3" :key="item">
                                         <div class="content-left">
                                             <div class="avatarImg">
                                                 <img :src="require('@/assets/img/fabe85b769064b61ad77a39d531a6e71.jpg')" alt="">
@@ -108,7 +108,7 @@
                                         相关事务
                                     </div>
                                     <div class="panel-btn">
-                                        <a-button type="text" size="small">添加关联</a-button>
+                                        <a-button type="text" size="small" @click="addRelateInstance">添加关联</a-button>
                                     </div>
                                 </div>
                                 <div class="panel-bd">
@@ -138,6 +138,11 @@
                                     <div class="panel-title">
                                         附件 (0)
                                     </div>
+                                    <div class="panel-btn">
+                                        <a-upload v-model:file-list="fileList" action="#" :showUploadList="false">
+                                            <a-button type="text" size="small">上传文件</a-button>
+                                        </a-upload>
+                                    </div>
                                 </div>
                                 <div class="panel-bd">
                                     <div class="collapse">
@@ -156,7 +161,7 @@
                                             </div>
                                             <div class="collapseBd">
                                                 <div class="files">
-                                                    <div class="fileItem" v-for="(row, idx) in item.Files" :key="row.Id">
+                                                    <div class="fileItem" v-for="(row, idx) in item.Files" :key="row.Id" :idx="idx">
                                                         <div class="fileItemImg">
                                                             <img :src="require('@/assets/img/filetype/doc.png')" v-if="row.FileExtension == 'ocx' || 
                                                             row.FileExtension == 'docx' || row.FileExtension == 'doc'" />
@@ -174,9 +179,9 @@
                                                         <div class="fileItemInfo">
                                                             <p class="name">{{row.Name}}</p>
                                                             <p class="link">
-                                                                <a href="javascript:;">查看</a>
+                                                                <a href="javascript:;" @click="openZW(row)">查看</a>
                                                                 ·
-                                                                <a href="javascript:;">下载</a>
+                                                                <a href="javascript:;" @click="openZW(row)">下载</a>
                                                             </p>
                                                             <p class="time">
                                                                 <span>{{row.CreatedOn}}&nbsp;·</span>
@@ -190,10 +195,16 @@
                                                                 <template #overlay>
                                                                     <a-menu>
                                                                         <a-menu-item>
-                                                                            <a href="javascript:;">查看</a>
+                                                                            <a href="javascript:;" @click="openZW(row)">查看</a>
                                                                         </a-menu-item>
                                                                         <a-menu-item>
-                                                                            <a href="javascript:;">删除</a>
+                                                                            <a-popconfirm title="是否确定要删除？"
+                                                                                ok-text="确定"
+                                                                                cancel-text="取消"
+                                                                                @confirm="confirm"
+                                                                                @cancel="cancel">
+                                                                                <a href="javascript:;">删除</a>
+                                                                            </a-popconfirm>
                                                                         </a-menu-item>
                                                                     </a-menu>
                                                                   </template>
@@ -210,31 +221,31 @@
                     </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey==2">
-                    <Related />
+                    <Related :id="id" @addRelateInstance="addRelateInstance" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==3">
-                    <Info />
+                    <Info @handleUrging="handleUrging" :id="id" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==4">
-                    <read-record />
+                    <read-record :id="id" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==5">
-                    <Comment />
+                    <Comment :isTitle="true" :id="id" />
                 </div>
             </div>
         </div>
         <div class="detail-footer">
             <div class="flexEnd">
                 <div class="rightBox">
-                    <a-button class="ml10">正文</a-button>
-                    <a-button type="primary" class="ml10">保存表单</a-button>
-                    <a-button type="primary" class="ml10">提交流程</a-button>
+                    <a-button class="ml10" @click="openZW">正文</a-button>
+                    <a-button type="primary" class="ml10" @click="handSave">保存表单</a-button>
+                    <a-button type="primary" class="ml10"  @click="handleSubmitProcess">提交流程</a-button>
                     <a-dropdown :trigger="['hover']" class="ml10">
                         <span class="btn-drop">
                           <UnorderedListOutlined style="color: #1D2129;" />
                         </span>
                         <template #overlay>
-                          <a-menu @click="handleMenuClick">
+                          <a-menu>
                             <a-menu-item key="1" @click="handleUrging">
                               催办
                             </a-menu-item>
@@ -244,10 +255,10 @@
                             <a-menu-item key="3" @click="handleDelegate">
                                 委托
                             </a-menu-item>
-                            <a-menu-item key="4">
+                            <a-menu-item key="4" @click="printForm">
                                 打印审批单
                             </a-menu-item>
-                            <a-menu-item key="5">
+                            <a-menu-item key="5" @click="printForm">
                                 PDF
                             </a-menu-item>
                           </a-menu>
@@ -261,6 +272,7 @@
         <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation" :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
         <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
         <Urging ref="UrgingRef" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
+        <RelateInstance v-if="isRelateInstance" :id="id" :entityApiName="lookEntityApiName" :entityType="lookEntityType" :objectTypeCode="lookObjectTypeCode" :isShow="isRelateInstance" @select="handleSelectLook" @cancel="isRelateInstance=false" />
     </div>
 </template>
 <script setup>
@@ -288,6 +300,11 @@
     import CirculationModal from "@/components/workflow/CirculationModal.vue";
     import Delegate from "@/components/workflow/Delegate.vue";
     import Urging from "@/components/workflow/Urging.vue";
+    import RelateInstance from "@/components/workflow/RelateInstance.vue";
+    import { useRouter, useRoute } from "vue-router";
+    import { message } from "ant-design-vue";
+    const route = useRoute();
+    const router = useRouter();
     const data = reactive({
         tabs: [
             {
@@ -320,13 +337,29 @@
         categoryFiles: [],
         isAside: true,
         reqIndex: 1,
-        pageCurrent: 1
+        pageCurrent: 1,
+        id:route.query.id,
+        fileList:[],
+        isRelateInstance:false,
+        lookEntityApiName: "",
+        lookObjectTypeCode: "",
+        lookEntityType:""
     })
     const { tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData,
-         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex,
+         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex,id,fileList,isRelateInstance,lookEntityApiName,lookObjectTypeCode,lookEntityType,
          pageCurrent } = toRefs(data);
     const changeTabs = (e) => {
         data.activeKey = e;
+    }
+    const backToList = () =>{
+        if(route.query.reurl){
+            router.push({
+                path: route.query.reurl,
+                query: {
+                }
+            });
+        }
+        //window.history.go(-1);
     }
     getRelatedWork();
     
@@ -381,6 +414,43 @@
     const changePagination = (e) => {
 
     };
+    const openZW=(row)=>{
+        // let url = router.resolve({
+        //     path:'/jgfiles/samples/OpenAndSave',
+        //     name: "OpenAndSave",
+        //     query: {
+        //         id: route.query.id,
+        //     },
+        // });
+        let url='/#/jgfiles/samples/OpenAndSave?id='+route.query.id;
+        if(row&&row.FileExtension == 'pdf'){
+            url='/pdfjs/web/viewer.html?file='+encodeURIComponent('../../resources/uploadfiles'+row.ViewLinkUrl)+"";
+        }
+        window.open(url);
+    }
+    //保存
+    const handSave=()=>{
+        message.success("保存成功");
+    }
+    //打印
+    const printForm= () => {
+            let url = router.resolve({
+                path:'/lightning/workflow/WFFormPrint',
+                name: "WFFormPrint",
+                query: {
+                    id: route.query.id,
+                },
+            });
+            window.open(url.href);
+    }
+    //添加关联事务
+    const addRelateInstance=()=>{
+        data.isRelateInstance=true;
+    }
+    //关联事务选中
+    const handleSelectLook=()=>{
+        data.isRelateInstance=false;
+    }
 </script>
 <style lang="less" scoped>
     .collapse{
@@ -429,10 +499,7 @@
                                 color: #b8bbcc;
                             }
                         }
-                        .iconOpera{
-
-                            
-                        }
+                        
                     }
                 }
             }

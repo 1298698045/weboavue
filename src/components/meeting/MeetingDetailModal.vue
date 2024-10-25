@@ -194,9 +194,15 @@
     }
     const openFullSign= (num) => {
         //window.open('http://192.168.1.200:82/apps/meetings/dynamicSign.aspx?id=8f9c33e1-52a4-4dcd-9ade-9e95484a6f1a');
+        let link='/lightning/o/Meeting/signin/screen';
+        let name='SigninScreen';
+        if(num*1==1){
+          link='/lightning/o/Meeting/signoff/screen';
+          name='SignoffScreen';
+        }
         let url = router.resolve({
-            path:'/lightning/o/dynamicSign',
-            name: "DynamicSign",
+            path:link,
+            name: name,
             query: {
                 id: props.meetingId,
                 exitQcode:num

@@ -109,7 +109,7 @@
   
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
-  console.log(document.documentElement.clientHeight);
+  //console.log(document.documentElement.clientHeight);
   const labelCol = ref({ style: { width: "100px" } });
   const props = defineProps({
     isShow: Boolean,
@@ -125,7 +125,7 @@
   };
   const data = reactive({
     title: "新建分类",
-    height: document.documentElement.clientHeight - 300,
+    height: document.documentElement.clientHeight - 350,
     treeData: []
   });
   const {
@@ -183,7 +183,7 @@
   }
   onMounted(() => {
     window.addEventListener("resize", (e) => {
-      data.height = document.documentElement.clientHeight - 300;
+      data.height = document.documentElement.clientHeight - 350;
     });
   });
   

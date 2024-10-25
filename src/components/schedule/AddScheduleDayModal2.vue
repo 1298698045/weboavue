@@ -827,7 +827,7 @@
             overflow: auto;
         }
         :deep .fc .fc-toolbar-title{
-            font-size: 18px;
+            font-size: 17px;
         }
         :deep .fc .fc-button-group{
             display: none;

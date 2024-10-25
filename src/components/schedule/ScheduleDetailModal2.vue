@@ -9,7 +9,7 @@
               </div>
           </template>
           <div class="modalContainer scheduleModalContainer" :style="{ height: height + 'px' }">
-              <ScheduleDetailContent :id="props.id" @handleDelete="handleDelete" @cancel="handleCancel" @reload="handleSubmit" />
+              <ScheduleDetailContent :itemid="props.id" :title="title" @handleDelete="handleDelete" @close="handleCancel" @reload="handleSubmit" />
           </div>
           <template #footer>
               <div>
@@ -17,18 +17,19 @@
               </div>
           </template>
       </a-modal>
+      <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshScheduleVal" :sObjectName="sObjectName" :recordId="props.id" :objTypeCode="objectTypeCode" :external="external" />
   </div>
 </template>
 <script setup>
   import {
       ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
-      defineEmits, provide,computed
+      defineEmits, provide,computed,nextTick
   } from "vue";
   import { message } from 'ant-design-vue';
   import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
   import { useRouter, useRoute } from "vue-router";
   import ScheduleDetailContent from "@/components/schedule/ScheduleDetailContent2.vue";
-  
+  import Delete from "@/components/listView/Delete.vue";
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
   const router = useRouter();
@@ -57,24 +58,39 @@
   const data = reactive({
       currentTab: '1',
       height: document.documentElement.clientHeight - 100,
-      title: "日程详情",
-      objectTypeCode:'5000',
-      sObjectName:'MeetingRec',
-      top:""
+      title: "日程",
+      top:"",
+      objectTypeCode:'4200',
+      sObjectName:'ActivityPointer',
+      isDelete: false,
+      deleteDesc: '确定要删除吗？',
+      external:false,
   })
-  const { currentTab, height, title,objectTypeCode,sObjectName,top } = toRefs(data);
+  const { currentTab, height, title,top,objectTypeCode,sObjectName,isDelete,deleteDesc,external } = toRefs(data);
   const handleSubmit = () => {
       emit("select-val", '');
   }
   const handleDelete = (e) => {
-      emit('handleDelete', {Id:e.Id});
+      //emit('handleDelete', {Id:e.Id});
+      data.id=e.Id;
+      data.isDelete = true;
+  }
+  //删除关闭
+  const cancelDelete = (e) => {
+      data.isDelete = false;
+  };
+  const refreshScheduleVal=(e)=>{
+      emit("select-val", '');
+      data.isDelete = false;
+      nextTick(()=>{
+          emit("cancel", false);
+      })
   }
   const itemid=props.id;
   const reload=()=>{
     handleSubmit();
   }
   provide('reload', {
-    itemid,
     reload
   })
   onMounted(() => {
@@ -85,11 +101,18 @@
         let h0=document.documentElement.clientHeight;
         //data.top = (h + 260) / 2 + 'px';
         if(h){
-        data.top = (h0 - h - 20) / 2 + 'px';
+          data.top = (h0 - h - 20) / 2 + 'px';
+          if((h0 - h - 20)<0){
+            data.top='55px';
+          }
         }
         else{
         data.top = (h - 20) / 2 + 'px';
+          if((h - 20)<0){
+            data.top='55px';
+          }
         }
+        
         //console.log(data.top)
   });
   const setTop = computed(() => ({
@@ -250,5 +273,14 @@ padding-bottom: 0 !important;
   .ant-modal-close{
       display: none;
    }
+   .relateditem-user {
+      display: flex;
+      align-items: center;
+  }
+  .relateditem-priorityCode .container{
+    position: relative;
+    top: 2px;
+    left: 10px;
+  }
 }
 </style>

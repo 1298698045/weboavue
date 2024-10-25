@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="100%" :maskClosable="false" @cancel="handleCancel" class="meetingDetailModal"
+        <a-modal v-model:open="props.isShow" :maskClosable="false" @cancel="handleCancel" class="meetingDetailModal3"
             @ok="handleSubmit">
             <template #title>
                 <div>
@@ -71,7 +71,7 @@
     }
     const data = reactive({
         currentTab: '1',
-        height: document.documentElement.clientHeight - 118,
+        height: document.documentElement.clientHeight - 170,
         title: "会议详情",
         objectTypeCode:'5000',
         sObjectName:'MeetingRec',
@@ -85,7 +85,7 @@
     }
     onMounted(() => {
         window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 118;
+            data.height = document.documentElement.clientHeight - 170;
         });
     });
     const handleEdit = () => {
@@ -93,9 +93,15 @@
     }
     const openFullSign= (num) => {
         //window.open('http://192.168.1.200:82/apps/meetings/dynamicSign.aspx?id=8f9c33e1-52a4-4dcd-9ade-9e95484a6f1a');
+        let link='/lightning/o/Meeting/signin/screen';
+        let name='SigninScreen';
+        if(num*1==1){
+          link='/lightning/o/Meeting/signoff/screen';
+          name='SignoffScreen';
+        }
         let url = router.resolve({
-            path:'/lightning/o/dynamicSign',
-            name: "DynamicSign",
+            path:link,
+            name: name,
             query: {
                 id: props.meetingId,
                 exitQcode:num
@@ -138,8 +144,9 @@
     :where(.css-dev-only-do-not-override-kqecok).ant-tabs>div>.ant-tabs-nav {
         margin: 0 !important;
     }
-    .meetingDetailModal{
-        top:0 !important;
+    .meetingDetailModal3{
+        width: calc(~'100% - 45px') !important;
+        top:25px !important;
         max-width: 100%;
         padding: 0;
         .ml11{
@@ -253,12 +260,15 @@ padding-bottom: 0 !important;
     overflow-y: auto;
     position: relative;
 }
-.meetingDetailModal{
+.meetingDetailModal3{
     .ant-modal-content .ant-modal-header{
         margin-bottom: 0 !important;
     }
     .ant-modal-content .ant-modal-footer{
         margin-top: 0 !important;
+    }
+    .detail-header{
+        top: 74.5px !important;
     }
 }
 </style>

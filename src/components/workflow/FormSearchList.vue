@@ -207,7 +207,7 @@
                   <div class="option-item">修改</div>  
                   <div class="option-item">删除</div>
                 </div>
-                <svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>
+                <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
             `
                     return str;
                 }
@@ -253,4 +253,19 @@
 </script>
 <style lang="less">
     @import "@/style/flow/treeList.less";
+    :deep .iconBox{
+  text-align: center;
+  .popup{
+    text-align: left;
+    top: 20px;
+  }
+  .moreaction{
+    padding: 0px 1px;
+    width: 18px;
+    border: 1px solid #dedede;
+    border-radius: 4px;
+    position: relative;
+    top: 1px;
+  }
+}
 </style>

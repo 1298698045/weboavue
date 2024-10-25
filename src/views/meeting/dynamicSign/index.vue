@@ -3,10 +3,10 @@
       <div class="panel">
           <div class="panel-bd">
               <div class="panelDynamicQrcodeWrap">
-                <div class="qrcodeimg-top">签到二维码</div>
+                <div class="qrcodeimg-top">{{ title||'' }}二维码</div>
                 <canvas id="qrcodeimg"></canvas>
-                <div class="qrcodeimg-bottom1">使用app【扫一扫】功能扫描二维码即可签到</div>
-                <div class="qrcodeimg-bottom2">应到0人 实到0人 未到0人</div>
+                <div class="qrcodeimg-bottom1">使用app【扫一扫】功能扫描二维码即可{{title||''}}</div>
+                <div class="qrcodeimg-bottom2">应到{{PeopleQty||0}}人 实到{{JoinQty||0}}人 未到{{(PeopleQty*1-JoinQty*1>0)?(PeopleQty*1-JoinQty*1):0}}人</div>
               </div>
               <div class="panelDynamicSignWrap">
                   <div class="DynamicSignList">
@@ -88,6 +88,7 @@
   ];
   
   const data = reactive({
+      title:'签到',
       listData: [],
       page: 1,
       rows: 10,
@@ -97,12 +98,14 @@
       height:0,
       tableHeight:0,
       pagination:{
-          hideOnSinglePage:true,
-          showSizeChanger:false,
+          hideOnSinglePage:false,
+          showSizeChanger:true,
           showQuickJumper:true,
           total:0,//数据总数
           pageSize:12,
           current:1,
+          pageSizeOptions: ['10', '12', '20', '50', '100'],
+          defaultPageSize: 12,
           showTotal:((total)=>{
               return `共${total}条`
           })
@@ -111,8 +114,10 @@
       columns:[],
       checkInUrl:'{!SiteRoot.Mobile}/_ui/meeting/checkin?method=meeting.attend.checkin',
       checkOutUrl:'{!SiteRoot.Mobile}/_ui/meeting/checkin?method=meeting.attend.checkout',
+      PeopleQty:0,
+      JoinQty:0,
   })
-  const { listData, page, rows, total, DynamicSign, id, height, tableHeight, pagination, exitQcode, columns } = toRefs(data);
+  const { listData, page, rows, total, DynamicSign, id, height, tableHeight, pagination, exitQcode, columns, title,PeopleQty,JoinQty } = toRefs(data);
   const getDynamicSignList = () => {
       data.listData=[];
       data.pagination.total = 0;
@@ -142,6 +147,32 @@
           }
           data.listData = list;
       })
+      getDetail()
+  }
+  const getDetail = () => {
+    let d = {
+        actions:[{
+            id: "4270;a",
+            descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordId: data.id,
+              apiName:'MeetingRec',
+              objTypeCode: 5000
+            }
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(Interface.detail,obj).then(res=>{
+        if(res&&res.actions&&res.actions[0]){
+          let record = res.actions[0].returnValue.fields;
+          data.PeopleQty = record.PeopleQty?record.PeopleQty.displayValue:0;
+          data.JoinQty = record.JoinQty?record.JoinQty.value:0;
+        }
+    })
+    
   }
   //改变页码
   // const ChangePage=(page, pageSize)=>{
@@ -191,9 +222,11 @@
         data.tableHeight = data.height-150;
         if(data.exitQcode*1==1){
           data.columns=columns1;
+          data.title='签退';
         }
         else{
           data.columns=columns0;
+          data.title='签到'
         }
         getDynamicSignList();
         generateQRCode();

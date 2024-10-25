@@ -6,7 +6,7 @@
                     关联事务
                 </div>
                 <div class="panel-btn">
-                    <a-button type="primary">添加关联</a-button>
+                    <a-button type="primary" @click="addRelateInstance">添加关联</a-button>
                 </div>
             </div>
             <div class="panel-bd">
@@ -28,7 +28,9 @@
                     备注和附件
                 </div>
                 <div class="panel-btn">
-                    <a-button type="primary">添加附件</a-button>
+                    <a-upload v-model:file-list="fileList" action="#" :showUploadList="false">
+                        <a-button type="primary">添加附件</a-button>
+                    </a-upload>
                 </div>
             </div>
             <div class="panel-bd">
@@ -51,7 +53,7 @@
 </template>
 <script setup>
     import "@/style/common.less";
-    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, toRaw } from "vue";
+    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, toRaw,defineEmits } from "vue";
     import useWrokDetail from "@/utils/workDetail";
     import Interface from "@/utils/Interface.js";
     import Dtable from "@/components/Dtable.vue";
@@ -101,7 +103,8 @@
         list: [],
         selectedRowKeys: [],
         loading: false,
-        isCollapsed: false
+        isCollapsed: false,
+        fileList:[]
     });
     const { isCollapsed } = toRefs(data);
     // const columnList = toRaw(columns);
@@ -149,6 +152,10 @@
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         data.selectedRowKeys = selectedRowKeys;
     };
+    const emit = defineEmits(['addRelateInstance']);
+    const addRelateInstance = ()=>{
+        emit("addRelateInstance");
+    }
     onMounted(()=>{
         loadList();
     })

@@ -594,6 +594,7 @@
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
                         let meetingItems = res.actions[0].returnValue;
                         let obj = {};
+                        data.calendarOptions.events=[];
                         meetingItems.forEach((item,index)=>{
                             let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
                             if(!obj[daydate]){

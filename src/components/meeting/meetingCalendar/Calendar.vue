@@ -1,6 +1,6 @@
 <template>
     <div class="calendarWrap">
-        <div class="leftBox">
+        <!-- <div class="leftBox">
             <div class="tabsWrap">
                 <a-tabs v-model:activeKey="activeKey">
                     <a-tab-pane key="1" tab="会议状态"></a-tab-pane>
@@ -17,7 +17,7 @@
                     <a-tree blockNode :tree-data="userListTree"></a-tree>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="rightBox">
             <div class="calendarHeader">
                 <div class="form">

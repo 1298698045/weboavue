@@ -392,6 +392,10 @@
         id: String,
         entityApiName: String,
         calendarType: String,
+        RegardingObjectTypeCode: String,
+        RegardingObjectId: String,
+        RegardingObjectIdName: String,
+        BgColor:String,
         paramsTime: [Object]
     });
     const dateFormat = 'YYYY-MM-DD';
@@ -522,8 +526,8 @@
         menuTimes, categoryList, OwningUser,isRadioUser,Reply,ReplyList,DisplayStatus,DisplayStatusList,ReminderTime,ReminderTimeList,CalendarType,CalendarTypeList,RecurrenceType,RecurrenceTypeList
     } = toRefs(data);
     const formState = reactive({
-        RegardingObjectTypeCode: 20290,
-        RegardingObjectId: {},
+        RegardingObjectTypeCode: '',
+        RegardingObjectId: '',
         Subject: '',
         StartDateTime: '',
         StartDateTime_time: '',
@@ -822,11 +826,15 @@
         }
         else if(userInfo){
             userInfo=JSON.parse(userInfo);
+            var userId=userInfo.userId;
+            if(userId=='jackliu'){
+                userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+            }
             data.OwningUser.push({
-                ID: userInfo.userId,
+                ID: userId,
                 Name: userInfo.fullName
             });
-            formState.OwningUser.Id=[userInfo.userId];
+            formState.OwningUser.Id=[userId];
         }
       calendarGetData();
   }
@@ -871,6 +879,12 @@
         else{
             //d.actions[0].params.recordInput.fields.CalendarType=props.calendarType||'';
             d.actions[0].params.recordInput.fields.ActivityTypeCode=4201;
+            if(props.RegardingObjectId){
+                d.actions[0].params.recordInput.fields.RegardingObjectTypeCode=props.RegardingObjectTypeCode;
+                d.actions[0].params.recordInput.fields.RegardingObjectId=props.RegardingObjectId;
+                d.actions[0].params.recordInput.fields.RegardingObjectIdName=props.RegardingObjectIdName;
+                d.actions[0].params.recordInput.fields.BgColor=props.BgColor;
+            }
         }
         var ids=formState.OwningUser&&formState.OwningUser.Id&&formState.OwningUser.Id.length?formState.OwningUser.Id:[];
         if(ids&&ids.length){

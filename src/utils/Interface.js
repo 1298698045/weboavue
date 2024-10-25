@@ -44,6 +44,8 @@ const Interface = {
       getMetadataInitialLoad: baseUrl + "/listview/listViewManager/getMetadataInitialLoad", // 获取元数据
       getFilterInfo: baseUrl + "/listview/listViewManager/getFilterInfo", // 列头
       actions: baseUrl + "/listview/Actions/handleAction",
+      actionsrow: baseUrl + "/aura/ui/global/components/ActionsManager/ListviewRecord/handleAction",//行记录按钮
+      actionstop: baseUrl + "/aura/ActionsController/handleAction",//右上角按钮
       createListView: baseUrl+'/aura/listViewManager/createListView',//创建视图
       updateListView: baseUrl+'/aura/listViewManager/updateListView',//重命名视图、共享设置、选择要显示字段、保存筛选器
       deleteListView: baseUrl+'/aura/listViewManager/deleteListView',//删除视图
@@ -104,7 +106,8 @@ const Interface = {
     addShare: "/localData/meeting/calendar.share.json", // 会议共享-添加权限
     removeShare: "/localData/meeting/calendar.share.remove.json",
     meetingPeople: "/localData/meeting/meeting.people.search.json", // 详情-参会人员
-    detail: "/localData/meeting/entity.recordandlayout.get.json"
+    detail: "/localData/meeting/entity.recordandlayout.get.json",
+    remind:baseUrl + "/ui.meeting.components/publish"//会议提醒
   },
   meetingRoom: {
     //roomList: "/localData/meetingRoom/meetingroom.reservation.getlist2.json",

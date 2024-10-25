@@ -42,7 +42,7 @@
             </div>
           </div>
           <div class="rightBtns">
-            <a-button @click="handleNew">新建</a-button>
+            <!-- <a-button @click="handleNew">新建</a-button> -->
             <div class="btnBox" v-for="(item, index) in actionList" :key="index">
               <div class="btnGroup ml10" v-if="Array.isArray(item)">
                 <a-button
@@ -371,7 +371,8 @@
       }
       data.title = data.initialData.breadCrumbList.length ? data.initialData.breadCrumbList[0].label : '';
       data.queryParams.filterId = data.currentFilter.id;
-      getActions();
+      //getActions();
+      getActionsTop();
       getListConfig();
       getFilterList();
     });
@@ -383,12 +384,92 @@
       }).then(res=>{
         let actions = res.actions[0].returnValue;
         let actionList = [];
-        // actions.forEach(item=>{
-  
-        // })
         data.actionList = actions;
       })
     }
+    const getActionsRow = () => {
+    let d = {
+        actions:[{
+            
+          "id": "",
+          "descriptor": "",
+          "callingDescriptor": "UNKNOWN",
+          "params": {
+            "recordId": "",
+            "context": "LIST_VIEW_RECORD",
+            "actionTypes": [
+              "standardButton"
+            ],
+            "inContextOfRecordId": null,
+            "listNameOrId": "",
+            "entityApiName": data.sObjectName,
+            "isLABPreview": false,
+            "actionsRequestId": 1
+          }
+
+
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(Interface.listView.actionsrow, obj).then((res) => {
+        var temp = [];
+if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+  data.listViewActions = res.actions[0].returnValue;
+}
+      });
+  };
+  const getActionsTop = () => {
+    let d = {
+        "actions": [
+          {
+            "id": "3817;a",
+            "descriptor": "",
+            "callingDescriptor": "UNKNOWN",
+            "params": {       
+                  "recordId": null,
+                  "context": "LIST_VIEW",
+                  "entityApiName": data.sObjectName,
+                  "record": null,
+                  "listNameOrId": "",
+                  "size": 5,
+                  "maxWidth": -1,
+                  "actionTypes": [],
+                  "bulkedAction": false,
+                  "actionNames": [],
+                  "enableActionsConfiguration": false,
+                  "isLABPreview": false,
+                  "actionsRequestId": 5        
+            }
+          }
+        ]
+
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(Interface.listView.actionstop, obj).then((res) => {
+        var temp = [];
+if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+        var actionList = res.actions[0].returnValue;
+        for (var i = 0; i < actionList.length; i++) {
+          let item = actionList[i];
+          if (item.isSeparator) {
+            temp.push([item]);
+          } else {
+            if (Array.isArray(temp[temp.length - 1])) {
+              temp[temp.length - 1].push(item);
+            } else {
+              temp.push(item);
+            }
+          }
+        }
+}
+        //console.log("temp", temp);
+        data.actionList = temp;
+      });
+  };
   
     const getListConfig = () => {
       proxy.$get(Interface.listView.getFilterInfo, {
@@ -498,6 +579,9 @@
   const handleNew = () => {
     data.isCommon = true;
   }
+  const New = () => {
+    data.isCommon = true;
+  }
   const handleClickBtn = (devNameOrId) => {
     if (typeof (eval(devNameOrId)) == "function") {
         var result = eval(devNameOrId + "();");
@@ -530,6 +614,12 @@
         background: #f3f3f3 !important;
         border-bottom: 1px solid #dedede;
         border-radius: 4px 4px 0 0;
+    }
+    .ant-btn:hover{
+        z-index: 1 !important;
+    }
+    .ant-btn:active{
+        z-index: 1 !important;
     }
   </style>
   <style>

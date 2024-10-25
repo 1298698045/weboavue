@@ -35,6 +35,7 @@
       $.fn.pagination.defaults.displayMsg = "从{from} 到 {to} 总计 {total} 条";
 
     }
+    var authorization=window.localStorage.getItem('token')||'';
     var url = props.gridUrl;
     $('#'+props.name).datagrid({
       url: url,
@@ -51,6 +52,7 @@
       method: "post",
       columns: [columns],
       queryParams: queryParams,
+      headers:{authorization:authorization},
       singleSelect: singleSelect,
       checkOnSelect: false,
       selectOnCheck: true,

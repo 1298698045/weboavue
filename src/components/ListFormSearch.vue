@@ -11,49 +11,51 @@
                 <a-input v-model:value="formState.username" />
             </a-form-item> -->
             <div class="searchItem" v-for="(item,index) in searchFields" :key="index">
-                <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='S'||item.dataType=='X'">
-                    <a-input class="radiusNone" :placeholder="item.label" v-model:value="formState[item.column]" />
-                </a-form-item>
-                <!-- <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='N'">
-                    <a-input-number v-model:value="formState[item.column]" :min="1" :max="100" />
-                    <a-input-number v-model:value="formState[item.column]" :min="1" :max="100" />
-                </a-form-item> -->
-                <a-form-item :name="item.column" :label="item.label"
-                    v-else-if="item.dataType=='L'||item.dataType=='LT'||item.dataType=='DT'||item.dataType=='status'||item.dataType=='Priority'">
-                    <a-select v-model:value="formState[item.column]" :placeholder="item.label" @change="handleChange">
-                        <!-- <a-select-option value="jack">Jack</a-select-option>
-                        <a-select-option value="lucy">Lucy</a-select-option>
-                        <a-select-option value="disabled" disabled>Disabled</a-select-option>
-                        <a-select-option value="Yiminghe">yiminghe</a-select-option> -->
-                        <a-select-option v-for="(row, idx) in item.picklistValues" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
-                    </a-select>
-                </a-form-item>
-                <a-form-item class="formTime" :name="item.column" :label="item.label" v-else-if="item.dataType=='F'||item.dataType=='D'">
-                    <!--  v-if="item.dateTypeCurrent.value=='default'" v-model:value="formState[item.column]" -->
-                    <a-range-picker style="border-right: none;" class="radiusNone" valueFormat="YYYY-MM-DD" :disabled="item.dateTypeCurrent&&item.dateTypeCurrent.value=='default'?false:true" @change="(e)=>{changeRangeDate(e,item)}" />
-                    <a-dropdown class="radiusNone">
-                        <template #overlay>
-                          <a-menu>
-                            <a-menu-item v-for="(row,idx) in timeoperator" :key="idx" @click="changeDateType(item,row)">
-                                {{row.label}}
-                            </a-menu-item>
-                          </a-menu>
-                        </template>
-                        <a-button class="downBtn">
-                          {{item.dateTypeCurrent?item.dateTypeCurrent.label:'自定义'}}
-                          <DownOutlined />
-                        </a-button>
-                      </a-dropdown>
-                </a-form-item>
-                <a-form-item class="searchItem" :name="item.column" :label="item.label" v-else-if="['O', 'Y', 'U', 'Y_MD'].includes(item.dataType)">
-                    <a-select v-model:value="formState[item.column]" @dropdownVisibleChange="(e)=>{searchlookup(e, item)}">
-                        <template #suffixIcon></template>
-                        <a-select-option v-for="(row, idx) in search[item.column]" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
-                    </a-select>
-                    <div class="selectSearchIcon" @click="handleOpenLook(item)">
-                        <SearchOutlined class="lookupIcon" />
-                    </div>
-                </a-form-item>
+                <template v-if="index<4">
+                    <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='S'||item.dataType=='X'">
+                        <a-input class="radiusNone" :placeholder="item.label" v-model:value="formState[item.column]" />
+                    </a-form-item>
+                    <!-- <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='N'">
+                        <a-input-number v-model:value="formState[item.column]" :min="1" :max="100" />
+                        <a-input-number v-model:value="formState[item.column]" :min="1" :max="100" />
+                    </a-form-item> -->
+                    <a-form-item :name="item.column" :label="item.label"
+                        v-else-if="item.dataType=='L'||item.dataType=='LT'||item.dataType=='DT'||item.dataType=='status'||item.dataType=='Priority'">
+                        <a-select v-model:value="formState[item.column]" :placeholder="item.label" @change="handleChange">
+                            <!-- <a-select-option value="jack">Jack</a-select-option>
+                            <a-select-option value="lucy">Lucy</a-select-option>
+                            <a-select-option value="disabled" disabled>Disabled</a-select-option>
+                            <a-select-option value="Yiminghe">yiminghe</a-select-option> -->
+                            <a-select-option v-for="(row, idx) in item.picklistValues" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
+                        </a-select>
+                    </a-form-item>
+                    <a-form-item class="formTime" :name="item.column" :label="item.label" v-else-if="item.dataType=='F'||item.dataType=='D'">
+                        <!--  v-if="item.dateTypeCurrent.value=='default'" v-model:value="formState[item.column]" -->
+                        <a-range-picker style="border-right: none;" class="radiusNone" valueFormat="YYYY-MM-DD" :disabled="item.dateTypeCurrent&&item.dateTypeCurrent.value=='default'?false:true" @change="(e)=>{changeRangeDate(e,item)}" />
+                        <a-dropdown class="radiusNone">
+                            <template #overlay>
+                            <a-menu>
+                                <a-menu-item v-for="(row,idx) in timeoperator" :key="idx" @click="changeDateType(item,row)">
+                                    {{row.label}}
+                                </a-menu-item>
+                            </a-menu>
+                            </template>
+                            <a-button class="downBtn">
+                            {{item.dateTypeCurrent?item.dateTypeCurrent.label:'自定义'}}
+                            <DownOutlined />
+                            </a-button>
+                        </a-dropdown>
+                    </a-form-item>
+                    <a-form-item class="searchItem" :name="item.column" :label="item.label" v-else-if="['O', 'Y', 'U', 'Y_MD'].includes(item.dataType)">
+                        <a-select v-model:value="formState[item.column]" @dropdownVisibleChange="(e)=>{searchlookup(e, item)}">
+                            <template #suffixIcon></template>
+                            <a-select-option v-for="(row, idx) in search[item.column]" :key="idx" :value="row.value">{{ row.label }}</a-select-option>
+                        </a-select>
+                        <div class="selectSearchIcon" @click="handleOpenLook(item)">
+                            <SearchOutlined class="lookupIcon" />
+                        </div>
+                    </a-form-item>
+                </template>
             </div>
             <a-form-item class="formitembtn">
                 <a-button type="primary"  class="radiusNone" html-type="submit">搜索</a-button>
@@ -252,6 +254,38 @@
             }
             else{
                 // data.searchFields = data.defaultSearchFields;
+                let obj = {
+                    actions: [{
+                        id: "138;a",
+                        descriptor: "",
+                        callingDescriptor: "UNKNOWN",
+                        params: {
+                            targetApiName: props.entityApiName,
+                            q: "",
+                            searchType: "",
+                            objectApiName: props.entityApiName,
+                            fieldApiName: '',
+                            body: "",
+                        }
+                    }]
+                };
+                let d = {
+                    message: JSON.stringify(obj)
+                };
+                proxy.$post(Interface.lookupObj.column, d).then(res=>{
+                    let { filterableColumns } = res.actions[0].returnValue;
+                    filterableColumns.forEach(item=>{
+                        // item.DataType=item.dataType;
+                        // item.Label=item.label;
+                        // item.Name=item.column;
+                        // item.PicklistValues=item.picklistValues;
+                        item.dateTypeCurrent={value:'default'};
+                        item.ReferencedEntityObjectTypeCode=0;
+                        formState[item.column] = "";
+                    })
+                    data.searchFields=filterableColumns;
+                    emit("update-height", formSearchRef.value.clientHeight)
+                })
             }
             nextTick(()=>{
                 emit("update-height", formSearchRef.value.clientHeight);
@@ -353,7 +387,10 @@
 
     };
     const handleDeptParams = (e) => {
-        console.log('e123', e);
+        //console.log('e123', e);
+        if(data.search[data.fieldName]){}else{
+            data.search[data.fieldName]=[];
+        }
         let isBook = data.search[data.fieldName].some(item=>item.value == e.ID);
         if(!isBook){
             data.search[data.fieldName].push({
@@ -365,7 +402,10 @@
         data.isRadioDept = false;
     };
     const handleUserParams = (e) => {
-        console.log('handleUserParams', e, data.fieldName);
+        //console.log('handleUserParams', e, data.fieldName);
+        if(data.search[data.fieldName]){}else{
+            data.search[data.fieldName]=[];
+        }
         let isBook = data.search[data.fieldName].some(item=>item.value == e.id);
         if(!isBook){
             data.search[data.fieldName].push({

@@ -112,10 +112,10 @@
     Body: "",
   });
   
-  data.height = document.documentElement.clientHeight - 300;
+  data.height = document.documentElement.clientHeight - 350;
   onMounted(() => {
     window.addEventListener("resize", (e) => {
-      data.height = document.documentElement.clientHeight - 300;
+      data.height = document.documentElement.clientHeight - 350;
     });
   });
   

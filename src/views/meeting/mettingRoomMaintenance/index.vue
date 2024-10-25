@@ -55,7 +55,7 @@
                 >{{ row.label }}</a-button
               >
             </div>
-            <a-button type="primary" v-else>{{ item.label }}</a-button>
+            <a-button type="primary" @click="handleClickBtn(item.devNameOrId)" v-else>{{ item.label }}</a-button>
           </div>
         </div>
       </div>
@@ -63,10 +63,7 @@
         <div class="bd">
           <div class="searchWrap">
             <div class="search-common">
-              <list-form-search
-                ref="searchRef"
-                @search="handleSearch"
-              ></list-form-search>
+              <list-form-search ref="searchRef" :isCollapsed="isCollapsed" @update-height="changeHeight" @search="handleSearch" :entityApiName="entityName"></list-form-search>
             </div>
             <div class="search-btns">
               <a-dropdown :trigger="['click']">
@@ -87,7 +84,7 @@
                   </a-menu>
                 </template>
               </a-dropdown>
-              <a-dropdown class="ml10" :trigger="['click']">
+              <!-- <a-dropdown class="ml10" :trigger="['click']">
                 <a-button>
                   <SettingOutlined />
                   <CaretDownOutlined style="font-size: 10px" />
@@ -99,18 +96,18 @@
                     <a-menu-item key="3">分屏视图</a-menu-item>
                   </a-menu>
                 </template>
-              </a-dropdown>
-              <a-button :icon="h(RedoOutlined)" class="ml10"> </a-button>
-              <div class="btnGroup ml10">
-                <a-button :icon="h(RedoOutlined)" title="图标"> </a-button>
-                <a-button
-                  :icon="h(RedoOutlined)"
-                  title="筛选器"
-                  @click="handleShowFilter"
-                >
-                </a-button>
-              </div>
-              <a-button class="ml10" :icon="h(SearchOutlined)"> </a-button>
+              </a-dropdown> -->
+              <a-button
+                :icon="h(FilterOutlined)"
+                title="筛选器"
+                @click="handleShowFilter"
+              >
+              </a-button>
+              <!-- <div class="btnGroup ml10">
+                
+              </div> -->
+              <a-button :icon="h(RedoOutlined)" title="刷新" @click="refreshList"> </a-button>
+              <a-button class="ml10" :icon="h(SearchOutlined)" title="高级搜索"> </a-button>
             </div>
           </div>
           <div class="gridWrap">
@@ -144,15 +141,12 @@
         v-if="isShowModal"
         @cancel="handleShowCancel"
       ></show-field>
-      <Delete
-        :isShow="isDeleteModal"
-        v-if="isDeleteModal"
-        @cancel="handleDeleteCancel"
-      />
+      <DeleteModal :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="handleDeleteCancel" @ok="refreshList" :sObjectName="entityName" :recordId="listId" :objTypeCode="objectTypeCode" :external="external" />
       <common-form-modal
         :isShow="isCommon"
         v-if="isCommon"
-        @cancel="handleCommonCancel"
+        @cancel="handleCommonCancel" @success="refreshList"
+        :title="listId?'编辑':'新建'" @load="handleSearch" :id="listId" :objectTypeCode="entityType" :entityApiName="entityName"
       ></common-form-modal>
     </div>
   </template>
@@ -166,6 +160,7 @@
     SettingOutlined,
     RedoOutlined,
     SearchOutlined,
+    FilterOutlined
   } from "@ant-design/icons-vue";
   import {
     ref,
@@ -187,14 +182,16 @@
   // 导出字段
   import ExportField from "@/components/listView/ExportField.vue";
   import ShowField from "@/components/listView/ShowField.vue";
-  import Delete from "@/components/listView/Delete.vue";
+  import DeleteModal from "@/components/listView/Delete.vue";
   import CommonFormModal from "@/components/listView/CommonFormModal.vue";
   // 筛选器弹层
   import Filter from "@/components/listView/Filter.vue";
   import Interface from "@/utils/Interface.js";
+  import { girdFormatterValue } from "@/utils/common.js";
   const { proxy } = getCurrentInstance();
   const data = reactive({
     currentMenu: "全部",
+    currentFilterId:'',
     menus: [
       {
         id: 1,
@@ -227,12 +224,16 @@
     isRenameModal: false,
     isShareModal: false,
     isShowModal: false,
-    isDeleteModal: false,
+    isDelete: false,
     isFilterModal: false,
     isCommon: false,
+    listId:'',
+    deleteDesc: '确定要删除吗？',
+    external:false,
   });
   const {
     currentMenu,
+    currentFilterId,
     menus,
     isLock,
     columns,
@@ -246,18 +247,52 @@
     isRenameModal,
     isShareModal,
     isShowModal,
-    isDeleteModal,
+    isDelete,
     isFilterModal,
     isCommon,
+    listId,
+    entityName,
+    deleteDesc,
+    external
   } = toRefs(data);
   const handleSwitchMenu = (item) => {
     data.currentMenu = item.name;
     data.isLock = false;
+    data.currentFilterId=item.id;
+    getConfig();
   };
   const handleLock = () => {
     data.isLock = !data.isLock;
   };
-  onMounted(() => {});
+  const getFilterList = () => {
+      proxy.$get(Interface.listView.filterList, {
+        entityType: data.entityType,
+        objectTypeCode: data.objectTypeCode,
+        search: ""
+      }).then(res=>{
+        data.menus = JSON.parse(JSON.stringify(res.actions[0].returnValue));
+      })
+    };
+  onMounted(() => {
+    
+    getMetadataInitialLoad().then(res=>{
+          //console.log("resAsync", res);
+          //data.initialData = res.actions[0].returnValue;
+          //data.currentFilter = {
+            //id: data.initialData.listViewId,
+            //name: data.initialData.listViewLabel
+          //}
+          //data.title = data.initialData.breadCrumbList.length ? data.initialData.breadCrumbList[0].label : '';
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.listViewId){
+            data.currentFilterId = res.actions[0].returnValue.listViewId||'';
+            data.currentMenu = res.actions[0].returnValue.listViewLabel||'';
+          }
+          getFilterList();
+          getActionsRow();
+          getActionsTop();
+          getConfig();
+        });
+  });
   const handleSearch = (params) => {
     // var filterQuery = "";
     // for (var key in params) {
@@ -275,15 +310,20 @@
       $.fn.pagination.defaults.afterPageText = "/{pages}";
       $.fn.pagination.defaults.displayMsg = "从{from} 到 {to} 总计 {total} 条";
     }
+    var authorization=window.localStorage.getItem('token')||'';
     $("#datagrid").datagrid({
-      url: Interface.listView.list,
-      method: "get",
+      url: Interface.list2,
+      method: "post",
       columns: [columns],
       queryParams: {
         filterQuery: data.filterQuery,
         entityType: data.entityType,
-        objectTypeCode: data.objectTypeCode
+        objectTypeCode: data.objectTypeCode,
+        filterId:data.currentFilterId||'',
+        entityName:data.entityName,
+        search:'',
       },
+      headers:{authorization:authorization},
       // data: tableList,
       singleSelect: false,
       checkOnSelect: false,
@@ -294,17 +334,34 @@
       fit: true,
       striped: false,
       rownumbers: true,
+      loadFilter: function (res) {
+          var data0 = { rows: [], total: 0 }
+          if (res&&res.nodes) {
+            for (var i = 0; i < res.nodes.length; i++) {
+                var item = res.nodes[i];
+                for(var cell in item){
+                    if(cell!='id'&&cell!='nameField'&&cell!='viewUrl'){
+                        item[cell]=girdFormatterValue(cell,item,res.nameField);
+                    }
+                }
+                data0.rows.push(item)
+            }
+          }
+          data0.total = res&&res.nodes && res.nodes.total ? Number(res.nodes.total) : data0.rows.length;
+          return data0
+      },
       onLoadSuccess: function () {},
     });
   };
   const Edit = (id) => {
-    console.log("id", id);
+    //console.log("id", id);
     data.isCommon = true;
+    data.listId=id;
   };
   window.Edit = Edit;
   const getConfig = () => {
     function formatOper(val, row, index, entityType, listViewActions) {
-      var rowId = row["LIST_RECORD_ID"];
+      var rowId = row["id"];
       var action = "";
       action += '<div class="iconBox">'
       action += '<div class="popup">'
@@ -321,13 +378,16 @@
           item.title +
           "</div>";
       }
-      action += '</div><svg t="1695373438173" class="icon img" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1943" width="200" height="200"><path d="M512 256a64 64 0 1 0-64-64 64.1 64.1 0 0 0 64 64z m0 192a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z m0 320a64 64 0 1 0 64 64 64.1 64.1 0 0 0-64-64z" p-id="1944"></path></svg></div>'
+      action += '</div><svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>'
       return action;
     }
-    proxy.$get(Interface.listView.config, {}).then((res) => {
+    proxy.$get(Interface.listView.getFilterInfo, {
+        entityType: data.entityType,
+        objectTypeCode: data.objectTypeCode,
+        search: '',
+        filterId: data.currentFilterId||''
+    }).then((res) => {
       console.log(res, "res");
-  
-      var cols = res.DataSet.Columns;
       var columnsArray = [];
       var col = {
         field: "Action",
@@ -343,32 +403,95 @@
         },
       };
       columnsArray.push(col);
-      for (var i = 0; i < cols.length; i++) {
-        var c = cols[i];
-        var col = {
-          field: c.Name,
-          title: c.Title,
-          sortable: true,
-        };
-        columnsArray.push(col);
-      }
+      let { fields } = res.actions[0].returnValue;
+      fields.forEach(item=>{
+        columnsArray.push({
+          field: item.name,
+          title: item.label,
+          sortable: true
+        });
+      })
       data.columns = columnsArray;
       loadGrid(data.columns);
     });
   };
-  
-  const getActions = () => {
-    proxy
-      .$get(Interface.listView.handleActions, {
-        objectTypeCode: 30053,
+  // 获取元数据
+  const getMetadataInitialLoad = async () => {
+      let response;
+      await proxy.$get(Interface.listView.getMetadataInitialLoad, {
+        entityType: data.entityType,
+      }).then(res=>{
+        response = res;
       })
-      .then((res) => {
-        var listViewActions =
-          res.actions[0].returnValue.actionsContainers[0].listViewActions;
-        var actionList =
-          res.actions[0].returnValue.actionsContainers[0].actionList;
-        data.listViewActions = listViewActions;
+      return response;
+    }
+    
+  const getActionsRow = () => {
+    let d = {
+        actions:[{
+            
+          "id": "",
+          "descriptor": "",
+          "callingDescriptor": "UNKNOWN",
+          "params": {
+            "recordId": "",
+            "context": "LIST_VIEW_RECORD",
+            "actionTypes": [
+              "standardButton"
+            ],
+            "inContextOfRecordId": null,
+            "listNameOrId": data.currentFilterId,
+            "entityApiName": data.entityName,
+            "isLABPreview": false,
+            "actionsRequestId": 1
+          }
+
+
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(Interface.listView.actionsrow, obj).then((res) => {
         var temp = [];
+if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+  data.listViewActions = res.actions[0].returnValue;
+}
+      });
+  };
+  const getActionsTop = () => {
+    let d = {
+        "actions": [
+          {
+            "id": "3817;a",
+            "descriptor": "",
+            "callingDescriptor": "UNKNOWN",
+            "params": {       
+                  "recordId": null,
+                  "context": "LIST_VIEW",
+                  "entityApiName": data.entityName,
+                  "record": null,
+                  "listNameOrId": data.currentFilterId,
+                  "size": 5,
+                  "maxWidth": -1,
+                  "actionTypes": [],
+                  "bulkedAction": false,
+                  "actionNames": [],
+                  "enableActionsConfiguration": false,
+                  "isLABPreview": false,
+                  "actionsRequestId": 5        
+            }
+          }
+        ]
+
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(Interface.listView.actionstop, obj).then((res) => {
+        var temp = [];
+if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+        var actionList = res.actions[0].returnValue;
         for (var i = 0; i < actionList.length; i++) {
           let item = actionList[i];
           if (item.isSeparator) {
@@ -381,12 +504,11 @@
             }
           }
         }
-        console.log("temp", temp);
+}
+        //console.log("temp", temp);
         data.actionList = temp;
-        getConfig();
       });
   };
-  getActions();
   
   // 右侧菜单操作
   const handleMenuClick = (e) => {
@@ -411,7 +533,7 @@
         data.isShowModal = true;
         break;
       case "7":
-        data.isDeleteModal = true;
+        data.isDelete = true;
         break;
     }
   };
@@ -435,7 +557,7 @@
     data.isShowModal = params;
   };
   const handleDeleteCancel = (params) => {
-    data.isDeleteModal = params;
+    data.isDelete = params;
   };
   // 显示筛选器
   const handleShowFilter = () => {
@@ -444,15 +566,28 @@
   const closeFilterModal = (params) => {
     data.isFilterModal = params;
   };
-  
+  const Delete = (id) => {
+    //console.log("id", id);
+    data.isDelete = true;
+    data.listId=id;
+  };
+  window.Delete = Delete;
   // 通用弹窗关闭
   const handleCommonCancel = (params) => {
+    data.listId='';
     data.isCommon = params;
   };
+  const refreshList= (params) => {
+    data.isCommon = false;
+    data.isDelete = false;
+    $("#datagrid").datagrid('reload');
+  };
   const New = () => {
+    data.listId='';
     data.isCommon = true;
   };
   const handleClickBtn = (type) => {
+    console.log(1111111111111111)
     if (typeof eval(type) == "function") {
       eval(type + "();");
     }
@@ -545,7 +680,7 @@
   
         .gridWrap {
           position: relative;
-          height: calc(~"100% - 60px");
+          height: calc(~"100% - 45px");
         }
       }
     }
@@ -593,5 +728,36 @@
     border: 1px solid #dddddd;
     border-left: none;
   }
+  button.css-dev-only-do-not-override-kqecok.ant-btn.ant-btn-default.ant-dropdown-trigger{
+    padding: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-right: 10px;
+    .anticon{
+      margin-left: 3px;
+    }
+  }
+  :where(.css-dev-only-do-not-override-kqecok).ant-btn.ant-btn-icon-only{
+    margin-right: 10px;
+    margin-left: 0;
+  }
+  .formSearch{
+    padding-bottom: 0;
+  }
+  :deep .iconBox{
+  text-align: center;
+  .popup{
+    text-align: left;
+    top: 20px;
+  }
+  .moreaction{
+    padding: 0px 1px;
+    width: 18px;
+    border: 1px solid #dedede;
+    border-radius: 4px;
+    position: relative;
+    top: 1px;
+  }
+}
   </style>
   

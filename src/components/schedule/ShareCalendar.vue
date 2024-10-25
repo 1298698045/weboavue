@@ -8,7 +8,7 @@
                 </div>
             </template>
             <div class="modalContainer">
-                <div class="modalCenter">
+                <div class="modalCenter" :style="{ height: height + 'px!important' }">
                     <a-form :model="formState" ref="formRef">
                         <div class="section">
                             <div class="sectionRow">
@@ -236,10 +236,12 @@
                             fields: {
                                 ObjectId: data.users.join(","),
                                 ObjectName: ObjectName,
+                                Name: ObjectName,
                                 SharedRights: data.rightCode,
+                                AccessLevel: data.rightCode,
                                 ObjectTypeName: data.currentMenu,
                                 ObjectType:ObjectType,
-                                CalendarId:(data.userInfoId&&data.userInfoId!='undefined'?data.userInfoId:'')
+                                CalendarId:(props.id?props.id:(data.userInfoId&&data.userInfoId!='undefined'?data.userInfoId:''))
                             }
                         }
                     }
@@ -267,7 +269,7 @@
         //     data.listData = res.rows;
         // })
         data.listData = [];
-        let filterQuery='\nCalendarId\teq\t'+(data.userInfoId&&data.userInfoId!='undefined'?data.userInfoId:'');
+        let filterQuery='\nCalendarId\teq\t'+(props.id?props.id:(data.userInfoId&&data.userInfoId!='undefined'?data.userInfoId:''));
         proxy.$post(Interface.list2, {
             filterId:'',
             objectTypeCode:'20376',
@@ -278,10 +280,11 @@
             rows: 100,
             sort:'CreatedOn',
             order:'desc',
-            displayColumns:'CalendarShareId,CreatedOn,ObjectName,SharedRights,ImageUrls'
+            displayColumns:'CalendarShareId,CreatedOn,ObjectName,SharedRights,AccessLevel,ImageUrls'
         }).then(res => {
             var list = [];
             data.total = res.pageInfo?res.pageInfo.total:0;
+            if(res&&res.nodes){}else{return}
             for (var i = 0; i < res.nodes.length; i++) {
                 var item = res.nodes[i];
                 for(var cell in item){
@@ -354,24 +357,6 @@
         })
     }
     const changeItemPerm = (e,item) => {
-        // console.log(e,item);
-        // let obj = {
-        //     actions: [
-        //         {
-        //             params: {
-        //                 CalendarId: props.id,
-        //                 SharedRights: item.SharedRights
-        //             }
-        //         }
-        //     ]
-        // }
-        // let messages = JSON.stringify(obj);
-        // proxy.$get(Interface.schedule.updatecontentaccess,{
-        //     message: messages
-        // }).then(res=>{
-        //     message.success("设置成功");
-        //     getAccess();
-        // })
             let url = Interface.edit;
             let d = {
                 actions:[{
@@ -386,6 +371,7 @@
                             objTypeCode: '20376',
                             fields: {
                                 SharedRights: item.SharedRights,
+                                AccessLevel: item.SharedRights,
                             }
                         }
                     }

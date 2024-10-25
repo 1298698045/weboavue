@@ -398,14 +398,30 @@ const routes = [
     component: () => import("../views/email/writeEmail/index.vue"),
   },
   {
-    path: "/lightning/o/dynamicSign",
-    name: "DynamicSign",
+    path: "/lightning/o/Meeting/signin/screen",
+    name: "SigninScreen",
     component: () => import("../views/meeting/dynamicSign/index.vue"),
+    meta: {
+      name: "签到屏"
+    },
+  },
+  {
+    path: "/lightning/o/Meeting/signoff/screen",
+    name: "SignoffScreen",
+    component: () => import("../views/meeting/dynamicSign/index.vue"),
+    meta: {
+      name: "签退屏"
+    },
   },
   {
     path: "/lightning/o/printMeetingPeoplelst",
     name: "PrintMeetingPeoplelst",
     component: () => import("../views/meeting/printMeetingPeoplelst/index.vue"),
+  },
+  {
+    path: "/lightning/o/printMeetingBasic",
+    name: "PrintMeetingBasic",
+    component: () => import("../views/meeting/printMeetingBasic/index.vue"),
   },
   {
     path: "/Search",
@@ -530,7 +546,7 @@ const routes = [
         },
       },
       {
-        path: "/meeting/report",
+        path: "/lightning/o/Meeting/report",
         name: "MeetingReport",
         component: () => import("../views/meeting/reportForms/index.vue"),
         icon: "huiyibaobiao",
@@ -552,13 +568,22 @@ const routes = [
     ],
   },
   {
+    path: "/lightning/o/Meeting/view",
+    name: "MeetingDetailView",
+    component: () => import("../views/meeting/detail/MeetingDetailView.vue"),
+    meta: {
+      name: "会议详情页",
+      icon: "huiyihuodong",
+    },
+  },
+  {
     path: "/fileDetail",
     name: "FileDetail",
     component: () => import("../views/fileAdmin/fileDetail.vue"),
   },
   {
-    path: "/informationEditor",
-    name: "InformationEditor",
+    path: "/content/visualEditor",
+    name: "visualEditor",
     component: () => import("../views/information/editor/index.vue"),
   },
   {
@@ -576,9 +601,9 @@ const routes = [
     component: () => import("../views/information/detail/index.vue"),
   },
   {
-    path: "/previewContent",
-    name: "PreviewContent",
-    component: () => import("../views/information/preview/index.vue"),
+    path: "/lightning/r/Content/view",
+    name: "ContentView",
+    component: () => import("../views/information/preview/index2.vue"),
   },
   {
     path: "/hrsetting",
@@ -649,7 +674,7 @@ const routes = [
   //   component: () => import("../views/sys/home/index.vue"),
   // },
   {
-    path: "/OfficialDocument",
+    path: "/lightning/OfficialDocument/dashboard",
     name: "OfficialDocument",
     component: Layout,
     redirect: "/OfficeDocument/in/monitor",
@@ -1896,7 +1921,7 @@ const routes = [
         name: "info",
         icon: "xinxiguanli1",
         meta: {
-          name: "信息管理",
+          name: "文档中心",
           icon: "xinxiguanli1",
         },
       },
@@ -1908,6 +1933,32 @@ const routes = [
         meta: {
           name: "通知管理",
           icon: "xinxiguanli1",
+        },
+      },
+      {
+        path: "/oa2/o",
+        component: () => import("../views/listView/index2.vue"),
+        name: "OASuggestion",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "领导信箱管理",
+          icon: "huiyicanhuiren",
+          entityType:'oA2',
+          objectTypeCode:'20520',
+          entityName:'OASuggestion',
+        },
+      },
+      {
+        path: "/705/o",
+        component: () => import("../views/listView/index2.vue"),
+        name: "CampaignSms",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "短信管理",
+          icon: "huiyicanhuiren",
+          entityType:'705',
+          objectTypeCode:'20026',
+          entityName:'CampaignSms',
         },
       },
     ],
@@ -1938,6 +1989,198 @@ const routes = [
     path: "/detailCommon",
     name: "DetailCommon",
     component: () => import("../views/detail/detailCommon.vue"),
+  },
+  {
+    path: "/knowledge/RuleArticle/mine/home'",
+    name: "RuleArticle",
+    component: Layout,
+    redirect: "/knowledge/RuleArticle/home",
+    meta: {
+      name: "制度文件"
+    },
+    children: [
+      {
+        path: "/knowledge/RuleArticle/home",
+        component: () => import("../views/knowledge/RuleArticle/home/index.vue"),
+        name: "RuleArticleHome",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "制度台账",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/knowledge/RuleArticle/myhome",
+        component: () => import("../views/knowledge/RuleArticle/myhome/index.vue"),
+        name: "RuleArticleMyHome",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "我的制度台账",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/knowledge/RuleArticle/history/home",
+        component: () => import("../views/listView/index2.vue"),
+        name: "RuleArticleHistory",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "变更记录",
+          icon: "huiyicanhuiren",
+          entityType:'093',
+          objectTypeCode:'100207',
+          entityName:'InstitutionHistory',
+        },
+      },
+      {
+        path: "/knowledge/RuleArticle/version/home",
+        component: () => import("../views/listView/index2.vue"),
+        name: "RuleArticleVersion",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "修订记录",
+          icon: "huiyicanhuiren",
+          entityType:'K30',
+          objectTypeCode:'3030',
+          entityName:'KbArticleVersion',
+        },
+      },
+      {
+        path: "/knowledge/RuleArticle/abolish/home",
+        name: "RuleArticleAbolish",
+        component: () => import("../views/listView/index2.vue"),
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "废止记录",
+          icon: "huiyicanhuiren",
+          entityType:'K31',
+          objectTypeCode:'3031',
+          entityName:'KbArticleAbolish',
+        },
+      }
+    ]
+  },
+  {
+    path: "/lightning/workflow/WFFormPrint",
+    name: "WFFormPrint",
+    component: () => import("../views/flow/WFFormPrint/index.vue"),
+  },
+  {
+    path: "/jgfiles/samples/OpenAndSave",
+    name: "OpenAndSave",
+    component: () => import("../jgfiles/samples/index.vue"),
+  },
+  {
+    path: "/knowledge/RuleArticle/detail",
+    name: "RuleArticleDetail",
+    component: () => import("../views/knowledge/RuleArticle/detail/index.vue"),
+    icon: "huiyicanhuiren",
+    meta: {
+      name: "制度文件详情",
+      icon: "huiyicanhuiren",
+    },
+  },
+  {
+    path: "/oa0/o",
+    name: "Office",
+    component: Layout,
+    redirect: "/oa0/o",
+    meta: {
+      name: "行政管理"
+    },
+    children: [
+      {
+        path: "/oa0/o",
+        component: () => import("../views/listView/index2.vue"),
+        name: "ReceptionMeal",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "用餐记录",
+          icon: "huiyicanhuiren",
+          entityType:'oa0',
+          objectTypeCode:'20143',
+          entityName:'OA_ReceptionMeal',
+        },
+      },
+      {
+        path: "/_ui/office/seal/home",
+        component: () => import("../views/listView/index2.vue"),
+        name: "Com_SealUse",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "用章记录",
+          icon: "huiyicanhuiren",
+          entityType:'A07',
+          objectTypeCode:'20054',
+          entityName:'Com_SealUse',
+        },
+      },
+      {
+        path: "/_ui/hr/goabroad/home",
+        component: () => import("../views/listView/index2.vue"),
+        name: "HREmpGoAbroad",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "出国管理",
+          icon: "huiyicanhuiren",
+          entityType:'A06',
+          objectTypeCode:'20191',
+          entityName:'HREmpGoAbroad',
+        },
+      },
+      {
+        path: "/XINFANGDENGJIDAN/o",
+        component: () => import("../views/listView/index2.vue"),
+        name: "XINFANGDENGJIDAN",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "访客管理",
+          icon: "huiyicanhuiren",
+          entityType:'20229',
+          objectTypeCode:'20229',
+          entityName:'XINFANGDENGJIDAN',
+        },
+      },
+      
+    ]
+  },
+  {
+    path: "/lightning/page/chatter",
+    name: "Chatter",
+    component: Layout,
+    redirect: "/lightning/page/chatter",
+    meta: {
+      name: "社区交流"
+    },
+    children: [
+      {
+        path: "/lightning/page/chatter",
+        component: () => import("../views/listView/index2.vue"),
+        name: "ChatterHome",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "社区",
+          icon: "huiyicanhuiren",
+          entityType:'0D5',
+          objectTypeCode:'6000',
+          entityName:'Chatter',
+        },
+      },
+      {
+        path: "/0D5/o",
+        component: () => import("../views/listView/index2.vue"),
+        name: "ChatterStatusManager",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "帖子管理",
+          icon: "huiyicanhuiren",
+          entityType:'0D5',
+          objectTypeCode:'6000',
+          entityName:'Chatter',
+        },
+      },
+      
+    ]
   },
 ];
 
