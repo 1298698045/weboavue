@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-  import { ref, reactive, toRefs, onMounted, watch, defineProps, defineExpose } from "vue";
+  import { ref, reactive, toRefs, onMounted, watch, defineProps, defineExpose, onErrorCaptured } from "vue";
   const props = defineProps({
     tableHeight: [String, Number],
     isCollapsed: Boolean,
@@ -64,7 +64,10 @@
       rownumbers: true,
       onLoadSuccess: function () {
         $('#'+props.name).datagrid('resize', { height: height });
-      }
+      },
+      onLoadError: function () {
+        $('#'+props.name).datagrid('loadData', { total: 0, rows: [] });
+      },
     });
   }
   

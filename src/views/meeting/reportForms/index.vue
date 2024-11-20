@@ -41,7 +41,7 @@
                                         <PieChartOutlined style="color: #108def;" />
                                     </div>      
                                     <div class="statistics-right">
-                                        <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.ResTotalNum}}</div>      
+                                        <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.ResTotalNum||0}}</div>      
                                         <div class="statistics-name">总预约次数</div> 
                                     </div> 
                                     <!-- <div>
@@ -57,7 +57,7 @@
                                         <UserOutlined style="color: rgb(141, 193, 57);" />
                                     </div>      
                                     <div class="statistics-right">
-                                        <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.MyResNum}}</div>      
+                                        <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.MyResNum||0}}</div>      
                                         <div class="statistics-name">我的预约次数</div> 
                                     </div> 
                                 </li>
@@ -66,7 +66,7 @@
                                         <FundProjectionScreenOutlined style="color: rgb(58, 200, 210);" />
                                     </div>      
                                     <div class="statistics-right">
-                                        <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.OrgNum}}</div>      
+                                        <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.OrgNum||0}}</div>      
                                         <div class="statistics-name">会议室数量</div> 
                                     </div> 
                                     <!-- <div>
@@ -127,8 +127,8 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item,index) in seriesData" :key="index">
-                                        <td>{{item.name}}</td>
-                                        <td v-for="(row,idx) in item.data" :key="idx">{{row}}</td>
+                                        <td>{{item.name||''}}</td>
+                                        <td v-for="(row,idx) in item.data" :key="idx">{{row||0}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -136,13 +136,13 @@
                                 <thead>
                                     <tr>
                                         <th>姓名</th>
-                                        <th v-for="(item,index) in xData" :key="index">{{item}}</th>
+                                        <th v-for="(item,index) in xData2" :key="index">{{item}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item,index) in seriesData" :key="index">
-                                        <td>{{'管理员'}}</td>
-                                        <td v-for="(row,idx) in item.data" :key="idx">{{row}}</td>
+                                    <tr v-for="(item,index) in seriesData2" :key="index">
+                                        <td>{{item.name||''}}</td>
+                                        <td v-for="(row,idx) in item.data" :key="idx">{{row||0}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -169,7 +169,7 @@
     } from "vue";
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
-
+    import { girdFormatterValue } from "@/utils/common.js";
     import { SearchOutlined, UndoOutlined,InfoCircleOutlined,FundProjectionScreenOutlined,UserOutlined,PieChartOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
@@ -181,7 +181,10 @@
         current: 1,
         xData: [],
         lineData: [],
+        lineData2:[],
         seriesData: [],
+        xData2: [],
+        seriesData2: [],
         listData: [],
         year: dayjs(new Date(), yearFormat),
         countObj: {},
@@ -197,7 +200,7 @@
         ],
         activeKey: 0,
     });
-    const { current, xData, lineData, seriesData, listData, year, countObj, rooms, selectRoom,tabs,activeKey } = toRefs(data);
+    const { current, xData,xData2, lineData,lineData2,seriesData,seriesData2, listData, year, countObj, rooms, selectRoom,tabs,activeKey } = toRefs(data);
     const changeTabs = (e) => {
         data.activeKey = e;
         if(e==0){
@@ -239,31 +242,86 @@
         getChartData();
     }
     const getQuery = () => {
-        proxy.$get(Interface.meetingRpt.list,{
-            type: 2
-        }).then(res=>{
-            data.listData = res.data;
-            data.rooms = data.listData.map(item=>{
-                item.checkbox = true;
-                return item;
-            });
-        })
+        // proxy.$get(Interface.meetingRpt.list,{
+        //     type: 2
+        // }).then(res=>{
+        //     data.listData = res.data;
+        //     data.rooms = data.listData.map(item=>{
+        //         item.checkbox = true;
+        //         return item;
+        //     });
+        // })
+        let filterQuery='\nResourceTypeCode\teq\t2\nStatusCode\teq\t1';
+        proxy.$post(Interface.list2, {
+              filterId:'',
+              objectTypeCode:'20034',
+              entityName:'ResourceOrg',
+              filterQuery:filterQuery,
+              search:'',
+              page: 1,
+              rows: 100,
+              sort:'SortNumber',
+              order:'asc',
+              displayColumns:'Name'
+          }).then(res => {
+              var list = [];
+              for (var i = 0; i < res.nodes.length; i++) {
+                  var item = res.nodes[i];
+                  for(var cell in item){
+                      if(cell!='id'&&cell!='nameField'){
+                          item[cell]=girdFormatterValue(cell,item);
+                      }
+                      if(cell=='CreatedOn'){
+                          item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
+                      }
+                  }
+                  item['Id']=item.id;
+                  item['checkbox']=true;
+                  list.push(item)
+              }
+              data.rooms = list;
+          })
     }
     getQuery();
     const getChartData = () => {
-        proxy.$get(Interface.meetingRpt.stat,{
+        data.countObj={};
+        data.xData=[];
+        data.lineData=[];
+        data.seriesData=[];
+        proxy.$get(Interface.meetingRpt.roomstat,{
             year: data.year.format("YYYY"),
-            type: 2,
             ids: data.selectRoom.join(',')
         }).then(res=> {
-            data.countObj = res;
-            data.xData = res.data.xData;
-            data.lineData = res.data.lineData;
-            data.seriesData = res.data.seriesData.map(item=>{
-                item.type = 'line';
-                return item;
-            })
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                let statdata=res.actions[0].returnValue;
+                data.countObj = statdata;
+                data.xData = statdata.xData||statdata.xdata;
+                data.lineData = statdata.lineData;
+                data.seriesData = statdata.seriesData.map(item=>{
+                    item.type = 'line';
+                    return item;
+                })
+            }
             loadChart();
+        })
+        data.xData2=[];
+        data.lineData2=[];
+        data.seriesData2=[];
+        proxy.$get(Interface.meetingRpt.peoplestat,{
+            year: data.year.format("YYYY"),
+            //ids: data.selectRoom.join(',')
+        }).then(res=> {
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                let statdata=res.actions[0].returnValue;
+                //data.countObj = statdata;
+                data.xData2 = statdata.xData||statdata.xdata;
+                data.lineData2 = statdata.lineData;
+                data.seriesData2 = statdata.seriesData.map(item=>{
+                    item.type = 'line';
+                    return item;
+                })
+            }
+            //loadChart();
         })
     }
     getChartData();

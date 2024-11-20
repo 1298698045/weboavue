@@ -83,7 +83,8 @@ const Interface = {
   group: {
     list: "/localData/group/sys.group.member.search.json",
     statusList: "/localData/group/chatter.status.search.json", // 动态
-    statistics: "/localData/group/chatter.status.statistics.json", // 统计
+    //statistics: "/localData/group/chatter.status.statistics.json", // 统计
+    statistics: baseUrl + "/one/group/getSummaryReport", // 统计
     addPeople: "/localData/group/sys.group.member.add.json", // 添加成员
   },
   email: {
@@ -174,7 +175,9 @@ const Interface = {
   // 会议报表
   meetingRpt: {
     list: "/localData/meetingRpt/resource.type.list.json",
-    stat: "/localData/meetingRpt/resource.room.stat.json"
+    stat: "/localData/meetingRpt/resource.room.stat.json",
+    roomstat: baseUrl + "/meeting/report/room/getSummary",
+    peoplestat: baseUrl + "/meeting/report/people/getSummary"
   },
   // 门户设计
   design: {
@@ -305,5 +308,28 @@ const Interface = {
   },
   login:baseUrl + "/auth/doLogin",
   validate:baseUrl + "/auth/captcha",
+  content:{
+    folder:{
+      get:baseUrl + '/content/folder/getFolderTree',//获取文档中心目录
+      new:baseUrl + '/content/folder/create',//创建文档中心目录
+      edit:baseUrl + '/aura/RecordUi/updateRecord',//编辑文档中心目录
+    }
+  },
+  portal: {
+    layoutList: baseUrl + "/aura/dashboard/describeDashboard", // 获取门户、仪表盘设置
+    save: baseUrl + "/aura/dashboard/save",
+    saveComponent: baseUrl + "/aura/dashboard/saveComponent",
+    loadComponents: baseUrl + "/aura/dashboard/loadComponents", // 加载组件数据
+  },
+  status:{
+    submit:baseUrl + "/weibo/status/submit",//发布状态
+    query:baseUrl + "/weibo/queryStatus",//拉取个人可以查看的状态、投票、问题
+  },
+  question:{
+    submit:baseUrl + "/weibo/question/submit",//发布问题
+  },
+  poll:{
+    submit:baseUrl + "/weibo/question/submit",//发布问题
+  },
 };
 export default Interface;

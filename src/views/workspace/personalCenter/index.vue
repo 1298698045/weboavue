@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper personalCenterWrap">
         <div class="appcenter-header-wrap">
             <a-input-search v-model:value="searchVal" placeholder="搜索" style="width: 300px" @search="onSearch" />
         </div>
@@ -50,18 +50,20 @@
             </div>
             <div class="app-list-section">
                 <div class="list-layout-wrap appcenter-list-layout-item-4 app-list-layout">
-                    <div class="appcenter-card-wrap" @click="handleDetail(item)" v-for="(item,index) in applicationList" :key="index">
-                        <div class="appcenter-avatar-wrap">
-                            <div class="larkc-avatar larkc-avatar-small appcenter-avatar-inline">
-                                <img class="larkc-avatar-img" :src="getImagePath(item.PictureUrl)" alt="">
+                    <template v-for="(item,index) in applicationList" :key="index">
+                        <div class="appcenter-card-wrap" @click="handleDetail(item)" v-if="data.groupId==''||data.groupId==item.GroupId">
+                            <div class="appcenter-avatar-wrap">
+                                <div class="larkc-avatar larkc-avatar-small appcenter-avatar-inline">
+                                    <img class="larkc-avatar-img" :src="getImagePath(item.PictureUrl)" alt="">
+                                </div>
+                            </div>
+                            <div class="appcenter-listapp-wrap" style="margin-left: 10px;">
+                                <div class="appcenter-listapp-title">
+                                    <div class="appcenter-listapp-name">{{item.Label}}</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="appcenter-listapp-wrap" style="margin-left: 10px;">
-                            <div class="appcenter-listapp-title">
-                                <div class="appcenter-listapp-name">{{item.Label}}</div>
-                            </div>
-                        </div>
-                    </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -99,11 +101,17 @@
         objData: {},
         applicationList: [],
         groupId: "",
-        isModal: false
+        isModal: false,
+        userId:'',
+        userName:''
     });
-    const { currentTab, searchVal, objData, applicationList, groupId, isModal } = toRefs(data);
+    const { userId,userName,currentTab, searchVal, objData, applicationList, groupId, isModal } = toRefs(data);
     const onSearch = (e) => {
 
+    }
+    const handleTab=(item,index)=>{
+data.currentTab=index;
+data.groupId=item.GroupId;
     }
     const getQuery = () => {
         proxy.$get(Interface.workspace.list,{}).then(res=>{
@@ -112,6 +120,7 @@
                 var applications = [];
                 data.objData.Groups.forEach(function(item){
                     item.Applications.forEach(function(v){
+                        v.GroupId=item.GroupId;
                         applications.push(v);
                     })
                 })
@@ -126,7 +135,6 @@
             }
         })
     }
-    getQuery();
     const getImagePath = (imagePath) => {
         if(imagePath){
             try {
@@ -140,6 +148,18 @@
     const handleOpenModal = () => {
         data.isModal = true;
     }
+    onMounted(() => {
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.userId=userInfo.userId;
+            data.userName=userInfo.fullName;
+            if(data.userId=='jackliu'){
+                data.userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+            }
+        }
+        getQuery();
+    });
     const handleDetail = (item) => {
         if(item.Label=='邮件'){
             let url = router.resolve({
@@ -149,8 +169,18 @@
                     
                 },
             });
-            //window.open(url.href);
-            window.location.href=url.href;
+            window.open(url.href);
+            //window.location.href=url.href;
+        }
+        else if(item.Label=='我的简历'){
+            let url = router.resolve({
+                path:'/MyResume',
+                name: "MyResume",
+                query: {
+                    id:data.userId
+                },
+            });
+            window.open(url.href);
         }
     }
     const cancelApplication = (e, params) => {
@@ -160,3 +190,11 @@
         data.isModal = e;
     }
 </script>
+<style lang="less">
+.personalCenterWrap{
+    height: 100%;
+    .appcenter-card-wrap,.appcenter-card-wrap:nth-child(6n),.common_card-wrap:nth-child(6n),.common_card-wrap{
+        margin-right: 9px;
+    }
+}
+</style>

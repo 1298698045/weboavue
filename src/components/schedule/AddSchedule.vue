@@ -179,7 +179,12 @@
                         <div class="leftForm">
                             <div class="formWrap">
                                 <a-form :model="formState" ref="formRef">
-                                    <a-form-item name="Subject">
+                                    <a-form-item name="Subject" :rules="[
+                                    {
+                                        required: true,
+                                        message: '标题不能为空',
+                                    },
+                                    ]">
                                         <div class="formRow">
                                             <div class="lIcon">
                                                 <!-- <a-button :icon="h(EditOutlined)" /> -->

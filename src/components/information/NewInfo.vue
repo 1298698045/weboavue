@@ -6,24 +6,24 @@
                     {{ModalTitle}}
                  </div>
             </template>
-            <div class="modalContainer">
+            <div class="modalContainer NewInfoWrap">
                 <div class="modalCenter">
                     <a-form ref="formRef" :model="formState" :label-col="labelCol">
                         <a-form-item label="标题" name="name" :rules="[{ required: true, message: '请输入标题!' }]">
                             <a-input v-model:value="formState.name" placeholder="请输入标题" />
                         </a-form-item>
-                        <a-form-item label="栏目" name="column" :rules="[{ required: true, message: '请选择栏目!' }]">
+                        <a-form-item label="目录" name="column" :rules="[{ required: true, message: '请选择目录!' }]">
                             <a-tree-select
                                 v-model:value="formState.column"
                                 show-search
                                 style="width: 100%"
                                 :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                                placeholder="请选择栏目"
+                                placeholder="请选择目录"
                                 allow-clear
                                 tree-default-expand-all
                                 :tree-data="treeData"
                                 tree-node-filter-prop="name"
-                                :disabled="formState.column=='00000000-0000-0000-0000-000000002000'"
+                                :disabled="formState.column=='00000000-0000-0000-0000-000000002000'||props.objectTypeCode=='100311'||props.objectTypeCode=='100201'"
                             >
                                 <template #title="{ value: val, name }">
                                     <span>{{ name }}</span>
@@ -88,9 +88,12 @@
             }
         ],
         currentMenu: "角色",
-        ModalTitle:'新建信息'
+        ModalTitle:'新建信息',
+        sObjectName:'Content',
+        userId:'',
+        userName:''
     })
-    const { listData, menus, currentMenu,ModalTitle } = toRefs(data);
+    const { listData, menus, currentMenu,ModalTitle,sObjectName,userId,userName } = toRefs(data);
     const formState = reactive({
         name: "",
         column: ""
@@ -125,12 +128,13 @@
             params: {
               recordInput: {
                 allowSaveOnDuplicate: false,
-                apiName: props.objectTypeCode=='100201'?'Content':'Notice',
+                apiName: data.sObjectName,
                 objTypeCode: props.objectTypeCode,
                 fields: {
                     ContentTypeCode: 1,
                     Title: formState.name,
-                    FolderId: formState.column
+                    FolderId: formState.column,
+                    CreatedBy:data.userId
                 }
               }              
             }
@@ -145,6 +149,13 @@
         d.actions[0].params.recordInput.fields.RegardingObjectId=props.RegardingObjectId;
         d.actions[0].params.recordInput.fields.RegardingObjectTypeCode=props.RegardingObjectTypeCode;
     }
+    if(props.objectTypeCode=='100311'){
+        d.actions[0].params.recordInput.fields={
+            SubjectId:formState.column,
+            Name: formState.name,
+            CreatedBy:data.userId
+        };
+    }
     let obj = {
         message: JSON.stringify(d)
     }
@@ -154,7 +165,7 @@
           message.success("保存成功！");
           emit("cancel", false);
           if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
-            let reUrl = router.resolve({
+                let reUrl = router.resolve({
                     name: "visualEditor",
                     query: {
                         id: res.actions[0].returnValue.id,
@@ -165,6 +176,18 @@
                         RegardingObjectTypeCode:props.RegardingObjectTypeCode||''
                     }
                 })
+                if(props.objectTypeCode=='100311'){
+                    reUrl = router.resolve({
+                        name: "visualEditor",
+                        query: {
+                            id: res.actions[0].returnValue.ContentId,
+                            objectTypeCode: '100201',
+                            FolderId: formState1.column,
+                            RegardingObjectId:props.RegardingObjectId||'',
+                            RegardingObjectTypeCode:props.RegardingObjectTypeCode||''
+                        }
+                    })
+                }
             window.open(reUrl.href); 
           }
           
@@ -173,10 +196,35 @@
         console.log('error', error);
     });
 }
-if(props.RegardingObjectId){
+if(props.RegardingObjectTypeCode=='5000'){
     data.ModalTitle='新建会议纪要'
-    formState.column=props.FolderId,
-    formState.name=props.RegardingObjectName
+    formState.column=props.FolderId;
+    formState.name=props.RegardingObjectName;
+    data.sObjectName='Content';
+}
+else if(props.objectTypeCode=='100311'){
+    data.ModalTitle='新建知识文章';
+    formState.column=props.FolderId;
+    data.sObjectName='KbSubjectContent';
+}
+else if(props.objectTypeCode=='100201'){
+    data.ModalTitle='新建文档';
+    formState.column=props.FolderId;
+    data.sObjectName='Content';
+}
+else if(props.objectTypeCode=='100202'){
+    data.ModalTitle='新建通知';
+    formState.column=props.FolderId;
+    data.sObjectName='Notice';
+}
+let userInfo=window.localStorage.getItem('userInfo');
+if(userInfo){
+    userInfo=JSON.parse(userInfo);
+    data.userId=userInfo.userId;
+    data.userName=userInfo.fullName;
+    if(data.userId=='jackliu'){
+        data.userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+    }
 }
 </script>
 <style lang="less" scoped>
@@ -185,5 +233,17 @@ if(props.RegardingObjectId){
         display: flex;
         align-items: center;
         margin-top: 10px;
+    }
+    .NewInfoWrap{
+        :deep .ant-form-item-label{
+            text-align: left;
+        }
+        .modalCenter{
+            padding: 10px 45px !important;
+        }
+        .ant-form-item{
+            margin-bottom: 30px !important;
+            margin-top: 10px !important;
+        }
     }
 </style>

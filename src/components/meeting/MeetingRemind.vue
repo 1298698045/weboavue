@@ -24,13 +24,22 @@
                         },
                       ]">
                         <div class="row">
-                            <a-checkbox v-model:checked="formState.wechat">微信消息</a-checkbox>
+                            <a-checkbox v-model:checked="formState.web">站内消息</a-checkbox>
+                        </div>
+                        <div class="row">
+                            <a-checkbox v-model:checked="formState.app">移动APP</a-checkbox>
                         </div>
                         <div class="row">
                             <a-checkbox v-model:checked="formState.sms">短信消息</a-checkbox>
                         </div>
                         <div class="row">
                             <a-checkbox v-model:checked="formState.email">邮件消息</a-checkbox>
+                        </div>
+                        <div class="row">
+                            <a-checkbox v-model:checked="formState.wechat">微信消息</a-checkbox>
+                        </div>
+                        <div class="row">
+                            <a-checkbox v-model:checked="formState.dingding">钉钉消息</a-checkbox>
                         </div>
                       </a-form-item>
                   </div>
@@ -104,6 +113,7 @@
     isShow: Boolean,
     id:String,
     RegardingObjectIdName:String,
+    RegardingObjectTypeCode:String,
     type:String
   });
   const formRef = ref();
@@ -122,6 +132,9 @@
     wechat:false,
     sms:false,
     email:false,
+    web:false,
+    app:false,
+    dingding:false
   });
   
   data.height = document.documentElement.clientHeight - 330;
@@ -135,17 +148,17 @@
         formState.message = e;
   }
   const handleSubmit = () => {
-    if(formState.wechat||formState.sms||formState.email){}else{
+    if(formState.wechat||formState.sms||formState.email||formState.web||formState.app||formState.dingding){}else{
       message.error("至少勾选一种渠道");
-      retun
+      return
     }
     if(formState.Name){}else{
       message.error("标题不能为空");
-      retun
+      return
     }
     if(formState.message){}else{
       message.error("通知内容不能为空");
-      retun
+      return
     }
     formRef.value
       .validate()
@@ -159,11 +172,15 @@
                     descriptor: "",
                     callingDescriptor: "UNKNOWN",
                     params: {
-                      meetingId:props.id,
+                      objectId:props.id,
+                      objectTypeCode:props.RegardingObjectTypeCode,
                       noticeMessageChannel: {
-                        wechat: formState.wechat,
+                        web:formState.web,
+                        app: formState.app,
                         sms: formState.sms,
                         email: formState.email,
+                        wechat: formState.wechat,
+                        dingding: formState.dingding,
                         message: formState.message
                       }              
                     }

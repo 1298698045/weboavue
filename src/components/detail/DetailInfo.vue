@@ -1,7 +1,7 @@
 <template>
-    <div class="detailInfo">
+    <div class="detailInfo" :style="{ minHeight: height + 'px' }" ref="detailInfoModal">
         <div class="fh-section" v-for="(item, index) in layoutList" :key="index">
-            <div class="fh-section-label">{{item.title}}</div>
+            <div class="fh-section-label" v-if="item.title!='内容'&&item.title!='回执'">{{item.title}}</div>
             <div class="section-content">
                 <div class="sectionRow" v-for="(row, rowIdx) in item.rows" :key="rowIdx">
                     <div class="sectionCol" v-for="(attr, attrIdx) in row.attributes" :key="attrIdx">
@@ -31,12 +31,13 @@
         objectTypeCode: [Number, String],
         entityApiName: String
     });
-
+    const detailInfoModal = ref(null);
     const data = reactive({
         layoutList: [],
-        list: {}
+        list: {},
+        height:100,
     });
-    const { layoutList, list } = toRefs(data);
+    const { layoutList, list,height } = toRefs(data);
     const getLayout = () => {
         let obj = {
             actions:[{
@@ -89,6 +90,14 @@
         })
     };
     // getDetail();
+    onMounted(() => {
+    let h = document.documentElement.clientHeight;
+        data.height=h-355;
+        window.addEventListener("resize", (e) => {
+            let h = document.documentElement.clientHeight;
+            data.height=h-355;
+        });
+    })
 </script>
 <style lang="less" scoped>
     .detailInfo{

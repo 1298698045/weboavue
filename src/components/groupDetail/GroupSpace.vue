@@ -1,20 +1,48 @@
 <template>
   <div class="GroupSpace">
-    <div class="panel">
-      <div class="panel-head">
+    <div class="panel panel0">
+      <!-- <div class="panel-head">
         <div class="panel-title">发布帖子</div>
-      </div>
-      <div class="panel-bd">
+      </div> -->
+      <div class="panel-bd commentBox">
+        <div class="tabContainer">
+          <a-tabs v-model:activeKey="activeKey" @change="changeTab">
+            <a-tab-pane key="0" tab="状态"></a-tab-pane>
+            <a-tab-pane key="30400" tab="投票"></a-tab-pane>
+            <a-tab-pane key="1" tab="问题"></a-tab-pane>
+          </a-tabs>
+        </div>
+        <div class="TEditorWrap CommentWrap" v-if="activeKey=='6000'||activeKey=='0'">
         <TEditor
-          :placeholder="'有什么新鲜事想分享给大家?'"
-          @input="getInputContent"
+            :placeholder="'有什么新鲜事想分享给大家?'"
+            @input="getInputContent"
+            :height="230"
         />
+        </div>
+        <div class="VoteWrap" v-if="activeKey=='30400'">
+            <div class="VoteLabel">问题</div>
+            <a-textarea class="Votetextarea" v-model:value="data.content" placeholder="您想提问什么？" :rows="3"></a-textarea>
+            <template v-for="(item,index) in VoteOptions" :key="index">
+                <div class="VoteLabel">选项{{index+1}}</div>
+                <a-input class="VoteInput" v-model:value="item.name"></a-input>
+            </template>
+        </div>
+        <div class="TEditorWrap QuestionWrap" v-if="activeKey=='30401'||activeKey=='1'">
+            <div class="QuestionLabel">问题</div>
+            <a-textarea class="Votetextarea" v-model:value="data.content" placeholder="您想知道什么？" :rows="3"></a-textarea>
+            <div class="QuestionLabel">详细信息</div>
+            <TEditor
+                :placeholder="'如果您还需要补充，请在此处添加一些细节...'"
+                :height="230"
+            />
+        </div>
         <div class="sendWrap">
+          <a-button type="primary" class="optionalWrapLeft" @click="addQuestionOption" v-if="activeKey=='30400'"><PlusOutlined />添加新选项</a-button>
           <a-button type="primary" :disabled="!isSend" @click="sendContent">发布</a-button>
         </div>
       </div>
     </div>
-    <div class="panel">
+    <div class="panel panel1">
       <div class="panel-head">
         <div class="panel-title">群组动态</div>
         <div class="panel-search">
@@ -23,11 +51,19 @@
             placeholder="搜索动态"
             style="width: 300px"
             @search="onSearch"
+            allowClear
           />
         </div>
       </div>
       <div class="panel-bd">
         <div class="trendsWrap">
+          <div class="empty" v-if="!spaceList.length">
+            <img
+              :src="require('@/assets/img/empty.png')"
+              alt=""
+            />
+            <p class="emptyDesc">当前暂无数据</p>
+          </div>
           <div
             class="trendsItem"
             v-for="(item, index) in spaceList"
@@ -35,12 +71,15 @@
           >
             <div class="trendsItemBox">
               <div class="avatar">
-                <img :src="item.ImageUrls" alt="" />
+                <!-- <img :src="item.ImageUrls" alt="" /> -->
+                <a-avatar :size="37">
+                    <template #icon><UserOutlined /></template>
+                </a-avatar>
               </div>
               <div class="trends-info">
                 <div class="info-name">
                   {{ item.OwningUser }}
-                  <svg
+                  <!-- <svg
                     viewBox="0 0 24 24"
                     aria-label="认证账号"
                     role="img"
@@ -52,7 +91,7 @@
                       ></path>
                     </g>
                   </svg>
-                  <span class="name2">@{{ item.OwningUser }}</span>
+                  <span class="name2">@{{ item.OwningUser }}</span> -->
                 </div>
                 <div class="info-time">
                   {{ item.CreatedOn }}
@@ -63,20 +102,20 @@
               <div class="trends-more">
                 <a-dropdown>
                       <a class="ant-dropdown-link" @click.prevent>
-                        <EllipsisOutlined />
+                        <MoreOutlined />
                       </a>
                       <template #overlay>
                           <a-menu>
-                              <a-menu-item>
-                                  <a href="javascript:void(0);" @click="handleDelete(item.id)">删除</a>
+                              <a-menu-item v-if="item.OwningUserId&&data.OwningUser&&data.OwningUser==item.OwningUserId" @click="handleDelete(item.id,1,'')">
+                                  <DeleteOutlined /><span class="a-menu-item-label">删除</span>
                               </a-menu-item>
                           </a-menu>
                       </template>
                   </a-dropdown>
               </div>
             </div>
-            <div class="trendsItemBottom">
-              <div class="iconBox">
+            <!-- <div class="trendsItemBottom">
+              <div class="iconBox" title="评论">
                 <svg
                   title="评论"
                   viewBox="0 0 24 24"
@@ -91,7 +130,7 @@
                 </svg>
                 <span class="num">{{ item.NumOfComment || 0 }}</span>
               </div>
-              <div class="iconBox">
+              <div class="iconBox" title="点赞">
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -105,7 +144,7 @@
                 </svg>
                 <span class="num">{{ item.NumOfLike || 0 }}</span>
               </div>
-              <div class="iconBox">
+              <div class="iconBox" title="分享">
                 <svg
                   title="分享"
                   viewBox="0 0 24 24"
@@ -119,6 +158,69 @@
                   </g>
                 </svg>
               </div>
+            </div> -->
+            <div class="commentBtn">
+                <span class="commentBtn-item" title="分享" ><ExportOutlined /><span>{{ item.NumOfForward||0 }}</span></span>
+                <span class="commentBtn-item" title="评论" v-if="!item.IsShowReply" @click="item.IsShowReply=true;getCommentList1(item.id,item)"><MessageOutlined /><span>{{ item.NumOfComment||0 }}</span></span>
+                <span class="commentBtn-item" title="评论" v-if="item.IsShowReply" @click="item.IsShowReply=false" style="color: #1677ff;"><MessageOutlined /><span>{{ item.NumOfComment||0 }}</span></span>
+                <span class="commentBtn-item" title="点赞" v-if="!item.IsLike" @click="item.IsLike=true;item.NumOfLike=1"><LikeOutlined /><span>{{ item.NumOfLike||0 }}</span></span>
+                <span class="commentBtn-item" title="取消点赞" v-if="item.IsLike" @click="item.IsLike=false;item.NumOfLike=0" style="color: red;"><LikeFilled /><span>{{ item.NumOfLike||0 }}</span></span>
+            </div>
+            <div class="commentReply" v-if="item.IsShowReply">
+                <div class="commentBox">
+                    <div class="leftAvatar">
+                        <a-avatar :size="37">
+                            <template #icon><UserOutlined /></template>
+                            <!-- <img :src="require('@/assets/img/avatar-r.png')" alt="" class="commentAvatar" /> -->
+                        </a-avatar>
+                    </div>
+                    <div class="rightTextare">
+                        <textarea class="textarea" v-model="item.comment" placeholder-class="placeholder" placeholder="" name="" id="" cols="30" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="optionalWrap">
+                    <a-button type="primary" @click="handleSendComment1(item,item)">发布</a-button>
+                </div>
+                <div class="commentList">
+                    <div class="commentItemBox" v-for="(item1,index1) in listData1[item.id]" :key="index1">
+                        <div class="leftAvatar leftAvatar1">
+                            <a-avatar :size="37">
+                                <template #icon><UserOutlined /></template>
+                                <!-- <img :src="item1.ImageUrls" alt="" class="commentAvatar" /> -->
+                            </a-avatar>
+                        </div>
+                        <div class="rightComment">
+                            <div class="commentName">{{item1.Title||item1.OwningUser||'暂无'}}</div>
+                            <div class="commentTime">
+                                {{item1.CreatedOn}}
+                            </div>
+                            <div class="commentContent" v-html="item.Description||'暂无'"></div>
+                            <div class="commentBtn">
+                                <span class="commentBtn-item" title="删除" v-if="item1.OwningUserId&&data.OwningUser&&data.OwningUser==item1.OwningUserId" @click="handleDelete(item1.id,2,item)" ><DeleteOutlined /></span>
+                                <span class="commentBtn-item" title="回复" v-if="!item1.IsShowReply" @click="item1.IsShowReply=true"><MessageOutlined /><span></span></span>
+                                <span class="commentBtn-item" title="回复" v-if="item1.IsShowReply" @click="item1.IsShowReply=false" style="color: #1677ff;"><MessageOutlined /><span></span></span>
+                                <span class="commentBtn-item" title="点赞" v-if="!item1.IsLike" @click="item1.IsLike=true;item1.NumOfLike=1"><LikeOutlined /><span>{{ item1.NumOfLike||0 }}</span></span>
+                                <span class="commentBtn-item" title="取消点赞" v-if="item1.IsLike" @click="item1.IsLike=false;item1.NumOfLike=0" style="color: red;"><LikeFilled /><span>{{ item1.NumOfLike||0 }}</span></span>
+                            </div>
+                            <div class="commentReply" v-if="item1.IsShowReply">
+                                <div class="commentBox">
+                                    <div class="leftAvatar leftAvatar2">
+                                        <a-avatar :size="37">
+                                            <template #icon><UserOutlined /></template>
+                                            <!-- <img :src="require('@/assets/img/avatar-r.png')" alt="" class="commentAvatar" /> -->
+                                        </a-avatar>
+                                    </div>
+                                    <div class="rightTextare">
+                                        <textarea class="textarea" v-model="item1.comment" placeholder-class="placeholder" placeholder="" name="" id="" cols="30" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="optionalWrap">
+                                    <a-button type="primary" @click="handleSendComment1(item,item1)">回复</a-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
           </div>
         </div>
@@ -142,13 +244,26 @@ import {
   h,
   computed,
 } from "vue";
+import dayjs from 'dayjs';
+    import 'dayjs/locale/zh-cn';
+    import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+    dayjs.locale('zh-cn');
+    import calendar from 'dayjs/plugin/calendar';
+    import weekday from 'dayjs/plugin/weekday';
+    import localeData from 'dayjs/plugin/localeData';
+
+    dayjs.extend(calendar);
+    dayjs.extend(weekday);
+    dayjs.extend(localeData);
 import {
   EditOutlined,
   UnorderedListOutlined,
-  EllipsisOutlined,
+  UserOutlined,
+  LikeOutlined,DeleteOutlined,ExportOutlined,MessageOutlined,BarsOutlined,MoreOutlined,SearchOutlined,LikeFilled,LoadingOutlined
 } from "@ant-design/icons-vue";
 import { useStore } from "vuex";
 let store = useStore();
+import { notification } from 'ant-design-vue';
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
 const { proxy } = getCurrentInstance();
@@ -167,6 +282,27 @@ const data = reactive({
   sObjectName:'Chatter',
   deleteDesc: '确定要删除吗？',
   external:false,
+  OwningUser:'',
+  OwningUserName:'',
+  keyIndex:1,
+  activeKey:'6000',
+  type:1,
+  typeitem:'',
+  listData1:{},
+  VoteOptions:[
+            {
+                name:'',
+                displayOrder:1
+            },
+            {
+                name:'',
+                displayOrder:2
+            },
+            {
+                name:'',
+                displayOrder:3
+            },
+        ]
 });
 const props = defineProps({
   id: String,
@@ -174,58 +310,251 @@ const props = defineProps({
 const isSend = computed(() => {
   return data.content ? true : false;
 });
+const addQuestionOption= () => {
+  data.VoteOptions.push({name:'',displayOrder:data.VoteOptions.length+1});
+};
 const getInputContent = (e) => {
   data.content = e;
 };
-const { adminList, peopleList, searchVal, spaceList, content,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external } = toRefs(data);
+const { VoteOptions,listData1,typeitem,type,activeKey,keyIndex,OwningUserName,OwningUser,adminList, peopleList, searchVal, spaceList, content,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external } = toRefs(data);
 const sendContent= () => {
-  let url=Interface.create;
-        let d = {
-        actions:[{
-            id: "2919;a",
-            descriptor: "",
-            callingDescriptor: "UNKNOWN",
-            params: {
-              recordInput: {
-                allowSaveOnDuplicate: false,
-                apiName: 'Chatter',
-                objTypeCode: '6000',
-                fields: {
-                    RegardingObjectId: props.id,
-                    Description:data.content,
-                    RegardingObjectTypeCode:9
-                }
-              }              
+  if(data.content==""){
+            notification.open({
+                key,
+                message: "内容不能为空！"
+            });
+        }else {
+            // let url=Interface.create;
+            //     let d = {
+            //     actions:[{
+            //         id: "2919;a",
+            //         descriptor: "",
+            //         callingDescriptor: "UNKNOWN",
+            //         params: {
+            //             recordInput: {
+            //                 allowSaveOnDuplicate: false,
+            //                 apiName: 'Chatter',
+            //                 objTypeCode: '6000',
+            //                 fields: {
+            //                     RegardingObjectId: props.id,
+            //                     OwningUser:data.OwningUser,
+            //                     Description:data.content,
+            //                     RegardingObjectTypeCode:'9',
+            //                     ChatterTypeCode:data.activeKey
+            //                 }
+            //             }              
+            //         }
+            //     }]
+            // };
+            
+            // let obj = {
+            //     message: JSON.stringify(d)
+            // }
+            // proxy.$post(url,obj).then(res=>{
+            // if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+            //     message.success("发送成功！");
+            //     data.keyIndex=1;
+            //     getSpace();
+            //     //data.content = "";
+            // }
+            
+            // });
+            let url=Interface.status.submit;
+                let d = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        text:data.content,
+                        chatterTypeCode:data.activeKey,
+                        RegardingObjectId: props.id,
+                        location: {
+                            location: "",
+                            buidingName: "",
+                            longitude: "",
+                            latitude: ""
+                        },
+                        visible: {
+                            visibleType: 0
+                        }
+                    }
+                }]
+            };
+            if(data.activeKey=='30400'){
+                url=Interface.poll.submit;
+                d.actions[0].options=data.VoteOptions;
             }
-        }]
-    };
-    
-    let obj = {
-        message: JSON.stringify(d)
-    }
-    proxy.$post(url,obj).then(res=>{
-      if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
-        message.success("发送成功！");
-        getSpace();
-      }
-      
-    });
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                message.success("发布成功！");
+                data.keyIndex=1;
+                getSpace();
+                data.content = "";
+                editorRef.value.content="";
+            }
+            
+            });
+        }
 };
 const onSearch = (e) => {
+  data.keyIndex=1;
   getSpace();
 };
 const getSpace = () => {
-  // proxy
-  //   .$get(Interface.group.statusList, {
-  //     objectId: store.state.groupId,
-  //   })
-  //   .then((res) => {
-  //     data.spaceList = res.listData;
-  //   });
+  if(data.keyIndex){}else{return false}
+        if(data.keyIndex==1){
+            data.spaceList = [];
+        }
   let filterQuery='\nRegardingObjectId\teq\t'+props.id;
   if(data.searchVal){
     filterQuery+='\nDescription\tcontains\t'+data.searchVal;
   }
+        // proxy.$post(Interface.list2, {
+        //     filterId:'',
+        //     objectTypeCode:'6000',
+        //     entityName:'Chatter',
+        //     filterQuery:filterQuery,
+        //     search:'',
+        //     page: data.keyIndex,
+        //     rows: 10,
+        //     sort:'CreatedOn',
+        //     order:'desc',
+        //     displayColumns:'OwningUser,CreatedOn,Description,NumOfComment,NumOfLike,ImageUrls'
+        // }).then(res => {
+        //     var list = [];
+        //     for (var i = 0; i < res.nodes.length; i++) {
+        //         var item = res.nodes[i];
+        //         for(var cell in item){
+        //             if(cell!='id'&&cell!='nameField'&&cell!='ImageUrls'){
+        //                 if(cell=='OwningUser'){
+        //                     item['OwningUserId']=item[cell].userValue.Value;
+        //                     if(item['OwningUserId']){
+        //                         item['OwningUserId']=(item['OwningUserId']).toUpperCase();
+        //                     }
+        //                 }
+        //                 item[cell]=girdFormatterValue(cell,item);
+        //             }
+        //             if(cell=='ImageUrls'){
+        //                 item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
+        //             }
+        //             if(cell=='CreatedOn'){
+        //                 item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
+        //             }
+        //         }
+        //         list.push(item)
+        //     }
+        //     if(list&&list.length){
+        //         data.spaceList = data.spaceList.concat(list);
+        //     }
+        // })
+        filterQuery='\nRegardingObjectId\teq\t'+props.id+'\nChatterTypeCode\teq\t'+data.activeKey;
+        let url=Interface.status.query;
+                let d = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        pageSize: 10,
+                        pageNumber: data.keyIndex,
+                        filterQuery: filterQuery,
+                        search: data.searchVal||''
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+            var list = [];
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                data.total = res.actions[0].returnValue.length||0;
+                for (var i = 0; i < res.actions[0].returnValue.length; i++) {
+                    var item = res.actions[0].returnValue[i];
+                    for(var cell in item){
+                        if(cell=='ImageUrls'){
+                            item[cell]=require('@/assets/img/avatar-r.png');
+                        }
+                        if(cell=='CreatedOn'||cell=='createdOn'){
+                            item['CreatedOn']=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
+                        }
+                    }
+                    if(!item['ImageUrls']){
+                        item['ImageUrls']=require('@/assets/img/avatar-r.png');
+                    }
+                    item['OwningUserId']=item.createdByName||'';
+                    item['OwningUser']=item.createdBy||'';
+                    item['Description']=item.text==''?'<span style="color:rgba(0, 0, 0, 0.25);">暂无内容</span>':item.text;
+                    item['NumOfLike']=item.numOfLike||0;
+                    item['NumOfComment']=item.numOfComment||0;
+                    list.push(item)
+                }
+            }
+            if(list&&list.length){
+                data.spaceList = data.spaceList.concat(list);
+            }
+        })
+};
+//getSpace();
+const handleSendComment1=(item,item1)=>{
+        if(item1.comment==""){
+            notification.open({
+                key,
+                message: "回复内容不能为空！"
+            });
+        }else {
+            let Name='';
+
+            if(item.id&&item1.id&&item.id!=item1.id){
+                Name=data.OwningUserName+' 回复 '+item1.OwningUser;
+            }
+            let url=Interface.create;
+                let d = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordInput: {
+                            allowSaveOnDuplicate: false,
+                            apiName: 'Chatter',
+                            objTypeCode: '6000',
+                            fields: {
+                                RegardingObjectId: item.id,
+                                OwningUser:data.OwningUser,
+                                Description:item1.comment,
+                                RegardingObjectTypeCode:'8',
+                                Title:Name
+                            }
+                        }              
+                    }
+                }]
+            };
+            
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                message.success("回复成功！");
+                getCommentList1(item.id,item);
+                item1.comment = "";
+            }
+            
+            });
+        }
+    }
+    const getCommentList1 = (id,item) => {
+        //data.listData1[id] = [];
+        let item0=item;
+        let filterQuery='\nRegardingObjectTypeCode\teq\t8';
+        if(id){
+            filterQuery+='\nRegardingObjectId\teq\t'+id;
+        }
         proxy.$post(Interface.list2, {
             filterId:'',
             objectTypeCode:'6000',
@@ -233,61 +562,204 @@ const getSpace = () => {
             filterQuery:filterQuery,
             search:'',
             page: 1,
-            rows: 1000,
+            rows: 100,
             sort:'CreatedOn',
-            order:'desc',
-            displayColumns:'OwningUser,CreatedOn,Description,NumOfComment,NumOfLike,ImageUrls'
+            order:'asc',
+            displayColumns:'Title,OwningUser,CreatedOn,Description,NumOfComment,NumOfLike,ImageUrls'
         }).then(res => {
             var list = [];
-            //console.log(pagination)
             for (var i = 0; i < res.nodes.length; i++) {
                 var item = res.nodes[i];
                 for(var cell in item){
                     if(cell!='id'&&cell!='nameField'&&cell!='ImageUrls'){
+                        if(cell=='OwningUser'){
+                            item['OwningUserId']=item[cell].userValue.Value;
+                            if(item['OwningUserId']){
+                                item['OwningUserId']=(item['OwningUserId']).toUpperCase();
+                            }
+                        }
                         item[cell]=girdFormatterValue(cell,item);
                     }
                     if(cell=='ImageUrls'){
                         item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
                     }
+                    if(cell=='CreatedOn'){
+                        item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
+                    }
                 }
                 list.push(item)
             }
-            data.spaceList = list;
-            
+            data.listData1[id]=list;
+            if(item0){
+                item0.NumOfComment=list.length;
+            }
         })
-};
-getSpace();
-// 删除
-const handleDelete = (e) => {
-    data.recordId=e;
-    data.isDelete = true;
-};
+    }
+    // 删除
+    const handleDelete = (e,type,typeitem) => {
+        data.type=type;
+        data.typeitem=typeitem;
+        data.recordId=e;
+        data.isDelete = true;
+    };
 const closeDelete = (e) => {
     data.recordId='';
     data.isDelete = false;
 };
-const deleteOk = (e) => {
-    getSpace();
+const deleteOk = (e) => {    
+    if(data.type==1){
+            data.keyIndex=1;
+            getSpace();
+        }
+        else{
+            getCommentList1(data.typeitem.id,data.typeitem)
+        }
 };
+const changeTab = (e) => {
+        data.activeKey = e;
+        data.keyIndex=1;
+        getSpace();
+    }
+onMounted(() => {
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.OwningUser=userInfo.userId;
+            data.OwningUserName=userInfo.fullName;
+            if(data.OwningUser=='jackliu'){
+                data.OwningUser='2ec00cf2-a484-4136-8fef-e2a2719c5ed6';
+            }
+            data.OwningUser=(data.OwningUser).toUpperCase();
+        }
+        getSpace();
+        window.addEventListener(
+            "scroll",
+            function () {
+            if (document.getElementsByClassName("detail-scroll").length) {
+            } else {
+                return;
+            }
+            var clientHeight =
+                document.getElementsByClassName("detail-scroll")[0].clientHeight;
+            var scrollTop =
+                document.getElementsByClassName("detail-scroll")[0].scrollTop;
+            var scrollHeight =
+                document.getElementsByClassName("detail-scroll")[0].scrollHeight;
+            if (
+                scrollTop &&
+                clientHeight &&
+                (clientHeight + scrollTop >= scrollHeight)
+            ) {
+                data.keyIndex = data.keyIndex + 1;
+                getSpace();
+            }
+            },
+            true
+        );
+    });
 </script>
 <style lang="less">
 .GroupSpace {
+  .panel{
+    padding: 20px 25px;
+    min-height: 200px;
+    padding-top: 15px;
+    height: auto;
+  }
+  .panel1{
+    margin-bottom: 0;
+    padding: 0;
+    background: #f0f2f6;
+    .panel-head{
+      padding: 12px 25px;
+      background: #fff;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+  }
+  .panel0{
+    .panel-bd{
+      border:2px solid #eeeeee;
+      border-radius: 8px;
+      overflow: hidden;
+      .tox .tox-edit-area::before{
+        border-radius: 8px;
+      }
+      .TEditorWrap{
+        padding: 15px 15px 0;
+      }
+      .sendWrap{
+        padding: 12px 16px 12px;
+        margin: 0;
+      }
+      .tabContainer{
+        background: #f3f3f3;
+        .ant-tabs-tab:hover,.ant-tabs-tab-active{
+          background: #fff;
+          .ant-tabs-tab-btn{
+            color: #333;
+            font-weight: bolder;
+          }
+        }
+        .ant-tabs-ink-bar{
+            display: none;
+          }
+      }
+    }
+  }
+  .tox:not([dir=rtl]){
+    height: 220px !important;
+  }
+  .trends-more,.iconBox{
+    cursor: pointer;
+  }
+  .trends-more{
+    .ant-dropdown-link{
+      font-size: 22px;
+      transform: rotate(-90deg);
+      -moz-transform:rotate(-90deg);
+      -webkit-transform:rotate(-90deg);
+      display: block;
+      cursor: pointer;
+    }
+  }
+  .trendsItemBox{
+    padding-bottom: 0 !important;
+  }
   .trendsWrap {
+    background: #f0f2f6;
+    .empty {
+      background: #fff;
+      padding: 8px 0 22px;
+      img{
+      width: 80px;
+    }
+  }
     .trendsItem {
-      border-bottom: 1px solid #e2e3e5;
+      background: #fff;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      //border-bottom: 1px solid #e2e3e5;
       .trendsItemBox {
         display: flex;
         padding: 15px 20px;
         border-radius: 3px;
         .avatar {
-          width: 48px;
-          height: 48px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           overflow: hidden;
-          margin-right: 10px;
+          margin-right: 9px;
+          margin-top: 1px;
           img {
             width: 100%;
             height: 100%;
+          }
+          .anticon{
+            position: relative;
+            top: -2px;
+            left: 1px;
           }
         }
         .trends-info {
@@ -295,7 +767,8 @@ const deleteOk = (e) => {
           .info-name {
             display: flex;
             align-items: center;
-            font-weight: bold;
+            font-weight: normal;
+            color: #ff7d00;
             svg {
               width: 18px;
               margin: 0 3px;
@@ -308,14 +781,42 @@ const deleteOk = (e) => {
             }
           }
           .info-time {
-            margin-top: 5px;
-            color: #808080;
+            margin-top: 3px;
+            color: #86909c;
+            font-size: 12px;
           }
           .info-desc {
             font-size: 15px;
             margin: 15px 0 5px 0;
           }
         }
+      }
+      .commentBtn{
+          font-size: 12px;
+          color: #86909c;
+          text-align: center;
+          margin: 10px;
+          display: flex;
+          text-align: center !important;
+          .commentBtn-item{
+                font-size: 14px;
+                margin-left: 10px;
+                cursor: pointer;
+                color: #666;
+                margin-left: 80px;
+                text-align: center !important;
+                flex: 1;
+                .anticon{
+                    font-size: 15px;
+                    margin-right: 10px;
+                }
+            }
+            .commentBtn-item:first-child{
+                margin-left: 10px;
+            }
+            .commentBtn-item:last-child{
+                margin-left: 80px;
+            }
       }
       .trendsItemBottom {
         display: flex;
@@ -348,12 +849,185 @@ const deleteOk = (e) => {
       }
     }
     .trendsItem:hover {
-      background: #f4f4f4;
+      background: #e9f7ff !important;
     }
   }
   .sendWrap {
     margin-top: 20px;
     text-align: right;
   }
+  .commentList .commentItemBox .rightComment .commentBtn{
+          display: block !important;
+          text-align: right !important;
+        }
+        .commentList .commentReply .commentBox .leftAvatar{
+           height: 28px;
+           .ant-avatar{
+            position: relative;
+            top:-13px;
+           }
+        }
+        .commentReply .commentItemBox .leftAvatar1{
+           height: 28px;
+           .ant-avatar{
+            position: relative;
+            top:-10px;
+           }
+        }
+        .commentList .commentReply{
+          padding: 0 !important;
+        }
+        .panel-search {
+          width: calc(~'100% - 100px') !important;
+          text-align: right;
+        .ant-input-group-wrapper{
+          width: 500px !important;
+        }
+      }
 }
+.a-menu-item-label{
+        margin-left: 5px !important;
+    }
+    .commentItemBox{
+                    display: flex;
+                    margin-top: 10px;
+    //margin-left: 5px !important;
+    border-bottom: 1px solid #eee;
+                    .leftAvatar{
+                        font-size: 36px;
+                        color: #C9CDD4;
+                        margin-right: 12px;
+                    }
+                    .rightComment{
+                        flex: 1;
+                        overflow: hidden;
+                        position: relative;
+                        .commentName{
+                            font-size: 14px;
+                            color: #ff7d00;
+                        }
+                        .commentContent{
+                            margin: 6px 0;
+                        }
+                        .commentTime{
+                            font-size: 12px;
+                            color: #86909c;
+                        }
+                        .commentBtn{
+                            font-size: 12px;
+                            color: #86909c;
+                        }
+                        .commentMore{
+                            position: absolute;
+                            top: -5px;
+                            right: 0px;
+                            font-size: 15px;
+                            color: #86909c;
+                            .btn-drop{
+                                font-size: 22px;
+                                transform: rotate(-90deg);
+                                -moz-transform:rotate(-90deg);
+                                -webkit-transform:rotate(-90deg);
+                                display: block;
+                                cursor: pointer;
+                            }
+                        }
+                        
+                    }
+                }
+    .commentReply{
+            margin-top: 12px;
+            padding: 0 20px 10px 60px;
+            .commentBox{
+              display: flex;
+                .leftAvatar{
+                    margin-right: 12px;
+                    margin-top: 5px;
+                }
+                .rightTextare{
+                    flex: 1;
+                    border-radius: 2px;
+                    .textarea{
+                        width: 100%;
+                        height: 100px;
+                        min-height: 22px;
+                        border-radius: 4px;
+                        background: #f2f3f5;
+                        padding-top: 12px;
+                        padding-left: 12px;
+                        font-size: 14px;
+                        border: none;
+                        outline: 0;
+                        resize: vertical;
+                    }
+                }
+                padding-left: 5px;
+            }
+            .commentBox .rightTextare .textarea{
+                height: 30px;
+                padding-top: 8px;
+                position: relative;
+                top: 5px;
+            }
+            .ant-avatar{
+                width: 30px !important;
+                height: 30px !important;
+                line-height: 26px !important;
+            }
+            .leftAvatar .ant-avatar .anticon{
+                font-size: 16px;
+                top: -5px;
+            }
+            .optionalWrap{
+                padding-top: 0px;
+                text-align: right;
+                margin-top: 10px;
+            }
+            .ant-btn{
+                font-size: 13px;
+                height: 26px;
+                padding: 0px 8px;
+            }
+            .commentList{
+                background: transparent;
+            }
+            .commentList .commentItemBox{
+                margin-bottom: 0;
+                background: transparent;
+                padding-left: 0 !important;
+            }
+            .commentBtn{
+                display: block;
+                margin-top: 10px;
+                text-align: right !important;
+            }
+            .commentBtn-item{
+                margin-left: 10px !important;
+            }
+            .commentBtn-item:last-child .anticon{
+                margin-right: 5px;
+            }
+        }
+        .GroupSpace{
+          .VoteWrap{
+            padding: 15px;
+          }
+          .QuestionWrap{
+              padding: 15px;
+          }
+          .commentBox .ant-input{
+              border: 1px solid #dedede !important;
+              border-radius: 4px !important;
+              margin-bottom: 6px;
+          }
+          .VoteLabel,.QuestionLabel{
+              margin-bottom: 6px;
+          }
+          .optionalWrapLeft{
+              float:left;
+          }
+          .optionalWrapRight{
+              float:right;
+          }
+        }
 </style>

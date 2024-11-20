@@ -290,9 +290,9 @@ const props = defineProps({
   relatedObjectAttributeName: String, // 默认值name
   relatedObjectAttributeValue: Object // 默认值value
 });
-console.log("props.entityId", props.entityId);
+//console.log("props.entityId", props.entityId);
 const formRef = ref();
-const emit = defineEmits(["cancel"]);
+const emit = defineEmits(["cancel","success"]);
 const handleCancel = () => {
   emit("cancel", false);
 };
@@ -302,7 +302,7 @@ const data = reactive({
   list: {},
   select: {},
   search: {},
-  height: document.documentElement.clientHeight - 300,
+  height: document.documentElement.clientHeight - 340,
   isRadioDept: false,
   isMultipleDept: false,
   isRadioUser: false,
@@ -358,7 +358,7 @@ const handleData = (res) => {
   data.layoutList.forEach(item=>{
     item.rows.forEach(row=>{
       row.attributes.forEach(col=>{
-        formState[col.localId] = data.list[col.localId]?.value;
+        formState[col.localId] = data.list[col.localId]&&data.list[col.localId].value?data.list[col.localId].value:null;
         if(['O', 'Y', 'U', 'Y_MD'].includes(col.attributes.type)){
           console.log("data.list[col.localId]",data.list[col.localId]);
           // formState[col.localId] = data.list[col.localId];
@@ -377,6 +377,18 @@ const handleData = (res) => {
               Name: props.relatedObjectAttributeValue.name
             })
           }
+        }
+        if(col.attributes.type=='F'){
+            formState[col.localId+'_obj'] = {
+                date: "",
+                time: ""
+            }
+            if(data.list[col.localId]&&data.list[col.localId].value){
+                formState[col.localId+'_obj'] = {
+                    date: (data.list[col.localId].value).split(' ')[0],
+                    time: (data.list[col.localId].value).split(' ')[1]
+                }
+            }
         }
       })
     })
@@ -612,7 +624,7 @@ const searchlookup = (search, attribute) => {
 
 onMounted(() => {
   window.addEventListener("resize", (e) => {
-    data.height = document.documentElement.clientHeight - 300;
+    data.height = document.documentElement.clientHeight - 340;
   });
 });
 
@@ -626,14 +638,23 @@ const handleDeptParams = (params) => {
   data.isRadioDept = false;
   data.isMultipleDept = false;
   // 单选部门赋值
-  var isEmpty = data.search[data.localId].some((item) => item.ID == params.ID);
-  if (!isEmpty) {
-    data.search[data.localId].push({
-      ID: params.ID,
-      Name: params.Name,
-    });
+  if(data.search[data.localId]){
+        var isEmpty = data.search[data.localId].some((item) => item.ID == params.ID);
+        if (!isEmpty) {
+            data.search[data.localId].push({
+            ID: params.ID,
+            Name: params.Name,
+            });
+        }
   }
-  formState[data.localId].Id = params.ID;
+  else{
+    data.search[data.localId]=[];
+    data.search[data.localId].push({
+            ID: params.ID,
+            Name: params.Name,
+            });
+  }
+  formState[data.localId] = params.ID;
 };
 
 const cancelUserModal = (params) => {
@@ -647,7 +668,7 @@ const handleUserParams = (params) => {
   console.log("userData", params);
   console.log("赋值字段", data.localId);
   data.isRadioUser = false;
-  formState[data.localId].Id = params.id;
+  formState[data.localId] = params.id;
   var isEmpty = data.search[data.localId].some((item) => item.ID == params.id);
   if (!isEmpty) {
     data.search[data.localId].push({
@@ -663,7 +684,7 @@ const handleOpenLook = (attribute) => {
   let localId = attribute.localId;
   data.localId = localId;
   let sObjectType = attribute.attributes.referencedEntityObjectTypeCode;
-  if (sObjectType == 30020) {
+  if (sObjectType == 30020||sObjectType == 8) {
     data.isRadioUser = true;
   } else if (sObjectType == 10) {
     data.isRadioDept = true;
@@ -678,13 +699,14 @@ const handleOpenLook = (attribute) => {
 const handleSelectData = (e) => {
   data.isLookup = false;
   // console.log("选中的数据", e);
+  let Name=e.Name||e.FullName;
   // console.log("recordObj", data.recordObj, formState[data.recordObj.localId]);
   let { localId } = data.recordObj;
   let isExist = data.search[localId].some(item=>item.ID==e.LIST_RECORD_ID);
   if(!isExist){
     data.search[localId].push({
       ID: e.LIST_RECORD_ID,
-      Name: e.Name
+      Name: Name&&$(Name)&&$(Name).html()?$(Name).html():''
     })
   }
   formState[localId] = e.LIST_RECORD_ID;
@@ -694,6 +716,26 @@ const handleSelectData = (e) => {
   // formState[localId].displayValue = e.Name;
 };
 const handleSubmit = () => {
+    let userInfo=window.localStorage.getItem('userInfo');
+    let userId='';
+    let userName='';
+    if(userInfo){
+          userInfo=JSON.parse(userInfo);
+          userId=userInfo.userId;
+          userName=userInfo.fullName;
+          if(userId=='jackliu'){
+              userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+          }
+          if(!props.id){
+            formState.CreatedBy=userId;
+            if(!formState.OwningUser){
+              formState.OwningUser=userId;
+            }
+          }
+          else{
+            formState.ModifiedBy=userId;
+          }
+    }
   formRef.value.validate().then(() => {
       // console.log("values", formState, toRaw(formState));
       let url = Interface.create;
@@ -721,8 +763,19 @@ const handleSubmit = () => {
           message: JSON.stringify(d)
       }
       proxy.$post(url, obj).then((res) => {
-        message.success("保存成功！");
-        emit("success", false);
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+            message.success("保存成功！");
+            emit("success", false);
+            emit("cancel", false);
+          }
+          else{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                message.error(res.actions[0].errorMessage);
+            }
+            else{
+                message.error("保存失败！");
+            }
+          }
       });
     })
     .catch((err) => {

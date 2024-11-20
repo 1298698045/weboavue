@@ -11,8 +11,8 @@
         <div class="panel-bd MeetingSummaryContent" v-html="content">
         </div>
       </div>
-      <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="onSearch"></radio-user>
-      <radio-dept :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal" @ok="onSearch"></radio-dept>
+      <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="onSearch"></radio-user>
+      <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal" @ok="onSearch"></radio-dept>
       <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
       <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
       <NewInfo :isShow="isNew" :treeData="gData" @cancel="isNew=false" :objectTypeCode="'100201'" :RegardingObjectTypeCode="'5000'" :RegardingObjectId="props.id" :FolderId="'00000000-0000-0000-0000-000000002000'" :RegardingObjectName="props.RegardingObjectName" />

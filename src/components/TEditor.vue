@@ -79,7 +79,20 @@ import "tinymce/plugins/visualblocks";
 import "tinymce/plugins/wordcount";
 import "tinymce/plugins/insertdatetime";
 import "tinymce/plugins/image";
+
+import "tinymce/themes/silver";
+import "tinymce/plugins/media";
+import "tinymce/plugins/directionality";
+import "tinymce/plugins/visualchars";
+import "tinymce/plugins/anchor";
+import "tinymce/plugins/nonbreaking";
+import "tinymce/plugins/autosave";
+import "tinymce/plugins/autoresize"; 
+import 'tinymce/plugins/pagebreak'
 import tinymce from "tinymce/tinymce";
+
+const DefaultToolBar='undo redo removeformat bold italic Alignleft Aligncenter Alignright Alignjustify lineheight forecolor backcolor bullist numlist link image table blocks fontsize fontfamily';
+const DocToolBar='code newdocument Preview Print | bold italic Underline Strikethrough | blocks fontfamily fontsize | lineheight forecolor backcolor | Cut Copy Paste | undo redo | bullist numlist | Increaseindent Decreaseindent | Alignleft Aligncenter Alignright Alignjustify | removeformat Find replace Selectall | link anchor | table Emoticons Special pagebreak fullscreen | media image';
 
 const initializeEditor = () => {
   return reactive({
@@ -98,15 +111,18 @@ const initializeEditor = () => {
     //   "bold italic hr | fontsize forecolor backcolor | blocks blockquote removeformat | undo redo ",
     //   "bullist table insertdatetime | link charmap wordcount searchreplace code | codesample visualblocks image fullscreen preview",
     // ],
-    toolbar: props.mode == 'simple' ? false :'blocks | bold italic forecolor backcolor bullist numlist | undo redo | link image table fontsize',
+    toolbar: props.mode == 'simple' ? false :(props.mode == 'doc' ? DocToolBar : DefaultToolBar),
+    font_size_formats: '初号=44pt 小初=36pt 一号=26pt 小一=24pt 二号=22pt 小三=18pt 三号=16pt 小四=14pt 四号=12pt 五号=10.5pt 小五=9pt 12px 14px 16px 18px 20px 22px 24px 30px 36px 48px',
+    font_family_formats: "微软雅黑='微软雅黑';宋体='宋体';黑体='黑体';仿宋='仿宋';楷体='楷体';隶书='隶书';幼圆='幼圆';Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings",
     menubar: props.mode == 'simple' ? 'edit custom' : '',
+    line_height_formats:'1 1.1 1.2 1.3 1.4 1.5 2 28pt 30pt 31pt 32pt',
     // 设置插件
-    plugins:"codesample lists advlist link autolink charmap fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
+    plugins:"codesample lists advlist pagebreak link autolink charmap media emoticons anchor fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
     placeholder: props.placeholder,
     statusbar: false,
     promotion: false,
     height: height.value,
-    //emoticons_database_url: '/tinymce/plugins/emoticons/js/emojis.js',
+    emoticons_database_url: '/tinymce/plugins/emoticons/js/emojis.js',
     images_upload_url: 'https://wx.phxinfo.com.cn/rest',
     paste_data_images:true,
     images_upload_handler:function(blobInfo,success,failure){

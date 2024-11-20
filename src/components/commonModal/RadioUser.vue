@@ -164,7 +164,7 @@
         pageSize: 20,
         pageTotal: 0,
         roleIdCurrent: "",
-        height: document.documentElement.clientHeight - 380,
+        height: document.documentElement.clientHeight - 400,
     })
     const tabs = toRaw([
         {
@@ -392,7 +392,7 @@
     }
     onMounted(() => {
         window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 380;
+            data.height = document.documentElement.clientHeight - 400;
         });
     }); 
 </script>

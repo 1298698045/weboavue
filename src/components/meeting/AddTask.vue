@@ -914,6 +914,9 @@
             });
             formState.RegardingObjectId.Id=props.RegardingObjectId;
         }
+        if(props.RegardingObjectTypeCode){
+            formState.RegardingObjectTypeCode=props.RegardingObjectTypeCode;
+        }
       calendarGetData();
   }
     const handleSubmit = () => {

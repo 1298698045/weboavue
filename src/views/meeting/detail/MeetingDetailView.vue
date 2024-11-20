@@ -143,9 +143,7 @@
             <RelatedAttachment :id="data.id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="'5000'" />
         </div>
         <div class="tabContainer" v-if="activeKey == 7">
-          <div class="detailContent">
             <Comment :title="'会议讨论'" :id="data.id" :RegardingObjectTypeCode="'5000'" />
-          </div>
         </div>
         <div class="tabContainer" v-if="activeKey == 8">
           <div class="detailContent">
@@ -157,6 +155,7 @@
       </div>
     </div>
     <InfoNotes
+      v-if="isNotes"
       :isShow="isNotes"
       :id="data.id"
       :objectTypeCode="objectTypeCode"
@@ -168,6 +167,7 @@
       :id="data.id"
       @cancel="cancelRemind"
       :RegardingObjectIdName="detail.Title"
+      :RegardingObjectTypeCode="objectTypeCode"
     />
     <MeetingRelease 
       v-if="isRelease"
@@ -183,18 +183,20 @@
       @cancel="cancelStatus"
     /> -->
     <InfoAddClass
+      v-if="isAddClass"
       :isShow="isAddClass"
       :id="id"
       :objectTypeCode="objectTypeCode"
       @cancel="cancelAddClass"
     />
     <RadioUser
+      v-if="isUserModal"
       :isShow="isUserModal"
       @cancel="cancelUser"
       @selectVal="getUserData"
     />
     <NewMeeting :isShow="isNewMeeting" :meetingId="data.id" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
-    <DeleteModal :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="data.id" :objTypeCode="objectTypeCode" :external="external" />
+    <DeleteModal v-if="isDelete" :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="data.id" :objTypeCode="objectTypeCode" :external="external" />
   </div>
 </template>
 <script setup>
@@ -462,7 +464,7 @@ const getFileClass = () => {
       data.fileCategorys = res.returnValue.records;
     });
 };
-getFileClass();
+//getFileClass();
 const getFiles = () => {
   proxy
     .$get(Interface.information.files, {
@@ -472,7 +474,7 @@ const getFiles = () => {
       data.files = res.listData;
     });
 };
-getFiles();
+//getFiles();
 // 关闭更改状态
 const cancelStatus = (e) => {
   data.isStatus = e;

@@ -29,7 +29,7 @@
               </div>
               <div class="search-modal" v-if="isAdvance">
                   <div class="search-container">
-                      <list-form-search ref="searchRef" @search="handleAdvanceSearch"></list-form-search>
+                      <list-form-search ref="searchRef" @search="handleAdvanceSearch" :entityApiName="props.entityApiName"></list-form-search>
                   </div>
                   <div class="search-footer"></div>
               </div>
@@ -212,7 +212,8 @@ const handleSubmit = () => {
 
   &.active{
       .ant-input-search{
-          margin-right: 86px;
+          //margin-right: 86px;
+          margin-right: 0;
       }
       .ant-btn.searchBtn{
           border-bottom: none;

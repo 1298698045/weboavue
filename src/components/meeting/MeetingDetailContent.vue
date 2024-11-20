@@ -140,9 +140,7 @@
             <RelatedAttachment :type="'modal'" :id="data.id" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="'5000'" />
         </div>
         <div class="tabContainer" v-if="activeKey == 7">
-          <div class="detailContent">
             <Comment :title="'会议讨论'" :id="data.id" :RegardingObjectTypeCode="'5000'" />
-          </div>
         </div>
         <div class="tabContainer" v-if="activeKey == 8">
           <div class="detailContent">
@@ -154,6 +152,7 @@
       </div>
     </div>
     <InfoNotes
+      v-if="isNotes"
       :isShow="isNotes"
       :id="props.meetingId"
       :objectTypeCode="objectTypeCode"
@@ -165,6 +164,7 @@
       :id="data.id"
       @cancel="cancelRemind"
       :RegardingObjectIdName="detail.Title"
+      :RegardingObjectTypeCode="objectTypeCode"
       :type="'modal'"
     />
     <MeetingRelease 
@@ -176,24 +176,27 @@
       :type="'modal'"
     />
     <!-- <ChangeStatus
+      v-if="isStatus"
       :isShow="isStatus"
       :id="id"
       :objectTypeCode="objectTypeCode"
       @cancel="cancelStatus"
     /> -->
     <InfoAddClass
+      v-if="isAddClass"
       :isShow="isAddClass"
       :id="id"
       :objectTypeCode="objectTypeCode"
       @cancel="cancelAddClass"
     />
     <RadioUser
+      v-if="isUserModal"
       :isShow="isUserModal"
       @cancel="cancelUser"
       @selectVal="getUserData"
     />
     <NewMeeting :isShow="isNewMeeting" :meetingId="props.meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
-    <DeleteModal :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="props.meetingId" :objTypeCode="objectTypeCode" :external="external" />
+    <DeleteModal v-if="isDelete" :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="props.meetingId" :objTypeCode="objectTypeCode" :external="external" />
   </div>
 </template>
 <script setup>
@@ -456,7 +459,7 @@ const getFileClass = () => {
       data.fileCategorys = res.returnValue.records;
     });
 };
-getFileClass();
+//getFileClass();
 const getFiles = () => {
   proxy
     .$get(Interface.information.files, {
@@ -466,7 +469,7 @@ const getFiles = () => {
       data.files = res.listData;
     });
 };
-getFiles();
+//getFiles();
 // 关闭更改状态
 const cancelStatus = (e) => {
   data.isStatus = e;

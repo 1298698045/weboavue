@@ -156,7 +156,7 @@
                   </div>
                   <div class="header-account-item-info">
                     <span v-if="currentAccountName==item.FullName" class="header-account-item-current-text">主</span>
-                    <span class="header-account-item-username">
+                    <span class="header-account-item-username" @click.stop="handleInfo(1)">
                       {{ item.FullName }}
                     </span>
                     <span class="header-account-item-jobs">{{item.JobTitle}}</span><span class="header-account-item-current-icon" v-if="currentAccountName==item.FullName"><CheckCircleFilled /></span>
@@ -171,6 +171,14 @@
               <div class="header-account-seeting-item"  @click="handlePersonal">
                 <i class="iconfont icon-gerenzhongxin" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">个人中心</span>
+              </div>
+              <div class="header-account-seeting-item"  @click="EditPassWord">
+                <i class="iconfont icon-xiugaimima" style="font-size: 18px;"></i>
+                <span class="header-account-seeting-title">密码修改</span>
+              </div>
+              <div class="header-account-seeting-item"  @click="handleInfo(2)">
+                <i class="iconfont icon-gaojiguanli" style="font-size: 18px;"></i>
+                <span class="header-account-seeting-title">个人基本信息修改</span>
               </div>
               <div class="header-account-seeting-item">
                 <!-- <ScheduleOutlined class="icon" /> -->
@@ -254,12 +262,14 @@ const data = reactive({
     {FullName:'张三（演示账号）',JobTitle:'院长',DeptName:'院领导'},
     {FullName:'李四（演示账号）',JobTitle:'科主任',DeptName:'信息科'}
   ],
-  currentAccountName:'张三（演示账号）'
+  currentAccountName:'张三（演示账号）',
+  userId:''
 })
-const { appList, isInfoPopup, isNotice, appCode, currentAppName,searchVal,accountList,currentAccountName } = toRefs(data);
+const { userId,appList, isInfoPopup, isNotice, appCode, currentAppName,searchVal,accountList,currentAccountName } = toRefs(data);
 const ChangeAccount= (item) => {
   data.isInfoPopup = false;
   data.currentAccountName=item.FullName;
+  data.userId=item.id;
 }
 // proxy.$get(Interface.applist,{
 //   systemCode: 'OA'
@@ -306,12 +316,33 @@ const handleOpenEmail= () => {
     //window.open(url.href);
     window.location.href=url.href;
 }
+//个人信息
+const handleInfo = (type) => {
+  data.isInfoPopup = false;
+  router.push({
+    path: "/workspace/PersonalInfo",
+    query: {
+      id: data.userId,
+      type:type
+    }
+  })
+}
+//个人中心
 const handlePersonal = () => {
   data.isInfoPopup = false;
   router.push({
     path: "/workspace/personal/home",
     query: {
       name: "123"
+    }
+  })
+}
+//修改密码
+const EditPassWord=()=>{
+  data.isInfoPopup = false;
+  router.push({
+    path: "/workspace/ChangePassWord",
+    query: {
     }
   })
 }
@@ -326,11 +357,13 @@ onMounted(() => {
     data.currentAccountName=userInfo.fullName;
     data.accountList=[
       {
+        id:userInfo.userId,
         FullName:userInfo.fullName,
         JobTitle:userInfo.JobTitle,
         DeptName:userInfo.DeptName||'信息科'
       }
     ]
+    data.userId=userInfo.userId;
   }
   window.addEventListener("click", function (e) {
     isShow.value = false;
@@ -397,6 +430,11 @@ const clearInput= () => {
 .headerFlex{
   width: 100%;
   display: flex;
+}
+.headerFlex .icon-sousuo{
+  position: relative;
+  top: 0px;
+  right: 0px;
 }
 .leftLogo{
   width: 197px;

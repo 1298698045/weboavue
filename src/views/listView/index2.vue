@@ -149,6 +149,12 @@
         :title="listId?'编辑'+pageTitle:'新建'+pageTitle" @load="handleSearch" :id="listId" :objectTypeCode="entityType" :entityApiName="entityName"
       ></common-form-modal>
       <CommonImport :isShow="isImport" v-if="isImport"  @cancel="isImport=false" />
+      <NewKnowledgeMap
+        :isShow="isKnowledgeMap"
+        v-if="isKnowledgeMap"
+        @cancel="isKnowledgeMap=false" @success="refreshList"
+        :title="listId?'编辑'+pageTitle:'新建'+pageTitle" @load="handleSearch" :id="listId" :objectTypeCode="entityType" :entityApiName="entityName"
+      ></NewKnowledgeMap>
     </div>
   </template>
   <script setup>
@@ -185,6 +191,7 @@
   import ShowField from "@/components/listView/ShowField.vue";
   import DeleteModal from "@/components/listView/Delete.vue";
   import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+  import NewKnowledgeMap from "@/components/Knowledge/NewKnowledgeMap.vue";
   // 筛选器弹层
   import Filter from "@/components/listView/Filter.vue";
   import CommonImport from "@/components/listView/CommonImport.vue";
@@ -194,6 +201,7 @@
   const route = useRoute();
   const router = useRouter();
   const { proxy } = getCurrentInstance();
+
   const data = reactive({
     currentMenu: "全部",
     currentFilterId:'',
@@ -237,6 +245,7 @@
     external:false,
     pageTitle:'',
     isImport:false,
+    isKnowledgeMap:false,
   });
   const {
     currentMenu,
@@ -262,7 +271,8 @@
     deleteDesc,
     external,
     pageTitle,
-    isImport
+    isImport,
+    isKnowledgeMap
   } = toRefs(data);
   const handleSwitchMenu = (item) => {
     data.currentMenu = item.name;
@@ -310,9 +320,6 @@
       getConfig();
     });
   }
-  onMounted(() => {
-    getData();
-  });
   const handleSearch = (params) => {
     // var filterQuery = "";
     // for (var key in params) {
@@ -321,6 +328,9 @@
     // console.log(filterQuery, "filterQuery");
     // data.filterQuery = filterQuery;
     data.filterQuery = params;
+    if(data.objectTypeCode=='100310'){
+      data.filterQuery+='\nParentSubject\tnull';
+    }
     loadGrid(data.columns);
   };
   const loadGrid = (columns) => {
@@ -331,18 +341,23 @@
       $.fn.pagination.defaults.displayMsg = "从{from} 到 {to} 总计 {total} 条";
     }
     var authorization=window.localStorage.getItem('token')||'';
-    $("#datagrid").datagrid({
-      url: Interface.list2,
-      method: "post",
-      columns: [columns],
-      queryParams: {
+    let queryParams={
         filterQuery: data.filterQuery,
         entityType: data.entityType,
         objectTypeCode: data.objectTypeCode,
         filterId:data.currentFilterId||'',
         entityName:data.entityName,
         search:'',
-      },
+    }
+    if(data.objectTypeCode=='100310'){
+      queryParams.sort='DisplayOrder';
+      queryParams.order='asc';
+    }
+    $("#datagrid").datagrid({
+      url: Interface.list2,
+      method: "post",
+      columns: [columns],
+      queryParams: queryParams,
       headers:{authorization:authorization},
       // data: tableList,
       singleSelect: false,
@@ -367,18 +382,12 @@
                 data0.rows.push(item)
             }
           }
-          data0.total = res&&res.nodes && res.nodes.total ? Number(res.nodes.total) : data0.rows.length;
+          data0.total = res&&res.totalCount ? Number(res.totalCount) : data0.rows.length;
           return data0
       },
       onLoadSuccess: function () {},
     });
   };
-  const Edit = (id) => {
-    //console.log("id", id);
-    data.isCommon = true;
-    data.listId=id;
-  };
-  window.Edit = Edit;
   const getConfig = () => {
     function formatOper(val, row, index, entityType, listViewActions) {
       var rowId = row["id"];
@@ -586,12 +595,6 @@ if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
   const closeFilterModal = (params) => {
     data.isFilterModal = params;
   };
-  const Delete = (id) => {
-    //console.log("id", id);
-    data.isDelete = true;
-    data.listId=id;
-  };
-  window.Delete = Delete;
   // 通用弹窗关闭
   const handleCommonCancel = (params) => {
     data.listId='';
@@ -602,17 +605,32 @@ if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
     data.isDelete = false;
     $("#datagrid").datagrid('reload');
   };
-  const New = () => {
-    data.listId='';
-    data.isCommon = true;
-  };
   const handleClickBtn = (type) => {
-    console.log(1111111111111111)
+    //console.log(1111111111111111)
     if (typeof eval(type) == "function") {
       eval(type + "();");
     }
   };
-  //查看
+  
+  //通用新建
+const New = () => {
+    data.listId='';
+    data.isCommon = true;
+};
+
+//通用编辑
+const Edit = (id) => {
+    data.isCommon = true;
+    data.listId=id;
+};
+
+//通用删除
+const Delete = (id) => {
+    data.isDelete = true;
+    data.listId=id;
+};
+
+//通用查看
 const View=(id) => {
   let path='';
   let name='';
@@ -631,11 +649,71 @@ const View=(id) => {
     window.open(url.href);
   }
 }
-window.View = View;
+
+//通用导出
 const Import=() => {
   data.isImport=true;
 }
-window.Import = Import;
+
+//文档模板-新建
+const NewContentViewTemplate=() => {
+    let url = router.resolve({
+        name: "ContentViewTemplateEditor",
+        query: {
+        id: '',
+        },
+    });
+    window.open(url.href);
+}
+
+//文档模板-编辑
+const EditContentViewTemplate=(id) => {
+    let url = router.resolve({
+        name: "ContentViewTemplateEditor",
+        query: {
+        id: id||'',
+        },
+    });
+    window.open(url.href);
+}
+//地图维护新建
+const AddKnowledgeMap = () => {
+    data.listId='';
+    data.isKnowledgeMap = true;
+};
+
+//地图维护编辑
+const EditKnowledgeMap = (id) => {
+    data.isKnowledgeMap = true;
+    data.listId=id;
+};
+//地图明细编辑
+const EditKnowledgeMapDetail=(id)=>{
+  let url = router.resolve({
+        name: "KnowledgeMapDetailEditor",
+        query: {
+        id: id||'',
+        },
+    });
+    window.open(url.href);
+}
+const getActionFunc=()=>{
+  window.New = New;
+  window.Edit = Edit;
+  window.Delete = Delete;
+  window.View = View;
+  window.Import = Import;
+  window.NewContentViewTemplate = NewContentViewTemplate;
+  window.EditContentViewTemplate = EditContentViewTemplate;
+  window.AddKnowledgeMap=AddKnowledgeMap;
+  window.EditKnowledgeMap=EditKnowledgeMap;
+  window.EditKnowledgeMapDetail=EditKnowledgeMapDetail;
+}
+onMounted(() => {
+  getActionFunc();
+  getData();
+});
+
   </script>
   <style lang="less" scoped>
   .wrapper {

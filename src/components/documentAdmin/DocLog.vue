@@ -57,11 +57,11 @@
               <template v-if="column.key === 'Action'">
                 <div class="iconBox">
                   <div class="popup">
-                    <div class="option-item" @click="handleView(record.id)" :num="index">查看</div>
+                    <!-- <div class="option-item" @click="handleView(record.id)" :num="index">查看</div> -->
                     <!-- <div class="option-item" @click="handleEdit(record.id)" :num="index">编辑</div>   -->
-                    <div class="option-item" :num="index">重命名</div>
+                    <!-- <div class="option-item" :num="index">重命名</div> -->
                     <div class="option-item" @click="handleDelete(record.id)" :num="index">删除</div>
-                    <div class="option-item" @click="handDownload(record.FileLocation)" :num="index">下载</div>
+                    <!-- <div class="option-item" @click="handDownload(record.FileLocation)" :num="index">下载</div> -->
                   </div>
                   <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
                 </div>
@@ -93,8 +93,8 @@
             </div>
         </div>
       </div>
-      <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="onSearch"></radio-user>
-      <radio-dept :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal" @ok="onSearch"></radio-dept>
+      <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="onSearch"></radio-user>
+      <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal" @ok="onSearch"></radio-dept>
       <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
       <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
       <AddMeetingShare :isShow="isShare" v-if="isShare"  @cancel="onSearch" :id="props.id" />
@@ -620,6 +620,15 @@
       text-align: right;
       padding: 15px;
     }
+    .DocLogWrap .iconBox {
+    position: relative;
+    cursor: pointer;
+}
+.DocLogWrap .popup .option-item {
+    padding: 7px 15px;
+    font-size: 12px;
+    border-radius: 6px 6px 0 0;
+}
     .DocLogWrap .iconBox .moreaction {
         padding: 0px 1px;
         width: 18px;
@@ -638,6 +647,56 @@
         .ant-table-wrapper,.ant-spin-nested-loading,.ant-spin-nested-loading .ant-spin-container,.ant-table-wrapper .ant-table,.ant-table-wrapper .ant-table-container{
             height: 100% !important;
         }
+        .iconBox {
+  position: relative;
+  cursor: pointer;
+}
+.icon.img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.iconBox:hover .popup {
+  display: block;
+}
+.popup {
+  position: absolute;
+  top: 0;
+  min-width: 100px;
+  background: #fff;
+  display: none;
+  z-index: 999999;
+  box-shadow: 0 1px 6px rgba(99, 99, 99, 0.2);
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+}
+.popup .option-item {
+  padding: 7px 15px;
+  font-size: 12px;
+  border-radius: 6px 6px 0 0;
+}
+.popup .option-item:hover {
+  background: #eaf8fe;
+}
+td[field="Action"] .datagrid-cell {
+  overflow: initial !important;
+}
+:deep .iconBox {
+  text-align: center;
+}
+:deep .iconBox .popup {
+  text-align: left;
+  top: 20px;
+}
+:deep .iconBox .moreaction {
+  padding: 0px 1px;
+  width: 18px;
+  border: 1px solid #dedede;
+  border-radius: 4px;
+  position: relative;
+  top: 1px;
+}
+
     }
     .DocLogWrap .panel-bd1{
       height: calc(~'100% - 115px') !important;
@@ -659,7 +718,7 @@
         }
         .ant-pagination-item-active,.ant-pagination-item-active:hover{
             border: 1px solid #1677ff;
-            background: #1677ff;
+            background: #1677ff !important;
             a{
                 color: #fff;
             }

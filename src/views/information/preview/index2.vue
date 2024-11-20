@@ -31,17 +31,31 @@
         <div class="rightBox">
           <!-- <a-button type="primary" class="ml10">内部分享</a-button> -->
           <a-button type="primary" class="ml10" @click="handleEdit">编辑</a-button>
-          <a-button type="primary" class="ml10" @click="handleDelete">删除</a-button>
+          <a-button type="primary" class="ml10" @click="handleSubmit">发布</a-button>
+          <a-button class="ml10" @click="handleRemind">通知提醒</a-button>
+          <!-- <a-button class="ml10" @click="handleTop">文档置顶</a-button>
+          <a-button class="ml10" @click="handleCancelRelease">失效</a-button> -->
+          <a-button class="ml10" @click="handleDelete2">删除</a-button>
           <!-- <a-button class="ml10" @click="changeStatus">更改状态</a-button> -->
           <!-- <a-button class="ml10" @click="handlePreview">预览</a-button> -->
-          <a-button class="ml10" @click="handleRemind">提醒</a-button>
+          
           <a-dropdown :trigger="['hover']" class="ml10">
             <span class="btn-drop">
               <UnorderedListOutlined style="color: #1d2129" />
             </span>
             <template #overlay>
               <a-menu>
-                <a-menu-item key="4" @click="handleNotes"> 备注 </a-menu-item>
+                <a-menu-item key="0" @click="handleTop"> 文档置顶 </a-menu-item>
+                <a-menu-item key="1" @click="handleCancelRelease"> 失效 </a-menu-item>
+                <a-menu-item key="2" @click="handleFavor"> 收藏 </a-menu-item>
+                <a-menu-item key="3" @click="addRelateInstance"> 相关流程 </a-menu-item>
+                <a-menu-item key="4" @click="handleNewTask"> 新建任务 </a-menu-item>
+                <a-menu-item key="5"> 
+                  <a-upload v-model:file-list="fileList" action="#" :showUploadList="false">
+                   <a style="color: rgba(0, 0, 0, 0.88);">上传文件</a>
+                  </a-upload>
+                </a-menu-item>
+                <a-menu-item key="6" @click="handleNotes"> 备注 </a-menu-item>
                 <!-- <a-menu-item key="1"> 内部分享 </a-menu-item> -->
                 <!-- <a-menu-item key="1"> 查看范围 </a-menu-item>
                 <a-menu-item key="2"> 邀请查看者 </a-menu-item>
@@ -92,14 +106,13 @@
             <DocLog :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" />
           </div>
           <div class="tabContainer" v-if="activeKey == 6">
-            <div class="detailContent">
-              <Comment :id="id" :title="'分享讨论'" :RegardingObjectTypeCode="objectTypeCode" />
-            </div>
+            <Comment :id="id" :title="'分享讨论'" :RegardingObjectTypeCode="objectTypeCode" />
           </div>
-          <span class="wea-doc-detail-content-text-sub"><span>最后由</span><span>&nbsp;&nbsp;&nbsp;{{detail.ModifiedBy ||'jackliu'}}&nbsp;&nbsp;</span><span> 编辑于 {{detail.ModifiedOn ||'2024-10-16 15:49:17'}} </span>&nbsp;&nbsp;<span> 阅读 ({{detail.ReadCount ||0}})</span></span>
+          <span class="wea-doc-detail-content-text-sub"><span>最后由</span><span>&nbsp;&nbsp;&nbsp;{{detail.ModifiedBy ||'暂无'}}&nbsp;&nbsp;</span><span> 编辑于 {{detail.ModifiedOn ||' '}} </span>&nbsp;&nbsp;<span> 阅读 ({{detail.ReadCount ||0}})</span></span>
         </div>
       </div>
       <InfoNotes
+        v-if="isNotes"
         :isShow="isNotes"
         :id="id"
         :objectTypeCode="objectTypeCode"
@@ -121,17 +134,25 @@
         :RegardingObjectTypeCode="objectTypeCode"
       />
       <InfoAddClass
+         v-if="isAddClass"
         :isShow="isAddClass"
         :id="id"
         :objectTypeCode="objectTypeCode"
         @cancel="cancelAddClass"
       />
       <RadioUser
+        v-if="isUserModal"
         :isShow="isUserModal"
         @cancel="cancelUser"
         @selectVal="getUserData"
       />
       <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
+    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="id" :objTypeCode="objectTypeCode" />
+    <RelaseInfo v-if="isRelaseInfo" :isShow="isRelaseInfo" :objectTypeCode="objectTypeCode" :id="id" :FolderId="FolderId" @cancel="cancelRelaseInfo" />
+    <Favor v-if='isFavor' :isShow="isFavor" @cancel="isFavor=false" @update-status="isFavor=false" :id="id" :objTypeCode="objectTypeCode" :objName="detail.Title" />
+    <PinOnTop v-if='isPinOnTop' :isShow="isPinOnTop" @cancel="isPinOnTop=false" @update-status="isPinOnTop=false" :id="id" :objTypeCode="objectTypeCode" />
+    <AddTask :isShow="isAddTask" :id="''" v-if="isAddTask" :paramsTime="''" @cancel="isAddTask=false" :objectTypeCode="'4200'" :entityApiName="'ActivityPointer'" @selectVal="onRefresh" :calendarType="''" :RegardingObjectTypeCode="objectTypeCode" :RegardingObjectId="id" :RegardingObjectIdName="detail.Title" :BgColor="''" />
+    <RelateInstance v-if="isRelateInstance" :id="id" :entityApiName="sObjectName" :entityType="EntityType" :objectTypeCode="objectTypeCode" :isShow="isRelateInstance" @select="handleSelectLook" @cancel="isRelateInstance=false" />
     </div>
   </template>
   <script setup>
@@ -144,6 +165,17 @@
     defineEmits,
     toRaw,
   } from "vue";
+  import dayjs from 'dayjs';
+  import 'dayjs/locale/zh-cn';
+  import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+  dayjs.locale('zh-cn');
+  import calendar from 'dayjs/plugin/calendar';
+  import weekday from 'dayjs/plugin/weekday';
+  import localeData from 'dayjs/plugin/localeData';
+
+  dayjs.extend(calendar);
+  dayjs.extend(weekday);
+  dayjs.extend(localeData);
   import {
     UnorderedListOutlined,
     DownOutlined,
@@ -167,9 +199,15 @@
   import DocShare from "@/components/meeting/MeetingShare2.vue";
   import Comment from "@/components/detail/Comment2.vue";
   import RadioUser from "@/components/commonModal/RadioUser.vue";
+  import RelaseInfo from  "@/components/information/RelaseInfo.vue";
   import DetailInfo from "@/components/detail/DetailInfo.vue";
   import Delete from "@/components/listView/Delete.vue";
+  import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+  import Favor from "@/components/workflow/Favor.vue";
+  import PinOnTop from "@/components/documentAdmin/PinOnTop.vue";
+  import AddTask from "@/components/meeting/AddTask.vue";
   import Interface from "@/utils/Interface.js";
+  import RelateInstance from "@/components/workflow/RelateInstance.vue";
   const { proxy } = getCurrentInstance();
   
   const route = useRoute();
@@ -202,6 +240,7 @@
     id: route.query.id,
     objectTypeCode: route.query.objectTypeCode,
     sObjectName:route.query.objectTypeCode=='100201'?'Content':'Notice',
+    EntityType:route.query.objectTypeCode=='100201'?'090':'091',
     detail: {},
     isNotes: false,
     isStatus: false,
@@ -210,10 +249,20 @@
     isUserModal: false,
     fileCategorys: [],
     files: [],
+    fileList:[],
     content:'',
     isDelete: false,
     deleteDesc: '确定要删除吗？',
     external:false,
+    isConfirm:false,
+    confirmText:'',
+    confirmTitle:'',
+    isRelaseInfo:false,
+    FolderId:route.query.FolderId||'',
+    isFavor:false,
+    isPinOnTop:false,
+    isAddTask:false,
+    isRelateInstance:false
   });
   const {
     tabs,
@@ -232,11 +281,14 @@
     sObjectName,
     isDelete,
     deleteDesc,
-    external,
+    external,isConfirm,confirmText,confirmTitle,isRelaseInfo,FolderId,isFavor,isPinOnTop,fileList,isAddTask,isRelateInstance,EntityType
   } = toRefs(data);
   const changeTabs = (e) => {
     data.activeKey = e;
   };
+  const onRefresh = () =>{
+    //console.log();
+  }
   const current = ref([]);
   const ReadRecordLst = ref();
   const expandIconPosition = ref("start");
@@ -279,12 +331,14 @@
               let fields=res.actions[0].returnValue.fields;
               data.detail.Title=fields.Title.value;
               data.content=fields.ContentBody.value;
-              data.detail.ApprovedOn=fields.ApprovedOn.value;
+              data.detail.ApprovedOn=fields.ApprovedOn.value?dayjs(fields.ApprovedOn.value).format("YYYY-MM-DD HH:mm"):'';
               data.detail.FolderIdName=fields.FolderId.displayValue;
               data.detail.BusinessUnitIdName=fields.BusinessUnitId.displayValue;
               data.detail.ApprovedByName=fields.ApprovedBy.displayValue;
               data.detail.StateCodeName=fields.StateCode.displayValue;
               data.detail.ReadCount=fields.ReadCount.value;
+              data.detail.ModifiedBy=fields.ModifiedBy.displayValue;
+              data.detail.ModifiedOn=fields.ModifiedOn.value?dayjs(fields.ModifiedOn.value).format("YYYY-MM-DD HH:mm"):'';
               }
           })
   };
@@ -298,7 +352,7 @@
         data.fileCategorys = res.returnValue.records;
       });
   };
-  getFileClass();
+  //getFileClass();
   const getFiles = () => {
     proxy
       .$get(Interface.information.files, {
@@ -308,7 +362,7 @@
         data.files = res.listData;
       });
   };
-  getFiles();
+  //getFiles();
   // 关闭更改状态
   const cancelStatus = (e) => {
     data.isStatus = e;
@@ -391,6 +445,45 @@
     console.log("params", params);
     cancelUser(false);
   };
+  //删除2
+  const handleDelete2 = () => {
+    data.isConfirm=true;
+    data.confirmText='确定要将文档放入回收站吗？'
+    data.confirmTitle='删除'
+  }
+  //发布
+  const handleSubmit = () => {
+      data.isRelaseInfo = true;
+  }
+  const cancelRelaseInfo = (e) => {
+      data.isRelaseInfo = false;
+  }
+  //失效
+  const handleCancelRelease = () => {
+    data.isConfirm=true;
+    data.confirmText='确定要取消发布吗？'
+    data.confirmTitle='失效'
+  }
+  //收藏
+  const handleFavor = (id) => {
+    data.isFavor=true;
+  }
+  //置顶
+  const handleTop=()=>{
+    data.isPinOnTop=true;
+  }
+  //新建任务
+  const handleNewTask = (e) => {
+    data.isAddTask = true;
+  }
+  //添加关联流程
+  const addRelateInstance=()=>{
+          data.isRelateInstance=true;
+      }
+  //关联流程选中
+  const handleSelectLook=()=>{
+      data.isRelateInstance=false;
+  }
   </script>
   <style lang="less" scoped>
   .previewWrap2{
@@ -536,6 +629,7 @@
         cursor: pointer;
         margin-top: 12px;
         color: #999999;
+        font-size: 18px !important;
     }
     .btn-drop:hover{
         color: rgb(78,89,105);

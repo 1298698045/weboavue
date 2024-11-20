@@ -164,8 +164,8 @@
             </div>
         </div>
       </div>
-      <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
-      <radio-dept :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal" @ok="refreshPeople"></radio-dept>
+      <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
+      <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal" @ok="refreshPeople"></radio-dept>
       <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
     </div>
   </template>
@@ -311,7 +311,7 @@
     DayoffQty:0,
   });
   const columnList = toRaw(columns);
-  const { listData,PeopleQty,AcceptQty,JoinQty,SignoffQty,RejectQty,DayoffQty,height,searchVal,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept } = toRefs(data);
+  const { listData,PeopleQty,AcceptQty,JoinQty,SignoffQty,RejectQty,DayoffQty,height,searchVal,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept,IsLate } = toRefs(data);
   const getQuery = () => {
     // proxy.$get(Interface.user.groupUser, {}).then((res) => {
     //   data.listData = res.rows;
@@ -692,7 +692,7 @@
         }
         .ant-pagination-item-active,.ant-pagination-item-active:hover{
             border: 1px solid #1677ff;
-            background: #1677ff;
+            background: #1677ff !important;
             a{
                 color: #fff;
             }

@@ -314,13 +314,33 @@ const routes = [
           icon: "xiaozu",
         },
       },
+      // {
+      //   path: "/listView",
+      //   name: "ListView",
+      //   component: () => import("../views/listView/index.vue"),
+      //   icon: "listView",
+      //   meta: {
+      //     name: "通用列表",
+      //     icon: "xiaozu",
+      //   },
+      // },
+      
+    ]
+  },
+  {
+    path: "/listView",
+    name: "ListView1",
+    component: Layout,
+    meta: {
+      name: "通用列表",
+    },
+    children: [
       {
-        path: "/listView",
+        path: "/lightning/o/:sObjectName",
         name: "ListView",
         component: () => import("../views/listView/index.vue"),
-        icon: "listView",
         meta: {
-          name: "通用列表",
+          name: "通用列表1",
           icon: "xiaozu",
         },
       },
@@ -356,7 +376,7 @@ const routes = [
         },
       },
       {
-        path: "/oa/file",
+        path: "/lightning/o/ContentDocument/home",
         component: () => import("../views/fileAdmin/index.vue"),
         name: "File",
         icon: "wenjianguanli",
@@ -378,7 +398,7 @@ const routes = [
     ],
   },
   {
-    path: "/group/detail",
+    path: "/lightning/r/group/view",
     name: "GroupDetail",
     component: () => import("../views/oa/groupDetail/index.vue"),
   },
@@ -584,11 +604,7 @@ const routes = [
   {
     path: "/content/visualEditor",
     name: "visualEditor",
-    component: () => import("../views/information/editor/index.vue"),
-  },
-  {
-    name: "InformationDetail",
-    component: () => import("../views/information/detail/index.vue"),
+    component: () => import("../views/information/editor/index2.vue"),
   },
   {
     path: "/previewContent",
@@ -604,6 +620,16 @@ const routes = [
     path: "/lightning/r/Content/view",
     name: "ContentView",
     component: () => import("../views/information/preview/index2.vue"),
+  },
+  {
+    path: "/ContentViewTemplate/visualEditor",
+    name: "ContentViewTemplateEditor",
+    component: () => import("../views/ContentViewTemplate/editor.vue"),
+  },
+  {
+    path: "/KnowledgeMapDetailEditor",
+    name: "KnowledgeMapDetailEditor",
+    component: () => import("../views/knowledge/KnowledgeMap/KnowledgeMapDetailEditor.vue"),
   },
   {
     path: "/hrsetting",
@@ -821,6 +847,26 @@ const routes = [
         meta: {
           icon: "xinjian",
           name: "个人中心",
+        },
+      },
+      {
+        path: "/workspace/ChangePassWord",
+        name: "ChangePassWord",
+        component: () => import("../views/workspace/ChangePassWord.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "修改密码",
+        },
+      },
+      {
+        path: "/workspace/PersonalInfo",
+        name: "PersonalInfo",
+        component: () => import("../views/workspace/PersonalInfoHome.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "个人信息",
         },
       },
     ],
@@ -1926,6 +1972,16 @@ const routes = [
         },
       },
       {
+        path: "/lightning/page/dashboard",
+        component: () => import("../views/knowledge/Home/index.vue"),
+        name: "KnowledgeHome",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "知识门户",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
         path: "/lightning/o/ContentNotice/home",
         component: () => import("../views/information/list/Notice.vue"),
         name: "Notification",
@@ -1961,20 +2017,185 @@ const routes = [
           entityName:'CampaignSms',
         },
       },
+      {
+        path: "/lightning/o/Contentfolder/permission",
+        component: () => import("../views/knowledge/Contentfolder/permission.vue"),
+        name: "ContentFolderPermission",
+        icon: "xinxiguanli1",
+        meta: {
+          name: "权限管控",
+          icon: "xinxiguanli1",
+        },
+      },
+      {
+        path: "/lightning/o/Document/readlog/home",
+        component: () => import("../views/listView/index2.vue"),
+        name: "RecentlyReadLog",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "最近浏览",
+          icon: "huiyicanhuiren",
+          entityType:'r1G',
+          objectTypeCode:'2021',
+          entityName:'RecordReadLog',
+        },
+      },
+      {
+        path: "/lightning/o/ContentViewTemplate",
+        component: () => import("../views/listView/index2.vue"),
+        name: "ContentViewTemplate",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "文档模板",
+          icon: "huiyicanhuiren",
+          entityType:'5081',
+          objectTypeCode:'5081',
+          entityName:'ContentViewTemplate',
+        },
+      },
+      {
+        path: "/lightning/o/KbSubject",
+        component: () => import("../views/listView/index2.vue"),
+        name: "KbSubject",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "地图维护",
+          icon: "huiyicanhuiren",
+          entityType:'100310',
+          objectTypeCode:'100310',
+          entityName:'KbSubject',
+        },
+      },
+      {
+        path: "/129/o",
+        component: () => import("../views/knowledge/Specialist/index.vue"),
+        name: "Specialist",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "专家地图",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/knowledge/search",
+        component: () => import("../views/listView/index2.vue"),
+        name: "KbArticle",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "知识管理",
+          icon: "huiyicanhuiren",
+          entityType:'1027',
+          objectTypeCode:'1027',
+          entityName:'KbArticle',
+        },
+      },
+      {
+        path: "/00l/o",
+        component: () => import("../views/listView/index2.vue"),
+        name: "temTree",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "栏目频道",
+          icon: "huiyicanhuiren",
+          entityType:'00l',
+          objectTypeCode:'100200',
+          entityName:'temTree',
+        },
+      },
+      {
+        path: "/lightning/page/QuestionAnswer",
+        component: () => import("../views/knowledge/QuestionAnswer/index.vue"),
+        name: "QuestionAnswer",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "知识问答",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/lightning/o/KbMap/home",
+        component: () => import("../views/knowledge/KnowledgeMap/index.vue"),
+        name: "KnowledgeMap",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "知识目录一级",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/lightning/page/article/new",
+        component: () => import("../views/knowledge/KnowledgeMap/NewKbArticle.vue"),
+        name: "NewKbArticle",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "新建知识文章",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/lightning/page/album",
+        component: () => import("../views/knowledge/Album/index.vue"),
+        name: "Album",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "相册文件",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/_ui/file/video/ListPage",
+        component: () => import("../views/knowledge/Video/List.vue"),
+        name: "VideoList",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "视频广场",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/lightning/page/video/home",
+        component: () => import("../views/knowledge/Video/Home.vue"),
+        name: "VideoHome",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "视频管理",
+          icon: "huiyicanhuiren",
+        },
+      },
     ],
+  },
+  {
+    path: "/lightning/page/KnowledgeMap",
+    component: () => import("../views/knowledge/KnowledgeMap/index2.vue"),
+    name: "KnowledgeMap2",
+    icon: "huiyicanhuiren",
+    meta: {
+      name: "知识目录二级",
+      icon: "huiyicanhuiren",
+    },
+  },
+  {
+    path: "/lightning/page/KnowledgeMapDetail",
+    component: () => import("../views/knowledge/KnowledgeMap/detail.vue"),
+    name: "KnowledgeMapDetail",
+    icon: "huiyicanhuiren",
+    meta: {
+      name: "知识目录详情",
+      icon: "huiyicanhuiren",
+    },
   },
   {
     path: "/portal",
     name: "portal",
     component: Layout,
-    redirect: "/home/Home.aspx",
+    redirect: "/lightning/o/workspace/home",
     meta: {
       name: "门户"
     },
     children: [
       {
-        path: "/home/Home.aspx",
-        component: () => import("../views/Home.vue"),
+        path: "/lightning/o/workspace/home",
+        component: () => import("../views/home/home.vue"),
         //component: () => import("../views/sys/home/index.vue"),
         name: "home",
         icon: "xinxiguanli1",
@@ -2103,6 +2324,30 @@ const routes = [
         },
       },
       {
+        path: "/Vehicle/calendar",
+        name: "VehicleApply",
+        component: () =>
+          import("../views/Vehicle/VehicleApply.vue"),
+        icon: "huiyishishiyongqingkuang",
+        meta: {
+          name: "车辆使用情况",
+          icon: "huiyishishiyongqingkuang",
+        },
+      },
+      {
+        path: "/03l/o",
+        component: () => import("../views/listView/index2.vue"),
+        name: "VehicleUse",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "用车记录",
+          icon: "huiyicanhuiren",
+          entityType:'03l',
+          objectTypeCode:'20503',
+          entityName:'VehicleUse',
+        },
+      },
+      {
         path: "/_ui/office/seal/home",
         component: () => import("../views/listView/index2.vue"),
         name: "Com_SealUse",
@@ -2141,7 +2386,32 @@ const routes = [
           entityName:'XINFANGDENGJIDAN',
         },
       },
-      
+      {
+        path: "/03m/o",
+        component: () => import("../views/listView/index2.vue"),
+        name: "VehicleMaintain",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "车辆维修",
+          icon: "huiyicanhuiren",
+          entityType:'03m',
+          objectTypeCode:'20502',
+          entityName:'VehicleMaintain',
+        },
+      },
+      {
+        path: "/03k/o",
+        component: () => import("../views/listView/index2.vue"),
+        name: "Vehicle",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "车辆管理",
+          icon: "huiyicanhuiren",
+          entityType:'03k',
+          objectTypeCode:'20501',
+          entityName:'Vehicle',
+        },
+      },
     ]
   },
   {
@@ -2155,7 +2425,7 @@ const routes = [
     children: [
       {
         path: "/lightning/page/chatter",
-        component: () => import("../views/listView/index2.vue"),
+        component: () => import("../views/knowledge/QuestionAnswer/index2.vue"),
         name: "ChatterHome",
         icon: "huiyicanhuiren",
         meta: {
@@ -2181,6 +2451,183 @@ const routes = [
       },
       
     ]
+  },
+  {
+    path: "/lightning/o/Rsearchproject/workspace",
+    name: "Project",
+    component: Layout,
+    redirect: "/lightning/o/Rsearchproject/workspace",
+    meta: {
+      name: "科研系统"
+    },
+    children: [
+      {
+        path: "/lightning/o/Rsearchproject/workspace",
+        component: () => import("../views/Project/Home.vue"),
+        name: "ProjectHome",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "项目主页",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/lightning/o/ResearchProject/home",
+        component: () => import("../views/Project/ProjectManager.vue"),
+        name: "ProjectManager",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "科研项目",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/lightning/o/ResearchProject/mine",
+        component: () => import("../views/Project/MyProject.vue"),
+        name: "MyProject",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "我的项目",
+          icon: "huiyicanhuiren",
+        },
+      },
+    ]
+  },
+  {
+    path: "/lightning/r/Project/detail",
+    name: "ProjectDetail",
+    component: () => import("../views/Project/ProjectDetail.vue"),
+    meta: {
+      name: "项目详情页",
+      icon: "huiyihuodong",
+    },
+  },
+  {
+    path: "/lightning/o/Dutyshift/admin",
+    name: "Dutyshift",
+    component: Layout,
+    redirect: "/lightning/o/Dutyshift/admin",
+    meta: {
+      name: "值班管理"
+    },
+    children: [
+      {
+        path: "/lightning/o/Dutyshift/admin",
+        component: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
+        name: "DutyshiftAdmin",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "行政总值班",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/lightning/o/Dutyshift/medical",
+        component: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
+        name: "DutyshiftMedical",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "医疗值班",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/lightning/o/Dutyshift/nurse",
+        component: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
+        name: "DutyshiftNurse",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "护理值班",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/hr/attend/DutyArrangeshift.aspx",
+        component: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
+        name: "DutyshiftYZDB",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "院长代表",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/lightning/o/Dutyshift/Dept/home",
+        component: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
+        name: "DutyshiftDept",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "部门值班",
+          icon: "huiyicanhuiren",
+        },
+      },
+      {
+        path: "/lightning/o/Dutyshift/search/home",
+        component: () => import("../views/listView/index2.vue"),
+        name: "HRAttendDutyShiftSearch",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "总值班查询",
+          icon: "huiyicanhuiren",
+          entityType:'06K',
+          objectTypeCode:'20284',
+          entityName:'HRAttendEmpDutyShift',
+        },
+      },
+      {
+        path: "/Workshift/Dept/Dutyshift/query",
+        component: () => import("../views/listView/index2.vue"),
+        name: "HRAttendDutyShiftSearch1",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "一线值班查询",
+          icon: "huiyicanhuiren",
+          entityType:'06K',
+          objectTypeCode:'20284',
+          entityName:'HRAttendEmpDutyShift',
+        },
+      },
+      {
+        path: "/ui/hr/attend/duthshiftLogListPage",
+        component: () => import("../views/listView/index2.vue"),
+        name: "HRAttendDutyShiftLog",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "交班记录",
+          icon: "huiyicanhuiren",
+          entityType:'06K',
+          objectTypeCode:'20284',
+          entityName:'HRAttendEmpDutyShift',
+        },
+      },
+      {
+        path: "/lightning/o/Dutshift/report",
+        component: () => import("../views/listView/index2.vue"),
+        name: "HRAttendEmpDutyShift",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "值班统计表",
+          icon: "huiyicanhuiren",
+          entityType:'06K',
+          objectTypeCode:'20451',
+          entityName:'HRAttendEmpDutyShift',
+        },
+      },
+    ]
+  },
+  {
+    path: "/lightning/o/printDutyShift",
+    name: "PrintDutyShift",
+    component: () => import("../views/Dutyshift/PrintDutyShift.vue"),
+  },
+  {
+    path: "/MyResume",
+    name: "MyResume",
+    component: () => import("../views/workspace/MyResume.vue"),
+    meta: {
+      name: "我的简历",
+      icon: "huiyihuodong",
+    },
   },
 ];
 

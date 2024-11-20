@@ -1,6 +1,6 @@
 <template>
     <div class="commentWrap2">
-        <div class="panel">
+        <div class="panel panel1">
             <div class="panel-head">
                 <div class="panel-title">
                     {{props.title}}
@@ -24,7 +24,27 @@
                     <div class="optionalWrap">
                         <a-button type="primary" @click="handleSendComment">发布</a-button>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel2">
+            <!-- <div class="panel-head">
+                <div class="panel-title">
+                </div>
+                <div class="panel-btn">
+                </div>
+            </div> -->
+            <div class="panel-bd">
+                <div class="panelcommentWrap2">
                     <div class="commentList">
+                        <div class="empty" v-if="!listData.length">
+                            <!-- <img
+                            :src="require('@/assets/img/empty.png')"
+                            alt=""
+                            /> -->
+                            <svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse fill="#f5f5f5" cx="32" cy="33" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#d9d9d9"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" fill="#fafafa"></path></g></g></svg>
+                            <p class="emptyDesc">暂无数据</p>
+                        </div>
                         <div class="commentItemBox" v-for="(item,index) in listData" :key="index">
                             <div class="leftAvatar">
                                 <a-avatar :size="37">
@@ -37,7 +57,7 @@
                                 <div class="commentTime">
                                     {{item.CreatedOn}}
                                 </div>
-                                <div class="commentContent">{{item.Description||'暂无'}}</div>
+                                <div class="commentContent" v-html="item.Description||'暂无'"></div>
                                 <div class="commentBtn">
                                     <!-- <span class="deleteComment" @click="handleDelete(item.id)">删除</span> -->
                                      <!-- <span class="commentBtn-item" title="删除" v-if="item.OwningUserId&&data.OwningUser&&data.OwningUser==item.OwningUserId" @click="handleDelete(item.id)" ><DeleteOutlined /></span> -->
@@ -102,7 +122,7 @@
         OwningUser:''
     })
     const { listData, page, rows, total, comment,searchVal,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external } = toRefs(data);
-    const getCommentList = () => {
+    const getCommentList_old = () => {
         // proxy.$get(Interface.commentList,{
         //     meetingid:"4c51a922-8762-40ae-9e10-5e1fa3f51a60",
         //     page: page,
@@ -153,6 +173,57 @@
             
         })
     }
+    const getCommentList = () => {
+        data.listData = [];
+        data.total = 0;
+        let filterQuery='\nRegardingObjectId\teq\t'+props.id;
+        let url=Interface.status.query;
+                let d = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        pageSize: data.rows,
+                        pageNumber: data.page,
+                        filterQuery: filterQuery,
+                        search: ''
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+            var list = [];
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                data.total = res.actions[0].returnValue.length||0;
+                for (var i = 0; i < res.actions[0].returnValue.length; i++) {
+                    var item = res.actions[0].returnValue[i];
+                    for(var cell in item){
+                        if(cell=='ImageUrls'){
+                            item[cell]=require('@/assets/img/avatar-r.png');
+                        }
+                        if(cell=='CreatedOn'||cell=='createdOn'){
+                            item['CreatedOn']=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
+                        }
+                    }
+                    if(!item['ImageUrls']){
+                        item['ImageUrls']=require('@/assets/img/avatar-r.png');
+                    }
+                    item['OwningUserId']=item.createdByName||'';
+                    item['OwningUser']=item.createdBy||'';
+                    item['Description']=item.text==''?'<span style="color:rgba(0, 0, 0, 0.25);">暂无内容</span>':item.text;
+                    item['NumOfLike']=item.numOfLike||0;
+                    item['NumOfComment']=item.numOfComment||0;
+                    list.push(item)
+                }
+            }
+            if(list&&list.length){
+                data.listData = list;
+            }
+        })
+    }
     //改变页码
     const ChangePage=(page, pageSize)=>{
         data.page=page;
@@ -182,34 +253,68 @@
             //         data.comment = "";
             //     }
             // })
-            let url=Interface.create;
+            // let url=Interface.create;
+            //     let d = {
+            //     actions:[{
+            //         id: "2919;a",
+            //         descriptor: "",
+            //         callingDescriptor: "UNKNOWN",
+            //         params: {
+            //         recordInput: {
+            //             allowSaveOnDuplicate: false,
+            //             apiName: 'Chatter',
+            //             objTypeCode: '6000',
+            //             fields: {
+            //                 RegardingObjectId: props.id,
+            //                 OwningUser:data.OwningUser,
+            //                 Description:data.comment,
+            //                 RegardingObjectTypeCode:props.RegardingObjectTypeCode
+            //             }
+            //         }              
+            //         }
+            //     }]
+            // };
+            
+            // let obj = {
+            //     message: JSON.stringify(d)
+            // }
+            // proxy.$post(url,obj).then(res=>{
+            // if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+            //     message.success("发布成功！");
+            //     getCommentList();
+            //     data.comment = "";
+            // }
+            
+            // });
+            let url=Interface.status.submit;
                 let d = {
                 actions:[{
                     id: "2919;a",
                     descriptor: "",
                     callingDescriptor: "UNKNOWN",
                     params: {
-                    recordInput: {
-                        allowSaveOnDuplicate: false,
-                        apiName: 'Chatter',
-                        objTypeCode: '6000',
-                        fields: {
-                            RegardingObjectId: props.id,
-                            OwningUser:data.OwningUser,
-                            Description:data.comment,
-                            RegardingObjectTypeCode:props.RegardingObjectTypeCode
+                        text:data.comment,
+                        chatterTypeCode:0,
+                        RegardingObjectId: props.id,
+                        location: {
+                            location: "",
+                            buidingName: "",
+                            longitude: "",
+                            latitude: ""
+                        },
+                        visible: {
+                            visibleType: 0
                         }
-                    }              
                     }
                 }]
             };
-            
             let obj = {
                 message: JSON.stringify(d)
             }
             proxy.$post(url,obj).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
                 message.success("发布成功！");
+                data.page=1;
                 getCommentList();
                 data.comment = "";
             }
@@ -332,8 +437,15 @@
         }
         height: 100%;
         .panel{
-            padding: 0;
             height: 100%;
+            padding: 15px;
+        }
+        .panel1{
+            height: 210px;
+            margin-bottom: 18px;
+        }
+        .panel2{
+            height: calc(~'100% - 230px');
         }
         .panelcommentWrap2 {
             padding: 0 15px;
@@ -345,7 +457,7 @@
             padding-left: 20px;
         }
         .panel-bd{
-            height: calc(~'100% - 35px') !important;
+            height: calc(~'100% - 40px') !important;
         }
         .commentList{
             height: calc(~'100% - 225px') !important;
@@ -395,10 +507,33 @@
         }
         .ant-pagination-item-active,.ant-pagination-item-active:hover{
             border: 1px solid #1677ff;
-            background: #1677ff;
+            background: #1677ff !important;
             a{
                 color: #fff;
             }
         }
     } 
+    .commentWrap2 {
+        .commentList{
+            height: calc(~'100% - 15px') !important;
+            margin-top: 0 !important;
+        }
+        .panel1 .panel-head{
+            margin-bottom: 15px !important;
+        }
+        .panel1 .ant-avatar{
+            top: 0px !important;
+        }
+        .empty {
+            background: #fff;
+            padding: 8px 0 22px;
+            svg,img{
+            width: 120px !important;
+            }
+            .emptyDesc{
+                color: #ccc;
+                margin-top: 10px;
+            }
+        }
+    }
 </style>

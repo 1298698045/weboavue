@@ -1,6 +1,6 @@
 <template>
   <div class="AddGroup" ref="AddGroup">
-    <a-modal v-model:open="props.isShow" width="650px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit" class="AddGroupModel">
+    <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit" class="AddGroupModel">
       <template #title>
         <div v-if="step==0">
           {{ title }}
@@ -104,7 +104,7 @@
               <div class="sectionTitle">小组访问权限</div>
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="IsPublic" label="是否公开">
+                  <a-form-item name="IsPublic" label="公用小组">
                       <a-checkbox v-model:checked="formState.IsPublic"></a-checkbox>
                   </a-form-item>
                 </div>
@@ -236,7 +236,7 @@
   import FilterQuery from "@/components/FilterQuery.vue";
   import Interface from "@/utils/Interface.js";
   import RadioDept from "@/components/commonModal/RadioDept.vue";
-  import RadioUser from "@/components/commonModal/MultipleUser.vue";
+  import RadioUser from "@/components/commonModal/RadioUser.vue";
   import Delete from "@/components/listView/Delete.vue";
   import { useRouter, useRoute } from "vue-router";
   import TEditor from "@/components/TEditor.vue";
@@ -275,7 +275,7 @@
   });
   const data = reactive({
     title: "新建小组",
-    height: document.documentElement.clientHeight - 300,
+    height: document.documentElement.clientHeight - 350,
     select: {},
     search: {
       OwningUser:[],
@@ -374,10 +374,10 @@
   
   onMounted(() => {
     window.addEventListener("resize", (e) => {
-      data.height = document.documentElement.clientHeight - 300;
+      data.height = document.documentElement.clientHeight - 350;
     });
     let h = AddGroup.value.clientHeight;
-    data.tableHeight = document.documentElement.clientHeight-450;
+    data.tableHeight = document.documentElement.clientHeight-500;
   });
   const searchlookup = (searchVal, Lktp, field) => {
     let obj = {
@@ -468,13 +468,23 @@
           //data.select = res.actions[0].picklistValuesMap||{};
           let record = res.actions[0].returnValue.fields;
           formState.Name = record.Name?record.Name.displayValue:'';
-          formState.OwningUser.Id = record.OwningUser?record.OwningUser.value:'';
+          //formState.OwningUser.Id = record.OwningUser?record.OwningUser.value:'';
           //formState.BusinessUnitId.Id = record.BusinessUnitId?record.BusinessUnitId.value : '';
           formState.ImportSequenceNumber = record.ImportSequenceNumber?record.ImportSequenceNumber.value:'';
           formState.IsPublic = record.IsPublic?record.IsPublic.value : false;
           formState.Description = record.Description?record.Description.value : '';
           formState.Notice=record.Notice?record.Notice.value : '';
           editorRef.value.content=record.Notice?record.Notice.value : '';
+          if(record.OwningUser&&record.OwningUser.value){
+                let OwningUserName=record.OwningUser.displayValue||'';
+                let OwningUserId=record.OwningUser.value;
+                formState.OwningUser={Id:OwningUserId,Name:OwningUserName};
+                data.search.OwningUser.push({
+                    ID: OwningUserId,
+                    Name: OwningUserName
+                });
+            }
+            searchlookup('', 'SystemUser','OwningUser');
         }
     })
     

@@ -122,7 +122,7 @@
                         window.localStorage.setItem('token', token);
                         window.localStorage.setItem('userInfo', userInfo);
                         message.success(res.msg||'登录成功！');
-                        router.push('/home/Home.aspx?t=home&dboardName=workspace');
+                        router.push('/lightning/o/workspace/home');
                     }else {
                         if(res&&res.msg){
                             message.error(res.msg);

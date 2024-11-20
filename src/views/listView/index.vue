@@ -182,7 +182,7 @@
       SearchOutlined
   
     } from "@ant-design/icons-vue";
-    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, h } from "vue";
+    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, h, nextTick } from "vue";
     import Interface from "@/utils/Interface.js";
     import Dtable from "@/components/Dtable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
@@ -260,12 +260,13 @@
       isFilterPicker: false,
       searchFilterVal: "",
       filterListFixed: [],
-      entityType: 'a0V',
-      sObjectName: 'HREmployee',
+      entityType: route.params.sObjectName,
+      sObjectName: route.params.sObjectName,
       initialData: {}, // 元数据
       actionList: [],
       title: "",
       isChartModal: false, // 图表
+      columns: []
     });
     const handleCollapsed = () => {
       data.isCollapsed = !data.isCollapsed;
@@ -274,7 +275,7 @@
        isModal, isCirculation, isCommon, isLock, filterList, currentFilter,
       isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal, 
       isDeleteModal, isFilterModal, searchFilterVal, filterListFixed, entityType,
-       initialData, actionList, title, sObjectName, isChartModal } = toRefs(data);
+       initialData, actionList, title, sObjectName, isChartModal, columns } = toRefs(data);
     const tabContent = ref(null);
     const contentRef = ref(null);
     let formSearchHeight = ref(null);
@@ -288,7 +289,7 @@
       data.isFilterPicker = false;
       data.isLock = false;
       data.queryParams.filterId = item.id;
-      columns.value = [];
+      // columns.value = [];
       getListConfig();
     };
     const handleLock = () => {
@@ -342,7 +343,7 @@
     }
   
     const gridUrl = ref(Interface.listView.list);
-    const columns = ref([]);
+    // const columns = ref([]);
     
     // 通用弹窗关闭
     const handleCommonCancel = (params) => {
@@ -362,20 +363,40 @@
       })
       return response;
     }
-    getMetadataInitialLoad().then(res=>{
-      console.log("resAsync", res);
-      data.initialData = res.actions[0].returnValue;
-      data.currentFilter = {
-        id: data.initialData.listViewId,
-        name: data.initialData.listViewLabel
-      }
-      data.title = data.initialData.breadCrumbList.length ? data.initialData.breadCrumbList[0].label : '';
-      data.queryParams.filterId = data.currentFilter.id;
-      //getActions();
-      getActionsTop();
-      getListConfig();
-      getFilterList();
-    });
+    // getMetadataInitialLoad().then(res=>{
+    //   console.log("resAsync", res);
+    //   data.initialData = res.actions[0].returnValue;
+    //   data.currentFilter = {
+    //     id: data.initialData.listViewId,
+    //     name: data.initialData.listViewLabel
+    //   }
+    //   data.title = data.initialData.breadCrumbList.length ? data.initialData.breadCrumbList[0].label : '';
+    //   data.queryParams.filterId = data.currentFilter.id;
+    //   //getActions();
+    //   getActionsTop();
+    //   getListConfig();
+    //   getFilterList();
+    // });
+
+    watch(()=> route.params.sObjectName, (newVal, oldVal) => {
+      console.log("route.params.sObjectName", newVal, oldVal);
+      data.sObjectName = route.params.sObjectName;
+      data.entityType = route.params.sObjectName;
+      getMetadataInitialLoad().then(res=>{
+        console.log("resAsync", res);
+        data.initialData = res.actions[0].returnValue;
+        data.currentFilter = {
+          id: data.initialData.listViewId,
+          name: data.initialData.listViewLabel
+        }
+        data.title = data.initialData.breadCrumbList.length ? data.initialData.breadCrumbList[0].label : '';
+        data.queryParams.filterId = data.currentFilter.id;
+        //getActions();
+        getActionsTop();
+        getListConfig();
+        getFilterList();
+      });
+    }, {immediate: true})
   
     const getActions = () => {
       proxy.$get(Interface.listView.actions, {
@@ -478,15 +499,19 @@ if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
         search: "",
         filterId: data.currentFilter.id
       }).then(res=>{
+        let columns = [];
         let { fields } = res.actions[0].returnValue;
         fields.forEach(item=>{
-          columns.value.push({
+          columns.push({
             field: item.name,
             title: item.label,
             sortable: true
           });
         })
-        gridRef.value.loadGrid(data.queryParams);
+        data.columns = columns;
+        nextTick(()=>{
+          gridRef.value.loadGrid(data.queryParams);
+        })
       })
     }
     const getFilterList = () => {

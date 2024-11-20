@@ -16,7 +16,7 @@
                 <div class="leftTreeWrap">
                     <a-tree :tree-data="treeData" block-node :selectedKeys="selectedKeys" @select="handleTreeSelect">
                         <template #title="{ text, key }">
-                            <span>{{ text }}</span>
+                            <span :key="key">{{ text }}</span>
                         </template>
                     </a-tree>
                 </div>
@@ -51,7 +51,17 @@
                                 <img :src="text" alt="" class="group_list_avatar"/>
                             </div>
                             <div v-if="column.key=='Name'">
-                                <a href="javascript:;" @click="handleDetail(record)" style="color:var(--textColor);">{{ text }}</a>
+                                <a href="javascript:;" @click="handleDetail(record.id)" style="color:var(--textColor);">{{ text }}</a>
+                            </div>
+                            <div v-if="column.key=='Action'">
+                                <div class="iconBox">
+                                    <div class="popup">
+                                        <div class="option-item" @click="handleDetail(record.id)" :num="index">查看</div>  
+                                        <div class="option-item" @click="handleEdit(record.id)" :num="index">编辑</div>  
+                                        <div class="option-item" @click="handleDelete(record.id)" :num="index">删除</div>
+                                    </div>
+                                    <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
+                                </div>
                             </div>
                         </template>
                     </a-table>
@@ -105,7 +115,7 @@
                 title: '头像',
                 dataIndex: 'AvatarImg',
                 key: 'AvatarImg',
-                width: 150
+                width: 120
             },
             {
                 title: '名称',
@@ -116,16 +126,25 @@
                 title: '成员人数',
                 dataIndex: 'Quantity',
                 key: 'Quantity',
+                width: 200
             },
             {
                 title: '创建时间',
                 dataIndex: 'CreatedOn',
                 key: 'CreatedOn',
+                width: 200
             },
             {
                 title: '所有人',
                 dataIndex: 'OwningUser',
                 key: 'OwningUser',
+                width: 200
+            },
+            {
+                title: '操作',
+                dataIndex: 'Action',
+                key: 'Action',
+                width: 120
             },
         ],
         groupList: [],
@@ -202,6 +221,9 @@
                         item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
                     }
                 }
+                if(!item.AvatarImg){
+                    item.AvatarImg=require('@/assets/img/avatar-r.png');
+                }
                 list.push(item)
             }
             data.dataSource = list;
@@ -218,8 +240,8 @@
     const handleMenuClick = (e) => {
         console.log("e",e);
     }
-    const handleDetail = (row) => {
-        let GroupId = row.id;
+    const handleDetail = (id) => {
+        let GroupId = id;
         let routeData = router.resolve({
             name: 'GroupDetail',
             query: {
@@ -259,7 +281,7 @@
     };
     onMounted(() => {
         let h = tablelist.value.clientHeight;
-        data.tableHeight = h-100;
+        data.tableHeight = h-80;
     })
 </script>
 <style lang="less" scoped>
@@ -278,4 +300,59 @@
     .group_list_avatar{
         height: 40px;
     }
+    .addressBook{
+        :deep .ant-table-tbody .ant-table-cell{
+            padding: 8px 16px !important;
+        }
+        .group_list_avatar{
+            position: relative;
+            top: 4px;
+        }
+        .iconBox .moreaction {
+            padding: 0px 1px;
+            width: 18px;
+            border: 1px solid #dedede;
+            border-radius: 4px;
+            position: relative;
+            top: 1px;
+        }
+        .iconBox .popup{
+            top: 25px;
+            right: 0;
+            width: max-content;
+            min-width: 88px;
+        }
+
+        :deep .ant-table-wrapper .ant-table-thead >tr>th{
+        background-color: #f7fbfe !important;
+        padding: 8.5px 16px !important;
+        }
+        :deep .ant-table-tbody tr:hover,:deep .ant-table-tbody tr:hover td{
+        background-color: #e9f7ff !important;
+        color: #108def !important;
+        }
+        :deep .ant-table-tbody tr:nth-child(odd) {
+        background-color: rgb(250, 250, 250) !important; /* 奇数行背景色 */
+        }
+        :deep .ant-table-tbody tr:nth-child(even) {
+        background-color: #fff !important; /* 偶数行背景色 */
+        }
+        :deep .ant-pagination{
+            .ant-pagination-item{
+                border: 1px solid #d9d9d9;
+            }
+            .ant-pagination-item:hover{
+                border: 1px solid #1677ff;
+                background: #fff !important;
+            }
+            .ant-pagination-item-active,.ant-pagination-item-active:hover{
+                border: 1px solid #1677ff;
+                background: #1677ff !important;
+                a{
+                    color: #fff;
+                }
+            }
+        } 
+    }
+    
 </style>

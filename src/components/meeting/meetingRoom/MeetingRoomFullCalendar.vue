@@ -621,7 +621,8 @@
                     "startDateTime": props.startDateTime,
                     "endDateTime": props.endDateTime,
                     "calendarType": 'week',
-                    "queryMeetings": true
+                    "queryMeetings": true,
+                    filterQuery:'\nResourceTypeCode\teq\t2'
                 }
 
             }]

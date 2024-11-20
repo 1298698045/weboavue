@@ -12,7 +12,7 @@
         ></div>
       </div>
     </div>
-    <div class="panel">
+    <!-- <div class="panel">
       <div class="panel-head">
         <div class="panel-title">成员统计</div>
       </div>
@@ -23,7 +23,7 @@
           style="width: 100%; height: 400px"
         ></div>
       </div>
-    </div>
+    </div> -->
     <div class="panel">
       <div class="panel-head">
         <div class="panel-title">摘要</div>
@@ -31,30 +31,24 @@
       <div class="panel-bd">
         <div class="abstract">
           <div class="abstractItem">
-            <div class="abstractItem-title">成员</div>
-            <div class="abstractItem-num">{{ statistics.TotalPeople }}</div>
+            <div class="abstractItem-title">帖子数量</div>
+            <div class="abstractItem-num">{{ statistics.postCount||0 }}</div>
           </div>
           <div class="abstractItem">
-            <div class="abstractItem-title">帖子</div>
-            <div class="abstractItem-num">{{ statistics.TotalContent }}</div>
+            <div class="abstractItem-title">点赞数量</div>
+            <div class="abstractItem-num">{{ statistics.likeCount||0 }}</div>
           </div>
           <div class="abstractItem">
-            <div class="abstractItem-title">问题</div>
-            <div class="abstractItem-num">{{ statistics.TotalQuestion }}</div>
+            <div class="abstractItem-title">组人数</div>
+            <div class="abstractItem-num">{{ statistics.peopleCount||0 }}</div>
           </div>
           <div class="abstractItem">
-            <div class="abstractItem-title">为帖子点赞</div>
-            <div class="abstractItem-num">
-              {{ statistics.TotalContentLike }}
-            </div>
+            <div class="abstractItem-title">问题数量</div>
+            <div class="abstractItem-num">{{ statistics.questionCount||0 }}</div>
           </div>
           <div class="abstractItem">
-            <div class="abstractItem-title">备注</div>
-            <div class="abstractItem-num">{{ statistics.TotalDesc }}</div>
-          </div>
-          <div class="abstractItem">
-            <div class="abstractItem-title">未回答</div>
-            <div class="abstractItem-num">{{ statistics.TotalUnAnser }}</div>
+            <div class="abstractItem-title">文件数量</div>
+            <div class="abstractItem-num">{{ statistics.fileCount||0 }}</div>
           </div>
         </div>
       </div>
@@ -73,7 +67,19 @@ import {
   getCurrentInstance,
   nextTick,
   onUnmounted,
+  defineProps
 } from "vue";
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+dayjs.locale('zh-cn');
+import calendar from 'dayjs/plugin/calendar';
+import weekday from 'dayjs/plugin/weekday';
+import localeData from 'dayjs/plugin/localeData';
+
+dayjs.extend(calendar);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
 import {
   SwapLeftOutlined,
   SwapRightOutlined,
@@ -81,21 +87,38 @@ import {
   ArrowDownOutlined,
 } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
+import { girdFormatterValue } from "@/utils/common.js";
+import { message } from "ant-design-vue";
 const { proxy } = getCurrentInstance();
 import * as echarts from "echarts";
+const props = defineProps({
+    id: String,
+});
+  
 const data = reactive({
   statistics: {},
+  groupChatterAbstract:{},
+  groupPostChatter:[]
 });
-const { statistics } = toRefs(data);
+const { statistics,groupChatterAbstract,groupPostChatter } = toRefs(data);
 const chartMain = ref();
 const chartMain2 = ref();
 const getStatistics = () => {
-  proxy.$get(Interface.group.statistics, {}).then((res) => {
-    console.log("res", res);
-    data.statistics = res.data;
+  data.statistics = {};
+  data.groupChatterAbstract = {};
+  data.groupPostChatter = [];
+  proxy.$get(Interface.group.statistics, {id:props.id}).then((res) => {
+    //console.log("res", res);
+    if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+      let statdata=res.actions[0].returnValue;
+      data.statistics = statdata;
+      data.groupChatterAbstract = statdata.groupChatterAbstract;
+      data.groupPostChatter = statdata.groupPostChatter;
+    }
     loadChart();
-    loadChart2();
+    //loadChart2();
   });
+
 };
 getStatistics();
 onMounted(() => {});
@@ -115,6 +138,10 @@ const loadChart = () => {
     "十一月",
     "十二月",
   ];
+  data.groupPostChatter.forEach((item) => {
+    chartName.push(item.lable);
+    chartData.push(item.value?Number(item.value) : 0);
+  });
   var myChart;
   if (myChart != null && myChart != "" && myChart != undefined) {
     myChart.dispose(); //销毁

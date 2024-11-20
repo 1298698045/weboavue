@@ -77,11 +77,13 @@ const getCurrentApp = () => {
     let routePath = localStorage.getItem("routePath");
     if(routePath){
       router.push({
-        path: routePath
+        path: routePath,
+        query: route.route
       });
     }else {
       router.push({
-        path: data.appTabs[0].key
+        path: data.appTabs[0].key,
+        query: route.route
       });
     }
   })

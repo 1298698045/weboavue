@@ -190,7 +190,7 @@
         margin-right: 20px;
   
         .ant-row {
-          display: flex !important;
+          //display: flex !important;
         }
       }
   

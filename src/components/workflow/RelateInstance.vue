@@ -270,6 +270,9 @@ const changeTab = (e) => {
   }
 }
 .ant-modal-content .RelateInstanceContent{
+  td .datagrid-cell a{
+    color: #1677ff !important;
+  }
     .modalTop{
         position: relative;
         margin-bottom: 10px;

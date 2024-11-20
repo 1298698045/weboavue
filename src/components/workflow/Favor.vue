@@ -12,8 +12,8 @@
                       ref="formRef"
                       :label-col="labelCol"
                       :model="formState">
-                      <a-form-item label="收藏" name="noticeMethod">
-                          <a-input type="checkbox" v-model:checked="formState.noticeMethod" class="CalendarCheckbox"></a-input>
+                      <a-form-item label="收藏" name="IsFavorite">
+                          <a-input type="checkbox" v-model:checked="formState.IsFavorite" class="CalendarCheckbox"></a-input>
                       </a-form-item>
                       <a-form-item label="备注：" name="Description" class="Description">
                           <a-textarea :rows="3" v-model:value="formState.Description" />
@@ -51,13 +51,91 @@
   const { proxy } = getCurrentInstance();
   const props = defineProps({
       paramsData: Object,
-      isShow: Boolean
+      isShow: Boolean,
+      id:String,
+      objTypeCode:String,
   });
+  let data = reactive({top: 0,userId:''})
+  const { top } = toRefs(data);
   const isModal = ref(true);
   const labelCol = ref({ style: { width: '100px' } });
   const emit = defineEmits(['update-status']);
+
   const handleSubmit = () => {
-      handleCancel();
+    let userInfo=window.localStorage.getItem('userInfo');
+    if(userInfo){
+        userInfo=JSON.parse(userInfo);
+        data.userId=userInfo.userId;
+    }
+    if(props.id){
+        let filterQuery='\nObjectId\teq\t'+props.id+'\nOwningUser\teq\t'+data.userId;
+        proxy.$post(Interface.list2, {
+            filterId:'',
+            objectTypeCode:'6060',
+            entityName:'',
+            filterQuery:filterQuery,
+            search:'',
+            page: 1,
+            rows: 10,
+            sort:'CreatedOn',
+            order:'DESC',
+            displayColumns:'Name'
+        }).then(res => {
+            if(res&&res.nodes&&res.nodes.length){
+                message.success("已收藏！");
+                handleCancel();
+            }else{
+                handleSave();
+            }
+        })
+    }else{
+        handleCancel();
+    }
+  };
+  const handleSave = () => {
+        let url=Interface.edit;
+        let d = {
+        actions:[{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName:'FavoriteObject',
+                objTypeCode: '6060',
+                fields: {
+                    Name:props.objName,
+                    ObjectId: props.id,
+                    ObjectTypeCode:props.objTypeCode,
+                    URL:formState.Description||'',
+                    OwningUser:data.userId
+                }
+              }              
+            }
+        }]
+    };
+    // if(props.id){
+    //     d.actions[0].params.recordId=props.id;
+    // }
+    let obj = {
+        message: JSON.stringify(d)
+    }
+        proxy.$post(url,obj).then(res=>{
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+            message.success("收藏成功！");
+          }
+          else{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                message.success(res.actions[0].errorMessage);
+            }
+            else{
+                message.success("收藏失败！");
+            }
+          }
+          handleCancel();
+        });
+      
   }
   const handleCancel = () => {
       emit("update-status",false);
@@ -69,7 +147,7 @@
       Priority:"0",
       Description:"",
       BusinessUnitList: [],
-      noticeMethod: []
+      IsFavorite: true
   })
   const modelContentRef = ref(null);
   onMounted(()=>{
@@ -123,10 +201,11 @@
           }
           :where(.css-dev-only-do-not-override-kqecok).ant-form-horizontal .ant-form-item-label{
               width: 50px !important;
+              margin-top: 10px;
           }
           :where(.css-dev-only-do-not-override-kqecok).ant-form-item .ant-form-item-control-input-content{
               flex: unset;
-              line-height: 34px;
+              line-height: 55px;
           }
           textarea:where(.css-dev-only-do-not-override-kqecok).ant-input{
               width: 510px !important;

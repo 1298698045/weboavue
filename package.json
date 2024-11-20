@@ -42,6 +42,7 @@
     "v3-easyui": "^3.0.14",
     "vue": "^3.2.36",
     "vue-draggable-next": "^2.2.1",
+    "vue-grid-layout": "3.0.0-beta1",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^4.0.0-0",
     "vuedraggable": "^2.24.3",

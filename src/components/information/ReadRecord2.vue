@@ -6,7 +6,7 @@
               <div class="ant-card-body">      
                 <div class="statistics-left">          
                   <div class="statistics-name">全部</div>          
-                  <div class="statistics-count" name="ContractNumber" style="color: #108def;">{{ PeopleQty||0 }}</div>      
+                  <div class="statistics-count" name="ContractNumber" style="color: #108def;">{{ AllQty||0 }}</div>      
                 </div>      
                 <div class="statistics-right">          
                   <InfoCircleOutlined style="color: #108def;" />
@@ -18,7 +18,7 @@
               <div class="ant-card-body">      
                 <div class="statistics-left">          
                   <div class="statistics-name">已读</div>          
-                  <div class="statistics-count" name="ContractNumber" style="color: rgb(141, 193, 57);">{{ AcceptQty||0 }}</div>      
+                  <div class="statistics-count" name="ContractNumber" style="color: rgb(141, 193, 57);">{{ ReadedQty||0 }}</div>      
                 </div>      
                 <div class="statistics-right">          
                   <CheckCircleOutlined style="color: rgb(141, 193, 57);" />     
@@ -30,7 +30,7 @@
               <div class="ant-card-body">      
                 <div class="statistics-left">          
                   <div class="statistics-name">未读</div>          
-                  <div class="statistics-count" name="ContractNumber" style="color: orangered;">{{ DayoffQty||0 }}</div>      
+                  <div class="statistics-count" name="ContractNumber" style="color: orangered;">{{ unReadQty||0 }}</div>      
                 </div>      
                 <div class="statistics-right" >          
                   <ClockCircleOutlined style="color: orangered;" />
@@ -50,7 +50,7 @@
           <div class="peopleHeader">
             <div class="left">
               <a-input
-                v-model:value="OwningBusinessUnitName"
+                v-model:value="BusinessUnitName"
                 placeholder="部门"
                 class="searchitem"
                 @search="onSearch"
@@ -133,8 +133,8 @@
             </div>
         </div>
       </div>
-      <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
-      <radio-dept :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal" @ok="refreshPeople"></radio-dept>
+      <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
+      <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal" @ok="refreshPeople"></radio-dept>
       <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
     </div>
   </template>
@@ -188,8 +188,8 @@
   },
   {
       title: "部门",
-      dataIndex: "OwningBusinessUnit",
-      key: "OwningBusinessUnit"
+      dataIndex: "BusinessUnit",
+      key: "BusinessUnit"
   },
   {
       title: "姓名",
@@ -230,7 +230,7 @@
     loading: false,
     listData: [],
     searchVal: "",
-    OwningBusinessUnitName:"",
+    BusinessUnitName:"",
     isRadioUser: false,
     isRadioDept: false,
     isDelete: false,
@@ -251,8 +251,8 @@
     total:0,
     tableHeight:0,
     recordId:'',
-    objectTypeCode:'20023',
-    sObjectName:'ContentReaders',
+    objectTypeCode:'2021',
+    sObjectName:'RecordReadLog',
     isDelete: false,
     deleteDesc: '确定要删除吗？',
     external:false,
@@ -269,17 +269,20 @@
     SignoffQty:0,
     RejectQty:0,
     DayoffQty:0,
-    IsRead:''
+    IsRead:'',
+    AllQty:0,
+    ReadedQty:0,
+    unReadQty:0,
   });
   const columnList = toRaw(columns);
-  const { listData,IsRead,PeopleQty,AcceptQty,JoinQty,SignoffQty,RejectQty,DayoffQty,height,searchVal,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept } = toRefs(data);
+  const { AllQty,ReadedQty,unReadQty,listData,IsRead,PeopleQty,AcceptQty,JoinQty,SignoffQty,RejectQty,DayoffQty,height,searchVal,BusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept } = toRefs(data);
   const getQuery = () => {
     // proxy.$get(Interface.user.groupUser, {}).then((res) => {
     //   data.listData = res.rows;
     // });
     data.listData=[];
     data.pagination.total = 0;
-    let filterQuery='\nContentId\teq\t'+props.id;
+    let filterQuery='\nObjectId\teq\t'+props.id;
     if(data.IsRead!=''){
       filterQuery+='\nIsRead\teq\t'+(data.IsRead=='1'?true:false);
     }
@@ -290,8 +293,8 @@
     //     filterQuery+='\nCheckinStatus\teq\t'+data.CheckinStatus;
     // }
     
-    if(data.OwningBusinessUnitName){
-      filterQuery+='\nOwningBusinessUnitName\tcontains\t'+data.OwningBusinessUnitName;
+    if(data.BusinessUnitName){
+      filterQuery+='\nBusinessUnitName\tcontains\t'+data.BusinessUnitName;
     }
     if(data.Checkin1){
       filterQuery+='\nReadedOn\tge\t'+data.Checkin1;
@@ -301,34 +304,46 @@
     }
           proxy.$post(Interface.list2, {
               filterId:'',
-              objectTypeCode:'5002',
-              entityName:'MeetingAudience',
+              objectTypeCode:data.objectTypeCode,
+              entityName:data.sObjectName,
               filterQuery:filterQuery,
               search:data.searchVal||'',
               page: data.pagination.current,
               rows: data.pagination.pageSize,
-              sort:'ModifiedOn',
+              sort:'ReadedOn',
               order:'desc',
-              displayColumns:'OwningBusinessUnit,ReaderId,IsRead,ReadedOn,IPAddr'
+              displayColumns:'BusinessUnitName,ReaderId,IsRead,ReadedOn,IPAddr'
           }).then(res => {
               var list = [];
               data.total = res.pageInfo?res.pageInfo.total:0;
               data.pagination.total = res.pageInfo?res.pageInfo.total:0;
+              if(data.IsRead!=''){
+                if(data.IsRead=='1'){
+                  data.ReadedQty=data.total;
+                }
+                else{
+                  data.unReadQty=data.total;
+                }
+              }
+              else{
+                data.AllQty=data.total;
+              }
               //console.log(pagination)
-              for (var i = 0; i < res.nodes.length; i++) {
-                  var item = res.nodes[i];
-                  for(var cell in item){
-                      if(cell!='id'&&cell!='nameField'){
-                          item[cell]=girdFormatterValue(cell,item);
-                      }
-                      if(cell=='ReadedOn'){
-                          item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
-                      }
-                  }
-                  list.push(item)
+              if(res&&res.nodes){
+                for (var i = 0; i < res.nodes.length; i++) {
+                    var item = res.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'){
+                            item[cell]=girdFormatterValue(cell,item);
+                        }
+                        if(cell=='ReadedOn'){
+                            item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
+                        }
+                    }
+                    list.push(item)
+                }
               }
               data.listData = list;
-              
           })
   };
   const onSearch = (e) => {
@@ -337,7 +352,7 @@
   };
   const onClear = (e) => {
     data.searchVal='';
-    data.OwningBusinessUnitName='';
+    data.BusinessUnitName='';
     data.StatusCode=null;
     data.CheckinStatus=null;
     data.Checkin=null;
@@ -399,8 +414,8 @@
               params: {
                 recordInput: {
                   allowSaveOnDuplicate: false,
-                  apiName: 'MeetingAudience',
-                  objTypeCode: '5002',
+                  apiName: data.sObjectName,
+                  objTypeCode: data.objectTypeCode,
                   fields: {
                       MeetingId: props.id,
                       InviteeId: params.id,
@@ -675,7 +690,7 @@
         }
         .ant-pagination-item-active,.ant-pagination-item-active:hover{
             border: 1px solid #1677ff;
-            background: #1677ff;
+            background: #1677ff !important;
             a{
                 color: #fff;
             }

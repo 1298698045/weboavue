@@ -1,5 +1,8 @@
 <template>
   <div class="groupDetail">
+    <div class="topImg">
+      <img :src="require('@/assets/img/groupdetail/lightning_blue_group.png')" />
+    </div>
     <div class="header">
       <div class="leftBox">
         <div class="leftBox-top">
@@ -17,14 +20,14 @@
             <div class="subtitle">{{detail.IsPublic&&detail.IsPublic.value?'公用':'非公用'}}</div>
           </div>
         </div>
-        <div class="tabContainer">
+        <!-- <div class="tabContainer">
           <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="1" tab="群空间"></a-tab-pane>
             <a-tab-pane key="2" tab="详细信息"></a-tab-pane>
             <a-tab-pane key="3" tab="人员"></a-tab-pane>
             <a-tab-pane key="4" tab="统计"></a-tab-pane>
           </a-tabs>
-        </div>
+        </div> -->
       </div>
       <div class="rightBtns">
         <a-button class="ml10" type="primary" @click="handleAddPeople">添加成员</a-button>
@@ -46,14 +49,81 @@
     <div class="detail-scroll">
       <div class="detail-bd">
         <div class="container">
-          <div class="tabContainer">
+          <div class="tabContainer" :class="{'tabContainer0':activeKey == '1'}">
+            <a-tabs v-model:activeKey="activeKey">
+              <a-tab-pane key="1" tab="群空间"></a-tab-pane>
+              <a-tab-pane key="2" tab="详细信息"></a-tab-pane>
+              <a-tab-pane key="3" tab="人员"></a-tab-pane>
+              <a-tab-pane key="4" tab="统计"></a-tab-pane>
+            </a-tabs>
             <group-space v-if="activeKey == '1'" :id="groudId" />
             <DetailInfo  v-if="activeKey == '2'" :id="groudId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
             <Personnel ref="PersonnelLst" :load="refreshPeople" :id="groudId" v-if="activeKey == '3'" />
-            <Statistics v-if="activeKey == '4'" />
+            <Statistics v-if="activeKey == '4'" :id="groudId" />
           </div>
           <div class="rightAside group-rightAside">
             <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title">附件 (0)</div>
+                <div class="panel-btn">
+                  <a-upload v-model:file-list="fileList" action="#" :showUploadList="false">
+                    <a-button type="link">上传附件</a-button>
+                  </a-upload>
+                </div>
+              </div>
+              <div class="panel-bd">
+                <a-collapse
+                  v-model:activeKey="current"
+                  :expand-icon-position="expandIconPosition"
+                >
+                  <a-collapse-panel
+                    :header="item.Name"
+                    v-for="(item, index) in fileCategorys"
+                    :key="index"
+                  >
+                    <template #extra><PlusOutlined /></template>
+                  </a-collapse-panel>
+                </a-collapse>
+                <div class="files">
+                  <div class="fileItem">
+                    <div class="lImg">
+                      <img :src="require('@/assets/img/filetype/pdf.png')" />
+                    </div>
+                    <div class="rInfo">
+                      <p class="name rowEllipsis">
+                        测试文件
+                      </p>
+                      <div class="optionLink">
+                        <span class="link" @click="viewFile('/pdfjs/web/viewer.html?file=..%2F..%2Fresources%2Fuploadfiles%2Ftest.pdf')">查看</span> ·
+                        <span class="link" @click="downloadFile('/pdfjs/web/viewer.html?file=..%2F..%2Fresources%2Fuploadfiles%2Ftest.pdf')">下载</span>
+                      </div>
+                      <div class="time">2023/11/7 10:10 · 36.7k</div>
+                    </div>
+                    <div class="icon">
+                      <a-dropdown :trigger="['click']">
+                        <a class="ant-dropdown-link" @click.prevent>
+                          <DownOutlined />
+                        </a>
+                        <template #overlay>
+                          <a-menu>
+                            <a-menu-item>
+                              <a href="javascript:;">标记分类</a>
+                            </a-menu-item>
+                            <a-menu-item>
+                              <a href="javascript:;">重命名</a>
+                            </a-menu-item>
+                            <a-menu-item>
+                              <a href="javascript:;">删除</a>
+                            </a-menu-item>
+                          </a-menu>
+                        </template>
+                      </a-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="panel">
               <div class="panel-head">
                 <div class="panel-title">管理员</div>
                 <div class="panel-btn">
@@ -84,8 +154,8 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="panel">
+            </div> -->
+            <!-- <div class="panel">
               <div class="panel-head">
                 <div class="panel-title">成员</div>
                 <div class="panel-btn">
@@ -116,7 +186,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -143,7 +213,7 @@ import {
   defineEmits,
   h,
 } from "vue";
-import { EditOutlined, UnorderedListOutlined,DeleteOutlined } from "@ant-design/icons-vue";
+import { EditOutlined, UnorderedListOutlined,DeleteOutlined,DownOutlined,PlusOutlined } from "@ant-design/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
 import GroupSpace from "@/components/groupDetail/GroupSpace.vue";
@@ -191,7 +261,9 @@ const data = reactive({
     recordId:'',
     objectTypeCode:'',
     sObjectName:''
-  }
+  },
+  fileList:[],
+  height:100
 });
 const {
   activeKey,
@@ -203,7 +275,8 @@ const {
   isAdmin,
   isCommon,
   isUpdateGroupImage,
-  recordId,objectTypeCode,sObjectName,deleteDesc,external,detail,AvatarImg,groudId,deleteInfo
+  fileList,
+  recordId,objectTypeCode,sObjectName,deleteDesc,external,detail,AvatarImg,groudId,deleteInfo,height
 } = toRefs(data);
 const handleOpenNotes = () => {
   data.isNotes = true;
@@ -366,6 +439,13 @@ const ChangeGroupImage=()=>{
 }
 onMounted(() => {
   getDetail();
+  let h = document.documentElement.clientHeight;
+  data.height=h-302;
+  window.addEventListener("resize", (e) => {
+    let h = document.documentElement.clientHeight;
+    data.height=h-302;
+  });
+  console.log(data.height)
 })
 const getDetail = () => {
         let d = {
@@ -401,6 +481,12 @@ const handleDeletePeople = (e) => {
   }
   data.isDelete = true;
 };
+const viewFile=(link)=>{
+  window.open(link);
+}
+const downloadFile=(link)=>{
+  window.open(link);
+}
 </script>
 <style lang="less" scoped>
 @import "@/style/detail.less";
@@ -410,10 +496,30 @@ const handleDeletePeople = (e) => {
   height: 100vh;
   background: #f0f2f6;
   overflow: hidden;
+  .topImg{
+    
+    img{
+      width: 100%;
+      height: auto;
+      position: absolute;
+    }
+  }
+  .ant-tabs{
+    position: relative;
+    top: 0;
+    background: #fff;
+    //padding: 0px 20px;
+    padding-top: 5px;
+    padding-bottom:15px !important;
+    :deep .ant-tabs-tab{
+      padding-bottom: 8px !important;
+    }
+  }
   .header {
     width: 100%;
-    position: fixed;
-    top: 0;
+    position: absolute;
+    top: 155px;
+    height: 97px;
     background: #fff;
     display: flex;
     justify-content: space-between;
@@ -427,15 +533,16 @@ const handleDeletePeople = (e) => {
       margin-top: 10px;
       display: flex;
       align-items: center;
-
+      position: absolute;
+      top: -20px;
       .d-panel-content-head-avatar {
         position: relative;
         cursor: pointer;
         margin-right: 10px;
 
         .editheadbg {
-          width: 80px;
-          height: 80px;
+          width: 170px;
+          height: 170px;
           border-radius: 50%;
           border: 4px solid #fff;
           margin: 0;
@@ -443,28 +550,44 @@ const handleDeletePeople = (e) => {
           background: #000;
           opacity: 0.3;
           position: absolute;
-          top: 0;
-          left: 0;
+          top: -102px;
+          left: 15px;
+          z-index: 1;
         }
 
         .edithead {
           display: none;
           position: absolute;
-          top: 36px;
-          left: 11px;
+          top: -30px;
+          left: 22px;
           color: #fff;
-          font-size: 12px;
+          font-size: 16px;
+          z-index: 2;
+          width: 155px;
+          text-align: center;
+          letter-spacing: 1px;
+          .anticon{
+            margin-right: 4px;
+          }
         }
 
         .d-panel-content-head-left {
-          width: 80px;
-          height: 80px;
+          width: 170px;
+          height: 170px;
           border-radius: 50%;
           border: 4px solid #fff;
           margin: 0;
+          position: absolute;
+          top: -102px;
+          background: #fff;
+          left: 15px;
         }
       }
-
+      .d-panel-content-head-title{
+          position: relative;
+          left: 190px;
+          top: 30px;
+        }
       .d-panel-content-head-avatar:hover {
         .editheadbg,
         .edithead {
@@ -490,7 +613,7 @@ const handleDeletePeople = (e) => {
     }
 
     .rightBtns {
-      padding-top: 24px;
+      padding-top: 32px;
       display: flex;
 
       .btn-drop {
@@ -502,6 +625,7 @@ const handleDeletePeople = (e) => {
         cursor: pointer;
         margin-top: 0;
         border-radius: 6px;
+        font-size: 20px;
       }
 
       .btn-drop:hover {
@@ -512,13 +636,17 @@ const handleDeletePeople = (e) => {
   }
 
   .detail-scroll {
-    height: calc(~"100% - 140px");
-    margin-top: 140px;
-    overflow: auto;
-
+    height: calc(~"100% - 250px");
+    margin-top: 250px;
+    //overflow: auto;
+    background: #f0f2f6;
+    position: absolute;
+    width: 100%;
     .detail-bd {
-      padding: 24px;
+      padding: 15px;
+      background: #f0f2f6;
       .container {
+        padding: 5px;
         display: flex;
         justify-content: space-between;
         .tabContainer {
@@ -527,7 +655,22 @@ const handleDeletePeople = (e) => {
           border-radius: 4px;
           margin-right: 12px;
           overflow: hidden;
-          padding: 20px 15px;
+          padding: 0px 20px;
+        }
+        .tabContainer0{
+          background: transparent;
+          padding: 0;
+          .ant-tabs{
+            position: relative;
+            top: 0;
+            background: #fff;
+            padding: 0px 20px;
+            padding-top: 5px;
+            padding-bottom:0 !important;
+            :deep .ant-tabs-tab{
+              padding-bottom: 8px !important;
+            }
+          }
         }
       }
     }
@@ -536,10 +679,17 @@ const handleDeletePeople = (e) => {
 
 .rightAside {
   max-width: 20%;
+  .anticon-down{
+    color: #666;
+    position: relative;
+    top: 8px;
+    right: 2px;
+  }
 }
 .group-rightAside{
   position: relative;
   padding-right: 0;
+  background: #fff;
 }
 .relevantList {
   height: calc(100% - 40px);
@@ -606,5 +756,43 @@ const handleDeletePeople = (e) => {
           display: block !important;
         }
       }
-
+      .files {
+  width: 100%;
+  .fileItem {
+    width: 100%;
+    display: flex;
+    padding: 10px 5px;
+    &:hover {
+      cursor: pointer;
+      background: #eee;
+    }
+    .lImg {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .rInfo {
+      flex: 1;
+      margin-left: 10px;
+      overflow: hidden;
+      .name {
+        width: 60%;
+        font-size: 14px;
+      }
+      .optionLink {
+        .link {
+          color: var(--textColor);
+        }
+      }
+      .time {
+        font-size: 12px;
+        color: #b8bbcc;
+      }
+    }
+  }
+}
 </style>

@@ -51,6 +51,7 @@ const props = defineProps({
   text: String,
   title:String,
   id:String,
+  objTypeCode:String,
 });
 const emit = defineEmits(["cancel", "ok"]);
 const modelContentRef = ref(null);
@@ -59,7 +60,49 @@ const handleCancel = () => {
   emit("cancel", false);
 };
 const handleSubmit = () => {
-  emit("ok", false);
+  if(props.title=='失效'){
+    let url=Interface.edit;
+        let d = {
+        actions:[{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName:props.objTypeCode=='100201'?'Content':'Notice',
+                objTypeCode: props.objTypeCode,
+                fields: {
+                  StatusCode: 2,
+                }
+              }              
+            }
+        }]
+    };
+    if(props.id){
+        d.actions[0].params.recordId=props.id;
+    }
+    let obj = {
+        message: JSON.stringify(d)
+    }
+        proxy.$post(url,obj).then(res=>{
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+            message.success("操作成功！");
+          }
+          else{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                message.success(res.actions[0].errorMessage);
+            }
+            else{
+                message.success("操作失败！");
+            }
+          }
+          emit("ok", false);
+        });
+  }
+  else{
+    emit("ok", false);
+  }
 };
 const data = reactive({
   top: ""
