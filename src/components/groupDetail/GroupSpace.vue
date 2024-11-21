@@ -285,7 +285,7 @@ const data = reactive({
   OwningUser:'',
   OwningUserName:'',
   keyIndex:1,
-  activeKey:'6000',
+  activeKey:'0',
   type:1,
   typeitem:'',
   listData1:{},
@@ -848,9 +848,9 @@ onMounted(() => {
         }
       }
     }
-    .trendsItem:hover {
-      background: #e9f7ff !important;
-    }
+    // .trendsItem:hover {
+    //   background: #e9f7ff !important;
+    // }
   }
   .sendWrap {
     margin-top: 20px;

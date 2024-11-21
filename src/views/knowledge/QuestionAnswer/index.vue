@@ -26,7 +26,7 @@
                 <div class="panel panel1">
                     <div class="panel-bd">
                         <div class="panelQuestionAnswerWrap">
-                            <div class="commentBox">
+                            <div class="commentBox commentBox0">
                                 <!-- <div class="leftAvatar">
                                     <a-avatar :size="37">
                                         <template #icon><UserOutlined /></template>
@@ -823,9 +823,9 @@
             padding-top: 20px;
             padding-left: 20px;
         }
-        .panelQuestionAnswerWrap .commentList .commentItemBox:hover{
-            background: #e9f7ff !important;
-        }
+        // .panelQuestionAnswerWrap .commentList .commentItemBox:hover{
+        //     background: #e9f7ff !important;
+        // }
         .ant-avatar{
             line-height: 36px !important;
             position: relative;
@@ -1129,7 +1129,7 @@
                 display: none;
             }
         }
-        .panelQuestionAnswerWrap .commentBox{
+        .panelQuestionAnswerWrap .commentBox0{
             display: block;
             //border: 2px solid #eeeeee;
             border-radius: 8px;

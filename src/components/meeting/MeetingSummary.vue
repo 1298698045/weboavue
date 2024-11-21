@@ -280,8 +280,7 @@
         window.open('/#/previewContent?id='+data.recordId+'&objectTypeCode=100201');
     };
   onMounted(() => {
-      let h = TopicsLst.value.clientHeight;
-      h=document.documentElement.clientHeight;
+    let h = document.documentElement.clientHeight;
       data.tableHeight = h-310;
       data.height=h-120;
       if(props.type=='modal'){
@@ -289,8 +288,7 @@
         data.height=h-285;
       }
       window.addEventListener("resize", (e) => {
-        let h = TopicsLst.value.clientHeight;
-        h=document.documentElement.clientHeight;
+        let h = document.documentElement.clientHeight;
         data.tableHeight = h-310;
         data.height=h-120;
         if(props.type=='modal'){

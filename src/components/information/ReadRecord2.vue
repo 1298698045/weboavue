@@ -487,8 +487,7 @@
     
   }
   onMounted(() => {
-      let h = PersonnelLst.value.clientHeight;
-      h=document.documentElement.clientHeight;
+    let h= document.documentElement.clientHeight;
       data.tableHeight = h-470;
       data.height=h-235;
       if(props.type=='modal'){
@@ -496,8 +495,7 @@
         data.height=h-385;
       }
       window.addEventListener("resize", (e) => {
-        let h = PersonnelLst.value.clientHeight;
-        h=document.documentElement.clientHeight;
+        let h= document.documentElement.clientHeight;
         data.tableHeight = h-470;
         data.height=h-235;
         if(props.type=='modal'){

@@ -275,8 +275,7 @@
      data.userList.splice(index,1);
   }
   onMounted(() => {
-      let h = PersonnelLst.value.clientHeight;
-      h=document.documentElement.clientHeight;
+    let h= document.documentElement.clientHeight;
       data.tableHeight = h-550;
   })
   </script>

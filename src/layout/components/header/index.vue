@@ -126,7 +126,7 @@
           <div class="avatar" @click.stop="handleOpenInfo">
             <img
               class="img"
-              :src="require('@/assets/img/fabe85b769064b61ad77a39d531a6e71.jpg')"
+              :src="avatarUrl?avatarUrl:require('@/assets/img/user/MyResume/showEmpAvatar.png')"
               alt=""
             />
           </div>
@@ -150,18 +150,18 @@
                   <div class="header-account-item-avatar">
                     <img
                     class="img"
-                    :src="require('@/assets/img/fabe85b769064b61ad77a39d531a6e71.jpg')"
+                    :src="item.avatarUrl?item.avatarUrl:require('@/assets/img/user/MyResume/showEmpAvatar.png')"
                     alt=""
                   />
                   </div>
                   <div class="header-account-item-info">
-                    <span v-if="currentAccountName==item.FullName" class="header-account-item-current-text">主</span>
+                    <span v-if="BusinessUnitId==item.BusinessUnitId" class="header-account-item-current-text">主</span>
                     <span class="header-account-item-username" @click.stop="handleInfo(1)">
-                      {{ item.FullName }}
+                      <span :title="item.FullName">{{ item.FullName }}</span><span v-if="item.UserName" :title="item.UserName">{{ item.UserName?'/'+item.UserName:'' }}</span>
                     </span>
-                    <span class="header-account-item-jobs">{{item.JobTitle}}</span><span class="header-account-item-current-icon" v-if="currentAccountName==item.FullName"><CheckCircleFilled /></span>
+                    <span class="header-account-item-jobs" :title="item.jobTitle">{{item.jobTitle}}</span><span class="header-account-item-current-icon" v-if="BusinessUnitId==item.BusinessUnitId"><CheckCircleFilled /></span>
                     <br/>
-                    <div class="header-account-item-deptName rowEllipsis">{{item.DeptName}}</div>
+                    <div class="header-account-item-deptName rowEllipsis"><span v-if="item.organizationIdName" :title="item.organizationIdName">{{item.organizationIdName?item.organizationIdName+'/':''}}</span><span :title="item.businessUnitIdName">{{item.businessUnitIdName}}</span></div>
                   </div>
                 </div>
                 <div class="header-account-splitter"></div>
@@ -170,16 +170,16 @@
             <div class="header-account-seeting">
               <div class="header-account-seeting-item"  @click="handlePersonal">
                 <i class="iconfont icon-gerenzhongxin" style="font-size: 18px;"></i>
-                <span class="header-account-seeting-title">个人中心</span>
+                <span class="header-account-seeting-title">应用中心</span>
               </div>
               <div class="header-account-seeting-item"  @click="EditPassWord">
                 <i class="iconfont icon-xiugaimima" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">密码修改</span>
               </div>
-              <div class="header-account-seeting-item"  @click="handleInfo(2)">
+              <!-- <div class="header-account-seeting-item"  @click="handleInfo(2)">
                 <i class="iconfont icon-gaojiguanli" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">个人基本信息修改</span>
-              </div>
+              </div> -->
               <div class="header-account-seeting-item">
                 <!-- <ScheduleOutlined class="icon" /> -->
                 <i class="iconfont icon-zhutizhongxin" style="font-size: 18px;"></i>
@@ -259,17 +259,22 @@ const data = reactive({
   currentAppName: "",
   searchVal:route.query.searchVal,
   accountList:[
-    {FullName:'张三（演示账号）',JobTitle:'院长',DeptName:'院领导'},
-    {FullName:'李四（演示账号）',JobTitle:'科主任',DeptName:'信息科'}
+    // {FullName:'张三（演示账号）',JobTitle:'院长',DeptName:'院领导'},
+    // {FullName:'李四（演示账号）',JobTitle:'科主任',DeptName:'信息科'}
   ],
-  currentAccountName:'张三（演示账号）',
-  userId:''
+  currentAccountName:'',
+  BusinessUnitId:'',
+  userId:'',
+  avatarUrl:''
 })
-const { userId,appList, isInfoPopup, isNotice, appCode, currentAppName,searchVal,accountList,currentAccountName } = toRefs(data);
+const { userId,appList, isInfoPopup, isNotice, appCode, currentAppName,searchVal,accountList,currentAccountName,BusinessUnitId,avatarUrl } = toRefs(data);
 const ChangeAccount= (item) => {
   data.isInfoPopup = false;
   data.currentAccountName=item.FullName;
-  data.userId=item.id;
+  data.BusinessUnitId=item.BusinessUnitId;
+  data.userId=item.UserId;
+  data.avatarUrl=item.avatarUrl;
+  switchUser();
 }
 // proxy.$get(Interface.applist,{
 //   systemCode: 'OA'
@@ -350,21 +355,42 @@ const loginOut= () => {
   localStorage.clear();
   router.push('/');
 }
-onMounted(() => {
+const getBusinessUnits = () => {
   let userInfo=window.localStorage.getItem('userInfo');
   if(userInfo){
     userInfo=JSON.parse(userInfo);
     data.currentAccountName=userInfo.fullName;
+    data.BusinessUnitId=userInfo.businessUnitId;
     data.accountList=[
       {
-        id:userInfo.userId,
-        FullName:userInfo.fullName,
-        JobTitle:userInfo.JobTitle,
-        DeptName:userInfo.DeptName||'信息科'
+        BusinessUnitId: userInfo.businessUnitId,
+        EmployeeId: userInfo.EmployeeId||'',
+        FullName: userInfo.fullName,
+        OrganizationId: userInfo.organizationId,
+        UserId: userInfo.userId,
+        UserName: userInfo.userName,
+        avatarUrl: userInfo.avatarUrl||'',
+        businessUnitIdName: userInfo.businessUnitIdName||'暂无',
+        jobTitle: userInfo.JobTitle,
+        organizationIdName: userInfo.organizationIdName||'暂无',
       }
     ]
     data.userId=userInfo.userId;
   }
+  proxy.$post(Interface.user.getBusinessUnits, {}).then(res=>{
+    //console.log("res", res);
+    if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
+      data.accountList=res.actions[0].returnValue;
+    }
+  })
+};
+const switchUser= () => {
+  proxy.$post(Interface.user.switch, {userId:data.userId}).then(res=>{
+    console.log("res", res);
+  })
+};
+onMounted(() => {
+  getBusinessUnits();
   window.addEventListener("click", function (e) {
     isShow.value = false;
     data.isInfoPopup  = false;
@@ -446,8 +472,8 @@ const clearInput= () => {
   color:#1055BC;
   font-size: 18px;
   position: absolute;
-  top: 17px;
-  right: 23px;
+  top: 18px;
+  right: 17px;
 }
 .header-account-item-current-text{
     margin-right: 6px;
@@ -470,5 +496,18 @@ const clearInput= () => {
 .header .header-end .header-info-popup .header-account-item{
   height: 60px;
   padding-top: 4px;
+}
+.header .header-end .header-info-popup{
+  right: 10px;
+}
+.header .header-end .header-info-popup .header-account-item .header-account-item-info{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.header .header-end .header-info-popup .header-account-item .header-account-item-info .header-account-item-jobs{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

@@ -19,7 +19,7 @@
 //     actions: {
 //         initializeFromRoute(){
 //             const route = useRoute();
-//             this.dashboardId = route.query.dashboardId;
+//             this.dashboardId = route.query.id;
 //         }
 //     }
 // });

@@ -412,9 +412,7 @@
     };
   onMounted(() => {
       data.detailData=props.detailData;
-      console.log(props.detailData,11122111)
-      let h = TopicsLst.value.clientHeight;
-      h=document.documentElement.clientHeight;
+      let h = document.documentElement.clientHeight;
       data.tableHeight = h-325;
       data.height=h-137;
       if(props.type=='modal'){
@@ -422,8 +420,7 @@
         data.height=h-295;
       }
       window.addEventListener("resize", (e) => {
-        let h = TopicsLst.value.clientHeight;
-        h=document.documentElement.clientHeight;
+        let h = document.documentElement.clientHeight;
         data.tableHeight = h-325;
         data.height=h-137;
         if(props.type=='modal'){

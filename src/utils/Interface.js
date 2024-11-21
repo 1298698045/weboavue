@@ -73,6 +73,8 @@ const Interface = {
     groupUser: "/localData/user/sys.group.member.search.json", // 小组下用户
     sysUser: "/localData/user/sys.user.search.json",
     usersettings: "/localData/user/sys.usersettings.get.json",
+    getBusinessUnits:baseUrl + "/one/user/getBusinessUnits", // 获取登录用户所有兼职部门
+    switch:baseUrl + "/one/user/switch", // 切换用户
   },
   saveRecord: "/localData/entity.saverecord.json",
   // 通讯录

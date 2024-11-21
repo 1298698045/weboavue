@@ -409,12 +409,10 @@ onMounted(() => {
         .items-right-label-title {
             display: inline-block;
             width: 80px;
-            float: left;
         }
         .items-right-label-value {
             display: inline-block;
             width: 230px;
-            float: left;
         }
         .slds-gutters_small {
             display: flex;

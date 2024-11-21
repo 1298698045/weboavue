@@ -9,7 +9,7 @@ export default createStore({
     tabListClickType: 0,
     isMasterAttr: false, // 页面和组件属性配置开关
     dashboardId: "",
-    themeType: "default"
+    themeType: "default",
   },
   mutations: {
     setCollapsed(state, val) {
@@ -21,15 +21,13 @@ export default createStore({
     setGroupId(state, val) {
       state.groupId = val;
     },
-    initializeFromRoute(state, val){
+    initializeFromRoute(state, val) {
       state.dashboardId = val;
     },
-    setTheme(state, val){
+    setTheme(state, val) {
       state.themeType = val;
-    }
+    },
   },
-  actions: {
-    
-  },
+  actions: {},
   modules: {},
 });

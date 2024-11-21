@@ -1025,7 +1025,7 @@
             margin-bottom: 20px;
         }
         :deep .ant-form-item-label{
-            min-width: 100px;
+            min-width: 120px;
             margin-right: 5px;
         }
         .tabContainer{

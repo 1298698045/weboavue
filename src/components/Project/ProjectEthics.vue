@@ -472,8 +472,7 @@ const handleNew = (e) => {
     window.open('/#'+link);
   };
 onMounted(() => {
-    let h = TopicsLst.value.clientHeight;
-    h=document.documentElement.clientHeight;
+  let h = document.documentElement.clientHeight;
     data.tableHeight = h-345+30;
     data.height=h-137+20;
     if(props.type=='modal'){
@@ -481,8 +480,7 @@ onMounted(() => {
       data.height=h-285+20;
     }
     window.addEventListener("resize", (e) => {
-      let h = TopicsLst.value.clientHeight;
-      h=document.documentElement.clientHeight;
+      let h = document.documentElement.clientHeight;
       data.tableHeight = h-345+30;
       data.height=h-137+20;
       if(props.type=='modal'){

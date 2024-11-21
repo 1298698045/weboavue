@@ -158,7 +158,6 @@
     window.addEventListener("resize", (e) => {
       data.height = document.documentElement.clientHeight - 350;
     });
-    let h = NewKnowledgeMap.value.clientHeight;
     data.tableHeight = document.documentElement.clientHeight-500;
   });
   const searchlookup = (searchVal, Lktp, field) => {
