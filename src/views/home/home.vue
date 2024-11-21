@@ -32,7 +32,7 @@
     
     import { useStore } from "vuex";
     let store = useStore();
-    store.commit("initializeFromRoute", route.query.dashboardId);
+    store.commit("initializeFromRoute", route.query.id);
 
     // import { useStore } from "vuex.js";
     // import { storeToRefs } from 'pinia';
@@ -47,7 +47,7 @@
         layoutData: [],
         isFullScreen: false,
         themeType: store.state.themeType,
-        dashboardId: route.query.dashboardId
+        dashboardId: route.query.id
     });
 
     const { layoutData, isFullScreen, themeType, dashboardId } = toRefs(data);

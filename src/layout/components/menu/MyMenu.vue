@@ -75,15 +75,16 @@ const getCurrentApp = () => {
       return item;
     });
     let routePath = localStorage.getItem("routePath");
+    console.log("routePath", routePath);
     if(routePath){
       router.push({
         path: routePath,
-        query: route.route
+        query: route.query
       });
     }else {
       router.push({
         path: data.appTabs[0].key,
-        query: route.route
+        query: route.query
       });
     }
   })
