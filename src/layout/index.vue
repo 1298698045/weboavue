@@ -20,7 +20,9 @@
           
               <router-view v-slot="{ Component }">
                 <transition name="fade" mode="out-in">
-                  <component :is="Component" />
+                  <keep-alive>
+                    <component :is="Component" />
+                  </keep-alive>
                 </transition>
               </router-view>
             
@@ -53,8 +55,8 @@ const handleMenuSwitch = () => {
 };
 const data = reactive({
   appList: [],
-  appCode: "02u90000110",
-  currentAppName: "通讯录"
+  appCode: "",
+  currentAppName: ""
 });
 const { appList, appCode, currentAppName } = toRefs(data);
 
@@ -70,8 +72,10 @@ const getModuleAppList = () => {
       systemCode: 'OA'
   }).then((res)=>{
     data.appList = res.actions[0].returnValue.apps;
-    // data.appCode = data.appList[0].AppCode;
-    // data.currentAppName = data.appList[0].Label;
+    if(localAppCode==""){
+      data.appCode = data.appList[0].AppCode;
+      data.currentAppName = data.appList[0].Label;
+    }
     store.commit('setModuleName', data.currentAppName);
     // let row = data.appList.find(item=>route.path.indexOf(item.StartUrl)!=-1);
     // if(row){

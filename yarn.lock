@@ -26,25 +26,10 @@
   dependencies:
     "@ctrl/tinycolor" "^3.4.0"
 
-"@ant-design/colors@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.npmmirror.com/@ant-design/colors/-/colors-7.0.0.tgz"
-  integrity sha512-iVm/9PfGCbC0dSMBrz7oiEXZaaGH7ceU40OJEfKmyuzR9R5CRimJYPlRiFtMQGQcbNMea/ePcoIebi4ASGYXtg==
-  dependencies:
-    "@ctrl/tinycolor" "^3.4.0"
-
 "@ant-design/icons-svg@^4.2.1":
   version "4.3.1"
   resolved "https://registry.npmmirror.com/@ant-design/icons-svg/-/icons-svg-4.3.1.tgz"
   integrity sha512-4QBZg8ccyC6LPIRii7A0bZUk3+lEDCLnhB+FVsflGdcWPPmV+j3fire4AwwoqHV/BibgvBmR9ZIo4s867smv+g==
-
-"@ant-design/icons-vue@^6.0.1":
-  version "6.1.0"
-  resolved "https://registry.npmmirror.com/@ant-design/icons-vue/-/icons-vue-6.1.0.tgz"
-  integrity sha512-EX6bYm56V+ZrKN7+3MT/ubDkvJ5rK/O2t380WFRflDcVFgsvl3NLH7Wxeau6R8DbrO5jWR6DSTC3B6gYFp77AA==
-  dependencies:
-    "@ant-design/colors" "^6.0.0"
-    "@ant-design/icons-svg" "^4.2.1"
 
 "@ant-design/icons-vue@^7.0.0":
   version "7.0.0"
@@ -1615,17 +1600,6 @@
   resolved "https://registry.npmjs.org/@soda/get-current-script/-/get-current-script-1.0.2.tgz"
   integrity sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==
 
-"@surely-vue/table@^4.1.9":
-  version "4.1.9"
-  resolved "https://registry.npmmirror.com/@surely-vue/table/-/table-4.1.9.tgz#15ae9e930b672543cf4ef936888600d8cc4687f8"
-  integrity sha512-T1ZiDHGVJFxTh6jvqGSBJeYaaqYu3eF5m+rhnw03mwuR68QQNXBqcUa145n5hQeZ9MnbC8xkRM75l6MwReAYBQ==
-  dependencies:
-    "@ant-design/colors" "^7.0.0"
-    "@ant-design/icons-vue" "^6.0.1"
-    ant-design-vue "^3.0.0 || ^4.0.0"
-    lodash-es "^4.17.21"
-    resize-observer-polyfill "^1.5.1"
-
 "@tinymce/tinymce-vue@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@tinymce/tinymce-vue/-/tinymce-vue-6.0.1.tgz#787b30373e4fc826e0b1f527bc00deccf10f373c"
@@ -2820,7 +2794,7 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-ant-design-vue@4.x, "ant-design-vue@^3.0.0 || ^4.0.0":
+ant-design-vue@4.x:
   version "4.0.3"
   resolved "https://registry.npmmirror.com/ant-design-vue/-/ant-design-vue-4.0.3.tgz"
   integrity sha512-fbgZbbirLx7rc19ytaGxApwS01CKLRzvEZmH0TVF06niQA9ekx7xkvfQGlmiSaCs4b8nWZi4Bo7gUzRNRt5YJA==
@@ -12032,11 +12006,6 @@ uuid@^8.3.2:
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-v3-easyui@^3.0.14:
-  version "3.0.14"
-  resolved "https://registry.npmmirror.com/v3-easyui/-/v3-easyui-3.0.14.tgz#dd26ca8ecd54e3f50a2145639d8144c437004784"
-  integrity sha512-nc8xH+ZgA09kNHZFddFMJLHxQizfDcq1aewfz6YdKXia6guCFefTDjUD0VmqIHnd+MlKdpAevpZDwEhlfnd3CQ==
-
 v8-compile-cache@^2.0.3:
   version "2.4.0"
   resolved "https://registry.npmjs.org/v8-compile-cache/-/v8-compile-cache-2.4.0.tgz"
@@ -12262,11 +12231,6 @@ vuex@^4.0.0-0:
   integrity sha512-hmV6UerDrPcgbSy9ORAtNXDr9M4wlNP4pEFKye4ujJF8oqgFFuxDCdOLS3eNoRTtq5O3hoBDh9Doj1bQMYHRbQ==
   dependencies:
     "@vue/devtools-api" "^6.0.0-beta.11"
-
-vx-easyui@^1.2.57:
-  version "1.2.57"
-  resolved "https://registry.npmmirror.com/vx-easyui/-/vx-easyui-1.2.57.tgz"
-  integrity sha512-S0ycI6nxCJOrYhjBt5DK3rmgcQxLTOgKsq0g209JT5sDuL4qMmlYazfEOD/mfU6UDaANzFdNa/PGWJEQYVPj/A==
 
 w3c-hr-time@^1.0.1:
   version "1.0.2"

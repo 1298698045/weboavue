@@ -10,8 +10,8 @@
           <div class="headerRight">
             <a-button type="primary" class="ml10" @click="handleAddLeft('')">新建目录</a-button>
             <a-button type="primary" class="ml10" @click="handleNew">新建文章</a-button>
-            <a-button type="primary" class="ml10">批量发布</a-button>
-            <a-button class="ml10">批量取消发布</a-button>
+            <a-button type="primary" class="ml10" @click="handleRelease">批量发布</a-button>
+            <a-button class="ml10" @click="cancelRelease">批量取消发布</a-button>
           </div>
       </div>
       <div class="todo-content">
@@ -155,6 +155,7 @@
       <Delete v-if="data.isDelete" :isShow="data.isDelete" :desc="data.deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="data.recordId" :objTypeCode="objectTypeCode" :external="data.external" />
       <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon=false" :title="data.recordId?'编辑':'新建'" @success="deleteOk" :id="data.recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue" :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
       <NewFolder v-if="isNewFolder" :isShow="isNewFolder" :treeData="gData" @cancel="isNewFolder=false" @success="deleteOk" :id="data.recordId" :ParentId="data.SelectKey" :ParentIdName="data.SelectName" />
+      <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="CheckList" />
     </div>
   </template>
   <script setup>
@@ -183,6 +184,7 @@
   import NewInfo from "@/components/information/NewInfo.vue";
   import NewFolder from "@/components/information/NewFolder.vue";
   import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+  import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
   import Delete from "@/components/listView/Delete.vue";
   const x = 3;
   const y = 2;
@@ -559,11 +561,15 @@
         SelectName:'',
         selectedKeys:[],
         isNewFolder:false,
+        CheckList:[],
+        isConfirm:false,
+        confirmText:'',
+        confirmTitle:'',
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
-  const { isNewFolder,selectedKeys,SelectName,SelectKey,relatedObjectAttributeValue,relatedObjectAttributeName,recordId,objectTypeCode,sObjectName,isCommon,isCollapsed, userId,tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields,leftTreeTop} = toRefs(data);
+  const { CheckList,isConfirm,confirmText,confirmTitle,isNewFolder,selectedKeys,SelectName,SelectKey,relatedObjectAttributeValue,relatedObjectAttributeName,recordId,objectTypeCode,sObjectName,isCommon,isCollapsed, userId,tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields,leftTreeTop} = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
   let formSearchHeight = ref(null);
@@ -918,6 +924,30 @@ const cancelDelete = (e) => {
       data.recordId=e;
       data.isDelete=true;
     }
+    //批量发布
+  const handleRelease = () => {
+    let list = gridRef.value.getCheckList();
+    if(list.length){
+      data.CheckList=list;
+      data.isConfirm=true;
+      data.confirmText='确定要批量发布吗？';
+      data.confirmTitle='批量发布';
+    }else {
+        message.error("请至少勾选一项！")
+    }
+  }
+  //批量取消发布
+  const cancelRelease = () => {
+    let list = gridRef.value.getCheckList();
+    if(list.length){
+      data.CheckList=list;
+      data.isConfirm=true;
+      data.confirmText='确定要批量取消发布吗？';
+      data.confirmTitle='批量取消发布';
+    }else {
+        message.error("请至少勾选一项！")
+    }
+ }
   </script>
   <style lang="less" scoped>
   .ContentWrap {

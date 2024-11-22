@@ -1,7 +1,7 @@
 <template>
     <div class="dashboardHome">
         <main class="weapp-de-workspace">
-            <ProtalGridLayout :themeType="themeType" :dashboardId="dashboardId" />
+            <ProtalGridLayout :themeType="themeType" :dashboardId="route.query.id" />
         </main>
     </div>
 </template>
@@ -32,14 +32,8 @@
     
     import { useStore } from "vuex";
     let store = useStore();
-    store.commit("initializeFromRoute", route.query.id);
 
-    // import { useStore } from "vuex.js";
-    // import { storeToRefs } from 'pinia';
-    // import { getCommonDetail } from "@/utils/commonApi.js";
-    // const store = useStore();
-    // store.initializeFromRoute();
-    // const { dashboardId, isMasterAttr } = storeToRefs(store);
+    store.commit("initializeFromRoute", route.query.id);
 
     const router = useRouter();
 
@@ -47,33 +41,12 @@
         layoutData: [],
         isFullScreen: false,
         themeType: store.state.themeType,
-        dashboardId: route.query.id
+        dashboardId: ""
     });
 
     const { layoutData, isFullScreen, themeType, dashboardId } = toRefs(data);
 
-    const getDetail = async () => {
-        let obj = {
-            actions:[{
-                id: "4270;a",
-                descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
-                callingDescriptor: "UNKNOWN",
-                params: {
-                    recordId: store.state.dashboardId,
-                    apiName: 'PageDashboard'
-                }
-            }]
-        }
-        let d = {
-            message: JSON.stringify(obj)
-        };
-        proxy.$post(Interface.detail, d).then(res=>{
-            let fields = res.actions[0].returnValue.fields;
-            // store.commit("setTheme", fields.Theme.value);
-        })
-    };
-    getDetail();
-
+    data.dashboardId = route.query.id;
 
 </script>
 

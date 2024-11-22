@@ -321,7 +321,12 @@
             data.layout = layoutList;
         })
     };
-    getQuery();
+
+    watch(()=>props.dashboardId, (newVal, oldVal)=>{
+        if(props.dashboardId){
+            getQuery();
+        }
+    },{immediate: true})
 
 </script>
 <style lang="less" scoped>

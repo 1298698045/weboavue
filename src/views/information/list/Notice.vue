@@ -9,8 +9,8 @@
           </div>
           <div class="headerRight">
             <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-            <a-button type="primary" class="ml10">批量发布</a-button>
-            <a-button class="ml10">批量取消发布</a-button>
+            <a-button type="primary" class="ml10" @click="handleRelease">批量发布</a-button>
+            <a-button class="ml10" @click="cancelRelease">批量取消发布</a-button>
           </div>
       </div>
       <div class="todo-content">
@@ -89,8 +89,9 @@
           </a-col>
         </a-row>
       </div>
-      <NewInfo :isShow="isNew" :treeData="gData" @cancel="cancelNew" :objectTypeCode="data.queryParams.objectTypeCode" />
+      <NewInfo v-if="isNew" :isShow="isNew" :treeData="gData" @cancel="cancelNew" :objectTypeCode="data.queryParams.objectTypeCode" :FolderId="data.SelectKey" />
       <Delete :isShow="data.isDelete" :desc="data.deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="data.queryParams.entityName" :recordId="data.recordId" :objTypeCode="data.queryParams.objectTypeCode" :external="external" />
+      <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="CheckList" />
     </div>
   </template>
   <script setup>
@@ -111,6 +112,7 @@
   const router = useRouter();
   import NewInfo from "@/components/information/NewInfo.vue";
   import Delete from "@/components/listView/Delete.vue";
+  import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
   const x = 3;
   const y = 2;
   const z = 1;
@@ -305,12 +307,17 @@
                 "sObjectName": "",
                 "targetApiName": "",
             }
-        ]
+        ],
+        CheckList:[],
+        isConfirm:false,
+        confirmText:'',
+        confirmTitle:'',
+        SelectKey:''
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
-  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields} = toRefs(data);
+  const { SelectKey,CheckList,isConfirm,confirmText,confirmTitle,isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields} = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
   let formSearchHeight = ref(null);
@@ -320,8 +327,11 @@
       return item.name.indexOf(data.searchVal) !== -1;
     })
   }
-  const onSelect = (keys) => {
-    gridRef.value.loadGrid(data.queryParams);
+  const onSelect = (keys,{node}) => {
+    if(keys&&keys.length){
+      data.SelectKey=node.id;
+    }
+    changeTab(data.activeKey);
   };
   onMounted(()=>{
     window.addEventListener('resize',changeHeight)
@@ -581,14 +591,49 @@ const cancelDelete = (e) => {
       }else if(e){
 
       }
+      if(data.SelectKey)
+      {
+        data.queryParams.filterQuery+='\nFolderId\teq\t'+data.SelectKey;
+      }
       gridRef.value.loadGrid(data.queryParams);
     }
     const handleNew = (e) => {
-      data.isNew = true;
+      if(data.SelectKey){
+        data.recordId='';
+        data.isNew = true;
+      }
+      else{
+          message.error("必须先选中左侧目录");
+      }
     }
     const cancelNew = (e) => {
       data.isNew = e;
     }
+
+    //批量发布
+  const handleRelease = () => {
+    let list = gridRef.value.getCheckList();
+    if(list.length){
+      data.CheckList=list;
+      data.isConfirm=true;
+      data.confirmText='确定要批量发布吗？';
+      data.confirmTitle='批量发布';
+    }else {
+        message.error("请至少勾选一项！")
+    }
+  }
+  //批量取消发布
+  const cancelRelease = () => {
+    let list = gridRef.value.getCheckList();
+    if(list.length){
+      data.CheckList=list;
+      data.isConfirm=true;
+      data.confirmText='确定要批量取消发布吗？';
+      data.confirmTitle='批量取消发布';
+    }else {
+        message.error("请至少勾选一项！")
+    }
+ }
   </script>
   <style lang="less" scoped>
   .todoList {

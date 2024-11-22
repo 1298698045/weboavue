@@ -1,5 +1,5 @@
 <template>
-  <div class="MyResumeWrap">
+  <div class="PersonalInfoViewWrap">
     <div class="panel" :style="{ height: height + 'px' }">
       <div class="panel-bd">
         <!-- <div class="printBtnGroup">
@@ -14,14 +14,98 @@
                         <div class="profile-message">
                             <div class="profile-message-leftmessage">
                                 <div class="profile-photo">
-                                    <img :src="require('@/assets/img/user/MyResume/showEmpAvatar.png')" alt="" />
+                                    <img :src="require('@/assets/img/user/MyResume/showEmpAvatar.png')" alt="" class="bigimg" v-if="isBig" @click="isBig=false" />
+                                    <img :src="require('@/assets/img/user/MyResume/showEmpAvatar.png')" alt="" v-if="!isBig" @click="isBig=true" />
                                 </div>
-                                <div class="profile-name"><label>姓名：</label>{{record.FullName||''}}</div>
-                                <div class="profile-name"><label>部门：</label>{{record.DeptId.Name||''}}</div>
-                                <div class="profile-name"><label>工号：</label>{{record.EmployeeNo||''}}</div>
-                                <div class="profile-name"><label>电话：</label>{{record.MobileNumber||''}}</div>
+                                <div class="hrm-my-card-basicInfo-left-imgwrap-op">
+                                    <div class="ant-col-6">
+                                        <div class="hrm-my-card-basicInfo-icon-circle" title="发送短信">
+                                            <MessageFilled />
+                                        </div>
+                                    </div>
+                                    <div class="ant-col-6">
+                                        <div class="hrm-my-card-basicInfo-icon-circle" title="发送邮件">
+                                            <MailFilled />
+                                        </div>
+                                    </div>
+                                    <div class="ant-col-6">
+                                        <div class="hrm-my-card-basicInfo-icon-circle" title="新建日程">
+                                            <ScheduleFilled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile-name"><label>账号类型：</label>{{'主账号'}}</div>
+                                <div class="profile-name"><label>次账号：</label>{{1}}</div>
+                                <div class="profile-name"><label>下属：</label>{{6}}</div>
+                                <div class="profile-name"><label>状态：</label>{{'正式'}}</div>
+                                <div class="profile-name"><label>最后登录日期：</label>{{'2024-11-21'}}</div>
                             </div>
                             <div class="profile-message-rightmessage">
+                                <div class="hrm-my-card-basicInfo-right-counts">
+                                    <div class="hrm-my-card-basicInfo-right-counts-cell">
+                                        <img :src="require('@/assets/img/hrm/workflow.png')" alt="">
+                                        <div class="hrm-my-card-basicInfo-right-counts-cell-info">
+                                            <div>流程</div>
+                                            <div title="2799" class="text-overflow">
+                                                <span style="color: rgb(26, 183, 244); font-size: 18px;">2799</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hrm-my-card-basicInfo-right-counts-cell">
+                                        <img :src="require('@/assets/img/hrm/doc.png')" alt="">
+                                        <div class="hrm-my-card-basicInfo-right-counts-cell-info">
+                                            <div>文档</div>
+                                            <div title="2827" class="text-overflow">
+                                                <span style="color: rgb(104, 193, 44); font-size: 18px;">2827</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hrm-my-card-basicInfo-right-counts-cell">
+                                        <img :src="require('@/assets/img/hrm/custom.png')" alt="">
+                                        <div class="hrm-my-card-basicInfo-right-counts-cell-info">
+                                            <div>客户</div>
+                                            <div title="15" class="text-overflow">
+                                                <span style="color: rgb(85, 141, 228); font-size: 18px;">15</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hrm-my-card-basicInfo-right-counts-cell">
+                                        <img :src="require('@/assets/img/hrm/project.png')" alt="">
+                                        <div class="hrm-my-card-basicInfo-right-counts-cell-info">
+                                            <div>项目</div>
+                                            <div title="17" class="text-overflow">
+                                                <span style="color: rgb(41, 207, 135); font-size: 18px;">17</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hrm-my-card-basicInfo-right-counts-cell">
+                                        <img :src="require('@/assets/img/hrm/cpt.png')" alt="">
+                                        <div class="hrm-my-card-basicInfo-right-counts-cell-info">
+                                            <div>资产</div>
+                                            <div title="0" class="text-overflow">
+                                                <span style="color: rgb(246, 174, 64); font-size: 18px;">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hrm-my-card-basicInfo-right-counts-cell">
+                                        <img :src="require('@/assets/img/hrm/cowork.png')" alt="">
+                                        <div class="hrm-my-card-basicInfo-right-counts-cell-info">
+                                            <div>协作</div>
+                                            <div title="8" class="text-overflow">
+                                                <span style="color: rgb(130, 110, 253); font-size: 18px;">8</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hrm-my-card-basicInfo-right-counts-cell">
+                                        <img :src="require('@/assets/img/hrm/weibo.png')" alt="">
+                                        <div class="hrm-my-card-basicInfo-right-counts-cell-info">
+                                            <div>微博</div>
+                                            <div title="5" class="text-overflow">
+                                                <span style="color: rgb(251, 111, 71); font-size: 18px;">5</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <el-collapse v-model="activesections">
                                     <el-collapse-item v-show="sections.isCollapsible" v-for="(sections,index) in list.sections" :key="index" :name="index">
                                 <div :id="sections.sectionId" v-show="sections.showHeader" class="sectiontitle">{{sections.title}}</div>
@@ -121,6 +205,9 @@ import {
   SwapRightOutlined,
   ArrowUpOutlined,
   ArrowDownOutlined,
+  ScheduleFilled,
+  MailFilled,
+  MessageFilled
 } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
@@ -157,8 +244,9 @@ const data = reactive({
   listItems: {},
   recordIds: {},
   records: {},
+  isBig:false,
 });
-const { record,list,detailviewloading,activesections,relatedLists,listItems,recordIds,records,id,height,listData,loading,listDataDetail,ParentSubjectName,Description} = toRefs(data);
+const { isBig,record,list,detailviewloading,activesections,relatedLists,listItems,recordIds,records,id,height,listData,loading,listDataDetail,ParentSubjectName,Description} = toRefs(data);
 const getQuery = () => {
   data.listData=[];
   let filterQuery='\nParentSubject\teq\t'+data.id;
@@ -296,7 +384,7 @@ onMounted(() => {
 })
 </script>
 <style lang="less">
-.MyResumeWrap {
+.PersonalInfoViewWrap {
   width: 100%;
   .panel{
     //padding: 12px 8px;
@@ -357,7 +445,45 @@ onMounted(() => {
         }
         .profile-message-rightmessage{
             flex: 1;
-            padding: 20px;
+            padding: 0;
+            padding-top: 22px;
+            padding-left: 30px;
+            .hrm-my-card-basicInfo-right-counts{
+                overflow: auto;
+                zoom: 1;
+                padding-left: 10px;
+                .hrm-my-card-basicInfo-right-counts-cell {
+                    position: relative;
+                    float: left;
+                    width: 150px;
+                    height: 70px;
+                    padding: 10px 0 10px 20px;
+                    margin-bottom: 30px;
+                    margin-right: 30px;
+                    margin-top: 1px;
+                    border-radius: 4px;
+                }
+                .hrm-my-card-basicInfo-right-counts-cell img {
+                    padding-right: 10px;
+                    position: relative;
+                    top: 3px;
+                }
+                .hrm-my-card-basicInfo-right-counts-cell-info {
+                    position: absolute;
+                    left: 0;
+                    top: 15px;
+                    width: 100%;
+                    padding-left: 75px;
+                    font-size: 12px;
+                }
+                .text-overflow{
+                    overflow: hidden;
+                    -o-text-overflow: ellipsis;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    margin-top: 5px;
+                }
+            }
         }
         .profile-name {
             height: 29px;
@@ -483,10 +609,13 @@ onMounted(() => {
     }
     .panel .panel-bd .profile-photo{
         position: relative;
-        height: auto;
         text-align: center;
+        width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+        min-height:210px;
         img{
-            width: 200px;
+            width: 190px;
             height: auto;
             position: relative;
             z-index: 2;
@@ -494,20 +623,56 @@ onMounted(() => {
             cursor: pointer;
             margin-top: 10px;
             margin-left: 0;
-            margin-bottom: 40px;
+            margin-bottom: 0;
+        }
+        .bigimg{
+            width: 300px;
+            height: auto;
+            left: 0;
+            position: absolute !important;
         }
     }
     .panel .panel-bd .profile-message-leftmessage{
-        margin-top: 20px;
+        margin-top: 15px;
         width:260px;
+        .hrm-my-card-basicInfo-left-imgwrap-op{
+            display: flex;
+            margin-left: -8px;
+            margin-right: -8px;
+            padding-top: 0px;
+            padding-bottom: 25px;
+            justify-content: center;
+        }
+        .ant-col-6 {
+            display: block;
+            width: 25%;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        .hrm-my-card-basicInfo-icon-circle {
+            display: inline-block;
+            vertical-align: middle;
+            width: 34px;
+            height: 35px;
+            font-size: 18px;
+            line-height: 35px;
+            text-align: center;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+            color: #3498ec;
+            cursor: pointer;
+        }
     }
     .panel .panel-bd .profile-name{
-        font-size: 14px;
+        font-size: 12px;
         color: #000;
-        padding-left: 20px;
-        height: 40px;
+        padding-left: 18px;
+        height: 36px;
         label{
             color:#868686;
+            width: 110px;
+            display: inline-block;
         }
     }
     .sectiontitle{
@@ -532,7 +697,7 @@ onMounted(() => {
         padding-left: 0;
     }
     .panel .panel-bd .slds-form-element__label{
-        min-width: 140px;
+        min-width: 168px;
         color: #000;
     }
     .panel .panel-bd .forcePageBlockItem{
@@ -553,5 +718,8 @@ onMounted(() => {
     .printBtn {
         display: none;
     }
+}
+.PersonalInfoViewWrap{
+    
 }
 </style>

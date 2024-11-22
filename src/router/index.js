@@ -2542,12 +2542,12 @@ const routes = [
         },
       },
       {
-        path: "/hr/attend/DutyArrangeshift.aspx",
+        path: "/lightning/o/Dutyshift",
         component: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
         name: "DutyshiftYZDB",
         icon: "huiyicanhuiren",
         meta: {
-          name: "院长代表",
+          name: "院长代表值班",
           icon: "huiyicanhuiren",
         },
       },

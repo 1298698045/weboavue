@@ -66,11 +66,11 @@
                 <DutyshiftFullCalendar ref="FullCalendarWrap" :calendarView="calendarView" :id="meetingId" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
                 <div class="Description">
                     <span>备注：</span>
-                    <a-textarea id="Description" placeholder="" :rows="8" v-model:value="Description" />
+                    <a-textarea id="Description" placeholder="" :rows="8" v-model:value="Description" @change="handleSave" />
                 </div>
                 <div class="LeaveMessage">
                     <span>备注二：</span>
-                    <a-textarea id="LeaveMessage" placeholder="" :rows="8" v-model:value="LeaveMessage" />
+                    <a-textarea id="LeaveMessage" placeholder="" :rows="8" v-model:value="LeaveMessage" @change="handleSave" />
                 </div>
             </div>
         </div>
@@ -127,6 +127,7 @@
     import Delete from "@/components/listView/Delete.vue";
     import { Lunar, Solar, HolidayUtil } from "lunar-javascript";
     import { useRouter, useRoute } from "vue-router";
+    import { girdFormatterValue,formTreeData } from "@/utils/common.js";
     const route = useRoute();
     const router = useRouter();
     const MonthCalendarWrap=ref(null);
@@ -196,9 +197,10 @@
         Description:'',
         type:'',
         pagename:'',
-        pagetime:''
+        pagetime:'',
+        id:''
     });
-    const { pagetime,pagename,type,activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,LeaveMessage,Description,
+    const { id,pagetime,pagename,type,activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,LeaveMessage,Description,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime,
          meetingId, isMeetingDetail,startTime,endTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,calendarView} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
@@ -306,6 +308,7 @@
         data.pagetime=route.query.time||'';
         emit("refresh", dayjs(data.monthValue).format("YYYY-MM"));
     },{deep: true, immediate: true})
+    
     // 周-切换日期
     const changeStartTime = (e) => {
         nextTick(()=>{
@@ -459,6 +462,7 @@
         window.dayjs = dayjs;
         currentDate.value = dayjs(e);
         getQuery();
+        getDetail();
         nextTick(()=>{
             calendarTypeChange(data.calendarType);
         })
@@ -544,6 +548,93 @@
     const cancelDelete = (e) => {
         data.isDelete = false;
     };
+
+  const getDetail = () => {
+    data.LeaveMessage='';
+    data.Description='';
+    data.id='';
+    let YearNumber=dayjs(data.monthValue).format("YYYY");
+    let MonthNumber=Number(dayjs(data.monthValue).format("MM"));
+    let filterQuery='\nShiftId\teq\t'+route.query.categoryId+'\nYearNumber\teq\t'+YearNumber+'\nMonthNumber\teq\t'+MonthNumber;
+        proxy.$post(Interface.list2, {
+            filterId:'',
+            objectTypeCode:'30641',
+            entityName:'HRAttendDutyMonth',
+            filterQuery:filterQuery,
+            search:'',
+            page: 1,
+            rows: 10,
+            sort:'CreatedOn',
+            order:'desc',
+            displayColumns:'Description,LeaveMessage'
+        }).then(res => {
+            if(res&&res.nodes&&res.nodes.length){
+              for (var i = 0; i < res.nodes.length; i++) {
+                  var item = res.nodes[i];
+                  for(var cell in item){
+                      if(cell!='id'&&cell!='nameField'){
+                          item[cell]=girdFormatterValue(cell,item);
+                      }
+                  }
+                  if(i==0){
+                    data.LeaveMessage=item.LeaveMessage||'';
+                    data.Description=item.Description||'';
+                    data.id=item.id;
+                  }
+              }
+            }
+        })
+  };
+
+  const handleSave = () => {
+    let YearNumber=dayjs(data.monthValue).format("YYYY");
+    let MonthNumber=Number(dayjs(data.monthValue).format("MM"));
+        let url=Interface.create;
+        let d = {
+        actions:[{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName:'HRAttendDutyMonth',
+                objTypeCode: '30641',
+                fields: {
+                    ShiftId:route.query.categoryId,
+                    Description:data.Description,
+                    LeaveMessage:data.LeaveMessage,
+                    YearNumber:YearNumber,
+                    MonthNumber:MonthNumber
+                }
+              }              
+            }
+        }]
+    };
+    if(data.id){
+        url=Interface.edit;
+        d.actions[0].params.recordId=data.id;
+    }
+    let obj = {
+        message: JSON.stringify(d)
+    }
+        proxy.$post(url,obj).then(res=>{
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                //message.success("保存成功！");
+          }
+          else{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                message.success(res.actions[0].errorMessage);
+            }
+            else{
+                message.success("保存失败！");
+            }
+          }
+        });
+    }
+    watch(route.query.categoryId,(newVal,oldVal)=>{
+        getDetail();
+    },{deep: true, immediate: true})
 </script>
 <style lang="less" scoped>
     .calendarWrap {

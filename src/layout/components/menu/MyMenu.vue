@@ -22,7 +22,8 @@ import {
   onMounted,
   defineProps,
   toRefs,
-  getCurrentInstance
+  getCurrentInstance,
+  toRaw
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import {
@@ -65,34 +66,49 @@ const getCurrentApp = () => {
   let d = {
     message: JSON.stringify(obj)
   }
-  proxy.$post(Interface.currentApp, d).then(res=>{
-    data.appTabs = res.actions[0].returnValue.tabs.map(item=>{
-      item.label = item.navAction.label;
-      item.key = item.navAction.url;
-      item.icon = () => h("i", {
-        class: ["iconfont", "icon-tongxunlu1"],
+  if(props.appCode){
+
+    proxy.$post(Interface.currentApp, d).then(res=>{
+      data.appTabs = res.actions[0].returnValue.tabs.map(item=>{
+        item.label = item.navAction.label;
+        item.key = item.navAction.url;
+        item.icon = () => h("i", {
+          class: ["iconfont", "icon-tongxunlu1"],
+        });
+        return item;
       });
-      return item;
-    });
-    let routePath = localStorage.getItem("routePath");
-    if(routePath){
-      router.push({
-        path: routePath,
-        query: route.route
-      });
-    }else {
-      router.push({
-        path: data.appTabs[0].key,
-        query: route.route
-      });
-    }
-  })
+      let routePath = localStorage.getItem("routePath");
+      let paramsArr = data.appTabs[0].navAction.url.split('?');
+      let queryData = {};
+      let url = paramsArr[0];
+      if(paramsArr && paramsArr.length>1){
+        let urlData = paramsArr[1].split('&');
+        for(let i = 0; i < urlData.length; i++){
+          let key = urlData[i].split('=')[0];
+          let value = urlData[i].split('=')[1];
+          queryData[key] = value;
+        }
+      }
+      if(routePath){
+        // router.push({
+        //   path: routePath,
+        // });
+        window.location.href = "#"+routePath;
+      }else {
+        router.push({
+          path: url,
+          query: queryData
+        });
+      }
+    })
+  }
 };
 
 watch(()=> props.appCode, (newVal, oldVal) => {
   // console.log("props.appCode", props.appCode);
   getCurrentApp();
 }, { immediate: true });
+
 
 const state = reactive({
   collapsed: false,
@@ -123,8 +139,7 @@ watch(
 const loadMenus = () => {
   // console.log(route.matched);
   if(route.matched.length){
-  // console.log(route.matched);
-
+  // console.log(route.matched)
     const routepath = route.matched[0].path;
     let list = [];
     routes.forEach((item) => {
@@ -187,7 +202,19 @@ watch(
   () => route.path,
   (newRoute) => {
     state.selectedKeys = [newRoute];
-    localStorage.setItem("routePath", newRoute);
+    let queryParams = toRaw(route.query);
+    let urlParams = '';
+    let index = 0;
+    for(let key in queryParams){
+      if(index == 0){
+        urlParams += '?'+key+'=' + queryParams[key];
+      }else {
+        urlParams += '&'+key+'=' + queryParams[key];
+      }
+      index++;
+    }
+    state.selectedKeys = [newRoute+urlParams]
+    localStorage.setItem("routePath", newRoute+urlParams);
     loadMenus();
   },
   { deep: true, immediate: true }

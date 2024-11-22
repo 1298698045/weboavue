@@ -170,7 +170,6 @@
         data.userId=userInfo.userId;
     }
     window.addEventListener('resize',changeHeight)
-    
   })
   function changeHeight(h){
     let contentHeight = document.documentElement.clientHeight;

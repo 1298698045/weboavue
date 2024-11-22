@@ -2,35 +2,74 @@
     <div class="PersonalInfoWrap">
       <div class="preview-header">
         <div class="icon-circle-base">
-            <img :src="require('@/assets/img/rightMenu/youcemoren.png')" alt="">
+          <img class="img" :src="data.avatarUrl?data.avatarUrl:require('@/assets/img/user/MyResume/showEmpAvatar.png')" alt="" />
         </div>
         <div class="leftBox">
           <div class="title">
-            <div>
-              <span class="doc-title">
-                {{ title }}
+            <div class="header-account-item-info">
+              <span class="header-account-item-username">
+                <span title="OA管理员">OA管理员</span>
+                <span title="jackliu">/jackliu</span>
+                <span title="jackliu"> (10000)</span>
+                <ManOutlined />
               </span>
+              <br>
+              <div class="header-account-item-deptName rowEllipsis">
+                <span title="凤凰世纪">凤凰世纪/</span>
+                <span title="测试一组">测试一组</span>
+              </div>
             </div>
           </div>
         </div>
         <div class="rightBox">
-          <a-button type="primary" class="ml10" @click="handleEdit" v-if="data.type==1">编辑</a-button>
-          <a-button type="primary" class="ml10" @click="handleSave" v-if="data.type==2">保存</a-button>
-          <a-button class="ml10" @click="closeEdit" v-if="data.type==2">返回</a-button>
+          <a-button type="primary" class="ml10" @click="handleEdit" v-if="data.activeKey!=-1">编辑</a-button>
+          <a-button type="primary" class="ml10" @click="handleSave" v-if="data.activeKey==-1">保存</a-button>
+          <a-button class="ml10" @click="closeEdit" v-if="data.activeKey==-1">返回</a-button>
+          <a-dropdown :trigger="['hover']" class="ml10" :getPopupContainer="getPopupContainer">
+            <span class="btn-drop">
+              <UnorderedListOutlined style="color: #1d2129" />
+            </span>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item @click="handleChangeAvatar"> 设置个人头像 </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </div>
       </div>
+      <div class="tabWrap">
+          <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
+            <a-tab-pane v-for="(item, index) in tabs" :key="index">
+              <template #tab>
+                <span>
+                  {{ item.label }}
+                </span>
+              </template>
+            </a-tab-pane>
+          </a-tabs>
+        </div>
       <div class="detail-scroll">
         <div class="detail-bd">
-          <div class="tabContainer containerForm" v-if="data.type==1">
-            <PersonalInfoView :id="userId" />
-          </div>
-          <div class="tabContainer containerForm" v-if="data.type==2">
+          <div class="tabContainer containerForm" v-if="data.activeKey==-1">
             <div class="detailContent">
               <PersonalInfoEdit ref="PersonalInfoEditRef" :id="userId" :type="'page'" :objectTypeCode="'8'" :entityApiName="'SystemUser'" @refreshData="getDetail" />
             </div>
           </div>
+          <div class="tabContainer containerForm" v-if="data.activeKey==0">
+            <PersonalInfoView :id="userId" />
+          </div>
+          <div class="tabContainer containerForm" v-if="data.activeKey==1">
+            <PersonalSalaryView :id="userId" />
+          </div>
+          <div class="tabContainer containerForm" v-if="data.activeKey==2">
+            <PersonalAssetView :id="userId" />
+          </div>
+          <div class="tabContainer containerForm" v-if="data.activeKey==3">
+            <PersonalInfoView :id="userId" />
+          </div>
         </div>
       </div>
+      <update-Avatar-image :isShow="isUpdateAvatar" v-if="isUpdateAvatar" @cancel="isUpdateAvatar=false" title="更新头像" @load="getDetail" :id="userId"></update-Avatar-image>
     </div>
   </template>
   <script setup>
@@ -73,7 +112,8 @@
     EyeOutlined,
     EyeInvisibleOutlined,
     InfoCircleOutlined,
-    CheckCircleOutlined
+    CheckCircleOutlined,
+    ManOutlined
   } from "@ant-design/icons-vue";
   import { useRouter, useRoute } from "vue-router";
   import Interface from "@/utils/Interface.js";
@@ -81,6 +121,9 @@
   import { girdFormatterValue } from "@/utils/common.js";
   import PersonalInfoEdit from "@/views/workspace/PersonalInfoEdit.vue";
   import PersonalInfoView from "@/views/workspace/PersonalInfoView.vue";
+  import PersonalSalaryView from "@/views/workspace/PersonalSalaryView.vue";
+  import PersonalAssetView from "@/views/workspace/PersonalAssetView.vue";
+  import UpdateAvatarImage from "@/components/UpdateAvatarImage.vue";
   const { proxy } = getCurrentInstance();
   const editorRef = ref();
   const route = useRoute();
@@ -90,10 +133,26 @@
     ],
     height: 0,
     title:'个人信息',
-    type:route.query.type||1,
+    activeKey:0,
     userId:route.query.id,
     userName:'',
     isSave:false,
+    tabs: [
+      {
+        label: "基本信息",
+      },
+      {
+        label: "工资福利",
+      },
+      {
+        label: "资产信息",
+      },
+      {
+        label: "考勤情况",
+      },
+    ],
+    avatarUrl:'',
+    isUpdateAvatar:false
   });
   const {
     listData,
@@ -102,9 +161,15 @@
     userId,
     userName,
     isSave,
-    type
+    activeKey,
+    tabs,
+    avatarUrl,
+    isUpdateAvatar
   } = toRefs(data);
   const PersonalInfoEditRef= ref(null);
+  const changeTabs = (e) => {
+    data.activeKey = e;
+  };
   const getDetail = () => {
     return
     let d = {
@@ -142,6 +207,8 @@
 //getDetail();
   // 保存
   const handleSave = (type) => {
+    data.activeKey=0;
+    data.title='个人信息查看';
     return
     if(PersonalInfoEditRef&&PersonalInfoEditRef.value&&PersonalInfoEditRef.value.handleSubmit!='undefined'&&type!=1){
             PersonalInfoEditRef.value.handleSubmit();
@@ -196,29 +263,17 @@
         });
     }
     const handleEdit=()=>{
-      data.type=2;
+      data.activeKey=-1;
       data.title='个人信息修改';
     }
     const closeEdit=()=>{
-      data.type=1;
+      data.activeKey=0;
       data.title='个人信息查看';
     }
-    watch(()=> route.query.type, (newVal,oldVal) => {
-      data.type=route.query.type;
-      if(data.type==1){
-        data.title='个人信息查看';
-      }
-      else if(data.type==2){
-        data.title='个人信息修改';
-      }
+    watch(()=> route.query.id, (newVal,oldVal) => {
+     getDetail();
     })
     onMounted(() => {
-      if(data.type==1){
-        data.title='个人信息查看';
-      }
-      else if(data.type==2){
-        data.title='个人信息修改';
-      }
       let userInfo=window.localStorage.getItem('userInfo');
       if(userInfo){
             userInfo=JSON.parse(userInfo);
@@ -228,7 +283,7 @@
                 userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
             }
       }
-      //getDetail();
+      getDetail();
         let h=document.documentElement.clientHeight;
         data.height = h-300;
         window.addEventListener("resize", () => {
@@ -236,6 +291,12 @@
             data.height = h-300;
         })
     })
+    const getPopupContainer = (triggerNode) => {
+      return triggerNode.parentNode || document.body;
+    }
+    const handleChangeAvatar= () => {
+      data.isUpdateAvatar= true;
+    }
   </script>
   <style lang="less" scoped>
   .PersonalInfoWrap{
@@ -867,7 +928,7 @@
         top: 4px;
     }
     .btn-drop{
-        font-size: 18px !important;
+        font-size: 19px !important;
     }
     .tableBox-Bottom{
         height: 45px;
@@ -1062,12 +1123,70 @@
                 color: green;
             }
         }
+        .tabContainer{
+          height: 100% !important;
+        }
         .detailContent{
             width: 100%;
             padding: 20px;
             background: #fff;
             border-radius: 4px;
             overflow: auto;
+            height: 100%;
+        }
+        .preview-header{
+            height: 60px;
+            box-shadow:none;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #eaeaea;
+            padding: 0px 12px 0 16px;
+            .icon-circle-base{
+              height: 60px;
+              width: 60px;
+              padding: 8px;
+              background: #f9f9f9;
+              position: relative;
+              top: 0px;
+              img{
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+              }
+            }
+            .leftBox .title{
+              margin: 9px 0 0 6px;
+              .header-account-item-username{
+                font-size: 14px;
+                color:#484848;
+              }
+              .anticon{
+                color: #1677ff;
+                text-shadow: 0 0 0.25px currentcolor;
+                margin-left: 5px;
+              }
+              .header-account-item-deptName{
+                font-size: 12px;
+                color: #999;
+                margin-top: 4px;
+              }
+            }
+            .rightBox{
+              height: 47px;
+            }
+        }
+        .detail-scroll{
+            height: calc(~'100% - 108px') !important;
+        }
+        .tabWrap{
+          height: 48px;
+          line-height: 48px;
+          border-bottom: 1px solid #d9d9d9;
+        }
+        :deep .ant-tabs-tab{
+          padding: 14px 24px !important;
+          margin-left: 0 !important;
+          font-size: 12px !important;
+          color: #484848 !important;
         }
     }
   </style>
