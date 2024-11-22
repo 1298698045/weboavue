@@ -4,7 +4,8 @@ import {
   createWebHashHistory,
 } from "vue-router";
 // import Home from "../views/Home.vue";
-const Layout = () => import("@/layout");
+const Layout = () => import("@/layout/index.vue");
+
 const routes = [
   {
     path: "/",
@@ -839,16 +840,16 @@ const routes = [
       name: "个人中心"
     },
     children: [
-      {
-        path: "/workspace/personal/home",
-        name: "PersonalHome",
-        component: () => import("../views/workspace/personalCenter/index.vue"),
-        icon: "xinjian",
-        meta: {
-          icon: "xinjian",
-          name: "个人中心",
-        },
-      },
+      // {
+      //   path: "/workspace/personal/home",
+      //   name: "PersonalHome",
+      //   component: () => import("../views/workspace/personalCenter/index.vue"),
+      //   icon: "xinjian",
+      //   meta: {
+      //     icon: "xinjian",
+      //     name: "个人中心",
+      //   },
+      // },
       {
         path: "/workspace/ChangePassWord",
         name: "ChangePassWord",

@@ -71,7 +71,7 @@
     import Interface from "@/utils/Interface.js";
     import Dtable from "@/components/Dtable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
-    import GridConfig from "@/components/GridConfig"
+    import GridConfig from "@/components/GridConfig.vue";
     const { proxy } = getCurrentInstance();
     const expandedKeys = ref([]);
     const autoExpandParent = ref(true);
