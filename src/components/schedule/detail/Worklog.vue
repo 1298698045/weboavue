@@ -1,6 +1,6 @@
 <template>
 <div class="container">
-    <el-dialog width="500px" title="时间跟踪" :append-to-body="true" v-model="value" top="6.5vh" class="el-overlay-dialog1">
+    <el-dialog width="500px" title="时间跟踪" :append-to-body="true" v-model="value1" top="6.5vh" class="el-overlay-dialog1">
         <div class="popup">
     <div class="popup-head">
       <div class="popup-title">时间跟踪</div>
@@ -165,7 +165,8 @@ export default {
         oldtime:'',
         remainingtimevalue:'2w 3d 4h 50m',
         oldremainingtimevalue:'2w 3d 4h 50m',
-        takentimerule:true
+        takentimerule:true,
+        value1:this.value
     };
   },
   created(){

@@ -10,7 +10,43 @@
                 </div>
             </div>
             <div class="panel-bd">
-                <Dtable name="relatedGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.instanceList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>
+                <!-- <a-table :columns="columns" :data-source="relatedList"
+                 :row-selection="{ selectedRowKeys: data.selectedRowKeys, onChange: onSelectChange }">
+                 <template #bodyCell="{ column }">
+                    <template v-if="column.key === 'Action'">
+                      <a-button type="text" size="small">查看</a-button>
+                      <a-button type="text" size="small">删除</a-button>
+                    </template>
+                  </template>
+                </a-table> -->
+                <Dtable name="relatedGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.instanceList" :tableHeight="200" :isCollapsed="isCollapsed"></Dtable>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-head">
+                <div class="panel-title">
+                    备注和附件
+                </div>
+                <div class="panel-btn">
+                    <a-upload v-model:file-list="fileList" action="#" :showUploadList="false">
+                        <a-button type="primary">添加附件</a-button>
+                    </a-upload>
+                </div>
+            </div>
+            <div class="panel-bd">
+                <!-- <a-table :columns="filesColumns" :data-source="files"
+                :row-selection="{ selectedRowKeys: data.selectedRowKeys, onChange: onSelectChange }">
+                    <template #bodyCell="{ column }">
+                        <template v-if="column.key === 'Action'">
+                            <a-button type="text" size="small">编辑</a-button>
+                            <a-button type="text" size="small">重命名</a-button>
+                            <a-button type="text" size="small">查看</a-button>
+                            <a-button type="text" size="small">删除</a-button>
+                            <a-button type="text" size="small">下载</a-button>
+                        </template>
+                    </template>
+                </a-table> -->
+                <Dtable name="fileGrid" ref="fileGridRef" :columns="filesColumns" :gridUrl="Interface.files" :tableHeight="200" :isCollapsed="isCollapsed"></Dtable>
             </div>
         </div>
     </div>
@@ -68,10 +104,9 @@
         selectedRowKeys: [],
         loading: false,
         isCollapsed: false,
-        fileList:[],
-        height:document.documentElement.clientHeight - 200,
+        fileList:[]
     });
-    const { isCollapsed,height } = toRefs(data);
+    const { isCollapsed } = toRefs(data);
     // const columnList = toRaw(columns);
     // const columnList2 = toRaw(filesColumns);
 
@@ -122,9 +157,6 @@
         emit("addRelateInstance");
     }
     onMounted(()=>{
-        window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 200;
-        });
         loadList();
     })
     const loadList = async () => {
@@ -136,7 +168,7 @@
         //     console.error('Error loading data:', err);
         //   }
         gridRef.value.loadGrid();
-        //fileGridRef.value.loadGrid();
+        fileGridRef.value.loadGrid();
     };
 </script>
 <style lang="less" scoped>
@@ -147,9 +179,9 @@
         color: var(--textColor);
     }
     .panel{
-        padding: 20px 20px 17px 20px;
+        padding: 20px 0 0 0;
         .panel-head{
-            padding: 0px;
+            padding: 0 20px;
         }
     }
 </style>

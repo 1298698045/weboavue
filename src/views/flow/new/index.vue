@@ -33,7 +33,7 @@
                         </a>
                     </div>
                     <div class="flowContent">
-                        <div class="flowPanelItem" :id="item.folderId" v-for="(item, index) in processLists" :key="index">
+                        <div class="flowPanelItem" :id="item.folderId" v-for="(item, index) in processLists" :key="index" :style="{'borderColor':colors[index%5]}">
                             <div class="flowPanelItemHead">
                                 <div class="typeName">{{ item.name }}</div>
                             </div>
@@ -118,9 +118,10 @@
         processLists: [],
         rowRecord: {},
         activeKey: 1,
-        typeIndex: ""
+        typeIndex: "",
+        colors:['#55d2d4','rgb(55, 178, 255)','rgb(255, 94, 86)','rgb(179, 123, 250)','rgb(55, 178, 255)',]
     })
-    const { searchVal, processLists, currentTab, currentTab2, rowRecord, activeKey, typeIndex } = toRefs(data);
+    const { colors,searchVal, processLists, currentTab, currentTab2, rowRecord, activeKey, typeIndex } = toRefs(data);
     const getProcessList = () =>{
         proxy.$get(Interface.workflow.processList,{}).then(res=>{
             console.log("res",res);
@@ -233,7 +234,8 @@
                 margin-top: 20px;
                 .flowPanelItem{
                     padding: 0 20px;
-                    border: 1px solid #f5f5f5;
+                    //border: 1px solid #f5f5f5;
+                    height: auto !important;
                     padding-bottom: 10px;
                     margin-bottom: 20px;
                     border-top: 4px solid #55d2d4;
@@ -289,6 +291,23 @@
                     }
                 }
             }
+        }
+        .flowContainer .flowContent .flowPanelItem .flowPanelItemBd .flowRowItem{
+            width: calc(~'100% - 10px');
+            height: 38px !important;
+        }
+        .flowContainer .flowContent .flowPanelItem{
+            width: 23.5%;
+            margin: 0 9px;
+            height: auto;
+            background: #f5f5f5;
+            height: 100%;
+        }
+        .flowContainer .flowContent{
+            flex-wrap: wrap;
+            display: flex;
+            justify-content: space-between;
+            align-content: flex-start;
         }
     }
 </style>

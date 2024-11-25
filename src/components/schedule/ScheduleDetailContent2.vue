@@ -6,7 +6,7 @@
             <a-breadcrumb>
                 <a-breadcrumb-item class="breadcrumbitem"><a>{{title}}</a></a-breadcrumb-item>
                 <a-breadcrumb-item class="breadcrumbitem">
-                    <img :src="require('@/assets/img/taskdetail'+(informationdata&&informationdata.record&&informationdata.record.RegardingObjectId&&informationdata.record.RegardingObjectId.content&&informationdata.record.RegardingObjectId.content.avatarValue&&informationdata.record.RegardingObjectId.content.avatarValue.large?informationdata.record.RegardingObjectId.content.avatarValue.large:'/images/icons/project/project00026.svg'))" alt="" />
+                    <img :src="imgUrl1" alt="" />
                     <a class="breadcrumbitema1">{{ projectname||RegardingObjectIdName||'详情' }}</a>
                 </a-breadcrumb-item>
                 <a-breadcrumb-item class="breadcrumbitem">
@@ -14,13 +14,13 @@
                         <div class="dropbtn" :class="{'showmenu':isshowmenu}">
                             <a-dropdown>
                                 <div class="a-dropdown-link" title="点击更改事务类型">
-                                    <img v-if="informationdata.record.IssueType&&informationdata.record.IssueType.content&&informationdata.record.IssueType.content.id" :src="require('@/assets/img/taskdetail'+(informationdata&&informationdata.record&&informationdata.record.IssueType&&informationdata.record.IssueType.content&&informationdata.record.IssueType.content.iconUrl?informationdata.record.IssueType.content.iconUrl:'/images/icons/issuetypes/task.svg'))" alt="">
+                                    <img v-if="informationdata.record.IssueType&&informationdata.record.IssueType.content&&informationdata.record.IssueType.content.id" :src="imgUrl2" alt="">
                                 </div>
                                 <template #overlay>
                                     <a-menu>
                                         <a-menu-item v-for="item,k in IssueTypeList" :key="k" class="a-menu-item" @click="changeIssueType(item.ID)">
                                             <div class="IssueTypeItem">
-                                                <div class="checkbox-img"><img :src="require('@/assets/img/taskdetail'+(item.IconUrl||(item.Name=='任务'?'/images/icons/issuetypes/task.svg':'/images/icons/issuetypes/subtask.png')))" alt="" /></div>
+                                                <div class="checkbox-img"><img :src="getImg3(item)" alt="" /></div>
                                                 <div>{{item.Name||'暂无'}}</div>
                                             </div>
                                         </a-menu-item>
@@ -181,8 +181,12 @@
     </div>
 </div>
 </template>
-<script>
-import {getCurrentInstance} from "vue";
+<script setup>
+import {
+      ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
+      defineEmits, provide,nextTick
+  } from "vue";
+  import { message } from 'ant-design-vue';
 import { EditOutlined, LinkOutlined } from "@ant-design/icons-vue";
 import commonapi from '@/utils/commonapi.js';
 import { IssueDataGet } from "@/utils/projectapi.js";
@@ -207,10 +211,9 @@ import TEditor from "@/components/TEditor.vue";
 import { getprojectboardtask } from "@/utils/projectapi.js";
 import Interface from "@/utils/Interface.js";
 import dayjs from 'dayjs';
-export default {
-    inject:['reload'],
-    data(){
-        return {
+const { proxy } = getCurrentInstance();
+const data = reactive({
+    
             id:'',
             projectname:'',
             projectid:'',
@@ -237,72 +240,55 @@ export default {
             isShowEditWorkflow:false,
             isShowMovetask:false,
             isShowCopytask:false,
-            proxy:null
-        }
-    },
-    props:['twoarrange','detailheight','itemid','popup','title','RegardingObjectIdName'],
-    watch:{
-        itemid(){
-            this.getdata()
-        }
-    },
-    computed:{
-    },
-    created(){
-        // if(this.$route.params.projectname){
-        //     this.projectname = this.$route.params.projectname
-        // }
-        // this.itemid = this.$route.query.id
-        const { proxy } = getCurrentInstance();
-        this.proxy=proxy;
-        this.getdata()
-        //this.getIssueTypeList()
-    },
-    mounted() {
-        //tinymce.init({});
-        //const dropdownMenu = this.$refs['elDropdown']
-        //dropdownMenu.$data.currentPlacement = 'bottom-start'
+        imgUrl1:'',
+        imgUrl2:'',
+        imgUrl3:''
+  })
+  const {id,
+    imgUrl1,
+    imgUrl2,
+    imgUrl3,
+            projectname,
+            projectid,
+            title,
+            edittitle,
+            fileList,
+            editdescribe,
+            informationdata,
+            relatedlist,
+            priorities,
+            dialogImageUrl,
+            dialogVisible,
+            disabled,
+            IssueTypeList,
+            isshowmenu,
+            changeurl,
+            worklog,
+            isShowWorkflow,
+            isShowEditWorkflow,
+            isShowMovetask,
+            isShowCopytask,
+            } = toRefs(data);
+            const emit = defineEmits(['reload','handleDelete']);
+            const props = defineProps({
+                twoarrange: String,
+                detailheight: String,itemid: String,popup: String,title: String,RegardingObjectIdName: String,
+            });
 
-        let me=this;
-        me.dragControllerDiv();
-    },
-    components:{
-        // Userhead,
-         //Editor,
-         TEditor,
-         information,
-         fileupload,
-         icon,
-         Subtask,
-         Common,
-         sharepopup,
-         guanzhu,
-         biaojue,
-        // copylink,
-         movetask,
-         copytask,
-         Worklog,
-         ManageWorkflow,
-         EditWorkflow,
-         EditOutlined,
-         LinkOutlined
-    },
-    methods:{
-        handleDelete(e){
-            this.$emit('handleDelete', {Id:this.itemid})
-        },
-        handleDelete1(e){
-            this.$emit('handleDelete', {Id:e.Id})
-        },
-        getEditorContent(e){
-            this.informationdata.record.Description = e;
-        },
-        getIssueTypeList(){
-            var that=this;
-            this.IssueTypeList=[];
-            var datalist=[{"id":"10009","name":"任务","iconUrl":"/images/icons/issuetypes/task.svg","subtask":false},{"id":"10010","name":"子任务","iconUrl":"/images/icons/issuetypes/subtask.png","subtask":false},{"id":"10000","name":"长篇故事","iconUrl":"/images/icons/issuetypes/epic.svg","subtask":false},{"id":"10017","name":"故事","iconUrl":"/images/icons/issuetypes/story.svg","subtask":false},{"id":"10007","name":"服务请求","iconUrl":"/images/icons/issuetypes/request.png","subtask":false},{"id":"10028","name":"缺陷","iconUrl":"/images/icons/issuetypes/bug.svg","subtask":false}];
+        function handleDelete(e){
+            emit('handleDelete', {Id:props.itemid})
+        }
+        function handleDelete1(e){
+            emit('handleDelete', {Id:e.Id})
+        }
+        function getEditorContent(e){
+            data.informationdata.record.Description = e;
+        }
+        function getIssueTypeList(){
+            data.IssueTypeList=[];
+            const datalist=[{"id":"10009","name":"任务","iconUrl":"/images/icons/issuetypes/task.svg","subtask":false},{"id":"10010","name":"子任务","iconUrl":"/images/icons/issuetypes/subtask.png","subtask":false},{"id":"10000","name":"长篇故事","iconUrl":"/images/icons/issuetypes/epic.svg","subtask":false},{"id":"10017","name":"故事","iconUrl":"/images/icons/issuetypes/story.svg","subtask":false},{"id":"10007","name":"服务请求","iconUrl":"/images/icons/issuetypes/request.png","subtask":false},{"id":"10028","name":"缺陷","iconUrl":"/images/icons/issuetypes/bug.svg","subtask":false}];
             datalist.forEach(item =>{
-                this.IssueTypeList.push({
+                data.IssueTypeList.push({
                     ID:item.id,
                     IconUrl:item.iconUrl,
                     Name:item.name
@@ -311,125 +297,90 @@ export default {
                     that.informationdata.record.IssueType.content.iconUrl=item.iconUrl
                 }
             })
-            //console.log(this.IssueTypeList,111)
-        },
-        changeDropdown(bool){
+        }
+        function changeDropdown(bool){
             if(bool){
-                this.isshowmenu=true;                       
-                var that=this;
-                // getprojectboardtask({
-                //     projectId:this.projectid,
-                //     search:'',
-                //     OwningUser:'',
-                //     filterQuery:''
-                // }).then((res)=>{
-                //     if(res&&res.data&&res.data.boardScope){
-                //         that.IssueTypeList=[];
-                //         const datalist=res.data.boardScope.projectLocation.issueTypes;
-                //         datalist.find(function(item,index){
-                //             that.IssueTypeList.push({
-                //                 ID:item.id,
-                //                 IconUrl:item.iconUrl,
-                //                 Name:item.name
-                //             })
-                //         })
-                //     }
-                // })
+                data.isshowmenu=true;                       
+                
             }
             else{
-                this.isshowmenu=false;
+                data.isshowmenu=false;
             }
-        },
-        changeIssueType(id){
+        }
+        function changeIssueType(id){
             //console.log(id)
-            this.informationdata.record['IssueType']=id
-            this.savedetail('IssueType')
-        },
-        addfile(){
-            console.log(this.$refs.fileupload)
-            this.$refs.fileupload.$el.childNodes[0].childNodes[0].childNodes[0].click()
-        },
-        addworklog(){
-            this.worklog = true
-        },
-        showWorkflow(){
-            this.isShowWorkflow = true;
-            this.isShowEditWorkflow = false;
-        },
-        ShowEditWorkflow(){
-            this.isShowEditWorkflow = true;
-            this.isShowWorkflow = false;
-        },
-        opendetail(){
-            // const url = this.$router.resolve({
-            //     path:'/projects/detail/'+this.projectname,
-            //     query:{
-            //         id:this.projectid,
-            //         itemid:this.itemid
-            //     }
-            // })
-            // window.open(url.href)
-        },
-        openproject(){
-            const url = this.$router.resolve({
-                path:'/projects/board/'+this.projectname,
+            data.informationdata.record['IssueType']=id
+            savedetail('IssueType')
+        }
+        function addfile(){
+            //refs.fileupload.$el.childNodes[0].childNodes[0].childNodes[0].click()
+        }
+        function addworklog(){
+            data.worklog = true
+        }
+        function showWorkflow(){
+            data.isShowWorkflow = true;
+            data.isShowEditWorkflow = false;
+        }
+        function ShowEditWorkflow(){
+            data.isShowEditWorkflow = true;
+            data.isShowWorkflow = false;
+        }
+        function opendetail(){
+            
+        }
+        function openproject(){
+            const url = router.resolve({
+                path:'/projects/board/'+data.projectname,
                 query:{
-                    id:this.projectid,
+                    id:data.projectid,
                 }
             })
             window.open(url.href)
-        },
-        openprojectlist(){
-            const url = this.$router.resolve({
+        }
+        function openprojectlist(){
+            const url = router.resolve({
                 path:'/projects/list',
                 query:{
                 }
             })
             window.open(url.href)
-        },
-        handleCommand(command){
+        }
+        function handleCommand(command){
             if(command=='move'){
-                //this.$refs.movetask.show()
-                this.isShowMovetask=true;
+                data.isShowMovetask=true;
             }
             if(command=='copy'){
-                //this.$refs.copytask.show()
-                this.isShowCopytask=true;
+                data.isShowCopytask=true;
             }
             if(command=='delete'){
-                this.$confirm('<p>您将永久删除此事务及其所有子任务、评论、附件以及所有数据。您应该将您不想删除的全部子任务移动到另一个父事务中。</p><p>如果不确定，可以解决或关闭此事务。</p>', '删除 '+this.informationdata.record.IssueKey.content+' 及其子任务?', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                confirmButtonClass:'warningbtn',
-                type: 'warning',
-                dangerouslyUseHTMLString: true
-            }).then(() => {
-                commonapi.entitydelete(4200,this.itemid).then(()=>{
-                    this.reload()
-                })
-            })
-            }
-        },
-        titlechange(){
-            console.log(123)
-        },
-        reloadinformation(){
-            this.$emit('reload')
-            this.getdetail()
-        },
-        newrelated(){
-            this.$refs.Subtask.newrelated()
-        },
-        savedetail(column){
-            const fields = {}
-            fields[column] = this.informationdata.record[column]
-            // commonapi.entitysaverecord(fields,4200,this.informationdata.id).then(()=>{
-            //     this.$message.success('保存成功')
-            //     this.getdetail()
-            //     this.$emit('reload')
-            //     this.editdescribe.show = false
+            //     data.$confirm('<p>您将永久删除此事务及其所有子任务、评论、附件以及所有数据。您应该将您不想删除的全部子任务移动到另一个父事务中。</p><p>如果不确定，可以解决或关闭此事务。</p>', '删除 '+data.informationdata.record.IssueKey.content+' 及其子任务?', {
+            //     confirmButtonText: '确定',
+            //     cancelButtonText: '取消',
+            //     confirmButtonClass:'warningbtn',
+            //     type: 'warning',
+            //     dangerouslyUseHTMLString: true
+            // }).then(() => {
+            //     commonapi.entitydelete(4200,props.itemid).then(()=>{
+            //         reload()
+            //     })
             // })
-            var that=this;
+            }
+        }
+        function titlechange(){
+            console.log(123)
+        }
+        function reloadinformation(){
+            emit('reload','')
+            getdetail()
+        }
+        function newrelated(){
+            //refs.Subtask.newrelated()
+        }
+        function savedetail(column){
+            const fields = {}
+            fields[column] = data.informationdata.record[column]
+            
             let url = Interface.edit;
             let d = {
                 actions:[{
@@ -437,7 +388,7 @@ export default {
                     descriptor: "",
                     callingDescriptor: "UNKNOWN",
                     params: {
-                        recordId: that.itemid,
+                        recordId: props.itemid,
                         recordInput:{
                             allowSaveOnDuplicate: false,
                             apiName: 'ActivityPointer',
@@ -450,57 +401,17 @@ export default {
             let obj = {
                 message: JSON.stringify(d)
             }
-            this.proxy.$post(url, obj).then((res) => {
-                 that.$message.success('保存成功')
-                 that.getdetail()
-                 that.$emit('reload')
-                 that.editdescribe.show = false
+            proxy.$post(url, obj).then((res) => {
+                 message.success('保存成功')
+                 getdetail()
+                 emit('reload')
+                 data.editdescribe.show = false
             });
-        },
-        getdata(){
-            this.getdetail()
-        },
-        getdetail(){
-            // return IssueDataGet(this.itemid).then((res)=>{
-            //     let record = {}
-            //     if(res&&res.data&&res.data.issue&&res.data.issue.fields){}else{return}
-            //     res.data.issue.fields.forEach(item => {
-            //         record[item.key]=item
-            //     });
-            //     this.informationdata.id = res.data.issue.id
-            //     this.projectid=record.RegardingObjectId.content.id
-            //     this.projectname=record.RegardingObjectId.content.name
-            //     this.informationdata.record = {
-            //         Subject:record.Subject.content,
-            //         Description:record.Description.content,
-            //         OwningUser:{
-            //             Id:record.OwningUser.content.id,
-            //             Name:record.OwningUser.content.displayName
-            //         },
-            //         CreatedBy:{
-            //             Id:record.OwningUser.content.id,
-            //             Name:record.OwningUser.content.displayName,
-            //             Icon:record.OwningUser.content.self
-            //         },
-            //         PriorityCode:record.PriorityCode,
-            //         ScheduledStart:record.ScheduledStart.content,
-            //         ScheduledEnd:record.ScheduledEnd.content,
-            //         IssueType:record.IssueType,
-            //         IssueKey:record.IssueKey,
-            //         StateCode:record.StateCode,
-            //         RegardingObjectId:{
-            //             id:record.RegardingObjectId.content.id,
-            //             name:record.RegardingObjectId.content.name,
-            //             avatarValue:{
-            //                 large:record.RegardingObjectId.content.avatarValue.large
-            //             }
-            //         },
-            //         subtask:record.subtask,
-            //         id:this.itemid,
-            //         TimeOriginalEstimate:record.TimeOriginalEstimate.content
-            //     }
-            // })
-            var that=this;
+        }
+        function getdata(){
+            getdetail()
+        }
+        function getdetail(){
             let d = {
                 actions:[{
                         id: "4270;a",
@@ -517,7 +428,7 @@ export default {
                 message: JSON.stringify(d)
             }
             
-            this.proxy.$post(Interface.detail,obj).then(res=>{
+            proxy.$post(Interface.detail,obj).then(res=>{
                 if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
                 let fields=res.actions[0].returnValue.fields;
 
@@ -562,30 +473,47 @@ export default {
                         that.$forceUpdate();
                     }
                 })
+                if(informationdata&&informationdata.record&&informationdata.record.RegardingObjectId&&informationdata.record.RegardingObjectId.content&&informationdata.record.RegardingObjectId.content.avatarValue&&informationdata.record.RegardingObjectId.content.avatarValue.large){
+                    data.imgUrl1=require('@/assets/img/taskdetail'+informationdata.record.RegardingObjectId.content.avatarValue.large);
+                }
+                else{
+                    data.imgUrl1=require('@/assets/img/taskdetail/images/icons/project/project00026.svg');
+                }
+                if(informationdata&&informationdata.record&&informationdata.record.IssueType&&informationdata.record.IssueType.content&&informationdata.record.IssueType.content.iconUrl){
+                    data.imgUrl2=require('@/assets/img/taskdetail'+informationdata.record.IssueType.content.iconUrl);
+                }
+                else{
+                    data.imgUrl2=require('@/assets/img/taskdetail/images/icons/issuetypes/task.svg');
+                }
+                if(informationdata&&informationdata.record&&informationdata.record.RegardingObjectId&&informationdata.record.RegardingObjectId.content&&informationdata.record.RegardingObjectId.content.avatarValue&&informationdata.record.RegardingObjectId.content.avatarValue.large){
+                    data.imgUrl1=require('@/assets/img/taskdetail'+informationdata.record.RegardingObjectId.content.avatarValue.large);
+                }
+                else{
+                    data.imgUrl1=require('@/assets/img/taskdetail/images/icons/project/project00026.svg');
+                }
                 that.getIssueTypeList()
                 }
             })
-        },
-        dragControllerDiv: function () {
-    var resize = document.getElementsByClassName('resize');
-    var left = document.getElementsByClassName('detail-left');
-    var mid = document.getElementsByClassName('detail-right');
-    var box = document.getElementsByClassName('box');
+        }
+        function dragControllerDiv(){
+    const resize = document.getElementsByClassName('resize');
+    const left = document.getElementsByClassName('detail-left');
+    const mid = document.getElementsByClassName('detail-right');
+    const box = document.getElementsByClassName('box');
     for (let i = 0; i < resize.length; i++) {
         // 鼠标按下事件
         resize[i].onmousedown = function (e) {
             //色彩扭转揭示
             resize[i].style.background = '#818181';
-            var startX = e.clientX;
+            const startX = e.clientX;
             resize[i].left = resize[i].offsetLeft-160;
             // 鼠标拖动事件
             document.onmousemove = function (e) {
-                var endX = e.clientX;
-                var moveLen = resize[i].left + (endX - startX); // （endx-startx）=挪动的间隔。resize[i].left+挪动的间隔=右边区域最初的宽度
-                var maxT = box[i].clientWidth - resize[i].offsetWidth; // 容器宽度 - 右边区域的宽度 = 左边区域的宽度
-                if (moveLen < 150) moveLen = 150; // 右边区域的最小宽度为32px
-                if (moveLen > maxT - 150) moveLen = maxT - 150; //左边区域最小宽度为150px
-                //resize[i].style.left = moveLen; // 设置左侧区域的宽度
+                const endX = e.clientX;
+                const moveLen = resize[i].left + (endX - startX); // （endx-startx）=挪动的间隔。resize[i].left+挪动的间隔=右边区域最初的宽度
+                const maxT = box[i].clientWidth - resize[i].offsetWidth; // 容器宽度 - 右边区域的宽度 = 左边区域的宽度
+                if (moveLen < 150) {moveLen = 150; }// 右边区域的最小宽度为32px
+                if (moveLen > maxT - 150) {moveLen = maxT - 150;} //左边区域最小宽度为150px
                 for (let j = 0; j < left.length; j++) {
                     left[j].style.width = (moveLen/document.body.clientWidth)*100 + '%';
                     mid[j].style.width = ((box[i].clientWidth - moveLen)/document.body.clientWidth)*100 + '%';
@@ -603,17 +531,36 @@ export default {
             return false;
         };
     }
-},
-        editsubject(){
-            this.edittitle = true
-            this.$nextTick(()=>{    
-                this.$refs.subject.focus()
+}
+function editsubject(){
+            data.edittitle = true
+            nextTick(()=>{    
+                //refs.subject.focus()
             })
         }
-    }
-}
+
+        const getImg3=(item)=>{
+            if(item.IconUrl&&item.IconUrl!=null&&item.IconUrl!='undefined'){
+                return require('@/assets/img/taskdetail'+(item.IconUrl))
+            }
+            else{
+                if(item.Name=='任务'){
+                    return require('@/assets/img/taskdetail/images/icons/issuetypes/task.svg')
+                }else{
+                    return require('@/assets/img/taskdetail/images/icons/issuetypes/subtask.png')
+                }
+            }
+        }
+
+watch(props.itemid,(newVal,oldVal)=>{
+    getdata();
+    },{deep: true, immediate: true})
+    onMounted(() => {
+        dragControllerDiv();
+        getdata();
+  });
 </script>
-<style scoped>
+<style lang="less">
 .head-operate{
     display: flex;
 }
@@ -707,17 +654,17 @@ display: flex;
 .el-dropdown-menu__item{
     padding: 0 30px 0 10px;
 }
-.sharepopup>>>.title{
+.sharepopup :deep .title{
     display: none;
 }
-.sharepopup>>>.icon{
+.sharepopup :deep .icon{
     margin: 0;
 }
-.sharepopup>>>svg{
+.sharepopup :deep svg{
     width: 22px;
     height: 22px;
 }
-.breadcrumbitem>>>.el-breadcrumb__inner{
+.breadcrumbitem :deep .el-breadcrumb__inner{
     display: flex;
     align-items: center;
 }
@@ -742,7 +689,7 @@ display: flex;
     display: flex;
     align-items: center;
 }
-.task-title>>>svg{
+.task-title :deep svg{
     width: 18px;
     height: 18px;
     margin-left: 3px;
@@ -770,7 +717,7 @@ display: flex;
     align-items: center;
     color: #42526e ;
 }
-.addsubtask>>>svg{
+.addsubtask :deep svg{
     width: 16px;
     height: 16px;
     margin-right: 3px;

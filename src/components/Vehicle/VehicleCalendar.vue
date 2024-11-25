@@ -90,7 +90,7 @@
     import DayCalendar from "@/components/meeting/meetingRoom/DayCalendarRoom.vue";
     import MonthCalendar from "@/components/meeting/meetingRoom/MonthCalendarRoom.vue";
     import VehicleFullCalendar from "@/components/Vehicle/VehicleFullCalendar.vue";
-    import {getMeetingRoom} from "@/components/meeting/meetingRoom/MonthCalendarRoom.vue";
+    //import {getMeetingRoom} from "@/components/meeting/meetingRoom/MonthCalendarRoom.vue";
     // 会议详情
     import MeetingDetailModal from "@/components/meeting/MeetingDetailModal2.vue";
     // 新建

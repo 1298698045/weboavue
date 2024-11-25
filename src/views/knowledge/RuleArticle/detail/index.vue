@@ -268,14 +268,7 @@
 
     };
     const openZW=(row)=>{
-        // let url = router.resolve({
-        //     path:'/jgfiles/samples/OpenAndSave',
-        //     name: "OpenAndSave",
-        //     query: {
-        //         id: route.query.id,
-        //     },
-        // });
-        let url='/#/jgfiles/samples/OpenAndSave?id='+route.query.id;
+        let url='';
         if(row&&row.FileExtension == 'pdf'){
             url='/pdfjs/web/viewer.html?file='+encodeURIComponent('../../resources/uploadfiles'+row.ViewLinkUrl)+"";
         }

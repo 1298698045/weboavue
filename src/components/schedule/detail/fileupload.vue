@@ -68,7 +68,7 @@ import commonapi from '@/utils/commonapi.js'
 import axios from 'axios'
 import { getToken } from '@/utils/auth'
 //import icon from '@/components/schedule/detail/icon.vue'
-import {baseURL} from '@/utils/request.js'
+//import {baseURL} from '@/utils/request.js'
 import Fileview from '@/components/schedule/detail/fileview.vue'
 import Interface from "@/utils/Interface.js";
 import Delete from "@/components/listView/Delete.vue";
@@ -78,7 +78,7 @@ import dayjs from 'dayjs';
 export default {
     data(){
         return {
-            baseURL:baseURL,
+            //baseURL:baseURL,
             fileList:[],
             dialogVisible:false,
             objClass: {

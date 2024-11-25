@@ -163,7 +163,7 @@
                 <i class="iconfont icon-zhutizhongxin" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">主题中心</span>
               </div>
-              <div class="header-account-seeting-item" @click="loginOut">
+              <div class="header-account-seeting-item" @click="handleloginOut">
                 <!-- <ScheduleOutlined class="icon" /> -->
                 <i class="iconfont icon-tuichu" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">退出</span>
@@ -186,6 +186,7 @@
       </div>
       <NoticeMessages v-if="isNotice" :isShow="isNotice" @cancel="isNotice=false" />
     </div>
+    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="loginOut" :id="''" />
   </div>
 </template>
 <script setup>
@@ -195,7 +196,7 @@ import { DownOutlined, SearchOutlined, BellOutlined, ScheduleOutlined, WeiboCirc
 import Interface from "@/utils/Interface.js";
 import NoticeMessages from "@/components/NoticeMessages.vue";
 import Logo from "../header/components/logo.vue";
-
+import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 let store = useStore();
@@ -243,9 +244,12 @@ const data = reactive({
   currentAccountName:'',
   BusinessUnitId:'',
   userId:'',
-  avatarUrl:''
+  avatarUrl:'',
+  isConfirm:false,
+  confirmText:'',
+  confirmTitle:'',
 })
-const { userId,appList, isInfoPopup, isNotice, appCode, currentAppName,searchVal,accountList,currentAccountName,BusinessUnitId,avatarUrl } = toRefs(data);
+const { isConfirm,confirmText,confirmTitle,userId,appList, isInfoPopup, isNotice, appCode, currentAppName,searchVal,accountList,currentAccountName,BusinessUnitId,avatarUrl } = toRefs(data);
 const ChangeAccount= (item) => {
   data.isInfoPopup = false;
   data.currentAccountName=item.FullName;
@@ -328,7 +332,13 @@ const EditPassWord=()=>{
     }
   })
 }
+const handleloginOut=()=>{
+  data.isConfirm=true;
+  data.confirmText='确定要退出登录吗？';
+  data.confirmTitle='退出登录';
+}
 const loginOut= () => {
+  data.isConfirm=false;
   localStorage.clear();
   router.push('/');
 }

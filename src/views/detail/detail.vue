@@ -4,7 +4,8 @@
             <div class="leftBox">
                 <div class="title">
                     <span class="backText" @click="backToList"> « 返回列表</span>
-                    <span>02 差旅费报销流程 院领导 jackliu3 2023-09-22&nbsp;</span>
+                    <span v-if="!isEdit" @click="EditTitle">{{data.Title||'02 差旅费报销流程 院领导 jackliu3 2023-09-22'}}&nbsp;<EditOutlined /></span>
+                    <a-input ref="detailTitleInputDom" v-if="isEdit" v-model:value="data.Title" class="detailTitleInput" @blur="handleSave"></a-input>
                 </div>
                 <div class="tabWrap">
                     <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
@@ -102,7 +103,7 @@
                         <div class="arrowIcon rightIcon" v-if="isAside" @click="isAside=false"></div>
                         <div class="arrowIcon leftIcon" v-else @click="isAside=true"></div>
                         <div v-if="isAside" class="asideScroll">
-                            <div class="panel">
+                            <!-- <div class="panel">
                                 <div class="panel-head">
                                     <div class="panel-title">
                                         相关事务
@@ -132,7 +133,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="panel">
                                 <div class="panel-head">
                                     <div class="panel-title">
@@ -220,17 +221,28 @@
                         </div>
                     </div>
                 </div>
+                <div class="tabContainer" v-if="activeKey==1">
+                    <div class="detailContent"></div>
+                </div>
                 <div class="tabContainer" v-if="activeKey==2">
                     <Related :id="id" @addRelateInstance="addRelateInstance" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==3">
-                    <Info @handleUrging="handleUrging" :id="id" />
+                    <Attachment :id="id" @addRelateInstance="addRelateInstance" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==4">
-                    <read-record :id="id" />
+                    <div class="detailContent">
+                        <DetailInfo class="DetailInfo" :id="id" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
+                    </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey==5">
-                    <Comment :isTitle="true" :id="id" />
+                    <Info @handleUrging="handleUrging" :id="id" />
+                </div>
+                <div class="tabContainer" v-if="activeKey==6">
+                    <read-record :id="id" />
+                </div>
+                <div class="tabContainer" v-if="activeKey==7">
+                    <Comment :title="'讨论留言'" :id="id" :RegardingObjectTypeCode="'122'" />
                 </div>
             </div>
         </div>
@@ -277,7 +289,7 @@
 </template>
 <script setup>
     import "@/style/detail.less";
-    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw } from "vue";
+    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw,watch,nextTick } from "vue";
     import {
         UnorderedListOutlined,
         DownOutlined,
@@ -285,12 +297,14 @@
         DeleteFilled,
         DeleteOutlined,
         UpOutlined,
-        PlusOutlined
+        PlusOutlined,
+        EditOutlined
     } from "@ant-design/icons-vue";
     import Related from "@/components/detail/Related.vue";
+    import Attachment from "@/components/detail/Attachment.vue";
     import Info from "@/components/detail/Info.vue";
     import ReadRecord from "@/components/detail/ReadRecord.vue";
-    import Comment from "@/components/detail/Comment.vue";
+    import Comment from "@/components/detail/Comment2.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     import useWrokDetail from "@/utils/workDetail";
@@ -301,6 +315,7 @@
     import Delegate from "@/components/workflow/Delegate.vue";
     import Urging from "@/components/workflow/Urging.vue";
     import RelateInstance from "@/components/workflow/RelateInstance.vue";
+    import DetailInfo from "@/components/detail/DetailInfo.vue";
     import { useRouter, useRoute } from "vue-router";
     import { message } from "ant-design-vue";
     const route = useRoute();
@@ -314,7 +329,13 @@
                 label: "流程图"
             },
             {
-                label: "相关事务与附件信息"
+                label: "关联事务"
+            },
+            {
+                label: "附件信息"
+            },
+            {
+                label: "基本信息"
             },
             {
                 label: "流转信息"
@@ -338,16 +359,21 @@
         isAside: true,
         reqIndex: 1,
         pageCurrent: 1,
-        id:route.query.id,
+        id: route.query.id,
+        objectTypeCode:'122',
+        sObjectName:'WFProcessInstance',
         fileList:[],
         isRelateInstance:false,
         lookEntityApiName: "",
         lookObjectTypeCode: "",
-        lookEntityType:""
+        lookEntityType:"",
+        Title:'',
+        isEdit:false,
     })
-    const { tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData,
+    const { isEdit,Title,objectTypeCode,sObjectName,tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData,
          isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex,id,fileList,isRelateInstance,lookEntityApiName,lookObjectTypeCode,lookEntityType,
          pageCurrent } = toRefs(data);
+    const detailTitleInputDom=ref(null);
     const changeTabs = (e) => {
         data.activeKey = e;
     }
@@ -415,14 +441,7 @@
 
     };
     const openZW=(row)=>{
-        // let url = router.resolve({
-        //     path:'/jgfiles/samples/OpenAndSave',
-        //     name: "OpenAndSave",
-        //     query: {
-        //         id: route.query.id,
-        //     },
-        // });
-        let url='/#/jgfiles/samples/OpenAndSave?id='+route.query.id;
+        let url='';
         if(row&&row.FileExtension == 'pdf'){
             url='/pdfjs/web/viewer.html?file='+encodeURIComponent('../../resources/uploadfiles'+row.ViewLinkUrl)+"";
         }
@@ -451,6 +470,84 @@
     const handleSelectLook=()=>{
         data.isRelateInstance=false;
     }
+    const getDetail = () => {
+  let d = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                recordId: data.id,
+                apiName:data.sObjectName,
+                objTypeCode: data.objectTypeCode
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.detail,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
+            let fields=res.actions[0].returnValue.fields;
+            if(fields.Name.value){
+                data.Title=fields.Name.value;
+              }
+            }
+        })
+};
+const handleSave = () => {
+    data.isEdit=false;
+        let url=Interface.create;
+        let d = {
+        actions:[{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName:data.sObjectName,
+                objTypeCode: data.objectTypeCode,
+                fields: {
+                    Name:data.Title,
+                }
+              }              
+            }
+        }]
+    };
+    if(data.id){
+        url=Interface.edit;
+        d.actions[0].params.recordId=data.id;
+    }
+    let obj = {
+        message: JSON.stringify(d)
+    }
+        proxy.$post(url,obj).then(res=>{
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                message.success("保存成功！");
+          }
+          else{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                message.success(res.actions[0].errorMessage);
+            }
+            else{
+                message.success("保存失败！");
+            }
+          }
+        });
+    }
+    const EditTitle=()=>{
+        data.isEdit=true;
+        nextTick(()=>{
+            setTimeout(function(){
+                detailTitleInputDom.value.focus();
+            })
+        })
+    }
+    watch(route.query.id,(newVal,oldVal)=>{
+        getDetail();
+    },{deep: true, immediate: true})
+
 </script>
 <style lang="less" scoped>
     .collapse{
@@ -584,6 +681,32 @@
                     padding: 15px 0 10px 0;
                 }
             }
+        }
+    }
+    .detailWrap{
+        .detail-footer{
+            display: none;
+        }
+        .detail-scroll{
+            height: calc(~'100% - 71px');
+        }
+        .rightAside{
+            height: calc(~'100% - 30px');
+        }
+        .detailContent{
+            width: 100%;
+            padding: 20px;
+            background: #fff;
+            border-radius: 4px;
+            overflow: auto;
+        }
+        .backText{
+            width: 90px;
+        }
+        .detailTitleInput{
+            margin-top: -8px;
+            position: relative;
+            top: 6px;
         }
     }
 </style>

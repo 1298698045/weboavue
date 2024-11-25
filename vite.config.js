@@ -2,9 +2,10 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
-import vitePluginRequire from "vite-plugin-require";
+//import vitePluginRequire from "vite-plugin-require";
+import requireTransform from 'vite-plugin-require-transform';
 export default defineConfig({
-  plugins: [vue(),vitePluginRequire(),],
+  plugins: [vue(),requireTransform({ fileRegex: /^(?!.*node_modules).*\.(js|jsx|ts|tsx|vue)$/, })],
   // 静态资源的根路径
   base: '/',
   // 构建输出目录

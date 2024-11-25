@@ -336,8 +336,8 @@ const checkIsSave=()=>{
             userInfo=JSON.parse(userInfo);
             data.userId=userInfo.userId;
             data.userName=userInfo.fullName;
-            if(userId=='jackliu'){
-                userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+            if(data.userId=='jackliu'){
+                data.userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
             }
       }
       //getDetail();

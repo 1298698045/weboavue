@@ -1,19 +1,6 @@
 <template>
     <div class="infoWrap">
-        <div class="panel">
-            <div class="panel-head">
-                <div class="panel-title">
-                    详细信息
-                </div>
-                <div class="panel-btn">
-                    <a-button type="default" @click="handleUrging">催办</a-button>
-                </div>
-            </div>
-            <div class="panel-bd">
-                <DetailInfo class="DetailInfo" :id="id" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
-            </div>
-        </div>
-        <div class="panel">
+        <div class="panel panel2">
             <div class="panel-head">
                 <div class="panel-title">
                     流转信息
@@ -22,19 +9,40 @@
                 </div>
             </div>
             <div class="panel-bd">
-                <!-- <a-table :columns="columns" :data-source="list">
-                    <template #bodyCell="{ column }">
-                        <template v-if="column.key === 'Action'">
-                        </template>
-                    </template>
-                </a-table> -->
-                <Dtable name="infoGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.rulelogList" :tableHeight="200" :isCollapsed="isCollapsed"></Dtable>               
+                <Dtable name="infoGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.rulelogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>               
             </div>
         </div>
+        <div class="panel panel1">
+            <div class="panel-head">
+                <div class="panel-title">
+                    审批流转时间线
+                </div>
+                <div class="panel-btn">
+                    <!-- <a-button type="default" @click="handleUrging">催办</a-button> -->
+                </div>
+            </div>
+            <div class="panel-bd panel-bd1" ref="timelineContent">
+                <a-timeline>
+                      <a-timeline-item v-for="(activity, index) in ApproveList" :key="index">
+                        <template #dot>
+                            <ClockCircleOutlined style="font-size: 16px;color: #1677ff;" v-if="ApproveList&&(ApproveList.length==index+1)" />
+                            <CheckCircleOutlined  style="font-size: 16px;color: green;" v-else />
+                        </template>
+                        <span class="timelinetime">{{activity.ModifiedOn}}</span>
+                        <span class="timelinetext">{{activity.ExecutorIdentityName}}</span>
+                        <span class="timelinetext">{{activity.ToActivityName}}</span>
+                        <span class="timelinetext">{{activity.StatusCodeName}}</span>
+                        <span class="timelinetext">{{activity.RuleLogStateCodeName}}</span>
+                      </a-timeline-item>
+                    </a-timeline>
+            </div>
+        </div>
+        
     </div>
 </template>
 <script setup>
     import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance,defineEmits } from "vue";
+    import {CheckCircleOutlined,ClockCircleOutlined} from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     import Dtable from "@/components/Dtable.vue";
     import DetailInfo from "@/components/detail/DetailInfo.vue";
@@ -43,6 +51,7 @@
     const route = useRoute();
     const router = useRouter();
     const { proxy } = getCurrentInstance();
+    const timelineContent=ref(null);
     const columns = ref([
         {
             title: "来源环节",
@@ -103,8 +112,10 @@
         id: route.query.id,
         objectTypeCode:'122',
         sObjectName:'WFProcessInstance',
+        height:0,
+        ApproveList:[]
     })
-    const { list,id,objectTypeCode,sObjectName } = toRefs(data);
+    const { list,id,objectTypeCode,sObjectName,height,ApproveList } = toRefs(data);
     // const columnList = toRaw(columns);
     const emit = defineEmits(['handleUrging']);
     const handleUrging=()=>{
@@ -116,25 +127,74 @@
             page: 1,
             rows: 10
         }).then(res=>{
-            data.list = res.rows;
+            //data.list = res.rows;
+            data.ApproveList=res.rows;
         })
     }
     onMounted(()=>{
-        // getList();
+        getList();
+        let h = document.documentElement.clientHeight;
+        let t = timelineContent.value.clientHeight;
+        let s = h - t - 360;
+        data.height = h-200;
+        window.addEventListener("resize", (e) => {
+            let h = document.documentElement.clientHeight;
+            let t = timelineContent.value.clientHeight;
+            let s = h - t - 360;
+            data.height = h-200;
+        });
         gridRef.value.loadGrid();
     })
 </script>
 <style lang="less" scoped>
     .infoWrap{
         width: 100%;
+        display: flex;
+        .panel1{
+            margin-left: 20px;
+            width: 33%;
+            margin-bottom: 0;
+        }
+        .panel2{
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .panel-bd1{
+            min-height: 100px;
+            height: auto;
+            margin-top: 45px;
+            margin-left: 35%;
+            :deep .ant-timeline .ant-timeline-item-tail{
+                border-inline-start: 2px solid #E4E7ED;
+            }
+            :deep .ant-timeline .ant-timeline-item{
+                padding-bottom: 38px;
+            }
+        }
+        .timelinetext{
+            font-size: 14px;
+            color: #303133;
+            margin-left: 15px;
+        }
+        .timelinetime{
+            font-size: 14px;
+            position: absolute;
+            left: -196px;
+            top: -6px;
+            color: #8393b0;
+            width: 140px;
+            line-height: 20px;
+            text-align: right;
+            margin-top: 8px;
+        }
     }
     .ant-btn.ant-btn-text,.ant-btn.ant-btn-text:hover{
         color: var(--textColor);
     }
     .panel{
-        padding: 20px 0 0 0;
+        padding: 20px 20px 17px 20px;
         .panel-head{
-            padding: 0 20px;
+            padding: 0px;
         }
     }
 </style>

@@ -4,19 +4,19 @@
             <!-- {{showicon}} -->
             <div v-if="type=='group'">
                 <img v-if="checkeditem" :class="{'borderradius':borderradius}" 
-                :src="require('@/assets/img/taskdetail'+(checkeditem.avatarValue.large||checkeditem.avatarValue.large))" alt="">
+                :src="checkeditem.avatarValue.large?require('@/assets/img/taskdetail'+checkeditem.avatarValue.large):''" alt="">
             </div>
             <div v-else-if="type=='groups'">
                 <img v-if="checkeditem" :class="{'borderradius':borderradius}" 
-                :src="require('@/assets/img/taskdetail'+(checkeditem.iconUrl||''))" alt="">
+                :src="checkeditem.iconUrl?require('@/assets/img/taskdetail'+checkeditem.iconUrl):''" alt="">
             </div>
             <div v-else-if="objtypecode==8||objtypecode==30020">
                 <div v-if="checkeditem">
-                    <Userhead :url="(checkeditem.Icon!=''?require('@/assets/img/taskdetail'+checkeditem.Icon):false)" class="optionimg" />
+                    <Userhead :url="(checkeditem.Icon!=''?(checkeditem.Icon?require('@/assets/img/taskdetail'+checkeditem.Icon):''):false)" class="optionimg" />
                 </div>
             </div>
-            <img v-else-if="filterables" :class="{'borderradius':borderradius}"  :src="require('@/assets/img/taskdetail'+(checkeditem&&checkeditem.Icon?checkeditem.Icon:''))" alt="" />
-            <img v-else :class="{'borderradius':borderradius}"  :src="require('@/assets/img/taskdetail'+(checkeditem&&checkeditem.iconUrl?checkeditem.iconUrl:''))" alt="" />
+            <img v-else-if="filterables" :class="{'borderradius':borderradius}"  :src="checkeditem&&checkeditem.Icon?require('@/assets/img/taskdetail'+checkeditem.Icon):''" alt="" />
+            <img v-else :class="{'borderradius':borderradius}"  :src="checkeditem&&checkeditem.iconUrl?require('@/assets/img/taskdetail'+checkeditem.iconUrl):''" alt="" />
         </div>
         <el-select
         :disabled="disabled"
@@ -75,7 +75,7 @@
                     :label="item.name"
                     :value="item.id">
                     <div class="option">
-                        <img :class="{'borderradius':borderradius}" :src="require('@/assets/img/taskdetail'+(item.iconUrl||''))" alt="">
+                        <img :class="{'borderradius':borderradius}" :src="item.iconUrl?require('@/assets/img/taskdetail'+item.iconUrl):''" alt="">
                         <div class="item-label" :title="item.name">{{item.name}}</div>
                     </div>
                 </el-option>
@@ -106,7 +106,7 @@
           :size="size"
           @blur="blur"
           @change="change"
-          :value="value"
+          :value="value1"
           :placeholder="(placeholder?placeholder:'请选择')"
           :multiple="multiple"
           remote
@@ -129,8 +129,8 @@
           :size="size"
           @blur="blur"
           @change="change"
-          v-model="value"
-          :value="value"
+          v-model="value1"
+          :value="value1"
           :placeholder="placeholder?placeholder:'请选择'"
           :multiple="multiple"
           remote
@@ -142,7 +142,7 @@
                 :value="item.id"
             >
             <div class="option">
-                <img :class="{'borderradius':borderradius}" :src="require('@/assets/img/taskdetail'+(item.iconUrl||''))" alt="">
+                <img :class="{'borderradius':borderradius}" :src="item.iconUrl?require('@/assets/img/taskdetail'+item.iconUrl):''" alt="">
                 <div>{{item.name}}</div>
             </div>
             </el-option>
@@ -162,7 +162,8 @@ export default {
             defaultsearch:{},
             checkedid:'',
             userid:'',
-            proxy:null
+            proxy:null,
+            value1:this.value
         }
     },
     props:['value','name','objtypecode','defaultdata',

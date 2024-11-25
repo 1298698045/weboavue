@@ -122,7 +122,7 @@
                 <div class="rightForm-content" v-show="rightshow">
                     <flow-node-form ref="nodeForm" @setLineLabel="setLineLabel" @repaintEverything="repaintEverything" :deleteElement="deleteElement" v-show="this.activeElement.type"></flow-node-form>
                     <div class="css-1lmg9rr" v-show="!this.activeElement.type">
-                        <img width="auto" height="auto" alt="" src="/static/img/images/icons/workflow/Connections.svg" class="css-1marach" style="--max-width:160px; --max-height:160px;">
+                        <img width="auto" height="auto" alt="" src="" class="css-1marach" style="--max-width:160px; --max-height:160px;">
                         <h4 class="css-12j2m0c">按您自己的方式制作工作流</h4>
                         <p class="css-103urqq">
                             <span class="sc-3o952d-1 hXMrAm">

@@ -155,5 +155,48 @@
                 }
             }
         }
+        .fh-section-label{
+            width:100%;
+            font-weight:700;
+            height:30px;
+            line-height:30px;
+            padding-left:10px;
+
+            font-size: 14px;
+            color: #868686;
+            border-bottom: 1px solid #e2e2e2;
+            background-color: #f4faff !important;
+            border-left: 2px solid #2b9dec;
+            border-radius: 0 !important;
+            margin-bottom: 10px;
+        }
+        .slds-form-element{
+            display: flex;
+            padding: 10px 10px 10px 15px;
+            padding-left: 0;
+        }
+        .fh-section .sectionCol{
+            border-bottom: 0 !important;
+        }
+        .fh-section .sectionCol_label{
+            min-width: 168px;
+            color: #000;
+        }
+        .fh-section .forcePageBlockItem{
+            border-bottom: 0;
+        }
+        .fh-section .sectionCol_body{
+            border-bottom: 1px solid #dedede !important;
+            padding-left: 10px;
+            padding-bottom: 5px;
+            font-size: 12px;
+            flex: 1;
+            height: 30px;
+            margin-right: 25px;
+            .sectionCol_static{
+                white-space: normal;
+                word-break: break-all;
+            }
+        }
     }
 </style>
