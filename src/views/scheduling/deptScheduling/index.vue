@@ -762,7 +762,7 @@
                             -webkit-box-shadow: transparent;
                             background-color: transparent;
                         }
-                        /deep/ .ant-checkbox-group{
+                        :deep .ant-checkbox-group{
                             display: block;
                             width: 100%;
                         }
@@ -800,7 +800,7 @@
             }
         }
     }
-    /deep/ .ant-popconfirm .ant-popconfirm-buttons{
+    :deep .ant-popconfirm .ant-popconfirm-buttons{
         display: none !important;
     }
     .empty{

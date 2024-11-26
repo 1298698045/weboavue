@@ -10,7 +10,12 @@ const Interface = {
   formSearch: "/localData/formSearch3.json",
   applist: "/localData/applist.json",
   workflow: {
-    processList: "/localData/process.search.json",
+    //processList: "/localData/process.search.json",
+    processType: baseUrl + "/workflow/Process/getCategories",//新建流程分类
+    getAuthorizedProcess: baseUrl + "/workflow/Process/getAuthorizedProcess",//获取当前用户可以访问的流程
+    getCommonUses: baseUrl + "/workflow/Process/getCommonUses",//获取常用流程
+    getFavorites:baseUrl + "/workflow/Process/getFavorites",//获取收藏流程
+    new:baseUrl + "/workflow/ProcessInstance/new",//新建流程
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",

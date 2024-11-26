@@ -35,7 +35,7 @@
 </script>
 <style lang="less" scoped>
     .ant-radio-group{
-        /deep/ .ant-radio-button-wrapper{
+        :deep .ant-radio-button-wrapper{
             border-radius: 0 !important;
             width: 32px !important; 
             padding: 0 !important;

@@ -274,7 +274,7 @@ const data = reactive({
                 twoarrange: String,
                 detailheight: String,itemid: String,popup: String,title: String,RegardingObjectIdName: String,
             });
-
+        const editorRef=ref(null)
         function handleDelete(e){
             emit('handleDelete', {Id:props.itemid})
         }
@@ -293,8 +293,8 @@ const data = reactive({
                     IconUrl:item.iconUrl,
                     Name:item.name
                 })
-                if(that.informationdata.record.IssueType.content.id==item.id){
-                    that.informationdata.record.IssueType.content.iconUrl=item.iconUrl
+                if(data.informationdata.record.IssueType.content.id==item.id){
+                    data.informationdata.record.IssueType.content.iconUrl=item.iconUrl
                 }
             })
         }
@@ -418,7 +418,7 @@ const data = reactive({
                         descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
                         callingDescriptor: "UNKNOWN",
                         params: {
-                        recordId: that.itemid,
+                        recordId: props.itemid,
                         apiName:'ActivityPointer',
                         objTypeCode: '4200'
                     }
@@ -432,11 +432,11 @@ const data = reactive({
                 if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
                 let fields=res.actions[0].returnValue.fields;
 
-                that.informationdata.id = that.itemid;
-                that.projectid=fields.OwningBusinessUnit.value;
-                that.projectname=fields.OwningBusinessUnit.displayValue;
-                that.$refs.editorRef.content=fields.Description.value;
-                that.informationdata.record = {
+                data.informationdata.id = props.itemid;
+                data.projectid=fields.OwningBusinessUnit.value;
+                data.projectname=fields.OwningBusinessUnit.displayValue;
+                editorRef.value.content=fields.Description.value;
+                data.informationdata.record = {
                     Subject:fields.Subject.value,
                     Description:fields.Description.value,
                     OwningUser:{
@@ -463,14 +463,13 @@ const data = reactive({
                         }
                     },
                     subtask:{content:fields.subtask&&fields.subtask.value?fields.subtask.value:[]},
-                    id:that.itemid,
+                    id:props.itemid,
                     TimeOriginalEstimate:fields.TimeOriginalEstimate.value
                 }
-                that.informationdata.record.StateCode.statuss.nodes.forEach(item =>{
-                    if(that.informationdata.record.StateCode.content.id==item.statusId){
-                        that.informationdata.record.StateCode.content.statusCategory.id=item.statusCategoryId
-                        that.informationdata.record.StateCode.content.name=item.name
-                        that.$forceUpdate();
+                data.informationdata.record.StateCode.statuss.nodes.forEach(item =>{
+                    if(data.informationdata.record.StateCode.content.id==item.statusId){
+                        data.informationdata.record.StateCode.content.statusCategory.id=item.statusCategoryId
+                        data.informationdata.record.StateCode.content.name=item.name
                     }
                 })
                 if(informationdata&&informationdata.record&&informationdata.record.RegardingObjectId&&informationdata.record.RegardingObjectId.content&&informationdata.record.RegardingObjectId.content.avatarValue&&informationdata.record.RegardingObjectId.content.avatarValue.large){
@@ -485,13 +484,7 @@ const data = reactive({
                 else{
                     data.imgUrl2=require('@/assets/img/taskdetail/images/icons/issuetypes/task.svg');
                 }
-                if(informationdata&&informationdata.record&&informationdata.record.RegardingObjectId&&informationdata.record.RegardingObjectId.content&&informationdata.record.RegardingObjectId.content.avatarValue&&informationdata.record.RegardingObjectId.content.avatarValue.large){
-                    data.imgUrl1=require('@/assets/img/taskdetail'+informationdata.record.RegardingObjectId.content.avatarValue.large);
-                }
-                else{
-                    data.imgUrl1=require('@/assets/img/taskdetail/images/icons/project/project00026.svg');
-                }
-                that.getIssueTypeList()
+                    getIssueTypeList()
                 }
             })
         }
@@ -540,16 +533,18 @@ function editsubject(){
         }
 
         const getImg3=(item)=>{
+            let path='';
             if(item.IconUrl&&item.IconUrl!=null&&item.IconUrl!='undefined'){
-                return require('@/assets/img/taskdetail'+(item.IconUrl))
+                path=('/src/assets/img/taskdetail'+(item.IconUrl))
             }
             else{
                 if(item.Name=='任务'){
-                    return require('@/assets/img/taskdetail/images/icons/issuetypes/task.svg')
+                    path=('/src/assets/img/taskdetail/images/icons/issuetypes/task.svg')
                 }else{
-                    return require('@/assets/img/taskdetail/images/icons/issuetypes/subtask.png')
+                    path=('/src/assets/img/taskdetail/images/icons/issuetypes/subtask.png')
                 }
             }
+            return path;
         }
 
 watch(props.itemid,(newVal,oldVal)=>{

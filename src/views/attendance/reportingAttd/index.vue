@@ -738,7 +738,7 @@
                             -webkit-box-shadow: transparent;
                             background-color: transparent;
                         }
-                        /deep/ .ant-checkbox-group{
+                        :deep .ant-checkbox-group{
                             display: block;
                             width: 100%;
                         }

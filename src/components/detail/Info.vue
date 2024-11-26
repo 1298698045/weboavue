@@ -9,7 +9,8 @@
                 </div>
             </div>
             <div class="panel-bd">
-                <Dtable name="infoGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.rulelogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>               
+                <!-- <Dtable name="infoGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.rulelogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable> -->
+                <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height" :isCollapsed="isCollapsed"></Ntable>
             </div>
         </div>
         <div class="panel panel1">
@@ -28,7 +29,7 @@
                             <ClockCircleOutlined style="font-size: 16px;color: #1677ff;" v-if="ApproveList&&(ApproveList.length==index+1)" />
                             <CheckCircleOutlined  style="font-size: 16px;color: green;" v-else />
                         </template>
-                        <span class="timelinetime">{{activity.ModifiedOn}}</span>
+                        <span class="timelinetime">{{activity.CreatedOn}}</span>
                         <span class="timelinetext">{{activity.ExecutorIdentityName}}</span>
                         <span class="timelinetext">{{activity.ToActivityName}}</span>
                         <span class="timelinetext">{{activity.StatusCodeName}}</span>
@@ -42,24 +43,44 @@
 </template>
 <script setup>
     import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance,defineEmits } from "vue";
+    import dayjs from 'dayjs';
+    import 'dayjs/locale/zh-cn';
+    import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+    dayjs.locale('zh-cn');
+    import calendar from 'dayjs/plugin/calendar';
+    import weekday from 'dayjs/plugin/weekday';
+    import localeData from 'dayjs/plugin/localeData';
+    dayjs.extend(calendar);
+    dayjs.extend(weekday);
+    dayjs.extend(localeData);
     import {CheckCircleOutlined,ClockCircleOutlined} from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
-    import Dtable from "@/components/Dtable.vue";
+    //import Dtable from "@/components/Dtable.vue";
+    import Ntable from "@/components/Ntable.vue";
     import DetailInfo from "@/components/detail/DetailInfo.vue";
     import { useRouter, useRoute } from "vue-router";
     import { message } from "ant-design-vue";
+    import { girdFormatterValue } from "@/utils/common.js";
     const route = useRoute();
     const router = useRouter();
     const { proxy } = getCurrentInstance();
     const timelineContent=ref(null);
     const columns = ref([
         {
-            title: "来源环节",
+            title: "来源节点",
             field: "FromActivityName"
         },
         {
-            title: "办理环节",
+            title: "办理节点",
             field: "ToActivityName"
+        },
+        {
+            title: "办理方式",
+            field: "SourceType"
+        },
+        {
+            title: "办理结果",
+            field: "StateCode"
         },
         {
             title: "应办人",
@@ -67,7 +88,7 @@
         },
         {
             title: "实办人",
-            field: "ToIdentityName"
+            field: "ExecutorIdentityName"
         },
         {
             title: "来源类型",
@@ -78,7 +99,7 @@
             field: "CreatedByName"
         },
         {
-            title: "分配时间",
+            title: "提交时间",
             field: "CreatedOn"
         },
         {
@@ -86,24 +107,20 @@
             field: "ModifiedOn"
         },
         {
-            title: "办理时长",
+            title: "办理时长小时",
             field: "TimeCost"
         },
         {
-            title: "期限",
+            title: "办理期限",
             field: "Deadline"
         },
         {
-            title: "办理结果",
-            field: "RuleLogStateCodeName"
+            title: "已读",
+            field: "IsRead"
         },
         {
-            title: "办理方式",
-            field: "StatusCodeName"
-        },
-        {
-            title: "阅读时间",
-            field: "ReadOn"
+            title: "办理意见",
+            field: "Description"
         }
     ]);
     const gridRef = ref(null);
@@ -113,7 +130,16 @@
         objectTypeCode:'122',
         sObjectName:'WFProcessInstance',
         height:0,
-        ApproveList:[]
+        ApproveList:[],
+        queryParams: {
+        filterId:'',
+        objectTypeCode:'123',
+        entityName:'WFRuleLog',
+        filterQuery:'\nProcessInstanceId\teq\t'+route.query.id,
+        displayColumns:'FromActivityName,ToActivityName,SourceType,StateCode,ToIdentityName,ExecutorIdentityName,SourceType,CreatedByName,CreatedOn,,ModifiedOn,TimeCost,Deadline,IsRead,,Description',
+        sort:'CreatedOn',
+        order:'desc'
+      },
     })
     const { list,id,objectTypeCode,sObjectName,height,ApproveList } = toRefs(data);
     // const columnList = toRaw(columns);
@@ -122,13 +148,43 @@
         emit("handleUrging");
     }
     const getList = async () => {
-        await proxy.$get(Interface.rulelogList,{
-            processInstanceId: "9fd5ec7f-86c8-44e2-b7ee-aa73f7730c2c",
+        // await proxy.$get(Interface.rulelogList,{
+        //     processInstanceId: "9fd5ec7f-86c8-44e2-b7ee-aa73f7730c2c",
+        //     page: 1,
+        //     rows: 10
+        // }).then(res=>{
+        //     data.ApproveList=res.rows;
+        // })
+        let filterQuery='\nProcessInstanceId\teq\t'+data.id;
+        proxy.$post(Interface.list2, {
+            filterId:'',
+            objectTypeCode:'123',
+            entityName:'WFRuleLog',
+            filterQuery:filterQuery,
+            search:'',
             page: 1,
-            rows: 10
-        }).then(res=>{
-            //data.list = res.rows;
-            data.ApproveList=res.rows;
+            rows: 100,
+            sort:'CreatedOn',
+            order:'DESC',
+            displayColumns:'Name,CreatedOn,ExecutorIdentityName,ToActivityName,StatusCodeName,RuleLogStateCodeName'
+        }).then(res => {
+            if(res&&res.nodes&&res.nodes.length){
+                var list = [];
+                for (var i = 0; i < res.nodes.length; i++) {
+                    var item = res.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'){
+                            item[cell]=girdFormatterValue(cell,item);
+                        }
+                        if(cell=='CreatedOn'){
+                            item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
+                        }
+                    }
+                    list.push(item)
+                }
+                data.ApproveList=list;
+            }
+            gridRef.value.loadGrid(data.queryParams);
         })
     }
     onMounted(()=>{

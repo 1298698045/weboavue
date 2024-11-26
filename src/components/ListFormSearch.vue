@@ -15,6 +15,9 @@
                     <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='S'||item.dataType=='X'">
                         <a-input class="radiusNone" :placeholder="item.label" v-model:value="formState[item.column]" />
                     </a-form-item>
+                    <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='N'">
+                        <a-input type="number" class="radiusNone" :placeholder="item.label" v-model:value="formState[item.column]" />
+                    </a-form-item>
                     <!-- <a-form-item :name="item.column" :label="item.label" v-if="item.dataType=='N'">
                         <a-input-number v-model:value="formState[item.column]" :min="1" :max="100" />
                         <a-input-number v-model:value="formState[item.column]" :min="1" :max="100" />

@@ -177,22 +177,41 @@
   const res = require("@/localData/treedata.json");
   const gData = ref([]);
   const gDataAll=ref([]);
-  proxy.$get(Interface.information.contentTree,{}).then((response)=>{
-    //console.log("res",response);
-    let formTree = (list) => {
-      list.forEach(item=>{
-        if(item.children){
-          formTree(item.children);
+  let url=Interface.content.folder.get;
+    proxy.$post(url,{}).then(res=>{
+      if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+        let formTree = (list) => {
+          list.forEach(item=>{
+            if(item.children){
+              formTree(item.children);
+            }
+            item.key = item.id;
+            item.value = item.id;
+            item.isFavor=item.isFavor||false;
+          })
         }
-        item.key = item.id;
-        item.value = item.id;
-      })
-    }
-    formTree(response);
-    console.log("formTree",response)
-    gData.value = response;
-    gDataAll.value = response;
-  })
+        let response=res.actions[0].returnValue;
+        formTree(response);
+        console.log("formTree",response);
+        gData.value = response;
+        gDataAll.value = response;
+      }
+    });
+  // proxy.$get(Interface.information.contentTree,{}).then((response)=>{
+  //   let formTree = (list) => {
+  //     list.forEach(item=>{
+  //       if(item.children){
+  //         formTree(item.children);
+  //       }
+  //       item.key = item.id;
+  //       item.value = item.id;
+  //     })
+  //   }
+  //   formTree(response);
+  //   console.log("formTree",response)
+  //   gData.value = response;
+  //   gDataAll.value = response;
+  // })
   // console.log("genData",genData,treeList)
   
   const onExpand = (keys) => {

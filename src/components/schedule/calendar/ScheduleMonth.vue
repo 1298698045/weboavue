@@ -245,7 +245,7 @@
         searchVal: "",
         userListTree: [],
         scheduleList: {},
-        monthValue: dayjs(new Date(), monthFormat),
+        monthValue: dayjs(new Date()),
         calendarType: 2,
         currentTime: dayjs(),
         startWeekTime: "",

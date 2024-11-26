@@ -1,6 +1,6 @@
 <template>
 <div class="container">
-    <el-dialog title="工作流" :append-to-body="true" :visible.sync="show" top="20vh" width="800px">
+    <el-dialog title="工作流" :append-to-body="true" v-modal="show" top="20vh" width="800px">
         <div class="popup">
     <div class="popup-head">
       <div class="popup-title">

@@ -312,12 +312,9 @@
   const getTreeData=()=>{
     gData.value = [];
     gDataAll.value = [];
-    let url=Interface.content.folder;
+    let url = Interface.content.folder.get;
     proxy.$post(url,{}).then(res=>{
       if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
-      }
-    });
-    proxy.$get(Interface.information.contentTree,{}).then((response)=>{
         let formTree = (list) => {
           list.forEach(item=>{
             if(item.children){
@@ -328,11 +325,28 @@
             item.isFavor=item.isFavor||false;
           })
         }
+        let response=res.actions[0].returnValue;
         formTree(response);
-        console.log("formTree",response)
+        console.log("formTree",response);
         gData.value = response;
         gDataAll.value = response;
+      }
     })
+    // proxy.$get(Interface.information.contentTree,{}).then((response)=>{
+    //     let formTree = (list) => {
+    //       list.forEach(item=>{
+    //         if(item.children){
+    //           formTree(item.children);
+    //         }
+    //         item.key = item.id;
+    //         item.value = item.id;
+    //         item.isFavor=item.isFavor||false;
+    //       })
+    //     }
+    //     formTree(response);
+    //     gData.value = response;
+    //     gDataAll.value = response;
+    // })
   }
   getTreeData()
 
@@ -638,7 +652,7 @@
     })
   }
   const onSelect = (keys) => {
-    gridRef.value.loadGrid(data.queryParams);
+    //gridRef.value.loadGrid(data.queryParams);
   };
   onMounted(()=>{
     let userInfo=window.localStorage.getItem('userInfo');

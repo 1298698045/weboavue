@@ -256,7 +256,7 @@
         height: 35px;
         cursor: pointer;
     }
-    /deep/ :where(.css-dev-only-do-not-override-kqecok).ant-input{
+    :deep :where(.css-dev-only-do-not-override-kqecok).ant-input{
         background: #f4f4f4;
     }
 </style>

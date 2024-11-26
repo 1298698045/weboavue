@@ -11,7 +11,7 @@
         <div class="todo-content">
             <div class="newFlowWrap">
                 <div class="webTabs">
-                    <a-tabs v-model:activeKey="activeKey">
+                    <a-tabs v-model:activeKey="activeKey" @change="changeTab">
                         <a-tab-pane :key="1" tab="全部流程"></a-tab-pane>
                         <a-tab-pane :key="2" tab="我的收藏"></a-tab-pane>
                         <a-tab-pane :key="3" tab="最近使用"></a-tab-pane>
@@ -28,28 +28,31 @@
                         <div class="flowTypeItem" :class="{'active':typeIndex===''}"  @click="handleTabTypes({}, '')">
                             全部
                         </div>
-                        <a class="flowTypeItem" :class="{'active':typeIndex===index}" v-for="(item, index) in processLists" :key="index" @click="handleTabTypes(item, index)">
+                        <a class="flowTypeItem" :class="{'active':typeIndex===item.categoryId}" v-for="(item, index) in processLists" :key="index" @click="handleTabTypes(item, item.categoryId)">
                             {{ item.name }}
                         </a>
                     </div>
                     <div class="flowContent">
-                        <div class="flowPanelItem" :id="item.folderId" v-for="(item, index) in processLists" :key="index" :style="{'borderColor':colors[index%5]}">
-                            <div class="flowPanelItemHead">
-                                <div class="typeName">{{ item.name }}</div>
-                            </div>
-                            <div class="flowPanelItemBd">
-                                <div class="flowRowItem" v-for="(row, idx) in item.Processes" :key="idx" @click="handleStartProcess(row)">
-                                    <div class="flowName rowEllipsis">{{row.name}}</div>
-                                    <div class="collectionIcon" :class="{'active':row.favoriteState=='1'}" @click.stop>
-                                        <a-tooltip>
-                                            <template #title>{{ row.favoriteState=='1'?'取消收藏':'收藏' }}</template>
-                                            <i class="iconfont icon-quxiaoshoucang" v-if="row.favoriteState=='1'"></i>
-                                            <i class="iconfont icon-tianjiashoucang" v-else></i>
-                                        </a-tooltip>
+                        <template v-for="(item, index) in processLists" :key="index">
+                            <div class="flowPanelItem" :id="item.categoryId" :style="{'borderColor':colors[index%5]}" v-if="typeIndex==item.categoryId||typeIndex==''">
+                                <div class="flowPanelItemHead">
+                                    <div class="typeName"><FileTextOutlined :style="{'color':colors[index%5]}" />{{ item.name }} ({{ item.Processes&&item.Processes.length?item.Processes.length:0 }})</div>
+                                </div>
+                                <div class="flowPanelItemBd">
+                                    <div class="flowRowItem" v-for="(row, idx) in item.Processes" :key="idx" @click="handleStartProcess(row)">
+                                        <div class="flowName rowEllipsis">{{row.name}}</div>
+                                        <div class="collectionIcon" :class="{'active':row.isFavorite}" @click.stop="handleFavorite(row)">
+                                            <a-tooltip>
+                                                <template #title>{{ row.isFavorite?'取消收藏':'收藏' }}</template>
+                                                <i class="iconfont icon-quxiaoshoucang" v-if="row.isFavorite"></i>
+                                                <i class="iconfont icon-tianjiashoucang" v-else></i>
+                                            </a-tooltip>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </template>
+                       
                     </div>
                 </div>
             </div>
@@ -63,7 +66,7 @@
                  </div>
             </template>
             <div class="modalContainer">
-                <div class="modalCenter">
+                <div class="modalCenter" style="height:440px;">
                     <a-form
                         ref="formRef"
                         :label-col="labelCol"
@@ -72,9 +75,9 @@
                         <a-form-item label="流程：" name="ProcessName">
                             <div class="ProcessName">{{ formState.ProcessName || '' }}</div>
                         </a-form-item>
-                        <a-form-item name="BusinessUnitId" label="发起部门：" :rules="[{ required: true, message: '请选择发起部门' }]">
+                        <a-form-item name="BusinessUnitId" label="创建身份：" :rules="[{ required: true, message: '请选择发起部门' }]">
                             <a-select v-model:value="formState.BusinessUnitId">
-                                <a-select-option v-for="(item,index) in formState.BusinessUnitList" :key="index" :value="item.id">{{item.name}}</a-select-option>
+                                <a-select-option v-for="(item,index) in formState.BusinessUnitList" :key="index" :value="item.BusinessUnitId">{{item.businessUnitIdName}}</a-select-option>
                             </a-select>
                         </a-form-item>
                         <a-form-item class="processTitle" label="标题：" name="Title"  :rules="[{ required: true, message: '标题不能为空' }]">
@@ -107,10 +110,13 @@
 <script setup>
     import "@/style/flow/icon/iconfont.css";
     import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw } from "vue";
-    import { HeartFilled } from "@ant-design/icons-vue";
+    import { HeartFilled,FileTextOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-
+    import { message } from "ant-design-vue";
+    import { useRouter, useRoute } from "vue-router";
+    const route = useRoute();
+    const router = useRouter();
     const data = reactive({
         searchVal:"",
         currentTab: 0,
@@ -119,22 +125,71 @@
         rowRecord: {},
         activeKey: 1,
         typeIndex: "",
+        userId:'',
         colors:['#55d2d4','rgb(55, 178, 255)','rgb(255, 94, 86)','rgb(179, 123, 250)','rgb(55, 178, 255)',]
     })
-    const { colors,searchVal, processLists, currentTab, currentTab2, rowRecord, activeKey, typeIndex } = toRefs(data);
-    const getProcessList = () =>{
-        proxy.$get(Interface.workflow.processList,{}).then(res=>{
-            console.log("res",res);
-            data.processLists = res.processLists;
+    const { userId,colors,searchVal, processLists, currentTab, currentTab2, rowRecord, activeKey, typeIndex } = toRefs(data);
+    const getProcessType = () =>{
+        data.processLists=[];
+        proxy.$post(Interface.workflow.processType,{}).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.rows&&res.actions[0].returnValue.rows.length){
+                for(var i=0;i<res.actions[0].returnValue.rows.length;i++){
+                    var item=res.actions[0].returnValue.rows[i];
+                    item.Processes=[];
+                    data.processLists.push(item);
+                }
+                data.processLists.push({
+                    name:'其他',
+                    categoryId:'123',
+                    Processes:[]
+                })
+                getProcessList();
+            }
         })
     }
-    getProcessList();
+    
+    const getProcessList = () =>{
+        let url='';
+        if(data.activeKey==1){
+           url=Interface.workflow.getAuthorizedProcess;
+        }else if(data.activeKey==2){
+           url=Interface.workflow.getFavorites;
+        }else if(data.activeKey==3){
+           url=Interface.workflow.getCommonUses;
+        }
+        for(var m=0;m<data.processLists.length;m++){
+            data.processLists[m].Processes=[];
+        }
+        proxy.$post(url,{search:data.searchVal}).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.rows&&res.actions[0].returnValue.rows.length){
+                for(var i=0;i<res.actions[0].returnValue.rows.length;i++){
+                    var item=res.actions[0].returnValue.rows[i];
+                    var isHasFolder=false;
+                    if(item&&item.name&&item.name.indexOf(data.searchVal)!=-1){
+                        for(var j=0;j<data.processLists.length;j++){
+                            var type=data.processLists[j];
+                            if(item.folderId==type.categoryId){
+                                data.processLists[j].Processes.push(item);
+                                isHasFolder=true;
+                            }
+                        }
+                        if(!isHasFolder){
+                            (data.processLists[data.processLists.length-1]).Processes.push(item);
+                        }
+                    }
+                }
+            }
+        })
+    }
 
-    const changeTab = (index,currentName) =>{
-        data[currentName] = index;
+    const changeTab = (e) =>{
+        //console.log('e',e)
+        data.activeKey = e;
+        getProcessList();
     }
     const onSearch = (e) => {
-        console.log('e',e)
+        //console.log('e',e)
+        getProcessList();
     }
     // 弹窗
     const isModal = ref(false);
@@ -150,10 +205,98 @@
     const handleStartProcess = (row)=> {
         formState.ProcessName = row.name;
         data.rowRecord = row;
-        getUserInfo();
+        //getUserInfo();
         getDeptList();
         isModal.value = true;
     }
+    const handleFavorite = (row)=>{
+    if(!row.isFavorite){
+      let url=Interface.create;
+        let d = {
+        actions:[{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName:'WFProcessFavorite',
+                objTypeCode: '20608',
+                fields: {
+                    Name:row.name,
+                    ProcessId:row.processId,
+                    CreatedBy:data.userId
+                }
+              }              
+            }
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+        proxy.$post(url,obj).then(res=>{
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+            message.success("收藏成功！");
+            getProcessList();
+          }
+          else{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                message.success(res.actions[0].errorMessage);
+            }
+            else{
+                message.success("收藏失败！");
+            }
+          }
+        });
+    }
+    else{
+      let filterQuery='\nProcessId\teq\t'+row.processId+'\nCreatedBy\teq\t'+data.userId;
+        proxy.$post(Interface.list2, {
+            filterId:'',
+            objectTypeCode:'20608',
+            entityName:'WFProcessFavorite',
+            filterQuery:filterQuery,
+            search:'',
+            page: 1,
+            rows: 10,
+            sort:'CreatedOn',
+            order:'DESC',
+            displayColumns:'Name'
+        }).then(res => {
+            if(res&&res.nodes&&res.nodes.length){
+                let obj = {
+                    actions: [{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId: res.nodes[0].id,
+                        apiName: 'WFProcessFavorite',
+                        objTypeCode: '20608',
+                    }
+                    }]
+                };
+                let d = {
+                    message: JSON.stringify(obj)
+                };
+                proxy.$post(Interface.delete, d).then(res => {
+                    if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+                    message.success("取消收藏成功");
+                    getProcessList();
+                    } else {
+                    if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+                        message.success(res.actions[0].errorMessage);
+                    }
+                    else {
+                        message.error("取消收藏失败");
+                    }
+                    }
+                })
+            }
+        })
+
+    }
+  }
     const handleOk = () => {
         isModal.value = false;
     }
@@ -163,7 +306,47 @@
     const formRef = ref();
     const handleSubmit = () => {
         formRef.value.validate().then(() => {
-            console.log('values', formState, toRaw(formState));
+            //console.log('values', formState, toRaw(formState));
+            let obj = {
+                "actions": [
+                    {
+                    "id": "4270;a",
+                    "descriptor": "aura://RecordUiController/ACTION$getRecordWithFields",
+                    "callingDescriptor": "UNKNOWN",
+                    "params": {
+                        "processId": data.rowRecord.processId,
+                        "priority": formState.Priority,
+                        "name": formState.Title,
+                        "businessUnitId": formState.BusinessUnitId,
+                        "description": formState.Description
+                    }
+                    }
+                ]
+                };
+                let d = {
+                    message: JSON.stringify(obj)
+                };
+                proxy.$post(Interface.workflow.new, d).then(res => {
+                    if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+                    message.success("新建流程成功");
+                    let url = router.resolve({
+                        path:'/detail',
+                        name: "Detail",
+                        query: {
+                            id: res.actions[0].returnValue.id,
+                            reurl:'/lightning/o/workflow/doing'
+                        },
+                    });
+                    window.open(url.href);
+                    } else {
+                    if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+                        message.success(res.actions[0].errorMessage);
+                    }
+                    else {
+                        message.error("新建流程失败");
+                    }
+                    }
+                })
             handleCancel();
         }).catch(err => {
             console.log('error', err);
@@ -171,16 +354,32 @@
     }
 
     const getUserInfo = async () => {
-        await proxy.$get(Interface.userInfo,{}).then(res=>{
+        // await proxy.$get(Interface.userInfo,{}).then(res=>{
             
-        })
+        // })
     }
     // 获取部门
     const getDeptList = () => {
-        proxy.$get(Interface.businessunitList,{}).then(res=>{
-            formState.BusinessUnitList = res.businessUnits;
-            formState.Title = data.rowRecord.name + ' ' + res.businessUnits[0].name;
-            formState.BusinessUnitId =  res.businessUnits[0].id;
+        // proxy.$get(Interface.businessunitList,{}).then(res=>{
+        //     formState.BusinessUnitList = res.businessUnits;
+        //     formState.Title = data.rowRecord.name + ' ' + res.businessUnits[0].name;
+        //     formState.BusinessUnitId =  res.businessUnits[0].id;
+        // })
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            formState.BusinessUnitId=userInfo.businessUnitId;
+            data.userId=userInfo.userId;
+        }
+        proxy.$post(Interface.user.getBusinessUnits, {}).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
+                formState.BusinessUnitList=res.actions[0].returnValue;
+                for(var i=0;i<formState.BusinessUnitList.length;i++){
+                if(formState.BusinessUnitList[i].BusinessUnitId==formState.BusinessUnitId){
+                formState.Title = data.rowRecord.name + ' ' + formState.BusinessUnitList[i].businessUnitIdName;
+                }
+                }
+            }
         })
     };
     const scrollToAnchor = (event, item) => {
@@ -193,6 +392,14 @@
     const handleTabTypes = (item, index) => {
         data.typeIndex = index;
     };
+    onMounted(()=>{
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.userId=userInfo.userId;
+        }
+        getProcessType();
+    })
 </script>
 <style lang="less" scoped>
     @import "@/style/flow/treeList.less";
@@ -291,23 +498,82 @@
                     }
                 }
             }
-        }
-        .flowContainer .flowContent .flowPanelItem .flowPanelItemBd .flowRowItem{
-            width: calc(~'100% - 10px');
-            height: 38px !important;
-        }
-        .flowContainer .flowContent .flowPanelItem{
-            width: 23.5%;
-            margin: 0 9px;
-            height: auto;
-            background: #f5f5f5;
-            height: 100%;
-        }
-        .flowContainer .flowContent{
-            flex-wrap: wrap;
-            display: flex;
-            justify-content: space-between;
-            align-content: flex-start;
-        }
+
+            .flowContent{
+                flex-wrap: wrap;
+                display: flex;
+                justify-content: space-between;
+                align-content: flex-start;
+                //flex-flow:column;
+                margin-top: 15px;
+                .flowPanelItem{
+                    width: 24%;
+                    margin: 0 0 15px 0;
+                    height: auto;
+                    background: #f5f5f5;
+                    height: 100%;
+                    padding: 0;
+                    padding-bottom: 10px;
+                    .flowPanelItemHead{
+                        padding: 20px 0;
+                        .typeName{
+                            font-size: 16px;
+                            width: 100%;
+                            text-align: center;
+                            color: #292929;
+                            font-weight: normal;
+                            .anticon{
+                                font-size: 26px;
+                                margin-right: 8px;
+                                position: relative;
+                                top:4px;
+                            }
+                        }
+                    }
+                    .flowPanelItemBd{
+                        .flowRowItem{
+                            width: calc(~'100% - 0px');
+                            height: 20px !important;
+                            margin-right:0;
+                            padding: 16px 24px 16px 26px;
+                            font-size: 12px;
+                            margin: 0;
+                            .flowName{
+                                font-weight: normal;
+                                color:#7a7a7a;
+                            }
+                            .iconfont{
+                                font-size: 14px;
+                            }
+                        }
+                        .flowRowItem:hover{
+                            box-shadow:none;
+                        }
+                    }
+                }
+                    .flowPanelItem:hover{
+                        background: #fff;
+                        //border-left:1px solid #dedede !important;
+                        //border-right:1px solid #dedede !important;
+                        //border-bottom:1px solid #dedede !important;
+                        box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.2);
+                        .flowRowItem{
+                            background: #fff;
+                        }
+                        .flowRowItem:hover{
+                            background: #f5f5f5;
+                        }
+                    }
+            }
+            .flowTypes{
+                .flowTypeItem{
+                    margin-right: 8px;
+                    margin-bottom: 8px;
+                    font-weight: normal;
+                    font-size: 12px;
+                }
+            }
+        }        
+
     }
 </style>

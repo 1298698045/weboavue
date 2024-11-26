@@ -97,7 +97,7 @@
                                 :tree-data="treeData"
                                 tree-node-filter-prop="name"
                             >
-                                <template #title="{ value: val, name }">
+                                <template #title="{ name }">
                                     <span>{{ name }}</span>
                                 </template>
                             </a-tree-select>
@@ -143,7 +143,7 @@
                                   </p>
                                   <p class="ant-upload-text">将文件拖到此处，或点击上传</p>
                               </div>
-                              <template #itemRender="{ file, actions }">
+                              <template #itemRender="{ file }">
                                   <div class="uploadList">
                                       <div class="uploadItem">
                                           <div>
@@ -588,9 +588,7 @@
   </script>
   <style lang="less">
   @import url("@/style/modal.less");
-  .ant-modal-content .modalContainer .modalCenter {
-    /* height: 500px !important; */
-  }
+ 
   .section {
     .sectionTitle {
       height: 30px;

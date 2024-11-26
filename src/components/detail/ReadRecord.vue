@@ -23,15 +23,32 @@
                 <Dtable name="recordGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>               
             </div>
             <div class="panel-bd" v-show="activeKey==1">
-                <Dtable name="browsingHistory" ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>               
+                <!-- <Dtable name="browsingHistory" ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>-->
+                <Ntable ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.list2" :tableHeight="height" :isCollapsed="isCollapsed"></Ntable>
             </div>
         </div>
     </div>
 </template>
 <script setup>
     import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance } from "vue";
+    import dayjs from 'dayjs';
+    import 'dayjs/locale/zh-cn';
+    import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+    dayjs.locale('zh-cn');
+    import calendar from 'dayjs/plugin/calendar';
+    import weekday from 'dayjs/plugin/weekday';
+    import localeData from 'dayjs/plugin/localeData';
+    dayjs.extend(calendar);
+    dayjs.extend(weekday);
+    dayjs.extend(localeData);
     import Interface from "@/utils/Interface.js";
     import Dtable from "@/components/Dtable.vue";
+    import Ntable from "@/components/Ntable.vue";
+    import { useRouter, useRoute } from "vue-router";
+    import { message } from "ant-design-vue";
+    import { girdFormatterValue } from "@/utils/common.js";
+    const route = useRoute();
+    const router = useRouter();
     const { proxy } = getCurrentInstance();
     const gridRef = ref(null);
     const browsingHistoryRef = ref(null);
@@ -65,11 +82,11 @@
         // },
         {
             title: "阅读人",
-            field: "CreatedByName"
+            field: "CreatedBy"
         },
         {
             title: "阅读时间",
-            field: "CreatedOn"
+            field: "ReadOn"
         },
         {
             title: "IP地址",
@@ -93,6 +110,15 @@
         label: "浏览记录",
       },
     ],
+    queryParams2: {
+        filterId:'',
+        objectTypeCode:'2021',
+        entityName:'RecordReadLog',
+        filterQuery:'\nObjectId\teq\t'+route.query.id,
+        displayColumns:'CreatedOn,CreatedBy,IPAddr,BrowserName,ReadOn',
+        sort:'CreatedOn',
+        order:'desc'
+      },
     })
     const { list, list2,height,activeKey,tabs } = toRefs(data);
     // const columnList = toRaw(columns);
@@ -102,7 +128,8 @@
         if(e==0){
             gridRef.value.loadGrid();
         }else{
-            browsingHistoryRef.value.loadGrid();
+            //browsingHistoryRef.value.loadGrid();
+            browsingHistoryRef.value.loadGrid(data.queryParams2);
         }
     };
     const getList = async () => {

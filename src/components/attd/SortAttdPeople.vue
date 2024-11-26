@@ -120,7 +120,7 @@
 </script>
 <style lang="less" scoped>
     @import url('@/style/modal.less');
-    /deep/ :where(.css-dev-only-do-not-override-kqecok).ant-transfer{
+    :deep :where(.css-dev-only-do-not-override-kqecok).ant-transfer{
         justify-content: center;
     }
     .selectBox{

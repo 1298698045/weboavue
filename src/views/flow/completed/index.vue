@@ -135,7 +135,7 @@
                   <a-button class="ml10">批量取消发布</a-button> -->
               </div>
             </div>
-            <list-form-search ref="searchRef" @search="handleSearch" entityApiName="WFProcessInstance" :SearchFields="SearchFields"
+            <list-form-search ref="searchRef" @search="handleSearch" :entityApiName="data.queryParams.entityName" :SearchFields="SearchFields"
               @update-height="changeHeight"></list-form-search>
             <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
               <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
@@ -156,7 +156,7 @@
     <!-- 分类 -->
     <NewCategory v-if="isCategory" @cancel="cancelCategory" :isShow="isCategory" :id="treeId" ObjectTypeCode="流程" />
     <!-- 删除 -->
-    <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="handleSearch" :sObjectName="'WFProcessInstance'" :recordId="ProcessInstanceId" :objTypeCode="'122'" :external="false" />
+    <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="handleSearch" :sObjectName="data.queryParams.entityName" :recordId="ProcessInstanceId" :objTypeCode="data.queryParams.objectTypeCode" :external="false" />
     <!-- 撤销、结束、取消督办、取消收藏 -->
     <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="ProcessInstanceId" />
     <!-- 传阅 -->
@@ -347,8 +347,8 @@
     activeKey: 0,
     queryParams: {
       filterId:'',
-      objectTypeCode:'122',
-      entityName:'WFProcessInstances',
+      objectTypeCode:'123',
+      entityName:'WFRuleLog',
       filterQuery:'',
       //displayColumns:'ProcessInstanceNumber,Name,ProcessId,StateCode,ExpiredOn,AttachQty,CreatedBy,CurrentStepName,CreatedOn,BusinessUnitId,ModifiedOn,Priority,ProcessInstanceId,WFRuleLogId,ExecutorIdentityName',
       sort:'CreatedOn',
@@ -472,8 +472,8 @@ const getColumns = (id) => {
             }
         },];
   proxy.$get(Interface.listView.getFilterInfo, {
-    entityType: '122',
-    objectTypeCode: '122',
+    entityType: data.queryParams.objectTypeCode,
+    objectTypeCode: data.queryParams.objectTypeCode,
     search: "",
     filterId: id
   }).then(res => {
@@ -517,7 +517,7 @@ const getColumns = (id) => {
   // 获取tabs
   const getTabs = () => {
     proxy.$get(Interface.getTabs, {
-      entityName:'WFProcessInstance',
+      entityName:data.queryParams.entityName,
       layoutName:'CompletedInstance'
     }).then(res => {
       //console.log("tabs", res)

@@ -161,7 +161,7 @@
         searchVal: "",
         userListTree: [],
         meetingList: {},
-        monthValue: dayjs(new Date(), monthFormat),
+        monthValue: dayjs(new Date()),
         calendarType: 2,
         calendarView:'dayGridMonth',
         currentTime: dayjs(),

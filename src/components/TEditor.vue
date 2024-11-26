@@ -16,7 +16,7 @@ import {
   toRaw,
 } from "vue";
 const emit = defineEmits(["input"]);
-const height = ref(props.height);
+const height = ref(null);
 const editorRef = ref();
 const index = ref(1);
 const props = defineProps({
@@ -121,7 +121,7 @@ const initializeEditor = () => {
     placeholder: props.placeholder,
     statusbar: false,
     promotion: false,
-    height: height.value,
+    height: props.height,
     emoticons_database_url: '/tinymce/plugins/emoticons/js/emojis.js',
     images_upload_url: 'https://wx.phxinfo.com.cn/rest',
     paste_data_images:true,
@@ -164,6 +164,9 @@ let init = initializeEditor();
 //   height: height
 // });
 let content = ref("");
+// onMounted(() => {
+//     height.value=props.height;
+// });
 watch(
   content,
   (newVal) => {
@@ -177,15 +180,14 @@ watch(()=>props.height,(newVal,oldVal)=>{
   // console.log("editor", tinymce.DOM)
   // console.log("editorRef", editorRef);
   height.value = newVal;
-  // // if (editorRef.value && newVal !== oldVal) {
-  //   // tinymce.execCommand("mceSetHeight", false, newVal)
-  //   if(editorRef.value && editorRef.value.editor){
-  //     // editorRef.value.execCommand('mceSetHeight', false, newVal);
-  //     // editorRef.value.editor.editorContainer.style.height = newVal;
-  //     // editorRef.value.editor.resize();
-  //   }
-
-  // }
+  // if (editorRef.value && newVal !== oldVal) {
+    // tinymce.execCommand("mceSetHeight", false, newVal)
+    // if(editorRef.value && editorRef.value.editor){
+    //   editorRef.value.execCommand('mceSetHeight', false, newVal);
+    //   editorRef.value.editor.editorContainer.style.height = newVal;
+    //   editorRef.value.editor.resize();
+    // }
+  //}
 },{ deep: true, immediate: true })
 defineExpose({init,content})
 </script>
