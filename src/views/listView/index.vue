@@ -189,7 +189,6 @@
     import { useRouter, useRoute } from "vue-router";
     const router = useRouter();
     const route = useRoute();
-  
     import CommonFormModal from "@/components/listView/CommonFormModal.vue";
   
     // 新建列表视图

@@ -386,8 +386,7 @@ onMounted(() => {
 const handleGoModule = (item) => {
   // console.log("item", item);
   store.commit('setModuleName',item.Label);
-  localStorage.setItem("appName", item.Label);
-  localStorage.removeItem("routePath");
+  localStorage.setItem("moduleName", item.Label);
   emit("changeCode", item.AppCode);
   // router.push({
   //     path:"/"+item.Name

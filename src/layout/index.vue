@@ -17,22 +17,20 @@
       <div class="right">
         
         <div class="container">
-          
-              <router-view v-slot="{ Component }">
-                <transition name="fade" mode="out-in">
-                  <keep-alive>
-                    <component :is="Component" />
-                  </keep-alive>
-                </transition>
-              </router-view>
-            
+          <router-view v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+              <keep-alive>
+                <component :is="Component" />
+              </keep-alive>
+            </transition>
+          </router-view>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, onMounted, reactive, getCurrentInstance, toRefs } from "vue";
+import { ref, onMounted, reactive, getCurrentInstance, toRefs, watch } from "vue";
 import Header from "./components/header/index.vue";
 import Logo from "./components/header/components/logo.vue";
 import MyMenu from "./components/menu/MyMenu.vue";
@@ -60,6 +58,8 @@ const data = reactive({
 });
 const { appList, appCode, currentAppName } = toRefs(data);
 
+data.appList = store.state.modules;
+
 let localAppCode = localStorage.getItem("appCode");
 let localAppName = localStorage.getItem("appName");
 if(localAppCode){
@@ -77,21 +77,31 @@ const getModuleAppList = () => {
       data.currentAppName = data.appList[0].Label;
     }
     store.commit('setModuleName', data.currentAppName);
-    // let row = data.appList.find(item=>route.path.indexOf(item.StartUrl)!=-1);
-    // if(row){
-    //   data.appCode = row.AppCode;
-    //   data.currentAppName =  row.Label;
-    //   store.commit('setModuleName', data.currentAppName);
-    // }
   })
 };
-getModuleAppList();
+// getModuleAppList();
 
 const changeCode = (e) => {
   // console.log('e', e);
   data.appCode = e;
   localStorage.setItem("appCode", data.appCode);
+  store.dispatch("getSubModules", e);
 }
+
+
+watch(()=> route.path, ()=>{
+  console.log("route==", route.meta);
+  let appCode = route.meta.appCode;
+  let moduleName = route.meta.moduleName;
+  let localAppCode = localStorage.getItem("appCode");
+  if(appCode!=localAppCode){
+    store.dispatch("getSubModules", appCode);
+    localStorage.setItem("appCode", appCode);
+    localStorage.setItem("moduleName", moduleName);
+  }
+},{immediate: true})
+
+
 </script>
 <style lang="less">
 @import "./layout.less";

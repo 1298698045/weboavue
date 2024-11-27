@@ -19,6 +19,54 @@ const app = createApp(App);
 moment.locale('zh-cn');
 app.config.globalProperties.$moment = moment;
 app.use(store);
+function restoreRoutes() {
+    const savedRoutes = JSON.parse(localStorage.getItem('savedRoutes'));
+    console.log("savedRoutes", savedRoutes);
+    // if(savedRoutes){
+    //     savedRoutes.component = () => import("@/layout/index.vue");
+    //     savedRoutes.children.forEach(item=>{
+    //     // let componentPath = routesMapping[savedRoutes.name][item.name];
+    //     // item.component = componentPath;
+    //         item.component = eval(item.component);
+    //     });
+    //     router.addRoute(savedRoutes);
+
+    //     console.log("router", router.getRoutes())
+    // }
+    if(savedRoutes){
+        const parentRouteExists = router.hasRoute(savedRoutes.name);
+        let parentRoute;
+        if (!parentRouteExists) {
+            parentRoute = {
+                path: savedRoutes.path,
+                name: savedRoutes.name,
+                component: () => import("@/layout/index.vue"),
+                meta: savedRoutes.meta,
+                children: [],
+            };
+            router.addRoute(parentRoute);
+        }
+        if(savedRoutes.children.length){
+            savedRoutes.children.forEach(item=>{
+                const newRoute = {
+                    path: item.path,
+                    name: item.name,
+                    component: eval(item.component),
+                    meta: item.meta,
+                    children: [],
+                };
+                router.addRoute(savedRoutes.name, {
+                    ...newRoute
+                })
+            })
+        }
+
+    };
+    console.log("router", router.getRoutes())
+}
+// if (localStorage.getItem('savedRoutes')) {
+//     restoreRoutes();
+// }
 app.use(router);
 app.use(Axios);
 app.use(Antd);

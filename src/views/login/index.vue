@@ -84,6 +84,9 @@
     import { useRouter, useRoute } from "vue-router";
     import Interface from "@/utils/Interface.js";
     const router = useRouter();
+    import { useStore } from 'vuex';
+    const store = useStore();
+    console.log('store', store);
     import md5 from "js-md5";
     const data = reactive({
         passwordType:'password'
@@ -122,7 +125,8 @@
                         window.localStorage.setItem('token', token);
                         window.localStorage.setItem('userInfo', userInfo);
                         message.success(res.msg||'登录成功！');
-                        router.push('/lightning/o/workspace/home');
+                        store.dispatch('getModules');
+                        // router.push('/lightning/o/workspace/home');
                     }else {
                         if(res&&res.msg){
                             message.error(res.msg);

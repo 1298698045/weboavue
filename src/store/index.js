@@ -1,8 +1,12 @@
 import { createStore } from "vuex";
+import request from "@/utils/request.js";
+import Interface from "@/utils/Interface.js";
+import router from "@/router/index.js";
+import { routesMapping } from "@/utils/routesMapping.js";
 export default createStore({
   state: {
     collapsed: false,
-    moduleName: "日程管理",
+    moduleName: "",
     groupId: "",
     currentData: {}, // 当前模板数据
     tabListCurrent: 0, // 当前选中的tab
@@ -10,6 +14,9 @@ export default createStore({
     isMasterAttr: false, // 页面和组件属性配置开关
     dashboardId: "",
     themeType: "default",
+    modules: [],
+    subModules: [],
+    appCode: ""
   },
   mutations: {
     setCollapsed(state, val) {
@@ -27,7 +34,166 @@ export default createStore({
     setTheme(state, val) {
       state.themeType = val;
     },
+    setModules(state, modules) {
+      state.modules = modules;
+    },
+    setSubModules(state, subModules) {
+      state.subModules = subModules;
+    },
   },
-  actions: {},
-  modules: {},
+  actions: {
+    async getModules({ commit, dispatch }){
+      try {
+        const res = await request.$get(Interface.applist, {systemCode: 'OA'});
+        if(res && res.actions && res.actions[0].returnValue){
+          let modules = res.actions[0].returnValue.apps;
+          commit('setModules', modules);
+          localStorage.setItem("modules", JSON.stringify(modules));
+          modules.forEach(item=>{
+            let path = item.StartUrl.startsWith("/") ? item.StartUrl : "/" + item.StartUrl;
+            if(path.indexOf('?')!=-1){
+              path = path.split('?')[0]
+            }
+            router.addRoute({
+              path: path+"Parent",
+              name: item.Name,
+              component: () => import("@/layout/index.vue"),
+              meta: { 
+                moduleName: item.Label
+              },
+              children: []
+            })
+          });
+          commit('setModuleName', modules[0].Label);
+          dispatch('getSubModules', modules[0].AppCode);
+          localStorage.setItem("moduleName", modules[0].Label);
+          localStorage.setItem("appCode", modules[0].AppCode);
+        }
+      }catch(error){
+        console.log("getModules error");
+      }
+    },
+    async getSubModules({commit, state}, appCode){
+      // try{
+        let obj = {
+          actions:[{
+            id: "4105;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              appCode: appCode
+            }
+          }]
+        };
+        let d = {
+          message: JSON.stringify(obj)
+        }
+        function serializeRoutes(routes){
+          // console.log("routes===========", routes);
+          return routes.map((route) => {
+            const serializedRoute = {
+                path: route.path,
+                name: route.name,
+                meta: route.meta,
+                component: route.componentPath || route.component
+            };
+            // 如果有子路由，递归处理
+            if (route.children && route.children.length > 0) {
+              serializedRoute.children = serializeRoutes(route.children);
+            }
+            return serializedRoute;
+          })
+        }
+        const res = await request.$post(Interface.currentApp, d);
+        if(res && res.actions && res.actions[0].returnValue){
+          let returnValue = res.actions[0].returnValue;
+          let developerName = returnValue.developerName;
+          let appCode = returnValue.appCode;
+          let label = returnValue.label;
+          let subModules = returnValue.tabs;
+          commit('setSubModules', subModules);
+          localStorage.setItem("subModules", JSON.stringify(subModules));
+          const parentRouteExists = router.hasRoute(developerName);
+          let parentRoute;
+          if (!parentRouteExists) {
+            parentRoute = {
+              path: `/${developerName}`,
+              name: developerName,
+              component: () => import("@/layout/index.vue"),
+              meta: { moduleName: returnValue.label },
+              children: [],
+            };
+            router.addRoute(parentRoute);
+          } else {
+            parentRoute = router.getRoutes().find(route => route.name === developerName);
+          }
+
+          const savedRoutes = [];
+          subModules.forEach(item=>{
+            let subPath  = item.navAction.url.startsWith("/") ? item.navAction.url : "/" + item.navAction.url;
+            if(subPath .indexOf('?')!=-1){
+              subPath = subPath .split('?')[0]
+            }
+            const componentPath = routesMapping[developerName][item.name];
+
+            // 处理通用列表
+            if(`${componentPath}`.indexOf('listView/index.vue')!=-1){
+              subPath = subPath.replace(/\/o.*$/, '/:sObjectName');
+            }
+
+            // 先检查路由是否已经存在
+            const existingRoute = router.getRoutes().find(route => route.path === subPath);
+            if(componentPath){
+              const newRoute = {
+                path: subPath,
+                name: item.name,
+                componentPath: `${componentPath}`,
+                meta: {
+                  label: item.navAction.label,
+                  moduleName: label,
+                  parentName: developerName,
+                  appCode: appCode
+                },
+                children: [],
+              };
+              // console.log("componentPath", componentPath);
+              router.addRoute(developerName, {
+                ...newRoute,
+                component: componentPath,
+              });
+    
+              // 保存路由信息
+              parentRoute.children.push(newRoute);
+            }
+          });
+
+          //parentRoute 相当于存储的是当前模块的整一个路由
+          const routes = router.getRoutes();
+          console.log("routes:", routes)
+          let children = serializeRoutes(parentRoute.children);
+          parentRoute.children = children;
+          // console.log("parentRoute", parentRoute);
+          // console.log("getRoutes", routes);
+
+          const newRoutes = serializeRoutes(routes);
+          console.log("newRoutes", newRoutes);
+
+          if(localStorage.getItem('savedRoutes')){
+            let localRoutes = JSON.parse(localStorage.getItem('savedRoutes'));
+            console.log("localRoutes", localRoutes);
+          }
+          localStorage.setItem('savedRoutes', JSON.stringify(newRoutes));
+          commit('setModuleName', returnValue.label);
+          setTimeout(()=>{
+            router.push(subModules[0].navAction.url);
+          },100)
+        }
+      // }
+      // catch(error){
+      //   console.log("getSubModules error");
+      // }
+    }
+  },
+  modules: {
+  },
 });

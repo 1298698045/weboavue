@@ -28,6 +28,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 dayjs.locale("zh-cn");
 import { useRouter, useRoute } from "vue-router";
+import { routesMapping } from "@/utils/routesMapping.js";
 const router = useRouter();
 const ZHLocale = zhCN;
 ZHLocale.DatePicker.lang = {
@@ -81,6 +82,24 @@ function clearInactivityTimer() {
 const handleLogout = () => {
   router.push('/');
 }
+
+// 刷新
+function restoreRoutes() {
+  const savedRoutes = JSON.parse(localStorage.getItem('savedRoutes'));
+  console.log("savedRoutes", savedRoutes);
+  if(savedRoutes){
+    savedRoutes.component = () => import("@/layout/index.vue");
+    savedRoutes.children.forEach(item=>{
+      // let componentPath = routesMapping[savedRoutes.name][item.name];
+      item.component = eval(item.component);
+    });
+    router.addRoute(savedRoutes);
+
+    console.log("router", router.getRoutes())
+  }
+}
+// restoreRoutes();
+
 </script>
 <style lang="less">
 #app {
