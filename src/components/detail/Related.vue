@@ -51,18 +51,16 @@
         fileList:[],
         height:document.documentElement.clientHeight - 200,
         queryParams: {
-        filterId:'',
-        objectTypeCode:'128',
-        entityName:'WFProcessInstanceRelated',
-        filterQuery:'\nProcessInstanceId\teq\t'+route.query.id,
-        displayColumns:'Name,CreatedOn,CreatedBy',
-        sort:'CreatedOn',
-        order:'desc'
-      },
+            filterId:'',
+            objectTypeCode:'128',
+            entityName:'WFProcessInstanceRelated',
+            filterQuery:'\nProcessInstanceId\teq\t'+route.query.id,
+            displayColumns:'Name,CreatedOn,CreatedBy',
+            sort:'CreatedOn',
+            order:'desc'
+        },
     });
     const { isCollapsed,height } = toRefs(data);
-    // const columnList = toRaw(columns);
-    // const columnList2 = toRaw(filesColumns);
 
     const columns = ref([
         {
@@ -82,28 +80,7 @@
             field: "CreatedBy"
         },
     ]);
-    const filesColumns = ref([
-        {
-            field: 'ids',
-            checkbox: true
-        },
-        {
-            title: "类型",
-            field: "FileExtension"
-        },
-        {
-            title: "标题",
-            field: "Name"
-        },
-        {
-            title: "关联时间",
-            field: "CreatedOn"
-        },
-        {
-            title: "创建人",
-            field: "createdByName"
-        }
-    ])
+    
     const gridUrl = ref(Interface.draftsList);
 
     const onSelectChange = selectedRowKeys => {

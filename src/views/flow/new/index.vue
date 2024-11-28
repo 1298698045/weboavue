@@ -34,9 +34,9 @@
                     </div>
                     <div class="flowContent">
                         <template v-for="(item, index) in processLists" :key="index">
-                            <div class="flowPanelItem" :id="item.categoryId" :style="{'borderColor':colors[index%5]}" v-if="typeIndex==item.categoryId||typeIndex==''">
+                            <div class="flowPanelItem" :id="item.categoryId" :style="{'borderColor':colors[index%7]}" v-if="typeIndex==item.categoryId||typeIndex==''">
                                 <div class="flowPanelItemHead">
-                                    <div class="typeName"><FileTextOutlined :style="{'color':colors[index%5]}" />{{ item.name }} ({{ item.Processes&&item.Processes.length?item.Processes.length:0 }})</div>
+                                    <div class="typeName"><FileTextOutlined :style="{'color':colors[index%7]}" />{{ item.name }} ({{ item.Processes&&item.Processes.length?item.Processes.length:0 }})</div>
                                 </div>
                                 <div class="flowPanelItemBd">
                                     <div class="flowRowItem" v-for="(row, idx) in item.Processes" :key="idx" @click="handleStartProcess(row)">
@@ -70,6 +70,7 @@
                     <a-form
                         ref="formRef"
                         :label-col="labelCol"
+                        class="CreateProcess"
                         :model="formState">
                         <div class="form-tip">请输入流程事务标题，建立事务</div>
                         <a-form-item label="流程：" name="ProcessName">
@@ -77,7 +78,7 @@
                         </a-form-item>
                         <a-form-item name="BusinessUnitId" label="创建身份：" :rules="[{ required: true, message: '请选择发起部门' }]">
                             <a-select v-model:value="formState.BusinessUnitId">
-                                <a-select-option v-for="(item,index) in formState.BusinessUnitList" :key="index" :value="item.BusinessUnitId">{{item.businessUnitIdName}}</a-select-option>
+                                <a-select-option v-for="(item,index) in formState.BusinessUnitList" :key="index" :value="item.BusinessUnitId">{{item.organizationIdName}}/{{item.businessUnitIdName}}</a-select-option>
                             </a-select>
                         </a-form-item>
                         <a-form-item class="processTitle" label="标题：" name="Title"  :rules="[{ required: true, message: '标题不能为空' }]">
@@ -126,7 +127,7 @@
         activeKey: 1,
         typeIndex: "",
         userId:'',
-        colors:['#55d2d4','rgb(55, 178, 255)','rgb(255, 94, 86)','rgb(179, 123, 250)','rgb(55, 178, 255)',]
+        colors:['rgb(85, 210, 212)','rgb(55, 178, 255)','rgb(255, 94, 86)','rgb(179, 123, 250)','rgb(255, 198, 46)','rgb(255, 149, 55)','rgb(141, 206, 54)']
     })
     const { userId,colors,searchVal, processLists, currentTab, currentTab2, rowRecord, activeKey, typeIndex } = toRefs(data);
     const getProcessType = () =>{
@@ -575,5 +576,24 @@
             }
         }        
 
+    }
+    :deep .CreateProcess {
+        .ant-form-item{
+            margin-bottom: 20px !important;
+        }
+        .processTitle .ant-row .ant-col .ant-form-item-required{
+            color: rgba(0, 0, 0, 0.88) !important;
+        }
+        .processTitle .ant-row .form-tip1{
+            color: rgba(0, 0, 0, 0.88) !important;
+        }
+        .ProcessName{
+            color: rgba(0, 0, 0, 0.88) !important;
+        }
+        .form-tip{
+            font-size: 12px;
+            margin-bottom: 12px;
+            color: #606266;
+        }
     }
 </style>

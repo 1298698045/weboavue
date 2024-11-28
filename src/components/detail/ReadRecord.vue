@@ -20,7 +20,8 @@
                 </div>
             </div>
             <div class="panel-bd" v-show="activeKey==0">
-                <Dtable name="recordGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>               
+                <!-- <Dtable name="recordGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable> -->
+                <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height" :isCollapsed="isCollapsed"></Ntable>
             </div>
             <div class="panel-bd" v-show="activeKey==1">
                 <!-- <Dtable name="browsingHistory" ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>-->
@@ -59,7 +60,7 @@
         // },
         {
             title: "传阅人",
-            field: "ToActivityName"
+            field: "CreatedBy"
         },
         {
             title: "传阅时间",
@@ -67,7 +68,7 @@
         },
         {
             title: "接收人",
-            field: "ReceiverName"
+            field: "ReceiverId"
         },
         {
             title: "是否已读",
@@ -110,6 +111,15 @@
         label: "浏览记录",
       },
     ],
+    queryParams1: {
+        filterId:'',
+        objectTypeCode:'124',
+        entityName:'WFInstanceNotifyMembers',
+        filterQuery:'\nProcessInstanceId\teq\t'+route.query.id,
+        displayColumns:'CreatedOn,CreatedBy,ReceiverId,IsRead',
+        sort:'CreatedOn',
+        order:'desc'
+      },
     queryParams2: {
         filterId:'',
         objectTypeCode:'2021',
@@ -126,25 +136,24 @@
     const changeTabs = (e) => {
         data.activeKey = e;
         if(e==0){
-            gridRef.value.loadGrid();
+            gridRef.value.loadGrid(data.queryParams1);
         }else{
             //browsingHistoryRef.value.loadGrid();
             browsingHistoryRef.value.loadGrid(data.queryParams2);
         }
     };
     const getList = async () => {
-        await proxy.$get(Interface.readlogList,{
-            processInstanceId: "9fd5ec7f-86c8-44e2-b7ee-aa73f7730c2c"
-        }).then(res=>{
-            data.list2 = res.rows;
-        })
+        // await proxy.$get(Interface.readlogList,{
+        //     processInstanceId: "9fd5ec7f-86c8-44e2-b7ee-aa73f7730c2c"
+        // }).then(res=>{
+        //     data.list2 = res.rows;
+        // })
+        gridRef.value.loadGrid(data.queryParams1);
     }
     onMounted(()=>{
         window.addEventListener("resize", (e) => {
             data.height = document.documentElement.clientHeight - 200;
-        });
-        gridRef.value.loadGrid();
-        
+        });        
         getList();
     })
 </script>
