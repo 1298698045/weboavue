@@ -651,8 +651,7 @@ const getColumns = (id) => {
     //   }
     // });
     let url = router.resolve({
-            path:'/detail',
-            name: "Detail",
+            name: "FlowDetail",
             query: {
                 id: WFRuleLogId,
                 reurl:'/lightning/worflow/instance/list'

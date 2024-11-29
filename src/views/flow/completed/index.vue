@@ -489,7 +489,7 @@ const getColumns = (id) => {
             formatter: function formatter(value, row, index) {
               let result=girdFormatterValue(item.name,row);
               var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.textValue:'';
-              return '<a style="color:#1677ff;text-decoration: none;" href="/#/detail?id='+ProcessInstanceId+'&reurl=/lightning/o/workflow/done/list" target="_blank">'+result+'</a>';
+              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/detail?id='+ProcessInstanceId+'&reurl=/lightning/o/workflow/done/list" target="_blank">'+result+'</a>';
             }
           });
         }
@@ -575,8 +575,7 @@ const getColumns = (id) => {
     //   }
     // });
     let url = router.resolve({
-            path:'/detail',
-            name: "Detail",
+            name: "FlowDetail",
             query: {
                 id: WFRuleLogId,
                 reurl:'/lightning/o/workflow/done/list'

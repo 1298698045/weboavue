@@ -16,6 +16,7 @@ const Interface = {
     getCommonUses: baseUrl + "/workflow/Process/getCommonUses",//获取常用流程
     getFavorites:baseUrl + "/workflow/Process/getFavorites",//获取收藏流程
     new:baseUrl + "/workflow/ProcessInstance/new",//新建流程
+    getProcessDefinitionInfo: baseUrl + "/aura/workflow/Process/getProcessDefinitionInfo", // 获取流程定义简要
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",
@@ -225,7 +226,7 @@ const Interface = {
     deleteSignature: "/localData/flow/process.signature.delete.json", // 删除签名
     datapriAdd: "/localData/flow/process.datapri.add.json", // 添加用户
     usepriAdd: "/localData/flow/process.usepri.add.json", // 添加筛选器
-    files: "/localData/flow/process.instance.file.getlist.json"
+    files: "/localData/flow/process.instance.file.getlist.json",
   },
   lookSearch: "/localData/entity.lookup.search.json",
   lookupfilter: "/localData/entity.lookupfilter.getlist.json",

@@ -449,7 +449,7 @@ data.isCommon=true;
   //发布
   const handleSubmit = () => {
       //data.isRelaseInfo = true;
-      window.open('/#/detail?id='+data.id+'&reurl=');
+      window.open('/#/lightning/r/Workflow/instance/detail?id='+data.id+'&reurl=');
   }
   const cancelRelaseInfo = (e) => {
       data.isRelaseInfo = false;

@@ -55,7 +55,7 @@
                 <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
                     <div class="leftContent" :class="{'active':!isAside}">
                         <div class="tableBox" style="width: 100%;overflow: auto;" :class="{'active':!isAside}">
-                            <FlowForm />
+                            <FlowForm ref="flowFormRef" />
                         </div>
                         <div class="reqWrap">
                             <div class="reqHead">
@@ -323,6 +323,9 @@
     import { message } from "ant-design-vue";
     const route = useRoute();
     const router = useRouter();
+
+    const flowFormRef = ref(null);
+
     const data = reactive({
         tabs: [
             {
@@ -456,7 +459,8 @@
     }
     //保存
     const handSave=()=>{
-        message.success("保存成功");
+        // message.success("保存成功");
+        flowFormRef.value.handleSave();
     }
     //打印
     const printForm= () => {
@@ -496,7 +500,7 @@
         proxy.$post(Interface.detail,obj).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
             let fields=res.actions[0].returnValue.fields;
-            if(fields.Name.value){
+            if(fields.Name && fields.Name.value){
                 data.Title=fields.Name.value;
               }
             }
@@ -551,7 +555,7 @@ const handleSave = () => {
             })
         })
     }
-    watch(route.query.id,(newVal,oldVal)=>{
+    watch(()=>route.query.id,(newVal,oldVal)=>{
         getDetail();
     },{deep: true, immediate: true})
 

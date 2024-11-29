@@ -341,6 +341,11 @@ const staticRoutes = [
       icon: "huiyihuodong",
     },
   },
+  {
+    path: "/lightning/r/Workflow/instance/detail",
+    name: "FlowDetail",
+    component: () => import("../views/flow/detail/index.vue")
+  }
 ];
 
 const router = createRouter({

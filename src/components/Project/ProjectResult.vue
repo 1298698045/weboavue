@@ -465,7 +465,7 @@
     const handleView= (id) => {
       data.recordId=id;
       //data.isTaskDetail=true;
-      //window.open('/#/detail?id='+id+'&reurl=');
+      //window.open('/#/lightning/r/Workflow/instance/detail?id='+id+'&reurl=');
     };
     //下载
     const handDownload= (link) => {

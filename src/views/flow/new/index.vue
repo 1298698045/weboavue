@@ -1,111 +1,113 @@
 <template>
-    <div class="todoList">
-        <div class="headerBar">
-            <div class="headerLeft">
-                <div class="icon-circle-base">
-                    <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
-                </div>
-                <span class="headerTitle">新建流程</span>
-            </div>
-        </div>
-        <div class="todo-content">
-            <div class="newFlowWrap">
-                <div class="webTabs">
-                    <a-tabs v-model:activeKey="activeKey" @change="changeTab">
-                        <a-tab-pane :key="1" tab="全部流程"></a-tab-pane>
-                        <a-tab-pane :key="2" tab="我的收藏"></a-tab-pane>
-                        <a-tab-pane :key="3" tab="最近使用"></a-tab-pane>
-                    </a-tabs>
-                    <a-input-search
-                        v-model:value="searchVal"
-                        placeholder="搜索流程"
-                        style="width: 200px"
-                        @search="onSearch"
-                    />
-                </div>
-                <div class="flowContainer">
-                    <div class="flowTypes">
-                        <div class="flowTypeItem" :class="{'active':typeIndex===''}"  @click="handleTabTypes({}, '')">
-                            全部
-                        </div>
-                        <a class="flowTypeItem" :class="{'active':typeIndex===item.categoryId}" v-for="(item, index) in processLists" :key="index" @click="handleTabTypes(item, item.categoryId)">
-                            {{ item.name }}
-                        </a>
+    <div>
+        <div class="todoList">
+            <div class="headerBar">
+                <div class="headerLeft">
+                    <div class="icon-circle-base">
+                        <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
                     </div>
-                    <div class="flowContent">
-                        <template v-for="(item, index) in processLists" :key="index">
-                            <div class="flowPanelItem" :id="item.categoryId" :style="{'borderColor':colors[index%7]}" v-if="typeIndex==item.categoryId||typeIndex==''">
-                                <div class="flowPanelItemHead">
-                                    <div class="typeName"><FileTextOutlined :style="{'color':colors[index%7]}" />{{ item.name }} ({{ item.Processes&&item.Processes.length?item.Processes.length:0 }})</div>
-                                </div>
-                                <div class="flowPanelItemBd">
-                                    <div class="flowRowItem" v-for="(row, idx) in item.Processes" :key="idx" @click="handleStartProcess(row)">
-                                        <div class="flowName rowEllipsis">{{row.name}}</div>
-                                        <div class="collectionIcon" :class="{'active':row.isFavorite}" @click.stop="handleFavorite(row)">
-                                            <a-tooltip>
-                                                <template #title>{{ row.isFavorite?'取消收藏':'收藏' }}</template>
-                                                <i class="iconfont icon-quxiaoshoucang" v-if="row.isFavorite"></i>
-                                                <i class="iconfont icon-tianjiashoucang" v-else></i>
-                                            </a-tooltip>
+                    <span class="headerTitle">新建流程</span>
+                </div>
+            </div>
+            <div class="todo-content">
+                <div class="newFlowWrap">
+                    <div class="webTabs">
+                        <a-tabs v-model:activeKey="activeKey" @change="changeTab">
+                            <a-tab-pane :key="1" tab="全部流程"></a-tab-pane>
+                            <a-tab-pane :key="2" tab="我的收藏"></a-tab-pane>
+                            <a-tab-pane :key="3" tab="最近使用"></a-tab-pane>
+                        </a-tabs>
+                        <a-input-search
+                            v-model:value="searchVal"
+                            placeholder="搜索流程"
+                            style="width: 200px"
+                            @search="onSearch"
+                        />
+                    </div>
+                    <div class="flowContainer">
+                        <div class="flowTypes">
+                            <div class="flowTypeItem" :class="{'active':typeIndex===''}"  @click="handleTabTypes({}, '')">
+                                全部
+                            </div>
+                            <a class="flowTypeItem" :class="{'active':typeIndex===item.categoryId}" v-for="(item, index) in processLists" :key="index" @click="handleTabTypes(item, item.categoryId)">
+                                {{ item.name }}
+                            </a>
+                        </div>
+                        <div class="flowContent">
+                            <template v-for="(item, index) in processLists" :key="index">
+                                <div class="flowPanelItem" :id="item.categoryId" :style="{'borderColor':colors[index%7]}" v-if="typeIndex==item.categoryId||typeIndex==''">
+                                    <div class="flowPanelItemHead">
+                                        <div class="typeName"><FileTextOutlined :style="{'color':colors[index%7]}" />{{ item.name }} ({{ item.Processes&&item.Processes.length?item.Processes.length:0 }})</div>
+                                    </div>
+                                    <div class="flowPanelItemBd">
+                                        <div class="flowRowItem" v-for="(row, idx) in item.Processes" :key="idx" @click="handleStartProcess(row)">
+                                            <div class="flowName rowEllipsis">{{row.name}}</div>
+                                            <div class="collectionIcon" :class="{'active':row.isFavorite}" @click.stop="handleFavorite(row)">
+                                                <a-tooltip>
+                                                    <template #title>{{ row.isFavorite?'取消收藏':'收藏' }}</template>
+                                                    <i class="iconfont icon-quxiaoshoucang" v-if="row.isFavorite"></i>
+                                                    <i class="iconfont icon-tianjiashoucang" v-else></i>
+                                                </a-tooltip>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </template>
-                       
+                            </template>
+                           
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal">
-        <a-modal v-model:open="isModal" width="550px" :maskClosable="false" @cancel="handleCancel" @ok="handleOk">
-            <template #title>
-                <div>
-                    新建流程事务
-                 </div>
-            </template>
-            <div class="modalContainer">
-                <div class="modalCenter" style="height:440px;">
-                    <a-form
-                        ref="formRef"
-                        :label-col="labelCol"
-                        class="CreateProcess"
-                        :model="formState">
-                        <div class="form-tip">请输入流程事务标题，建立事务</div>
-                        <a-form-item label="流程：" name="ProcessName">
-                            <div class="ProcessName">{{ formState.ProcessName || '' }}</div>
-                        </a-form-item>
-                        <a-form-item name="BusinessUnitId" label="创建身份：" :rules="[{ required: true, message: '请选择发起部门' }]">
-                            <a-select v-model:value="formState.BusinessUnitId">
-                                <a-select-option v-for="(item,index) in formState.BusinessUnitList" :key="index" :value="item.BusinessUnitId">{{item.organizationIdName}}/{{item.businessUnitIdName}}</a-select-option>
-                            </a-select>
-                        </a-form-item>
-                        <a-form-item class="processTitle" label="标题：" name="Title"  :rules="[{ required: true, message: '标题不能为空' }]">
-                            <a-input v-model:value="formState.Title" />
-                            <div class="form-tip1">默认标题是 流程名称 部门名称，为了查询方便，请输入流程真实标题。</div>
-                            <div class="form-tip1">如收文 关于XX来文 XX科室 XX人。</div>
-                        </a-form-item>
-                        <a-form-item name="Priority" label="紧急程度：">
-                            <a-select v-model:value="formState.Priority">
-                                <a-select-option value="0">普通</a-select-option>
-                                <a-select-option value="1">紧急</a-select-option>
-                                <a-select-option value="2">加急</a-select-option>
-                            </a-select>
-                        </a-form-item>
-                        <a-form-item label="备注：" name="Description">
-                            <a-textarea :rows="3" v-model:value="formState.Description" />
-                        </a-form-item>
-                    </a-form>
+        <div class="modal">
+            <a-modal v-model:open="isModal" width="550px" :maskClosable="false" @cancel="handleCancel" @ok="handleOk">
+                <template #title>
+                    <div>
+                        新建流程事务
+                     </div>
+                </template>
+                <div class="modalContainer">
+                    <div class="modalCenter" style="height:440px;">
+                        <a-form
+                            ref="formRef"
+                            :label-col="labelCol"
+                            class="CreateProcess"
+                            :model="formState">
+                            <div class="form-tip">请输入流程事务标题，建立事务</div>
+                            <a-form-item label="流程：" name="ProcessName">
+                                <div class="ProcessName">{{ formState.ProcessName || '' }}</div>
+                            </a-form-item>
+                            <a-form-item name="BusinessUnitId" label="创建身份：" :rules="[{ required: true, message: '请选择发起部门' }]">
+                                <a-select v-model:value="formState.BusinessUnitId">
+                                    <a-select-option v-for="(item,index) in formState.BusinessUnitList" :key="index" :value="item.BusinessUnitId">{{item.organizationIdName}}/{{item.businessUnitIdName}}</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item class="processTitle" label="标题：" name="Title"  :rules="[{ required: true, message: '标题不能为空' }]">
+                                <a-input v-model:value="formState.Title" />
+                                <div class="form-tip1">默认标题是 流程名称 部门名称，为了查询方便，请输入流程真实标题。</div>
+                                <div class="form-tip1">如收文 关于XX来文 XX科室 XX人。</div>
+                            </a-form-item>
+                            <a-form-item name="Priority" label="紧急程度：">
+                                <a-select v-model:value="formState.Priority">
+                                    <a-select-option value="0">普通</a-select-option>
+                                    <a-select-option value="1">紧急</a-select-option>
+                                    <a-select-option value="2">加急</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item label="备注：" name="Description">
+                                <a-textarea :rows="3" v-model:value="formState.Description" />
+                            </a-form-item>
+                        </a-form>
+                    </div>
                 </div>
-            </div>
-            <template #footer>
-                <div>
-                    <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
-                    <a-button @click="handleCancel">取消</a-button>
-                </div>
-            </template>
-        </a-modal>
+                <template #footer>
+                    <div>
+                        <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
+                        <a-button @click="handleCancel">取消</a-button>
+                    </div>
+                </template>
+            </a-modal>
+        </div>
     </div>
 </template>
 <script setup>
@@ -331,8 +333,7 @@
                     if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                     message.success("新建流程成功");
                     let url = router.resolve({
-                        path:'/detail',
-                        name: "Detail",
+                        name: "FlowDetail",
                         query: {
                             id: res.actions[0].returnValue.id,
                             reurl:'/lightning/o/workflow/doing'

@@ -371,7 +371,7 @@
     const handleView= (id) => {
       data.recordId=id;
       data.isTaskDetail=true;
-        //window.open('/#/detail?id='+id+'&reurl=');
+        //window.open('/#/lightning/r/Workflow/instance/detail?id='+id+'&reurl=');
     };
   onMounted(() => {
     let h = document.documentElement.clientHeight;

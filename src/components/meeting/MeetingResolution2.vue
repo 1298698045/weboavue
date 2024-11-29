@@ -349,7 +349,7 @@
     };
     //查看
     const handleView= (id) => {
-        window.open('/#/detail?id='+id+'&reurl=');
+        window.open('/#/lightning/r/Workflow/instance/detail?id='+id+'&reurl=');
     };
   onMounted(() => {
     let h = document.documentElement.clientHeight;
