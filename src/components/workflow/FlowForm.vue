@@ -62,11 +62,11 @@
                                             <a-checkbox-group v-model:value="col.selectedList" style="width: 100%;display: contents;">
                                                 <tr v-for="(sub, subIdx) in col.subTableData" style="width: 100%;">
                                                     <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">
-                                                        <a-checkbox :value="sub.id"></a-checkbox>
+                                                        <a-checkbox :value="sub.key"></a-checkbox>
                                                     </td>
                                                     <!-- <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">{{subIdx+1}}</td> -->
                                                     <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 24px;">
-                                                        <FieldType :type="child.type" :field="child" :list="sub" :select="select" :search="search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="searchlookup" />
+                                                        <FieldType :type="child.type" :field="child" :list="sub" :select="relatedObjData[col.field.id].select" :search="col.search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)" />
                                                     </td>
                                                 </tr>
                                             </a-checkbox-group>
@@ -92,7 +92,7 @@
             @selectVal="handleUserParams"
             :localId="fieldData.name"
           ></radio-user>
-        <Lookup-filter v-if="isLookup" :isShow="isLookup" :field="fieldData.name" :entityApiName="entityApiName" :lookEntityApiName="lookEntityApiName" :objectTypeCode="objectTypeCode" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
+        <Lookup-filter v-if="isLookup" :isShow="isLookup" :field="fieldData.name" :entityApiName="entityApiName" :lookEntityApiName="lookEntityApiName" :lookObjectTypeCode="lookObjectTypeCode" :objectTypeCode="objTypeCode" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
     </div>
 </template>
 <script setup>
@@ -119,6 +119,7 @@
     import RadioDept from "@/components/commonModal/RadioDept.vue";
     import RadioUser from "@/components/commonModal/RadioUser.vue";
     import LookupFilter from "@/components/commonModal/LookupFilter.vue";
+    import { formNodesValueObj } from "@/utils/common.js";
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
     import { useRoute, useRouter } from "vue-router";
@@ -141,6 +142,7 @@
         fieldData: {},
         entityApiName: "QJD",
         lookEntityApiName: "",
+        lookObjectTypeCode: "",
         objectTypeCode: "",
         list: {},
         select: {},
@@ -156,12 +158,15 @@
         processInstanceId: "",
         objTypeCode: "",
         isSub: false, // 是否是子表
-        subRecordFieldData: {}
+        subRecordFieldData: {}, // 相关列表搜索字段
+        relatedObjData: {}, // 相关列表
+        relatedEntityInfoList: [],
+        toActivityID: "", // 当前节点ID
     });
     const { entityId, layoutData, rowCount, columnCount, cellData, mergeData, rows, mergeRowColData, 
-        isRadioUser, isRadioDept, isLookup, fieldData, entityApiName, lookEntityApiName, objectTypeCode, columns, comps, ruleId,
+        isRadioUser, isRadioDept, isLookup, fieldData, entityApiName, lookEntityApiName, lookObjectTypeCode, objectTypeCode, columns, comps, ruleId,
         processId, entityLayoutId, select, isLoad, entityObjectId, attributes, list, search, processInstanceId, objTypeCode, isSub,
-        subRecordFieldData
+        subRecordFieldData, relatedObjData, relatedEntityInfoList, toActivityID
      } = toRefs(data);
 
      const handleSetValue = (field, value) => {
@@ -188,9 +193,10 @@
         }
         let res = await proxy.$post(Interface.detail, d);
         if(res && res.actions && res.actions[0].returnValue){
-            let { ProcessId, ProcessInstanceId } = res.actions && res.actions[0].returnValue.fields;
+            let { ProcessId, ProcessInstanceId, ToActivityID } = res.actions && res.actions[0].returnValue.fields;
             data.processId = ProcessId.value;
             data.processInstanceId = ProcessInstanceId.value;
+            data.toActivityID = ToActivityID.value;
         }
     };
 
@@ -238,7 +244,7 @@
         // console.log("getFlowFormDetail", res);
         if(res && res.actions && res.actions[0] && res.actions[0].returnValue){
             let fields = res.actions[0].returnValue.fields;
-            console.log("data.comps", data.comps);
+            // console.log("data.comps", data.comps);
             for(let key in data.list){
                 let type = data.comps.find(item=>item.id == key).type;
                 // console.log("type:",type);
@@ -252,9 +258,171 @@
 
                 data.list[key] = fields[key].value;
             }
-            console.log("list", data.list);
+            // console.log("list", data.list);
         }
             
+    }
+
+    // 获取主对象相关列表
+    const getRelatedObjects = async () => {
+        let obj = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    id: data.entityObjectId
+                }
+            }]
+        }
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        let res = await proxy.$post(Interface.workflow.getRelatedObjects, d);
+        let relatedEntityList = res.actions[0].returnValue;
+        // console.log("relatedEntityList", relatedEntityList);
+        // console.log("relatedObjData", data.relatedObjData);
+
+
+        let relatedEntityInfoList = [];
+        for(let key in data.relatedObjData){
+            let name = data.relatedObjData[key].relatedName;
+            let entityRow = relatedEntityList.find(item=>item.relatedEntity==name);
+            entityRow.checkedColumns = data.relatedObjData[key].checkedColumns;
+            relatedEntityInfoList.push(entityRow);
+        };
+        data.relatedEntityInfoList = relatedEntityInfoList;
+
+    };
+
+    const getRelatedPicks = async () => {
+        const requests = data.relatedEntityInfoList.map(item => {
+            let obj = {
+                actions:[{
+                    id: "2320;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        objectApiName: item.relatedEntity,
+                        recordTypeId: ""
+                    }
+                }]
+            };
+            let d = {
+                message: JSON.stringify(obj)
+            }
+            return proxy.$post(Interface.pickListValues, d);
+        });
+
+        try{
+            const results = await Promise.all(requests);
+            let keys = Object.keys(data.relatedObjData);
+            results.forEach((item, index)=>{
+                let pickList = item.actions[0].returnValue;
+                data.relatedObjData[keys[index]]['select'] = pickList;
+            });
+            // console.log("data.relatedObjData:", data.relatedObjData);
+        }catch{
+
+        }
+    };
+
+    const getRelatedAttrs = async () => {
+        const requests = data.relatedEntityInfoList.map(item => {
+            let d = {
+                entityApiName: item.relatedEntity
+            }
+            return proxy.$post(Interface.objFieldData, d);
+        });
+
+        try{
+            const results = await Promise.all(requests);
+            let keys = Object.keys(data.relatedObjData);
+            results.forEach((item, index)=>{
+                let attributes = item.attributes;
+                data.relatedObjData[keys[index]]['attributes'] = attributes;
+            });
+            // console.log("data.relatedObjData-attributes:", data.relatedObjData);
+        }catch{
+
+        }
+    }
+
+    const getFlowFormRelatedList = async () => {
+
+        console.log("relatedEntityInfoList", data.relatedEntityInfoList);
+
+        let requests = data.relatedEntityInfoList.map(item=>{
+            let filterQuery = item.relatedEntityJoinField+'\teq\t'+data.processInstanceId;
+            let displayColumns = item.checkedColumns.map(row=>row.key).join(',');
+            let d = {
+                filterId: "",
+                // displayColumns: displayColumns,
+                objectTypeCode: item.relatedEntityObjectTypeCode,
+                entityName: item.relatedEntity,
+                filterQuery: filterQuery,
+                page: 1,
+                rows: 100
+            };
+            return proxy.$post(Interface.list2, d);
+        })
+
+        let results = await Promise.all(requests);
+        console.log("relatedObjData-nodes", data.relatedObjData);
+        console.log("results-nodes:", results);
+
+        let keys = Object.keys(data.relatedObjData);
+        results.forEach((item, index)=>{
+            let list = [];
+            item.nodes.forEach((row, idx)=>{
+                let obj = {};
+                for(let key in row){
+                    if(row[key].__typeName){
+                        obj[key] = formNodesValueObj(key, row);
+                    }else {
+                        obj[key] = row[key];
+                    }
+                }
+                obj['key'] = idx;
+                list.push(obj);
+            });
+            // console.log("listlist", list);
+            data.relatedObjData[keys[index]]['list'] = list;
+        });
+        // console.log('data.relatedObjDatadata.relatedObjData', data.relatedObjData);
+
+        data.cellData.forEach(item=>{
+            for(let key in item){
+                let col = item[key];
+                if(col.field?.displayCategory == 'RelatedList'){
+                    let relatedName = col.field.id;
+                    let list = [];
+                    data.relatedObjData[relatedName].list.forEach((row, index)=>{
+                        let obj = {};
+                        for(let field in row){
+                            if(Object.prototype.toString.call(row[field]) == '[object Object]'){
+                                if(col.search[field]?.length==0){
+                                    col.search[field] = [row[field]];
+                                }else if(col.search[field]?.length > 0){
+                                    let isBook = col.search[field].some(l=>l.ID==row[field].ID);
+                                    if(!isBook){
+                                        col.search[field].push(row[field]);
+                                    }
+                                }
+                                obj[field] = row[field].ID;
+                            }else {
+                                obj[field] = row[field];
+                            }
+                        };
+                        list.push(obj);
+                    });
+                    col.subTableData = list;
+                }
+            }
+        });
+
+        console.log("data.cellData:", data.cellData);
+        
     }
 
     const getProcessData = async () => {
@@ -349,6 +517,7 @@
                     pageParam: 1,
                     pageSize: 25,
                     q: "",
+                    search: search,
                     searchType: "Recent",
                     targetApiName: targetApiName,
                     body: {
@@ -375,10 +544,118 @@
                     Name: item.fields.Name.value
                 })
             });
-            data.search[field.id] = arr;
-            // console.log("data.search", data.search);
+
+            if(data.search[field.id].length == 0){
+                data.search[field.id] = arr;
+            }else {
+                arr.forEach(item=>{
+                    let isBook = data.search[field.id].some(row=>row.ID==item.ID);
+                    if(!isBook){
+                        data.search[field.id].push(item);
+                    }
+                });
+            }
+            // data.search[field.id] = arr;
         })
-    } 
+    }
+
+    const searchlookupChildren = (search, field, col, subIdx) => {
+        // console.log("search", search);
+        // console.log("field", field);
+        // console.log("col", col);
+        // console.log("subIdx", subIdx);
+        let subRecordFieldData = {
+            name: col.field.id, // 当前子表名称
+            subIdx,
+            data: field
+        };
+        let targetApiName;
+
+        let attributes = data.relatedObjData[col.field.id].attributes;
+        let findRow = attributes.find(item=>field.id == item.name);
+        console.log("findRow", findRow);
+        targetApiName = findRow.referencedEntity.EntityName;
+        let obj = {
+            actions:[{
+                id: "6129;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    objectApiName: data.entityApiName,
+                    fieldApiName: field.id,
+                    pageParam: 1,
+                    pageSize: 25,
+                    q: "",
+                    searchType: "Recent",
+                    targetApiName: targetApiName,
+                    search: search,
+                    body: {
+                        sourceRecord: {
+                            apiName: data.entityApiName,
+                            fields: {
+                                Id: null,
+                                RecordTypeId: ""
+                            }
+                        }
+                    }
+                }
+            }]
+        }
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.lookup, d).then((res) => {
+            let list = res.actions[0].returnValue.lookupResults.records;
+            let arr = [];
+            list.forEach(item=>{
+                arr.push({
+                    ID: item.fields.Id.value,
+                    Name: item.fields.Name.value
+                })
+            });
+            // console.log("arr", arr);
+            data.cellData.forEach(item=>{
+                for(let key in item){
+                    let { name, subIdx } = subRecordFieldData;
+                    let { id } = subRecordFieldData.data;
+                    if(item[key].field?.id == name){
+                        if(item[key].search[id].length == 0){
+                            item[key].search[id] = arr;
+                        }else {
+                            arr.forEach(selfItem=>{
+                                let isBook = item[key].search[id].some(row=>row.ID==selfItem.ID);
+                                if(!isBook){
+                                    item[key].search[id].push(selfItem);
+                                }
+                            });
+                            // item[key].search[id] = item[key].search[id].concat(arr);
+                        }
+                    }
+                }    
+            })
+        })
+    };
+
+    // 获取权限
+    const getPermission = async () => {
+        let obj = {
+            actions:[{
+                id: "562;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    processId: data.processId,
+                    activityId: data.toActivityID
+                }
+            }]
+        };
+
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        let res = await proxy.$post(Interface.workflow.getPermission, d);
+        
+    }
 
     const loadQuery = async () => {
         await getRuleLogData();
@@ -389,12 +666,16 @@
         getPickList();
         await getAttributes();
         await getFlowFormDetail();
+        
+        await getRelatedObjects();
+        await getRelatedPicks();
+        await getRelatedAttrs();
+        await getFlowFormRelatedList();
+        await getPermission();
         data.isLoad = true;
     }
     loadQuery();
     
-
-
     const getDetail = async () => {
         let obj = {
             actions: [{
@@ -403,7 +684,7 @@
                 callingDescriptor: "UNKNOWN",
                 params: {
                     recordId: data.entityLayoutId,
-                    // recordId: "6E4F1989-831A-42EC-863B-675ECADC1F3B",
+                    // recordId: "6E4F1989-831A-42EC-863B-675ECADC1F3B", // 流程步骤表单
                     apiName: "EntityForm"
                 }
             }]
@@ -472,7 +753,7 @@
             console.log('cells', cells);
             data.cellData = cells;
 
-
+            // console.log("comps", comps);
             // 处理子表
             comps.forEach(item=>{
                 let { row, column } = item.layout;
@@ -483,15 +764,29 @@
                     data.cellData[row][column].subTableData = [];
                     data.cellData[row][column].selectedList = [];
                     if(item.displayCategory=='RelatedList'){
+                        data.cellData[row][column].search = {};
                         console.log("data.cellData[row][column]", data.cellData[row][column]);
                         let rowField = {
-                            id: 1
+                            key: 1
                         };
                         item.checkedColumns.forEach(item=>{
                             rowField[item.key] = "";
                             item.id = item.key;
                         })
                         data.cellData[row][column].subTableData.push(rowField);
+
+                        // search
+                        data.cellData[row][column].field.checkedColumns.forEach(k=>{
+                            // console.log("k", k);
+                            data.cellData[row][column].search[k.id] = [];
+                        })
+
+                        // 记录相关列表
+                        let relatedName = item.id.split("__")[1];
+                        data.relatedObjData[item.id] = {
+                            relatedName: relatedName,
+                            checkedColumns: item.checkedColumns
+                        }
                     }
                 }
             });
@@ -505,6 +800,7 @@
             };
             console.log('data.cellData2', data.cellData);
             console.log('mergeRowKeyData', data.mergeRowKeyData);
+            console.clear();
         })
     }
 
@@ -614,30 +910,40 @@
         } else if (type == 'O') {
             data.isRadioDept = true;
         }else {
-            // data.lookEntityApiName = attribute.attributes.referencedEntityName;
-            // data.recordObj = attribute;
-            // data.type = type;
-            // data.isLookup = true;
+            // console.log("data", data.attributes);
+            let { EntityName, EntityObjectTypeCode } = data.attributes.find(item=>item.name == e.id).referencedEntity;
+            console.log("EntityName, EntityObjectTypeCode", EntityName, EntityObjectTypeCode);
+            data.lookEntityApiName = EntityName;
+            data.lookObjectTypeCode = EntityObjectTypeCode;
+            data.isLookup = true;
         }
     };
 
     // 子表查找字段
     const handleOpenLookChildren = (e, subIdx, field) => {
-        console.log("field", field);
+        console.log("e", e);
+        // console.log("field", field);
         data.isSub = true;
-        console.log("handleOpenLookChildren", e, subIdx);
+        // console.log("handleOpenLookChildren", e, subIdx);
         data.subRecordFieldData = {
             name: field.id, // 当前子表名称
             subIdx,
             data: e
         };
         let type = e.type;
+        // console.log("subRecordFieldData", data.subRecordFieldData);
+
         if (type == 'U') {
             data.isRadioUser = true;
         } else if (type == 'O') {
             data.isRadioDept = true;
         }else {
-
+            let attributes = data.relatedObjData[field.id].attributes;
+            let { EntityName, EntityObjectTypeCode } = attributes.find(item=>item.name == e.id).referencedEntity;
+            // console.log("EntityName, EntityObjectTypeCode", EntityName, EntityObjectTypeCode);
+            data.lookEntityApiName = EntityName;
+            data.lookObjectTypeCode = EntityObjectTypeCode;
+            data.isLookup = true;
         }
     };
 
@@ -652,39 +958,135 @@
             ID: e.id,
             Name: e.name
         }
-        let { name } = data.fieldData;
         
-        if(data.search[name] == undefined){
-            console.log("1123", data.search[name])
-            data.search[name] = [
-                newData
-            ]
-        }else {
-            let isBook = data.search[name].some(item=>item.ID==newData.ID);
-            if(!isBook){
-                data.search[name].push(newData);
-            }
-        }
+        // 处理子表
         if(!data.isSub){
+            let { name } = data.fieldData;
+            if(data.search[name] == undefined){
+                // console.log("1123", data.search[name])
+                data.search[name] = [
+                    newData
+                ]
+            }else {
+                let isBook = data.search[name].some(item=>item.ID==newData.ID);
+                if(!isBook){
+                    data.search[name].push(newData);
+                }
+            }
             data.list[name] = newData.ID;
         }else {
-            console.log("sublist", data.subRecordFieldData);
-            console.log("dada", data.cellData)
+            // console.log("sublist", data.subRecordFieldData);
+            // console.log("dada", data.cellData);
+            data.cellData.forEach(item=>{
+                for(let key in item){
+                    let { name, subIdx } = data.subRecordFieldData;
+                    let { id } = data.subRecordFieldData.data;
+                    if(item[key].field?.id == name){
+                        if(item[key].search[id].length == 0){
+                            item[key].search[id] = [newData];
+                        }else {
+                            let isBook = item[key].search[id].some(row=>row.ID==newData.ID);
+                            if(!isBook){
+                                item[key].search[id].push(newData);
+                            }
+                        }
+                        item[key].subTableData[subIdx][id] = newData.ID;
+                    }
+                }    
+            })
         }
-        console.log("search", data.search);
-        console.log("list", data.list);
+        // console.log("search", data.search);
+        // console.log("list", data.list);
         data.isRadioUser = false;
     };
 
     const cancelDeptModal = () => {
         data.isRadioDept = false;
     };
-    const handleDeptParams = () => {
 
+    const handleDeptParams = (e) => {
+        // console.log("handleDeptParams:", e);
+        // console.log("fieldData:", data.fieldData);
+        let newData = e;
+        if(!data.isSub){
+            let { name } = data.fieldData;
+            console.log("data.search[name]", data.search[name]);
+            if(data.search[name] == undefined){
+                data.search[name] = [
+                    newData
+                ]
+            }else {
+                let isBook = data.search[name].some(item=>item.ID==newData.ID);
+                if(!isBook){
+                    data.search[name].push(newData);
+                }
+            }
+            data.list[name] = newData.ID;
+        }else {
+            data.cellData.forEach(item=>{
+                for(let key in item){
+                    let { name, subIdx } = data.subRecordFieldData;
+                    let { id } = data.subRecordFieldData.data;
+                    if(item[key].field?.id == name){
+                        if(item[key].search[id].length == 0){
+                            item[key].search[id] = [newData];
+                        }else {
+                            let isBook = item[key].search[id].some(row=>row.ID==newData.ID);
+                            if(!isBook){
+                                item[key].search[id].push(newData);
+                            }
+                        }
+                        item[key].subTableData[subIdx][id] = newData.ID;
+                    }
+                }    
+            })
+        }
+
+        data.isRadioDept = false;
     };
 
-    const handleSelect = () => {
-        
+
+    // 通用查找弹窗赋值
+    const handleSelectData = (e) => {
+        let newData = {
+            ID: e.id,
+            Name: e.Name
+        }
+        if(!data.isSub){
+            let { name } = data.fieldData;
+            console.log("data.search[name]", data.search[name]);
+            if(data.search[name] == undefined){
+                data.search[name] = [
+                    newData
+                ]
+            }else {
+                let isBook = data.search[name].some(item=>item.ID==newData.ID);
+                if(!isBook){
+                    data.search[name].push(newData);
+                }
+            }
+            data.list[name] = newData.ID;
+        }else {
+            data.cellData.forEach(item=>{
+                for(let key in item){
+                    let { name, subIdx } = data.subRecordFieldData;
+                    let { id } = data.subRecordFieldData.data;
+                    if(item[key].field?.id == name){
+                        if(item[key].search[id].length == 0){
+                            item[key].search[id] = [newData];
+                        }else {
+                            let isBook = item[key].search[id].some(row=>row.ID==newData.ID);
+                            if(!isBook){
+                                item[key].search[id].push(newData);
+                            }
+                        }
+                        item[key].subTableData[subIdx][id] = newData.ID;
+                    }
+                }    
+            })
+        }
+
+        data.isLookup = false;
     }
 
     const isRowShow = (row, key) => {
@@ -700,19 +1102,27 @@
     const handleAddSubTable = (col) => {
         console.log("handleAddSubTable", col);
         let row = {
-            id: col.subTableData.length + 1
+            key: col.subTableData.length + 1
         };
-        col.field.selectableColumns.forEach(item=>{
+        col.field.checkedColumns.forEach(item=>{
             row[item.key] = "";
         })
         col.subTableData.push(row);
     };
 
     const handleDelSubTable = (col) => {
+        
         console.log('col.subTableData',col.subTableData, col.selectedList);
+
         for (let i = col.subTableData.length - 1; i >= 0; i--) {
-            if (col.selectedList.indexOf(col.subTableData[i].id) !== -1) {
-                col.subTableData.splice(i, 1);
+            let item = col.subTableData[i]
+            if (col.selectedList.indexOf(col.subTableData[i].key) !== -1) {
+                console.log("col.subTableData", col.subTableData[i]);
+                if(item.id){
+                    
+                }else {
+                    col.subTableData.splice(i, 1);
+                }
             }
         }
     };
@@ -720,17 +1130,17 @@
     const handleCopySubTable = (col) => {
         let list = col.subTableData.filter(item=>{
             return col.selectedList.find(row=>{
-                return item.id == row;
+                return item.key == row;
             })
         })
         const copyData = JSON.parse(JSON.stringify(list));
         copyData.forEach(item=>{
-            item.id = item.id+new Date().getTime();
+            item.key = item.key+new Date().getTime();
             col.subTableData.push(item);
         })
     }
 
-    const handleSave = () => {
+    const handleSave_old = () => {
         // console.log("保存", data.list);
         let d = {
           actions:[{
@@ -754,8 +1164,95 @@
         proxy.$post(Interface.edit, obj).then((res) => {
             console.log("res", res);
             message.success("保存成功！");
-            
         })
+
+        // console.log("cellData:", data.cellData);
+        // saveRelated();
+        
+    }
+
+    const handleSave = () => {
+
+        let relatedList = saveRelated();
+        let obj = {
+          actions:[{
+              id: "2919;a",
+              descriptor: "",
+              callingDescriptor: "UNKNOWN",
+              params: {
+                master: {
+                    recordId: data.processInstanceId,
+                    recordInput:{
+                        allowSaveOnDuplicate: false,
+                        apiName: data.entityApiName,
+                        objTypeCode: data.objTypeCode,
+                        fields: data.list
+                    }
+                },
+                relatedList: relatedList
+              }
+          }]
+        };
+
+        let d = {
+            message: JSON.stringify(obj)
+        }
+
+        console.log("d", JSON.stringify(obj));
+
+        proxy.$post(Interface.workflow.updateRecordBatch , d).then(res=>{
+            message.success("保存成功！");
+        })
+    };
+
+    const saveRelated = () => {
+        let relatedObj = {};
+        data.cellData.forEach(item=>{
+            for(let key in item){
+                if(item[key]?.field?.displayCategory == 'RelatedList'){
+                    let { field, subTableData } = item[key];
+                    let relatedName = field.id.split("__")[1];
+                    relatedObj[field.id] = {
+                        relatedName: relatedName,
+                        list: subTableData,
+                        checkedColumns: field.checkedColumns
+                    }
+                }
+            }
+        });
+        // console.log("relatedObj", relatedObj);
+        let relatedList = [];
+        for(let key in relatedObj){
+            let relatedName = relatedObj[key].relatedName;
+            let list = relatedObj[key].list;
+            let newList = list.map(item=>{
+                const { key, ...rest } = item;
+                return rest;
+            });
+            data.relatedEntityInfoList.forEach(item=>{
+                if(item.relatedEntity == relatedName){
+                    // relatedList.push({
+                    //     relatedEntity: item.relatedEntity,
+                    //     relatedEntityObjectTypeCode: item.relatedEntityObjectTypeCode,
+                    //     list: newList
+                    // });
+                    newList.forEach(row=>{
+                        let obj = {
+                            recordId: item.id || '',
+                            recordInput: {
+                                allowSaveOnDuplicate: false,
+                                apiName: item.relatedEntity,
+                                objTypeCode: item.relatedEntityObjectTypeCode,
+                                fields: row
+                            }
+                        }
+                        relatedList.push(obj);
+                    })
+                }
+            })
+        };
+        // console.log("relatedList", relatedList);
+        return relatedList;
     }
 
     defineExpose({handleSave});

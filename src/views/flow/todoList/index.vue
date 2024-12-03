@@ -524,7 +524,7 @@ const getColumns = (id) => {
       if(res&&res.tabs&&res.tabs.length){
         let list=res.tabs;
         list.forEach(item => {
-          item.label = item.title;
+          item.label = item.title||item.name;
           item.filterId = item.filter.filterId;
           item.filterquery=item.filterquery||'';
         })

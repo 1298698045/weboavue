@@ -344,6 +344,7 @@
 <style lang="less" scoped>
     .filed{
         padding: 5px;
+        min-width: 100px;
         .searchLook{
             position: relative;
             .searchIcon{

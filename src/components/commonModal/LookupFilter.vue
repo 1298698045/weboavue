@@ -13,7 +13,7 @@
         </div>
       </template>
       <div class="modalContainer">
-        <div class="modalCenter" style="padding: 10px 15px!important;" :style="{ height: height + 'px!important' }">
+        <div class="modalCenter" style="padding: 10px 15px!important;max-height: inherit !important;" :style="{ height: height + 'px!important' }">
           <div class="searchBox">
               <div class="searchForm" :class="{'active':isAdvance}">
                   <a-input-search
@@ -29,18 +29,18 @@
               </div>
               <div class="search-modal" v-if="isAdvance">
                   <div class="search-container">
-                      <list-form-search ref="searchRef" @search="handleAdvanceSearch" :entityApiName="props.entityApiName"></list-form-search>
+                      <list-form-search ref="searchRef" @search="handleAdvanceSearch"></list-form-search>
                   </div>
                   <div class="search-footer"></div>
               </div>
           </div>
-          <Dtable ref="gridRef" :singleSelect="true" name="datagridFilter" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable>
+          <Dtable ref="gridRef" :singleSelect="true" name="datagridFilter" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed" :loadFilter="loadFilter"></Dtable>
         </div>
       </div>
       <template #footer>
         <div>
           <a-button @click="handleCancel">取消</a-button>
-          <a-button type="primary" @click.prevent="handleSubmit">保存</a-button>
+          <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
         </div>
       </template>
     </a-modal>
@@ -67,7 +67,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
-import Dtable from "@/components/Dtable.vue";
+import Dtable from "@/components/Dtable_nodes.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
 
 import Interface from "@/utils/Interface.js";
@@ -80,7 +80,8 @@ const props = defineProps({
   entityType: [Number, String],
   field: String,
   entityApiName: String,
-  lookEntityApiName: String
+  lookEntityApiName: String,
+  lookObjectTypeCode: [Number, String],
 });
 const formRef = ref();
 const emit = defineEmits(["cancel","select"]);
@@ -109,13 +110,15 @@ const data = reactive({
     rows: "",
     page: "",
     sort: "",
-    order: ""
-  }
+    order: "",
+    displayColumns: "",
+  },
+  nameField: ""
 });
-const gridUrl = ref(Interface.listView.list);
+const gridUrl = ref(Interface.list2);
 const {
   title,
-  height, columns, isCollapsed, tableHeight, searchVal, isAdvance, queryParams
+  height, columns, isCollapsed, tableHeight, searchVal, isAdvance, queryParams, nameField
 } = toRefs(data);
 const formState = reactive({
   searchVal: ""
@@ -143,6 +146,39 @@ onMounted(() => {
   });
 });
 
+const loadFilter = (res) => {
+  // console.log('dataloadfilter', data);
+  // console.log("filterdata.queryParams.displayColumns", data.queryParams.displayColumns);
+  let fields = data.queryParams.displayColumns.split(',');
+  console.log("fields", fields);
+  var data0 = { rows: [], total: 0 }
+  if (res) {
+    if(res.nodes){
+      let list = [];
+      fields.forEach(field=>{
+        list = res.nodes.map(row=>{
+          if(row[field] && row[field].__typeName == 'TextField'){
+            row[field] = row[field].textValue;
+          }else if(row[field] && row[field].__typeName == 'DateTimeField'){
+            row[field] = row[field].dateTime;
+          }else if(row[field] && row[field].__typeName == 'UserField'){
+            row[field] = row[field].userValue.DisplayName || '';
+          }else {
+            row[field] = row[field].value || '';
+          }
+          row.LIST_RECORD_ID = row.id;
+          return row;
+        })
+      })
+      data0.rows = list;
+    }else {
+      data0.rows = res;
+    }
+  }
+  data0.total = res&&res.totalCount ? Number(res.totalCount) : data0.rows.length;
+  return data0
+}
+
 const getConfig = () => {
   let obj = {
       actions: [{
@@ -163,14 +199,16 @@ const getConfig = () => {
       message: JSON.stringify(obj)
   };
   proxy.$post(Interface.lookupObj.column, d).then(res=>{
-      let { fields } = res.actions[0].returnValue;
+      let { fields, nameField } = res.actions[0].returnValue;
       fields.forEach(item=>{
         data.columns.push({
           field: item.column,
           title: item.label,
           sortable: item.isSortable,
         });
-      })
+      });
+      data.nameField = nameField;
+      data.queryParams.displayColumns = fields.map(item=>item.column).join(',');
       gridRef.value.loadGrid(data.queryParams);
   })
 }
@@ -179,9 +217,9 @@ const handleSubmit = () => {
   let list = gridRef.value.getCheckList();
   console.log("checklist", list);
   if(list.length){
-      emit("select", list[0]);
+      emit("select", list[0], data.nameField);
   }else {
-      message.error("至少选择一项！")
+      Toast("至少选择一项！")
   }
 };
 </script>
@@ -212,8 +250,7 @@ const handleSubmit = () => {
 
   &.active{
       .ant-input-search{
-          //margin-right: 86px;
-          margin-right: 0;
+          margin-right: 86px;
       }
       .ant-btn.searchBtn{
           border-bottom: none;

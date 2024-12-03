@@ -17,6 +17,9 @@ const Interface = {
     getFavorites:baseUrl + "/workflow/Process/getFavorites",//获取收藏流程
     new:baseUrl + "/workflow/ProcessInstance/new",//新建流程
     getProcessDefinitionInfo: baseUrl + "/aura/workflow/Process/getProcessDefinitionInfo", // 获取流程定义简要
+    getRelatedObjects: baseUrl + "/objectmanager/object/getRelatedObjects", // 根据对象ID，包括主表、子表信息
+    updateRecordBatch: baseUrl + "/aura/RecordUi/updateRecordBatch", // 保存表单 - 同时保存主子表
+    getPermission: baseUrl + "/aura/workflow/definition/activity/getPermission", // 流程节点权限
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",

@@ -1,3 +1,4 @@
+// 格式化树结构
 export const formTreeData = (list, id, pid) => {
     var result = [];
     if (!Array.isArray(list)) {
@@ -18,6 +19,7 @@ export const formTreeData = (list, id, pid) => {
     });
     return result;
 }
+// 去重
 export const unique = (list, field) => {
     for(let i = 0; i < list.length; i++){
         for(let j = i + 1; j < list.length; j++) {
@@ -29,10 +31,13 @@ export const unique = (list, field) => {
     }
     return list;
 }
+
 export const compareIgnoreCase = (str1, str2) => {
-    console.log("str1", str1, str2)
+    // console.log("str1", str1, str2)
     return str1.toLowerCase() === str2.toLowerCase();
 }
+
+//  格式化/api/listview/data/getNodes接口的数据 所有字段只输出name
 export const girdFormatterValue = (key,row,nameField) => {
     let val = '';
     let typename = row[key] && row[key].__typeName;
@@ -63,6 +68,39 @@ export const girdFormatterValue = (key,row,nameField) => {
     }
     if(nameField&&nameField==key&&row['viewUrl']){
         val = '<a style="text-decoration: none;color:#1677ff;" href="/#'+row['viewUrl']+'" target="_blank">'+val+'</a>'
+    }
+    return val;
+}
+
+//  格式化/api/listview/data/getNodes接口的数据 form表单使用 搜索字段输出键值对{value, name} 其余输出name
+export const formNodesValueObj = (key, row) => {
+    let val = '';
+    let typename = row[key] && row[key].__typeName;
+    if(typename == 'StatusField'){
+        val = row[key].name;
+    }else if(typename == 'LookupField'){
+        val = {
+            ID: row[key].lookupValue.value,
+            Name: row[key].lookupValue.displayName
+        };
+        // val = row[key].lookupValue.value
+    } else if(typename == 'DateTimeField'){
+        val = row[key].dateTime;
+    } else if(typename=="UserField"){
+        val = {
+            ID: row[key].userValue.Value,
+            Name: row[key].userValue.DisplayName
+        };
+    } else if(typename=="PicklistField"){
+        val = row[key].name || '';
+    } else if(typename=="DateField"){
+        val = row[key] && row[key].date;
+    } else if (typename == "TextField") {
+        val = row[key] && row[key].textValue;
+    } else if (typename == "CheckboxField") {
+        val = row[key] && row[key].selected;
+    } else {
+        val = row[key] && row[key].value;
     }
     return val;
 }
