@@ -2,7 +2,7 @@
     <div class="emailDetail">
         <div class="mailSubject">
             <div class="title rowEllipsis">
-                传附件查看
+                {{detail.Subject||'暂无标题'}}
             </div>
             <div class="emailOption">
                 <a-button class="ml5">回复</a-button>
@@ -35,7 +35,7 @@
                         <a-menu-item key="4">
                             转发
                         </a-menu-item>
-                        <a-menu-item key="5">
+                        <a-menu-item key="5" @click="handleDeleteEmail">
                             删除
                         </a-menu-item>
                       </a-menu>
@@ -63,7 +63,7 @@
                         <div class="rowLabel">
                             <span class="label">收件人：</span>
                             <div class="fullNameList" v-if="receiverNames!=''">
-                                <span class="emailFullName" v-for="item in receiverNames">{{item}}</span>
+                                <span class="emailFullName" v-for="(item,index) in receiverNames" :key="index">{{item}}</span>
                             </div>
                         </div>
                         <div class="emailTitleBox" v-if="isEmailTitle">
@@ -118,12 +118,13 @@
     const data = reactive({
         isDetail: false,
         isEmailTitle: false,
-        detail: {},
+        detail: {Subject:''},
         ltags: "inbox",
         receiverNames: [],
+        attachments:[],
         isDelete: false
     })
-    const { isDetail, isEmailTitle, detail, receiverNames, isDelete } = toRefs(data);
+    const { isDetail, isEmailTitle, detail, receiverNames, isDelete,attachments } = toRefs(data);
 
     const handleClickText = () => {
         data.isDetail = !data.isDetail;
@@ -131,12 +132,22 @@
     }
     
     const getDetail = () => {
-        proxy.$get(Interface.email.emailInfo,{
-            id: props.emailId,
-            ltags: data.ltags
+        // proxy.$get(Interface.email.emailInfo,{
+        //     id: props.emailId,
+        //     ltags: data.ltags
+        // }).then(res=>{
+        //     data.detail = res.data;
+        //     data.receiverNames = data.detail.ReceiverNames && data.detail.ReceiverNames.split(',');
+
+        // })
+        proxy.$get(Interface.email.getMail,{
+            mailid: props.emailId,
         }).then(res=>{
-            data.detail = res.data;
-            data.receiverNames = data.detail.ReceiverNames && data.detail.ReceiverNames.split(',');
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue){
+                data.detail = res.actions[0].returnValue;
+                data.receiverNames = data.detail.toUserNames && data.detail.toUserNames.split(',');
+                data.attachments=res.actions[0].returnValue.attachments;
+            }
 
         })
     }

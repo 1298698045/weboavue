@@ -105,6 +105,14 @@ const Interface = {
     read: "/localData/email/email.read.mark.json", // 未读/已读邮件设置
     star: "/localData/email/email.star.mark.json", // 重要邮件
     send: "/localData/email/email.send.json", // 发送邮件
+    saveDraft:baseUrl + "/email/saveDraft", // 保存草稿
+    send:baseUrl + "/email/send", // 发送邮件
+    sendbatch:baseUrl + "/email/sendbatch", // 群发邮件
+    upload:baseUrl + "/email/upload", // 上传附件
+    inboxSearch:baseUrl + "/email/inbox/search", // 查询收件箱
+    draftboxSearch:baseUrl + "/email/draftbox/search", // 查询草稿箱
+    sentboxSearch:baseUrl + "/email/sentbox/search", // 查询发件箱
+    getMail:baseUrl + "/email/getMail", // 获取单个邮件信息
   },
   meeting: {
     userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织

@@ -52,7 +52,9 @@
                             </a-form>
                             <div class="filesWrap">
                                 <div class="selectFile">
-                                    <a-upload v-model:file-list="fileList" name="file" action="/mail/attach/upload"
+                                    <a-upload multiple v-model:file-list="fileList" name="file" action="#"
+                                        :auto-upload="false"
+                                        :showUploadList="false"
                                         :headers="headers" @change="handleChange">
                                         <a-button type="link">添加附件</a-button>
                                         <template #itemRender>
@@ -60,15 +62,24 @@
                                         </template>
                                     </a-upload>
                                     <div class="inboxFileList">
-                                        <div class="inboxFileItem">
+                                        <div class="inboxFileItem" v-for="(item,index) in fileList" :key="index">
                                             <div class="leftImg">
-                                                <img :src="require('@/assets/img/avatar.png')" alt="">
+                                                <img src="/src/assets/img/filetype/doc.png" v-if="item.fileExtension=='ocx'||item.fileExtension=='docx'||item.fileExtension=='doc'||
+                                                     item.fileExtension=='.ocx'||item.fileExtension=='.docx'||item.fileExtension=='.doc'" />
+                                                <img src="/src/assets/img/filetype/rar.png" v-else-if="item.fileExtension=='rar'||item.fileExtension=='zip'||
+                                                     item.fileExtension=='.rar'||item.fileExtension=='.zip'" />
+                                                <img src="/src/assets/img/filetype/Excel.png" v-else-if="item.fileExtension=='xlsx'||item.fileExtension=='xls'||
+                                                     item.fileExtension=='.xlsx'||item.fileExtension=='.xls'" />
+                                                <img src="/src/assets/img/filetype/Pdf.png" v-else-if="item.fileExtension=='pdf'||item.fileExtension=='.pdf'" />
+                                                <img src="/src/assets/img/filetype/PPT.png" v-else-if="item.fileExtension=='ppt'||item.fileExtension=='.ppt'" />
+                                                <img src="/src/assets/img/filetype/defaultImg.png" v-else-if="item.fileExtension=='jpg'||item.fileExtension=='png'||item.fileExtension=='.jpg'||item.fileExtension=='.png'" />
+                                                <img src="/src/assets/img/filetype/Folder.png" v-else />
                                             </div>
                                             <div class="rightFileInfo">
                                                 <div class="fileName rowEllipsis">
-                                                    测试文件.jpg
+                                                    {{item.name}}.{{item.fileExtension}}
                                                 </div>
-                                                <div class="fileSize"></div>
+                                                <div class="fileSize">{{item.size}}</div>
                                                 <div class="fileOptionShow">
                                                     <div class="btns">
                                                         <a-tooltip title="查看" placement="top">
@@ -126,8 +137,8 @@
         </div>
         <div class="writeFooter">
             <div class="footerOption">
-                <a-button class="mr10" type="primary" @click="handleSendEmail">发送</a-button>
-                <a-button class="mr10">存草稿</a-button>
+                <a-button class="mr10" type="primary" @click="handleSendEmail(1)">发送</a-button>
+                <a-button class="mr10" @click="handleSendEmail(0)">存草稿</a-button>
                 <a-button class="mr10" @click="cancelWriteEmail">取消</a-button>
             </div>
         </div>
@@ -177,6 +188,7 @@
     const emit = defineEmits(['cancel','refresh']);
     const props = defineProps({
         ltags:String,
+        id:String,
     })
     const previewIcon = h("i",{
         class: "iconfont icon-yulanwenjian"
@@ -230,11 +242,12 @@
         latelySelectedKeys: [],
         height: 600,
         isRadioUser:false,
-        defaultExpandAll:false
+        defaultExpandAll:false,
+        id:''
     })
     const { fileList, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
         deptSelectedKeys, deptTreeData, departListTree, selectConcatsList, selectGroupList, departListTree2, groupTreeData2, latelyTreeData,
-        latelyexpandedKeys, latelySelectedKeys, height,isRadioUser,defaultExpandAll
+        latelyexpandedKeys, latelySelectedKeys, height,isRadioUser,defaultExpandAll,id
     } = toRefs(data);
     if(route.query.Id){
         if(route.query.type*1==1){
@@ -256,8 +269,18 @@
     const getContent = (e) => {
         formState.mailBody = e;
     }
-    const handleChange = (e) => {
-
+    const handleChange = (file) => {
+        data.fileList.push({
+            uid: file.uid,
+            name: file.name,
+            url: file.url,
+            FileExtension: file.name ? (file.name).split('.')[1] : '',
+            ViewLinkUrl: file.url,
+            raw: file.raw,
+            Privilege: '',
+            size:file.size,
+            isNew:true
+        });
     }
     const onSearch = (e) => {
         data.latelyexpandedKeys=[1];
@@ -568,24 +591,95 @@
         }
     }
     // 发送邮件
-    const handleSendEmail = () => {
+    const handleSendEmail = (type) => {
+        let url=Interface.email.saveDraft;
+        if(type==1){
+            url=Interface.email.send;
+        }
+        let tos=[];
+        for(var i=0;i<formState.addressee.length;i++){
+            for(var j=0;j<data.selectConcatsList.length;j++){
+                if(formState.addressee[i]==data.selectConcatsList[j].ID){
+                    tos.push({
+                        id:formState.addressee[i],
+                        name:data.selectConcatsList[j].Name||''
+                    })
+                }
+            }
+        }
+        let d = {
+            actions:[{
+                id:"4105;a",
+                descriptor:"",
+                callingDescriptor:"UNKNOWN",
+                params: {
+                    subject:formState.theme,
+                    body:formState.mailBody,
+                    isGroupmail:false,
+                    to:tos
+                }
+            }]
+        };
+        if(data.activeKey*1==2){
+            d.actions[0].params.isGroupmail=true;
+        }
+        if(data.id){
+            d.actions[0].params.id=data.id;
+        }
+        let obj = {
+            message: JSON.stringify(d)
+        }
         formRef.value.validate().then(() => {
-            console.log('values', formState, toRaw(formState));
-            proxy.$get(Interface.email.send,{
-                id: "",
-                subject: formState.theme,
-                mailBody: formState.mailBody,
-                ToUserIds:activeKey.value=='1'?formState.addressee:'',
-                ToGroupIds:activeKey.value=='1'?'':formState.group,
-                emailStatus: 1,
-                priority: 0,
-                Forward: "",
-                IsGroupmail: activeKey.value=='1'?false:true,
-                chkSms: formState.chkSms
-            }).then(res=>{
-                console.log("res",res);
-                emit("cancel", props.ltags);
-                emit("refresh", '');
+            //console.log('values', formState, toRaw(formState));
+            // proxy.$get(url,{
+            //     id: "",
+            //     subject: formState.theme,
+            //     mailBody: formState.mailBody,
+            //     ToUserIds:activeKey.value=='1'?formState.addressee:'',
+            //     ToGroupIds:activeKey.value=='1'?'':formState.group,
+            //     emailStatus: 1,
+            //     priority: 0,
+            //     Forward: "",
+            //     IsGroupmail: activeKey.value=='1'?false:true,
+            //     chkSms: formState.chkSms
+            // }).then(res=>{
+            //     console.log("res",res);
+            //     emit("cancel", props.ltags);
+            //     emit("refresh", '');
+            // })
+            proxy.$post(url,obj).then(res=>{
+                //console.log("res",res);
+                if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+                    data.id=res.actions[0].returnValue.id;
+                    message.success(type==1?"发送成功":"保存成功");
+                    if (data.fileList&&data.fileList.length) {
+                        var fd = new FormData();
+                        fd.append('pid', data.id);
+                        for (var i = 0; i < data.fileList.length; i++) {
+                            var item = that.fileList[i];
+                            if (item.raw&&item.isNew) {
+                                fd.append('file'+i, item.raw);
+                            }
+                        }
+                        proxy.$post(Interface.email.upload,fd).then(res=>{
+
+                        }).catch(err => {
+                            console.log('error', err);
+                        });
+                    }
+                    
+                    if(type==1){
+                        emit("cancel", props.ltags);
+                        data.id='';
+                    }
+                    emit("refresh", '');
+                }
+                else if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+                    message.success(res.actions[0].errorMessage);
+                }
+                else {
+                    message.error(type==1?"发送失败":"保存失败");
+                }
             })
         }).catch(err => {
             console.log('error', err);
@@ -650,6 +744,14 @@
         }
       }
     };
+    onMounted(() => {
+        if(props.id){
+            getDetail();
+        }
+    })
+    // watch(()=>props.id,(newVal,oldVal)=>{
+    //     getDetail();
+    // },{immediate:true,deep:true})
 </script>
 <style lang="less" scoped>
     .writeEmail {

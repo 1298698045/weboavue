@@ -57,7 +57,7 @@ export const girdFormatterValue = (key,row,nameField) => {
         val = row[key] && row[key].textValue;
     } else if (typename == "CheckboxField") {
         if(row[key] && row[key].img){
-            let imglink='@/assets'+row[key].img
+            let imglink='/src/assets'+row[key].img
             val = '<img style="height:18px;width:24px;margin-left:7px;" src="'+imglink+'">';
         }
         else{

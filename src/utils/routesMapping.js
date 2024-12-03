@@ -21,7 +21,8 @@ export const routesMapping = {
         InstaceDashboard: () => import("../views/NotFound.vue"),
         wftask: () => import("../views/NotFound.vue"),
         WFInstance: () => import("../views/flow/workAdmin/index.vue"),
-        wfdefinition: () => import("../views/flow/seeting/index.vue")
+        wfdefinition: () => import("../views/flow/seeting/index.vue"),
+        WorkflowSuperviselist:() => import("../views/flow/Supervise/index.vue"),
     },
     // 日程管理
     Workplan: {

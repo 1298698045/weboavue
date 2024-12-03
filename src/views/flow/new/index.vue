@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="todoListWrap">
         <div class="todoList">
             <div class="headerBar">
                 <div class="headerLeft">
@@ -340,6 +340,7 @@
                         },
                     });
                     window.open(url.href);
+                    handleCancel();
                     } else {
                     if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
                         message.success(res.actions[0].errorMessage);
@@ -349,7 +350,6 @@
                     }
                     }
                 })
-            handleCancel();
         }).catch(err => {
             console.log('error', err);
         });
@@ -502,20 +502,19 @@
             }
 
             .flowContent{
-                flex-wrap: wrap;
-                display: flex;
-                justify-content: space-between;
-                align-content: flex-start;
-                //flex-flow:column;
                 margin-top: 15px;
+                column-count: 4;
+                column-gap: 15px;
+                column-width: 10px;
                 .flowPanelItem{
-                    width: 24%;
+                    //width: 24%;
                     margin: 0 0 15px 0;
                     height: auto;
                     background: #f5f5f5;
                     height: 100%;
                     padding: 0;
                     padding-bottom: 10px;
+                    break-inside: avoid;
                     .flowPanelItemHead{
                         padding: 20px 0;
                         .typeName{
@@ -596,5 +595,8 @@
             margin-bottom: 12px;
             color: #606266;
         }
+    }
+    .todoListWrap{
+        height:100%;
     }
 </style>

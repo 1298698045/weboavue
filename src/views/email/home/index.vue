@@ -1,9 +1,25 @@
 <template>
     <div class="emailWrap">
         <div class="emailHeader">
-            <div class="emailLogo">
+            <!-- <div class="emailLogo">
                 <MailOutlined />
                 <span class="logoText">邮件</span>
+            </div> -->
+            <div class="header-top-menu" @click.stop="handleShowApp">
+                <i class="iconfont icon-yingyongzhongxin" style="margin-left: 10px;font-size: 18px;"></i>
+                <span class="text">邮件</span>
+            </div>
+            <div class="app_popup" v-if="isShow" @click.stop>
+                <div class="appList">
+                <div class="app_item" v-for="(item,index) in appList" :style="{background:item.BgColor}" :key="index" @click="handleGoModule(item)">
+                    <div class="appBox">
+                    <div class="iconBox">
+                        <img :src="'http://182.92.221.64:10000'+(item.LogoUrl||'/img/apps/icon/ContentPage.png')" alt="">
+                    </div>
+                    <div class="app-item-label">{{item.Label}}</div>
+                    </div>
+                </div>
+                </div>
             </div>
             <div class="emailSearch">
                 <div class="navSearch" :class="{active:isFocus}">
@@ -16,7 +32,7 @@
                     </el-input>
                 </div>
             </div>
-            <div class="return" @click="backToOA">返回OA</div>
+            <div class="return">容量：67.86M/200.00M</div>
         </div>
         <div class="emailBd">
             <div class="emailContainer">
@@ -300,6 +316,16 @@
         defineEmits,
         nextTick
     } from "vue";
+    import dayjs from 'dayjs';
+    import 'dayjs/locale/zh-cn';
+    import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+    dayjs.locale('zh-cn');
+    import calendar from 'dayjs/plugin/calendar';
+    import weekday from 'dayjs/plugin/weekday';
+    import localeData from 'dayjs/plugin/localeData';
+    dayjs.extend(calendar);
+    dayjs.extend(weekday);
+    dayjs.extend(localeData);
     import {
         SearchOutlined,
         DeleteOutlined,
@@ -310,6 +336,11 @@
     import writeEmail from "@/views/email/writeEmail/index.vue";
     import Interface from "@/utils/Interface.js";
     import { useRouter, useRoute } from "vue-router";
+    import { useStore } from "vuex";
+let store = useStore();
+    const state = reactive({
+  collapsed: false,
+});
     const { proxy } = getCurrentInstance();
     const router = useRouter();
     const route = useRoute();
@@ -393,13 +424,47 @@
         searchText:'',
         isFocus:false,
         isWriteEmail:false,
-        ltagsRecord:''
+        ltagsRecord:'',
+        appList: [],
+        keyIndex:1,
+  appCode: "",
+  currentAppName: ""
     });
     const { navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
          folderList, folderText, renameFolderId, isEdit, checkList, checkAll, isIndeterminate, isFold, 
-         isDetail, emailIndex, pageNumber, pageSize,searchText,isFocus,isWriteEmail,ltagsRecord } = toRefs(data);
+         isDetail, emailIndex, pageNumber, pageSize,searchText,isFocus,isWriteEmail,ltagsRecord,appList, appCode, currentAppName } = toRefs(data);
+         data.appList = store.state.modules;
+
+let localAppCode = localStorage.getItem("appCode");
+let localAppName = localStorage.getItem("appName");
+if(localAppCode){
+  data.appCode = localAppCode;
+  data.currentAppName = localAppName;
+}
+
+const getModuleAppList = () => {
+  proxy.$get(Interface.applist,{
+      systemCode: 'OA'
+  }).then((res)=>{
+    data.appList = res.actions[0].returnValue.apps;
+    if(localAppCode==""){
+      data.appCode = data.appList[0].AppCode;
+      data.currentAppName = data.appList[0].Label;
+    }
+    store.commit('setModuleName', data.currentAppName);
+  })
+};
+// getModuleAppList();
+
+const changeCode = (e) => {
+  // console.log('e', e);
+  data.appCode = e;
+  localStorage.setItem("appCode", data.appCode);
+  store.dispatch("getSubModules", e);
+}
     let itemRefs = [];
     const handleTypeEmail = (item, index) => {
+        data.keyIndex=1;
         console.log(item, index);
         data.ltags = item.ltags;
         data.emailId = "";
@@ -417,33 +482,68 @@
 
     // 获取邮件列表
     const getInboxList = () => {
-        proxy.$get(Interface.email.inboxList, {
-            ltags: data.ltags,
-            search: data.searchText,
-            pageNumber: data.pageNumber,
-            pageSize: data.pageSize
-        }).then(res => {
-            data.inboxList = res.data;
-            data.inboxList.forEach(function (item) {
-                data.isBook = false;
-                if (item.toUserNames) {
-                    if (item.toUserNames.slice(item.toUserNames.length - 1) == ',') {
-                        var name = item.toUserNames.slice(0, item.toUserNames.length - 1)
-                        data.fromName = name;
-                    }
+        let url=Interface.email.inboxSearch;
+        if(data.ltags=='inbox'){
+            url=Interface.email.inboxSearch;
+        }else if(data.ltags=='sent'){
+            url=Interface.email.sentboxSearch;
+        }else if(data.ltags=='draft'){
+            url=Interface.email.draftboxSearch;
+        }else if(data.ltags==''){
+            
+        }
+        let d = {
+            actions:[{
+                params: {
+                    ltags: data.ltags,
+                    search: data.searchText,
+                    pageNumber: data.keyIndex,
+                    pageSize: data.pageSize
                 }
-            })
-            data.emailTotal = res.totalRecords;
-            if (res.data.length > 0) {
-
-            } else {
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        if(data.keyIndex==1){
+                    data.inboxList = [];
+                }
+        proxy.$post(url, obj).then(res => {
+            if(res&&res.nodes.length){
+                let nodes=res.nodes;
+                if(nodes&&nodes.length){
+                    nodes.forEach(function (item) {
+                        data.isBook = false;
+                        // if (item.toUserNames) {
+                        //     if (item.toUserNames.slice(item.toUserNames.length - 1) == ',') {
+                        //         var name = item.toUserNames.slice(0, item.toUserNames.length - 1)
+                        //         data.fromName = name;
+                        //     }
+                        // }
+                        data.inboxList.push({
+                            emailId:item.EmailId.value,
+                            fromName:item.FromName?item.FromName.textValue:'',
+                            ToUserNames:item.ToUserNames?item.ToUserNames.textValue:'',
+                            isRead:item.IsRead?item.IsRead.selected:false,
+                            subject:item.Subject.textValue,
+                            content:item.Content&&item.Content.value?item.Content.value:'',
+                            createdOn:item.CreatedOn&&item.CreatedOn.dateTime?dayjs(item.CreatedOn.dateTime).format('YYYY-MM-DD HH:mm'):'',
+                            id:item.id
+                        })
+                    })
+                    data.inboxList=data.inboxList.concat(data.inboxList);
+                    data.inboxList=unique(data.inboxList);
+                }
+                data.emailTotal = res.totalCount||0;
+            }
+            else{
                 data.emailId = '';
             }
             data.emailListAll = data.emailListAll.concat(data.inboxList);
             data.emailListAll = unique(data.emailListAll)
         })
     }
-    getInboxList();
+    
     // 获取我的文件夹
     const getMyFolder = () => {
         proxy.$get(Interface.email.myEmailFolder,{}).then(res=>{
@@ -613,6 +713,7 @@
     }
     const searchEmailInbox = (e) => {
         data.searchText = e;
+        data.keyIndex=1;
         if(data.searchText.length>=2 || data.searchText == ''){
             getInboxList();
         }
@@ -629,14 +730,55 @@
         data.ltags=e;
     }
     onMounted(() => {
+        getInboxList();
         if(route.query.Id){
             openWriteEmail();
         }
+        window.addEventListener("click", function (e) {
+            isShow.value = false;
+            data.isInfoPopup  = false;
+        });
+        window.addEventListener(
+            "scroll",
+            function () {
+            if (document.getElementsByClassName("mailListContent").length) {
+            } else {
+                return;
+            }
+            var clientHeight =
+                document.getElementsByClassName("mailListContent")[0].clientHeight;
+            var scrollTop =
+                document.getElementsByClassName("mailListContent")[0].scrollTop;
+            var scrollHeight =
+                document.getElementsByClassName("mailListContent")[0].scrollHeight;
+            if (
+                scrollTop &&
+                clientHeight &&
+                (clientHeight + scrollTop >= scrollHeight)
+            ) {
+                data.keyIndex = data.keyIndex + 1;
+                getInboxList();
+            }
+            },
+            true
+        );
     })
+    const isShow = ref(false);
+const handleShowApp = () => {
+  isShow.value = !isShow.value;
+};
+const handleGoModule = (item) => {
+  // console.log("item", item);
+  store.commit('setModuleName',item.Label);
+  localStorage.setItem("moduleName", item.Label);
+  changeCode(item.AppCode);
+  isShow.value = false;
+}
 </script>
 <style lang="less" scoped>
     @import url("@/style/email.less");
     @import "~@/style/icon/header/iconfont.css";
+    @import "~@/layout/layout.less";
     .el-checkbox-group{
         font-size: 14px !important;
         line-height: unset !important;
@@ -652,8 +794,10 @@
             flex: 1;
         }
         .navSearch {
-            padding: 13px 170px 13px 0;
+            padding: 13px 20px 13px 0;
             position: relative;
+            width: 40%;
+            float: right;
             .el-input{
                 height: 39px;
                 :deep .el-input__inner{
@@ -1103,7 +1247,9 @@
                 }
 
                 .timer {
-                    color: #4e5969;
+                    //color: #4e5969;
+                    color: #999;
+                    font-size: 12px;
                 }
 
                 .theme {
@@ -1181,4 +1327,82 @@
         height: 100%;
         position: relative;
     }
+    :deep .header-top-menu{
+        width: 100px;
+        font-size: 25px;
+        position: relative;
+    top: -1px;
+    cursor: pointer;
+        .icon-yingyongzhongxin{
+            margin: 0 10px 0 20px !important;
+            margin-left: 20px;
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            top: -1px;
+        }
+    }
+    .ant-menu-submenu{
+  .ant-menu-submenu-title{
+    background: var(--textColor);
+    box-shadow: none;
+    margin: 0;
+    width: 100%;
+    border-radius: 0;
+    &:hover{
+      background: #2866C3 !important;
+    }
+  }
+}
+.app_popup {
+    width: 580px;
+    height: 340px;
+    background: #fff;
+    position: absolute;
+    top: 100%;
+    z-index: 999;
+    left: 0;
+    box-sizing: 0 2px 2px 0 rgba(0, 0, 0, 0.6);
+    border: 1px solid #d9d9d9;
+    color: #333;
+    overflow: auto;
+    .appList .app_item .app-item-label {
+        text-align: center;
+        color: #fff;
+        padding: 0 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .appList {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 10px 0 0 0;
+        box-sizing: border-box;
+        .app_item {
+            width: 100px;
+            height: 100px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            background: #3399ff;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            .iconBox {
+                position: relative;
+                cursor: pointer;
+                width: 40px;
+                height: 40px;
+                margin: 0 auto 10px;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+    }
+}
 </style>
