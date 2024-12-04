@@ -126,6 +126,11 @@
     const router = useRouter();
     const route = useRoute();
 
+    const props = defineProps({
+        processId: String,
+        processInstanceId: String,
+        toActivityID: String
+    })
     const data = reactive({
         entityId: route.query.entityId,
         layoutData: {},
@@ -162,11 +167,15 @@
         relatedObjData: {}, // 相关列表
         relatedEntityInfoList: [],
         toActivityID: "", // 当前节点ID
+        deleteRelatedData: [], // 删除子表的数据
+        masterEntityPermission: {}, // 主表权限
+        relatedListEntityPermissions: [], // 子表权限
     });
     const { entityId, layoutData, rowCount, columnCount, cellData, mergeData, rows, mergeRowColData, 
         isRadioUser, isRadioDept, isLookup, fieldData, entityApiName, lookEntityApiName, lookObjectTypeCode, objectTypeCode, columns, comps, ruleId,
         processId, entityLayoutId, select, isLoad, entityObjectId, attributes, list, search, processInstanceId, objTypeCode, isSub,
-        subRecordFieldData, relatedObjData, relatedEntityInfoList, toActivityID
+        subRecordFieldData, relatedObjData, relatedEntityInfoList, toActivityID, deleteRelatedData,
+        masterEntityPermission, relatedListEntityPermissions
      } = toRefs(data);
 
      const handleSetValue = (field, value) => {
@@ -350,7 +359,7 @@
 
     const getFlowFormRelatedList = async () => {
 
-        console.log("relatedEntityInfoList", data.relatedEntityInfoList);
+        // console.log("relatedEntityInfoList", data.relatedEntityInfoList);
 
         let requests = data.relatedEntityInfoList.map(item=>{
             let filterQuery = item.relatedEntityJoinField+'\teq\t'+data.processInstanceId;
@@ -368,8 +377,8 @@
         })
 
         let results = await Promise.all(requests);
-        console.log("relatedObjData-nodes", data.relatedObjData);
-        console.log("results-nodes:", results);
+        // console.log("relatedObjData-nodes", data.relatedObjData);
+        // console.log("results-nodes:", results);
 
         let keys = Object.keys(data.relatedObjData);
         results.forEach((item, index)=>{
@@ -383,7 +392,7 @@
                         obj[key] = row[key];
                     }
                 }
-                obj['key'] = idx;
+                obj['key'] = idx+1;
                 list.push(obj);
             });
             // console.log("listlist", list);
@@ -395,11 +404,12 @@
             for(let key in item){
                 let col = item[key];
                 if(col.field?.displayCategory == 'RelatedList'){
+                    let keys = col.field.checkedColumns.map(row=>row.key);
                     let relatedName = col.field.id;
                     let list = [];
                     data.relatedObjData[relatedName].list.forEach((row, index)=>{
                         let obj = {};
-                        for(let field in row){
+                        for(let field of keys){
                             if(Object.prototype.toString.call(row[field]) == '[object Object]'){
                                 if(col.search[field]?.length==0){
                                     col.search[field] = [row[field]];
@@ -414,6 +424,8 @@
                                 obj[field] = row[field];
                             }
                         };
+                        obj['id'] = row.id;
+                        obj['key'] = row.key;
                         list.push(obj);
                     });
                     col.subTableData = list;
@@ -421,7 +433,7 @@
             }
         });
 
-        console.log("data.cellData:", data.cellData);
+        // console.log("data.cellData:", data.cellData);
         
     }
 
@@ -654,11 +666,50 @@
             message: JSON.stringify(obj)
         }
         let res = await proxy.$post(Interface.workflow.getPermission, d);
-        
+        // console.log("permission-res", res);
+        let permission = res.actions[0].returnValue;
+        let { masterEntityPermission, relatedListEntityPermissions } = permission;
+        data.masterEntityPermission = masterEntityPermission;
+        data.relatedListEntityPermissions = relatedListEntityPermissions;
+
+        handleFormPerm();
     }
 
+    // permission 2:不可见 4:只读 8/0:读写 16: 显示默认值且不可修改 32: 显示默认值且可修改
+    const handleFormPerm = () => {
+        data.cellData.forEach(item=>{
+            for(let key in item){
+                let col = item[key];
+                if(col.field && col.field.displayCategory != 'RelatedList'){
+                    let id = col.field.id;
+                    let permission = searchCorrelationFieldPerm(data.masterEntityPermission.fieldPermissions, id);
+                    col.field.permission = permission;
+                } else if(col.field && col.field.displayCategory == 'RelatedList'){
+                    let relatedName = col.field.id.split('__')[1];
+                    let { fieldPermissions } = data.relatedListEntityPermissions.find(v=>v.name==relatedName);
+                    col.field.checkedColumns.forEach(column=>{
+                        column.permission = searchCorrelationFieldPerm(fieldPermissions, column.key);
+                    })
+                }
+            }
+        });
+        // console.log("data.cellData", data.cellData);
+    };
+
+    const searchCorrelationFieldPerm = (fieldPermissions, field) => {
+        let row = fieldPermissions.find(item=>{
+            return item.name == field;
+        });
+        let permission = row.permission;
+        return permission;
+    }
+
+
     const loadQuery = async () => {
-        await getRuleLogData();
+        data.processId = props.processId;
+        data.processInstanceId = props.processInstanceId;
+        data.toActivityID = props.toActivityID;
+        // await getRuleLogData();
         await getProcessDefinitionInfo();
         // await getProcessData();
         // await getEntityData();
@@ -1112,32 +1163,78 @@
 
     const handleDelSubTable = (col) => {
         
-        console.log('col.subTableData',col.subTableData, col.selectedList);
+        // console.log('col.subTableData', col, col.subTableData, col.selectedList);
 
+        let relatedName = col.field.id.split("__")[1];
+
+        // let  = data.relatedObjData[id];
+
+        let { relatedEntity, relatedEntityObjectTypeCode } = data.relatedEntityInfoList.find(item=>item.relatedEntity == relatedName);
+
+        // console.log("relatedEntity, relatedEntityObjectTypeCode", relatedEntity, relatedEntityObjectTypeCode);
+
+        let deleteRelatedData = [];
         for (let i = col.subTableData.length - 1; i >= 0; i--) {
             let item = col.subTableData[i]
             if (col.selectedList.indexOf(col.subTableData[i].key) !== -1) {
-                console.log("col.subTableData", col.subTableData[i]);
                 if(item.id){
-                    
+                    item.relatedEntity = relatedEntity;
+                    item.relatedEntityObjectTypeCode = relatedEntityObjectTypeCode;
+                    deleteRelatedData.push(item);
+                    col.subTableData.splice(i, 1);
                 }else {
                     col.subTableData.splice(i, 1);
                 }
             }
-        }
+        };
+        console.log("deleteRelatedData:", deleteRelatedData);
+        data.deleteRelatedData = deleteRelatedData;
+
+        // if(deleteRelatedData.length){
+        //     deleteRelted();
+        // }
     };
 
+    const deleteRelted = async () => {
+        let requests = data.deleteRelatedData.map(item=>{
+            let obj = {
+                actions: [{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId: item.id,
+                        apiName: item.relatedEntity,
+                        objTypeCode: item.relatedEntityObjectTypeCode,
+                    }
+                }]
+            };
+            let d = {
+                message: JSON.stringify(obj)
+            };
+            return proxy.$post(Interface.delete, d);
+        });
+        
+        const results = await Promise.all(requests);
+        // console.log("results", results);
+        data.deleteRelatedData = [];
+        // getFlowFormRelatedList();
+    }
+
     const handleCopySubTable = (col) => {
+        console.log("col", col);
         let list = col.subTableData.filter(item=>{
             return col.selectedList.find(row=>{
                 return item.key == row;
             })
-        })
+        });
         const copyData = JSON.parse(JSON.stringify(list));
         copyData.forEach(item=>{
+            item.id = '';
             item.key = item.key+new Date().getTime();
             col.subTableData.push(item);
-        })
+        });
+        console.log("col.subTableData", col.subTableData);
     }
 
     const handleSave_old = () => {
@@ -1172,8 +1269,13 @@
     }
 
     const handleSave = () => {
+        
+        if(data.deleteRelatedData.length){
+            deleteRelted();
+        }
 
         let relatedList = saveRelated();
+
         let obj = {
           actions:[{
               id: "2919;a",
@@ -1220,7 +1322,7 @@
                 }
             }
         });
-        // console.log("relatedObj", relatedObj);
+        console.log("relatedObj", relatedObj);
         let relatedList = [];
         for(let key in relatedObj){
             let relatedName = relatedObj[key].relatedName;
@@ -1238,7 +1340,7 @@
                     // });
                     newList.forEach(row=>{
                         let obj = {
-                            recordId: item.id || '',
+                            recordId: row.id || '',
                             recordInput: {
                                 allowSaveOnDuplicate: false,
                                 apiName: item.relatedEntity,

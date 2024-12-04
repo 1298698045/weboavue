@@ -18,36 +18,51 @@
                         :label-col="labelCol"
                         :model="formState">
                         <a-form-item label="操作类型：">
-                            <a-radio-group v-model:value="formState.noticeMethod">
-                                <a-radio value="1">提交流转</a-radio>
-                                <a-radio value="2">跳转</a-radio>
+                            <a-radio-group v-model:value="formState.operationType">
+                                <a-radio :value="1">提交流转</a-radio>
+                                <!-- <a-radio value="2">跳转</a-radio> -->
                               </a-radio-group>
                         </a-form-item>
-                        <a-form-item label="下一环节：">
-                            <a-radio-group v-model:value="formState.noticeMethod">
-                                <a-radio value="1">部门领导</a-radio>
-                              </a-radio-group>
+                        <a-form-item label="下一环节：" v-if="splitType!=2">
+                            <a-radio-group v-model:value="activityId" @change="changeActivity">
+                                <a-radio :value="item.ToActivityId" v-for="(item, index) in transitions">{{item.To.name}}</a-radio>
+                            </a-radio-group>
                         </a-form-item>
-                        <a-form-item label="办理人员：">
-                            <div class="flex">
-                                <a-input placeholder="请输入搜索字符"></a-input>
-                                <a-button type="link" @click="handleAddPeople">添加人员</a-button>
-                            </div>
-                            <div class="peopleBox">
-                                <a-table :row-selection="rowSelection" size="small" :pagination="pagination" style="height: 100%;" :dataSource="dataSource" :columns="columns">
-                                    <template #bodyCell="{ column,index }">
-                                        <template v-if="column.key === 'operation'">
-                                            <span class="iconTop" @click="arrowup(index)">
-                                                <ArrowUpOutlined />
-                                            </span>
-                                            <span class="iconTop" @click="arrowdown(index)">
-                                                <ArrowDownOutlined />
-                                            </span>
-                                        </template>
-                                    </template>
-                                </a-table>
-                            </div>
+                        <a-form-item label="办理节点" v-if="splitType==2">
                         </a-form-item>
+                        <div class="collapseItem" v-for="(item, parentIndex) in transitions" :key="parentIndex">
+                            <div class="collapseHead">
+                                <a-form-item :label="item.To.name">
+                                    <a-checkbox v-model:checked="item.isMatched"></a-checkbox>
+                                </a-form-item>
+                                <div class="arrow" @click="item.isCollapse=!item.isCollapse">
+                                    <DownOutlined v-if="item.isCollapse" />
+                                    <UpOutlined v-else />
+                                </div>
+                            </div>
+                            <div class="collapseBody" v-if="item.isCollapse">
+                                <a-form-item label="办理人员：">
+                                    <div class="flex">
+                                        <a-input :disabled="!item.isMatched" v-model:value="item.searchVal" placeholder="请输入搜索字符"></a-input>
+                                        <a-button :disabled="!item.isMatched" type="link" @click="item.isMatched && handleAddPeople(item, parentIndex)" v-if="item.addPeople">添加人员</a-button>
+                                    </div>
+                                    <div class="peopleBox">
+                                        <a-table :disabled="!item.isMatched" :row-selection="rowSelection" size="small" :pagination="pagination" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
+                                            <template #bodyCell="{ column,index }">
+                                                <template v-if="column.key === 'operation'">
+                                                    <span class="iconTop" @click="arrowup(item, index)">
+                                                        <ArrowUpOutlined />
+                                                    </span>
+                                                    <span class="iconTop" @click="arrowdown(item, index)">
+                                                        <ArrowDownOutlined />
+                                                    </span>
+                                                </template>
+                                            </template>
+                                        </a-table>
+                                    </div>
+                                </a-form-item>
+                            </div>
+                        </div>
                         <a-form-item label="办理工作日：">
                             <a-input></a-input>
                         </a-form-item>
@@ -90,14 +105,18 @@
         defineEmits,
         toRaw
     } from "vue";
-    import { PieChartOutlined, ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons-vue";
+    import { PieChartOutlined, ArrowUpOutlined, ArrowDownOutlined, UpOutlined, DownOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     import RadioUser from "@/components/commonModal/RadioUser.vue";
     const { proxy } = getCurrentInstance();
     const props = defineProps({
         paramsData: Object,
-        isShow: Boolean
+        isShow: Boolean,
+        ruleLogId: [String, Number],
+        processId: String,
+        processInstanceId: String,
+        toActivityID: String
     });
     const isModal = ref(true);
     const labelCol = ref({ style: { width: '100px' } });
@@ -109,13 +128,14 @@
         emit("update-status",false);
     }
     const formState = reactive({
+        operationType: 1,
         ProcessName: "",
         BusinessUnitId:"",
         Title:"",
         Priority:"0",
         Description:"",
         BusinessUnitList: [],
-        noticeMethod: []
+        noticeMethod: [],
     })
     const data = reactive({
         activeKey: '1',
@@ -128,8 +148,13 @@
             total: 0,
             showTotal: (total) => `共 ${total} 条数据`, // 展示总共有几条数据
         },
+        transitions: [],
+        splitType: "", // 分支类型
+        activityId: "", // 节点id
+        addPeople: true,
+        recordData: {}
     })
-    const { activeKey,height,isRadioUser,selectedRowKeys,pagination } = toRefs(data);
+    const { activeKey,height,isRadioUser,selectedRowKeys,pagination, transitions, splitType, activityId, addPeople, recordData } = toRefs(data);
     const columns = [
         {
             title: "姓名",
@@ -162,46 +187,161 @@
         //     name: record.name,
         // }),
     };
-    const handleAddPeople = () => {
+
+    onMounted(()=>{
+        formState.ProcessName = props.paramsData.InstanceIdName;
+        window.addEventListener("resize", (e) => {
+            data.height = document.documentElement.clientHeight - 390;
+        });
+    });
+
+
+    const changeActivity = (e) => {
+        data.activityId = e.target.value;
+        let index = data.transitions.findIndex(item=>item.ToActivityId == data.activityId);
+        getPermission(data.activityId, index);
+    }
+
+    // 获取权限
+    const getPermission = (activityId, index) => {
+        let obj = {
+            actions:[{
+                id: "562;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    processId: props.processId,
+                    activityId: activityId
+                }
+            }]
+        };
+
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.workflow.getPermission, d).then(res=>{
+            let permission = res.actions[0].returnValue;
+            let { flowPermission } = permission;
+            data.addPeople = flowPermission.addPeople;
+            data.transitions[index].addPeople = flowPermission.addPeople;
+        });
+    }
+
+    // 获取节点转移路径
+    const getTransitions = () => {
+        let obj = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    processId: props.processId,
+                    activityId: props.toActivityID,
+                    processInstanceId: props.processInstanceId,
+                    ruleLogId: props.ruleLogId
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.workflow.getTransitions, d).then(res=>{
+            console.log("getTransitions", res);
+            let { splitType, transitions } = res.actions[0].returnValue;
+            data.splitType = splitType;
+            data.transitions = transitions.map(item=>{
+                item.searchVal = "";
+                item.addPeople = false;
+                item.peopleList = [];
+                item.selectPeoples = [];
+                item.isCollapse = true;
+                return item;
+            });
+
+            if(splitType!=2){
+                data.activityId = transitions[0].ToActivityId;
+                getPermission(data.activityId, 0);
+                getParticipators(0);
+            }else {
+                data.transitions.forEach((item,index)=>{
+                    let activityId = item.ToActivityId;
+                    getPermission(activityId, index)
+                })
+            }
+        })
+    };
+    getTransitions();
+
+    // 获取节点办理人员
+    const getParticipators = () => {
+        let obj = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    processId: props.processId,
+                    instanceId: props.processInstanceId,
+                    activityId: data.activityId,
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.workflow.getParticipators, d).then(res=>{
+            console.log("getParticipators", res);
+        })
+    };
+    
+    const handleAddPeople = (item, index) => {
+        data.recordData = {
+            item,
+            index
+        }
         data.isRadioUser = true;
     }
     const cancelUserModal = (e) => {
         data.isRadioUser = e;
     }
     const handleUserParams = (e) => {
+        let obj = {
+            key: e.id,
+            userName: e.name,
+            BusinessUnitIdName: e.BusinessUnitIdName
+        }
         dataSource.value.push({
             key: e.id,
             userName: e.name,
             BusinessUnitIdName: e.BusinessUnitIdName
         })
+        let { index } = data.recordData;
+        data.transitions[index].peopleList.push(obj);
         data.isRadioUser = false;
     }
-    const arrowup=(index)=>{
-        if(index!=0){
-            let list=dataSource.value;
-            let a=list[index];
-            let b=list[index-1];
-            list[index-1]=a;
-            list[index]=b;
-            dataSource.value=list;
+    const arrowup=(item, index)=>{
+        if(index != 0){
+            let list = item.peopleList;
+            let a = list[index];
+            let b = list[index-1];
+            list[index-1] = a;
+            list[index] = b;
+            item.peopleList = list;
         }
     }
-    const arrowdown=(index)=>{
-        if(index!=dataSource.value.length-1){
-            let list=dataSource.value;
-            let a=list[index];
-            let b=list[index+1];
-            list[index+1]=a;
-            list[index]=b;
-            dataSource.value=list;
+    const arrowdown=(item, index)=>{
+        if(index != item.peopleList.length-1){
+            let list = item.peopleList;
+            let a = list[index];
+            let b = list[index+1];
+            list[index+1] = a;
+            list[index] = b;
+            item.peopleList = list;
         }
     }
-    onMounted(()=>{
-        formState.ProcessName = props.paramsData.InstanceIdName;
-        window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 390;
-        });
-    })
+    
+
+
     defineExpose({isModal})
 </script>
 <style lang="less" scoped>
@@ -267,5 +407,18 @@
 .ant-modal div[aria-hidden="true"] {
 		display: none !important
 }
-
+.collapseItem{
+    background: #e2e3e5;
+    border-radius: 4px;
+    padding: 10px 16px 16px 0;
+    margin-bottom: 16px;
+    .collapseHead{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .arrow{
+            cursor: pointer;
+        }
+    }
+}
 </style>

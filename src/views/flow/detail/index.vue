@@ -55,7 +55,7 @@
                 <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
                     <div class="leftContent" :class="{'active':!isAside}">
                         <div class="tableBox" style="width: 100%;overflow: auto;" :class="{'active':!isAside}">
-                            <FlowForm ref="flowFormRef" />
+                            <FlowForm ref="flowFormRef" v-if="processId!=''" :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID" />
                         </div>
                         <div class="reqWrap">
                             <div class="reqHead">
@@ -281,7 +281,7 @@
                 </div>
             </div>
         </div>
-        <SubmitProcess ref="processRef" v-if="isProcess" :isShow="isProcess" @update-status="updateStatus" :paramsData="ProcessData" />
+        <SubmitProcess ref="processRef" v-if="isProcess" :ruleLogId="ruleLogId" :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID" :isShow="isProcess" @update-status="updateStatus" :paramsData="ProcessData" />
         <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" @update-status="updateStatus" :paramsData="RejectionData"  />
         <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation" :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
         <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
@@ -375,10 +375,42 @@
         lookEntityType:"",
         Title:'',
         isEdit:false,
+        ruleLogId: route.query.id,
+        processId: "",
+        processInstanceId: "",
+        toActivityID: ""
     })
     const { isEdit,Title,objectTypeCode,sObjectName,tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData,
          isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex,id,fileList,isRelateInstance,lookEntityApiName,lookObjectTypeCode,lookEntityType,
-         pageCurrent } = toRefs(data);
+         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID } = toRefs(data);
+
+    const getRuleLogData = () => {
+        let obj = {
+            actions: [{
+                id: "4270;a",
+                descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    recordId: data.ruleLogId,
+                    apiName: "WFRuleLog"
+                }
+            }]
+        }
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.detail, d).then(res=>{
+            if(res && res.actions && res.actions[0].returnValue){
+                let { ProcessId, ProcessInstanceId, ToActivityID } = res.actions && res.actions[0].returnValue.fields;
+                data.processId = ProcessId.value;
+                data.processInstanceId = ProcessInstanceId.value;
+                data.toActivityID = ToActivityID.value;
+            }
+        });
+    };
+    getRuleLogData();
+
+
     const detailTitleInputDom=ref(null);
     const changeTabs = (e) => {
         data.activeKey = e;

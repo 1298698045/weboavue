@@ -1,43 +1,93 @@
 <template>
     <div class="filed">
         <div v-if="type=='S'">
-            <a-input :placeholder="'请输入' + field.label" v-model:value="list[field.id]" style="min-width: 100px;"></a-input>
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-input v-else :disabled="disabledPermission" :placeholder="'请输入' + field.label" v-model:value="list[field.id]" style="min-width: 100px;"></a-input>
         </div>
         <div v-else-if="type=='N'">
-            <a-input type="Number" v-model:value="list[field.id]" :placeholder="'请输入' + field.label"></a-input>
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-input v-else :disabled="disabledPermission" type="Number" v-model:value="list[field.id]" :placeholder="'请输入' + field.label"></a-input>
         </div>
         <div v-else-if="type=='H'">
-            <a-input type="Number" v-model:value="list[field.id]" maxlength="11" :placeholder="'请输入' + field.label"></a-input>
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-input v-else :disabled="disabledPermission" type="Number" v-model:value="list[field.id]" maxlength="11" :placeholder="'请输入' + field.label"></a-input>
         </div>
         <div v-else-if="type=='6'">
-            <a-input type="password" v-model:value="list[field.id]" :placeholder="'请输入' + field.label"></a-input>
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-input v-else :disabled="disabledPermission" type="password" v-model:value="list[field.id]" :placeholder="'请输入' + field.label"></a-input>
         </div>
-        <div v-else-if="type=='P'" style="width: 150px;display: flex;">
-            <a-slider style="flex: 1;" v-model:value="inputValue1" :min="1" :max="100" />
-            <a-input-number v-model:value="inputValue1" :min="1" :max="100" style="width: 50px;margin-left: 16px" />
+        <div v-else-if="type=='P'">
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <div v-else style="width: 150px;display: flex;">
+                <a-slider :disabled="disabledPermission" style="flex: 1;" v-model:value="inputValue1" :min="1" :max="100" />
+                <a-input-number :disabled="disabledPermission" v-model:value="inputValue1" :min="1" :max="100" style="width: 50px;margin-left: 16px" />
+            </div>
         </div>
         <div v-else-if="type=='L' || type=='LT' || type=='DT'">
-            <a-select style="min-width: 150px;width: 100%;" v-model:value="list[field.id]" :placeholder="'请选择' + field.label">
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-select v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" v-model:value="list[field.id]" :placeholder="'请选择' + field.label">
                 <a-select-option v-for="(option, optionIdx) in select[field.id] && select[field.id].values" :key="optionIdx" :value="option.value">{{option.label}}</a-select-option>
             </a-select>
         </div>
         <div v-else-if="type=='D'">
-            <a-date-picker style="min-width: 150px;width: 100%;" valueFormat="YYYY-MM-DD" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" valueFormat="YYYY-MM-DD" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
         </div>
         <div v-else-if="type=='F'">
-            <a-date-picker style="min-width: 150px;width: 100%;" valueFormat="YYYY-MM-DD hh:mm:ss" show-time v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" valueFormat="YYYY-MM-DD hh:mm:ss" show-time v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
         </div>
         <div v-else-if="type=='Year'">
-            <a-date-picker style="min-width: 150px;width: 100%;" picker="year" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" picker="year" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
         </div>
         <div v-else-if="type=='Month'||type=='Y_M'">
-            <a-date-picker style="min-width: 150px;width: 100%;" picker="month" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" picker="month" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
         </div>
         <div v-else-if="type=='X' || type=='z' || type=='J' || type=='UC' || type=='UCS'">
-            <a-textarea v-model:value="list[field.id]" :placeholder="'请输入' + field.label" :rows="4" />
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-textarea v-else :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" :rows="4" />
         </div>
         <div v-else-if="type=='B'">
-            <a-checkbox v-model:checked="list[field.id]"></a-checkbox>
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] ? '是' : '否' }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-checkbox v-else :disabled="disabledPermission" v-model:checked="list[field.id]"></a-checkbox>
         </div>
         <div v-else-if="type=='BC'">
             <a-form-item name="appStyle" label="应用程序个性化设置">
@@ -67,18 +117,24 @@
             />
         </div>
         <div class="searchLook" v-else-if="type=='U' || type=='O' || type=='Y' || type=='Y_MD'">
-            <a-select style="min-width: 150px;width: 100%;" showSearch v-model:value="list[field.id]" :placeholder="'请选择' + field.label" @search="(e)=>searchlookup(e, field)" @dropdownVisibleChange="(e)=>{searchlookup('', field, e)}" allowClear>
-                <template #suffixIcon></template>
-                <a-select-option v-for="(option, optionIdx) in search[field.id]" :key="optionIdx" :value="option.ID">
-                    {{ option.Name }}
-                </a-select-option>
-            </a-select>
-            <div class="searchIcon">
-                <SearchOutlined
-                  class="ant-select-suffix"
-                  @click="handleOpenLook"
-                />
-              </div>
+            <span class="valText" v-if="field?.permission == 4">
+                {{ computedName }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <template v-else>
+                <a-select style="min-width: 150px;width: 100%;" :disabled="disabledPermission" showSearch v-model:value="list[field.id]" :placeholder="'请选择' + field.label" @search="(e)=>searchlookup(e, field)" @dropdownVisibleChange="(e)=>{searchlookup('', field, e)}" allowClear>
+                    <template #suffixIcon></template>
+                    <a-select-option v-for="(option, optionIdx) in search[field.id]" :key="optionIdx" :value="option.ID">
+                        {{ option.Name }}
+                    </a-select-option>
+                </a-select>
+                <div class="searchIcon">
+                    <SearchOutlined
+                      class="ant-select-suffix"
+                      @click="handleOpenLook"
+                    />
+                </div>
+            </template>
         </div>
         <div class="uploadPhoto" v-else-if="type=='I'">
             <a-upload
@@ -119,7 +175,11 @@
             </a-tree-select>
         </div>
         <div v-else>
-            <a-input v-model:value="list[field.id]" :placeholder="'请输入' + field.label" style="min-width: 100px;"></a-input>
+            <span class="valText" v-if="field?.permission == 4">
+                {{ list[field.id] }}
+            </span>
+            <span v-else-if="field?.permission == 2"></span>
+            <a-input v-else :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" style="min-width: 100px;"></a-input>
         </div>
     </div>
 </template>
@@ -138,6 +198,7 @@
         defineProps,
         defineExpose,
         inject,
+        computed
     } from "vue";
     import {
         SearchOutlined,
@@ -174,6 +235,21 @@
     //     emit('setValue', props.field.id, formState[props.field.id]);
     // };
 
+
+    const computedName = computed(()=>{
+        const id = props.field.id;
+        const search = props.search;
+        const val = props.list[id];
+        let name = search[id].find(item=>item.ID==val)?.Name || '';
+        return name;
+    })
+
+    // 控制字段默认值可编辑/不可编辑
+    const disabledPermission = computed(()=>{
+        const permission = props.field.permission;
+        const isDisabled = permission == 16 ? true : false;
+        return isDisabled;
+    })
     const treeData = ref([
         {
             label: 'root 1',
@@ -278,6 +354,9 @@
     const { fileList, options, inputValue1 } = toRefs(data);
 
     const handleOpenLook = () => {
+        if(props.field?.permission == 16){
+            return false;
+        }
         emit('openlook', props.field);
     }
 
