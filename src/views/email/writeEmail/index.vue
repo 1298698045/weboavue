@@ -22,7 +22,7 @@
                             <a-form ref="formRef" :model="formState" :label-col="labelCol">
                                 <a-form-item label="收件人" name="addressee"
                                     v-if="activeKey=='1'"
-                                    :rules="[{ required: activeKey==1?true:false, message: '请选择收件人' }]">
+                                    :rules="[{ required: activeKey*1==1?true:false, message: '请选择收件人' }]">
                                     <a-select :default-active-first-option="false"
                                     allowClear :filter-option="false" showSearch
                                     @dropdownVisibleChange="(e) => {getUserList('');}"
@@ -39,7 +39,7 @@
                                 </a-form-item>
                                 <a-form-item label="群组" name="group"
                                     v-if="activeKey=='2'"
-                                    :rules="[{ required: activeKey==2?true:false, message: '请选择群组' }]">
+                                    :rules="[{ required: activeKey*1==2?true:false, message: '请选择群组' }]">
                                     <a-select v-model:value="formState.group" mode="multiple"
                                     @dropdownVisibleChange="(e) => {getGroupList('');}"
                                     @search="(e) => {getGroupList(e);}" placeholder="请选择群组">
@@ -52,17 +52,17 @@
                             </a-form>
                             <div class="filesWrap">
                                 <div class="selectFile">
-                                    <a-upload multiple v-model:file-list="fileList" name="file" action="#"
-                                        :auto-upload="false"
+                                    <a-upload multiple v-model:file-list="fileList" name="file" action
+                                        :customRequest="changeRequest"
                                         :showUploadList="false"
-                                        :headers="headers" @change="handleChange">
+                                        @change="handleChange">
                                         <a-button type="link">添加附件</a-button>
                                         <template #itemRender>
                                             
                                         </template>
                                     </a-upload>
                                     <div class="inboxFileList">
-                                        <div class="inboxFileItem" v-for="(item,index) in fileList" :key="index">
+                                        <div class="inboxFileItem" v-for="(item,index) in fileList2" :key="index">
                                             <div class="leftImg">
                                                 <img src="/src/assets/img/filetype/doc.png" v-if="item.fileExtension=='ocx'||item.fileExtension=='docx'||item.fileExtension=='doc'||
                                                      item.fileExtension=='.ocx'||item.fileExtension=='.docx'||item.fileExtension=='.doc'" />
@@ -76,11 +76,11 @@
                                                 <img src="/src/assets/img/filetype/Folder.png" v-else />
                                             </div>
                                             <div class="rightFileInfo">
-                                                <div class="fileName rowEllipsis">
-                                                    {{item.name}}.{{item.fileExtension}}
+                                                <div class="fileName rowEllipsis" >
+                                                    {{item.name}}
                                                 </div>
                                                 <div class="fileSize">{{item.size}}</div>
-                                                <div class="fileOptionShow">
+                                                <div class="fileOptionShow" :title="(item.name||'')">
                                                     <div class="btns">
                                                         <a-tooltip title="查看" placement="top">
                                                             <a-button type="text" :icon="previewIcon"></a-button>
@@ -89,7 +89,7 @@
                                                             <a-button type="text" :icon="h(VerticalAlignBottomOutlined)"></a-button>
                                                         </a-tooltip>
                                                         <a-tooltip title="删除" placement="top">
-                                                            <a-button type="text" :icon="h(CloseOutlined)"></a-button>
+                                                            <a-button type="text" :icon="h(CloseOutlined)" @click="deleteFile(item)"></a-button>
                                                         </a-tooltip>
                                                     </div>
                                                 </div>
@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                             <div class="editor">
-                                <Editor placeholder="请输入邮件内容" :height="height" @input="getContent" />
+                                <Editor ref="editorRef" placeholder="请输入邮件内容" :height="height" @input="getContent" />
                             </div>
                             <div class="checkWrap">
                                 <a-checkbox v-model:checked="formState.chkSms">短信</a-checkbox>
@@ -185,16 +185,21 @@
         group: [],
         mailBody: ""
     })
+    const editorRef = ref();
     const emit = defineEmits(['cancel','refresh']);
     const props = defineProps({
         ltags:String,
         id:String,
+        username:String,
+        userid:String,
+        body:String,
     })
     const previewIcon = h("i",{
         class: "iconfont icon-yulanwenjian"
     })
     const data = reactive({
         fileList: [],
+        fileList2: [],
         headers: {},
         searchVal: "",
         departListTree:[
@@ -245,7 +250,7 @@
         defaultExpandAll:false,
         id:''
     })
-    const { fileList, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
+    const { fileList,fileList2, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
         deptSelectedKeys, deptTreeData, departListTree, selectConcatsList, selectGroupList, departListTree2, groupTreeData2, latelyTreeData,
         latelyexpandedKeys, latelySelectedKeys, height,isRadioUser,defaultExpandAll,id
     } = toRefs(data);
@@ -266,21 +271,63 @@
             formState.group.push(route.query.Id);
         }
     }
+    if(props.userid){
+        activeKey.value='1';
+        data.selectConcatsList.push({
+            ID: props.userid,
+            Name: props.username
+        });
+        formState.addressee.push(props.userid);
+    }
     const getContent = (e) => {
         formState.mailBody = e;
     }
+    const unique = (list) => {
+        for (var i = 0; i < list.length; i++) {
+            for (var j = i + 1; j < list.length; j++) {
+                if (list[i].uid == list[j].uid) {
+                    list.splice(j, 1)
+                    j--;
+                }
+            }
+        }
+        return list;
+    }
+    const changeRequest=(file) => {
+        // console.log(file)
+        // if(file&&file.file){
+        //     data.fileList2.push({
+        //         uid: file.file.uid,
+        //         name: file.file.name,
+        //         url: file.file.url,
+        //         fileExtension: file.file.name ? (file.file.name).split('.')[1] : '',
+        //         ViewLinkUrl: file.file.url,
+        //         raw: file.file.originFileObj,
+        //         Privilege: '',
+        //         size:file.file.size,
+        //         isNew:true
+        //     });
+        // }
+        // data.fileList2=unique(data.fileList2);
+        // console.log(data.fileList2)
+    }
     const handleChange = (file) => {
-        data.fileList.push({
-            uid: file.uid,
-            name: file.name,
-            url: file.url,
-            FileExtension: file.name ? (file.name).split('.')[1] : '',
-            ViewLinkUrl: file.url,
-            raw: file.raw,
-            Privilege: '',
-            size:file.size,
-            isNew:true
-        });
+        //console.log(file.file)
+        if(file&&file.file){
+            data.fileList2.push({
+                uid: file.file.uid,
+                name: file.file.name,
+                url: file.file.url,
+                fileExtension: file.file.name ? (file.file.name).split('.')[1] : '',
+                ViewLinkUrl: file.file.url,
+                raw: file.file.originFileObj,
+                Privilege: '',
+                size:file.file.size,
+                isNew:true
+            });
+        }
+        data.fileList2=unique(data.fileList2);
+        //console.log(data.fileList2)
     }
     const onSearch = (e) => {
         data.latelyexpandedKeys=[1];
@@ -596,6 +643,9 @@
         if(type==1){
             url=Interface.email.send;
         }
+        if(activeKey.value*1==2){
+            url=Interface.email.sendbatch;
+        }
         let tos=[];
         for(var i=0;i<formState.addressee.length;i++){
             for(var j=0;j<data.selectConcatsList.length;j++){
@@ -620,7 +670,7 @@
                 }
             }]
         };
-        if(data.activeKey*1==2){
+        if(activeKey.value*1==2){
             d.actions[0].params.isGroupmail=true;
         }
         if(data.id){
@@ -652,11 +702,11 @@
                 if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                     data.id=res.actions[0].returnValue.id;
                     message.success(type==1?"发送成功":"保存成功");
-                    if (data.fileList&&data.fileList.length) {
+                    if (data.fileList2&&data.fileList2.length) {
                         var fd = new FormData();
                         fd.append('pid', data.id);
-                        for (var i = 0; i < data.fileList.length; i++) {
-                            var item = that.fileList[i];
+                        for (var i = 0; i < data.fileList2.length; i++) {
+                            var item = that.fileList2[i];
                             if (item.raw&&item.isNew) {
                                 fd.append('file'+i, item.raw);
                             }
@@ -744,14 +794,59 @@
         }
       }
     };
+    const getDetail = () => {
+        // proxy.$get(Interface.email.emailInfo,{
+        //     id: props.emailId,
+        //     ltags: data.ltags
+        // }).then(res=>{
+        //     data.detail = res.data;
+        //     data.receiverNames = data.detail.ReceiverNames && data.detail.ReceiverNames.split(',');
+
+        // })
+        proxy.$get(Interface.email.getMail,{
+            id: props.id,
+        }).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue){
+                let detail = res.actions[0].returnValue;
+                formState.theme=detail.subject;
+                if(detail.body){
+                    formState.mailBody=detail.body;
+                    let editorRef = ref();
+                    if(editorRef&&editorRef.value){
+                        editorRef.value.content=detail.body;
+                    }
+                }
+            }
+        })
+    }
+    const deleteFile=(item)=>{
+        for (var i = 0; i < data.fileList.length; i++) {
+            if (item.uid == data.fileList[i].uid) {
+                data.fileList.splice(i, 1);
+            }
+        }
+        for (var i = 0; i < data.fileList2.length; i++) {
+            if (item.uid == data.fileList2[i].uid) {
+                data.fileList2.splice(i, 1);
+            }
+        }
+    }
     onMounted(() => {
         if(props.id){
             getDetail();
         }
     })
-    // watch(()=>props.id,(newVal,oldVal)=>{
-    //     getDetail();
-    // },{immediate:true,deep:true})
+    watch(()=>props.body,(newVal,oldVal)=>{
+        //getDetail();
+        //console.log(props.body)
+        if(props.body){
+            formState.mailBody=props.body;
+            let editorRef = ref();
+            if(editorRef&&editorRef.value){
+                editorRef.value.content=props.body;
+            }
+        }
+    },{immediate:true,deep:true})
 </script>
 <style lang="less" scoped>
     .writeEmail {

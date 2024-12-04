@@ -101,7 +101,12 @@ const handleSubmit = () => {
         });
   }
   else{
-    emit("ok", false);
+    if(props.id){
+      emit("ok", props.id);
+    }
+    else{
+      emit("ok", false);
+    }
   }
 };
 const data = reactive({

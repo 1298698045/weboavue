@@ -113,6 +113,8 @@ const Interface = {
     draftboxSearch:baseUrl + "/email/draftbox/search", // 查询草稿箱
     sentboxSearch:baseUrl + "/email/sentbox/search", // 查询发件箱
     getMail:baseUrl + "/email/getMail", // 获取单个邮件信息
+    getAttachments:baseUrl + "/email/getAttachments",//获取邮件附件列表
+    deletePermEmail:baseUrl + "/email/deletePermEmail",//删除箱永久删除
   },
   meeting: {
     userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织

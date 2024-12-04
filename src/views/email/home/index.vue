@@ -32,7 +32,14 @@
                     </el-input>
                 </div>
             </div>
-            <div class="return">容量：67.86M/200.00M</div>
+            <div class="return">
+                <div class="progressWrap">
+                    <a-progress :percent="(percentage?(percentage*1>100?100:percentage):0)" :size="8" :show-info="true" :title="'容量已使用'+(percentage?(percentage*1>100?100:percentage):0)+'%'"></a-progress>
+                    <p class="progressText">
+                        邮箱空间使用量：67.86M/200.00M
+                    </p>
+                </div>
+            </div>
         </div>
         <div class="emailBd">
             <div class="emailContainer">
@@ -64,12 +71,10 @@
                                                 </div>
                                                 <p class="name">{{ self.name }}</p>
                                                 <div class="option" v-if="item.isAdd">
-                                                    <span @click.stop="
-                                handleRenameFolder(item, self, idx, index)
-                              " style="padding-right: 5px">
+                                                    <span @click.stop="handleRenameFolder(item, self, idx, index)" style="padding-right: 5px" title="重命名">
                                                         <i class="iconfont icon-bianji"></i>
                                                     </span>
-                                                    <span @click.stop="handleDelFolder(self, idx)">
+                                                    <span @click.stop="handleDelFolder(self, idx)" title="删除">
                                                         <i class="iconfont icon-yishanchu"></i>
                                                     </span>
                                                 </div>
@@ -212,38 +217,65 @@
                                     <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
                                 </div>
                             </a-tooltip>
-                            <div class="titleBox">
+                            <div class="titleBox" v-if="ltags=='inbox'">
                                 <button class="btnText">
-                                    全部邮件(2)
-                                    <i class="iconfont icon-xiala"></i></button>
+                                    {{dropMenuItemName}}({{ emailTotal||0 }})
+                                    <i class="iconfont icon-xiala"></i>
+                                </button>
                                 <div class="dropMenuWapper mailDropWrap">
                                     <div class="dropMenu">
-                                        <div class="dropMenuItem"><span class="name">全部邮件</span></div>
-                                        <div class="dropMenuItem"><span class="name">未读邮件</span></div>
-                                        <div class="dropMenuItem"><span class="name">已读邮件</span></div>
+                                        <div class="dropMenuItem" @click="dropMenuItemChange('全部邮件')"><span class="name">全部邮件</span></div>
+                                        <div class="dropMenuItem" @click="dropMenuItemChange('未读邮件')"><span class="name">未读邮件</span></div>
+                                        <div class="dropMenuItem" @click="dropMenuItemChange('已读邮件')"><span class="name">已读邮件</span></div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="titleBox" v-if="ltags!='inbox'">
+                                <button class="btnText">
+                                    {{dropMenuItemName}}({{ emailTotal||0 }})
+                                </button>
                             </div>
                             <div class="rightBtn">
                                 <button class="btnText" @click="handleEditEmail">
                                     {{isEdit ? '取消' : '编辑'}}
                                 </button>
+                                <a-dropdown v-if="isEdit">
+                                    <template #overlay>
+                                    <a-menu>
+                                        <a-menu-item key="1" @click="BatchHandleUnRead">
+                                        <i class="iconfont icon-weiduyoujian"></i>
+                                          设为未读邮件
+                                        </a-menu-item>
+                                        <a-menu-item key="2" @click="BatchHandleStar">
+                                        <i class="iconfont icon-zhongyaoyoujian"></i>
+                                          设为重要邮件
+                                        </a-menu-item>
+                                        <a-menu-item key="5" @click="BatchHandleDeleteEmail">
+                                            <i class="iconfont icon-yishanchu"></i>
+                                            批量删除
+                                        </a-menu-item>
+                                    </a-menu>
+                                    </template>
+                                    <a-button :icon="h(MenuOutlined)" class="ml5"> </a-button>
+                                </a-dropdown>
                             </div>
                         </div>
                         <div class="mailListContent">
                             <div class="empty" v-if="inboxList==''">
-                                该标签下没有邮件！
+                                <!-- 该标签下没有邮件！ -->
+                                <svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse fill="#f5f5f5" cx="32" cy="33" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#d9d9d9"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" fill="#fafafa"></path></g></g></svg>
+                                <p class="emptyDesc">暂无数据</p>
                             </div>
                             <el-checkbox-group v-model="checkList" @change="changeCheckbox">
 
-                                <div class="mailContentItem" :class="{active:item.emailId==emailId}"
+                                <div class="mailContentItem" :class="{active:item.id==emailId,unReadClass:item.isRead!=true}"
                                     v-for="(item,index) in inboxList" :key="index" @mouseenter="handleMouseover(item,index)"
                                     @mouseleave="handleMouseout(item,index)" @click="handleRowEmail(item,index)">
                                     <p @click.stop v-if="item.isBook">
-                                        <el-checkbox class="checkbox" 
-                                            :value="item.emailId"></el-checkbox>
+                                        <el-checkbox class="checkbox" :key="item.emailId"
+                                        :label="item.emailId" :value="item.emailId"></el-checkbox>
                                     </p>
-                                    <a-tooltip placement="top" title="点击标记未读">
+                                    <a-tooltip placement="top" :title="item.isRead?'点击取消未读':'点击标记未读'">
                                         <span class="readElement" :class="{active:item.isRead}"
                                             @click.stop="handleRowRead(item)"></span>
                                     </a-tooltip>
@@ -254,34 +286,51 @@
                                         <div class="nameRow">
                                             <span class="name" :class="{active:!item.isRead}">{{item.fromName || ''}}</span>
                                             <div class="right">
-                                                <span :class="{'active':item.isStar}"
+                                                <a-tooltip placement="top" :title="item.isRead?'点击取消未读':'点击标记未读'">
+                                                    <span @click.stop="handleRowRead(item)">
+                                                        <i class="iconfont icon-wodeyoujian"></i>
+                                                    </span>
+                                                </a-tooltip>
+                                                <a-tooltip placement="top" :title="item.isStar?'点击取消重要邮件':'点击标记重要邮件'">
+                                                    <span :class="{'active':item.isStar}"
                                                     @click.stop="handleItemStarEmail(item)">
                                                     <i v-if="item.isStar" class="iconfont icon-shoucangyoujian"
                                                         style="color:#F7BA1E;opacity:1;"></i>
                                                     <i v-else class="iconfont icon-zhongyaoyoujian"></i>
                                                 </span>
+                                                </a-tooltip>
                                                 <span style="visibility: visible;margin-left: 5px;" v-if="item.isAttach">
                                                     <i class="iconfont icon-fujianwenjian"></i>
                                                 </span>
-                                                <a-tooltip placement="top" :title="item.createdOn">
-                                                    <div class="timer">
-                                                        <i class="iconfont icon-fujian"></i>
-                                                        {{item.createdOn || ''}}
-                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="middleRow">
+                                            <div class="theme rowEllipsis" :class="{active:!item.isRead}">
+                                                <a-tooltip :title="item.subject || '无主题'" placement="bottom">
+                                                    <span>
+                                                        {{item.subject || '[无主题]'}}
+                                                    </span>
+                                                </a-tooltip>
+                                            </div>
+                                            <div class="timer">
+                                                <i class="iconfont icon-fujian"></i>
+                                                {{item.createdOn || ''}}
+                                            </div>
+                                            <div class="deleteAction">
+                                                <a-tooltip placement="top" title="删除">
+                                                    <span @click.stop="handleRowDelete(item)">
+                                                        <i class="iconfont icon-yishanchu"></i>
+                                                    </span>
                                                 </a-tooltip>
                                             </div>
                                         </div>
-                                        <div class="theme rowEllipsis" :class="{active:!item.isRead}">
-                                            <a-tooltip :title="item.subject || '无主题'" placement="bottom">
-                                                <span>
-                                                    {{item.subject || '[无主题]'}}
-                                                </span>
-                                            </a-tooltip>
-                                        </div>
-                                        <div class="desc rowEllipsis">
-                                            {{item.content || '此邮件没有文字内容'}}
+                                        
+                                        <div class="desc rowEllipsis" v-html="(item.content || '')">
                                         </div>
                                     </div>
+                                </div>
+                                <div class="loadingList" v-if="loading">
+                                    <LoadingOutlined />
                                 </div>
                             </el-checkbox-group>
                         </div>
@@ -291,14 +340,16 @@
                     </div>
                     <!-- 邮件详情 -->
                     <div class="mailContainerWrap inboxContainer" v-if="isDetail">
-                        <email-detail :emailId="emailId"></email-detail>
+                        <email-detail :emailId="emailId" @cancel="isDetail=false" @reply="handleReply" @share="handleShare" @delete="handleRowDelete"></email-detail>
                     </div>
                 </div>
                 <div class="rightContainer" v-if="isWriteEmail">
-                    <writeEmail :ltags="ltagsRecord" @cancel="closeWriteEmail" @refresh="getInboxList" />
+                    <writeEmail :body="ltagsData.body" v-if="isWriteEmail" :username="ltagsData.name" :userid="ltagsData.id" :ltags="ltagsRecord" @cancel="closeWriteEmail" @refresh="getInboxList" :id="recordId" />
                 </div>
             </div>
         </div>
+        <Delete :isShow="isDelete" :desc="deleteDesc" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" @cancel="isDelete=false" @ok="deleteOk" />
+        <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="confirmOk" :id="recordId" />
     </div>
 </template>
 <script setup>
@@ -314,7 +365,8 @@
         defineProps,
         defineExpose,
         defineEmits,
-        nextTick
+        nextTick,
+        h
     } from "vue";
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
@@ -330,10 +382,14 @@
         SearchOutlined,
         DeleteOutlined,
         MailOutlined,
+        LoadingOutlined,
+        MenuOutlined
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import EmailDetail from "@/components/email/EmailDetail.vue";
     import writeEmail from "@/views/email/writeEmail/index.vue";
+    import Delete from "@/components/listView/Delete.vue";
+    import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
     import Interface from "@/utils/Interface.js";
     import { useRouter, useRoute } from "vue-router";
     import { useStore } from "vuex";
@@ -425,14 +481,29 @@ let store = useStore();
         isFocus:false,
         isWriteEmail:false,
         ltagsRecord:'',
+        ltagsData:{name:'',id:'',body:''},
         appList: [],
         keyIndex:1,
-  appCode: "",
-  currentAppName: ""
+        appCode: "",
+        currentAppName: "",
+        folderName:'',
+        userId:'',
+        isDelete: false,
+        recordId:'',
+        objectTypeCode:'6000',
+        sObjectName:'Chatter',
+        deleteDesc: '确定要删除吗？',
+        external:false,
+        dropMenuItemName:'全部邮件',
+        percentage:34,
+        loading:false,
+        isConfirm:false,
+        confirmText:'',
+        confirmTitle:'',
     });
-    const { navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
-         folderList, folderText, renameFolderId, isEdit, checkList, checkAll, isIndeterminate, isFold, 
-         isDetail, emailIndex, pageNumber, pageSize,searchText,isFocus,isWriteEmail,ltagsRecord,appList, appCode, currentAppName } = toRefs(data);
+    const { loading,percentage,dropMenuItemName,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external,userId,folderName,navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
+         folderList, folderText, renameFolderId, isEdit, checkList, checkAll, isIndeterminate, isFold,isConfirm,confirmText,confirmTitle,
+         isDetail, emailIndex, pageNumber, pageSize,searchText,isFocus,isWriteEmail,ltagsRecord,ltagsData,appList, appCode, currentAppName } = toRefs(data);
          data.appList = store.state.modules;
 
 let localAppCode = localStorage.getItem("appCode");
@@ -456,64 +527,104 @@ const getModuleAppList = () => {
 };
 // getModuleAppList();
 
-const changeCode = (e) => {
-  // console.log('e', e);
-  data.appCode = e;
-  localStorage.setItem("appCode", data.appCode);
-  store.dispatch("getSubModules", e);
-}
+    const changeCode = (e) => {
+        data.appCode = e;
+        localStorage.setItem("appCode", data.appCode);
+        store.dispatch("getSubModules", e);
+    }
     let itemRefs = [];
     const handleTypeEmail = (item, index) => {
         data.keyIndex=1;
-        console.log(item, index);
+        data.checkList = [];
+        data.isDetail=false;
         data.ltags = item.ltags;
         data.emailId = "";
-        if (data.ltags.indexOf("folder") != -1) {
-            data.folderId = item.Id;
-        }
         data.isWriteEmail=false;
+        data.recordId='';
+        data.ltagsData={name:'',id:'',body:''};
+        if (data.ltags.indexOf("folder") != -1) {
+            data.folderId = item.id;
+            data.folderName = item.name;
+        }
+        if(data.ltags=='inbox'){
+            data.dropMenuItemName='全部邮件';
+        }else{
+            data.dropMenuItemName=item.name;
+        }
         getInboxList();
     };
     const handleOpen = (item, index) => {
         item.isBook = !item.isBook;
         item.isAddTabs = false;
         data.isWriteEmail=false;
+        data.recordId='';
+        data.ltagsData={name:'',id:'',body:''};
     }
 
     // 获取邮件列表
     const getInboxList = () => {
-        let url=Interface.email.inboxSearch;
-        if(data.ltags=='inbox'){
-            url=Interface.email.inboxSearch;
-        }else if(data.ltags=='sent'){
-            url=Interface.email.sentboxSearch;
-        }else if(data.ltags=='draft'){
-            url=Interface.email.draftboxSearch;
-        }else if(data.ltags==''){
-            
+        data.loading=true;
+        if(data.keyIndex==1){
+            data.inboxList = [];
         }
+        let url=Interface.email.inboxSearch;
         let d = {
             actions:[{
                 params: {
                     ltags: data.ltags,
                     search: data.searchText,
                     pageNumber: data.keyIndex,
-                    pageSize: data.pageSize
+                    pageSize: data.pageSize,
+                    sort:'CreatedOn',
+                    sortDir:'DESC'
                 }
             }]
         };
+        if(data.ltags=='inbox'){
+            url=Interface.email.inboxSearch;
+            if(data.dropMenuItemName=='未读邮件'){
+                d.actions[0].params.IsRead=false;
+            }
+            else if(data.dropMenuItemName=='已读邮件'){
+                d.actions[0].params.IsRead=true;
+            }
+        }else if(data.ltags=='sent'){
+            url=Interface.email.sentboxSearch;
+        }else if(data.ltags=='draft'){
+            url=Interface.email.draftboxSearch;
+        }else if(data.ltags=='star'){
+            d.actions[0].params.starEmail=1;
+        }else if(data.ltags=='group'){
+            d.actions[0].params.IsGroupmail=true;
+        }else if(data.ltags=='unread'){
+            d.actions[0].params.IsRead=false;
+        }else if(data.ltags=='Deleted'){
+            d.actions[0].params.DeleteStateCode=1;
+        }
         let obj = {
             message: JSON.stringify(d)
         }
-        if(data.keyIndex==1){
-                    data.inboxList = [];
-                }
+        if (data.ltags.indexOf("folder") != -1) {
+            url=Interface.list2;
+            obj={
+                filterId:'',
+                objectTypeCode:'20021',
+                entityName:'MailInbox',
+                filterQuery:'\nMailTagId\teq\t'+data.folderId,
+                search:data.searchText,
+                page: data.keyIndex,
+                rows: data.pageSize,
+                sort:'CreatedOn',
+                order:'DESC',
+                displayColumns:'FromName,ToUserNames,IsRead,Subject,MailContent,CreatedOn'
+            }
+        }
         proxy.$post(url, obj).then(res => {
             if(res&&res.nodes.length){
                 let nodes=res.nodes;
                 if(nodes&&nodes.length){
+                    data.isBook = false;
                     nodes.forEach(function (item) {
-                        data.isBook = false;
                         // if (item.toUserNames) {
                         //     if (item.toUserNames.slice(item.toUserNames.length - 1) == ',') {
                         //         var name = item.toUserNames.slice(0, item.toUserNames.length - 1)
@@ -521,12 +632,13 @@ const changeCode = (e) => {
                         //     }
                         // }
                         data.inboxList.push({
-                            emailId:item.EmailId.value,
+                            emailId:item.id,
                             fromName:item.FromName?item.FromName.textValue:'',
                             ToUserNames:item.ToUserNames?item.ToUserNames.textValue:'',
                             isRead:item.IsRead?item.IsRead.selected:false,
+                            isStar:item.StarEmail&&item.StarEmail.value*1==1?true:false,
                             subject:item.Subject.textValue,
-                            content:item.Content&&item.Content.value?item.Content.value:'',
+                            content:item.Content&&item.Content.value?item.Content.value:(item.MailContent&&item.MailContent.value?item.MailContent.value:''),
                             createdOn:item.CreatedOn&&item.CreatedOn.dateTime?dayjs(item.CreatedOn.dateTime).format('YYYY-MM-DD HH:mm'):'',
                             id:item.id
                         })
@@ -534,7 +646,7 @@ const changeCode = (e) => {
                     data.inboxList=data.inboxList.concat(data.inboxList);
                     data.inboxList=unique(data.inboxList);
                 }
-                data.emailTotal = res.totalCount||0;
+                data.emailTotal = res.totalCount||(res.pageInfo?res.pageInfo.total:0)||0;
             }
             else{
                 data.emailId = '';
@@ -542,30 +654,66 @@ const changeCode = (e) => {
             data.emailListAll = data.emailListAll.concat(data.inboxList);
             data.emailListAll = unique(data.emailListAll)
         })
+        setTimeout(function(){
+            data.loading=false;
+        },3000)
     }
     
-    // 获取我的文件夹
+    // 获取我的标签
     const getMyFolder = () => {
-        proxy.$get(Interface.email.myEmailFolder,{}).then(res=>{
-            data.folderList = res.data;
-            var result = [];
-            result = res.data.map(function (item,index) {
-                item.name = item.Name;
-                item.id = item.Id;
-                item.num = '';
-                item.iconClass = '';
-                item.ltags = 'folder_'+index;
-                item.folderId = item.Id;
-                return item;
-            })
-            data.navList[1].children = result
+        data.navList[1].children=[];
+        let url=Interface.list2;
+        let obj={
+                filterId:'',
+                objectTypeCode:'20609',
+                entityName:'MailLabel',
+                filterQuery:'\nCreatedBy\teq-userid',
+                search:data.searchText,
+                page: 1,
+                rows: 100,
+                sort:'CreatedOn',
+                order:'ASC',
+                displayColumns:'Name'
+            }
+            proxy.$post(url, obj).then(res => {
+            if(res&&res.nodes.length){
+                let nodes=res.nodes;
+                if(nodes&&nodes.length){
+                    nodes.forEach(function (item,index) {
+                        (data.navList[1].children).push({
+                            name:item.Name?item.Name.textValue:'',
+                            id:item.id,
+                            num:'',
+                            iconClass:'',
+                            ltags:'folder_'+index,
+                            folderId:item.id
+                        })
+                    })
+                }
+            }
+            else{
+                data.folderId = '';
+            }
         })
+        // proxy.$get(Interface.email.myEmailFolder,{}).then(res=>{
+        //     data.folderList = res.data;
+        //     var result = [];
+        //     result = res.data.map(function (item,index) {
+        //         item.name = item.Name;
+        //         item.id = item.Id;
+        //         item.num = '';
+        //         item.iconClass = '';
+        //         item.ltags = 'folder_'+index;
+        //         item.folderId = item.Id;
+        //         return item;
+        //     })
+        //     data.navList[1].children = result
+        // })
     }
-    getMyFolder();
     const unique = (list) => {
         for (var i = 0; i < list.length; i++) {
             for (var j = i + 1; j < list.length; j++) {
-                if (list[i].emailId == list[j].emailId) {
+                if (list[i].id == list[j].id) {
                     list.splice(j, 1)
                     j--;
                 }
@@ -584,25 +732,63 @@ const changeCode = (e) => {
             itemRefs = [];
         })
     }
-    // 新建文件夹
+    // 新建邮箱标签
    const handleConfirm = (item, index) => {
-        if (data.folderText != '') {
-            if (data.renameFolderId) {
-                // renameFolder();
-            } else {
-                // handleNewFolder();
+        if (data.folderText!='') {
+            let url=Interface.create;
+            let d = {
+            actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                    recordInput: {
+                        allowSaveOnDuplicate: false,
+                        apiName: 'MailLabel',
+                        objTypeCode: '20609',
+                        fields: {
+                            Name:data.folderText,
+                            CreatedBy: data.userId
+                        }
+                    }              
+                    }
+                }]
+            };
+            if(data.renameFolderId){
+                url=Interface.edit;
+                d.actions[0].params.recordId=data.renameFolderId;
             }
-            item.isAddTabs = false;
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                    message.success("保存成功！");
+                    item.isAddTabs = false;
+                    data.renameFolderId='';
+                    data.folderText = '';
+                    getMyFolder();
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                        message.success(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.success("保存失败！");
+                    }
+                }
+            });
         } else {
-            message.error("文件夹名称不能为空!")
+            message.error("邮箱标签名称不能为空!")
         }
     }
-    // 关闭新建文件夹
+    // 关闭新建邮箱标签
     const handleClose = (item,index) => {
         item.isAddTabs = false;
         data.folderText = '';
+        data.renameFolderId='';
     }
-    // 文件夹重命名
+    // 邮箱标签重命名
     const handleRenameFolder = (item, self, idx,index)=> {
         data.folderText = self.name;
         data.renameFolderId = self.folderId;
@@ -615,9 +801,24 @@ const changeCode = (e) => {
             itemRefs = [];
         })
     }
-    // 删除文件夹
+    const deleteOk=()=>{
+        if(data.objectTypeCode=='20609'){
+            getMyFolder();
+        }
+        if(data.objectTypeCode=='20021'){
+            data.keyIndex=1;
+            data.checkList = [];
+            data.isDetail=false;
+            getInboxList();
+        }
+    }
+    // 删除邮箱标签
     const handleDelFolder = (item,index) => {
         // deleteFolder(item.folderId);
+        data.recordId=item.id;
+        data.isDelete = true;
+        data.objectTypeCode='20609';
+        data.sObjectName='MailLabel';
     }
     const handleMouseover = (item, index) => {
         item.isBook = true;
@@ -671,15 +872,24 @@ const changeCode = (e) => {
                 index: index,
                 el
             })
-            console.log("itemRefs",itemRefs)
+            //console.log("itemRefs",itemRefs)
         }
     }
     // 切换邮件
     const handleRowEmail = (item,index) => {
+        item.isRead=true;
+        let item0={isRead:false,id:item.id,subject:item.subject};
+        if(item0.id){
+            handleRowRead(item0,1)
+        }
         if(data.ltags=='draft'){
-            window.location.href = '/email/writeEmail.html?emailId='+item.emailId+'&isDraft=1'
+            //window.location.href = '/email/writeEmail.html?emailId='+item.id+'&isDraft=1'
+            data.ltagsRecord=data.ltags;
+            data.ltagsData={name:'',id:'',body:item.content||''};
+            data.recordId=item.id;
+            data.isWriteEmail=true;
         }else {
-            data.emailId = item.emailId;
+            data.emailId = item.id;
             data.emailIndex = index;
             data.isDetail = true;
         }
@@ -707,13 +917,25 @@ const changeCode = (e) => {
         //window.location.href=url.href;
         data.ltagsRecord=data.ltags;
         data.isWriteEmail=true;
-        nextTick(()=>{
-            data.ltags='';
-        })
+        
+    }
+    const handleReply= (e) => {
+        data.ltagsRecord=data.ltags;
+        data.ltagsData=e;
+        data.isWriteEmail=true;
+        
+    }
+    const handleShare= (e) => {
+        data.ltagsRecord=data.ltags;
+        data.ltagsData=e;
+        data.isWriteEmail=true;
+        
     }
     const searchEmailInbox = (e) => {
         data.searchText = e;
         data.keyIndex=1;
+        data.checkList = [];
+        data.isDetail=false;
         if(data.searchText.length>=2 || data.searchText == ''){
             getInboxList();
         }
@@ -727,10 +949,18 @@ const changeCode = (e) => {
     const closeWriteEmail=(e)=>{
         console.log(e)
         data.isWriteEmail=false;
+        data.recordId='';
+        data.ltagsData={name:'',id:'',body:''};
         data.ltags=e;
     }
     onMounted(() => {
         getInboxList();
+        getMyFolder();
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.userId=userInfo.userId;
+        }
         if(route.query.Id){
             openWriteEmail();
         }
@@ -774,6 +1004,246 @@ const handleGoModule = (item) => {
   changeCode(item.AppCode);
   isShow.value = false;
 }
+const handleRowDelete=(item)=>{
+    data.recordId=item.id;
+    // data.isDelete = true;
+    // data.objectTypeCode='20021';
+    // data.sObjectName='MailInbox';
+    data.isConfirm=true;
+    if(data.ltags=='Deleted'){
+        data.confirmText='确定要永久删除吗？'
+    }else{
+        data.confirmText='确定要删除吗？'
+    }
+    data.confirmTitle='删除'
+}
+const handleRowRead=(item,num)=>{
+    let IsRead=item.isRead?false:true;
+    let url=Interface.edit;
+            let d = {
+            actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId:item.id,
+                        recordInput: {
+                            allowSaveOnDuplicate: false,
+                            apiName: 'MailInbox',
+                            objTypeCode: '20021',
+                            fields: {
+                                IsRead:IsRead
+                            }
+                        }              
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                    if(num*1==1){
+
+                    }
+                    else{
+                        message.success("操作成功！");
+                    }
+                    if(item.subject){
+                        item.isRead=IsRead;
+                    }
+                    else{
+                        data.keyIndex=1;
+                        getInboxList();
+                    }
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                        message.success(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.success("操作失败！");
+                    }
+                }
+            });
+}
+const handleItemStarEmail=(item)=>{
+    let StarEmail=item.isStar?0:1;
+    let url=Interface.edit;
+            let d = {
+            actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId:item.id,
+                        recordInput: {
+                            allowSaveOnDuplicate: false,
+                            apiName: 'MailInbox',
+                            objTypeCode: '20021',
+                            fields: {
+                                StarEmail:StarEmail
+                            }
+                        }              
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                    message.success("操作成功！");
+                    if(item.subject){
+                        item.isStar=StarEmail&&StarEmail*1==1?true:false;
+                    }
+                    else{
+                        data.keyIndex=1;
+                        getInboxList();
+                    }
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                        message.success(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.success("操作失败！");
+                    }
+                }
+            });
+}
+const confirmOk=(id)=>{
+    data.isConfirm=false
+    if(data.confirmTitle=='批量删除'){
+        BatchHandleDeleteEmail2();
+    }
+    else{
+        handleRowDelete2(id);
+    }
+}
+//逻辑删除
+const handleRowDelete2=(id)=>{
+    let url=Interface.edit;
+            let d = {
+            actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId:id,
+                        recordInput: {
+                            allowSaveOnDuplicate: false,
+                            apiName: 'MailInbox',
+                            objTypeCode: '20021',
+                            fields: {
+                                DeleteStateCode:1
+                            }
+                        }              
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            if(data.ltags=='Deleted'){
+                url=Interface.email.deletePermEmail;
+                obj={
+                    id:id
+                }
+            }
+            proxy.$post(url,obj).then(res=>{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                    message.success("删除成功！");
+                    data.keyIndex=1;
+                    data.isDetail=false;
+                    getInboxList();
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                        message.success(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.success("删除失败！");
+                    }
+                }
+            });
+}
+//切换已读未读条件
+const dropMenuItemChange=(name)=>{
+    data.dropMenuItemName=name;
+    data.keyIndex=1;
+    data.checkList = [];
+    data.isDetail=false;
+    data.emailId = "";
+    data.isWriteEmail=false;
+    data.recordId='';
+    data.ltagsData={name:'',id:'',body:''};
+    getInboxList();
+}
+//批量设置重要邮件
+const BatchHandleStar=()=>{
+    console.log(data.checkList)
+    if(data.checkList&&data.checkList.length){
+        for(var i=0;i<data.checkList.length;i++){
+            let item={isStar:false,id:data.checkList[i]};
+            if(item.id){
+                handleItemStarEmail(item)
+            }
+        }
+        setTimeout(function(){
+            data.checkList=[];
+        },2000)
+    }else{
+        message.error("至少需要勾选一个");
+    }
+}
+//批量设置未读
+const BatchHandleUnRead=()=>{
+    console.log(data.checkList)
+    if(data.checkList&&data.checkList.length){
+        for(var i=0;i<data.checkList.length;i++){
+            let item={isRead:true,id:data.checkList[i]};
+            if(item.id){
+                handleRowRead(item)
+            }
+            
+        }
+        setTimeout(function(){
+            data.checkList=[];
+        },2000)
+    }else{
+        message.error("至少需要勾选一个");
+    }
+}
+//批量删除
+const BatchHandleDeleteEmail=()=>{
+    console.log(data.checkList)
+    if(data.checkList&&data.checkList.length){
+        data.recordId='';
+        data.isConfirm=true;
+        if(data.ltags=='Deleted'){
+            data.confirmText='确定要批量永久删除吗？'
+        }else{
+            data.confirmText='确定要批量删除吗？'
+        }
+        data.confirmTitle='批量删除'
+    }else{
+        message.error("至少需要勾选一个");
+    }
+}
+const BatchHandleDeleteEmail2=()=>{
+    if(data.checkList&&data.checkList.length){
+        for(var i=0;i<data.checkList.length;i++){
+            let item={id:data.checkList[i]};
+            if(item.id){
+                handleRowDelete2(item.id);
+            }
+        }
+        setTimeout(function(){
+            data.checkList=[];
+        },2000)
+    }
+}
 </script>
 <style lang="less" scoped>
     @import url("@/style/email.less");
@@ -796,8 +1266,8 @@ const handleGoModule = (item) => {
         .navSearch {
             padding: 13px 20px 13px 0;
             position: relative;
-            width: 40%;
-            float: right;
+            float: left;
+            margin-left: 60px;
             .el-input{
                 height: 39px;
                 :deep .el-input__inner{
@@ -973,7 +1443,11 @@ const handleGoModule = (item) => {
                                         flex: 1;
                                         padding-left: 14px;
                                     }
-
+                                    .option{
+                                        .iconfont{
+                                            color: rgba(23, 26, 29, 0.6);
+                                        }
+                                    }
                                     &.active {
                                         background: #f2f3f5;
                                     }
@@ -1126,7 +1600,9 @@ const handleGoModule = (item) => {
             }
             .titleBox {
                 position: relative;
-
+                .btnText .iconfont{
+                    font-size: 12px;
+                }
                 &:hover .mailDropWrap {
                     display: block;
                 }
@@ -1191,6 +1667,22 @@ const handleGoModule = (item) => {
                 position: relative;
                 &:hover,&.active{
                     background: #f2f3f5;
+                    .rightInfo .nameRow .right span{
+                        visibility: visible;
+                    }
+                    .middleRow .deleteAction{
+                        visibility: visible;
+                    }
+                }
+                .rightInfo .nameRow .right span .iconfont{
+                    font-size: 12px;
+                    color: #aaa;
+                    margin-right: 6px;
+                    position: relative;
+                    top: 1px;
+                }
+                .rightInfo .nameRow .right span.active{
+                    visibility: visible;
                 }
                 .readElement {
                     width: 8px;
@@ -1296,6 +1788,7 @@ const handleGoModule = (item) => {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        min-height: 20px;
     }
     .emptyContent{
         flex: 1;
@@ -1305,10 +1798,13 @@ const handleGoModule = (item) => {
         font-size: 16px;
         color: #1d2129;
         .emptyContentbox{
-            background: #fff;
+            //background: #fff;
             border-radius: 4px;
-            height: 116px !important;
-            line-height: 116px;
+            height: 100% !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #666;
         }
     }
     .el-checkbox__label{
@@ -1329,12 +1825,13 @@ const handleGoModule = (item) => {
     }
     :deep .header-top-menu{
         width: 100px;
-        font-size: 25px;
+        font-size: 22px;
         position: relative;
-    top: -1px;
-    cursor: pointer;
+        top: -1px;
+        cursor: pointer;
+        font-weight: bold;
         .icon-yingyongzhongxin{
-            margin: 0 10px 0 20px !important;
+            margin: 0 15px 0 22px !important;
             margin-left: 20px;
             font-size: 18px;
             margin-bottom: 20px;
@@ -1405,4 +1902,140 @@ const handleGoModule = (item) => {
         }
     }
 }
+.empty {
+            background: #fff;
+            padding: 8px 0 22px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            svg,img{
+                width: 100px !important;
+                height: auto;
+            }
+            .emptyDesc{
+                color: #ccc;
+                margin-top: 10px;
+            }
+        }
+        .emailDetail{
+            :deep .mailContentView{
+                height: calc(~'100% - 95px') !important;
+            }
+        }
+        .emailWrap{
+            .icon-xiala.active{
+                transform: rotate(-90deg);
+                display: block;
+            }
+            .navSearch{
+                //width: calc(~'100% - 200px');
+                width: 50%;
+            }
+            .emailHeader .return{
+                width: 250px;
+                .progressWrap{
+                    font-size: 12px;
+                    text-align: left;
+                    margin-right: 0px;
+                    .progressText{
+                        margin-left: 10px;
+                    }
+                    :deep .ant-progress-line{
+                        margin-bottom: 2px;
+                    }
+                    :deep .ant-progress-text{
+                        color: #fff;
+                        font-size: 12px;
+                    }
+                    :deep .ant-progress-inner{
+                        background-color: #fff;
+                    }
+                    :deep .ant-progress .ant-progress-bg{
+                        background-color: rgb(135, 208, 104);
+                    }
+                }
+            }
+            .mailListContent{
+                :deep .el-checkbox-group{
+                    .loadingList{
+                        display: flex;
+                        justify-content: center;
+                        height: 100px;
+                        .anticon{
+                            font-size: 28px;
+                            color: #999;
+                        }
+                    }
+                }
+                .mailContentItem {
+                    :deep .el-checkbox__label{
+                        display: none;
+                    }
+                    .rightInfo{
+                        .nameRow {
+                            .name{
+                                color: #242424;
+                            }
+                            .right{
+                                position: relative;
+                                right: 15px;
+                            }
+                            .right span .iconfont{
+                                font-size: 15px;
+                                color: #aaa;
+                                margin: 0 7px;
+                                position: relative;
+                                top: -2px;
+                                right: 0px;
+                            }
+                        }
+                        .theme{
+                            color: #242424;
+                            width: 153px;
+                        }
+                        .desc{
+                            color: #616161;
+                        }
+
+                    }
+                    .middleRow{
+                        display: flex;
+                        .timer{
+                            font-size: 12px;
+                        }
+                        .deleteAction{
+                            font-size: 14px;
+                            color: #aaa;
+                            position: relative;
+                            left: 7px;
+                            visibility: hidden;
+                        }
+                    }
+                }
+                .mailContentItem.unReadClass{
+                    .nameRow .name{
+                        font-weight: bolder;
+                    }
+                    .theme{
+                        color: #1055BC;
+                        font-weight: bolder;
+                    }
+                }
+                
+                
+            }
+
+        }
+        .mailListWrap{
+            width: 362px;
+        }
+        .mailHeader{
+            .rightBtn{
+                :deep .ant-btn{
+                    border:none;
+                }
+            }
+        }
 </style>
