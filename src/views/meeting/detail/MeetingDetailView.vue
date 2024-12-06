@@ -562,10 +562,10 @@ const getUserData = (params) => {
 
 const openFullSign= (num) => {
         //window.open('http://192.168.1.200:82/apps/meetings/dynamicSign.aspx?id=8f9c33e1-52a4-4dcd-9ade-9e95484a6f1a');
-        let link='/lightning/o/Meeting/signin/screen';
+        let link='/Meeting/signin/screen';
         let name='SigninScreen';
         if(num*1==1){
-          link='/lightning/o/Meeting/signoff/screen';
+          link='/Meeting/signoff/screen';
           name='SignoffScreen';
         }
         let url = router.resolve({
@@ -586,7 +586,7 @@ const openFullSign1=()=>{
 }
 const printMeetingPeoplelst= (type) => {
         let url = router.resolve({
-            path:'/lightning/o/printMeetingPeoplelst',
+            path:'/printMeetingPeoplelst',
             name: "PrintMeetingPeoplelst",
             query: {
                 id: data.id,

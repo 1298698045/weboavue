@@ -17,7 +17,7 @@
                     </template>
                     <a-button class="ml5">移动</a-button>
                 </a-dropdown> -->
-                <a-button class="ml5">移动</a-button>
+                <a-button class="ml5" @click="changeEmailLabel">移动</a-button>
                 <a-button class="ml5" @click="handleDeleteEmail">删除</a-button>
                 <a-dropdown>
                     <template #overlay>
@@ -26,7 +26,7 @@
                           <i class="iconfont icon-weiduyoujian"></i>
                           设为未读邮件
                         </a-menu-item>
-                        <a-menu-item key="2" @click="handleStar">
+                        <a-menu-item key="2" @click="handleStar(1)">
                           <i class="iconfont icon-zhongyaoyoujian"></i>
                           设为重要邮件
                         </a-menu-item>
@@ -72,7 +72,13 @@
                         </div>
                     </div>
                     <div class="emailOther">
-                        <div class="timerRow"><span><i class="iconfont icon-zhongyaoyoujian"></i></span> <!---->
+                        <div class="timerRow">
+                            <a-tooltip placement="top" :title="detail.isStar?'点击取消重要邮件':'点击标记重要邮件'">
+                                <span @click.stop="handleStar(detail.isStar?0:1)" >
+                                    <i v-if="detail.isStar" class="iconfont icon-shoucangyoujian" style="color:#F7BA1E;opacity:1;"></i>
+                                    <i v-else class="iconfont icon-zhongyaoyoujian"></i>
+                                </span>
+                            </a-tooltip>
                             {{detail.createdOn}}
                         </div>
                         <div class="detailText">
@@ -120,7 +126,7 @@
                                                 <div class="fileOptionShow" :title="(item.name||'')">
                                                     <div class="btns">
                                                         <a-tooltip title="保存到优盘" placement="top">
-                                                            <a-button class="btn square default" title="保存到优盘" @click="openUsb(item.Id)">
+                                                            <a-button class="btn square default" title="保存到优盘" @click="openUsb(item)">
                                                                 <i class="iconfont icon-baocundaoyoupan"></i>
                                                             </a-button>
                                                         </a-tooltip>
@@ -143,7 +149,12 @@
                             </div>
                         </div>
         </div>
-        <Delete :isShow="isDelete" :desc="'是否删除当前邮件?'" @cancel="cancelDelete" @ok="deleteEmail" />
+        <ChangeLabel
+            :isShow="isLabel"
+            v-if="isLabel"
+            :id="props.emailId"
+            @cancel="isLabel=false"
+        />
     </div>
 </template>
 <script setup>
@@ -167,7 +178,7 @@
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
-    import Delete from "@/components/listView/Delete.vue";
+    import ChangeLabel from "@/components/email/ChangeLabel.vue";
     const { proxy } = getCurrentInstance();
     const props = defineProps({
         emailId: String
@@ -175,6 +186,7 @@
     const emit = defineEmits(['cancel','reply','share']);
     const data = reactive({
         isDetail: false,
+        isLabel:false,
         isEmailTitle: false,
         detail: {Subject:''},
         ltags: "inbox",
@@ -198,9 +210,11 @@
             //     "size":'1.6kb'
             // }
         ],
-        isDelete: false
+        isDelete: false,
+        currentUserId:'',
+        currentUserName:'',
     })
-    const { isDetail, isEmailTitle, detail, receiverNames, isDelete,attachments } = toRefs(data);
+    const { isLabel,currentUserId,currentUserName,isDetail, isEmailTitle, detail, receiverNames, isDelete,attachments } = toRefs(data);
 
     const handleClickText = () => {
         data.isDetail = !data.isDetail;
@@ -221,9 +235,12 @@
         }).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue){
                 data.detail = res.actions[0].returnValue;
-                data.receiverNames = data.detail.toUserNames && data.detail.toUserNames.split(',');
+                data.receiverNames = data.detail.toUserNames?data.detail.toUserNames.split(','):[];
                 if(data.detail.isGroupmail){
-                    data.receiverNames = data.detail.toGroupNames && data.detail.toGroupNames.split(',');
+                    data.receiverNames = data.detail.toGroupNames?data.detail.toGroupNames.split(','):[];
+                }
+                if(data.receiverNames&&data.receiverNames.length==0){
+                    data.receiverNames=[data.currentUserName]
                 }
                 //data.attachments=res.actions[0].returnValue.attachments||[];
             }
@@ -241,6 +258,12 @@
                     size=size?(size*1/1024).toFixed(2):0;
                     size=size+'kb';
                     data.attachments[i].size=size;
+                    data.attachments[i]['uid']=item.attachId;
+                    let name=item.name||'';
+                    if(name){
+                        name=name.replaceAll('.'+item.fileExtension,'');
+                    }
+                    data.attachments[i]['url']='/'+item.parentId+'/'+name;
                 }
             }
         })
@@ -313,14 +336,14 @@
             });
     }
     // 重要邮件
-    const handleStar = () => {
+    const handleStar = (type) => {
         // proxy.$get(Interface.email.star,{
         //     Id: props.emailId,
         //     IsStar: 1
         // }).then(res=>{
         //     message.success("设置成功!");
         // })
-        let StarEmail=1;
+        let StarEmail=type;
     let url=Interface.edit;
             let d = {
             actions:[{
@@ -358,14 +381,70 @@
                 }
             });
     }
+    // 回复
     const handleReply=()=>{
-        let ltagsData={name:data.detail.fromName||'',id:data.detail.fromNameId||'2EC00CF2-A484-4136-8FEF-E2A2719C5ED6',body:''}
+        let ltagsData={name:'',id:'',body:'',emailId:props.emailId,type:'回复'}
         emit("reply", ltagsData);
     }
+    // 转发
     const handleShare=()=>{
-        let ltagsData={name:'',id:'',body:data.detail.body||''}
+        let ltagsData={name:'',id:'',body:'',emailId:props.emailId,type:'转发'}
         emit("share", ltagsData);
     }
+    // 移动到邮件标签
+    const changeEmailLabel = () => {
+        data.isLabel = true;
+    };
+    //保存到优盘
+    const openUsb= (item) => {
+        data.isLabel = true;
+    };
+    //预览附件
+    const handlePreviewFile= (item) => {
+        let url='/api/email/preview'+item.url;
+        // let d = {}
+        // proxy.$post(url,d).then(res=>{
+        //     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                
+        //     }
+        //     else{
+        //         if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+        //             message.success(res.actions[0].errorMessage);
+        //         }
+        //         else{
+        //             message.success("预览失败！");
+        //         }
+        //     }
+        // })
+        window.open(url);
+    };
+    //下载附件
+    const downloadFile= (item) => {
+        let url='/api/email/download'+item.url;
+        // let d = {}
+        // proxy.$post(url,d).then(res=>{
+        //     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                
+        //     }
+        //     else{
+        //         if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+        //             message.success(res.actions[0].errorMessage);
+        //         }
+        //         else{
+        //             message.success("下载失败！");
+        //         }
+        //     }
+        // })
+        window.open(url);
+    };
+    onMounted(() => {
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.currentUserId=userInfo.userId;
+            data.currentUserName=userInfo.fullName;
+        }
+    })
 </script>
 <style lang="less" scoped>
     .readElement {
@@ -507,7 +586,7 @@
             }
         }
         .richText{
-            padding: 20px;
+            padding: 20px 15px;
         }
         
     }

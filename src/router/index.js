@@ -69,7 +69,7 @@ const staticRoutes = [
     component: () => import("../views/email/writeEmail/index.vue"),
   },
   {
-    path: "/lightning/o/Meeting/signin/screen",
+    path: "/Meeting/signin/screen",
     name: "SigninScreen",
     component: () => import("../views/meeting/dynamicSign/index.vue"),
     meta: {
@@ -77,7 +77,7 @@ const staticRoutes = [
     },
   },
   {
-    path: "/lightning/o/Meeting/signoff/screen",
+    path: "/Meeting/signoff/screen",
     name: "SignoffScreen",
     component: () => import("../views/meeting/dynamicSign/index.vue"),
     meta: {
@@ -85,12 +85,12 @@ const staticRoutes = [
     },
   },
   {
-    path: "/lightning/o/printMeetingPeoplelst",
+    path: "/printMeetingPeoplelst",
     name: "PrintMeetingPeoplelst",
     component: () => import("../views/meeting/printMeetingPeoplelst/index.vue"),
   },
   {
-    path: "/lightning/o/printMeetingBasic",
+    path: "/printMeetingBasic",
     name: "PrintMeetingBasic",
     component: () => import("../views/meeting/printMeetingBasic/index.vue"),
   },
@@ -116,7 +116,7 @@ const staticRoutes = [
     ]
   },
   {
-    path: "/lightning/o/Meeting/view",
+    path: "/Meeting/detail",
     name: "MeetingDetailView",
     component: () => import("../views/meeting/detail/MeetingDetailView.vue"),
     meta: {
@@ -328,7 +328,7 @@ const staticRoutes = [
     },
   },
   {
-    path: "/lightning/o/printDutyShift",
+    path: "/printDutyShift",
     name: "PrintDutyShift",
     component: () => import("../views/Dutyshift/PrintDutyShift.vue"),
   },

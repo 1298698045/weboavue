@@ -55,13 +55,15 @@
               <a-tab-pane key="2" tab="详细信息"></a-tab-pane>
               <a-tab-pane key="3" tab="人员"></a-tab-pane>
               <a-tab-pane key="4" tab="统计"></a-tab-pane>
+              <a-tab-pane key="5" tab="附件"></a-tab-pane>
             </a-tabs>
             <group-space v-if="activeKey == '1'" :id="groudId" />
             <DetailInfo  v-if="activeKey == '2'" :id="groudId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
-            <Personnel ref="PersonnelLst" :load="refreshPeople" :id="groudId" v-if="activeKey == '3'" />
+            <Personnel v-if="activeKey == '3'" :id="groudId" ref="PersonnelLst" :load="refreshPeople" />
             <Statistics v-if="activeKey == '4'" :id="groudId" />
+            <RelatedAttachment v-if="activeKey == '5'" :id="groudId" :type="'page'" :RegardingObjectIdName="(detail.Name&&detail.Name.value?detail.Name.value:'')" :RegardingObjectTypeCode="objectTypeCode" />
           </div>
-          <div class="rightAside group-rightAside">
+          <!-- <div class="rightAside group-rightAside">
             <div class="panel">
               <div class="panel-head">
                 <div class="panel-title">附件 (0)</div>
@@ -123,7 +125,7 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="panel">
+            <div class="panel">
               <div class="panel-head">
                 <div class="panel-title">管理员</div>
                 <div class="panel-btn">
@@ -154,8 +156,8 @@
                   </div>
                 </div>
               </div>
-            </div> -->
-            <!-- <div class="panel">
+            </div>
+            <div class="panel">
               <div class="panel-head">
                 <div class="panel-title">成员</div>
                 <div class="panel-btn">
@@ -186,8 +188,8 @@
                   </div>
                 </div>
               </div>
-            </div> -->
-          </div>
+            </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -231,6 +233,8 @@ import AddGroup from "@/components/groupDetail/AddGroup.vue";
 import UpdateGroupImage from "@/components/groupDetail/UpdateGroupImage.vue";
 // 删除
 import Delete from "@/components/listView/Delete.vue";
+// 附件列表
+import RelatedAttachment from "@/components/meeting/RelatedAttachment.vue";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
 import { girdFormatterValue } from "@/utils/common.js";

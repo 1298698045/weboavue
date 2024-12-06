@@ -432,7 +432,7 @@
   //打印
   const printForm=()=>{
     let url = router.resolve({
-            path:'/lightning/o/printMeetingBasic',
+            path:'/printMeetingBasic',
             name: "PrintMeetingBasic",
             query: {
                 id: props.id,

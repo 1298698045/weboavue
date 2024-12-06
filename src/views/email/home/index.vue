@@ -230,7 +230,7 @@
                                     </div>
                                 </div>
                             </div> -->
-                            <a-tooltip class="foldIcon" placement="top" title="全选">
+                            <a-tooltip class="foldIcon" placement="top" title="全选" v-if="isEdit">
                                 <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"></el-checkbox>
                             </a-tooltip>
                             <div class="titleBox">
@@ -239,7 +239,7 @@
                                 </button>
                             </div>
                             <div class="rightBtn">
-                                <a-tooltip placement="top" title="批量选择">
+                                <a-tooltip placement="top" :title="isEdit?'点击关闭选择':'点击打开选择'">
                                     <a-dropdown>
                                         <template #overlay>
                                             <a-menu>
@@ -257,7 +257,9 @@
                                             </a-menu-item>
                                         </a-menu>
                                         </template>
-                                        <a-button :icon="h(isEdit?CheckSquareOutlined:BorderOutlined)" class="ml5" @click="handleEditEmail"> </a-button>
+                                        <a-button class="ml5 emaillistmenubtn1" @click="handleEditEmail"> 
+                                            <Icon :name="isEdit?'SelectAllOn':'SelectAllOff'" fill="#000" width="20" hight="20" />
+                                        </a-button>
                                     </a-dropdown>
                                 </a-tooltip>
                                 <a-tooltip placement="top" title="筛选器">
@@ -281,7 +283,9 @@
                                             </a-menu-item>
                                         </a-menu>
                                         </template>
-                                        <a-button :icon="h(FilterOutlined)" class="ml5"> </a-button>
+                                        <a-button class="ml5 emaillistmenubtn2">
+                                            <Icon name="Filter" fill="#000" width="20" hight="20" />
+                                        </a-button>
                                     </a-dropdown>
                                 </a-tooltip>
                                 <a-tooltip placement="top" title="排序方式">
@@ -314,7 +318,9 @@
                                                     </a-menu-item-group>
                                             </a-menu>
                                         </template>
-                                        <a-button :icon="h(SwapOutlined)" class="ml5 m155"> </a-button>
+                                        <a-button class="ml5 m155 emaillistmenubtn3"> 
+                                            <Icon name="ArrowSort" fill="#000" width="20" hight="20" />
+                                        </a-button>
                                     </a-dropdown>
                                 </a-tooltip>
                             </div>
@@ -334,7 +340,7 @@
                                         <el-checkbox class="checkbox" :key="item.emailId"
                                         :label="item.emailId" :value="item.emailId"></el-checkbox>
                                     </p>
-                                    <a-tooltip placement="top" :title="item.isRead?'点击取消未读':'点击标记未读'">
+                                    <a-tooltip placement="top" :title="item.isRead?'点击标记未读':'点击标记已读'">
                                         <span class="readElement" :class="{active:item.isRead}"
                                             @click.stop="handleRowRead(item)"></span>
                                     </a-tooltip>
@@ -345,7 +351,7 @@
                                         <div class="nameRow">
                                             <span class="name" :class="{active:!item.isRead}">{{item.fromName || ''}}</span>
                                             <div class="right">
-                                                <a-tooltip placement="top" :title="item.isRead?'点击取消未读':'点击标记未读'">
+                                                <a-tooltip placement="top" :title="item.isRead?'点击标记未读':'点击标记已读'">
                                                     <span @click.stop="handleRowRead(item)">
                                                         <i class="iconfont icon-wodeyoujian"></i>
                                                     </span>
@@ -399,11 +405,11 @@
                     </div>
                     <!-- 邮件详情 -->
                     <div class="mailContainerWrap inboxContainer" v-if="isDetail">
-                        <email-detail :emailId="emailId" @cancel="isDetail=false" @reply="handleReply" @share="handleShare" @delete="handleRowDelete"></email-detail>
+                        <email-detail :emailId="emailId" @cancel="isDetail=false;emailId='';" @reply="handleReply" @share="handleShare" @delete="handleRowDelete"></email-detail>
                     </div>
                 </div>
                 <div class="rightContainer" v-if="isWriteEmail">
-                    <writeEmail :body="ltagsData.body" v-if="isWriteEmail" :username="ltagsData.name" :userid="ltagsData.id" :ltags="ltagsRecord" @cancel="closeWriteEmail" @refresh="getInboxList" :id="recordId" />
+                    <writeEmail v-if="isWriteEmail" :ltags="ltagsRecord" :type="writeEmailType" @cancel="closeWriteEmail" @refresh="getInboxList" :id="recordId" />
                 </div>
             </div>
         </div>
@@ -453,6 +459,7 @@
     import writeEmail from "@/views/email/writeEmail/index.vue";
     import Delete from "@/components/listView/Delete.vue";
     import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+    import Icon from '@/components/icon/index.vue';
     import Interface from "@/utils/Interface.js";
     import { useRouter, useRoute } from "vue-router";
     import { useStore } from "vuex";
@@ -550,7 +557,8 @@ let store = useStore();
         appCode: "",
         currentAppName: "",
         folderName:'',
-        userId:'',
+        currentUserId:'',
+        currentUserName:'',
         isDelete: false,
         recordId:'',
         objectTypeCode:'6000',
@@ -565,9 +573,10 @@ let store = useStore();
         confirmTitle:'',
         sort:'CreatedOn',
         order:'DESC',
-        filterName:'全部'
+        filterName:'全部',
+        writeEmailType:''
     });
-    const { filterName,sort,order,loading,percentage,dropMenuItemName,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external,userId,folderName,navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
+    const { writeEmailType,filterName,sort,order,loading,percentage,dropMenuItemName,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external,currentUserId,currentUserName,folderName,navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
          folderList, folderText, renameFolderId, isEdit, checkList, checkAll, isIndeterminate, isFold,isConfirm,confirmText,confirmTitle,
          isDetail, emailIndex, pageNumber, pageSize,searchText,isFocus,isWriteEmail,ltagsRecord,ltagsData,appList, appCode, currentAppName } = toRefs(data);
          data.appList = store.state.modules;
@@ -607,7 +616,8 @@ const getModuleAppList = () => {
         data.emailId = "";
         data.isWriteEmail=false;
         data.recordId='';
-        data.ltagsData={name:'',id:'',body:''};
+        data.writeEmailType='';
+        //data.ltagsData={name:'',id:'',body:''};
         if (data.ltags.indexOf("folder") != -1) {
             data.folderId = item.id;
             data.folderName = item.name;
@@ -624,7 +634,7 @@ const getModuleAppList = () => {
         item.isAddTabs = false;
         data.isWriteEmail=false;
         data.recordId='';
-        data.ltagsData={name:'',id:'',body:''};
+        //data.ltagsData={name:'',id:'',body:''};
     }
 
     // 获取邮件列表
@@ -676,7 +686,7 @@ const getModuleAppList = () => {
                 filterId:'',
                 objectTypeCode:'20021',
                 entityName:'MailInbox',
-                filterQuery:'\nMailTagId\teq\t'+data.folderId,
+                filterQuery:'\nLabeld\teq\t'+data.folderId,
                 search:data.searchText,
                 page: data.keyIndex,
                 rows: data.pageSize,
@@ -739,7 +749,7 @@ const getModuleAppList = () => {
                 objectTypeCode:'20609',
                 entityName:'MailLabel',
                 filterQuery:'\nCreatedBy\teq-userid',
-                search:data.searchText,
+                search:'',
                 page: 1,
                 rows: 100,
                 sort:'CreatedOn',
@@ -819,7 +829,7 @@ const getModuleAppList = () => {
                         objTypeCode: '20609',
                         fields: {
                             Name:data.folderText,
-                            CreatedBy: data.userId
+                            CreatedBy: data.currentUserId
                         }
                     }              
                     }
@@ -880,8 +890,10 @@ const getModuleAppList = () => {
             data.keyIndex=1;
             data.checkList = [];
             data.isDetail=false;
+            data.emailId = "";
             getInboxList();
         }
+        data.recordId='';
     }
     // 删除邮箱标签
     const handleDelFolder = (item,index) => {
@@ -948,17 +960,20 @@ const getModuleAppList = () => {
     }
     // 切换邮件
     const handleRowEmail = (item,index) => {
-        item.isRead=true;
-        let item0={isRead:false,id:item.id,subject:item.subject};
-        if(item0.id){
-            handleRowRead(item0,1)
+        if(item.isRead!=true){
+            item.isRead=true;
+            let item0={isRead:false,id:item.id,subject:item.subject};
+            if(item0.id){
+                handleRowRead(item0,1)
+            }
         }
         if(data.ltags=='draft'){
             //window.location.href = '/email/writeEmail.html?emailId='+item.id+'&isDraft=1'
             data.ltagsRecord=data.ltags;
-            data.ltagsData={name:'',id:'',body:item.content||''};
+            //data.ltagsData={name:'',id:'',body:item.content||''};
             data.recordId=item.id;
             data.isWriteEmail=true;
+            data.writeEmailType='';
         }else {
             data.emailId = item.id;
             data.emailIndex = index;
@@ -988,25 +1003,33 @@ const getModuleAppList = () => {
         //window.location.href=url.href;
         data.ltagsRecord=data.ltags;
         data.isWriteEmail=true;
-        
+        data.recordId='';
+        data.writeEmailType='';
     }
     const handleReply= (e) => {
         data.ltagsRecord=data.ltags;
-        data.ltagsData=e;
-        data.isWriteEmail=true;
-        
+        //data.ltagsData=e;
+        data.recordId=e.emailId;
+        data.writeEmailType=e.type;
+        nextTick(()=>{
+            data.isWriteEmail=true;
+        })
     }
     const handleShare= (e) => {
         data.ltagsRecord=data.ltags;
-        data.ltagsData=e;
-        data.isWriteEmail=true;
-        
+        //data.ltagsData=e;
+        data.recordId=e.emailId;
+        data.writeEmailType=e.type;
+        nextTick(()=>{
+            data.isWriteEmail=true;
+        })
     }
     const searchEmailInbox = (e) => {
         data.searchText = e;
         data.keyIndex=1;
         data.checkList = [];
         data.isDetail=false;
+        data.emailId = "";
         if(data.searchText.length>=2 || data.searchText == ''){
             getInboxList();
         }
@@ -1018,53 +1041,14 @@ const getModuleAppList = () => {
         data.isFocus = false
     }
     const closeWriteEmail=(e)=>{
-        console.log(e)
+        //console.log(e)
         data.isWriteEmail=false;
         data.recordId='';
-        data.ltagsData={name:'',id:'',body:''};
+        data.writeEmailType='';
+        //data.ltagsData={name:'',id:'',body:''};
         data.ltags=e;
     }
-    onMounted(() => {
-        getInboxList();
-        getMyFolder();
-        let userInfo=window.localStorage.getItem('userInfo');
-        if(userInfo){
-            userInfo=JSON.parse(userInfo);
-            data.userId=userInfo.userId;
-        }
-        if(route.query.Id){
-            openWriteEmail();
-        }
-        window.addEventListener("click", function (e) {
-            isShow.value = false;
-            data.isInfoPopup  = false;
-        });
-        window.addEventListener(
-            "scroll",
-            function () {
-            if (document.getElementsByClassName("mailListContent").length) {
-            } else {
-                return;
-            }
-            var clientHeight =
-                document.getElementsByClassName("mailListContent")[0].clientHeight;
-            var scrollTop =
-                document.getElementsByClassName("mailListContent")[0].scrollTop;
-            var scrollHeight =
-                document.getElementsByClassName("mailListContent")[0].scrollHeight;
-            if (
-                scrollTop &&
-                clientHeight &&
-                (clientHeight + scrollTop >= scrollHeight)
-            ) {
-                data.keyIndex = data.keyIndex + 1;
-                getInboxList();
-            }
-            },
-            true
-        );
-    })
-    const isShow = ref(false);
+const isShow = ref(false);
 const handleShowApp = () => {
   isShow.value = !isShow.value;
 };
@@ -1227,6 +1211,7 @@ const handleRowDelete2=(id)=>{
                     message.success("删除成功！");
                     data.keyIndex=1;
                     data.isDetail=false;
+                    data.emailId = "";
                     getInboxList();
                 }
                 else{
@@ -1249,7 +1234,8 @@ const dropMenuItemChange=(name)=>{
     data.emailId = "";
     data.isWriteEmail=false;
     data.recordId='';
-    data.ltagsData={name:'',id:'',body:''};
+    data.writeEmailType='';
+    //data.ltagsData={name:'',id:'',body:''};
     getInboxList();
 }
 //切换排序方式
@@ -1260,7 +1246,8 @@ const ChangeEmailSort=(name)=>{
     data.emailId = "";
     data.isWriteEmail=false;
     data.recordId='';
-    data.ltagsData={name:'',id:'',body:''};
+    data.writeEmailType='';
+    //data.ltagsData={name:'',id:'',body:''};
     data.sort=name;
     getInboxList();
 }
@@ -1272,7 +1259,8 @@ const ChangeEmailOrder=(name)=>{
     data.emailId = "";
     data.isWriteEmail=false;
     data.recordId='';
-    data.ltagsData={name:'',id:'',body:''};
+    data.writeEmailType='';
+    //data.ltagsData={name:'',id:'',body:''};
     data.order=name;
     getInboxList();
 }
@@ -1340,6 +1328,47 @@ const BatchHandleDeleteEmail2=()=>{
         },2000)
     }
 }
+onMounted(() => {
+        getInboxList();
+        getMyFolder();
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.currentUserId=userInfo.userId;
+            data.currentUserName=userInfo.fullName;
+        }
+        if(route.query.Id){
+            openWriteEmail();
+        }
+        window.addEventListener("click", function (e) {
+            isShow.value = false;
+            data.isInfoPopup  = false;
+        });
+        window.addEventListener(
+            "scroll",
+            function () {
+            if (document.getElementsByClassName("mailListContent").length) {
+            } else {
+                return;
+            }
+            var clientHeight =
+                document.getElementsByClassName("mailListContent")[0].clientHeight;
+            var scrollTop =
+                document.getElementsByClassName("mailListContent")[0].scrollTop;
+            var scrollHeight =
+                document.getElementsByClassName("mailListContent")[0].scrollHeight;
+            if (
+                scrollTop &&
+                clientHeight &&
+                (clientHeight + scrollTop >= scrollHeight)
+            ) {
+                data.keyIndex = data.keyIndex + 1;
+                getInboxList();
+            }
+            },
+            true
+        );
+})
 </script>
 <style lang="less" scoped>
     @import url("@/style/email.less");
@@ -2146,13 +2175,14 @@ const BatchHandleDeleteEmail2=()=>{
         }
         .mailListWrap{
             width: 362px;
-            .m155{
-                transform: rotate(90deg);
-            }
+            // .m155{
+            //     transform: rotate(90deg);
+            // }
         }
         .mailHeader{
             height: 44px !important;
             line-height: 44px !important;
+            padding-left: 8px !important;
             .rightBtn{
                 :deep .ant-btn{
                     border:none;
@@ -2161,6 +2191,39 @@ const BatchHandleDeleteEmail2=()=>{
                 :deep .ant-btn:hover{
                     border:none;
                     background: #F0F0F0;
+                }
+                .emaillistmenubtn1{
+                    width: 32px;
+                    padding-inline-start: 0;
+                    padding-inline-end: 0;
+                    position: relative;
+                    top: 4px;
+                    .IconWrapContent{
+                        position: relative;
+                        top: 0px;
+                    }
+                }
+                .emaillistmenubtn2{
+                    width: 32px;
+                    padding-inline-start: 0;
+                    padding-inline-end: 0;
+                    position: relative;
+                    top: 12px;
+                    .IconWrapContent{
+                        position: relative;
+                        top: -4px;
+                    }
+                }
+                .emaillistmenubtn3{
+                    width: 32px;
+                    padding-inline-start: 0;
+                    padding-inline-end: 0;
+                    position: relative;
+                    top: 8px;
+                    .IconWrapContent{
+                        position: relative;
+                        top: -2px;
+                    }
                 }
             }
         }

@@ -25,15 +25,16 @@
                                     :rules="[{ required: activeKey*1==1?true:false, message: '请选择收件人' }]">
                                     <a-select :default-active-first-option="false"
                                     allowClear :filter-option="false" showSearch
-                                    @dropdownVisibleChange="(e) => {getUserList('');}"
-                                    @search="(e) => {getUserList(e);}" ref="select" v-model:value="formState.addressee" mode="multiple"
+                                    @dropdownVisibleChange="(e) => {getUserList1('');}"
+                                    @search="(e) => {getUserList1(e);}" ref="select" v-model:value="formState.addressee" mode="multiple"
                                         placeholder="请选择收件人">
-                                        <a-select-option v-for="(item, index) in selectConcatsList" :key="index" :value="item.ID">
+                                        <a-select-option v-for="(item, index) in selectConcatsList" :key="index" :value="item.ID" class="userclass">
                                             <a-avatar :size="37">
                                                 <template #icon><UserOutlined /></template>
                                                 <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
                                             </a-avatar>
-                                            {{item.Name}}
+                                            用户：
+                                            {{item.OrganizationId?item.OrganizationId+' / ':''}}{{item.BusinessUnitId?item.BusinessUnitId+' / ':''}}{{item.Name}}{{item.EmployeeId?' ('+item.EmployeeId+')':''}}
                                         </a-select-option>
                                     </a-select>
                                 </a-form-item>
@@ -41,9 +42,9 @@
                                     v-if="activeKey=='2'"
                                     :rules="[{ required: activeKey*1==2?true:false, message: '请选择群组' }]">
                                     <a-select v-model:value="formState.group" mode="multiple"
-                                    @dropdownVisibleChange="(e) => {getGroupList('');}"
-                                    @search="(e) => {getGroupList(e);}" placeholder="请选择群组">
-                                        <a-select-option v-for="(item, index) in selectGroupList" :key="index" :value="item.ID">{{item.Name}}</a-select-option>
+                                    @dropdownVisibleChange="(e) => {getGroupList1('');}"
+                                    @search="(e) => {getGroupList1(e);}" placeholder="请选择群组">
+                                        <a-select-option v-for="(item, index) in selectGroupList" :key="index" :value="item.ID">小组：{{item.Name}}</a-select-option>
                                     </a-select>
                                 </a-form-item>
                                 <a-form-item label="主题" name="theme" :rules="[{ required: true, message: '请输入主题' }]">
@@ -84,10 +85,10 @@
                                                 <div class="fileOptionShow" :title="(item.name||'')">
                                                     <div class="btns">
                                                         <a-tooltip title="查看" placement="top">
-                                                            <a-button type="text" :icon="previewIcon"></a-button>
+                                                            <a-button type="text" :icon="previewIcon" @click="handlePreviewFile(item)"></a-button>
                                                         </a-tooltip>
                                                         <a-tooltip title="下载" placement="top">
-                                                            <a-button type="text" :icon="h(VerticalAlignBottomOutlined)"></a-button>
+                                                            <a-button type="text" :icon="h(VerticalAlignBottomOutlined)" @click="downloadFile(item)"></a-button>
                                                         </a-tooltip>
                                                         <a-tooltip title="删除" placement="top">
                                                             <a-button type="text" :icon="h(CloseOutlined)" @click="deleteFile(item)"></a-button>
@@ -143,7 +144,7 @@
                 <a-button class="mr10" @click="cancelWriteEmail">取消</a-button>
             </div>
         </div>
-        <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
+        <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
     </div>
 </template>
 <script setup>
@@ -172,8 +173,9 @@
     import Delete from "@/components/listView/Delete.vue";
     import Editor from "@/components/TEditor.vue"
     import RadioUser from "@/components/commonModal/RadioUser.vue";
-    import { formTreeData } from "@/utils/common.js";
+    import { formTreeData,girdFormatterValue } from "@/utils/common.js";
     import { useRouter, useRoute } from "vue-router";
+    //import { search } from "core-js/fn/symbol";
     const { proxy } = getCurrentInstance();
     const route = useRoute();
     const router = useRouter();
@@ -192,9 +194,7 @@
     const props = defineProps({
         ltags:String,
         id:String,
-        username:String,
-        userid:String,
-        body:String,
+        type:String,
     })
     const previewIcon = h("i",{
         class: "iconfont icon-yulanwenjian"
@@ -251,9 +251,12 @@
         height: 600,
         isRadioUser:false,
         defaultExpandAll:false,
+        currentUserId:'',
+        currentUserName:'',
+        keyword:'',
         id:''
     })
-    const { fileList,fileList2, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
+    const { keyword,currentUserId,currentUserName,fileList,fileList2, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
         deptSelectedKeys, deptTreeData, departListTree, selectConcatsList, selectGroupList, departListTree2, groupTreeData2, latelyTreeData,
         latelyexpandedKeys, latelySelectedKeys, height,isRadioUser,defaultExpandAll,id
     } = toRefs(data);
@@ -273,14 +276,6 @@
             });
             formState.group.push(route.query.Id);
         }
-    }
-    if(props.userid){
-        activeKey.value='1';
-        data.selectConcatsList.push({
-            ID: props.userid,
-            Name: props.username
-        });
-        formState.addressee.push(props.userid);
     }
     const getContent = (e) => {
         formState.mailBody = e;
@@ -319,6 +314,9 @@
             proxy.$post(url,obj).then(res=>{
                 if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                     data.id=res.actions[0].returnValue.id;
+                    if(props.id&&props.id!=data.id){
+                        copyAttachment();
+                    }
                 }
             })
         }
@@ -333,7 +331,6 @@
                 name: file.file.name,
                 url: file.file.url,
                 fileExtension: file.file.name ? (file.file.name).split('.')[1] : '',
-                ViewLinkUrl: file.file.url,
                 raw: file.file.originFileObj,
                 Privilege: '',
                 size:size+'kb',
@@ -373,21 +370,16 @@
                                 let size=item.fileSize;
                                 size=size?(size*1/1024).toFixed(2):0;
                                 size=size+'kb';
-                                let location=item.fileLocation;
-                                let name0='';
-                                if(location){
-                                    location=location.split('\\');
-                                    if(location&&location.length==3){
-                                        name0=location[2]||'';
-                                    }
+                                let name=item.name||'';
+                                if(name){
+                                    name=name.replaceAll('.'+item.fileExtension,'');
                                 }
-                                let name=item.name&&item.name!='files'?item.name:name0;
+                                let url='/'+item.parentId+'/'+name;
                                 data.fileList2.push({
                                     uid: item.attachId,
-                                    name: name,
-                                    url: item.fileLocation,
+                                    name: item.name,
+                                    url: url,
                                     fileExtension: item.fileExtension||'',
-                                    ViewLinkUrl: item.fileLocation,
                                     size:size,
                                     createdOn:item.createdOn
                                 });
@@ -412,6 +404,65 @@
             item.id = item.ID;
             item.isExpanded=true;
            return item.Name.indexOf(data.searchVal) != -1;
+        })
+    }
+    const highlightKeyword = (label) => {
+        if (!data.keyword) {
+            return label;
+        }
+        var highlightedLabel = label.replace(new RegExp(data.keyword, 'gi'), function (match){
+            return '<span style="color: red;">'+match+'</span>';
+        });
+        return highlightedLabel;
+    }
+    const getUserList1 = (e) => {
+        //proxy.$get(Interface.user.allUser,{}).then(res=>{
+            // let list = res.actions[0].returnValue.lookupResults.records;
+            // let arr = [];
+            // list.forEach(item=>{
+            //     arr.push({
+            //         ID: item.fields.Id.value,
+            //         Name: item.fields.Name.value
+            //     })
+            // });
+            // data.selectConcatsList = data.selectConcatsList.concat(arr);
+            // data.selectConcatsList = uniqu(data.selectConcatsList,'ID');
+        //})
+        let filterQuery='';
+        if(e){
+            filterQuery="\nFullName\tcontains\t"+e;
+        }
+        let d = {
+            filterId: "",
+            objectTypeCode:'8',
+            entityName:'SystemUser',
+            filterQuery: filterQuery,
+            page: 1,
+            rows: 10,
+            displayColumns:'FullName,OrganizationId,BusinessUnitId,EmployeeId'
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            var list = [];
+            if(res&&res.nodes){
+                for (var i = 0; i < res.nodes.length; i++) {
+                    var item = res.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'&&cell!='AvatarImg'){
+                            item[cell]=girdFormatterValue(cell,item);
+                        }
+                        if(cell=='AvatarImg'){
+                            item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
+                        }
+                    }
+                    if(!item.AvatarImg){
+                        item.AvatarImg=require('@/assets/img/avatar-r.png');
+                    }
+                    item.Name=item.FullName;
+                    item.ID = item.id;
+                    list.push(item)
+                }
+            }
+            data.selectConcatsList = list;
         })
     }
     const getUserList = (e) => {
@@ -454,9 +505,32 @@
             });
             data.selectConcatsList = data.selectConcatsList.concat(arr);
             data.selectConcatsList = uniqu(data.selectConcatsList,'ID');
-            //console.log(data.selectConcatsList)
         })
         
+    }
+    const getGroupList1 = (e) => {
+        let filterQuery='\nIsPublic\teq\ttrue';
+        if(e){
+            filterQuery+="\nName\tcontains\t"+e;
+        }
+        let d = {
+            filterId: "",
+            objectTypeCode:'9',
+            entityName:'Group',
+            filterQuery: filterQuery,
+            search:e,
+            page: 1,
+            rows: 100,
+            displayColumns:'Name'
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            let nodes = res.nodes;
+            data.selectGroupList = nodes.map(item=>{
+                item.Name = item.Name&&item.Name.textValue?item.Name.textValue:'';
+                item.ID = item.id;
+                return item;
+            });
+        })
     }
     const getGroupList = (e) => {
         let obj = {
@@ -877,23 +951,27 @@
       }
     };
     const getDetail = () => {
-        // proxy.$get(Interface.email.emailInfo,{
-        //     id: props.emailId,
-        //     ltags: data.ltags
-        // }).then(res=>{
-        //     data.detail = res.data;
-        //     data.receiverNames = data.detail.ReceiverNames && data.detail.ReceiverNames.split(',');
-
-        // })
         proxy.$get(Interface.email.getMail,{
             id: props.id,
         }).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue){
                 let detail = res.actions[0].returnValue;
                 formState.theme=detail.subject;
+                if(props.type){
+                    formState.theme=props.type+'：'+detail.subject;
+                }
+                if(props.type=='回复'){
+                    if(detail.fromName&&detail.createdBy){
+                        data.selectConcatsList.push({
+                            ID: detail.createdBy,
+                            Name: detail.fromName
+                        });
+                        formState.addressee.push(detail.createdBy);
+                    }
+                }
                 if(detail.body){
                     formState.mailBody=detail.body;
-                    let editorRef = ref();
+                    console.log(formState.mailBody)
                     if(editorRef&&editorRef.value){
                         editorRef.value.content=detail.body;
                     }
@@ -901,6 +979,45 @@
             }
         })
     }
+    //预览附件
+    const handlePreviewFile= (item) => {
+        let url='/api/email/preview'+item.url;
+        // let d = {}
+        // proxy.$post(url,d).then(res=>{
+        //     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                
+        //     }
+        //     else{
+        //         if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+        //             message.success(res.actions[0].errorMessage);
+        //         }
+        //         else{
+        //             message.success("预览失败！");
+        //         }
+        //     }
+        // })
+        window.open(url);
+    };
+    //下载附件
+    const downloadFile= (item) => {
+        let url='/api/email/download'+item.url;
+        // let d = {}
+        // proxy.$post(url,d).then(res=>{
+        //     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                
+        //     }
+        //     else{
+        //         if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+        //             message.success(res.actions[0].errorMessage);
+        //         }
+        //         else{
+        //             message.success("下载失败！");
+        //         }
+        //     }
+        // })
+        window.open(url);
+    };
+    //删除附件
     const deleteFile=(item)=>{
         let d = {
             actions:[{
@@ -909,7 +1026,7 @@
                     callingDescriptor: "UNKNOWN",
                     params: {
                         parentId:data.id,
-                        fileName:item.name
+                        fileId:item.uid
                     }
                 }]
             };
@@ -938,23 +1055,88 @@
                 message.error("删除失败！");
             });
     }
+    //获取附件列表
+    const getAttachments = () => {
+        proxy.$get(Interface.email.getAttachments,{
+            id: data.id,
+        }).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue){
+                data.fileList2=res.actions[0].returnValue||[];
+                for (var i = 0; i < data.fileList2.length; i++) {
+                    var item = data.fileList2[i];
+                    let size=item.fileSize;
+                    size=size?(size*1/1024).toFixed(2):0;
+                    size=size+'kb';
+                    let name=item.name||'';
+                    if(name){
+                        name=name.replaceAll('.'+item.fileExtension,'');
+                    }
+                    data.fileList2[i].size=size;
+                    data.fileList2[i]['uid']=item.attachId;
+                    data.fileList2[i]['url']='/'+item.parentId+'/'+name;
+                }
+            }
+        })
+    }
+    //回复或转发，复制邮件附件
+    const copyAttachment = () => {
+        let d = {
+            actions:[{
+                id: "4105;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    copyEmailId:props.id,
+                    emailId:data.id
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.email.copyAttachment,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                getAttachments()
+            }
+            else{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                    message.success(res.actions[0].errorMessage);
+                }
+                else{
+                    message.success("附件复制失败！");
+                }
+            }
+        })
+    }
+    // watch(()=>props.body,(newVal,oldVal)=>{
+    //     if(props.body){
+    //         formState.mailBody=props.body;
+    //         let editorRef = ref();
+    //         if(editorRef&&editorRef.value){
+    //             editorRef.value.content=props.body;
+    //         }
+    //     }
+    // },{immediate:true,deep:true})
     onMounted(() => {
-        beforeUpload();
         if(props.id){
             getDetail();
-        }
-    })
-    watch(()=>props.body,(newVal,oldVal)=>{
-        //getDetail();
-        //console.log(props.body)
-        if(props.body){
-            formState.mailBody=props.body;
-            let editorRef = ref();
-            if(editorRef&&editorRef.value){
-                editorRef.value.content=props.body;
+            if(props.ltags!='draft'){
+                beforeUpload();
+            }
+            else{
+                data.id=props.id;
             }
         }
-    },{immediate:true,deep:true})
+        else{
+            beforeUpload();
+        }
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.currentUserId=userInfo.userId;
+            data.currentUserName=userInfo.fullName;
+        }
+    })
 </script>
 <style lang="less" scoped>
     .writeEmail {
@@ -1143,4 +1325,17 @@
     :deep .ant-tree-title{
             white-space: nowrap;
         }
+    .userclass{
+        .anticon-user{
+            position: relative;
+            top: -2px;
+        }
+        .ant-avatar{
+            margin-right: 8px;
+        }
+        .anticon-check{
+            position: relative;
+            top: 10px;
+        }
+    }
 </style>

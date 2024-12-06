@@ -365,7 +365,7 @@ const onSearch=()=>{
     //打印
   const handlePrint=()=>{
     let url = router.resolve({
-            path:'/lightning/o/printDutyShift',
+            path:'/printDutyShift',
             name: "PrintDutyShift",
             query: {
                 name: data.pageTitle,
