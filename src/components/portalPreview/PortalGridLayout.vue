@@ -45,7 +45,7 @@
                     <p>Card content</p>
                 </div>
             </a-card>
-            <div class="weapp-ebde-toolbar" v-if="item.i == current">
+            <!-- <div class="weapp-ebde-toolbar" v-if="item.i == current">
                 <a-tooltip placement="bottom">
                     <template #title>
                       <span>另存为</span>
@@ -86,7 +86,7 @@
                         </span>
                     </span>
                 </a-tooltip>
-            </div>
+            </div> -->
         </grid-item>
     </grid-layout>
 </template>

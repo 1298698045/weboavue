@@ -94,7 +94,7 @@ watch(()=> route.path, ()=>{
   let appCode = route.meta.appCode;
   let moduleName = route.meta.moduleName;
   let localAppCode = localStorage.getItem("appCode");
-  if(appCode!=localAppCode){
+  if(appCode && appCode!=localAppCode){
     store.dispatch("getSubModules", appCode);
     localStorage.setItem("appCode", appCode);
     localStorage.setItem("moduleName", moduleName);

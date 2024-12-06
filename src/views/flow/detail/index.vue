@@ -287,7 +287,6 @@
         <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
         <Urging ref="UrgingRef" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
         <RelateInstance v-if="isRelateInstance" :id="id" :entityApiName="lookEntityApiName" :entityType="lookEntityType" :objectTypeCode="lookObjectTypeCode" :isShow="isRelateInstance" @select="handleSelectLook" @cancel="isRelateInstance=false" />
-        <MultipleUsers :isShow="isMultipleUser" v-if="isMultipleUser" />
     </div>
 </template>
 <script setup>
@@ -320,7 +319,6 @@
     import RelateInstance from "@/components/workflow/RelateInstance.vue";
     import DetailInfo from "@/components/detail/DetailInfo.vue";
     import FlowForm from "@/components/workflow/FlowForm.vue";
-    import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 
     import { useRouter, useRoute } from "vue-router";
     import { message } from "ant-design-vue";
@@ -382,11 +380,10 @@
         processId: "",
         processInstanceId: "",
         toActivityID: "",
-        isMultipleUser: true
     })
     const { isEdit,Title,objectTypeCode,sObjectName,tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData,
          isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex,id,fileList,isRelateInstance,lookEntityApiName,lookObjectTypeCode,lookEntityType,
-         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID, isMultipleUser } = toRefs(data);
+         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID } = toRefs(data);
 
     const getRuleLogData = () => {
         let obj = {

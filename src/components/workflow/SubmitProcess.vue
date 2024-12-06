@@ -28,9 +28,32 @@
                                 <a-radio :value="item.ToActivityId" v-for="(item, index) in transitions">{{item.To.name}}</a-radio>
                             </a-radio-group>
                         </a-form-item>
+                        <div  v-if="splitType!=2" v-for="(item, parentIndex) in transitions" :key="parentIndex">
+                            <a-form-item label="办理人员：" v-if="activityId == item.ToActivityId">
+                                <div class="flex">
+                                    <a-input v-model:value="item.searchVal" placeholder="请输入搜索字符"></a-input>
+                                    <a-button type="link" @click="handleAddPeople(item, parentIndex)" v-if="item.addPeople">添加人员</a-button>
+                                </div>
+                                <div class="peopleBox">
+                                    <a-table :row-selection="rowSelection" size="small" :pagination="pagination" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
+                                        <template #bodyCell="{ column,index }">
+                                            <template v-if="column.key === 'operation'">
+                                                <span class="iconTop" @click="arrowup(item, index)">
+                                                    <ArrowUpOutlined />
+                                                </span>
+                                                <span class="iconTop" @click="arrowdown(item, index)">
+                                                    <ArrowDownOutlined />
+                                                </span>
+                                            </template>
+                                        </template>
+                                    </a-table>
+                                </div>
+                            </a-form-item>
+                        </div>
+
                         <a-form-item label="办理节点" v-if="splitType==2">
                         </a-form-item>
-                        <div class="collapseItem" v-for="(item, parentIndex) in transitions" :key="parentIndex">
+                        <div class="collapseItem" v-if="splitType==2" v-for="(item, parentIndex) in transitions" :key="parentIndex">
                             <div class="collapseHead">
                                 <a-form-item :label="item.To.name">
                                     <a-checkbox v-model:checked="item.isMatched"></a-checkbox>
@@ -88,7 +111,7 @@
                 </div>
             </template>
         </a-modal>
-        <MultipleUsers :isShow="isMultipleUser" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
+        <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser=false" @select="handleSelectUsers" />
     </div>
 </template>
 <script setup>
@@ -159,13 +182,13 @@
     const columns = [
         {
             title: "姓名",
-            dataIndex: "userName",
+            dataIndex: "name",
             align: "center",
             width: 100,
         },
         {
             title: "部门",
-            dataIndex: "BusinessUnitIdName",
+            dataIndex: "businessUnitIdName",
             align: "center",
             width: 100,
         },
@@ -301,11 +324,14 @@
             item,
             index
         }
-        data.isRadioUser = true;
+        // data.isRadioUser = true;
+        data.isMultipleUser = true;
     }
     const cancelUserModal = (e) => {
         data.isRadioUser = e;
     }
+
+    // 单选用户
     const handleUserParams = (e) => {
         let obj = {
             key: e.id,
@@ -320,8 +346,28 @@
         let { index } = data.recordData;
         data.transitions[index].peopleList.push(obj);
         data.isRadioUser = false;
-    }
-    const arrowup=(item, index)=>{
+    };
+    // 多选用户
+    const handleSelectUsers = (params) => {
+        // console.log("多选用户:", params);
+        let { index } = data.recordData;
+        let addUsers = params.map(item=>{
+            item.key = item.id;
+            return item;
+        })
+        let peopleList = data.transitions[index].peopleList;
+        addUsers.forEach(item=>{
+            let isBook = peopleList.some(row=>row.key == item.key);
+            if(!isBook){
+                peopleList.push(item);
+            }
+        });
+        data.isMultipleUser = false;
+
+    };
+
+
+    const arrowup = (item, index )=> {
         if(index != 0){
             let list = item.peopleList;
             let a = list[index];
@@ -358,7 +404,7 @@
             if(isNodeSelect){
                 data.transitions.forEach(item=>{
                     if(item.isMatched && item.peopleList.length == 0){
-                        message.error('请选择人员!');
+                        message.error('请选择节点下的办理人员!');
                         throw error("请选择人员!");
                     }
                 })
@@ -372,18 +418,21 @@
             if(data.activityId==""){
                 message.error('请选择节点!');
                 return false;
+            };
+            let isPeople = data.transitions.some(item=>item.peopleList.length > 0);
+            if(!isPeople){
+                message.error('请选择节点下的办理人员!');
+                return false;
             }
         }
 
-        console.log("data.transitions2:", data.transitions);
+        // console.log("data.transitions2:", data.transitions);
 
         data.transitions.forEach(item=>{
-            if(item.isMatched){
+            if((item.isMatched && data.splitType == 2) || (item.ToActivityId == data.activityId && data.splitType != 2)){
                 console.log("item.peopleList", item.peopleList);
                 let toUsers = item.peopleList.map(row=>{
-                    row.id = row.key;
-                    row.name = row.userName;
-                    let { BusinessUnitIdName, key, userName, ...rest } = row;
+                    let { businessUnitIdName, key, organizationIdName, ...rest } = row;
                     return rest;
                 });
                 let nodeObj = {
@@ -395,8 +444,6 @@
                 transitions.push(nodeObj);
             }
         })
-
-
 
         let obj = {
             actions:[{

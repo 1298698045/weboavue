@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="800px" :maskClosable="false" @cancel="handleCancel"
+        <a-modal v-model:open="props.isShow" width="900px" :maskClosable="false" @cancel="handleCancel"
             @ok="handleSubmit">
             <template #title>
                 <div>
@@ -18,17 +18,17 @@
                         <div class="muti-left">
                             <div class="muti-head">
                                 <div class="muti-search">
-                                    <a-input>
+                                    <a-input v-model:value="searchVal" @change="searchUser">
                                         <template #suffix>
                                             <SearchOutlined />
                                         </template>
                                     </a-input>
                                 </div>
                             </div>
-                            <template v-if="currentTab == 0 || currentTab == 1 || currentTab == 2">
-                                <div class="muti-center muti-left-center">
+                            <template v-if="currentTab == 0 || currentTab == 1 || currentTab == 2 || currentTab == -1">
+                                <div class="muti-center muti-left-center" :class="{'active':currentTab==1||currentTab==-1 && total > 10}">
                                     <ul class="user-list">
-                                        <li class="user-item" :class="{'active':item.checked}" v-for="(item, index) in userList" :key="index" @click="handleSelectUser(item)">
+                                        <li class="user-item" :class="{'active':item.checked}" v-for="(item, index) in filterUserList" :key="index" @click="handleSelectUser(item)">
                                             <div class="user-avatar">
                                                 <!-- <div class="avatar-img">
                                                 </div> -->
@@ -37,11 +37,11 @@
                                             <div class="user-info">
                                                 <div class="info-row">
                                                     <span>{{item.name}}</span>
-                                                    <span>{{item.BusinessUnitIdName}}</span>
+                                                    <span>{{item.businessUnitIdName}}</span>
                                                 </div>
                                                 <div class="info-row">
-                                                    <span>{{item.OrganizationName}}</span>-
-                                                    <span>{{item.BusinessUnitIdName}}</span>
+                                                    <span>{{item.organizationIdName}}</span>-
+                                                    <span>{{item.businessUnitIdName}}</span>
                                                 </div>
                                             </div>
                                             <div class="icon-wrap"></div>
@@ -51,27 +51,41 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="muti-left-footer">
+                                <div class="muti-left-footer" v-if="(currentTab==1||currentTab==-1) && total > 10">
                                     <span>
-                                        共50条
+                                        共{{total}}条
                                     </span>
-                                    <a-pagination size="small" v-model:current="pageNumber" :total="50" show-less-items />
+                                    <a-pagination size="small" v-model:current="pageNumber" :total="total" show-less-items />
                                 </div>
                             </template>
-                            <template v-else-if="currentTab==3">
+                            <template v-else>
                                 <div class="muti-center">
                                     <div class="muti-row">
-                                        <div class="tree-container">
-                                            <a-tree :tree-data="deptTreeList" :fieldNames="fieldNames" block-node
+                                        <div class="tree-container" v-if="currentTab==3">
+                                            <a-tree :tree-data="deptTreeList" :selectedKeys="[deptIdCurrent]" :fieldNames="fieldNames" block-node
                                                 @select="handleSelectTree">
-                                                    <template  #title="{name, key }">
+                                                    <template #title="{name, key }">
                                                         <span>{{name}}</span>
                                                     </template>
                                             </a-tree>
                                         </div>
+                                        <div class="tree-container" v-if="currentTab==4">
+                                            <a-tree :tree-data="groupList" :selectedKeys="[groupIdCurrent]" block-node @select="handleNodeGroup">
+                                                <template #title="{ Name, key }">
+                                                    <span>{{ Name.textValue }}</span>
+                                                </template>
+                                            </a-tree>
+                                        </div>
+                                        <div class="tree-container" v-if="currentTab==5">
+                                            <a-tree :tree-data="roleList" :selectedKeys="[roleIdCurrent]" block-node @select="handleNodeRole">
+                                                <template #title="{ Name, key }">
+                                                    <span>{{ Name.textValue }}</span>
+                                                </template>
+                                            </a-tree>
+                                        </div>
                                         <div class="userList">
-                                            <ul class="user-list">
-                                                <li class="user-item" :class="{'active':item.checked}" v-for="(item, index) in userList" :key="index" @click="handleSelectUser(item)">
+                                            <ul class="user-list" :class="{active:currentTab==3}">
+                                                <li class="user-item" :class="{'active':item.checked}" v-for="(item, index) in filterUserList" :key="index" @click="handleSelectUser(item)">
                                                     <div class="user-avatar">
                                                         <!-- <div class="avatar-img">
                                                         </div> -->
@@ -80,11 +94,11 @@
                                                     <div class="user-info">
                                                         <div class="info-row">
                                                             <span>{{item.name}}</span>
-                                                            <span>{{item.BusinessUnitIdName}}</span>
+                                                            <span>{{item.businessUnitIdName}}</span>
                                                         </div>
                                                         <div class="info-row">
-                                                            <span>{{item.OrganizationName}}</span>-
-                                                            <span>{{item.BusinessUnitIdName}}</span>
+                                                            <span>{{item.organizationIdName}}</span>-
+                                                            <span>{{item.businessUnitIdName}}</span>
                                                         </div>
                                                     </div>
                                                     <div class="icon-wrap"></div>
@@ -93,6 +107,12 @@
                                                     </span>
                                                 </li>
                                             </ul>
+                                            <div class="muti-left-footer" v-if="currentTab==3  && total > 10">
+                                                <span>
+                                                    共{{total}}条
+                                                </span>
+                                                <a-pagination size="small" v-model:current="pageNumber" :total="total" show-less-items @change="getDeptUser" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -105,10 +125,10 @@
                             <button class="btn-radius" :class="{'primary':userSelectedListChecked.length}" :disabled="userSelectedListChecked.length?false:true" @click="handleAddLeftUser">
                                 <LeftOutlined />
                             </button>
-                            <button class="btn-radius primary" @click="handleAddRightUserAll">
+                            <button class="btn-radius primary" :disabled="filterUserList.length == 0 ? true : false" @click="handleAddRightUserAll">
                                 <RightOutlined />
                             </button>
-                            <button class="btn-radius primary" @click="handleAddLeftUserAll">
+                            <button class="btn-radius primary" :disabled="userSelectedList.length == 0 ? true : false" @click="handleAddLeftUserAll">
                                 <LeftOutlined />
                             </button>
                         </div>
@@ -133,11 +153,11 @@
                                         <div class="user-info">
                                             <div class="info-row">
                                                 <span>{{item.name}}</span>
-                                                <span>营销主管</span>
+                                                <span>{{item.businessUnitIdName}}</span>
                                             </div>
                                             <div class="info-row">
-                                                <span>九氚汇</span>
-                                                <span>九氚汇-业务发展部</span>
+                                                <span>{{item.organizationIdName}}</span>-
+                                                <span>{{item.businessUnitIdName}}</span>
                                             </div>
                                         </div>
                                         <div class="icon-wrap"></div>
@@ -153,8 +173,10 @@
             </div>
             <template #footer>
                 <div>
-                    <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
-                    <a-button @click="clearData">清除</a-button>
+                    <a-button type="primary" @click.prevent="handleSubmit">确定
+                        <span v-if="userSelectedList.length">({{userSelectedList.length}})</span>
+                    </a-button>
+                    <a-button @click="clearSelectedUser">清除</a-button>
                     <a-button @click="handleCancel">取消</a-button>
                 </div>
             </template>
@@ -164,30 +186,30 @@
 <script setup>
     import {
         ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
-        defineEmits, toRaw
+        defineEmits, toRaw, computed
     } from "vue";
     import { SearchOutlined, DownOutlined, UserOutlined, RightOutlined, LeftOutlined, CheckOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     import { formTreeData } from "@/utils/common.js";
+    import { message } from "ant-design-vue";
 
     const { proxy } = getCurrentInstance();
     const labelCol = ref({ style: { width: '100px' } });
     const props = defineProps({
         isShow: Boolean
     })
-    const emit = defineEmits(['cancel', 'select-val']);
+    const emit = defineEmits(['cancel', 'select']);
     const handleCancel = () => {
         emit("cancel", false);
     }
 
     const data = reactive({
-        currentTab: 1,
+        currentTab: 0,
         deptTreeList: [],
         userList: [],
         deptUserList: [],
         groupList: [],
         roleList: [],
-        pageNumber: 1,
         userList: [],
         currentSelectedList: [],
         userSelectedList: [],
@@ -196,8 +218,14 @@
             key: "id",
             title: "name",
             children: "children"
-        }
-
+        },
+        deptIdCurrent: "",
+        groupIdCurrent: "",
+        roleIdCurrent: "",
+        searchVal: "",
+        pageNumber: 1,
+        pageSize: 10,
+        total: 0
     })
     const tabs = toRaw([
         {
@@ -226,22 +254,87 @@
         }
     ])
     const { currentTab, deptTreeList, userList, groupList,
-        roleList, deptUserList, pageNumber, currentSelectedList, userSelectedList, userSelectedListChecked,
-        fieldNames } = toRefs(data);
+        roleList, deptUserList, currentSelectedList, userSelectedList, userSelectedListChecked,
+        fieldNames, deptIdCurrent, groupIdCurrent, roleIdCurrent, searchVal, pageNumber, pageSize, total } = toRefs(data);
 
-    const getSameDeptUser = () => {
-        proxy.$get(Interface.user.mybusinessUser,{}).then(res=>{
-            // console.log("res",res);
-            data.userList = res.listData.map(item=>{
-                item.id = item.SystemUserId;
-                item.name = item.FullName;
-                item.BusinessUnitIdName = item.BusinessUnitIdName || '';
-                item.OrganizationName = item.OrganizationName || '';
+    const filterUserList = computed(()=>{
+        return data.userList.filter((item=>{
+            let isBook = data.userSelectedList.some(row=>row.id==item.id);
+            if(!isBook){
+                return item;
+            }
+        }))
+    });
+
+    const searchUser = () => {
+        data.currentTab = -1;
+        data.userList = [];
+        let d = {
+            filterId: "",
+            entityType: "SystemUser",
+            displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
+            search: data.searchVal,
+            filterQuery: "",
+            page: data.pageNumber,
+            rows: data.pageSize
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            data.total = res.totalCount;
+            let nodes = res.nodes;
+            data.userList = nodes.map(item=>{
+                item.name = item.FullName.textValue;
+                item.businessUnitIdName = item.BusinessUnitIdName.textValue || '';
+                item.organizationIdName = item.OrganizationId.lookupValue.displayName || '';
                 return item;
             });
         })
     }
-    getSameDeptUser();
+
+    // 最近使用
+    const getLatestUsers = () => {
+        proxy.$get(Interface.user.getLatestUsers, {}).then(res=>{
+            let list = res.actions[0].returnValue;
+            data.userList = list.map(item=>{
+                item.id = item.UserId;
+                item.name = item.FullName;
+                return item;
+            });
+        })
+    };
+    getLatestUsers();
+
+    // 获取同部门
+    const getSameDeptUser = () => {
+        let d = {
+            filterId: "",
+            entityType: "SystemUser",
+            displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
+            filterQuery: "\nBusinessUnitId\teq-businessunitid",
+            page: data.pageNumber,
+            rows: data.pageSize
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            let nodes = res.nodes;
+            data.total = res.totalCount;
+            data.userList = nodes.map(item=>{
+                item.name = item.FullName.textValue;
+                item.businessUnitIdName = item.BusinessUnitIdName.textValue || '';
+                item.organizationIdName = item.OrganizationId.lookupValue.displayName || '';
+                return item;
+            });
+        })
+    }
+
+    const getSubordinates = () => {
+        proxy.$get(Interface.user.getSubordinates, {}).then(res=>{
+            let list = res.actions[0].returnValue;
+            data.userList = list.map(item=>{
+                item.id = item.UserId;
+                item.name = item.FullName;
+                return item;
+            });
+        })
+    }
 
     // 左侧选中的数据
     const handleSelectUser = (item) => {
@@ -260,9 +353,9 @@
             item.checked = false;
         })
         data.userSelectedList = data.userSelectedList.concat(data.currentSelectedList);
-        data.userList = data.userList.filter(item => {
-            return !data.userSelectedList.some(row => row.id === item.id);
-        });
+        // data.userList = data.userList.filter(item => {
+        //     return !data.userSelectedList.some(row => row.id === item.id);
+        // });
         data.currentSelectedList = [];
     };
 
@@ -272,7 +365,8 @@
             item.checked = false;
         })
 
-        data.userList = data.userList.concat(data.userSelectedListChecked);
+        // data.userList = data.userList.concat(data.userSelectedListChecked);
+
         data.userSelectedList = data.userSelectedList.filter(item => {
             return !data.userSelectedListChecked.some(row => row.id === item.id);
         });
@@ -286,7 +380,7 @@
             item.checked = false;
         })
         data.userSelectedList = data.userSelectedList.concat(data.userList);
-        data.userList = [];
+        // data.userList = [];
     };
 
     // 全部用户添加到左侧
@@ -295,7 +389,7 @@
         data.userSelectedList.forEach(item=>{
             item.checked = false;
         })
-        data.userList = data.userList.concat(data.userSelectedList);
+        // data.userList = data.userList.concat(data.userSelectedList);
         data.userSelectedList = [];
     };
 
@@ -310,25 +404,18 @@
         };
     };
     
-
-    // 角色
-    const getRoleList = () => {
-        proxy.$get(Interface.user.roleUser,{}).then(res=>{
-            // console.log("res",res);
-            data.roleList = res.listData;
-        })
-    }
     const changeTab = (e) => {
-        console.log("e",e);
+        data.pageNumber = 1;
+        data.userList = [];
         switch(e){
             case 0:
-                data.userList = [];
+                getLatestUsers();
                 break;
             case 1:
                 getSameDeptUser();
                 break;
             case 2:
-                data.userList = [];
+                getSubordinates();
                 break;
             case 3:
                 getTreeDept();
@@ -351,39 +438,36 @@
                 return item;
             });
             data.deptTreeList = formTreeData(rows, 'id', 'parentId');
-            console.log("deptTreeList", data.deptTreeList);
             let deptId = data.deptTreeList[0].id;
+            data.deptIdCurrent = deptId;
             getDeptUser(deptId)
         });
     };
 
-    const expandDept = (expandedKeys,{expanded, node}) => {
-        if(expanded){
-            const users = getDeptUser(node.id);
-        }
-    }
-
     const handleSelectTree = (selectedKeys,selectedNodes) => {
         let deptId = selectedNodes.node.id;
+        data.deptIdCurrent = deptId;
+        data.pageNumber = 1;
         getDeptUser(deptId);
     }
 
     // 获取部门用户
-    const getDeptUser = (deptId) => {
+    const getDeptUser = () => {
         let d = {
             filterId: "",
             entityType: "SystemUser",
             displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
-            filterQuery: "\nBusinessUnitId\teq\t" + deptId,
-            page: 1,
-            rows: 100
+            filterQuery: "\nBusinessUnitId\teq\t" + data.deptIdCurrent,
+            page: data.pageNumber,
+            rows: data.pageSize
         };
         proxy.$get(Interface.list2, d).then(res=>{
             let nodes = res.nodes;
+            data.total = res.totalCount;
             data.userList = nodes.map(item=>{
                 item.name = item.FullName.textValue;
-                item.BusinessUnitIdName = item.BusinessUnitIdName.textValue || '';
-                item.OrganizationName = item.OrganizationId.lookupValue.lookupValue || '';
+                item.businessUnitIdName = item.BusinessUnitIdName.textValue || '';
+                item.organizationIdName = item.OrganizationId.lookupValue.displayName || '';
                 return item;
             });
         })
@@ -391,47 +475,119 @@
 
     // 获取小组
     const getGroup = () => {
-        proxy.$get(Interface.user.groupList,{
-
-        }).then(res=>{
-            data.groupList = res.listData.map(item=>{
-                item.key = item.GroupId;
+        let d = {
+            filterId: "",
+            entityType: "Group",
+            filterQuery: "\nIsPublic\teq\ttrue"
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            let nodes = res.nodes;
+            data.groupList = nodes.map(item=>{
+                item.key = item.id;
                 return item;
             });
-            data.groupIdCurrent = [data.groupList[0].GroupId];
-            getGroupUser(data.groupList[0].GroupId);
+            data.groupIdCurrent = data.groupList[0].id;
+            getGroupUser();
         })
     }
     const handleNodeGroup = (selectedKeys,selectedNodes) => {
-        let groupId = selectedNodes.node.GroupId;
+        let groupId = selectedNodes.node.id;
+        data.groupIdCurrent = groupId;
         getGroupUser(groupId);
     }
     // 获取小组用户
-    const getGroupUser = (groupId) => {
-        proxy.$get(Interface.user.groupUser,{
-            GroupId: groupId
-        }).then(res=>{
-            data.groupUserList = res.listData;
+    const getGroupUser = () => {
+        let obj = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    id: data.groupIdCurrent
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.user.getGroupUsers, d).then(res=>{
+            let list = res.actions[0].returnValue;
+            data.userList = list.map(item=>{
+                item.id = item.UserId;
+                item.name = item.FullName;
+                return item;
+            });
         })
-    }
-    const clearData = () => {
-        data.selectData = {};
+    };
+
+    const handleNodeRole = (selectedKeys,selectedNodes) => {
+        let RoleId = selectedNodes.node.id;
+        data.roleIdCurrent = RoleId;    
+        getRoleUser(RoleId);
     }
 
-    // 选择人员
-    const handleSelectRow = (id,name) => {
-        console.log("id:",id,name);
-        var selectUser = {
-            id: id,
-            name: name
-        }
-        emit("select-val", selectUser);
+    // 角色
+    const getRoleList = () => {
+        let d = {
+            filterId: "",
+            entityType: "Role",
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            let nodes = res.nodes;
+            data.roleList = nodes.map(item=>{
+                item.key = item.id;
+                return item;
+            });
+            data.roleIdCurrent = data.roleList[0].id;
+            getRoleUser();
+        })
+    };
+    const getRoleUser = () => {
+        let obj = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    id: data.roleIdCurrent
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.user.getRoleUsers, d).then(res=>{
+            let list = res.actions[0].returnValue;
+            data.userList = list.map(item=>{
+                item.id = item.UserId;
+                item.name = item.FullName;
+                return item;
+            });
+        })
+    };
+
+
+
+    const clearSelectedUser = () => {
+        data.userSelectedList = [];
     }
+
     const handleSubmit = () => {
-        if(Object.keys(data.selectData).length){
-            emit("select-val", data.selectData);
+        if(data.userSelectedList.length == 0){
+            message.error("请选择人员!");
         }else {
-            alert("请选择部门!")
+            // console.log("userSelectedList:", data.userSelectedList);
+            let list = [];
+            data.userSelectedList.forEach(item=>{
+                list.push({
+                    id: item.id,
+                    name: item.name,
+                    businessUnitIdName: item.businessUnitIdName,
+                    organizationIdName: item.organizationIdName
+                })
+            });
+            
+            emit("select", list);
         }
     }
 </script>
@@ -485,7 +641,9 @@
             float: left;
             position: relative;
             .muti-center.muti-left-center{
-                height: calc(100% - 70px);
+                &.active{
+                    height: calc(100% - 70px);
+                }
             }
             .muti-left-footer{
                 position: absolute;
@@ -612,7 +770,16 @@
         .userList{
             flex: 1;
             height: 100%;
-            overflow-y: auto;
+            /* overflow-y: auto; */
+            border-left: 1px solid #dadada;
+            position: relative;
+            .user-list{
+                overflow-y: auto;
+                height: 100%;
+                &.active{
+                    height: calc(100% - 35px);
+                }
+            }
         }
     }
 </style>

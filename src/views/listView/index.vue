@@ -215,8 +215,8 @@
       isCollapsed: false,
       tableHeight: '',
       queryParams: {
-        entityType: 'a0V',
-        objectTypeCode: 8,
+        entityType: route.params.sObjectName,
+        objectTypeCode: '',
         search: "",
         filterId: ""
       },
@@ -265,7 +265,8 @@
       actionList: [],
       title: "",
       isChartModal: false, // 图表
-      columns: []
+      columns: [],
+      objectTypeCode: ""
     });
     const handleCollapsed = () => {
       data.isCollapsed = !data.isCollapsed;
@@ -274,7 +275,7 @@
        isModal, isCirculation, isCommon, isLock, filterList, currentFilter,
       isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal, 
       isDeleteModal, isFilterModal, searchFilterVal, filterListFixed, entityType,
-       initialData, actionList, title, sObjectName, isChartModal, columns } = toRefs(data);
+       initialData, actionList, title, sObjectName, isChartModal, columns, objectTypeCode } = toRefs(data);
     const tabContent = ref(null);
     const contentRef = ref(null);
     let formSearchHeight = ref(null);
@@ -384,6 +385,9 @@
       getMetadataInitialLoad().then(res=>{
         console.log("resAsync", res);
         data.initialData = res.actions[0].returnValue;
+        let entityType = res.actions[0].returnValue.recordThemeInfo.entityType;
+        data.objectTypeCode = entityType;
+        data.queryParams.objectTypeCode = entityType;
         data.currentFilter = {
           id: data.initialData.listViewId,
           name: data.initialData.listViewLabel
@@ -494,7 +498,7 @@ if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
     const getListConfig = () => {
       proxy.$get(Interface.listView.getFilterInfo, {
         entityType: data.entityType,
-        objectTypeCode: 8,
+        objectTypeCode: data.objectTypeCode,
         search: "",
         filterId: data.currentFilter.id
       }).then(res=>{
@@ -516,7 +520,7 @@ if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
     const getFilterList = () => {
       proxy.$get(Interface.listView.filterList, {
         entityType: data.entityType,
-        objectTypeCode: 8,
+        objectTypeCode: data.objectTypeCode,
         search: ""
       }).then(res=>{
         data.filterList = res.actions[0].returnValue;

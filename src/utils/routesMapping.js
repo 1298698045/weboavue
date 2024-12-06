@@ -51,7 +51,7 @@ export const routesMapping = {
         BusinessUnitAddresslist: () => import("../views/oa/deptAddressBook/index.vue"),
         PersonalContact: () => import("../views/oa/myAddressBook/index.vue"),
         CollaborationGroup:  () => import("../views/oa/group/index.vue"),
-        OASuggestion: () => import("../views/listView/index2.vue")
+        OASuggestion: () => import("../views/listView/index.vue")
     },
     // 知识管理
     content: {
@@ -61,12 +61,12 @@ export const routesMapping = {
         album: () => import("../views/knowledge/Album/index.vue"),
         ContentFolder: () => import("../views/knowledge/Contentfolder/permission.vue"),
         QuestionAnswer: () => import("../views/knowledge/QuestionAnswer/index.vue"),
-        DocumentReadLog: () => import("../views/listView/index2.vue"),
-        ContentViewTemplate: () => import("../views/listView/index2.vue"),
-        KbSubject: () => import("../views/listView/index2.vue"),
+        DocumentReadLog: () => import("../views/listView/index.vue"),
+        ContentViewTemplate: () => import("../views/listView/index.vue"),
+        KbSubject: () => import("../views/listView/index.vue"),
         KbMap: () => import("../views/knowledge/KnowledgeMap/index.vue"),
-        ContentChannel: () => import("../views/listView/index2.vue"),
-        KbArticleSearch: () => import("../views/listView/index2.vue"),
+        ContentChannel: () => import("../views/listView/index.vue"),
+        KbArticleSearch: () => import("../views/listView/index.vue"),
         FileManager: () => import("../views/fileAdmin/index.vue"),
         videomanager: () => import("../views/knowledge/Video/Home.vue"),
         KnowledgeAddWizard: () => import("../views/knowledge/KnowledgeMap/NewKbArticle.vue"),
@@ -77,18 +77,18 @@ export const routesMapping = {
     DocumentRule: {
         RuleArticle: () => import("../views/knowledge/RuleArticle/myhome/index.vue"), // 我的制度
         RuleArticle: () => import("../views/knowledge/RuleArticle/home/index.vue"), // 制度台账
-        KbArticleVersion: () => import("../views/listView/index2.vue"),
-        KbArticleAbolish: () => import("../views/listView/index2.vue"),
+        KbArticleVersion: () => import("../views/listView/index.vue"),
+        KbArticleAbolish: () => import("../views/listView/index.vue"),
     },
     // 行政管理
     administration: {
-        ReceptionMeal: () => import("../views/listView/index2.vue"),
+        ReceptionMeal: () => import("../views/listView/index.vue"),
         VehicleReservation: () => import("../views/Vehicle/VehicleApply.vue"),
-        VehicleUse: () => import("../views/listView/index2.vue"),
-        VehicleMaintain: () => import("../views/listView/index2.vue"),
-        SealUse: () => import("../views/listView/index2.vue"),
-        GoingAbroad: () => import("../views/listView/index2.vue"),
-        vehicle: () => import("../views/listView/index2.vue"),
+        VehicleUse: () => import("../views/listView/index.vue"),
+        VehicleMaintain: () => import("../views/listView/index.vue"),
+        SealUse: () => import("../views/listView/index.vue"),
+        GoingAbroad: () => import("../views/listView/index.vue"),
+        vehicle: () => import("../views/listView/index.vue"),
     },
     // 值班管理
     dutyShift: {
@@ -97,15 +97,15 @@ export const routesMapping = {
         DutyshiftNurse: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
         DutyshiftLeaderAgent: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
         DeptDutyShift: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
-        WorkshiftDeptDutyshiftQuery: () => import("../views/listView/index2.vue"),
-        DutyShiftSearch: () => import("../views/listView/index2.vue"),
-        DuthshiftLog: () => import("../views/listView/index2.vue"),
-        DutyShiftReport: () => import("../views/listView/index2.vue"),
+        WorkshiftDeptDutyshiftQuery: () => import("../views/listView/index.vue"),
+        DutyShiftSearch: () => import("../views/listView/index.vue"),
+        DuthshiftLog: () => import("../views/listView/index.vue"),
+        DutyShiftReport: () => import("../views/listView/index.vue"),
     },
     // 社区交流
     chatter: {
         Chatter: () => import("../views/knowledge/QuestionAnswer/index2.vue"),
-        ChatterStatusManager: () => import("../views/listView/index2.vue"),
+        ChatterStatusManager: () => import("../views/listView/index.vue"),
     },
     // 档案管理
     archivemanage: {

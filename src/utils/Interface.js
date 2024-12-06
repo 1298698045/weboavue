@@ -86,20 +86,28 @@ const Interface = {
     sysUser: "/localData/user/sys.user.search.json",
     usersettings: "/localData/user/sys.usersettings.get.json",
     getBusinessUnits:baseUrl + "/one/user/getBusinessUnits", // 获取登录用户所有兼职部门
+    switchBusinessUnit:baseUrl+"/one/user/switchBusinessUnit", // 登录用户切换
     switch:baseUrl + "/one/user/switch", // 切换用户
+    getSubordinates: baseUrl + "/one/user/getSubordinates", // 获取我的下属
+    getGroupUsers: baseUrl + "/one/group/getGroupUsers", // 获取小组成员
+    getLatestUsers: baseUrl + "/one/user/getLatestUsers", // 获取最近使用用户
+    getRoleUsers: baseUrl + "/one/group/getRoleUsers", // 获取角色用户列表
+    allUser:baseUrl+"/one/organization/querUsers",//查询所有用户
   },
   saveRecord: "/localData/entity.saverecord.json",
   // 通讯录
   addressBook: {
     lastList: "/localData/addressBook/user.latestuse.getlist.json", // 最近联系人
     addresslist: "/localData/addressBook/addresslist.search.json", // 全部联系人
-  },
+  }, 
   group: {
     list: "/localData/group/sys.group.member.search.json",
     statusList: "/localData/group/chatter.status.search.json", // 动态
     //statistics: "/localData/group/chatter.status.statistics.json", // 统计
     statistics: baseUrl + "/one/group/getSummaryReport", // 统计
     addPeople: "/localData/group/sys.group.member.add.json", // 添加成员
+    getOwningGroups: baseUrl + "/one/group/getOwningGroups", // 我的小组
+    getJointGroups: baseUrl + "/one/group/getJointGroups", // 活动小组
   },
   email: {
     inboxList: "/localData/email/email.inbox.search.json", //邮件列表
@@ -118,7 +126,8 @@ const Interface = {
     getMail:baseUrl + "/email/getMail", // 获取单个邮件信息
     getAttachments:baseUrl + "/email/getAttachments",//获取邮件附件列表
     deletePermEmail:baseUrl + "/email/deletePermEmail",//删除箱永久删除
-    deleteAttachment:baseUrl + "/email/temporaryFile/delete",//删除邮件附件
+    deleteAttachment:baseUrl + "/email/deleteAttachment",//删除邮件附件
+    copyAttachment:baseUrl + "/email/copyAttachment",//复制邮件附件
   },
   meeting: {
     userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织
