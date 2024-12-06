@@ -197,6 +197,7 @@ import Interface from "@/utils/Interface.js";
 import NoticeMessages from "@/components/NoticeMessages.vue";
 import Logo from "../header/components/logo.vue";
 import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+import { message } from "ant-design-vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 let store = useStore();
@@ -256,7 +257,7 @@ const ChangeAccount= (item) => {
   data.BusinessUnitId=item.BusinessUnitId;
   data.userId=item.UserId;
   data.avatarUrl=item.avatarUrl;
-  switchUser();
+  switchUser(item);
 }
 // proxy.$get(Interface.applist,{
 //   systemCode: 'OA'
@@ -371,9 +372,47 @@ const getBusinessUnits = () => {
     }
   })
 };
-const switchUser= () => {
-  proxy.$post(Interface.user.switch, {userId:data.userId}).then(res=>{
-    console.log("res", res);
+const switchUser= (item) => {
+  let d={
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          businessUnitId: item.BusinessUnitId,
+          organizationId: item.OrganizationId,
+          jobTitle: item.jobTitle
+        }
+      }
+    ]
+  }
+  let obj = {
+      message: JSON.stringify(d)
+  }
+  proxy.$post(Interface.user.switchBusinessUnit,obj).then(res=>{
+    //console.log("res", res);
+    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+        message.success("切换成功！");
+        localStorage.clear();
+        let data=res.actions[0].returnValue;
+        let token = data.token;
+        let userInfo=data.user?JSON.stringify(data.user):'';
+        window.localStorage.setItem('token', token);
+        window.localStorage.setItem('userInfo', userInfo);
+        setTimeout(function(){
+          store.dispatch('getModules');
+        },200)
+    }
+    else{
+        if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+            message.success(res.actions[0].errorMessage);
+        }
+        else{
+            message.success("切换失败！");
+        }
+    }
+    
   })
 };
 onMounted(() => {
