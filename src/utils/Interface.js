@@ -22,6 +22,7 @@ const Interface = {
     getPermission: baseUrl + "/aura/workflow/definition/activity/getPermission", // 流程节点权限
     getTransitions: baseUrl + "/aura/workflow/Process/activity/getTransitions", // 获取节点转移路径
     getParticipators: baseUrl + "/aura/workflow/Process/activity/getParticipators", // 获取节点办理人员
+    agree: "/api/workflow/ProcessInstance/task/agree", // 提交流转-审批通过
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",
@@ -117,6 +118,7 @@ const Interface = {
     getMail:baseUrl + "/email/getMail", // 获取单个邮件信息
     getAttachments:baseUrl + "/email/getAttachments",//获取邮件附件列表
     deletePermEmail:baseUrl + "/email/deletePermEmail",//删除箱永久删除
+    deleteAttachment:baseUrl + "/email/temporaryFile/delete",//删除邮件附件
   },
   meeting: {
     userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织

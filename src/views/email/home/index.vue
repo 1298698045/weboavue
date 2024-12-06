@@ -209,15 +209,15 @@
                 <div class="rightContainer" v-if="!isWriteEmail">
                     <div class="mailListWrap">
                         <div class="mailHeader">
-                            <a-tooltip class="foldIcon" placement="top" :title="isFold?'收起文件夹栏':'展开文件夹栏'">
+                            <!-- <a-tooltip class="foldIcon" placement="top" :title="isFold?'收起文件夹栏':'展开文件夹栏'">
                                 <div class="btnText foldIcon" v-if="!isEdit" @click="handleFoldIcon">
                                     <i class="iconfont icon-shouqiwenjianjialan" :class="{active:!isFold}"></i>
                                 </div>
                                 <div v-else>
-                                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+                                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"></el-checkbox>
                                 </div>
-                            </a-tooltip>
-                            <div class="titleBox" v-if="ltags=='inbox'">
+                            </a-tooltip> -->
+                            <!-- <div class="titleBox" v-if="ltags=='inbox'">
                                 <button class="btnText">
                                     {{dropMenuItemName}}({{ emailTotal||0 }})
                                     <i class="iconfont icon-xiala"></i>
@@ -229,35 +229,94 @@
                                         <div class="dropMenuItem" @click="dropMenuItemChange('已读邮件')"><span class="name">已读邮件</span></div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="titleBox" v-if="ltags!='inbox'">
+                            </div> -->
+                            <a-tooltip class="foldIcon" placement="top" title="全选">
+                                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"></el-checkbox>
+                            </a-tooltip>
+                            <div class="titleBox">
                                 <button class="btnText">
-                                    {{dropMenuItemName}}({{ emailTotal||0 }})
+                                    {{dropMenuItemName}}
                                 </button>
                             </div>
                             <div class="rightBtn">
-                                <button class="btnText" @click="handleEditEmail">
-                                    {{isEdit ? '取消' : '编辑'}}
-                                </button>
-                                <a-dropdown v-if="isEdit">
-                                    <template #overlay>
-                                    <a-menu>
-                                        <a-menu-item key="1" @click="BatchHandleUnRead">
-                                        <i class="iconfont icon-weiduyoujian"></i>
-                                          设为未读邮件
-                                        </a-menu-item>
-                                        <a-menu-item key="2" @click="BatchHandleStar">
-                                        <i class="iconfont icon-zhongyaoyoujian"></i>
-                                          设为重要邮件
-                                        </a-menu-item>
-                                        <a-menu-item key="5" @click="BatchHandleDeleteEmail">
-                                            <i class="iconfont icon-yishanchu"></i>
-                                            批量删除
-                                        </a-menu-item>
-                                    </a-menu>
-                                    </template>
-                                    <a-button :icon="h(MenuOutlined)" class="ml5"> </a-button>
-                                </a-dropdown>
+                                <a-tooltip placement="top" title="批量选择">
+                                    <a-dropdown>
+                                        <template #overlay>
+                                            <a-menu>
+                                            <a-menu-item key="1" @click="BatchHandleUnRead">
+                                            <i class="iconfont icon-weiduyoujian"></i>
+                                            设为未读邮件
+                                            </a-menu-item>
+                                            <a-menu-item key="2" @click="BatchHandleStar">
+                                            <i class="iconfont icon-zhongyaoyoujian"></i>
+                                            设为重要邮件
+                                            </a-menu-item>
+                                            <a-menu-item key="5" @click="BatchHandleDeleteEmail">
+                                                <i class="iconfont icon-yishanchu"></i>
+                                                批量删除
+                                            </a-menu-item>
+                                        </a-menu>
+                                        </template>
+                                        <a-button :icon="h(isEdit?CheckSquareOutlined:BorderOutlined)" class="ml5" @click="handleEditEmail"> </a-button>
+                                    </a-dropdown>
+                                </a-tooltip>
+                                <a-tooltip placement="top" title="筛选器">
+                                    <a-dropdown>
+                                        <template #overlay>
+                                            <a-menu class="emaillistmenu">
+                                            <a-menu-item key="1" @click="dropMenuItemChange('全部')">
+                                                <i class="iconfont icon-duigou" :style="{color:(data.filterName=='全部'?'#000':'#fff')}"></i>
+                                            <i class="iconfont icon-shoujianxiang"></i>
+                                            全部
+                                            </a-menu-item>
+                                            <a-menu-item key="2" @click="dropMenuItemChange('未读')">
+                                                <i class="iconfont icon-duigou" :style="{color:(data.filterName=='未读'?'#000':'#fff')}"></i>
+                                            <i class="iconfont icon-weiduyoujian"></i>
+                                            未读
+                                            </a-menu-item>
+                                            <a-menu-item key="5" @click="dropMenuItemChange('已标记')">
+                                                <i class="iconfont icon-duigou" :style="{color:(data.filterName=='已标记'?'#000':'#fff')}"></i>
+                                                <i class="iconfont icon-zhongyaoyoujian"></i>
+                                                已标记
+                                            </a-menu-item>
+                                        </a-menu>
+                                        </template>
+                                        <a-button :icon="h(FilterOutlined)" class="ml5"> </a-button>
+                                    </a-dropdown>
+                                </a-tooltip>
+                                <a-tooltip placement="top" title="排序方式">
+                                    <a-dropdown>
+                                        <template #overlay>
+                                            <a-menu class="emaillistmenu">
+                                                    <a-menu-item-group title="排序依据">
+                                                        <a-menu-item key="1" @click="ChangeEmailSort('CreatedOn')">
+                                                            <i class="iconfont icon-duigou" :style="{color:(data.sort=='CreatedOn'?'#000':'#fff')}"></i>
+                                                            日期
+                                                        </a-menu-item>
+                                                        <a-menu-item key="2" @click="ChangeEmailSort('FromName')">
+                                                            <i class="iconfont icon-duigou" :style="{color:(data.sort=='FromName'?'#000':'#fff')}"></i>
+                                                            发件人
+                                                        </a-menu-item>
+                                                        <a-menu-item key="3" @click="ChangeEmailSort('StarEmail')">
+                                                            <i class="iconfont icon-duigou" :style="{color:(data.sort=='StarEmail'?'#000':'#fff')}"></i>
+                                                            重要性
+                                                        </a-menu-item>
+                                                    </a-menu-item-group>
+                                                    <a-menu-item-group title="排序顺序">
+                                                        <a-menu-item key="4" @click="ChangeEmailOrder('ASC')">
+                                                            <i class="iconfont icon-duigou" :style="{color:(data.order=='ASC'?'#000':'#fff')}"></i>
+                                                            由旧到新
+                                                        </a-menu-item>
+                                                        <a-menu-item key="5" @click="ChangeEmailOrder('DESC')">
+                                                            <i class="iconfont icon-duigou" :style="{color:(data.order=='DESC'?'#000':'#fff')}"></i>
+                                                            由新到旧
+                                                        </a-menu-item>
+                                                    </a-menu-item-group>
+                                            </a-menu>
+                                        </template>
+                                        <a-button :icon="h(SwapOutlined)" class="ml5 m155"> </a-button>
+                                    </a-dropdown>
+                                </a-tooltip>
                             </div>
                         </div>
                         <div class="mailListContent">
@@ -383,7 +442,11 @@
         DeleteOutlined,
         MailOutlined,
         LoadingOutlined,
-        MenuOutlined
+        MenuOutlined,
+        CheckSquareOutlined,
+        BorderOutlined,
+        FilterOutlined,
+        SwapOutlined,
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import EmailDetail from "@/components/email/EmailDetail.vue";
@@ -408,43 +471,43 @@ let store = useStore();
                 children: [
                     {
                         name: "收件箱",
-                        num: "",
+                        num: 0,
                         iconClass: "icon-shoujianxiang",
                         ltags: "inbox",
                     },
-                    {
-                        name: "重要邮件",
-                        num: "",
-                        iconClass: "icon-zhongyaoyoujian",
-                        ltags: "star",
-                    },
+                    // {
+                    //     name: "重要邮件",
+                    //     num: "",
+                    //     iconClass: "icon-zhongyaoyoujian",
+                    //     ltags: "star",
+                    // },
                     {
                         name: "群邮件",
-                        num: "",
+                        num: 0,
                         iconClass: "icon-qunyoujian",
                         ltags: "group",
                     },
-                    {
-                        name: "未读邮件",
-                        num: "",
-                        iconClass: "icon-weiduyoujian",
-                        ltags: "unread",
-                    },
+                    // {
+                    //     name: "未读邮件",
+                    //     num: "",
+                    //     iconClass: "icon-weiduyoujian",
+                    //     ltags: "unread",
+                    // },
                     {
                         name: "草稿箱",
-                        num: "",
+                        num: 0,
                         iconClass: "icon-caogaoxiang1",
                         ltags: "draft",
                     },
                     {
                         name: "已发送",
-                        num: "",
+                        num: 0,
                         iconClass: "icon-yifasong",
                         ltags: "sent",
                     },
                     {
                         name: "已删除",
-                        num: "",
+                        num: 0,
                         iconClass: "icon-yishanchu",
                         ltags: "Deleted",
                     },
@@ -494,14 +557,17 @@ let store = useStore();
         sObjectName:'Chatter',
         deleteDesc: '确定要删除吗？',
         external:false,
-        dropMenuItemName:'全部邮件',
+        dropMenuItemName:'收件箱',
         percentage:34,
         loading:false,
         isConfirm:false,
         confirmText:'',
         confirmTitle:'',
+        sort:'CreatedOn',
+        order:'DESC',
+        filterName:'全部'
     });
-    const { loading,percentage,dropMenuItemName,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external,userId,folderName,navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
+    const { filterName,sort,order,loading,percentage,dropMenuItemName,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external,userId,folderName,navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
          folderList, folderText, renameFolderId, isEdit, checkList, checkAll, isIndeterminate, isFold,isConfirm,confirmText,confirmTitle,
          isDetail, emailIndex, pageNumber, pageSize,searchText,isFocus,isWriteEmail,ltagsRecord,ltagsData,appList, appCode, currentAppName } = toRefs(data);
          data.appList = store.state.modules;
@@ -547,7 +613,7 @@ const getModuleAppList = () => {
             data.folderName = item.name;
         }
         if(data.ltags=='inbox'){
-            data.dropMenuItemName='全部邮件';
+            data.dropMenuItemName='收件箱';
         }else{
             data.dropMenuItemName=item.name;
         }
@@ -575,19 +641,19 @@ const getModuleAppList = () => {
                     search: data.searchText,
                     pageNumber: data.keyIndex,
                     pageSize: data.pageSize,
-                    sort:'CreatedOn',
-                    sortDir:'DESC'
+                    sort:data.sort,
+                    order:data.order,
                 }
             }]
         };
+        if(data.filterName=='未读'){
+            d.actions[0].params.IsRead=false;
+        }
+        else if(data.filterName=='已标记'){
+            d.actions[0].params.starEmail=1;
+        }
         if(data.ltags=='inbox'){
             url=Interface.email.inboxSearch;
-            if(data.dropMenuItemName=='未读邮件'){
-                d.actions[0].params.IsRead=false;
-            }
-            else if(data.dropMenuItemName=='已读邮件'){
-                d.actions[0].params.IsRead=true;
-            }
         }else if(data.ltags=='sent'){
             url=Interface.email.sentboxSearch;
         }else if(data.ltags=='draft'){
@@ -614,8 +680,8 @@ const getModuleAppList = () => {
                 search:data.searchText,
                 page: data.keyIndex,
                 rows: data.pageSize,
-                sort:'CreatedOn',
-                order:'DESC',
+                sort:data.sort,
+                order:data.order,
                 displayColumns:'FromName,ToUserNames,IsRead,Subject,MailContent,CreatedOn'
             }
         }
@@ -647,6 +713,11 @@ const getModuleAppList = () => {
                     data.inboxList=unique(data.inboxList);
                 }
                 data.emailTotal = res.totalCount||(res.pageInfo?res.pageInfo.total:0)||0;
+                for (var i = 0; i < data.navList[0].children.length; i++) {
+                    if(data.ltags==data.navList[0].children[i].ltags&&(data.ltags=='inbox'||data.ltags=='draft')){
+                        data.navList[0].children[i].num=data.emailTotal
+                    }
+                }
             }
             else{
                 data.emailId = '';
@@ -1170,7 +1241,8 @@ const handleRowDelete2=(id)=>{
 }
 //切换已读未读条件
 const dropMenuItemChange=(name)=>{
-    data.dropMenuItemName=name;
+    //data.dropMenuItemName=name;
+    data.filterName=name;
     data.keyIndex=1;
     data.checkList = [];
     data.isDetail=false;
@@ -1178,6 +1250,30 @@ const dropMenuItemChange=(name)=>{
     data.isWriteEmail=false;
     data.recordId='';
     data.ltagsData={name:'',id:'',body:''};
+    getInboxList();
+}
+//切换排序方式
+const ChangeEmailSort=(name)=>{
+    data.keyIndex=1;
+    data.checkList = [];
+    data.isDetail=false;
+    data.emailId = "";
+    data.isWriteEmail=false;
+    data.recordId='';
+    data.ltagsData={name:'',id:'',body:''};
+    data.sort=name;
+    getInboxList();
+}
+//切换排序顺序
+const ChangeEmailOrder=(name)=>{
+    data.keyIndex=1;
+    data.checkList = [];
+    data.isDetail=false;
+    data.emailId = "";
+    data.isWriteEmail=false;
+    data.recordId='';
+    data.ltagsData={name:'',id:'',body:''};
+    data.order=name;
     getInboxList();
 }
 //批量设置重要邮件
@@ -1437,6 +1533,7 @@ const BatchHandleDeleteEmail2=()=>{
                                     cursor: pointer;
                                     &:hover {
                                         background: #f2f3f5;
+                                        //background: #CFE4FA;
                                     }
                                     .name{
                                         color: #1d2129;
@@ -1448,8 +1545,17 @@ const BatchHandleDeleteEmail2=()=>{
                                             color: rgba(23, 26, 29, 0.6);
                                         }
                                     }
+                                    .num{
+                                            color: #242424;
+                                            font-size: 14px;
+                                        }
                                     &.active {
-                                        background: #f2f3f5;
+                                        //background: #f2f3f5;
+                                        background: #CFE4FA;
+                                        .num{
+                                            color: #0F548C;
+                                            font-weight: 600;
+                                        }
                                     }
 
                                     .emailNum {
@@ -1600,6 +1706,13 @@ const BatchHandleDeleteEmail2=()=>{
             }
             .titleBox {
                 position: relative;
+                flex: 1;
+                margin-left: 5px;
+                .btnText{
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: #242424;
+                }
                 .btnText .iconfont{
                     font-size: 12px;
                 }
@@ -1650,7 +1763,7 @@ const BatchHandleDeleteEmail2=()=>{
         }
         
         .mailListContent {
-            height: calc(~"100% - 34px");
+            height: calc(~"100% - 45px");
             overflow-y: auto;
             box-sizing: border-box;
             display: block;
@@ -1673,6 +1786,9 @@ const BatchHandleDeleteEmail2=()=>{
                     .middleRow .deleteAction{
                         visibility: visible;
                     }
+                }
+                &.active{
+                    background: #CFE4FA;
                 }
                 .rightInfo .nameRow .right span .iconfont{
                     font-size: 12px;
@@ -1766,8 +1882,8 @@ const BatchHandleDeleteEmail2=()=>{
     }
 
     .btnText {
-        height: 25px;
-        line-height: 25px;
+        height: 44px;
+        line-height: 49px;
         background: transparent;
         color: #4e5969;
         font-size: 14px;
@@ -1934,13 +2050,13 @@ const BatchHandleDeleteEmail2=()=>{
                 width: 50%;
             }
             .emailHeader .return{
-                width: 250px;
+                width: 240px;
                 .progressWrap{
                     font-size: 12px;
                     text-align: left;
                     margin-right: 0px;
                     .progressText{
-                        margin-left: 10px;
+                        margin-left: 5px;
                     }
                     :deep .ant-progress-line{
                         margin-bottom: 2px;
@@ -2030,12 +2146,33 @@ const BatchHandleDeleteEmail2=()=>{
         }
         .mailListWrap{
             width: 362px;
+            .m155{
+                transform: rotate(90deg);
+            }
         }
         .mailHeader{
+            height: 44px !important;
+            line-height: 44px !important;
             .rightBtn{
                 :deep .ant-btn{
                     border:none;
+                    color: #000;
                 }
+                :deep .ant-btn:hover{
+                    border:none;
+                    background: #F0F0F0;
+                }
+            }
+        }
+        .emaillistmenu{
+            width: 130px;
+            .icon-duigou{
+                margin-right: 10px;
+            }
+            :deep .ant-dropdown-menu-item-group-title{
+                font-size: 12px !important;
+                font-weight: bold !important;
+                padding-bottom: 5px;
             }
         }
 </style>

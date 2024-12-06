@@ -94,37 +94,46 @@
                                 <div class="inboxFileWrap" v-if="attachments && attachments.length>0">
                                     <div class="inboxFileHead">
                                         <i class="iconfont icon-fujianwenjian"></i>
-                                        附件{{attachments && attachments.length}}个（{{filesSizeAll || ''}}）
+                                        附件{{attachments && attachments.length}}个
                                         <!--<span class="shu" v-if="attachments && attachments.length>=2">|</span>
                                         <span class="linkText">打包下载</span>-->
                                     </div>
                                     <div class="inboxFileList" v-if="attachments && attachments.length>0">
                                         <div class="inboxFileItem" v-for="(item,index) in attachments" :key="index">
                                             <div class="leftImg">
-                                                <img src="/src/assets/img/filetype/doc.png" v-if="item.FileExtension=='ocx'||item.FileExtension=='docx'||item.FileExtension=='doc'" />
-                                                <img src="/src/assets/img/filetype/rar.png" v-else-if="item.FileExtension=='rar'||item.FileExtension=='zip'" />
-                                                <img src="/src/assets/img/filetype/Excel.png" v-else-if="item.FileExtension=='xlsx'||item.FileExtension=='xls'" />
-                                                <img src="/src/assets/img/filetype/Pdf.png" v-else-if="item.FileExtension=='pdf'" />
-                                                <img src="/src/assets/img/filetype/PPT.png" v-else-if="item.FileExtension=='ppt'" />
-                                                <img :src="item.ViewLinkUrl||'/src/assets/img/filetype/img.png'" v-else-if="item.FileExtension=='jpg'||item.FileExtension=='png'" />
+                                                <img src="/src/assets/img/filetype/doc.png" v-if="item.fileExtension=='ocx'||item.fileExtension=='docx'||item.fileExtension=='doc'||
+                                                     item.fileExtension=='.ocx'||item.fileExtension=='.docx'||item.fileExtension=='.doc'" />
+                                                <img src="/src/assets/img/filetype/rar.png" v-else-if="item.fileExtension=='rar'||item.fileExtension=='zip'||
+                                                     item.fileExtension=='.rar'||item.fileExtension=='.zip'" />
+                                                <img src="/src/assets/img/filetype/Excel.png" v-else-if="item.fileExtension=='xlsx'||item.fileExtension=='xls'||
+                                                     item.fileExtension=='.xlsx'||item.fileExtension=='.xls'" />
+                                                <img src="/src/assets/img/filetype/Pdf.png" v-else-if="item.fileExtension=='pdf'||item.fileExtension=='.pdf'" />
+                                                <img src="/src/assets/img/filetype/PPT.png" v-else-if="item.fileExtension=='ppt'||item.fileExtension=='.ppt'" />
+                                                <img src="/src/assets/img/filetype/defaultImg.png" v-else-if="item.fileExtension=='jpg'||item.fileExtension=='png'||item.fileExtension=='.jpg'||item.fileExtension=='.png'" />
                                                 <img src="/src/assets/img/filetype/Folder.png" v-else />
                                             </div>
                                             <div class="rightFileInfo">
                                                 <div class="fileName rowEllipsis">
-                                                    {{item.Name || ''}}
+                                                    {{item.name || ''}}
                                                 </div>
-                                                <div class="fileSize">{{item.sizekb || ''}}</div>
-                                                <div class="fileOptionShow">
+                                                <div class="fileSize">{{item.size || ''}}</div>
+                                                <div class="fileOptionShow" :title="(item.name||'')">
                                                     <div class="btns">
-                                                            <button class="btn square default" title="保存到优盘" @click="openUsb(item.Id)">
+                                                        <a-tooltip title="保存到优盘" placement="top">
+                                                            <a-button class="btn square default" title="保存到优盘" @click="openUsb(item.Id)">
                                                                 <i class="iconfont icon-baocundaoyoupan"></i>
-                                                            </button>
-                                                            <button class="btn square default" @click="handlePreviewFile(item)" title="预览">
+                                                            </a-button>
+                                                        </a-tooltip>
+                                                        <a-tooltip title="预览" placement="top">
+                                                            <a-button class="btn square default" @click="handlePreviewFile(item)" title="预览">
                                                                 <i class="iconfont icon-yulanwenjian"></i>
-                                                            </button>
-                                                            <button class="btn square default" @click="downloadFile(item)" title="下载">
+                                                            </a-button>
+                                                        </a-tooltip>
+                                                        <a-tooltip title="下载" placement="top">
+                                                            <a-button class="btn square default" @click="downloadFile(item)" title="下载">
                                                                 <i class="iconfont icon-xiazai"></i>
-                                                            </button>
+                                                            </a-button>
+                                                        </a-tooltip>
                                                     </div>
                                                 </div>
                                             </div>
@@ -170,7 +179,25 @@
         detail: {Subject:''},
         ltags: "inbox",
         receiverNames: [],
-        attachments:[],
+        attachments:[
+            // {
+            //     "attachId": "79354244-3BAB-44A2-BD10-80FA622CD0A8",
+            //     "name": "1.jpg",
+            //     "description": null,
+            //     "fileTypeCode": 0,
+            //     "fileLocation": "/202411/14/9445b88b-2647-4974-b4e2-2cdce80ec053/20241125102002337.jpg",
+            //     "fileExtension": ".jpg",
+            //     "fileSize": 1012086,
+            //     "parentTypeCode": null,
+            //     "parentId": "9445B88B-2647-4974-B4E2-2CDCE80EC053",
+            //     "parentName": "",
+            //     "isFromFile": false,
+            //     "organizationId": null,
+            //     "storageNode": "",
+            //     "createdOn": "2024-11-25 10:20:02.0",
+            //     "size":'1.6kb'
+            // }
+        ],
         isDelete: false
     })
     const { isDetail, isEmailTitle, detail, receiverNames, isDelete,attachments } = toRefs(data);
@@ -198,7 +225,7 @@
                 if(data.detail.isGroupmail){
                     data.receiverNames = data.detail.toGroupNames && data.detail.toGroupNames.split(',');
                 }
-                data.attachments=res.actions[0].returnValue.attachments||[];
+                //data.attachments=res.actions[0].returnValue.attachments||[];
             }
         })
     }
@@ -208,11 +235,19 @@
         }).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue){
                 data.attachments=res.actions[0].returnValue||[];
+                for (var i = 0; i < data.attachments.length; i++) {
+                    var item = data.attachments[i];
+                    let size=item.fileSize;
+                    size=size?(size*1/1024).toFixed(2):0;
+                    size=size+'kb';
+                    data.attachments[i].size=size;
+                }
             }
         })
     }
     watch(()=>props.emailId,(newVal,oldVal)=>{
         getDetail();
+        getAttachments();
     },{immediate:true,deep:true})
     const handleDeleteEmail = () => {
         //data.isDelete = true;
@@ -476,4 +511,87 @@
         }
         
     }
+    .inboxFileWrap{
+        .inboxFileList{
+            display: flex;
+            flex-wrap: wrap;
+            .inboxFileItem{
+                width: 266px;
+                border-radius: 2px;
+                background: #f2f3f5;
+                padding: 10px;
+                box-sizing: border-box;
+                margin-right: 16px;
+                margin-bottom: 16px;
+                cursor: pointer;
+                display: flex;
+                overflow: hidden;
+                position: relative;
+                .leftImg{
+                    width: 32px;
+                    height: 32px;
+                    position: relative;
+                    top: 5px;
+                    img{
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                .rightFileInfo{
+                    flex: 1;
+                    margin-left: 14px;
+                    overflow: hidden;
+                    color: #1d2129;
+                    .fileSize{
+                        color: #4e5969;
+                        padding-top: 4px;
+                    }
+                    .fileOptionShow{
+                        position: absolute;
+                        width: calc(~"100% - 36px");
+                        height: 100%;
+                        left: 42px;
+                        top: 0;
+                        background: rgba(242, 243, 245,.8);
+                        display: none;
+                        .btns{
+                            display: flex;
+                            align-items: center;
+                            height: 100%;
+                            justify-content: flex-end;
+                            padding-right: 20px;
+                            box-sizing: border-box;
+                        }
+                    }
+                }
+                &:hover .fileOptionShow{
+                    display: block;
+                }
+            }
+        }
+        
+        .inboxFileHead{
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #242424;
+            .iconfont{
+                font-size: 12px;
+            }
+        }
+        :deep .ant-btn:hover {
+            color: rgba(0, 0, 0, 0.88);
+            background-color: rgba(0, 0, 0, 0.06);
+            border: none;
+            box-shadow: none;
+        }
+        :deep .ant-btn {
+            width: 32px;
+            padding-inline-start: 0;
+            padding-inline-end: 0;
+            border: none;
+            box-shadow: none;
+            background-color: transparent;
+        }
+    }
+    
 </style>

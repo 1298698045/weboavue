@@ -75,7 +75,7 @@
                     </a-form>
                     <a-form v-if="activeKey=='2'">
                         <a-form-item label="留言:" name="Description">
-                            <a-textarea :rows="3" />
+                            <a-textarea :rows="3" v-model:value="formState.description" />
                         </a-form-item>
                     </a-form>
                 </div>
@@ -88,6 +88,7 @@
                 </div>
             </template>
         </a-modal>
+        <MultipleUsers :isShow="isMultipleUser" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
     </div>
 </template>
 <script setup>
@@ -109,6 +110,8 @@
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     import RadioUser from "@/components/commonModal/RadioUser.vue";
+    import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
+
     const { proxy } = getCurrentInstance();
     const props = defineProps({
         paramsData: Object,
@@ -121,19 +124,14 @@
     const isModal = ref(true);
     const labelCol = ref({ style: { width: '100px' } });
     const emit = defineEmits(['update-status']);
-    const handleSubmit = () => {
-        handleCancel();
-    }
-    const handleCancel = () => {
-        emit("update-status",false);
-    }
+    
     const formState = reactive({
         operationType: 1,
         ProcessName: "",
         BusinessUnitId:"",
         Title:"",
         Priority:"0",
-        Description:"",
+        description:"",
         BusinessUnitList: [],
         noticeMethod: [],
     })
@@ -152,9 +150,12 @@
         splitType: "", // 分支类型
         activityId: "", // 节点id
         addPeople: true,
-        recordData: {}
+        recordData: {},
+        fromActivityId: "",
+        isMultipleUser: false
     })
-    const { activeKey,height,isRadioUser,selectedRowKeys,pagination, transitions, splitType, activityId, addPeople, recordData } = toRefs(data);
+    const { activeKey,height,isRadioUser,selectedRowKeys,pagination, transitions, splitType, 
+        activityId, addPeople, recordData, fromActivityId, isMultipleUser } = toRefs(data);
     const columns = [
         {
             title: "姓名",
@@ -247,7 +248,8 @@
         };
         proxy.$post(Interface.workflow.getTransitions, d).then(res=>{
             console.log("getTransitions", res);
-            let { splitType, transitions } = res.actions[0].returnValue;
+            let { splitType, transitions, fromActivityId } = res.actions[0].returnValue;
+            data.fromActivityId = fromActivityId;
             data.splitType = splitType;
             data.transitions = transitions.map(item=>{
                 item.searchVal = "";
@@ -339,8 +341,95 @@
             item.peopleList = list;
         }
     }
-    
 
+    const cancelDeptModal = () => {
+
+    };
+
+    const handleDeptParams = () => {
+
+    };
+    
+    const handleSubmit = () => {
+        let transitions = [];
+        
+        if(data.splitType==2){
+            let isNodeSelect = data.transitions.some(item=>item.isMatched==true);
+            if(isNodeSelect){
+                data.transitions.forEach(item=>{
+                    if(item.isMatched && item.peopleList.length == 0){
+                        message.error('请选择人员!');
+                        throw error("请选择人员!");
+                    }
+                })
+            }
+            if(!isNodeSelect){
+                message.error('请选择节点!');
+                return false;
+            }
+
+        }else {
+            if(data.activityId==""){
+                message.error('请选择节点!');
+                return false;
+            }
+        }
+
+        console.log("data.transitions2:", data.transitions);
+
+        data.transitions.forEach(item=>{
+            if(item.isMatched){
+                console.log("item.peopleList", item.peopleList);
+                let toUsers = item.peopleList.map(row=>{
+                    row.id = row.key;
+                    row.name = row.userName;
+                    let { BusinessUnitIdName, key, userName, ...rest } = row;
+                    return rest;
+                });
+                let nodeObj = {
+                    ruleId: item.ID,
+                    toActivityId: item.ToActivityId,
+                    toActivityName: item.To.name,
+                    toUsers: toUsers
+                };
+                transitions.push(nodeObj);
+            }
+        })
+
+
+
+        let obj = {
+            actions:[{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    ruleLogId: props.ruleLogId,
+                    processInstanceId: props.processInstanceId,
+                    fromActivityId: data.fromActivityId,
+                    description: formState.description,
+                    deadline: 3,
+                    transitions: transitions
+                }
+            }]
+        };
+
+        let d = {
+            message: JSON.stringify(obj)
+        };
+
+        proxy.$post(Interface.workflow.agree, d).then(res=>{
+
+        })
+
+
+
+
+        // handleCancel();
+    }
+    const handleCancel = () => {
+        emit("update-status",false);
+    }
 
     defineExpose({isModal})
 </script>

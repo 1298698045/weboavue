@@ -55,6 +55,7 @@
                                     <a-upload multiple v-model:file-list="fileList" name="file" action
                                         :customRequest="changeRequest"
                                         :showUploadList="false"
+                                        :before-upload="beforeUpload"
                                         @change="handleChange">
                                         <a-button type="link">添加附件</a-button>
                                         <template #itemRender>
@@ -76,7 +77,7 @@
                                                 <img src="/src/assets/img/filetype/Folder.png" v-else />
                                             </div>
                                             <div class="rightFileInfo">
-                                                <div class="fileName rowEllipsis" >
+                                                <div class="fileName rowEllipsis">
                                                     {{item.name}}
                                                 </div>
                                                 <div class="fileSize">{{item.size}}</div>
@@ -147,6 +148,7 @@
 </template>
 <script setup>
     import "@/style/oldIcon/iconfont.css";
+    import axios from "axios";
     import {
         ref,
         watch,
@@ -199,6 +201,7 @@
     })
     const data = reactive({
         fileList: [],
+        fileList1:[],
         fileList2: [],
         headers: {},
         searchVal: "",
@@ -293,28 +296,39 @@
         }
         return list;
     }
-    const changeRequest=(file) => {
-        // console.log(file)
-        // if(file&&file.file){
-        //     data.fileList2.push({
-        //         uid: file.file.uid,
-        //         name: file.file.name,
-        //         url: file.file.url,
-        //         fileExtension: file.file.name ? (file.file.name).split('.')[1] : '',
-        //         ViewLinkUrl: file.file.url,
-        //         raw: file.file.originFileObj,
-        //         Privilege: '',
-        //         size:file.file.size,
-        //         isNew:true
-        //     });
-        // }
-        // data.fileList2=unique(data.fileList2);
-        // console.log(data.fileList2)
+    const beforeUpload=()=>{
+        //执行顺序1
+        if(data.id==''){
+            let url=Interface.email.saveDraft;
+            let d = {
+                actions:[{
+                    id:"4105;a",
+                    descriptor:"",
+                    callingDescriptor:"UNKNOWN",
+                    params: {
+                        subject:'',
+                        body:'',
+                        isGroupmail:false,
+                        to:[]
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+                if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+                    data.id=res.actions[0].returnValue.id;
+                }
+            })
+        }
     }
     const handleChange = (file) => {
-        //console.log(file.file)
+        //执行顺序2
         if(file&&file.file){
-            data.fileList2.push({
+            let size=file.file.size;
+            size=size?(size*1/1024).toFixed(2):0;
+            data.fileList1.push({
                 uid: file.file.uid,
                 name: file.file.name,
                 url: file.file.url,
@@ -322,12 +336,73 @@
                 ViewLinkUrl: file.file.url,
                 raw: file.file.originFileObj,
                 Privilege: '',
-                size:file.file.size,
+                size:size+'kb',
                 isNew:true
             });
         }
-        data.fileList2=unique(data.fileList2);
-        //console.log(data.fileList2)
+        data.fileList1=unique(data.fileList1);
+    }
+    const changeRequest=(file) => {
+        //执行顺序3
+        nextTick(()=>{
+            if (data.fileList1&&data.fileList1.length&&data.id) {
+                let isHasNew=false;
+                var fd = new FormData();
+                fd.append('parentId', data.id);
+                for (var i = 0; i < data.fileList1.length; i++) {
+                    var item = data.fileList1[i];
+                    if (item.raw&&item.isNew) {
+                        fd.append('files', item.raw);
+                        data.fileList1[i].isNew=false;
+                        isHasNew=true;
+                    }
+                }
+                if(isHasNew){
+                    axios({
+                        url: Interface.email.upload,
+                        method: 'POST',
+                        data: fd,
+                        headers: {
+                            'Content-type': 'multipart/form-data',
+                        },
+                    }).then(res=>{
+                        //console.log(res);
+                        if(res&&res.data&&res.data.actions&&res.data.actions[0]&&res.data.actions[0].returnValue&&res.data.actions[0].returnValue.length){
+                            for (var i = 0; i < res.data.actions[0].returnValue.length; i++) {
+                                var item = res.data.actions[0].returnValue[i];
+                                let size=item.fileSize;
+                                size=size?(size*1/1024).toFixed(2):0;
+                                size=size+'kb';
+                                let location=item.fileLocation;
+                                let name0='';
+                                if(location){
+                                    location=location.split('\\');
+                                    if(location&&location.length==3){
+                                        name0=location[2]||'';
+                                    }
+                                }
+                                let name=item.name&&item.name!='files'?item.name:name0;
+                                data.fileList2.push({
+                                    uid: item.attachId,
+                                    name: name,
+                                    url: item.fileLocation,
+                                    fileExtension: item.fileExtension||'',
+                                    ViewLinkUrl: item.fileLocation,
+                                    size:size,
+                                    createdOn:item.createdOn
+                                });
+                            }
+                            data.fileList2=unique(data.fileList2);
+                            //console.log(data.fileList2,'fileList2');
+                        }
+                        message.success("上传成功！");
+                    }).catch(err => {
+                        console.log('error', err);
+                        message.error("上传失败！");
+                    });
+                }
+            }
+        })
     }
     const onSearch = (e) => {
         data.latelyexpandedKeys=[1];
@@ -702,21 +777,28 @@
                 if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                     data.id=res.actions[0].returnValue.id;
                     message.success(type==1?"发送成功":"保存成功");
-                    if (data.fileList2&&data.fileList2.length) {
-                        var fd = new FormData();
-                        fd.append('pid', data.id);
-                        for (var i = 0; i < data.fileList2.length; i++) {
-                            var item = that.fileList2[i];
-                            if (item.raw&&item.isNew) {
-                                fd.append('file'+i, item.raw);
-                            }
-                        }
-                        proxy.$post(Interface.email.upload,fd).then(res=>{
+                    // if (data.fileList2&&data.fileList2.length) {
+                    //     var fd = new FormData();
+                    //     fd.append('parentid', data.id);
+                    //     for (var i = 0; i < data.fileList2.length; i++) {
+                    //         var item = data.fileList2[i];
+                    //         if (item.raw&&item.isNew) {
+                    //             fd.append('files', item.raw);
+                    //         }
+                    //     }
+                    //     axios({
+                    //         url: Interface.email.upload,
+                    //         method: 'POST',
+                    //         data: fd,
+                    //         headers: {
+                    //             'Content-type': 'multipart/form-data',
+                    //         },
+                    //     }).then(res=>{
 
-                        }).catch(err => {
-                            console.log('error', err);
-                        });
-                    }
+                    //     }).catch(err => {
+                    //         console.log('error', err);
+                    //     });
+                    // }
                     
                     if(type==1){
                         emit("cancel", props.ltags);
@@ -820,18 +902,44 @@
         })
     }
     const deleteFile=(item)=>{
-        for (var i = 0; i < data.fileList.length; i++) {
-            if (item.uid == data.fileList[i].uid) {
-                data.fileList.splice(i, 1);
+        let d = {
+            actions:[{
+                    id: "4105;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        parentId:data.id,
+                        fileName:item.name
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
             }
-        }
-        for (var i = 0; i < data.fileList2.length; i++) {
-            if (item.uid == data.fileList2[i].uid) {
-                data.fileList2.splice(i, 1);
-            }
-        }
+            proxy.$post(Interface.email.deleteAttachment,obj).then(res=>{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                    message.success("删除成功！");
+                    for (var i = 0; i < data.fileList2.length; i++) {
+                        if (item.uid == data.fileList2[i].uid) {
+                            data.fileList2.splice(i, 1);
+                        }
+                    }
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                        message.success(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.success("删除失败！");
+                    }
+                }
+            }).catch(err => {
+                console.log('error', err);
+                message.error("删除失败！");
+            });
     }
     onMounted(() => {
+        beforeUpload();
         if(props.id){
             getDetail();
         }
@@ -905,6 +1013,8 @@
                                     .leftImg{
                                         width: 32px;
                                         height: 32px;
+                                        position: relative;
+                                        top: 5px;
                                         img{
                                             width: 100%;
                                             height: 100%;

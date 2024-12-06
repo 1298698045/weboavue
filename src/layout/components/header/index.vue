@@ -300,8 +300,8 @@ const handleOpenEmail= () => {
             
         },
     });
-    //window.open(url.href);
-    window.location.href=url.href;
+    window.open(url.href);
+    //window.location.href=url.href;
 }
 //个人信息
 const handleInfo = () => {

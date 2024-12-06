@@ -376,64 +376,68 @@
             return proxy.$post(Interface.list2, d);
         })
 
-        let results = await Promise.all(requests);
-        // console.log("relatedObjData-nodes", data.relatedObjData);
-        // console.log("results-nodes:", results);
-
-        let keys = Object.keys(data.relatedObjData);
-        results.forEach((item, index)=>{
-            let list = [];
-            item.nodes.forEach((row, idx)=>{
-                let obj = {};
-                for(let key in row){
-                    if(row[key].__typeName){
-                        obj[key] = formNodesValueObj(key, row);
-                    }else {
-                        obj[key] = row[key];
+        try{
+            let results = await Promise.all(requests);
+            // console.log("relatedObjData-nodes", data.relatedObjData);
+            // console.log("results-nodes:", results);
+    
+            let keys = Object.keys(data.relatedObjData);
+            results.forEach((item, index)=>{
+                let list = [];
+                item.nodes.forEach((row, idx)=>{
+                    let obj = {};
+                    for(let key in row){
+                        if(row[key].__typeName){
+                            obj[key] = formNodesValueObj(key, row);
+                        }else {
+                            obj[key] = row[key];
+                        }
+                    }
+                    obj['key'] = idx+1;
+                    list.push(obj);
+                });
+                // console.log("listlist", list);
+                data.relatedObjData[keys[index]]['list'] = list;
+            });
+            // console.log('data.relatedObjDatadata.relatedObjData', data.relatedObjData);
+    
+            data.cellData.forEach(item=>{
+                for(let key in item){
+                    let col = item[key];
+                    if(col.field?.displayCategory == 'RelatedList'){
+                        let keys = col.field.checkedColumns.map(row=>row.key);
+                        let relatedName = col.field.id;
+                        let list = [];
+                        data.relatedObjData[relatedName].list.forEach((row, index)=>{
+                            let obj = {};
+                            for(let field of keys){
+                                if(Object.prototype.toString.call(row[field]) == '[object Object]'){
+                                    if(col.search[field]?.length==0){
+                                        col.search[field] = [row[field]];
+                                    }else if(col.search[field]?.length > 0){
+                                        let isBook = col.search[field].some(l=>l.ID==row[field].ID);
+                                        if(!isBook){
+                                            col.search[field].push(row[field]);
+                                        }
+                                    }
+                                    obj[field] = row[field].ID;
+                                }else {
+                                    obj[field] = row[field];
+                                }
+                            };
+                            obj['id'] = row.id;
+                            obj['key'] = row.key;
+                            list.push(obj);
+                        });
+                        col.subTableData = list;
                     }
                 }
-                obj['key'] = idx+1;
-                list.push(obj);
             });
-            // console.log("listlist", list);
-            data.relatedObjData[keys[index]]['list'] = list;
-        });
-        // console.log('data.relatedObjDatadata.relatedObjData', data.relatedObjData);
-
-        data.cellData.forEach(item=>{
-            for(let key in item){
-                let col = item[key];
-                if(col.field?.displayCategory == 'RelatedList'){
-                    let keys = col.field.checkedColumns.map(row=>row.key);
-                    let relatedName = col.field.id;
-                    let list = [];
-                    data.relatedObjData[relatedName].list.forEach((row, index)=>{
-                        let obj = {};
-                        for(let field of keys){
-                            if(Object.prototype.toString.call(row[field]) == '[object Object]'){
-                                if(col.search[field]?.length==0){
-                                    col.search[field] = [row[field]];
-                                }else if(col.search[field]?.length > 0){
-                                    let isBook = col.search[field].some(l=>l.ID==row[field].ID);
-                                    if(!isBook){
-                                        col.search[field].push(row[field]);
-                                    }
-                                }
-                                obj[field] = row[field].ID;
-                            }else {
-                                obj[field] = row[field];
-                            }
-                        };
-                        obj['id'] = row.id;
-                        obj['key'] = row.key;
-                        list.push(obj);
-                    });
-                    col.subTableData = list;
-                }
-            }
-        });
-
-        // console.log("data.cellData:", data.cellData);
+    
+            // console.log("data.cellData:", data.cellData);
+        }catch(err){
+            console.log("err");
+        }
         
     }
 
