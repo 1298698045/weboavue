@@ -692,7 +692,7 @@ const getModuleAppList = () => {
                 rows: data.pageSize,
                 sort:data.sort,
                 order:data.order,
-                displayColumns:'FromName,ToUserNames,IsRead,Subject,MailContent,CreatedOn'
+                displayColumns:'FromName,ToUserNames,IsRead,StarEmail,Subject,MailContent,CreatedOn'
             }
         }
         proxy.$post(url, obj).then(res => {
@@ -852,10 +852,10 @@ const getModuleAppList = () => {
                 }
                 else{
                     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
-                        message.success(res.actions[0].errorMessage);
+                        message.error(res.actions[0].errorMessage);
                     }
                     else{
-                        message.success("保存失败！");
+                        message.error("保存失败！");
                     }
                 }
             });

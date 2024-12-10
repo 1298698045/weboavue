@@ -13,7 +13,7 @@
                             <a-input v-model:value="formState.name" placeholder="请输入标题" />
                         </a-form-item>
                         <a-form-item label="目录" name="column" :rules="[{ required: true, message: '请选择目录!' }]">
-                            <a-tree-select
+                            <a-tree-select v-if="props.objectTypeCode!='20021'"
                                 v-model:value="formState.column"
                                 show-search
                                 style="width: 100%"
@@ -25,10 +25,30 @@
                                 tree-node-filter-prop="name"
                                 :disabled="formState.column=='00000000-0000-0000-0000-000000002000'||props.objectTypeCode=='100311'||props.objectTypeCode=='100201'"
                             >
-                                <template #title="{ value: val, name }">
+                                <template #title="{ name }">
                                     <span>{{ name }}</span>
                                 </template>
                             </a-tree-select>
+                            <a-tree v-if="props.objectTypeCode=='20021'"
+                            :expanded-keys="expandedKeys"
+                            :auto-expand-parent="autoExpandParent"
+                            :tree-data="treeData"
+                            block-node
+                            :fieldNames="fieldNames"
+                            :selectedKeys="selectedKeys"
+                            @select="onSelect"
+                            @expand="onExpand"
+                            >
+                            <template #switcherIcon="{ switcherCls }">
+                                <CaretDownOutlined
+                                :class="switcherCls"
+                                style="color: rgb(163, 163, 163); font-size: 14px"
+                                ></CaretDownOutlined>
+                            </template>
+                            <template  #title="{ name}">
+                                <span>{{ name }}</span>
+                            </template>
+                            </a-tree>
                         </a-form-item>
                     </a-form>
                 </div>
@@ -45,7 +65,7 @@
 <script setup>
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps,defineExpose,
         defineEmits, toRaw } from "vue";
-    import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
+    import { SearchOutlined, DownOutlined, UserOutlined,CaretDownOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     import { useRouter, useRoute } from "vue-router";
@@ -59,7 +79,8 @@
         RegardingObjectId:String,
         RegardingObjectTypeCode:String,
         FolderId:String,
-        RegardingObjectName:String
+        RegardingObjectName:String,
+        name:String
     })
     import { message } from "ant-design-vue";
 
@@ -91,9 +112,13 @@
         ModalTitle:'新建信息',
         sObjectName:'Content',
         userId:'',
-        userName:''
+        userName:'',
+        fieldNames:{
+            children:'children', title:'name', key:'id'
+        },
+        selectedKeys:[],
     })
-    const { listData, menus, currentMenu,ModalTitle,sObjectName,userId,userName } = toRefs(data);
+    const { fieldName,selectedKeys,listData, menus, currentMenu,ModalTitle,sObjectName,userId,userName } = toRefs(data);
     const formState = reactive({
         name: "",
         column: ""
@@ -108,6 +133,18 @@
     }
     const handleChange = (e) =>{
     }
+    const expandedKeys = ref([]);
+    const autoExpandParent = ref(true);
+    const onExpand = (keys) => {
+        expandedKeys.value = keys;
+        autoExpandParent.value = false;
+    };
+    const onSelect = (keys,{node}) => {
+        if(keys&&keys.length){
+            data.selectedKeys=[node.id];
+            formState.column=node.id
+        }
+    };
     const getPeople = (val="")=>{
         proxy.$get(Interface.uilook,{
             Lktp: 30020,
@@ -217,6 +254,17 @@ else if(props.objectTypeCode=='100202'){
     formState.column=props.FolderId;
     data.sObjectName='Notice';
 }
+else if(props.objectTypeCode=='20021'){
+    data.ModalTitle='保存到文档';
+    data.sObjectName='Content';
+    if(props.FolderId){
+        formState.column=props.FolderId;
+        data.selectedKeys=[props.FolderId];
+    }
+    if(props.name){
+        formState.name=props.name;
+    }
+}
 let userInfo=window.localStorage.getItem('userInfo');
 if(userInfo){
     userInfo=JSON.parse(userInfo);
@@ -245,5 +293,15 @@ if(userInfo){
             margin-bottom: 30px !important;
             margin-top: 10px !important;
         }
+        .ant-tree-switcher{
+            .ant-tree-switcher-icon{
+                position: relative;
+                top: 2px;
+            }
+        }
+    }
+    //解决aria-hidden属性报错
+    input[aria-hidden=true]{
+    display: none !important;
     }
 </style>

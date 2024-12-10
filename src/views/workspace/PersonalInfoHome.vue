@@ -2,7 +2,7 @@
     <div class="PersonalInfoWrap">
       <div class="preview-header">
         <div class="icon-circle-base">
-          <img class="img" :src="data.avatarUrl?data.avatarUrl:require('@/assets/img/user/MyResume/showEmpAvatar.png')" alt="" />
+          <img class="img" :src="data.avatarUrl" :on-error="defaultImg" alt="" />
         </div>
         <div class="leftBox">
           <div class="title">
@@ -56,16 +56,16 @@
             </div>
           </div>
           <div class="tabContainer containerForm" v-if="data.activeKey==0">
-            <PersonalInfoView :id="userId" />
+            <PersonalInfoView :id="userId" :avatarUrl="avatarUrl" />
           </div>
           <div class="tabContainer containerForm" v-if="data.activeKey==1">
-            <PersonalSalaryView :id="userId" />
+            <PersonalSalaryView :id="userId" :avatarUrl="avatarUrl" />
           </div>
           <div class="tabContainer containerForm" v-if="data.activeKey==2">
-            <PersonalAssetView :id="userId" />
+            <PersonalAssetView :id="userId" :avatarUrl="avatarUrl" />
           </div>
           <div class="tabContainer containerForm" v-if="data.activeKey==3">
-            <PersonalInfoView :id="userId" />
+            <PersonalInfoView :id="userId" :avatarUrl="avatarUrl" />
           </div>
         </div>
       </div>
@@ -152,6 +152,7 @@
       },
     ],
     avatarUrl:'',
+    defaultImg:require('@/assets/img/user/MyResume/showEmpAvatar.png'),
     isUpdateAvatar:false
   });
   const {
@@ -164,23 +165,23 @@
     activeKey,
     tabs,
     avatarUrl,
-    isUpdateAvatar
+    isUpdateAvatar,
+    defaultImg
   } = toRefs(data);
   const PersonalInfoEditRef= ref(null);
   const changeTabs = (e) => {
     data.activeKey = e;
   };
   const getDetail = () => {
-    return
     let d = {
               actions:[{
                   id: "4270;a",
                   descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
                   callingDescriptor: "UNKNOWN",
                   params: {
-                  recordId: data.id,
-                  apiName:data.sObjectName,
-                  objTypeCode: data.objectTypeCode
+                  recordId: data.userId,
+                  apiName:'SystemUser',
+                  objTypeCode: 8
                   }
               }]
           };
@@ -190,29 +191,26 @@
           proxy.$post(Interface.detail,obj).then(res=>{
               if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
                 let fields=res.actions[0].returnValue.fields;
-                formState.Name=fields.Name.value;
-                //formState.Content=fields.Body.value?htmlDecode(fields.Body.value):'';
+                let url=fields.AvatarUrl&&fields.AvatarUrl.value?fields.AvatarUrl.value:'';
+                if(url){
+                  data.avatarUrl=Interface.viewAvatar+'/SystemUser/'+props.id;
+                }
+                else{
+                  data.avatarUrl=require('@/assets/img/user/MyResume/showEmpAvatar.png');
+                }
               }
-              // if(editorRef&&editorRef.value){
-              //       if(formState.Content){
-              //         editorRef.value.content=formState.Content;
-              //       }
-              //       else{
-              //         formState.Content=defaultContent;
-              //         editorRef.value.content=formState.Content;
-              //       }
-              //   }
+              
           })
   };
-//getDetail();
+getDetail();
   // 保存
   const handleSave = (type) => {
     data.activeKey=0;
     data.title='个人信息查看';
-    return
     if(PersonalInfoEditRef&&PersonalInfoEditRef.value&&PersonalInfoEditRef.value.handleSubmit!='undefined'&&type!=1){
             PersonalInfoEditRef.value.handleSubmit();
         }
+        return
         let url=Interface.create;
         let d = {
         actions:[{

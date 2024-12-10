@@ -43,7 +43,7 @@
                     </template>
                     <a-button :icon="h(EllipsisOutlined)" class="ml5"> </a-button>
                 </a-dropdown>
-                <a-button :icon="h(CloseOutlined)" class="ml5" @click="closeDetail"> </a-button>
+                <a-button :icon="h(CloseOutlined)" class="ml5" @click="closeDetail" title="点击关闭详情"> </a-button>
 
             </div>
         </div>
@@ -73,13 +73,13 @@
                     </div>
                     <div class="emailOther">
                         <div class="timerRow">
-                            <a-tooltip placement="top" :title="detail.isStar?'点击取消重要邮件':'点击标记重要邮件'">
-                                <span @click.stop="handleStar(detail.isStar?0:1)" >
-                                    <i v-if="detail.isStar" class="iconfont icon-shoucangyoujian" style="color:#F7BA1E;opacity:1;"></i>
+                            <a-tooltip placement="top" :title="detail.starEmail*1==1?'点击取消重要邮件':'点击标记重要邮件'">
+                                <span @click.stop="handleStar(detail.starEmail*1==1?0:1)" >
+                                    <i v-if="detail.starEmail*1==1" class="iconfont icon-shoucangyoujian" style="color:#F7BA1E;opacity:1;"></i>
                                     <i v-else class="iconfont icon-zhongyaoyoujian"></i>
                                 </span>
                             </a-tooltip>
-                            {{detail.createdOn}}
+                            {{detail.createdOn||''}}
                         </div>
                         <div class="detailText">
                             <a-tooltip :title="!isDetail?'展开详情信息':'收起详情信息'" placement="bottom">
@@ -125,8 +125,8 @@
                                                 <div class="fileSize">{{item.size || ''}}</div>
                                                 <div class="fileOptionShow" :title="(item.name||'')">
                                                     <div class="btns">
-                                                        <a-tooltip title="保存到优盘" placement="top">
-                                                            <a-button class="btn square default" title="保存到优盘" @click="openUsb(item)">
+                                                        <a-tooltip title="保存到文档" placement="top">
+                                                            <a-button class="btn square default" title="保存到文档" @click="saveToContent(item)">
                                                                 <i class="iconfont icon-baocundaoyoupan"></i>
                                                             </a-button>
                                                         </a-tooltip>
@@ -155,6 +155,7 @@
             :id="props.emailId"
             @cancel="isLabel=false"
         />
+        <NewContent v-if="isNewContent" :isShow="isNewContent" :name="fileName" :treeData="gData" @cancel="isNewContent=false" :objectTypeCode="'20021'" :FolderId="''" />
     </div>
 </template>
 <script setup>
@@ -179,6 +180,7 @@
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     import ChangeLabel from "@/components/email/ChangeLabel.vue";
+    import NewContent from "@/components/information/NewInfo.vue";
     const { proxy } = getCurrentInstance();
     const props = defineProps({
         emailId: String
@@ -213,8 +215,10 @@
         isDelete: false,
         currentUserId:'',
         currentUserName:'',
+        isNewContent:false,
+        fileName:''
     })
-    const { isLabel,currentUserId,currentUserName,isDetail, isEmailTitle, detail, receiverNames, isDelete,attachments } = toRefs(data);
+    const { fileName,isNewContent,isLabel,currentUserId,currentUserName,isDetail, isEmailTitle, detail, receiverNames, isDelete,attachments } = toRefs(data);
 
     const handleClickText = () => {
         data.isDetail = !data.isDetail;
@@ -395,9 +399,35 @@
     const changeEmailLabel = () => {
         data.isLabel = true;
     };
-    //保存到优盘
-    const openUsb= (item) => {
-        data.isLabel = true;
+    const gData = ref([]);
+    //保存到文档
+    const saveToContent= (item) => {
+        data.fileName=item.name;
+        if(gData.value&&gData.value.length){
+            data.isNewContent=true;
+        }
+        else{
+            let url=Interface.content.folder.get;
+            proxy.$post(url,{}).then(res=>{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                    let formTree = (list) => {
+                        list.forEach(item=>{
+                            if(item.children){
+                                formTree(item.children);
+                            }
+                            item.key = item.id;
+                            item.value = item.id;
+                            item.isFavor=item.isFavor||false;
+                        })
+                    }
+                    let response=res.actions[0].returnValue;
+                    formTree(response);
+                    //console.log("formTree",response);
+                    gData.value = response;
+                    data.isNewContent=true;
+                }
+            });
+        }
     };
     //预览附件
     const handlePreviewFile= (item) => {
@@ -484,6 +514,7 @@
                 color: #080707;
                 font-weight: bold;
                 margin-right: 20px;
+                padding-left: 2px;
             }
 
             .emailOption {
@@ -567,7 +598,14 @@
 
                 .emailOther {
                     color: #4e5969;
-
+                    .timerRow{
+                        font-size: 12px;
+                        color: #424242;
+                    }
+                    .btnText{
+                        padding-left: 10px;
+                        padding-right: 0;
+                    }
                     .iconfont {
                         padding-right: 10px;
                         cursor: pointer;

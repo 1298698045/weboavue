@@ -1203,7 +1203,14 @@ const cancelDelete = (e) => {
       right: 14px !important;
       position: relative !important;
     }
-    
+    :deep .ant-tree-switcher .ant-tree-switcher-icon{
+      position: relative;
+      top: 2px;
+      left: 5px;
+    }
+    :deep .ant-tree-treenode{
+      padding-left: 10px !important;
+    }
 }
 :deep .ant-tree-treenode:hover .tree-btn{
     display: block !important;

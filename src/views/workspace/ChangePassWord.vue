@@ -266,52 +266,34 @@ const checkIsSave=()=>{
 //getDetail();
   // 保存
   const handleSave = (type) => {
-    return
-        let url=Interface.create;
+        let url=Interface.user.changePwd;
+        let pwd=btoa(formState.newpass);
+        let confirmpwd=btoa(formState.newpass);
         let d = {
-        actions:[{
-            id: "2919;a",
-            descriptor: "",
-            callingDescriptor: "UNKNOWN",
-            params: {
-              recordInput: {
-                allowSaveOnDuplicate: false,
-                apiName:data.sObjectName,
-                objTypeCode: data.objectTypeCode,
-                fields: {
-                    Name:formState.Name,
-                    
+            actions:[{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                  pwd: pwd,
+                  confirmpwd: confirmpwd
                 }
-              }              
-            }
-        }]
-    };
-    if(data.id){
-        url=Interface.edit;
-        d.actions[0].params.recordId=data.id;
-        d.actions[0].params.recordInput.fields.ModifiedBy=data.userId;
-    }
-    let obj = {
-        message: JSON.stringify(d)
-    }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
         proxy.$post(url,obj).then(res=>{
-          //formRef.value.resetFields();
           if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
-                message.success("保存成功！");
-                //getDetail();
-                let url = router.resolve({
-                  name: "ChangePassWord",
-                  query: {
-                  },
-                });
-                window.location.href=url.href;
+                message.success("密码修改成功！");
+                formRef.value.resetFields();
           }
           else{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
-                message.success(res.actions[0].errorMessage);
+                message.error(res.actions[0].errorMessage);
             }
             else{
-                message.success("保存失败！");
+                message.error("密码修改失败！");
             }
           }
         });
@@ -1172,7 +1154,7 @@ const checkIsSave=()=>{
             };
             .passwordrule{
                 right: -25px;
-                color: red;
+                color: #1055BC;
             }
             .passwordsuccess{
                 right: -25px;

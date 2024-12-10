@@ -4,7 +4,8 @@
         <div class="panel-head">
           <div class="panel-title">附件</div>
           <div class="panel-btn">
-            <a-upload v-model:file-list="fileList" action="#" :showUploadList="false">
+            <a-upload v-model:file-list="fileList" action :showUploadList="false" multiple name="file" 
+            :customRequest="changeRequest" :before-upload="beforeUpload" @change="handleChange">
               <a-button class="ml10" type="primary">上传文件</a-button>
             </a-upload>
           </div>
@@ -50,17 +51,17 @@
               <template v-if="column.key === 'Action'">
                 <div class="iconBox">
                   <div class="popup">
-                    <div class="option-item" @click="handleView(record.id)" :num="index">查看</div>
-                    <!-- <div class="option-item" @click="handleEdit(record.id)" :num="index">编辑</div>   -->
+                    <div class="option-item" @click="handlePreviewFile(record)" :num="index">查看</div>
+                    <!-- <div class="option-item" @click="handleEdit(record)" :num="index">编辑</div>   -->
                     <div class="option-item" :num="index">重命名</div>
-                    <div class="option-item" @click="handleDelete(record.id)" :num="index">删除</div>
-                    <div class="option-item" @click="handDownload(record.FileLocation)" :num="index">下载</div>
+                    <div class="option-item" @click="handleDelete(record)" :num="index">删除</div>
+                    <div class="option-item" @click="downloadFile(record)" :num="index">下载</div>
                   </div>
                   <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
                 </div>
-                <!-- <a-button type="text" size="small" @click="handleView(record.id)" :num="index">查看</a-button>
-                <a-button type="text" size="small" @click="handleEdit(record.id)" :num="index">编辑</a-button>
-                <a-button type="text" size="small" @click="handleDelete(record.id)" :num="index">删除</a-button> -->
+                <!-- <a-button type="text" size="small" @click="handlePreviewFile(record)" :num="index">查看</a-button>
+                <a-button type="text" size="small" @click="handleEdit(record)" :num="index">编辑</a-button>
+                <a-button type="text" size="small" @click="handleDelete(record)" :num="index">删除</a-button> -->
               </template>
               <!-- <template v-if="column.key === 'index'">
                 <div>
@@ -91,6 +92,7 @@
       <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
       <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
       <AddMeetingShare :isShow="isShare" v-if="isShare"  @cancel="onSearch" :id="props.id" />
+      <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="deleteFile" :id="recordId" />
     </div>
   </template>
   <script setup>
@@ -106,8 +108,10 @@
     defineEmits,
     defineExpose,
     defineProps,
-    h
+    h,
+    nextTick,
   } from "vue";
+  import axios from "axios";
   import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
     import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
@@ -134,6 +138,7 @@
   import Delete from "@/components/listView/Delete.vue";
   import CommonFormModal from "@/components/listView/CommonFormModal.vue";
   import AddMeetingShare from "@/components/meeting/AddMeetingShare.vue";
+  import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
   const { proxy } = getCurrentInstance();
   const TopicsLst = ref();
   const TaskDetailModal=ref(null);
@@ -156,6 +161,12 @@
       key: "Name"
   },
   {
+      title: "大小",
+      dataIndex: "size",
+      key: "size",
+      width: 200,
+  },
+  {
       title: "关联时间",
       dataIndex: "CreatedOn",
       key: "CreatedOn",
@@ -175,6 +186,7 @@
   ];
   const props = defineProps({
     id: String,
+    entityName:String,
     type:String,
     RegardingObjectTypeCode:String,
     RegardingObjectIdName:String
@@ -185,6 +197,7 @@
   const data = reactive({
     list: [],
     fileList:[],
+    fileList1:[],
     selectedRowKeys: [],
     loading: false,
     listData: [],
@@ -222,17 +235,20 @@
     Checkin:null,
     Checkin1:null,
     Checkin2:null,
-    height:100
+    height:100,
+    isConfirm:false,
+    confirmText:'',
+    confirmTitle:'',
   });
   const columnList = toRaw(columns);
-  const { listData, fileList,height,searchVal,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,isCommon,isTaskDetail,isShare,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept } = toRefs(data);
+  const { listData, fileList,height,searchVal,fileList1,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,isCommon,isTaskDetail,isShare,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept,isConfirm,confirmText,confirmTitle } = toRefs(data);
   const getQuery = () => {
     // proxy.$get(Interface.user.groupUser, {}).then((res) => {
     //   data.listData = res.rows;
     // });
     data.listData=[];
     data.pagination.total = 0;
-    let filterQuery='\nParentId\teq\t'+props.id;
+    // let filterQuery='\nParentId\teq\t'+props.id;
     // if(data.StatusCode){
     //     filterQuery+='\nStatusCode\teq\t'+data.StatusCode;
     // }
@@ -248,38 +264,103 @@
     // if(data.Checkin2){
     //   filterQuery+='\nCheckin\tle\t'+data.Checkin2;
     // }
-          proxy.$post(Interface.list2, {
-              filterId:'',
-              objectTypeCode:data.objectTypeCode,
-              entityName:data.sObjectName,
-              filterQuery:filterQuery,
-              search:data.searchVal||'',
-              page: data.pagination.current,
-              rows: data.pagination.pageSize,
-              sort:'Position',
-              order:'asc',
-              displayColumns:'FileExtension,Name,CreatedOn,CreatedBy,FileLocation,AccessRight'
-          }).then(res => {
+    // let url=Interface.list2;
+    // let d={
+    //   filterId:'',
+    //   objectTypeCode:data.objectTypeCode,
+    //   entityName:data.sObjectName,
+    //   filterQuery:filterQuery,
+    //   search:data.searchVal||'',
+    //   page: data.pagination.current,
+    //   rows: data.pagination.pageSize,
+    //   sort:'Position',
+    //   order:'asc',
+    //   displayColumns:'FileExtension,Name,CreatedOn,CreatedBy,FileLocation,AccessRight'
+    // }
+    let url=Interface.getFiles;
+    let d={
+      parentId:props.id,
+      page: data.pagination.current,
+      rows: data.pagination.pageSize,
+      // sort:'Position',
+      // order:'asc'
+    }
+          proxy.$post(url, d).then(res => {
               var list = [];
-              data.total = res.pageInfo?res.pageInfo.total:0;
-              data.pagination.total = res.pageInfo?res.pageInfo.total:0;
-              //console.log(pagination)
-              for (var i = 0; i < res.nodes.length; i++) {
-                  var item = res.nodes[i];
-                  for(var cell in item){
-                      if(cell!='id'&&cell!='nameField'){
-                          item[cell]=girdFormatterValue(cell,item);
+              if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue){
+                  data.total = res.actions[0].returnValue.length||0;
+                  data.pagination.total = res.actions[0].returnValue.length||0;
+                  for (var i = 0; i < res.actions[0].returnValue.length; i++) {
+                      var item = res.actions[0].returnValue[i];
+                      let size=item.fileSize;
+                      size=size?(size*1/1024).toFixed(2):0;
+                      size=size+'kb';
+                      let name=item.name||'';
+                      if(name){
+                          name=name.replaceAll('.'+item.fileExtension,'');
                       }
-                      if(cell=='CreatedOn'){
-                          item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
-                      }
+                      list.push({
+                        size:size,
+                        url:'/'+props.entityName+'/'+item.attachId+'/'+name,
+                        uid:item.attachId,
+                        id:item.attachId,
+                        FileExtension:item.fileExtension,
+                        Name:item.name,
+                        CreatedOn:item.createdOn,
+                        CreatedBy:item.createdByName||'',
+                      })
                   }
-                  list.push(item)
               }
               data.listData = list;
               
           })
   };
+  //预览附件
+  const handlePreviewFile= (item) => {
+      let url='/api/file/attachment/preview'+item.url;
+      window.open(url);
+  };
+  //下载附件
+  const downloadFile= (item) => {
+      let url='/api/file/attachment/download'+item.url;
+      window.open(url);
+  };
+  //删除附件
+  const deleteFile=(id)=>{
+      let d = {
+          actions:[{
+                  id: "4105;a",
+                  descriptor: "",
+                  callingDescriptor: "UNKNOWN",
+                  params: {
+                      parentId:props.id,
+                      entityName:props.entityName,
+                      fileId:id
+                  }
+              }]
+          };
+          let obj = {
+              message: JSON.stringify(d)
+          }
+          proxy.$post(Interface.deleteFiles,obj).then(res=>{
+              if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                  message.success("删除成功！");
+                  data.isConfirm=false;
+                  getQuery();
+              }
+              else{
+                  if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                      message.error(res.actions[0].errorMessage);
+                  }
+                  else{
+                      message.error("删除失败！");
+                  }
+              }
+          }).catch(err => {
+              console.log('error', err);
+              message.error("删除失败！");
+          });
+  }
   const onSearch = (e) => {
     data.isDelete=false;
     data.isShare=false;
@@ -374,9 +455,11 @@
 
   defineExpose({ getQuery,TopicsLst });
   //删除
-  const handleDelete = (key) => {
-      data.recordId=key;
-      data.isDelete = true;
+  const handleDelete = (item) => {
+      data.recordId=item.id;
+      data.confirmText='确定要删除吗？'
+      data.confirmTitle='删除'
+      data.isConfirm=true;
   }
   //删除关闭
   const cancelDelete = (e) => {
@@ -396,16 +479,75 @@
     const handleCommonCancel = (params) => {
         data.isCommon=false;
     };
-    //查看
-    const handleView= (id) => {
-      data.recordId=id;
-      //data.isTaskDetail=true;
-      //window.open('/#/lightning/r/Workflow/instance/detail?id='+id+'&reurl=');
-    };
-    //下载
-    const handDownload= (link) => {
-      window.open('/#'+link);
-    };
+    //去重
+    const unique = (list) => {
+        for (var i = 0; i < list.length; i++) {
+            for (var j = i + 1; j < list.length; j++) {
+                if (list[i].uid == list[j].uid) {
+                    list.splice(j, 1)
+                    j--;
+                }
+            }
+        }
+        return list;
+    }
+    const beforeUpload=(e)=>{
+        //执行顺序1
+        console.log("beforeUpload",e);
+    }
+    const handleChange = (file) => {
+        //执行顺序2
+        if(file&&file.file){
+            let size=file.file.size;
+            size=size?(size*1/1024).toFixed(2):0;
+            data.fileList1.push({
+                uid: file.file.uid,
+                name: file.file.name,
+                url: file.file.url,
+                fileExtension: file.file.name ? (file.file.name).split('.')[1] : '',
+                raw: file.file.originFileObj,
+                Privilege: '',
+                size:size+'kb',
+                isNew:true
+            });
+        }
+        data.fileList1=unique(data.fileList1);
+    }
+    const changeRequest=(file) => {
+        //执行顺序3
+        nextTick(()=>{
+            if (data.fileList1&&data.fileList1.length&&props.id) {
+                let isHasNew=false;
+                var fd = new FormData();
+                fd.append('parentId', props.id);
+                fd.append('entityName', props.entityName);
+                for (var i = 0; i < data.fileList1.length; i++) {
+                    var item = data.fileList1[i];
+                    if (item.raw&&item.isNew) {
+                        fd.append('files', item.raw);
+                        data.fileList1[i].isNew=false;
+                        isHasNew=true;
+                    }
+                }
+                if(isHasNew){
+                    axios({
+                        url: Interface.uploadFiles,
+                        method: 'POST',
+                        data: fd,
+                        headers: {
+                            'Content-type': 'multipart/form-data',
+                        },
+                    }).then(res=>{
+                        message.success("上传成功！");
+                        getQuery();
+                    }).catch(err => {
+                        console.log('error', err);
+                        message.error("上传失败！");
+                    });
+                }
+            }
+        })
+    }
   onMounted(() => {
     let h = document.documentElement.clientHeight;
       data.tableHeight = h-325;
@@ -414,6 +556,10 @@
         data.tableHeight = h-470;
         data.height=h-285;
       }
+      if(props.type=='group'){
+        data.tableHeight = h-540;
+        data.height=h-355;
+      }
       window.addEventListener("resize", (e) => {
         let h = document.documentElement.clientHeight;
         data.tableHeight = h-325;
@@ -421,6 +567,10 @@
         if(props.type=='modal'){
           data.tableHeight = h-470;
           data.height=h-285;
+        }
+        if(props.type=='group'){
+          data.tableHeight = h-540;
+          data.height=h-355;
         }
       });
   })

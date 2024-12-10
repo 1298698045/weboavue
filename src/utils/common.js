@@ -50,7 +50,7 @@ export const girdFormatterValue = (key,row,nameField) => {
     } else if(typename=="UserField"){
         val = row[key].userValue.DisplayName;
     } else if(typename=="PicklistField"){
-        val = row[key].name;
+        val = row[key].name||row[key].value;
     } else if(typename=="DateField"){
         val = row[key] && row[key].date;
     } else if (typename == "TextField") {

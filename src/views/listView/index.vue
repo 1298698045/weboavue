@@ -207,7 +207,7 @@
     import { message } from "ant-design-vue";
     import moment from "moment";
     import { formTreeData } from "@/utils/common.js";
-    
+    import { getActionFunc } from "@/utils/ButtonLinkActions.js";
     const { proxy } = getCurrentInstance();
     const headFilterRef = ref(null);
   
@@ -617,6 +617,9 @@ if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
   
     }
   }
+  onMounted(() => {
+    getActionFunc();
+  });
   </script>
   <style lang="less" scoped>
     @import url("@/style/listView.less");

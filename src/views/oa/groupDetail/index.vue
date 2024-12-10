@@ -10,7 +10,8 @@
             <div class="editheadbg"></div>
             <div class="edithead"><EditOutlined />编辑头像</div>
             <img
-              :src="AvatarImg"
+              :src="AvatarUrl"
+              :on-error="defaultImg"
               alt=""
               class="d-panel-content-head-left default_avatar"
             />
@@ -61,7 +62,7 @@
             <DetailInfo  v-if="activeKey == '2'" :id="groudId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
             <Personnel v-if="activeKey == '3'" :id="groudId" ref="PersonnelLst" :load="refreshPeople" />
             <Statistics v-if="activeKey == '4'" :id="groudId" />
-            <RelatedAttachment v-if="activeKey == '5'" :id="groudId" :type="'page'" :RegardingObjectIdName="(detail.Name&&detail.Name.value?detail.Name.value:'')" :RegardingObjectTypeCode="objectTypeCode" />
+            <RelatedAttachment v-if="activeKey == '5'" :id="groudId" :entityName="sObjectName" :type="'group'" :RegardingObjectIdName="(detail.Name&&detail.Name.value?detail.Name.value:'')" :RegardingObjectTypeCode="objectTypeCode" />
           </div>
           <!-- <div class="rightAside group-rightAside">
             <div class="panel">
@@ -193,12 +194,12 @@
         </div>
       </div>
     </div>
-    <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
-    <Notes :isShow="isNotes" @cancel="closeNotes" />
+    <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
+    <Notes v-if="isNotes" :isShow="isNotes" @cancel="closeNotes" />
     <!-- <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal> -->
     <add-group :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" type="1"></add-group>
     <update-group-image :isShow="isUpdateGroupImage" v-if="isUpdateGroupImage" @cancel="isUpdateGroupImage=false" title="更新照片" @load="submitOk" :id="recordId"></update-group-image>
-    <Delete :isShow="isDelete" :desc="deleteDesc" :sObjectName="deleteInfo.sObjectName" :recordId="deleteInfo.recordId" :objTypeCode="deleteInfo.objectTypeCode" :external="external" @cancel="closeDelete" @ok="deleteOk" />
+    <Delete v-if="isDelete" :isShow="isDelete" :desc="deleteDesc" :sObjectName="deleteInfo.sObjectName" :recordId="deleteInfo.recordId" :objTypeCode="deleteInfo.objectTypeCode" :external="external" @cancel="closeDelete" @ok="deleteOk" />
   </div>
 </template>
 <script setup>
@@ -260,14 +261,15 @@ const data = reactive({
   deleteDesc: '确定要删除吗？',
   external:false,
   detail: {Name:{value:""},IsPublic:{value:""}},
-  AvatarImg:require('@/assets/img/avatar-r.png'),
+  AvatarUrl:'',
   deleteInfo:{
     recordId:'',
     objectTypeCode:'',
     sObjectName:''
   },
   fileList:[],
-  height:100
+  height:100,
+  defaultImg:require('@/assets/img/avatar-r.png')
 });
 const {
   activeKey,
@@ -280,7 +282,7 @@ const {
   isCommon,
   isUpdateGroupImage,
   fileList,
-  recordId,objectTypeCode,sObjectName,deleteDesc,external,detail,AvatarImg,groudId,deleteInfo,height
+  recordId,objectTypeCode,sObjectName,deleteDesc,external,detail,AvatarUrl,groudId,deleteInfo,height,defaultImg
 } = toRefs(data);
 const handleOpenNotes = () => {
   data.isNotes = true;
@@ -428,7 +430,6 @@ const getAdminData = () => {
             });
         })
 };
-getAdminData();
 //编辑
 const handleEdit = (key) => {
     data.isCommon = true;
@@ -441,16 +442,7 @@ const handleCommonCancel = (params) => {
 const ChangeGroupImage=()=>{
   data.isUpdateGroupImage= true;
 }
-onMounted(() => {
-  getDetail();
-  let h = document.documentElement.clientHeight;
-  data.height=h-302;
-  window.addEventListener("resize", (e) => {
-    let h = document.documentElement.clientHeight;
-    data.height=h-302;
-  });
-  console.log(data.height)
-})
+
 const getDetail = () => {
         let d = {
             actions:[{
@@ -469,9 +461,15 @@ const getDetail = () => {
         }
         proxy.$post(Interface.detail,obj).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
-            let fields=res.actions[0].returnValue.fields;
+              let fields=res.actions[0].returnValue.fields;
               data.detail=fields;
-              data.AvatarImg=fields.AvatarImg&&fields.AvatarImg.value?fields.AvatarImg.value:require('@/assets/img/avatar-r.png');
+              let url=fields.AvatarUrl&&fields.AvatarUrl.value?fields.AvatarUrl.value:'';
+              if(url){
+                data.AvatarUrl=Interface.viewAvatar+'/Group/'+data.recordId;
+              }
+              else{
+                data.AvatarUrl=require('@/assets/img/avatar-r.png');
+              }
             }
         })
     }
@@ -491,6 +489,16 @@ const viewFile=(link)=>{
 const downloadFile=(link)=>{
   window.open(link);
 }
+onMounted(() => {
+  getDetail();
+  let h = document.documentElement.clientHeight;
+  data.height=h-302;
+  window.addEventListener("resize", (e) => {
+    let h = document.documentElement.clientHeight;
+    data.height=h-302;
+  });
+  //console.log(data.height)
+})
 </script>
 <style lang="less" scoped>
 @import "@/style/detail.less";
@@ -500,6 +508,14 @@ const downloadFile=(link)=>{
   height: 100vh;
   background: #f0f2f6;
   overflow: hidden;
+  :deep .panel-search{
+      .ant-input{
+          border:none !important;
+      }
+      .ant-input-affix-wrapper{
+          border-radius: 2px;
+      }
+  } 
   .topImg{
     
     img{
@@ -654,7 +670,7 @@ const downloadFile=(link)=>{
         display: flex;
         justify-content: space-between;
         .tabContainer {
-          width: 80%;
+          width: 100%;
           background: #fff;
           border-radius: 4px;
           margin-right: 12px;
@@ -798,5 +814,9 @@ const downloadFile=(link)=>{
       }
     }
   }
+}
+//解决aria-hidden属性报错
+input[aria-hidden=true]{
+  display: none !important;
 }
 </style>

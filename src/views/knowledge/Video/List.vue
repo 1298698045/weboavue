@@ -271,8 +271,10 @@
     const { loading,relatedObjectAttributeValue,relatedObjectAttributeName,fileList,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
          searchVal, total, isLeft, selectedKeys, FolderList, columns, groupList,isCommon,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,pagination,tableHeight } = toRefs(data);
     
-    const handleTreeSelect = (e) => {
-        data.selectedKeys = e;
+    const handleTreeSelect = (keys,{node}) => {
+        if(keys&&keys.length){
+            data.selectedKeys=keys;
+        }
         getQuery();
     }
     const handleLeftShow = () => {

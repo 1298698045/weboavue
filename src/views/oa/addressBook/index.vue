@@ -9,8 +9,8 @@
             </div>
             <div class="headerRight" v-if="activeKey=='1'">
                 <!-- <a-button class="ml10">导入</a-button> -->
-                <a-button class="ml10">导出</a-button>
-                <a-button class="ml10">下载模板</a-button>
+                <!-- <a-button class="ml10">导出</a-button>
+                <a-button class="ml10">下载模板</a-button> -->
                 <a-input-search class="ml10" v-model:value="searchVal" placeholder="请输入关键字" style="width: 150px;"
                     @search="onSearch" />
                 <a-dropdown class="ml10">
@@ -86,9 +86,9 @@
                 <div class="rightTab">
                     <a-tabs v-model:activeKey="activeKey" @change="changeRightTab">
                         <a-tab-pane key="1" tab="全部人员"></a-tab-pane>
-                        <a-tab-pane key="2" tab="同部门"></a-tab-pane>
-                        <a-tab-pane key="3" tab="我的下属"></a-tab-pane>
-                        <a-tab-pane key="4" tab="最近联系人"></a-tab-pane>
+                        <a-tab-pane key="2" tab="同部门" v-if="typeCurrent==0"></a-tab-pane>
+                        <a-tab-pane key="3" tab="我的下属" v-if="typeCurrent==0"></a-tab-pane>
+                        <a-tab-pane key="4" tab="最近联系人" v-if="typeCurrent==0"></a-tab-pane>
                     </a-tabs>
                     <!-- <div class="rWrap" v-if="activeKey==2">
                         <a-button class="ml10">导入</a-button>
@@ -121,6 +121,15 @@
                             </a-button>
                           </a-dropdown>
                     </div> -->
+                </div>
+                <div class="businessWrapper" v-if="!listData.length">
+                    <div class="empty">
+                        <img
+                        src="/src/assets/img/empty.png"
+                        alt=""
+                        />
+                        <p class="emptyDesc">当前暂无数据</p>
+                    </div>
                 </div>
                 <div class="businessWrapper" v-if="sortField.id=='Pinyin'">
                     <div v-for="(parentItem,parentIdx) in listData" :key="parentIdx">
@@ -160,8 +169,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="depart">{{item.BusinessUnitIdName || item.businessUnitIdName ||
-                                                item.ContactGroupIdName || '无'}}</p>
+                                            <p class="depart">{{(item.OrganizationIdName||'')}}<br v-if="item.OrganizationIdName" />{{item.BusinessUnitIdName || item.businessUnitIdName || item.ContactGroupIdName || '无'}}</p>
                                             <p class="desc" v-if="item.workStatus">({{item.workStatus || '无'}})</p>
                                         </div>
                                         <div class="more">
@@ -268,8 +276,7 @@
                                     </div>
                                     <div class="cartInfo">
                                         <div class="name">{{item.FullName || item.fullName || ''}}</div>
-                                        <p class="depart">{{item.BusinessUnitIdName || item.businessUnitIdName ||
-                                            item.ContactGroupIdName || '无'}}</p>
+                                        <p class="depart">{{(item.OrganizationIdName||'')}}<br v-if="item.OrganizationIdName" />{{item.BusinessUnitIdName || item.businessUnitIdName ||item.ContactGroupIdName || '无'}}</p>
                                     </div>
                                     <div class="more">
                                         <a-dropdown>
@@ -394,30 +401,29 @@
         groupListAll:[],
         isLeft: true,
         sortField: {
-            id: 'EmployeeId',
+            id: '',
             name: '全部'
         },
         treeId:'',
-        searchTreeVal:''
+        searchTreeVal:'',
+        BusinessUnitId:'',
+        currentUserId:''
     })
-    const { activeKey, deptTreeData, pageNumber, pageSize, listData,
+    const { currentUserId,BusinessUnitId,activeKey, deptTreeData, pageNumber, pageSize, listData,
         searchVal, total, leftTabCurrent, typeCurrent, groupList, isLeft, sortField,treeId,searchTreeVal,deptTreeDataAll,groupListAll} = toRefs(data);
     const choiceSort = (name, id) => {
         data.sortField = {
             name,
             id
         }
+        data.pageNumber=1;
         getQuery();
     }
     watch(leftTabCurrent, (newVal, oldVal) => {
-        console.log(newVal)
+        //console.log(newVal)
         data.activeKey = '1';
+        data.pageNumber=1;
         getQuery();
-        // if (newVal == 2) {
-        //     getQuery();
-        // } else {
-        //     getLastList();
-        // }
     })
     const handleLeftShow = () => {
         data.isLeft = !data.isLeft;
@@ -429,6 +435,9 @@
         } else {
             getGroupList();
         }
+        data.activeKey = '1';
+        data.pageNumber=1;
+        getQuery();
     }
     //处理树
     const formTree = (list) => {
@@ -461,18 +470,33 @@
     getDeptTreeData();
 
     const getGroupList = () => {
-        proxy.$get(Interface.user.groupList, {
-        }).then(res => {
-            data.groupList = res.listData;
-            data.groupListAll = res.listData;
+        let filterQuery='\nIsPublic\teq\ttrue';
+        let d = {
+            filterId: "",
+            objectTypeCode:'9',
+            entityName:'Group',
+            filterQuery: filterQuery,
+            search:'',
+            page: 1,
+            rows: 100,
+            displayColumns:'Name'
+        };
+        proxy.$post(Interface.list2, d).then(res=>{
+            let nodes = res.nodes;
+            let list=[];
+            list = nodes.map(item=>{
+                item.Name = item.Name&&item.Name.textValue?item.Name.textValue:'';
+                item.text = item.Name;
+                item.GroupId = item.id;
+                return item;
+            });
+            data.groupList=list;
+            data.groupListAll=list;
         })
     }
     const onSearch = (e) => {
-        if (data.activeKey == 4) {
-            getLastList();
-        } else {
-            getQuery();
-        }
+        data.pageNumber=1;
+        getQuery();
     }
     const onSearchTree = (e) => {
         if(data.typeCurrent==0){
@@ -489,7 +513,7 @@
         }
     }
     const changePagination = (e) => {
-        onSearch();
+        getQuery();
     };
     const onTreeNodeSelect= (value, option) => {
         if(data.typeCurrent==0){
@@ -502,32 +526,15 @@
     };
     // 右侧tab
     const changeRightTab = (e) => {
-        if (e == 4) {
-            getLastList();
-        } else {
-            getQuery();
-        }
+        data.pageNumber=1;
+        getQuery();
     }
-    // 最近联系人
-    const getLastList = () => {
-        proxy.$get(Interface.addressBook.lastList, {
-            pageNumber: data.pageNumber,
-            pageSize: data.pageSize
-        }).then(res => {
-            data.listData = res.listData;
-            data.total = res.rowsPerPage;
-        })
-    }
-    //getLastList();
+    
+    // 获取数据
     const getQuery = () => {
         let filterQuery='';
-        if(data.typeCurrent==0&&data.treeId){
-            filterQuery+='\nBusinessUnitId\teq\t'+data.treeId;
-        }
-        else if(data.treeId){
-            filterQuery+='\nContactGroupId\teq\t'+data.treeId;
-        }
-        proxy.$post(Interface.list2, {
+        let url=Interface.list2;
+        let d={
             filterId:'',
             objectTypeCode:'8',
             entityName:'SystemUser',
@@ -538,45 +545,147 @@
             sort:data.sortField.id,
             order:'ASC',
             displayColumns:'FullName,PhotoUrl,BusinessUnitId,WorkStatus,JobTitle,EmployeeId,MobilePhone,InternalEMailAddress,OwningUser'
-        }).then(res => {
-            data.listData = res.nodes;
-            data.total = res.pageInfo?res.pageInfo.total:0;
-            var list = [];
-            for (var i = 0; i < res.nodes.length; i++) {
-                var item = res.nodes[i];
-                item.FullName=item.FullName?item.FullName.textValue:(item.fullName?item.fullName.textValue:'');
-                item.PhotoUrl=item.PhotoUrl?item.PhotoUrl.textValue:(item.Avatar?item.Avatar.textValue:'');
-                item.BusinessUnitIdName=item.BusinessUnitId?item.BusinessUnitId.lookupValue.displayName:'';
-                item.workStatus=item.WorkStatus?item.WorkStatus.name:'';
-                item.JobTitle=item.JobTitle?item.JobTitle.textValue:'';
-                item.EmployeeNo=item.EmployeeId?item.EmployeeId.textValue:'';
-                item.MobilePhone=item.MobilePhone?item.MobilePhone.textValue:(item.mobilePhone?item.mobilePhone.textValue:'');
-                item.EMailAddress=item.EMailAddress?item.EMailAddress.textValue:(item.InternalEMailAddress?item.InternalEMailAddress.textValue:'');
-                item.pinyin=item.Pinyin?item.Pinyin.textValue:'';
-                var isPinyin = list.some(function (v) {
-                    if(item.pinyin){
-                        return v.pinyin == (item.pinyin.textValue).slice(0, 1)
-                    }
-                })
-                if (!isPinyin) {
-                    list.push({
-                        pinyin: item.pinyin?(item.pinyin.textValue).slice(0, 1):'',
-                        listData: []
-                    });
-                }
-                for (var j = 0; j < list.length; j++) {
-                    var row = list[j];
-                    if (item.pinyin&&row.pinyin == (item.pinyin.textValue).slice(0, 1)) {
-                        row.listData.push(item);
-                    }
-                }
+        }
+        if(data.typeCurrent==0){
+            //左侧部门tab
+            if(data.treeId){
+                d.filterQuery='\nBusinessUnitId\teq\t'+data.treeId;
             }
-            if (data.sortField.id == 'Pinyin') {
-                data.listData = list;
+            if(data.activeKey*1==1){
+                //全部
+                //url=Interface.user.allUser;
+            }else if(data.activeKey*1==2){
+                //同部门
+                //url=Interface.user.allUser;
+                //d.filterQuery='\nBusinessUnitId\teq-businessunitid';
+                d.filterQuery='\nBusinessUnitId\teq\t'+data.BusinessUnitId;
+            }else if(data.activeKey*1==3){
+                d = {
+                    filterQuery:filterQuery,
+                    search:data.searchVal||'',
+                    page: data.pageNumber,
+                    rows: data.pageSize,
+                    sort:data.sortField.id,
+                    order:'ASC',
+                }
+                //我的下属
+                url=Interface.user.getSubordinates;
+            }else if(data.activeKey*1==4){
+                d = {
+                    filterQuery:filterQuery,
+                    search:data.searchVal||'',
+                    page: data.pageNumber,
+                    rows: data.pageSize,
+                    sort:data.sortField.id,
+                    order:'ASC',
+                }
+                //最近联系人
+                url=Interface.user.getLatestUsers;
+            }
+        }
+        else{
+            d = {
+                filterQuery:filterQuery,
+                search:data.searchVal||'',
+                page: data.pageNumber,
+                rows: data.pageSize,
+                sort:data.sortField.id,
+                order:'ASC',
+            }
+            //左侧小组tab
+            if(data.treeId){
+                d.filterQuery='\nGroupId\teq\t'+data.treeId;
+            }
+            //获取小组成员
+            url=Interface.user.getGroupUsers;
+        }
+        data.listData=[];
+        proxy.$post(url,d).then(res => {
+            let list = [];
+            let list2 = [];
+            if(res){
+                if(url!=Interface.list2&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                    data.total = res.actions[0].returnValue.length||0;
+                    for (var i = 0; i < res.actions[0].returnValue.length; i++) {
+                        var item = res.actions[0].returnValue[i];
+                        item.FullName=item.FullName||'';
+                        item.PhotoUrl=item.avatarUrl||'';
+                        item.BusinessUnitIdName=item.businessUnitIdName||'';
+                        item.workStatus=item.WorkStatus||'';
+                        item.JobTitle=item.jobTitle||'';
+                        item.EmployeeNo=item.EmployeeId||'';
+                        item.MobilePhone=item.MobilePhone||'';
+                        item.EMailAddress=item.EMailAddress||'';
+                        item.OrganizationIdName=item.organizationIdName||'';
+                        item.pinyin=item.Pinyin||'';
+                        item.id=item.UserId||'';
+                        var isPinyin = list2.some(function (v) {
+                            if(item.pinyin){
+                                return v.pinyin == (item.pinyin.textValue).slice(0, 1)
+                            }
+                        })
+                        if (!isPinyin) {
+                            list2.push({
+                                pinyin: item.pinyin?(item.pinyin.textValue).slice(0, 1):'',
+                                listData: []
+                            });
+                        }
+                        for (var j = 0; j < list2.length; j++) {
+                            var row = list2[j];
+                            if (item.pinyin&&row.pinyin == (item.pinyin.textValue).slice(0, 1)) {
+                                row.listData.push(item);
+                            }
+                        }
+                        list.push(item)
+                    }
+                    if (data.sortField.id == 'Pinyin') {
+                        data.listData = list2;
+                    }else{
+                        data.listData = list;
+                    }
+                }
+                else if(res.nodes){
+                    data.listData = res.nodes;
+                    data.total = res.pageInfo?res.pageInfo.total:0;
+                    let list = [];
+                    for (var i = 0; i < res.nodes.length; i++) {
+                        var item = res.nodes[i];
+                        item.FullName=item.FullName?item.FullName.textValue:(item.fullName?item.fullName.textValue:'');
+                        item.PhotoUrl=item.PhotoUrl?item.PhotoUrl.textValue:(item.Avatar?item.Avatar.textValue:'');
+                        item.BusinessUnitIdName=item.BusinessUnitId?item.BusinessUnitId.lookupValue.displayName:'';
+                        item.workStatus=item.WorkStatus?item.WorkStatus.name:'';
+                        item.JobTitle=item.JobTitle?item.JobTitle.textValue:'';
+                        item.EmployeeNo=item.EmployeeId?item.EmployeeId.textValue:'';
+                        item.MobilePhone=item.MobilePhone?item.MobilePhone.textValue:(item.mobilePhone?item.mobilePhone.textValue:'');
+                        item.EMailAddress=item.EMailAddress?item.EMailAddress.textValue:(item.InternalEMailAddress?item.InternalEMailAddress.textValue:'');
+                        item.pinyin=item.Pinyin?item.Pinyin.textValue:'';
+                        var isPinyin = list.some(function (v) {
+                            if(item.pinyin){
+                                return v.pinyin == (item.pinyin.textValue).slice(0, 1)
+                            }
+                        })
+                        if (!isPinyin) {
+                            list.push({
+                                pinyin: item.pinyin?(item.pinyin.textValue).slice(0, 1):'',
+                                listData: []
+                            });
+                        }
+                        for (var j = 0; j < list.length; j++) {
+                            var row = list[j];
+                            if (item.pinyin&&row.pinyin == (item.pinyin.textValue).slice(0, 1)) {
+                                row.listData.push(item);
+                            }
+                        }
+                    }
+                    if (data.sortField.id == 'Pinyin') {
+                        data.listData = list;
+                    }
+                }
             }
         })
     }
     getQuery();
+
     // 复制
     const handleCopy = (item) => {
         onCopy(item.MobilePhone || item.mobilePhone || '')
@@ -609,6 +718,14 @@
         });
         window.open(url.href);
     };
+    onMounted(() => {
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            data.currentUserId=userInfo.userId;
+            data.BusinessUnitId=userInfo.businessUnitId;
+        }
+    })
 </script>
 <style lang="less" scoped>
     @import "@/style/addressBook.less";
@@ -627,4 +744,28 @@
     .addressBook :deep .ant-input{
         border-color: #d9d9d9 !important;
     }
+    .businessWrap .businessCartItem .cartItemHead .cartInfo .depart{
+        font-size: 13px;
+        position: relative;
+        top: 3px;
+    }
+    .addressBook{
+        .empty {
+            background: #fff;
+            padding: 0px 0 30px;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            img{
+                width: 130px;
+            }
+            .emptyDesc{
+                color: #333;
+            }
+        }
+    }
+    
 </style>

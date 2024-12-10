@@ -1,5 +1,5 @@
 <template>
-    <div class="ShareCalendarWrap">
+    <div class="NewDepthWrap">
         <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel"
             @ok="handleSubmit">
             <template #title>
@@ -18,7 +18,7 @@
                                             <a-dropdown>
                                                 <template #overlay>
                                                     <a-menu @click="handleMenu">
-                                                        <a-menu-item v-for="(item,index) in menus" :key="item.key">
+                                                        <a-menu-item v-for="(item,index) in menus" :key="item.key" :num="index">
                                                             <UserOutlined v-if="item.name=='用户'" />
                                                             <UserSwitchOutlined v-if="item.name=='角色'" />
                                                             <TeamOutlined v-if="item.name=='小组'" />
@@ -52,8 +52,10 @@
                                 <div class="sectionItem">
                                     <a-form-item label="访问权限">
                                         <a-select v-model:value="rightCode">
-                                            <a-select-option value="2">允许查看</a-select-option>
-                                            <a-select-option value="4">允许查看和新建事件</a-select-option>
+                                            <a-select-option value="2">读</a-select-option>
+                                            <a-select-option value="4">读/写</a-select-option>
+                                            <a-select-option value="8">读/写/删</a-select-option>
+                                            <a-select-option value="16">管理（读/写/删/移动）</a-select-option>
                                         </a-select>
                                     </a-form-item>
                                 </div>
@@ -64,21 +66,30 @@
                         </div>
                         <div class="section">
                             <div class="sectionTitle">已添加</div>
+                            <div class="empty" v-if="!listData.length">
+                                <img
+                                src="/src/assets/img/empty.png"
+                                alt=""
+                                />
+                                <p class="emptyDesc">当前暂无数据</p>
+                            </div>
                             <div class="rowBox" v-for="(item,index) in listData" :key="index">
                                 <div class="imgs">
                                     <img :src="require('@/assets/img/user.png')" alt="" />
                                 </div>
                                 <div class="name">
-                                    {{item.ObjectName}}
+                                    {{item.AccessObjectName}}
                                 </div>
                                 <div class="option">
-                                    <a-select v-model:value="item.SharedRights" style="width: 200px;" @change="(e)=>{changeItemPerm(e,item)}">
-                                        <a-select-option :value="2">允许查看</a-select-option>
-                                        <a-select-option :value="4">允许查看和新建事件</a-select-option>
+                                    <a-select v-model:value="item.Depth" style="width: 200px;" @change="(e)=>{changeItemPerm(e,item)}">
+                                        <a-select-option value="2">读</a-select-option>
+                                        <a-select-option value="4">读/写</a-select-option>
+                                        <a-select-option value="8">读/写/删</a-select-option>
+                                        <a-select-option value="16">管理（读/写/删/移动）</a-select-option>
                                     </a-select>
                                 </div>
                                 <div class="delIcon">
-                                    <CloseOutlined @click="handleItemDelete(item)"  v-if="item.ObjectId != '00000000-0000-0000-0000-000000000000' && item.ObjectId != '00000000-0000-0000-0000-000000000001' && item.IsCreated != 'true'" />
+                                    <CloseOutlined @click="handleItemDelete(item)"  v-if="item.ObjectId != '00000000-0000-0000-0000-000000000000' && item.ObjectId != '00000000-0000-0000-0000-000000000001'" />
                                 </div>
                             </div>
                         </div>
@@ -126,15 +137,17 @@
     const labelCol = ref({ style: { width: "100px" } });
     const props = defineProps({
         isShow: Boolean,
-        id: String
+        id: String,
+        ObjectTypeCode:String,
+        ObjectName:String
     });
     const formRef = ref();
-    const emit = defineEmits(["cancel"]);
+    const emit = defineEmits(["cancel","load"]);
     const handleCancel = () => {
         emit("cancel", false);
     };
     const data = reactive({
-        title: "共享日历",
+        title: "新增权限",
         height: document.documentElement.clientHeight - 300,
         menus: [
             {
@@ -177,6 +190,17 @@
     });
 
     onMounted(() => {
+        if(props.ObjectTypeCode=='5080'){
+            if(props.ObjectName){
+                data.title='新增权限记录'
+            }
+        }else if(props.ObjectTypeCode=='100103'){
+            //console.log(props.ObjectName)
+            if(props.ObjectName){
+                data.title='设置 '+props.ObjectName+' 权限'
+            }
+        }
+        
         window.addEventListener("resize", (e) => {
             data.height = document.documentElement.clientHeight - 300;
         });
@@ -231,17 +255,16 @@
                         // recordId: props.id,
                         recordInput:{
                             allowSaveOnDuplicate: false,
-                            apiName: 'CalendarShare',
-                            objTypeCode: '20376',
+                            apiName: 'RecordAccessControl',
+                            objTypeCode: '6061',
                             fields: {
-                                ObjectId: data.users.join(","),
-                                ObjectName: ObjectName,
-                                Name: ObjectName,
-                                SharedRights: data.rightCode,
-                                AccessLevel: data.rightCode,
-                                ObjectTypeName: data.currentMenu,
-                                ObjectType:ObjectType,
-                                CalendarId:(props.id?props.id:(data.userInfoId&&data.userInfoId!='undefined'?data.userInfoId:''))
+                                AccessObjectId: data.users.join(","),
+                                AccessObjectTypeCode:ObjectType*1,
+                                AccessObjectName:ObjectName,
+                                ObjectId:props.id,
+                                ObjectTypeCode: props.ObjectTypeCode*1,
+                                Name: props.ObjectName,
+                                Depth:data.rightCode*1,
                             }
                         }
                     }
@@ -251,8 +274,19 @@
                 message: JSON.stringify(d)
             }
             proxy.$post(url, obj).then((res) => {
-                message.success("添加成功！");
-                getAccess();
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                    message.success("添加成功！");
+                    getAccess();
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                        message.error(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.error("添加失败！");
+                    }
+                }
+                
             });
         }
         else{
@@ -269,18 +303,18 @@
         //     data.listData = res.rows;
         // })
         data.listData = [];
-        let filterQuery='\nCalendarId\teq\t'+(props.id?props.id:(data.userInfoId&&data.userInfoId!='undefined'?data.userInfoId:''));
+        let filterQuery='\nObjectId\teq\t'+props.id;
         proxy.$post(Interface.list2, {
             filterId:'',
-            objectTypeCode:'20376',
-            entityName:'CalendarShare',
+            objectTypeCode:'6061',
+            entityName:'RecordAccessControl',
             filterQuery:filterQuery,
             search:'',
             page: 1,
             rows: 100,
             sort:'CreatedOn',
             order:'desc',
-            displayColumns:'CalendarShareId,CreatedOn,ObjectName,SharedRights,AccessLevel,ImageUrls'
+            displayColumns:'AccessObjectName,Name,CreatedBy,CreatedOn,Depth,ObjectId'
         }).then(res => {
             var list = [];
             data.total = res.pageInfo?res.pageInfo.total:0;
@@ -367,11 +401,10 @@
                         recordId: item.id,
                         recordInput:{
                             allowSaveOnDuplicate: false,
-                            apiName: 'CalendarShare',
-                            objTypeCode: '20376',
+                            apiName: 'RecordAccessControl',
+                            objTypeCode: '6061',
                             fields: {
-                                SharedRights: item.SharedRights,
-                                AccessLevel: item.SharedRights,
+                                Depth: item.Depth,
                             }
                         }
                     }
@@ -381,8 +414,17 @@
                 message: JSON.stringify(d)
             }
             proxy.$post(url, obj).then((res) => {
-                message.success("设置成功！");
-                getAccess();
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                    message.success("设置成功！");
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                        message.error(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.error("添加失败！");
+                    }
+                }
             });
     }
 </script>
@@ -392,7 +434,6 @@
         border-top: 0;
     }
 
-    
     .modalCenter{
         height: 350px !important;
     }
@@ -486,4 +527,21 @@
         text-align: right;
         margin-right: 10px;
     }
+    .empty {
+            background: #fff;
+            padding: 0px 0 30px;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+            img{
+                width: 130px;
+            }
+            .emptyDesc{
+                color: #333;
+            }
+        }
 </style>

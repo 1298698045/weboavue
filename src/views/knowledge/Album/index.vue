@@ -11,6 +11,7 @@
                 <a-upload v-model:file-list="fileList" action="#" :showUploadList="false" v-if="data.BreadCrumbList.length">
                    <a-button class="ml10" type="primary" >上传照片</a-button>
                 </a-upload>
+                <a-button class="ml10" type="primary" @click="handleDepth('')" v-if="data.BreadCrumbList.length">设置权限</a-button>
                 <a-button class="ml10" type="primary" @click="handleNew">新建相册</a-button>
                 <!-- <a-dropdown class="ml10">
                     <template #overlay>
@@ -79,11 +80,32 @@
                             <img :src="require('@/assets/img/filetype/Folder.png')" />
                             <div class="add-addtext">{{item.Name}}</div>
                             <div class="add-addtime">{{item.CreatedOn}}</div>
+                            <div class="iconBox content-item-iconBox">
+                                <div class="popup">
+                                    <!-- <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>  
+                                    <div class="option-item" @click="handleEdit(item.id)" :num="index">编辑</div>  
+                                    <div class="option-item" :num="index">重命名</div>  
+                                    <div class="option-item" @click="handleDelete(item.id)" :num="index">删除</div> -->
+                                    <div class="option-item" :num="index" @click.stop="handleDepth(item)">设置权限</div>  
+                                </div>
+                                <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
+                            </div>
                         </div>
                         <div class="content-item" v-for="(item,index) in FileList" :key="index" @click="handlePreview(item.id)">
                             <img :src="require('@/assets/img/filetype/defaultImg.png')" />
                             <div class="add-addtext">{{item.Name}}</div>
                             <div class="add-addtime">{{item.CreatedOn}}</div>
+                            <div class="iconBox content-item-iconBox">
+                                <div class="popup">
+                                    <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>
+                                    <!-- <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>  
+                                    <div class="option-item" @click="handleEdit(item.id)" :num="index">编辑</div>  
+                                    <div class="option-item" :num="index">重命名</div>  
+                                    <div class="option-item" @click="handleDelete(item.id)" :num="index">删除</div> 
+                                    <div class="option-item" :num="index" @click.stop="handleDepth(item)">设置权限</div>-->
+                                </div>
+                                <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
+                            </div>
                         </div>
                     </div>
                     <div class="empty" v-if="FolderList.length==0&&FileList.length==0">
@@ -118,7 +140,7 @@
                                         <div class="option-item" @click="handleEdit(record.id)" :num="index">编辑</div>  
                                         <div class="option-item" :num="index">重命名</div>  
                                         <div class="option-item" @click="handleDelete(record.id)" :num="index">删除</div>
-                                        <div class="option-item" :num="index">设置权限</div>  
+                                        <div class="option-item" :num="index" @click.stop="handleDepth(record)">设置权限</div>  
                                     </div>
                                     <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
                                 </div>
@@ -135,6 +157,7 @@
         <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon=false" :title="data.recordId?'编辑':'新建'" @success="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue" :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
         <!-- <add-group :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" ></add-group> -->
         <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+        <NewDepth :isShow="isDepth" v-if="isDepth"  @cancel="isDepth=false" :id="data.SelectKey" :ObjectTypeCode="'100103'" :ObjectName="data.SelectName" />
     </div>
 </template>
 <script setup>
@@ -161,6 +184,7 @@
     import CommonFormModal from "@/components/listView/CommonFormModal.vue";
     import Delete from "@/components/listView/Delete.vue";
     import AddGroup from "@/components/groupDetail/AddGroup.vue";
+    import NewDepth from "@/components/information/NewDepth.vue";
     const tablelist=ref();
     const { proxy } = getCurrentInstance();
     const router = useRouter();
@@ -268,16 +292,28 @@
         relatedObjectAttributeValue:'10010000-0000-0000-0000-000000000011',
         relatedObjectAttributeName:'相册文件',
         loading:false,
+        isDepth:false,
+        SelectKey:'',
+        SelectName:''
     })
-    const { loading,relatedObjectAttributeValue,relatedObjectAttributeName,fileList,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
+    const { isDepth,SelectKey,SelectName,loading,relatedObjectAttributeValue,relatedObjectAttributeName,fileList,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
          searchVal, total, isLeft, selectedKeys, FolderList, columns, groupList,isCommon,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,pagination,tableHeight } = toRefs(data);
     
-    const handleTreeSelect = (e) => {
-        data.selectedKeys = e;
+    const handleTreeSelect = (keys,{node}) => {
+        if(keys&&keys.length){
+            data.selectedKeys=keys;
+        }
         getQuery();
     }
     const handleLeftShow = () => {
         data.isLeft = !data.isLeft;
+    }
+    const handleDepth= (item) => {
+        if(item){
+            data.SelectKey=item.id
+            data.SelectName=item.Name
+        }
+        data.isDepth=true;
     }
     const getQuery = () => {
         data.loading=true;
@@ -496,6 +532,8 @@ const getArticle=(id)=>{
     // window.open(reUrl.href); 
   }
   const CreatedBreadCrumb=(id,name)=>{
+    data.SelectKey=id
+    data.SelectName=name
     if(id){
         if((JSON.stringify(data.BreadCrumbList)).indexOf(id)!=-1){
             data.BreadCrumbList=(data.BreadCrumbList).slice(0,(JSON.stringify(data.BreadCrumbList)).indexOf(id)+1)
@@ -625,6 +663,9 @@ const getArticle=(id)=>{
           cursor: pointer;
           &:hover{
             background: rgba(242, 243, 245, 1);
+            .content-item-iconBox{
+                visibility:visible;
+            }
           }
       }
       .content-item img {
@@ -672,6 +713,17 @@ const getArticle=(id)=>{
       .content-item{
         padding: 25px 30px;
         margin: 0 10px;
+        position: relative;
+        .content-item-iconBox{
+            visibility: hidden;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            .popup{
+                text-align: left;
+                top: 20px;
+            }
+        }
       }
       .rightContainer .tableWrap{
         height: calc(~'100% - 95px');

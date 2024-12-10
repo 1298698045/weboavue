@@ -17,10 +17,11 @@
                                 name="file"
                                 list-type=""
                                 class="avatar-uploader"
+                                :customRequest="changeRequest"
                                 :show-upload-list="false"
-                                :data="{ 'id': recordId }"
                                 :multiple="false"
-                                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                accept="image/*"
+                                action
                                 :before-upload="beforeUpload"
                                 @change="handleChange"
                             >
@@ -38,7 +39,7 @@
       <template #footer>
         <div>
           <a-button @click="handleCancel" class="cancelmodel">取消</a-button>
-          <a-button type="primary" @click.prevent="handleCancel">保存</a-button>
+          <a-button type="primary" @click.prevent="handleSubmit">保存</a-button>
         </div>
       </template>
     </a-modal>
@@ -57,7 +58,9 @@
     defineExpose,
     defineEmits,
     toRaw,
+    nextTick
   } from "vue";
+  import axios from "axios";
   import {
     SearchOutlined,
     DownOutlined,
@@ -98,14 +101,14 @@
    
   });
   const data = reactive({
-    title: "新建小组",
-    height: document.documentElement.clientHeight - 300,
+    title: "更新照片",
+    height: document.documentElement.clientHeight - 350,
     select: {},
     search: {},
     step:0,
     fileList: [],
-    file: "",
-    imageUrl:require('@/assets/img/defaultGroup.png'),
+    file: null,
+    imageUrl:'',
     recordId:''
   });
   const {
@@ -141,26 +144,44 @@
       reader.onerror = error => reject(error);
     });
   }
+
   const beforeUpload = (e) => {
     console.log("beforeUpload",e);
   }
-  const handleChange = (info) => {
-    //console.log("handleChange",info);
-    data.file = info.file;
-    if (info.file.status === 'uploading') {
-      return;
+  const handleChange = (file) => {
+    if(file&&file.file){
+        data.file=file.file.originFileObj;
+        getBase64(data.file).then(imageUrl => {
+          data.imageUrl=imageUrl;
+        });
     }
-    if (info.file.status === 'done'||info.file.status === 'error') {
-      getBase64(info.file.originFileObj).then(imageUrl => {
-        message.success('图片上传成功！');
-        data.imageUrl=imageUrl;
-        //console.log('文件的URL:', imageUrl);
-      });
-    }
+  }
+  const changeRequest=(file) => {
+      nextTick(()=>{
+          if (data.file) {
+            let fd = new FormData();
+            fd.append('entityName', 'Group');
+            fd.append('parentId', props.id);
+            fd.append('file', data.file);
+            axios({
+                url: Interface.uploadAvatar,
+                method: 'POST',
+                data: fd,
+                headers: {
+                    'Content-type': 'multipart/form-data',
+                },
+            }).then(res=>{
+                message.success("上传成功！");
+            }).catch(err => {
+                console.log('error', err);
+                message.error("上传失败！");
+            });
+          }
+      })
   }
   onMounted(() => {
     window.addEventListener("resize", (e) => {
-      data.height = document.documentElement.clientHeight - 300;
+      data.height = document.documentElement.clientHeight - 350;
     });
   });
   const searchlookup = (saerchVal, Lktp, field) => {
@@ -193,9 +214,14 @@
     }
     proxy.$post(Interface.detail,obj).then(res=>{
         if(res&&res.actions&&res.actions[0]){
-          data.select = res.actions[0].picklistValuesMap||{};
-          let record = res.actions[0].returnValue.fields;
-          data.imageUrl = record.AvatarImg.value||require('@/assets/img/defaultGroup.png');
+          let fields = res.actions[0].returnValue.fields;
+          let url=fields.AvatarUrl&&fields.AvatarUrl.value?fields.AvatarUrl.value:'';
+          if(url){
+            data.imageUrl=Interface.viewAvatar+'/Group/'+props.id;
+          }
+          else{
+            data.imageUrl=require('@/assets/img/avatar-r.png');
+          }
         }
     })
     
@@ -205,12 +231,8 @@
       data.recordId=props.id;
   }
   const handleSubmit = () => {
-    formRef.value
-      .validate()
-      .then(() => {
-            console.log("values", formState, toRaw(formState));
-            let item = toRaw(formState)
-            let url=Interface.create;
+    if(data.file){
+      let url=Interface.create;
             let d = {
             actions:[{
                 id: "2919;a",
@@ -222,12 +244,7 @@
                     apiName: 'Group',
                     objTypeCode: 9,
                     fields: {
-                        Name: item.Name,
-                        OwningUser: item.OwningUser.Id,
-                        BusinessUnitId: item.BusinessUnitId.Id,
-                        Description: item.Description,
-                        ImportSequenceNumber:item.ImportSequenceNumber||item.ImportSequenceNumber==0?item.ImportSequenceNumber*1:'',
-                        IsPublic:item.IsPublic
+                      AvatarUrl:'\\Group\\'+props.id
                     }
                   }              
                 }
@@ -241,19 +258,24 @@
                 message: JSON.stringify(d)
             }
             proxy.$post(url,obj).then(res=>{
-                  //formRef.value.resetFields();
-                  message.warning("保存成功！");
-                  emit("load", false);
-                  setTimeout(function(){
-                      //emit("cancel", false);
-                      data.step=1;
-                  },1000)
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                    message.success("保存成功！");
+                    emit("load", false);
+                    emit("cancel", false);
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                        message.error(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.error("保存失败！");
+                    }
+                }
             });
-      
-      })
-      .catch((err) => {
-        console.log("error", err);
-      });
+    }
+    else{
+      message.error("请上传照片！");
+    }
   };
 </script>
 <style lang="less">

@@ -1044,10 +1044,10 @@
                 }
                 else{
                     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
-                        message.success(res.actions[0].errorMessage);
+                        message.error(res.actions[0].errorMessage);
                     }
                     else{
-                        message.success("删除失败！");
+                        message.error("删除失败！");
                     }
                 }
             }).catch(err => {

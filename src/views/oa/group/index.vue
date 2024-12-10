@@ -47,8 +47,8 @@
                 <div class="tableWrap" ref="tablelist">
                     <a-table style="height: 100%;" :scroll="{ y:tableHeight }" :dataSource="dataSource" :columns="columns" :pagination="data.pagination" @change="handleTableChange">
                         <template #bodyCell="{ column, text, record }">
-                            <div v-if="column.key=='AvatarImg'">
-                                <img :src="text" alt="" class="group_list_avatar"/>
+                            <div v-if="column.key=='AvatarUrl'">
+                                <img :src="record.AvatarUrl?Interface.viewAvatar+'/Group/'+record.id:defaultImg" :on-error="defaultImg" alt="" class="group_list_avatar"/>
                             </div>
                             <div v-if="column.key=='Name'">
                                 <a href="javascript:;" @click="handleDetail(record.id)" style="color:var(--textColor);">{{ text }}</a>
@@ -113,8 +113,8 @@
         columns: [
             {
                 title: '头像',
-                dataIndex: 'AvatarImg',
-                key: 'AvatarImg',
+                dataIndex: 'AvatarUrl',
+                key: 'AvatarUrl',
                 width: 120
             },
             {
@@ -156,7 +156,7 @@
         deleteDesc: '确定要删除吗？',
         external:false,
         pagination:{
-            hideOnSinglePage:true,
+            hideOnSinglePage:false,
             showSizeChanger:true,
             showQuickJumper:true,
             total:0,//数据总数
@@ -166,65 +166,93 @@
                 return `共${total}条`
             })
         },
-        tableHeight:0
+        tableHeight:0,
+        defaultImg:require('@/assets/img/avatar-r.png')
     })
-    const { treeData, pageNumber, pageSize, listData,
+    const { treeData, pageNumber, pageSize, listData,defaultImg,
          searchVal, total, isLeft, selectedKeys, dataSource, columns, groupList,isCommon,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,pagination,tableHeight } = toRefs(data);
     
-    const handleTreeSelect = (e) => {
-        data.selectedKeys = e;
+    const handleTreeSelect = (keys,{node}) => {
+        if(keys&&keys.length){
+            data.selectedKeys=keys;
+        }
         getQuery();
     }
     const handleLeftShow = () => {
         data.isLeft = !data.isLeft;
     }
     const getQuery = () => {
-        let filterQuery='';
-        if(data.selectedKeys[0]=='owner'){
-            filterQuery='\nOwningUser\teq-userid';
-        }else if(data.selectedKeys[0]=='join'){
-            filterQuery='';
-        }else if(data.selectedKeys[0]=='public'){
-            filterQuery='\nIsPublic\teq\ttrue';
-        }
-        // proxy.$get(Interface.user.groupList, {
-        //     scope: data.selectedKeys[0],
-        //     search: data.searchVal
-        // }).then(res => {
-        //     data.dataSource = res.listData;
-        // })
-        data.dataSource=[];
-        data.pagination.total = 0;
-        proxy.$post(Interface.list2, {
+        let url=Interface.list2;
+        let d={
             filterId:'',
             objectTypeCode:data.objectTypeCode,
             entityName:data.sObjectName,
-            filterQuery:filterQuery,
+            filterQuery:'',
             search:data.searchVal||'',
             page: data.pagination.current,
             rows: data.pagination.pageSize,
             sort:'ImportSequenceNumber',
             order:'ASC',
-            displayColumns:'Name,Quantity,CreatedOn,OwningUser,AvatarImg'
-        }).then(res => {
-            data.listData = res.nodes;
-            data.total = res.pageInfo?res.pageInfo.total:0;
-            data.pagination.total = res.pageInfo?res.pageInfo.total:0;
-            var list = [];
-            for (var i = 0; i < res.nodes.length; i++) {
-                var item = res.nodes[i];
-                for(var cell in item){
-                    if(cell!='id'&&cell!='nameField'&&cell!='AvatarImg'){
-                        item[cell]=girdFormatterValue(cell,item);
+            displayColumns:'Name,Quantity,CreatedOn,OwningUser,AvatarUrl'
+        }
+        if(data.selectedKeys[0]=='owner'){
+            //d.filterQuery='\nOwningUser\teq-userid';
+            url=Interface.group.getOwningGroups;
+            d = {
+                search:data.searchVal||'',
+                page: data.pagination.current,
+                rows: data.pagination.pageSize,
+                sort:'ImportSequenceNumber',
+                order:'ASC',
+            }
+        }else if(data.selectedKeys[0]=='join'){
+            //d.filterQuery='';
+            url=Interface.group.getJointGroups;
+            d = {
+                search:data.searchVal||'',
+                page: data.pagination.current,
+                rows: data.pagination.pageSize,
+                sort:'ImportSequenceNumber',
+                order:'ASC',
+            }
+        }else if(data.selectedKeys[0]=='public'){
+            d.filterQuery='\nIsPublic\teq\ttrue';
+        }
+        data.dataSource=[];
+        data.pagination.total = 0;
+        proxy.$post(url,d).then(res => {
+            let list = [];
+            if(res&&res.nodes&&data.selectedKeys[0]=='public'){
+                //data.listData = res.nodes;
+                //data.total = res.pageInfo?res.pageInfo.total:0;
+                data.pagination.total = res.pageInfo?res.pageInfo.total:0;
+                for (var i = 0; i < res.nodes.length; i++) {
+                    var item = res.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'){
+                            item[cell]=girdFormatterValue(cell,item);
+                        }
                     }
-                    if(cell=='AvatarImg'){
-                        item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
+                    if(!item.AvatarUrl){
+                        item.AvatarUrl=item.avatarUrl;
                     }
+                    list.push(item)
                 }
-                if(!item.AvatarImg){
-                    item.AvatarImg=require('@/assets/img/avatar-r.png');
+            }
+            else if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&data.selectedKeys[0]!='public'){
+                data.pagination.total = res.actions[0].returnValue.length||0;
+                for (var i = 0; i < res.actions[0].returnValue.length; i++) {
+                    var item = res.actions[0].returnValue[i];
+                    if(!item.AvatarUrl){
+                        item.AvatarUrl=item.avatarUrl;
+                    }
+                    item.id=item.groupId;
+                    item.Name=item.name;
+                    item.Quantity=item.quantity;
+                    item.CreatedOn=item.createdOn;
+                    item.OwningUser=item.owningUserName;
+                    list.push(item)
                 }
-                list.push(item)
             }
             data.dataSource = list;
         })

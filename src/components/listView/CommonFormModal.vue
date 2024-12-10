@@ -366,10 +366,12 @@ const handleData = (res) => {
           if(data.search[col.localId]==undefined){
             data.search[col.localId] = [];
           }
-          data.search[col.localId].push({
-            ID: data.list[col.localId].value,
-            Name: data.list[col.localId].displayValue
-          })
+          if(data.list[col.localId]){
+            data.search[col.localId].push({
+              ID: data.list[col.localId].value,
+              Name: data.list[col.localId].displayValue
+            })
+          }
           if(props.relatedObjectAttributeName == col.localId){
             formState[col.localId] = props.relatedObjectAttributeValue.value;
             data.search[col.localId].push({

@@ -21,10 +21,10 @@
                             <a-menu-item key="1" @click="choiceSort('全部','')">
                                 全部
                             </a-menu-item>
-                            <a-menu-item key="2" @click="choiceSort('按姓名(A-Z)','Pinyin')">
+                            <a-menu-item key="2" @click="choiceSort('按姓名(A-Z)','FullName')">
                                 按名称(A-Z)
                             </a-menu-item>
-                            <a-menu-item key="3" @click="choiceSort('按编号','BusinessUnitId')">
+                            <a-menu-item key="3" @click="choiceSort('按编号','ContactId')">
                                 按编号
                             </a-menu-item>
                         </a-menu>
@@ -469,10 +469,33 @@
     //getDeptTreeData();
 
     const getGroupList = () => {
-        proxy.$get(Interface.user.groupList, {
-        }).then(res => {
-            data.groupList = res.listData;
-            data.groupListAll = res.listData;
+        // proxy.$get(Interface.user.groupList, {
+        // }).then(res => {
+        //     data.groupList = res.listData;
+        //     data.groupListAll = res.listData;
+        // })
+        let filterQuery='';
+        let d = {
+            filterId: "",
+            objectTypeCode:'7021',
+            entityName:'ContactGroup',
+            filterQuery: filterQuery,
+            search:'',
+            page: 1,
+            rows: 100,
+            displayColumns:'Name'
+        };
+        proxy.$post(Interface.list2, d).then(res=>{
+            let nodes = res.nodes;
+            let list=[];
+            list = nodes.map(item=>{
+                item.Name = item.Name&&item.Name.textValue?item.Name.textValue:'';
+                item.text = item.Name;
+                item.GroupId = item.id;
+                return item;
+            });
+            data.groupList=list;
+            data.groupListAll=list;
         })
     }
     getGroupList();
@@ -544,7 +567,7 @@
             search:data.searchVal||'',
             page: data.pageNumber,
             rows: data.pageSize,
-            sort: data.sortField.id,
+            sort: data.sortField.id||'',
             order:'ASC',
             displayColumns:'FullName,PhotoUrl,Department,WorkStatus,JobTitle,EmployeeNo,MobilePhone,EMailAddress1,OwningUser'
         }).then(res => {

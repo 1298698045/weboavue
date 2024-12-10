@@ -1,5 +1,5 @@
 <template>
-    <div class="PermissionWrap">
+    <div class="ContentWrap">
       <div class="headerBar">
           <div class="headerLeft">
               <div class="icon-circle-base">
@@ -8,19 +8,7 @@
               <span class="headerTitle">权限管控</span>
           </div>
           <div class="headerRight">
-            <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
-            <!-- <a-button type="primary" class="ml10">批量发布</a-button>
-            <a-button class="ml10">批量取消发布</a-button> -->
-            <a-dropdown :trigger="['hover']" class="ml10">
-            <span class="btn-drop">
-              <UnorderedListOutlined style="color: #1d2129" />
-            </span>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item key="1" @click="handleFavor"> 收藏 </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
+            <a-button type="primary" class="ml10" @click="handleNew">新建权限</a-button>
           </div>
       </div>
       <div class="todo-content">
@@ -31,15 +19,6 @@
             v-if="!isCollapsed"
           >
             <div class="wea-left-tree">
-              <!-- <div class="wea-left-tree-select">
-                <div class="wea-left-tree-select-icon">
-                  <ApartmentOutlined />
-                </div>
-                <a-select v-model:value="data.leftTreeTop" @change="leftTreeTopChange">
-                  <a-select-option key="0" value="组织维度">组织维度</a-select-option>
-                  <a-select-option key="1" value="产品维度">产品维度</a-select-option>
-                </a-select>
-              </div> -->
               <div class="wea-left-tree-search">
                 <span class="wea-left-tree-search-label alltype">全部类型</span>
                 <a-input
@@ -61,6 +40,7 @@
                   :tree-data="gData"
                   block-node
                   :fieldNames="fieldNames"
+                  :selectedKeys="selectedKeys"
                   @select="onSelect"
                   @expand="onExpand"
                 >
@@ -71,16 +51,7 @@
                     ></CaretDownOutlined>
                   </template>
                   <template  #title="{ name }">
-                    <span>
-                      {{ name }}
-                      <!-- <span class="tree-num">
-                        <span class="tree-favor" :class="{'tree-favor-active':isFavor||data.leftTreeTop=='组织维度'}" @click="setFavor(id,name,quantity,isFavor)">
-                          <StarOutlined title="收藏" v-if="!isFavor&&data.leftTreeTop!='组织维度'" />
-                          <StarFilled title="取消收藏" v-if="(isFavor||data.leftTreeTop=='组织维度')" />
-                        </span>
-                        {{ quantity }}
-                      </span> -->
-                    </span>
+                    <span>{{ name }}</span>
                   </template>
                 </a-tree>
               </div>
@@ -96,127 +67,65 @@
               @click="handleCollapsed"
             ></div>
             <div style="height: 100%" ref="contentRef">
-              <div class="batchmaintenance-authority">
-                <div class="wea-search-group  wea-show">
-                  <div class="ant-row wea-title">
-                    <div class="ant-col-24">
-                      <div class="wea-f12 text-elli">操作类型</div>
+              <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch" :entityApiName="sObjectName" :SearchFields="SearchFields"></list-form-search>
+              <div class="tableWrap" ref="tablelist">
+                    <div class="empty" v-if="!dataSource.length">
+                        <img
+                        src="/src/assets/img/empty.png"
+                        alt=""
+                        />
+                        <p class="emptyDesc">当前暂无数据</p>
                     </div>
-                  </div>
-                  <div class="ant-row wea-content center  pt15">
-                    <div class="wea-form-cell-wrapper clearfix  ">
-                      <div class=" wea-form-item clearfix wea-error setLineHeight ">
-                        <div class="ant-row">
-                          <div class="ant-col-8" style="position: static;">
-                            <div title="原有设置下" class="wea-form-item-label text-elli colon" style="width: 33.3333%;">原有设置下</div>
-                          </div>
-                          <div class="ant-col-16">
-                            <div class="wea-form-item-wrapper" style="display: table;">
-                              <div class="wea-select  " id="weaSelect_3">
-                                <div class="ant-radio-group">
-                                  <label class="ant-radio-wrapper ant-radio-wrapper-checked">
-                                    <span class="ant-radio ant-radio" :class="{'ant-radio-checked':data.setType=='1'}" @click="data.setType='1'">
-                                      <input type="radio" class="ant-radio-input">
-                                      <span class="ant-radio-inner"></span>
-                                    </span>
-                                    <span>追加</span>
-                                  </label>
-                                  <label class="ant-radio-wrapper">
-                                    <span class="ant-radio ant-radio" :class="{'ant-radio-checked':data.setType=='2'}" @click="data.setType='2'">
-                                      <input type="radio" class="ant-radio-input">
-                                      <span class="ant-radio-inner"></span>
-                                    </span>
-                                    <span>覆盖</span>
-                                  </label>
-                                </div>
-                                <input type="hidden" value="1">
+                    <a-table v-if="dataSource.length" :scroll="{ y:tableHeight }" :dataSource="dataSource" :columns="columns" :pagination="data.pagination" @change="handleTableChange">
+                        <template #bodyCell="{ column, index,record }">
+                          <template v-if="column.key === 'index'">
+                              <div>
+                                {{ index + 1 }}
                               </div>
+                            </template>
+                            <template v-if="column.key === 'AccessObjectTypeCode'">
+                              <div v-if="record.AccessObjectTypeCode*1==8">用户</div>
+                              <div v-if="record.AccessObjectTypeCode*1==1036">角色</div>
+                              <div v-if="record.AccessObjectTypeCode*1==9">小组</div>
+                              <div v-if="record.AccessObjectTypeCode*1==10">部门</div>
+                            </template>
+                            <template v-if="column.key === 'AccessObjectName'">
+                              <div :title="record.AccessObjectName" class="AccessObjectName">
+                               {{record.AccessObjectName}}
+                              </div>
+                            </template>
+                            <template v-if="column.key === 'checked'">
+                              <div>
+                                <a-checkbox v-model:checked="record.checked"></a-checkbox>
+                              </div>
+                            </template>
+                            <template v-if="column.key === 'Depth'">
+                              <div>
+                                <a-select v-model:value="record.Depth" placeholder="请选择权限" @change="(e)=>{changeDepth(e,record)}">
+                                    <a-select-option v-for="(item,index) in DepthList" :value="item.value" :key="index">{{item.label}}</a-select-option>
+                                </a-select>
+                              </div>
+                            </template>
+                            <div v-if="column.key=='Action'">
+                                <div class="iconBox">
+                                    <div class="popup">
+                                        <div class="option-item" @click="handleDelete(record.id)" :num="index">删除</div>
+                                    </div>
+                                    <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
+                                </div>
                             </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                        </template>
+                    </a-table>
                 </div>
-                <div class="wea-search-group  wea-show">
-                  <div class="ant-row wea-title">
-                    <div class="ant-col-24">
-                      <div class="wea-f12 text-elli">权限设置</div>
-                    </div>
-                  </div>
-                  <div class="ant-row wea-content   pt15">
-                    <div class="wea-form-cell-wrapper clearfix  ">
-                      <div class="wea-document-engine-batch-auth">
-                        <div class="ant-col-4">
-                          <div class="batch-auth-oper wea-f14">
-                            <div class="batch-auth-icon">
-                              <img :src="require('@/assets/img/permission/share.png')">
-                            </div>
-                            默认共享
-                          </div>
-                        </div>
-                        <div class="ant-col-4">
-                          <div class="batch-auth-oper wea-f14">
-                            <div class="batch-auth-icon">
-                              <img :src="require('@/assets/img/permission/maintenance.png')">
-                            </div>
-                            维护权限
-                          </div>
-                        </div>
-                        <div class="ant-col-4">
-                          <div class="batch-auth-oper wea-f14">
-                            <div class="batch-auth-icon">
-                              <img :src="require('@/assets/img/permission/createAuth.png')">
-                            </div>
-                            创建权限
-                          </div>
-                        </div>
-                        <div class="ant-col-4">
-                          <div class="batch-auth-oper wea-f14">
-                            <div class="batch-auth-icon">
-                              <img :src="require('@/assets/img/permission/copyAuth.png')">
-                            </div>
-                            复制权限
-                          </div>
-                        </div>
-                        <div class="ant-col-4">
-                          <div class="batch-auth-oper wea-f14">
-                            <div class="batch-auth-icon">
-                              <img :src="require('@/assets/img/permission/moveAuth.png')">
-                            </div>
-                            移动权限
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- <div class="wea-tab">
-                <a-tabs v-model:activeKey="activeKey" @change="changeTab">
-                  <a-tab-pane v-for="(item,index) in tabs" :key="index">
-                    <template #tab>
-                      <span>
-                        {{item.lable}} <span v-if="item.count">({{item.count}})</span>
-                      </span>
-                    </template>
-                  </a-tab-pane>
-                </a-tabs>
-                <div class="tabsBtn">
-                 
-                </div>
-              </div> -->
-              <!-- <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch" entityApiName="KbArticle" :SearchFields="SearchFields"></list-form-search>
-              <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
-                <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Ntable>
-              </div> -->
             </div>
           </a-col>
         </a-row>
       </div>
-      <NewInfo :isShow="isNew" :treeData="gData" @cancel="cancelNew" :objectTypeCode="data.queryParams.objectTypeCode" />
-      <Delete :isShow="data.isDelete" :desc="data.deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="data.queryParams.entityName" :recordId="data.recordId" :objTypeCode="data.queryParams.objectTypeCode" :external="data.external" />
-      <Favor v-if='isFavor' :isShow="isFavor" @cancel="isFavor=false" @update-status="isFavor=false" :id="id" :objTypeCode="data.queryParams.objectTypeCode" :objName="''" />
+      <Delete v-if="data.isDelete" :isShow="data.isDelete" :desc="data.deleteDesc" @cancel="cancelDelete" @ok="refreshData" :sObjectName="sObjectName" :recordId="data.recordId" :objTypeCode="objectTypeCode" :external="data.external" />
+      <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon=false" :title="data.recordId?'编辑':'新建'" @success="refreshData" :id="data.recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue" :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
+      <NewFolder v-if="isNewFolder" :isShow="isNewFolder" :treeData="gData" @cancel="isNewFolder=false" @success="refreshData" :id="data.recordId" :ParentId="data.SelectKey" :ParentIdName="data.SelectName" />
+      <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="CheckList" />
+      <NewDepth :isShow="isNew" v-if="isNew"  @cancel="cancelNew" :id="data.SelectKey" :ObjectTypeCode="'5080'" :ObjectName="data.SelectName" @load="refreshData"/>
     </div>
   </template>
   <script setup>
@@ -228,25 +137,42 @@
     ApartmentOutlined,
     SearchOutlined,
     StarOutlined,
-    StarFilled
+    StarFilled,
+    PlusOutlined,
+    EditOutlined,
+    DeleteOutlined
   } from "@ant-design/icons-vue";
   import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated  } from "vue";
+  import dayjs from 'dayjs';
+  import 'dayjs/locale/zh-cn';
+  import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+  dayjs.locale('zh-cn');
+  import calendar from 'dayjs/plugin/calendar';
+  import weekday from 'dayjs/plugin/weekday';
+  import localeData from 'dayjs/plugin/localeData';
+  dayjs.extend(calendar);
+  dayjs.extend(weekday);
+  dayjs.extend(localeData);
   import Interface from "@/utils/Interface.js";
   import { message } from "ant-design-vue";
-  import Ntable from "@/components/Ntable.vue";
   import ListFormSearch from "@/components/ListFormSearch.vue";
   import { useRouter, useRoute } from "vue-router";
   import { girdFormatterValue } from "@/utils/common.js";
   const route = useRoute();
   const router = useRouter();
   import NewInfo from "@/components/information/NewInfo.vue";
+  import NewFolder from "@/components/information/NewFolder.vue";
+  import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+  import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
   import Delete from "@/components/listView/Delete.vue";
-  import Favor from "@/components/workflow/Favor.vue";
+  import NewDepth from "@/components/information/NewDepth.vue";
+import { refresh } from "less";
   const x = 3;
   const y = 2;
   const z = 1;
   const { proxy } = getCurrentInstance();
   const genData = [];
+  const tablelist=ref();
   const generateData = (_level, _preKey, _tns) => {
     const preKey = _preKey || "0";
     const tns = _tns || genData;
@@ -301,18 +227,17 @@
     return parentKey;
   };
   const expandedKeys = ref([]);
-  const checkedKeys = ref([]);
   const searchValue = ref("");
   const autoExpandParent = ref(true);
   const res = require("@/localData/treedata.json");
   const gData = ref([]);
   const gDataAll=ref([]);
   
-  //产品维度
+  //全部目录
   const getTreeData=()=>{
     gData.value = [];
     gDataAll.value = [];
-    let url = Interface.content.folder.get;
+    let url=Interface.content.folder.get;
     proxy.$post(url,{}).then(res=>{
       if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
         let formTree = (list) => {
@@ -331,7 +256,7 @@
         gData.value = response;
         gDataAll.value = response;
       }
-    })
+    });
     // proxy.$get(Interface.information.contentTree,{}).then((response)=>{
     //     let formTree = (list) => {
     //       list.forEach(item=>{
@@ -344,6 +269,7 @@
     //       })
     //     }
     //     formTree(response);
+    //     console.log("formTree",response)
     //     gData.value = response;
     //     gDataAll.value = response;
     // })
@@ -359,7 +285,7 @@
             filterId:'',
             objectTypeCode:'6060',
             entityName:'',
-            //filterQuery:filterQuery,
+            filterQuery:filterQuery,
             search:'',
             page: 1,
             rows: 100,
@@ -450,14 +376,13 @@
         proxy.$post(url,obj).then(res=>{
           if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
             message.success("收藏成功！");
-            leftTreeTopChange(data.leftTreeTop);
           }
           else{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
-                message.success(res.actions[0].errorMessage);
+                message.error(res.actions[0].errorMessage);
             }
             else{
-                message.success("收藏失败！");
+                message.error("收藏失败！");
             }
           }
         });
@@ -481,10 +406,9 @@
       proxy.$post(Interface.delete, d).then(res => {
         if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
           message.success("取消收藏成功");
-          leftTreeTopChange(data.leftTreeTop);
         } else {
           if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
-            message.success(res.actions[0].errorMessage);
+            message.error(res.actions[0].errorMessage);
           }
           else {
             message.error("取消收藏失败");
@@ -512,43 +436,13 @@
   // });
   
   let data = reactive({
-    setType:'1',
-    leftTreeTop:'产品维度',
     isCollapsed: false,
-    tableHeight: '',
+    tableHeight: 0,
     fieldNames:{
       children:'children', title:'name', key:'id'
     },
-    tabs:[
-      {
-        lable: "我创建",
-        count: ''
-      },
-      // {
-      //   lable: "部门的",
-      //   count: ''
-      // },
-      {
-        lable: "全部",
-        count: ''
-      },
-      // {
-      //   lable: "我管理的",
-      //   count: 16
-      // },
-      // {
-      //   lable: "待审批",
-      //   count: 0
-      // }
-    ],
     activeKey: 0,
-    queryParams: {
-      filterId:'',
-      objectTypeCode:'1027',
-      entityName:'KbArticle',
-      filterquery:'\nCreatedBy\teq-userid',
-      displayColumns:'Name,Title,FolderId,StateCode,BusinessUnitId,Number,CreatedBy,CreatedOn,ModifiedBy,ModifiedOn'
-    },
+    filterQuery:'',
     isModal: false,
     isCirculation: false,
     isNew: false,
@@ -561,52 +455,104 @@
     userId:'',
     SearchFields:[
             {
-                "column": "Title",
-                "label": "标题",
+                "column": "AccessObjectName",
+                "label": "授权对象名称",
                 "dataType": "S",
                 "ReferencedEntityObjectTypeCode": 0,
                 "sObjectName": "",
                 "targetApiName": "",
             },
             // {
-            //     "column": "BusinessUnitId",
-            //     "label": "部门",
-            //     "dataType": "O",
-            //     "ReferencedEntityObjectTypeCode": 10,
-            //     "picklistValues": [],
-            //     "sObjectName": "BusinessUnit",
-            //     "targetApiName": "BusinessUnit",
+            //     "column": "Name",
+            //     "label": "记录对象",
+            //     "dataType": "S",
+            //     "ReferencedEntityObjectTypeCode": 0,
+            //     "sObjectName": "",
+            //     "targetApiName": "",
             // },
             {
-                "column": "Number",
-                "label": "编号",
-                "dataType": "S",
-                "ReferencedEntityObjectTypeCode": 0,
-                "sObjectName": "",
-                "targetApiName": "",
-            },
-            {
-                "column": "StatusCode",
-                "label": "状态",
+                "column": "AccessObjectTypeCode",
+                "label": "角色",
                 "dataType": "L",
-                "ReferencedEntityObjectTypeCode": 127,
+                "ReferencedEntityObjectTypeCode": 100201,
                 "picklistValues": [
                 {
-                    "label": "草稿",
-                    "value": "0"
+                    "label": "用户",
+                    "value": "8"
                 },
                 {
-                    "label": "已发布",
-                    "value": "1"
+                    "label": "角色",
+                    "value": "1036"
                 },
                 {
-                    "label": "审批未通过",
-                    "value": "2"
+                    "label": "小组",
+                    "value": "9"
+                },
+                {
+                    "label": "部门",
+                    "value": "10"
                 }
                 ],
                 "sObjectName": "",
                 "targetApiName": "",
             },
+            {
+                "column": "Depth",
+                "label": "权限",
+                "dataType": "L",
+                "ReferencedEntityObjectTypeCode": 100201,
+                "picklistValues": [
+                {
+                    "label": "读",
+                    "value": "2"
+                },
+                {
+                    "label": "读/写",
+                    "value": "4"
+                },
+                {
+                    "label": "读/写/删",
+                    "value": "8"
+                },
+                {
+                    "label": "管理（读/写/删/移动）",
+                    "value": "16"
+                },
+                ],
+                "sObjectName": "",
+                "targetApiName": "",
+            },
+            // {
+            //     "column": "CreatedBy",
+            //     "label": "创建人",
+            //     "dataType": "O",
+            //     "ReferencedEntityObjectTypeCode": 8,
+            //     "picklistValues": [],
+            //     "sObjectName": "SystemUser",
+            //     "targetApiName": "SystemUser",
+            // },
+            // {
+            //     "column": "StatusCode",
+            //     "label": "状态",
+            //     "dataType": "L",
+            //     "ReferencedEntityObjectTypeCode": 100201,
+            //     "picklistValues": [
+            //     {
+            //         "label": "草稿",
+            //         "value": "0"
+            //     },
+            //     {
+            //         "label": "已发布",
+            //         "value": "1"
+            //     },
+            //     {
+            //         "label": "审批未通过",
+            //         "value": "2"
+            //     }
+            //     ],
+            //     "sObjectName": "",
+            //     "targetApiName": "",
+            // },
             {
                 "column": "CreatedOn",
                 "label": "创建时间",
@@ -615,44 +561,116 @@
                 "picklistValues": [],
                 "sObjectName": "",
                 "targetApiName": "",
-            },
-            {
-                "column": "CreatedBy",
-                "label": "创建人",
-                "dataType": "O",
-                "ReferencedEntityObjectTypeCode": 8,
-                "picklistValues": [],
-                "sObjectName": "",
-                "targetApiName": "",
             }
         ],
-        isFavor:false,
-        id:''
+        isCommon:false,
+        objectTypeCode:'6061',
+        sObjectName:'RecordAccessControl',
+        relatedObjectAttributeValue:{},
+        relatedObjectAttributeName:'',
+        SelectKey:'',
+        SelectName:'',
+        selectedKeys:[],
+        isNewFolder:false,
+        CheckList:[],
+        isConfirm:false,
+        confirmText:'',
+        confirmTitle:'',
+        pagination:{
+            hideOnSinglePage:false,
+            showSizeChanger:true,
+            showQuickJumper:true,
+            total:0,//数据总数
+            pageSize:15,
+            current:1,
+            showTotal:((total)=>{
+                return `共${total}条`
+            })
+        },
+        columns: [
+        {
+            title: "序号",
+            dataIndex: "index",
+            key: "index",
+            width: 80,
+        },
+        // {
+        //     title: "选择",
+        //     dataIndex: "checked",
+        //     key: "checked",
+        //     width: 80,
+        // },
+        {
+            title: "类型",
+            dataIndex: "AccessObjectTypeCode",
+            key: "AccessObjectTypeCode",
+            width: 80,
+        },
+        {
+            title: "授权对象",
+            dataIndex: "AccessObjectName",
+            key: "AccessObjectName"
+        },
+        {
+            title: "权限",
+            dataIndex: "Depth",
+            key: "Depth",
+            width: 250,
+        },
+        {
+            title: "记录",
+            dataIndex: "Name",
+            key: "Name",
+            width: 150,
+        },
+        // {
+        //     title: "创建人",
+        //     dataIndex: "CreatedBy",
+        //     key: "CreatedBy",
+        //     width: 120,
+        // },
+        {
+            title: "创建时间",
+            dataIndex: "CreatedOn",
+            key: "CreatedOn",
+            width: 150,
+        },
+        {
+          title: "操作",
+          key: "Action",
+          width: 120,
+        },
+      ],
+      dataSource: [],
+      DepthList:[
+        {label:'读',value:'2',},
+        {label:'读/写',value:'4',},
+        {label:'读/写/删',value:'8',},
+        {label:'管理（读/写/删/移动）',value:'16',},
+      ]
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
-  const { setType,isFavor,id,isCollapsed, userId,tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields,leftTreeTop} = toRefs(data);
+  const { DepthList,dataSource,columns,pagination,CheckList,isConfirm,confirmText,confirmTitle,isNewFolder,selectedKeys,SelectName,SelectKey,relatedObjectAttributeValue,relatedObjectAttributeName,recordId,objectTypeCode,sObjectName,isCommon,isCollapsed, userId,tableHeight, fieldNames, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields} = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
   let formSearchHeight = ref(null);
   const gridRef = ref(null);
-  const leftTreeTopChange= (e) => {
-    if(e=='产品维度'){
-      getTreeData();
-    }
-    else{
-      getFavorite();
-    }
-    //console.log(e)
-  }
   const onSearch = (e) => {
     gData.value = gDataAll.value.filter(item=>{
       return item.name.indexOf(data.searchVal) !== -1;
     })
   }
-  const onSelect = (keys) => {
-    //gridRef.value.loadGrid(data.queryParams);
+  const onSelect = (keys,{node}) => {
+    //console.log(node)
+    if(keys&&keys.length){
+      data.SelectKey=node.id;
+      data.SelectName=node.name;
+      data.selectedKeys=[node.id];
+    }
+    data.pagination.current=1;
+    getQuery();
   };
   onMounted(()=>{
     let userInfo=window.localStorage.getItem('userInfo');
@@ -660,281 +678,164 @@
         userInfo=JSON.parse(userInfo);
         data.userId=userInfo.userId;
     }
+    data.pagination.current=1;
+    getQuery();
     window.addEventListener('resize',changeHeight)
   })
   function changeHeight(h){
-    if(typeof h == 'number'){
-      formSearchHeight.value = h;
-    }
-    let contentHeight = contentRef.value.clientHeight;
-    let tabsHeight = 46;
-    let height = contentHeight - tabsHeight - formSearchHeight.value;
-    data.tableHeight = height;
-    console.log('data',data.tableHeight);
-    //console.log("gridRef",gridRef.value.loadGrid())
-      //data.queryParams.activeKey = e;
-      if(data.activeKey==0){
-        data.queryParams.filterquery='\nCreatedBy\teq-userid';
-      }else if(data.activeKey==1){
-        //data.queryParams.filterquery='\nBusinessUnitId\teq-businessunitid';
-        data.queryParams.filterquery='';
-      }else if(data.activeKey==2){
-        data.queryParams.filterquery='';
-      }else if(data.activeKey==3){
-
-      }
-    //gridRef.value.loadGrid(data.queryParams);
+    // if(typeof h == 'number'){
+    //   formSearchHeight.value = h;
+    // }
+    // let contentHeight = contentRef.value.clientHeight;
+    // let tabsHeight = 46;
+    // let height = contentHeight - formSearchHeight.value;
+    // data.tableHeight = height;
+    // console.log('data',data.tableHeight);
+    let h1 = tablelist.value.clientHeight;
+    data.tableHeight = h1-100;
   }
-  const handleSearch=(filterquery)=>{
-      if(data.activeKey==0){
-        data.queryParams.filterquery='\nCreatedBy\teq-userid';
-      }else if(data.activeKey==1){
-        //data.queryParams.filterquery='\nBusinessUnitId\teq-businessunitid';
-        data.queryParams.filterquery='';
-      }else if(data.activeKey==2){
-        data.queryParams.filterquery='';
-      }else if(data.activeKey==3){
-
-      }
-      if(filterquery){
-        data.queryParams.filterquery+=filterquery;
-      }
-    gridRef.value.loadGrid(data.queryParams);
+  const handleSearch=(filterQuery)=>{
+    data.pagination.current=1;
+    data.filterQuery=filterQuery;
+      getQuery(); 
   }
-  // 获取tabs
-  const getTabs = () => {
-    proxy.$get(Interface.PermissionWrap.tabs,{
-      a: 1
-    }).then(res=>{
-      console.log("tabs",res)
-      data.tabs = res.list;
-    })
-  }
-  // getTabs();
-  
-  const handleMenuClick = ()=>{
-  
-  }
-  const DelegateRef = ref();
-  
-  function handleDetail(id){
-      // router.push({
-      //   path:"/informationDetail",
-      //   query: {
-      //     id: id
-      //   }
-      // });
-      let reUrl = router.resolve({
-          path:"/informationDetail",
-          query: {
-            id: id,
-            objectTypeCode:'127'
-          }
-      })
-      window.open(reUrl.href); 
-  }
-  function handlePreview(id) {
-    // router.push({
-    //     path:"/lightning/r/Content/view",
-    //     query: {
-    //       id: id,
-    //       objectTypeCode:'127'
-    //     }
-    // });
-    let reUrl = router.resolve({
-        path:"/lightning/r/Content/view",
-        query: {
-          id: id,
-          objectTypeCode:'127'
-        }
-    })
-    window.open(reUrl.href); 
-  }
-  function handleEdit(id,FolderId){
-    // router.push({
-    //     path:"/content/visualEditor",
-    //     query: {
-    //       id: id
-    //     }
-    // });
-    let reUrl = router.resolve({
-            name: "visualEditor",
-            query: {
-                id: id,
-                objectTypeCode: 127,
-                //FolderId: res.actions[0].returnValue&&res.actions[0].returnValue.fields&&res.actions[0].returnValue.fields.FolderId?res.actions[0].returnValue.fields.FolderId:''
-                FolderId: FolderId
+const changeDepth=(e,item)=>{
+  let url = Interface.edit;
+            let d = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId: item.id,
+                        recordInput:{
+                            allowSaveOnDuplicate: false,
+                            apiName: 'RecordAccessControl',
+                            objTypeCode: '6061',
+                            fields: {
+                                Depth: item.Depth,
+                            }
+                        }
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
             }
-        })
-    window.open(reUrl.href); 
-  }
-  function handleDelete(id){
+            proxy.$post(url, obj).then((res) => {
+                message.success("设置成功！");
+                
+            });
+}
+  const handleDelete=(id)=>{
+    data.relatedObjectAttributeValue={};
+    data.relatedObjectAttributeName='';
+    data.objectTypeCode='6061';
+    data.sObjectName='RecordAccessControl';
     data.recordId=id;
     data.isDelete = true;
   }
-const deleteOk = (e) => {
-  gridRef.value.loadGrid(data.queryParams);
+const refreshData = (e) => {
+  getQuery();
 };
 const cancelDelete = (e) => {
   data.isDelete = false;
 };
-  const updateStatus = (e) => {
-    data.isModal = e;
-    data.isCirculation = e;
-  }
-  const formatStatus=(val, row, index)=>{
-      let value = girdFormatterValue("StateCode",row);
-      if (value == "1" || value == "审批通过" || value == "已发布") {
-          return "<span style='color:#333;'>已发布</span>";
-      }
-      if (value == "2" || value == "审批未通过" || value == "审批不通过") {
-          return "<span style='color:#333;'>审批未通过</span>";
-      }
-      if (value == "0" || value == "草稿") {
-          return "<span style='color:#333;'>草稿</span>";
-      }
-      if (value == "已退回" || value == "退回") {
-          return "<span style='color:#333;'>" + value + "</span>";
-      }
-  }
-
-  window.handleDetail = handleDetail;
-  window.handlePreview = handlePreview;
-  window.handleEdit = handleEdit;
-  window.handleDelete = handleDelete;
-  window.data = data;
-
-  const imgUrl = require("@/assets/flow/checkbox_checked.gif");
-    const gridUrl = ref(Interface.list2);
-    const columns = ref(
-      [
-        {
-          field: 'ids',
-          checkbox: true
-        },
-        {
-            field: "Action",
-            title: "操作",
-            formatter: function formatter(value, row, index) {
-              var str = `
-                <div class="iconBox">
-                  <div class="popup">
-                    <div class="option-item" onclick="handlePreview('${row.id}')">查看详情</div>  
-                    <div class="option-item" onclick="handleEdit('${row.id}','${row.FolderId?row.FolderId.lookupValue.value:''}')">编辑</div>  
-                    <div class="option-item" onclick="handleDelete('${row.id}')">删除</div>
-                  </div>
-                  <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
-              `
-              return str;
-            }
-        },
-        { field: 'Name', title: '标题', sortable: true,
-          formatter: function formatter(value, row, index) {
-              let val=girdFormatterValue('Name',row);
-              return '<a style="text-decoration: none;color:#1677ff;" href="/#'+row.viewUrl+'" target="_blank">'+val+'</a>';
-          } 
-        },
-        {
-            field: 'FolderId',
-            title: '栏目',
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue('FolderId',row);
-          } 
-        }, 
-        {
-            field: 'StateCode',
-            title: '发布状态',
-            sortable: true,
-            formatter: formatStatus
-        }, {
-            field: 'BusinessUnitId',
-            title: '发布部门',
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue('BusinessUnitId',row);
-          } 
-        }, {
-            field: 'ReadCount',
-            title: '阅读数',
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue('ReadCount',row);
-          } 
-        }, {
-            field: 'ApprovedBy',
-            title: '审批发布人',
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue('ApprovedBy',row);
-          } 
-        }, {
-            field: 'ApprovedOn',
-            title: '发布时间',
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue('ApprovedOn',row);
-          } 
-        }, {
-            field: 'CreatedBy',
-            title: '创建人',
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue('CreatedBy',row);
-          } 
-        }, {
-            field: 'CreatedOn',
-            title: '创建时间',
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue('CreatedOn',row);
-          } 
-        }, {
-            field: 'ModifiedBy',
-            title: '上次修改人',
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue('ModifiedBy',row);
-          } 
-        }, {
-            field: 'ModifiedOn',
-            title: '上次修改时间',
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue('ModifiedOn',row);
-          } 
-        }
-      ]
-    )
-    
-    const changeTab = (e) => {
-      data.activeKey = e;
-      //data.queryParams.activeKey = e;
-      if(e==0){
-        data.queryParams.filterquery='\nCreatedBy\teq-userid';
-      }else if(e==1){
-        //data.queryParams.filterquery='\nBusinessUnitId\teq-businessunitid';
-        data.queryParams.filterquery='';
-      }else if(e==2){
-        data.queryParams.filterquery='';
-      }else if(e){
-
-      }
-      gridRef.value.loadGrid(data.queryParams);
+//改变页码
+const handleTableChange=(pag, filters, sorter)=>{
+      data.pagination.current=pag.current;
+      getQuery();
     }
+    
+  //新建权限
     const handleNew = (e) => {
-      data.isNew = true;
+      if(data.selectedKeys&&data.selectedKeys.length){
+        // data.relatedObjectAttributeValue={};
+        // data.relatedObjectAttributeName='';
+        // data.objectTypeCode='100201';
+        // data.sObjectName='Content';
+        // data.recordId='';
+        data.isNew = true;
+      }
+      else{
+          message.error("必须先选中左侧目录");
+      }
     }
     const cancelNew = (e) => {
       data.isNew = e;
+      refreshData();
     }
-    //收藏
-  const handleFavor = (id) => {
-    data.isFavor=true;
+    const getQuery = () => {
+      let filterQuery='';
+      if(data.filterQuery){
+        filterQuery=data.filterQuery;
+      }
+      if(data.SelectKey)
+      {
+        filterQuery+='\nObjectId\teq\t'+data.SelectKey;
+      }
+        let url=Interface.list2;
+        let d={
+            filterId:'',
+            objectTypeCode:data.objectTypeCode,
+            entityName:data.sObjectName,
+            filterQuery:filterQuery,
+            search:data.searchVal||'',
+            page: data.pagination.current,
+            rows: data.pagination.pageSize,
+            sort:'CreatedOn',
+            order:'desc',
+            displayColumns:'AccessObjectTypeCode,AccessObjectName,Name,CreatedBy,CreatedOn,Depth'
+        }
+        data.dataSource=[];
+        data.pagination.total = 0;
+        proxy.$post(url,d).then(res => {
+            let list = [];
+            if(res&&res.nodes){
+                data.pagination.total = res.pageInfo?res.pageInfo.total:0;
+                for (var i = 0; i < res.nodes.length; i++) {
+                    var item = res.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'){
+                            item[cell]=girdFormatterValue(cell,item);
+                        }
+                        if(cell=='CreatedOn'){
+                          item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
+                        }
+                    }
+                    list.push(item)
+                }
+            }
+            data.dataSource = list;
+        })
+    }
+    //批量发布
+  const handleRelease = () => {
+    let list = gridRef.value.getCheckList();
+    if(list.length){
+      data.CheckList=list;
+      data.isConfirm=true;
+      data.confirmText='确定要批量发布吗？';
+      data.confirmTitle='批量发布';
+    }else {
+        message.error("请至少勾选一项！")
+    }
   }
+  //批量取消发布
+  const cancelRelease = () => {
+    let list = gridRef.value.getCheckList();
+    if(list.length){
+      data.CheckList=list;
+      data.isConfirm=true;
+      data.confirmText='确定要批量取消发布吗？';
+      data.confirmTitle='批量取消发布';
+    }else {
+        message.error("请至少勾选一项！")
+    }
+ }
   </script>
   <style lang="less" scoped>
-  .PermissionWrap {
+  .ContentWrap {
     width: 100%;
     height: 100%;
     background: #fff;
@@ -976,7 +877,6 @@ const cancelDelete = (e) => {
           line-height: 40px;
           vertical-align: middle;
           cursor: pointer;
-          font-size: 18px !important;
         }
         .ant-btn-group {
           margin-left: 10px;
@@ -1021,19 +921,6 @@ const cancelDelete = (e) => {
               width: 100%;
               height: calc(~"100% - 56px");
               overflow: auto;
-              :deep .ant-tree {
-                .ant-tree-checkbox{
-                  margin: 0;
-                  margin-right: 3px;
-                }
-                .ant-tree-checkbox+span{
-                  line-height: 30px;
-                }
-                .ant-tree-switcher{
-                  position: relative;
-                  top: 2px;
-                }
-              }
               .ant-tree-title{
                 display: inline-block;
                 width: 100%;
@@ -1046,14 +933,26 @@ const cancelDelete = (e) => {
                   padding-right: 10px;
                   position: relative;
                   color: rgb(197, 197, 197);
-                  .tree-favor{
+                  .tree-btn{
                     position: absolute;
                     left: -20px;
                     top:1px;
                     width: 14px;
                     height: 14px;
-                    color: rgb(197, 197, 197);
+                    color: #aaa;
                     display: none;
+                  }
+                  .tree-favor{
+                    left: -20px;
+                  }
+                  .tree-add{
+                    left: -110px;
+                  }
+                  .tree-edit{
+                    left: -80px;
+                  }
+                  .tree-delete{
+                    left: -50px;
                   }
                   .tree-favor-active{
                     color: #ffa741;
@@ -1117,7 +1016,7 @@ const cancelDelete = (e) => {
         white-space: nowrap !important;
     }
 :deep .iconBox{
-  text-align: center;
+  text-align: left;
   .popup{
     text-align: left;
     top: 20px;
@@ -1131,7 +1030,7 @@ const cancelDelete = (e) => {
     top: 1px;
   }
 }
-.PermissionWrap{
+.ContentWrap{
   .headerBar .headerLeft .icon-circle-base{
     background: rgb(223, 88, 58);
   }
@@ -1179,7 +1078,7 @@ const cancelDelete = (e) => {
     }
   }
   .wea-left-tree-scroll{
-      height: calc(~'100% - 60px') !important;
+      height: calc(~'100% - 100px') !important;
     }
     :deep .ant-tabs .ant-tabs-tab{
       padding: 12px 24px !important;
@@ -1189,288 +1088,134 @@ const cancelDelete = (e) => {
       right: 14px !important;
       position: relative !important;
     }
-    .batchmaintenance-authority{
-      .wea-show {
-        display: block;
-      }
-      .wea-search-group {
-          padding-left: 25px;
-          padding-right: 25px;
-      }
-      .ant-row {
-          position: relative;
-          margin-left: 0;
-          margin-right: 0;
-          height: auto;
-          zoom: 1;
-          display: block;
-      }
-      .wea-search-group .wea-title {
-          color: #484848;
-          padding-left: 10px;
-          border-bottom: 1px solid #ebebeb;
-          line-height: 45px;
-      }
-      .ant-row:after, .ant-row:before {
-          content: " ";
-          display: table;
-      }
-      .ant-col-24 {
-          display: block;
-          width: 100%;
-          float: left;
-      }
-      .text-elli {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    -moz-text-overflow: ellipsis;
-    -webkit-text-overflow: ellipsis;
-}
-.wea-f12 {
-    font-size: 12px !important;
-}
-.ant-row:after {
-    clear: both;
-    visibility: hidden;
-    font-size: 0;
-    height: 0;
-}
-.wea-search-group .wea-content{
-  padding: 8px 0;
-  -webkit-transition: height .2s cubic-bezier(.215,.61,.355,1);
-  -o-transition: height .2s cubic-bezier(.215, .61, .355, 1);
-  transition: height .2s cubic-bezier(.215,.61,.355,1);
-  text-align: center;
-  padding-top: 8px;
-}
-.wea-search-group .wea-content.center .wea-form-cell-wrapper {
-        width: 640px;
-        display: inline-block;
+    :deep .ant-tree-switcher .ant-tree-switcher-icon{
+      position: relative;
+      top: 2px;
+      left: 5px;
     }
-    .clearfix {
-    zoom: 1;
-}
-.clearfix:after, .clearfix:before {
-    content: " ";
-    display: table;
-}
-.wea-form-item {
-    font-size: 12px;
-    color: #333;
-    position: relative;
-    min-height: 32px;
-}
-.wea-error {
-    position: relative;
-}
-.wea-search-group .wea-form-item {
-    min-height: 30px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-}
-.wea-search-group .wea-content.center .wea-form-item {
-    padding-left: 0;
-    text-align: left;
-}
-.ant-col-1, .ant-col-2, .ant-col-3, .ant-col-4, .ant-col-5, .ant-col-6, .ant-col-7, .ant-col-8, .ant-col-9, .ant-col-10, .ant-col-11, .ant-col-12, .ant-col-13, .ant-col-14, .ant-col-15, .ant-col-16, .ant-col-17, .ant-col-18, .ant-col-19, .ant-col-20, .ant-col-21, .ant-col-22, .ant-col-23, .ant-col-24{
-  float: left;
-}
-.ant-col-8{
-    position: relative;
-    min-height: 1px;
-    padding-left: 0;
-    padding-right: 0;
-    display: block;
-    width: 33.33333333%;
-    position: static;
-}
-.wea-form-item .wea-form-item-label {
-    padding-right: 5px;
-    position: absolute;
-}
-.wea-form-item.setLineHeight .wea-form-item-label {
-    line-height: 30px;
-}
-.wea-form-item.setLineHeight .wea-form-item-label {
-    line-height: 30px;
-}
-.wea-form-item .wea-form-item-label.colon:after {
-    content: ":";
-    margin: 0 8px 0 2px;
-    position: relative;
-    top: -.5px;
-}
-.ant-col-16 {
-    display: block;
-    width: 66.66666667%;
-}
-.wea-form-item .wea-form-item-wrapper {
-    position: relative;
-    zoom: 1;
-    min-height: 30px;
-    display: table;
-    width: 100%;
-}
-.wea-select {
-    position: relative;
-    max-width: 100%;
-    display: inline-block;
-}
-.wea-form-item .wea-select, .wea-search-group .wea-select {
-    width: 100%;
-}
-.wea-form-item .wea-form-item-wrapper .wea-select .ant-radio-group {
-    padding-top: 4px;
-    padding-bottom: 3px;
-    display: inline-block;
-}
-.ant-radio {
-    white-space: nowrap;
-    outline: none;
-    display: inline-block;
-    position: relative;
-    line-height: 1;
-    vertical-align: middle;
-    cursor: pointer;
-    padding-top: 2px;
-    padding-right: 6px;
-}
-.ant-radio-wrapper>span {
-    display: table-cell;
-}
-.ant-radio-input {
-    position: absolute;
-    left: 0;
-    z-index: 1;
-    cursor: pointer;
-    opacity: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-}
-input[type=checkbox], input[type=radio] {
-    line-height: normal;
-}
-.ant-radio-inner {
-    position: relative;
-    top: 0;
-    left: 0;
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border-radius: 14px;
-    border: 1px solid #969696;
-    background-color: #fff;
-}
-.ant-radio-inner, .ant-radio-inner:after {
-    -webkit-transition: all .2s cubic-bezier(.78,.14,.15,.86);
-    -o-transition: all .2s cubic-bezier(.78, .14, .15, .86);
-    transition: all .2s cubic-bezier(.78,.14,.15,.86);
-}
-.ant-radio-checked .ant-radio-inner {
-    border-color: #969696;
-}
-.ant-radio-inner:after {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    left: 3px;
-    top: 3px;
-    border-radius: 6px;
-    display: table;
-    border-top: 0;
-    border-left: 0;
-    content: " ";
-    background-color: #2db7f5;
-    opacity: 0;
-    -webkit-transform: scale(0);
-    -ms-transform: scale(0);
-    transform: scale(0);
-}
-.ant-radio-checked .ant-radio-inner:after {
-    -webkit-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
-    opacity: 1;
-    -webkit-transition: all .2s cubic-bezier(.78,.14,.15,.86);
-    -o-transition: all .2s cubic-bezier(.78, .14, .15, .86);
-    transition: all .2s cubic-bezier(.78,.14,.15,.86);
-}
-.ant-radio-wrapper>span {
-    display: table-cell;
-}
-span.ant-radio+* {
-    margin-left: 3px;
-}
-.wea-show {
-    display: block;
-}
-.wea-search-group .wea-title {
-    color: #484848;
-    padding-left: 10px;
-    border-bottom: 1px solid #ebebeb;
-    line-height: 45px;
-}
-.ant-col-24 {
-    display: block;
-    width: 100%;
-}
-.wea-f12 {
-    font-size: 12px !important;
-}
-.wea-search-group .wea-content.pt15 {
-    padding-top: 8px;
-}
-.wea-document-engine-batch-auth {
-    height: 180px;
-    padding-left: 8.3333%;
-    // display: flex;
-    // justify-content: center;
-}
-.ant-col-4 {
-    display: block;
-    width: 198px;
-}
-.wea-document-engine-batch-auth .ant-col-4 {
-    padding: 12px;
-    height: 100%;
-}
-.wea-f14 {
-    font-size: 14px !important;
-}
-.wea-document-engine-batch-auth .batch-auth-oper {
-    height: 100%;
-    width: 100%;
-    border: 1px solid #e2e2e2;
-    text-align: center;
-    color: #333;
-    cursor: pointer;
-}
-.wea-document-engine-batch-auth .batch-auth-oper .batch-auth-icon {
-    font-size: 50px;
-    padding-top: 24px;
-}
-img{
-  vertical-align: middle;
-}
-.ant-radio-wrapper {
-    vertical-align: middle;
-    position: relative;
-    white-space: nowrap;
-    margin-right: 16px;
-}
+    :deep .ant-tree-treenode{
+      padding-left: 10px !important;
     }
+    :deep .ant-tree .ant-tree-checkbox+span{
+      line-height: 30px;
+    }
+    :deep .ant-tree .ant-tree-checkbox{
+      position: relative;
+      left: 4px;
+      top: -2px;
+    }
+    .wea-left-tree-scroll{
+      height: calc(100% - 58px) !important;
+    }
+    :deep .formSearch .ant-form{
+      position: relative !important;
+      top: 6px !important;
+    }
+    .tableWrap{
+      height: calc(~'100% - 100px');
+    }
+    :deep .ant-table-wrapper{
+      height: calc(~'100% - 0px');
+      .ant-table-container{
+        height: calc(~'100% - 0px');
+      }
+    }
+    :deep .ant-spin-nested-loading{
+      height: calc(~'100% - 0px');
+      .ant-spin-container{
+        height: calc(~'100% - 0px');
+      }
+    }
+    :deep .ant-table-wrapper .ant-table{
+      height: calc(~'100% - 35px');
+    }
+    .empty {
+            background: #fff;
+            padding: 0px 0 30px;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            img{
+                width: 130px;
+            }
+            .emptyDesc{
+                color: #333;
+            }
+        }
+
+        :deep .ant-table-tbody .ant-table-cell{
+            padding: 8px 16px !important;
+            .AccessObjectName{
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              width: 100%;
+              overflow: hidden;
+            }
+            .ant-select{
+              width: 100%;
+            }
+        }
+        .group_list_avatar{
+            position: relative;
+            top: 4px;
+        }
+        .iconBox .moreaction {
+            padding: 0px 1px;
+            width: 18px;
+            border: 1px solid #dedede;
+            border-radius: 4px;
+            position: relative;
+            top: 1px;
+        }
+        .iconBox .popup{
+            top: 25px;
+            right: 0;
+            width: max-content;
+            min-width: 88px;
+        }
+:deep .formSearch .searchItem:first-child .ant-form-item{
+  width: 255px;
 }
-:deep .ant-tree-treenode:hover .tree-favor{
+        :deep .ant-table-wrapper .ant-table-thead >tr>th{
+        background-color: #f7fbfe !important;
+        padding: 8.5px 16px !important;
+        }
+        :deep .ant-table-tbody tr:hover,:deep .ant-table-tbody tr:hover td{
+        background-color: #e9f7ff !important;
+        color: #108def !important;
+        }
+        :deep .ant-table-tbody tr:nth-child(odd) {
+        background-color: rgb(250, 250, 250) !important; /* 奇数行背景色 */
+        }
+        :deep .ant-table-tbody tr:nth-child(even) {
+        background-color: #fff !important; /* 偶数行背景色 */
+        }
+        :deep .ant-pagination{
+          margin: 16px 16px !important;
+            .ant-pagination-item{
+                border: 1px solid #d9d9d9;
+            }
+            .ant-pagination-item:hover{
+                border: 1px solid #1677ff;
+                background: #fff !important;
+            }
+            .ant-pagination-item-active,.ant-pagination-item-active:hover{
+                border: 1px solid #1677ff;
+                background: #1677ff !important;
+                a{
+                    color: #fff;
+                }
+            }
+        } 
+}
+:deep .ant-tree-treenode:hover .tree-btn{
     display: block !important;
 }
-.headerRight .btn-drop {
-    font-size: 18px !important;
-    cursor: pointer;
-}
+input[aria-hidden=true]{
+    display: none !important;
+    }
   </style>
   

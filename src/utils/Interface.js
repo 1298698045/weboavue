@@ -22,7 +22,8 @@ const Interface = {
     getPermission: baseUrl + "/aura/workflow/definition/activity/getPermission", // 流程节点权限
     getTransitions: baseUrl + "/aura/workflow/Process/activity/getTransitions", // 获取节点转移路径
     getParticipators: baseUrl + "/aura/workflow/Process/activity/getParticipators", // 获取节点办理人员
-    agree: "/api/workflow/ProcessInstance/task/agree", // 提交流转-审批通过
+    agree: baseUrl + "/workflow/ProcessInstance/task/agree", // 提交流转-审批通过
+    disagree: baseUrl + "/workflow/ProcessInstance/task/disagree", // 审批拒绝
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",
@@ -93,6 +94,7 @@ const Interface = {
     getLatestUsers: baseUrl + "/one/user/getLatestUsers", // 获取最近使用用户
     getRoleUsers: baseUrl + "/one/group/getRoleUsers", // 获取角色用户列表
     allUser:baseUrl+"/one/organization/querUsers",//查询所有用户
+    changePwd:baseUrl+"/one/user/changepwd",//修改登录密码
   },
   saveRecord: "/localData/entity.saverecord.json",
   // 通讯录
@@ -119,7 +121,7 @@ const Interface = {
     saveDraft:baseUrl + "/email/saveDraft", // 保存草稿
     send:baseUrl + "/email/send", // 发送邮件
     sendbatch:baseUrl + "/email/sendbatch", // 群发邮件
-    upload:baseUrl + "/email/upload", // 上传附件
+    upload:baseUrl + "/email/upload", // 上传邮箱附件
     inboxSearch:baseUrl + "/email/inbox/search", // 查询收件箱
     draftboxSearch:baseUrl + "/email/draftbox/search", // 查询草稿箱
     sentboxSearch:baseUrl + "/email/sentbox/search", // 查询发件箱
@@ -347,7 +349,8 @@ const Interface = {
       get:baseUrl + '/content/folder/getFolderTree',//获取文档中心目录
       new:baseUrl + '/content/folder/create',//创建文档中心目录
       edit:baseUrl + '/aura/RecordUi/updateRecord',//编辑文档中心目录
-    }
+    },
+    renderView:baseUrl + '/content/text/renderView',//根据知识库模板，和知识内容 合并出显示内容。
   },
   portal: {
     layoutList: baseUrl + "/aura/dashboard/describeDashboard", // 获取门户、仪表盘设置
@@ -365,5 +368,10 @@ const Interface = {
   poll:{
     submit:baseUrl + "/weibo/question/submit",//发布问题
   },
+  uploadAvatar:baseUrl + '/file/avatar/upload',//通用头像上传
+  viewAvatar:baseUrl + '/file/avaterPreview',//头像查看
+  uploadFiles:baseUrl + '/file/attachment/upload',//通用附件上传
+  getFiles:baseUrl + '/file/attachment/getFiles',//通用获取附件
+  deleteFiles:baseUrl + '/file/attachment/deleteFiles',//通用删除附件
 };
 export default Interface;

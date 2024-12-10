@@ -385,11 +385,11 @@ const getLayoutInterface = () => {
         params: {
           entityApiName: props.entityApiName,
           defaultFieldValues: {
-            entityId: props.entityId
+            entityId: ''
           },
           mode: "CREATE",
           type: "FULL",
-          layoutOverride: "",
+          layoutOverride: "00000000-0000-0000-0000-000000080001",
           inContextOfComponent: "",
           pageSize: -1,
           offset: 0
@@ -762,10 +762,10 @@ const handleSubmit = () => {
           }
           else{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
-                message.success(res.actions[0].errorMessage);
+                message.error(res.actions[0].errorMessage);
             }
             else{
-                message.success("保存失败！");
+                message.error("保存失败！");
             }
           }
       });

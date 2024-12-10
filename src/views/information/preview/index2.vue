@@ -343,6 +343,28 @@
           })
   };
   getDetail();
+  const getContentView = () => {
+    let d = {
+              actions:[{
+                  id: "2919;a",
+                  descriptor: "",
+                  callingDescriptor: "UNKNOWN",
+                  params: {
+                    id: data.id,
+                  }
+              }]
+          };
+          let obj = {
+              message: JSON.stringify(d)
+          }
+          proxy.$post(Interface.content.renderView,obj).then(res=>{
+              if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
+              let fields=res.actions[0].returnValue.fields;
+              
+              }
+          })
+  };
+  getContentView();
   const getFileClass = () => {
     proxy
       .$get(Interface.information.attachmentCategory, {
