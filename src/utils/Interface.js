@@ -27,6 +27,9 @@ const Interface = {
     notice: baseUrl + "/workflow/ProcessInstance/notice", // 催办
     forward: baseUrl + "/workflow/ProcessInstance/forward", // 传阅
     countersign: baseUrl + "/aura/workflow/Process/activity/task/insert", // 加签
+    jump: baseUrl + "/workflow/ProcessInstance/jump", // 跳转
+    withdraw: baseUrl + "/workflow/ProcessInstance/withdraw", // 撤销
+    delete: baseUrl + "/workflow/ProcessInstance/delete", // 删除流程实例
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",

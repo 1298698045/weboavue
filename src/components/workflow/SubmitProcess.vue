@@ -3,7 +3,7 @@
         <a-modal v-model:open="props.isShow" width="800px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
-                    审批通过流转
+                    审批通过
                  </div>
             </template>
             <div class="modalContainer">
@@ -35,7 +35,7 @@
                                     <a-button type="link" @click="handleAddPeople(item, parentIndex)" v-if="item.addPeople">添加人员</a-button>
                                 </div>
                                 <div class="peopleBox">
-                                    <a-table :row-selection="rowSelection" size="small" :pagination="pagination" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
+                                    <a-table :row-selection="item.rowSelectionConfig" size="small" :pagination="pagination" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
                                         <template #bodyCell="{ column,index }">
                                             <template v-if="column.key === 'operation'">
                                                 <span class="iconTop" @click="arrowup(item, index)">
@@ -66,11 +66,11 @@
                             <div class="collapseBody" v-if="item.isCollapse">
                                 <a-form-item label="办理人员：">
                                     <div class="flex">
-                                        <a-input :disabled="!item.isMatched" v-model:value="item.searchVal" placeholder="请输入搜索字符"></a-input>
+                                        <a-input :disabled="!item.isMatched" v-model:value="item.searchVal" @change="(e)=>{handleSearch(e, item)}" placeholder="请输入搜索字符"></a-input>
                                         <a-button :disabled="!item.isMatched" type="link" @click="item.isMatched && handleAddPeople(item, parentIndex)" v-if="item.addPeople">添加人员</a-button>
                                     </div>
                                     <div class="peopleBox">
-                                        <a-table :disabled="!item.isMatched" :row-selection="rowSelection" size="small" :pagination="pagination" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
+                                        <a-table :disabled="!item.isMatched" :row-selection="item.rowSelectionConfig" size="small" :pagination="pagination" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
                                             <template #bodyCell="{ column,index }">
                                                 <template v-if="column.key === 'operation'">
                                                     <span class="iconTop" @click="arrowup(item, index)">
@@ -87,13 +87,14 @@
                             </div>
                         </div>
                         <a-form-item label="办理工作日：">
-                            <a-input></a-input>
+                            <a-input type="number" v-model:value="formState.deadline" style="width: 100px;"></a-input>
                         </a-form-item>
                         <a-form-item label="提醒方式" name="noticeMethod">
                             <a-checkbox-group v-model:value="formState.noticeMethod">
-                                <a-checkbox value="1" name="type">系统消息</a-checkbox>
-                                <a-checkbox value="2" name="type">手机短信</a-checkbox>
-                              </a-checkbox-group>
+                                <a-checkbox value="web" name="type">站内消息</a-checkbox>
+                                <a-checkbox value="app" name="type">移动消息</a-checkbox>
+                                <a-checkbox value="sms" name="type">短信消息</a-checkbox>
+                            </a-checkbox-group>
                         </a-form-item>
                     </a-form>
                     <a-form v-if="activeKey=='2'">
@@ -127,7 +128,8 @@
         getCurrentInstance,
         defineExpose,
         defineEmits,
-        toRaw
+        toRaw,
+        computed
     } from "vue";
     import { PieChartOutlined, ArrowUpOutlined, ArrowDownOutlined, UpOutlined, DownOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
@@ -157,6 +159,7 @@
         description:"",
         BusinessUnitList: [],
         noticeMethod: [],
+        deadline: 3
     })
     const data = reactive({
         activeKey: '1',
@@ -175,10 +178,11 @@
         addPeople: true,
         recordData: {},
         fromActivityId: "",
-        isMultipleUser: false
+        isMultipleUser: false,
+        listData: []
     })
-    const { activeKey,height,isRadioUser,selectedRowKeys,pagination, transitions, splitType, 
-        activityId, addPeople, recordData, fromActivityId, isMultipleUser } = toRefs(data);
+    const { activeKey,height,isRadioUser,selectedRowKeys,pagination, splitType, 
+        activityId, addPeople, recordData, fromActivityId, isMultipleUser, listData } = toRefs(data);
     const columns = [
         {
             title: "姓名",
@@ -202,10 +206,15 @@
     ]
     const dataSource = ref([]);
     const columnsList = toRaw(columns);
+    
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
+            console.log("item:", item);
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
+        selections: (e) => {
+            console.log("e", e);
+        }
         // getCheckboxProps: record => ({
         //     disabled: record.name === 'Disabled User',
         //     name: record.name,
@@ -222,7 +231,7 @@
 
     const changeActivity = (e) => {
         data.activityId = e.target.value;
-        let index = data.transitions.findIndex(item=>item.ToActivityId == data.activityId);
+        let index = data.listData.findIndex(item=>item.ToActivityId == data.activityId);
         getPermission(data.activityId, index);
     }
 
@@ -247,8 +256,27 @@
             let permission = res.actions[0].returnValue;
             let { flowPermission } = permission;
             data.addPeople = flowPermission.addPeople;
-            data.transitions[index].addPeople = flowPermission.addPeople;
+            data.listData[index].addPeople = flowPermission.addPeople;
         });
+    }
+
+    const transitions = computed(()=>{
+        return data.listData.map(item=>{
+            item.rowSelectionConfig = {
+                onChange: (selectedRowKeys, selectedRows) => {
+                    item.selectPeoples = selectedRowKeys;
+                },
+                selectedRowKeys: item.selectPeoples,
+                preserveSelectedRowKeys: true,
+            };
+            return item;
+        });
+    });
+
+    const handleSearch = (e, item) => {
+        item.peopleList = item.recordPeopleList.filter(row=>{
+            return row.name.indexOf(item.searchVal) != -1;
+        })
     }
 
     // 获取节点转移路径
@@ -274,13 +302,16 @@
             let { splitType, transitions, fromActivityId } = res.actions[0].returnValue;
             data.fromActivityId = fromActivityId;
             data.splitType = splitType;
-            data.transitions = transitions.map(item=>{
-                item.searchVal = "";
-                item.addPeople = false;
-                item.peopleList = [];
-                item.selectPeoples = [];
-                item.isCollapse = true;
-                return item;
+            data.listData = transitions.map(item=>{
+                // item = JSON.parse(JSON.stringify(item));
+                const newItem = { ...item };
+                newItem.searchVal = "";
+                newItem.addPeople = false;
+                newItem.peopleList = [];
+                newItem.selectPeoples = [];
+                newItem.recordPeopleList = [];
+                newItem.isCollapse = true;
+                return newItem;
             });
 
             if(splitType!=2){
@@ -288,7 +319,7 @@
                 getPermission(data.activityId, 0);
                 getParticipators(0);
             }else {
-                data.transitions.forEach((item,index)=>{
+                data.listData.forEach((item,index)=>{
                     let activityId = item.ToActivityId;
                     getPermission(activityId, index)
                 })
@@ -344,7 +375,7 @@
             BusinessUnitIdName: e.BusinessUnitIdName
         })
         let { index } = data.recordData;
-        data.transitions[index].peopleList.push(obj);
+        data.listData[index].peopleList.push(obj);
         data.isRadioUser = false;
     };
     // 多选用户
@@ -355,15 +386,16 @@
             item.key = item.id;
             return item;
         })
-        let peopleList = data.transitions[index].peopleList;
+        let peopleList = data.listData[index].peopleList;
         addUsers.forEach(item=>{
             let isBook = peopleList.some(row=>row.key == item.key);
             if(!isBook){
                 peopleList.push(item);
+                data.listData[index].selectPeoples.push(item.key);
             }
         });
+        data.listData[index].recordPeopleList = JSON.parse(JSON.stringify(peopleList));
         data.isMultipleUser = false;
-
     };
 
 
@@ -388,22 +420,13 @@
         }
     }
 
-    const cancelDeptModal = () => {
-
-    };
-
-    const handleDeptParams = () => {
-
-    };
-    
     const handleSubmit = () => {
         let transitions = [];
-        
         if(data.splitType==2){
-            let isNodeSelect = data.transitions.some(item=>item.isMatched==true);
+            let isNodeSelect = data.listData.some(item=>item.isMatched==true);
             if(isNodeSelect){
-                data.transitions.forEach(item=>{
-                    if(item.isMatched && item.peopleList.length == 0){
+                data.listData.forEach(item=>{
+                    if(item.isMatched && item.selectPeoples.length == 0){
                         message.error('请选择节点下的办理人员!');
                         throw error("请选择人员!");
                     }
@@ -419,19 +442,25 @@
                 message.error('请选择节点!');
                 return false;
             };
-            let isPeople = data.transitions.some(item=>item.peopleList.length > 0);
+            let isPeople = data.listData.some(item=>item.selectPeoples.length > 0);
             if(!isPeople){
                 message.error('请选择节点下的办理人员!');
                 return false;
             }
         }
 
-        // console.log("data.transitions2:", data.transitions);
+        // console.log("data.transitions2:", data.listData);
 
-        data.transitions.forEach(item=>{
+        data.listData.forEach(item=>{
             if((item.isMatched && data.splitType == 2) || (item.ToActivityId == data.activityId && data.splitType != 2)){
-                console.log("item.peopleList", item.peopleList);
-                let toUsers = item.peopleList.map(row=>{
+
+                const list = item.peopleList.filter(self=>{
+                    return item.selectPeoples.find(row=>{
+                        return self.key == row;
+                    })
+                });
+
+                let toUsers = list.map(row=>{
                     let { businessUnitIdName, key, organizationIdName, ...rest } = row;
                     return rest;
                 });
@@ -455,7 +484,7 @@
                     processInstanceId: props.processInstanceId,
                     fromActivityId: data.fromActivityId,
                     description: formState.description,
-                    deadline: 3,
+                    deadline: formState.deadline,
                     transitions: transitions
                 }
             }]
@@ -464,6 +493,7 @@
         let d = {
             message: JSON.stringify(obj)
         };
+        // console.log("obj", obj);
 
         proxy.$post(Interface.workflow.agree, d).then(res=>{
 
@@ -544,7 +574,7 @@
 		display: none !important
 }
 .collapseItem{
-    background: #e2e3e5;
+    background: #f4f4f4;
     border-radius: 4px;
     padding: 10px 16px 16px 0;
     margin-bottom: 16px;

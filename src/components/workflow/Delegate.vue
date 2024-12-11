@@ -212,7 +212,7 @@
                     message.success("委派成功！");
                     handleCancel();
                 }else {
-                    message.success("委派失败！");
+                    message.error("委派失败！");
                 }
             });
         }).catch(()=>{

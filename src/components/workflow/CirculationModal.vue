@@ -14,7 +14,7 @@
                         :model="formState">
                         <a-form-item label="办理人员：">
                             <div class="flex">
-                                <a-input placeholder="请输入搜索字符"></a-input>
+                                <a-input placeholder="请输入搜索字符" v-model:value="searchVal" @change="handleSearch"></a-input>
                                 <a-button type="link" @click="handleAddPeople">添加人员</a-button>
                             </div>
                             <div class="peopleBox">
@@ -69,7 +69,9 @@
         getCurrentInstance,
         defineExpose,
         defineEmits,
-        toRaw
+        toRaw,
+        nextTick,
+        computed
     } from "vue";
     import { PieChartOutlined, ArrowUpOutlined, ArrowDownOutlined  } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
@@ -106,8 +108,10 @@
             total: 0,
             showTotal: (total) => `共 ${total} 条数据`, // 展示总共有几条数据
         },
+        searchVal: "",
+        recordUsers: []
     })
-    const { nodes, isMultipleUser, selectedRowKeys,height,pagination } = toRefs(data);
+    const { nodes, isMultipleUser, selectedRowKeys, height, pagination, searchVal, recordUsers } = toRefs(data);
     
     
     const columns = [
@@ -133,11 +137,23 @@
     ]
     const dataSource = ref([]);
     const columnsList = toRaw(columns);
-    const rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        },
+
+    const rowSelection = computed(()=>{
+        return {
+            onChange: (selectedRowKeys, selectedRows) => {
+                data.selectedRowKeys = selectedRowKeys;
+            },
+            selectedRowKeys: data.selectedRowKeys,
+            preserveSelectedRowKeys: true
+        }
+    })
+
+    const handleSearch = (e) => {
+        dataSource.value = data.recordUsers.filter(item=>{
+            return item.name.indexOf(data.searchVal) != -1;
+        })
     };
+
     const handleAddPeople = () => {
         data.isMultipleUser = true;
     };
@@ -160,8 +176,11 @@
             let isBook = dataSource.value.some(row=>row.key == item.key);
             if(!isBook){
                 dataSource.value.push(item);
+                data.selectedRowKeys.push(item.key);
             }
         });
+
+        data.recordUsers = JSON.parse(JSON.stringify(dataSource.value));
         data.isMultipleUser = false;
     }
 
@@ -202,8 +221,24 @@
         let sms = getBoolean('sms');
 
         let toUsers = [];
-        
-        dataSource.value.forEach(item=>{
+
+        if(dataSource.value.length == 0){
+            message.error("请添加办理人员！");
+            return false;
+        }
+
+        const list = dataSource.value.filter(item=>{
+            return data.selectedRowKeys.find(row=>{
+                return item.key == row;
+            })
+        });
+
+        if(list.length == 0){
+            message.error("请选择办理人员！");
+            return false;
+        }
+
+        list.forEach(item=>{
             toUsers.push({
                 id: item.id,
                 name: item.name
@@ -232,11 +267,13 @@
             message: JSON.stringify(obj)
         };
 
-        console.log("Obj", obj);
-
-        return false;
-        props.$post(Interface.workflow.forward, d).then(res=>{
-
+        proxy.$post(Interface.workflow.forward, d).then(res=>{
+            if(res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
+                message.success("传阅成功！");
+                handleCancel();
+            }else {
+                message.error("传阅失败！");
+            }
         })
     }
     const handleCancel = () => {

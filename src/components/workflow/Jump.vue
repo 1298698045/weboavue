@@ -13,17 +13,17 @@
                         :label-col="labelCol"
                         :model="formState">
                         <a-form-item label="当前节点名称">
-                            <p>	{{paramsData.ProcessIdName}}</p>
+                            <p>	{{ processInstanceName }}</p>
                         </a-form-item>
-                        <a-form-item label="跳转到节点">
-                            <a-select v-model:value="formState.toActivityId">
+                        <a-form-item label="跳转到节点" name="toActivityId" :rules="{required: true, message: '请选择跳转到节点'}">
+                            <a-select v-model:value="formState.toActivityId" @change="changeNode">
                                 <a-select-option v-for="(row,idx) in nodes" :key="idx"
-                                    :value="row.StepID">{{row.Name}}</a-select-option>
+                                    :value="row.id">{{row.name}}</a-select-option>
                             </a-select>
                         </a-form-item>
                         <a-form-item label="办理人员：">
                             <div class="flex">
-                                <a-input placeholder="请输入搜索字符"></a-input>
+                                <a-input placeholder="请输入搜索字符" v-model:value="searchVal" @change="handleSearch"></a-input>
                                 <a-button type="link" @click="handleAddPeople">添加人员</a-button>
                             </div>
                             <div class="peopleBox">
@@ -41,12 +41,12 @@
                                 </a-table>
                             </div>
                         </a-form-item>
-                        <a-form-item label="备注" name="Remark">
-                            <a-textarea :rows="3" v-model:value="formState.Remark" />
+                        <a-form-item label="备注" name="description">
+                            <a-textarea :rows="3" v-model:value="formState.description" />
                         </a-form-item>
                     </a-form>
                 </div>
-                <radio-user :isShow="isRadioUser" v-if="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams"></radio-user>
+                <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser=false" @select="handleSelectUsers" />
             </div>
             <template #footer>
                 <div>
@@ -70,18 +70,24 @@
         getCurrentInstance,
         defineExpose,
         defineEmits,
-        toRaw
+        toRaw,
+        computed
     } from "vue";
     import { PieChartOutlined, ArrowUpOutlined, ArrowDownOutlined  } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
 
     import Interface from "@/utils/Interface.js";
-    import RadioUser from "@/components/commonModal/RadioUser.vue";
+    import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
+
     const { proxy } = getCurrentInstance();
     const formRef = ref();
     const props = defineProps({
         paramsData: Object,
-        isShow: Boolean
+        isShow: Boolean,
+        processInstanceId: String,
+        processInstanceName: String,
+        processId: String,
+        ruleLogId: String
     });
     const isModal = ref(true);
     const labelCol = ref({ style: { width: '100px' } });
@@ -90,18 +96,20 @@
     const formState = reactive({
         ProcessName: "",
         toActivityId: "",
-        Remark: ""
+        toActivityName: "",
+        Remark: "",
+        description: ""
     })
     const columns = [
         {
             title: "姓名",
-            dataIndex: "userName",
+            dataIndex: "name",
             align: "center",
             width: 100,
         },
         {
             title: "部门",
-            dataIndex: "BusinessUnitIdName",
+            dataIndex: "businessUnitIdName",
             align: "center",
             width: 100,
         },
@@ -119,7 +127,7 @@
     const columnsList = toRaw(columns);
     const data = reactive({
         nodes: [],
-        isRadioUser: false,
+        isMultipleUser: false,
         selectedRowKeys: [],
         height: document.documentElement.clientHeight - 340,
         pagination: {
@@ -128,32 +136,44 @@
             total: 0,
             showTotal: (total) => `共 ${total} 条数据`, // 展示总共有几条数据
         },
+        searchVal: "",
+        recordUsers: []
     })
-    const { nodes, isRadioUser, selectedRowKeys,height,pagination } = toRefs(data);
-    const rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-            data.selectedRowKeys = selectedRowKeys;
-        },
-        // getCheckboxProps: record => ({
-        //     disabled: record.name === 'Disabled User',
-        //     name: record.name,
-        // }),
-    };
+    const { nodes, isMultipleUser, selectedRowKeys, height, pagination, searchVal, recordUsers } = toRefs(data);
+    const rowSelection = computed(()=>{
+        return {
+            onChange: (selectedRowKeys, selectedRows) => {
+                data.selectedRowKeys = selectedRowKeys;
+            },
+            selectedRowKeys: data.selectedRowKeys,
+            preserveSelectedRowKeys: true
+        }
+    });
     const handleAddPeople = () => {
-        data.isRadioUser = true;
+        data.isMultipleUser = true;
     }
-    const cancelUserModal = (e) => {
-        data.isRadioUser = e;
-    }
-    const handleUserParams = (e) => {
-        dataSource.value.push({
-            key: e.id,
-            userName: e.name,
-            BusinessUnitIdName: e.BusinessUnitIdName
+    const handleSearch = (e) => {
+        dataSource.value = data.recordUsers.filter(item=>{
+            return item.name.indexOf(data.searchVal) != -1;
         })
-        data.isRadioUser = false;
+    };
+    const handleSelectUsers = (params) => {
+        let addUsers = params.map(item=>{
+            item.key = item.id;
+            return item;
+        });
+        addUsers.forEach(item=>{
+            let isBook = dataSource.value.some(row=>row.key == item.key);
+            if(!isBook){
+                dataSource.value.push(item);
+                data.selectedRowKeys.push(item.key);
+            }
+        });
+
+        data.recordUsers = JSON.parse(JSON.stringify(dataSource.value));
+        data.isMultipleUser = false;
     }
+
     const arrowup=(index)=>{
         if(index!=0){
             let list=dataSource.value;
@@ -175,44 +195,93 @@
         }
     }
     const getProcessNodes = () => {
-        proxy.$get(Interface.flow.processNodes,{
-            ProcessId: props.paramsData.ProcessId,
-        }).then(res=>{
-            data.nodes = res.rows;
+        let d = {
+            filterId: "",
+            entityType: "WFStep",
+            filterQuery: "ProcessId\teq\t" + props.processId
+        }
+        proxy.$get(Interface.list2, d).then(res=>{
+            let list = res.nodes;
+            let temp = [];
+            list.forEach(item=>{
+                temp.push({
+                    id: item.id,
+                    name: item.Name.textValue
+                })
+            });
+            data.nodes = temp;
         })
     }
     getProcessNodes();
+
+    const changeNode = (e) => {
+        let row = data.nodes.find(item=>item.id==formState.toActivityId);
+        formState.toActivityName = row.name;
+    }
+
     onMounted(()=>{
-        // formState.ProcessName = props.paramsData.InstanceIdName;
         window.addEventListener("resize", (e) => {
             data.height = document.documentElement.clientHeight - 340;
         });
     })
-    defineExpose({isModal})
+    
     const handleSubmit = () => {
         formRef.value.validate().then(() => {
-            // console.log("values", formState, toRaw(formState));
-            var obj = {
-                processInstanceId: props.paramsData.ProcessInstanceId,
-                ruleLogId: "",
-                fromActivityId: "",
-                toActivityId: formState.toActivityId,
-                participators: data.selectedRowKeys.join(','),
-                memo: "",
-                Remark: formState.Remark
+            let toUsers = [];
+            if(dataSource.value.length == 0){
+                message.error("请添加办理人员！");
+                return false;
             }
-            proxy.$get(Interface.flow.jump,obj).then(res=>{
-                message.success("跳转成功！");
-                handleCancel();
+            const list = dataSource.value.filter(item=>{
+                return data.selectedRowKeys.find(row=>{
+                    return item.key == row;
+                })
+            });
+            if(list.length == 0){
+                message.error("请选择办理人员！");
+                return false;
+            }
+            list.forEach(item=>{
+                toUsers.push({
+                    id: item.id,
+                    name: item.name
+                });
+            });
+            let obj = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        ruleLogId: props.ruleLogId,
+                        processInstanceId: props.processInstanceId,
+                        toActivityId: formState.toActivityId,
+                        toActivityName: formState.toActivityName,
+                        toUsers: toUsers,
+                        description: formState.description
+                    }
+                }]
+            };
+            let d = {
+                message: JSON.stringify(obj)
+            };
+            proxy.$post(Interface.workflow.jump, d).then(res=>{
+                if(res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
+                    message.success("跳转成功！");
+                    handleCancel();
+                }else {
+                    message.error("跳转失败！");
+                }
             })
         }).catch((err) => {
             console.log("error", err);
         });
-        
+                
     }
     const handleCancel = () => {
         emit("update-status",false);
     }
+    defineExpose({isModal})
 </script>
 <style lang="less">
     .ant-modal-content{

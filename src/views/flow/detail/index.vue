@@ -33,9 +33,12 @@
                         <a-menu-item key="1" @click="handleUrging">
                           催办
                         </a-menu-item>
-                        <!-- <a-menu-item key="6" @click="handleCountersign">
+                        <a-menu-item key="6" @click="handleCountersign">
                             加签
-                        </a-menu-item> -->
+                        </a-menu-item>
+                        <a-menu-item key="7" @click="handleJump">
+                            跳转
+                        </a-menu-item>
                         <a-menu-item key="2" @click="handleCirculation">
                           传阅他人
                         </a-menu-item>
@@ -47,6 +50,12 @@
                         </a-menu-item>
                         <a-menu-item key="5" @click="printForm">
                             PDF
+                        </a-menu-item>
+                        <a-menu-item key="8" @click="handleRevoke">
+                            撤销
+                        </a-menu-item>
+                        <a-menu-item key="9" @click="handleDelete">
+                            删除
                         </a-menu-item>
                       </a-menu>
                     </template>
@@ -269,6 +278,9 @@
                             <a-menu-item key="6" @click="handleCountersign">
                               加签
                             </a-menu-item>
+                            <a-menu-item key="7" @click="handleJump">
+                                跳转
+                            </a-menu-item>
                             <a-menu-item key="2" @click="handleCirculation">
                                 传阅他人
                             </a-menu-item>
@@ -288,11 +300,15 @@
             </div>
         </div>
         <SubmitProcess ref="processRef" v-if="isProcess" :ruleLogId="ruleLogId" :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID" :isShow="isProcess" @update-status="updateStatus" :paramsData="ProcessData" />
-        <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" @update-status="updateStatus" :paramsData="RejectionData"  />
+        <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" :ruleLogId="ruleLogId" :processId="processId" :processInstanceId="processInstanceId" :fromActivityId="fromActivityId" @update-status="updateStatus" />
         <circulation-modal ref="circulationRef" :processInstanceId="processInstanceId" :processInstanceName="processInstanceName" @update-status="updateStatus" v-if="isCirculation" :isShow="isCirculation"></circulation-modal>
         <Delegate ref="DelegateRef" :ruleLogId="ruleLogId" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
         <Urging ref="UrgingRef" :processInstanceId="processInstanceId" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
         <RelateInstance v-if="isRelateInstance" :id="id" :entityApiName="lookEntityApiName" :entityType="lookEntityType" :objectTypeCode="lookObjectTypeCode" :isShow="isRelateInstance" @select="handleSelectLook" @cancel="isRelateInstance=false" />
+        <Countersign v-if="isCountersign" :isShow="isCountersign" :processInstanceId="processInstanceId" :processInstanceName="processInstanceName" :processId="processId" :paramsData="ProcessData" @update-status="isCountersign=false" />
+        <Jump v-if="isJump" :isShow="isJump" :ruleLogId="ruleLogId" :processInstanceId="processInstanceId" :processInstanceName="processInstanceName" :processId="processId" :paramsData="{}" @update-status="isJump=false" />
+        <Confirm v-if="isConfirm" :isShow="isConfirm" title="撤销流程" :desc="revokeDesc" @cancel="isConfirm=false" @ok="revokeFlow"></Confirm>
+        <Delete v-if="isDelete" :isShow="isDelete" desc="您确定删除该工作流吗?" :external="true" @cancel="isDelete=false" @ok="deleteFlow"></Delete>
     </div>
 </template>
 <script setup>
@@ -326,6 +342,9 @@
     import DetailInfo from "@/components/detail/DetailInfo.vue";
     import FlowForm from "@/components/workflow/FlowForm.vue";
     import Countersign from "@/components/workflow/Countersign.vue";
+    import Jump from "@/components/workflow/Jump.vue";
+    import Confirm from "@/components/commonModal/Confirm.vue";
+    import Delete from "@/components/listView/Delete.vue";
 
     import { useRouter, useRoute } from "vue-router";
     import { message } from "ant-design-vue";
@@ -388,10 +407,17 @@
         processInstanceId: "",
         processInstanceName: "",
         toActivityID: "",
+        isCountersign: false,
+        isJump: false,
+        isConfirm: false,
+        revokeDesc: "是否撤销该事务吗？撤销后进入发起人的退件箱，发起人可以进行删除",
+        isDelete: false,
+        fromActivityId: ""
     })
     const { isEdit,Title,objectTypeCode,sObjectName,tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData,
          isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex,id,fileList,isRelateInstance,lookEntityApiName,lookObjectTypeCode,lookEntityType,
-         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID, processInstanceName } = toRefs(data);
+         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID, 
+         processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete, fromActivityId } = toRefs(data);
 
     const getRuleLogData = () => {
         let obj = {
@@ -415,6 +441,7 @@
                 data.processInstanceName = ProcessInstanceId.displayValue;
                 data.processInstanceId = ProcessInstanceId.value;
                 data.toActivityID = ToActivityID.value;
+                data.fromActivityId = FromActivityId.value;
             }
         });
     };
@@ -481,7 +508,72 @@
 
     // 加签
     const handleCountersign = () => {
+        data.isCountersign = true;
+    };
 
+    // 跳转
+    const handleJump = () => {
+        data.isJump = true;
+    };
+    
+    // 撤销
+    const handleRevoke = () => {
+        data.isConfirm = true;
+    };
+
+    // 删除
+    const handleDelete = () => {
+        data.isDelete = true;
+    }
+    
+    // 撤销
+    const revokeFlow = () => {
+        let obj = {
+            actions:[{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    id: data.processInstanceId
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.workflow.withdraw, d).then(res=>{
+            if(res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
+                message.success("撤销成功！");
+                data.isConfirm = false;
+            }else {
+                message.error("撤销失败！");
+            }
+        });
+    };
+
+    // 删除
+    const deleteFlow = (e) => {
+        let obj = {
+            actions:[{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    id: data.processInstanceId
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.workflow.delete, d).then(res=>{
+            if(res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
+                message.success("删除成功！");
+                data.isDelete = false;
+            }else {
+                message.error("删除失败！");
+            }
+        });
     }
 
     const getFiles = () => {
