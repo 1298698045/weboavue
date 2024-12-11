@@ -740,6 +740,9 @@ const handleSubmit = () => {
     }
   formRef.value.validate().then(() => {
       // console.log("values", formState, toRaw(formState));
+      if(props.relatedObjectAttributeName&&props.relatedObjectAttributeValue&&props.relatedObjectAttributeValue.value&&!formState[props.relatedObjectAttributeName]){
+        formState[props.relatedObjectAttributeName] = props.relatedObjectAttributeValue.value;
+      }
       let url = Interface.create;
       let d = {
           actions:[{

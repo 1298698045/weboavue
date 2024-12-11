@@ -8,7 +8,9 @@
                 <span class="headerTitle">相册文件</span>
             </div>
             <div class="headerRight">
-                <a-upload v-model:file-list="fileList" action="#" :showUploadList="false" v-if="data.BreadCrumbList.length">
+                <a-upload v-model:file-list="fileList" action="#" :showUploadList="false" v-if="data.BreadCrumbList.length"
+                
+                >
                    <a-button class="ml10" type="primary" >上传照片</a-button>
                 </a-upload>
                 <a-button class="ml10" type="primary" @click="handleDepth('')" v-if="data.BreadCrumbList.length">设置权限</a-button>
@@ -36,7 +38,8 @@
                 <div class="leftTreeWrap">
                     <a-tree :tree-data="treeData" block-node :selectedKeys="selectedKeys" @select="handleTreeSelect">
                         <template #title="{ text, key }">
-                          <FolderOutlined v-if="text=='相册文件'" />
+                          <FolderOutlined v-if="text=='所有相册'" />
+                          <UserOutlined v-if="text=='我创建的'" />
                           <ClockCircleOutlined v-if="text=='最近使用'" />
                           <FolderViewOutlined v-if="text=='时光轴'" />
                           <DeleteOutlined v-if="text=='回收站'" />
@@ -78,30 +81,30 @@
                     <div class="card-content" v-show="data.type=='1'">
                         <div class="content-item" v-for="(item,index) in FolderList" :key="index" @click="tofolder(item.id,item.Name)">
                             <img :src="require('@/assets/img/filetype/Folder.png')" />
-                            <div class="add-addtext">{{item.Name}}</div>
+                            <div class="add-addtext" :title="item.Name">{{item.Name}}</div>
                             <div class="add-addtime">{{item.CreatedOn}}</div>
                             <div class="iconBox content-item-iconBox">
                                 <div class="popup">
                                     <!-- <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>  
-                                    <div class="option-item" @click="handleEdit(item.id)" :num="index">编辑</div>  
-                                    <div class="option-item" :num="index">重命名</div>  
-                                    <div class="option-item" @click="handleDelete(item.id)" :num="index">删除</div> -->
-                                    <div class="option-item" :num="index" @click.stop="handleDepth(item)">设置权限</div>  
+                                    <div class="option-item" :num="index">重命名</div> -->
+                                    <div class="option-item" @click.stop="handleEdit(item.id)">编辑</div>  
+                                    <div class="option-item" @click.stop="handleDepth(item)">设置权限</div>
+                                    <div class="option-item" @click.stop="handleDelete(item.id,'folder')">删除</div>
                                 </div>
                                 <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
                             </div>
                         </div>
-                        <div class="content-item" v-for="(item,index) in FileList" :key="index" @click="handlePreview(item.id)">
-                            <img :src="require('@/assets/img/filetype/defaultImg.png')" />
-                            <div class="add-addtext">{{item.Name}}</div>
+                        <div class="content-item" v-for="(item,index) in FileList" :key="index" @click="handleOpenFile(item)">
+                            <img :src="item.ThumbnailUrl||require('@/assets/img/filetype/defaultImg.png')" />
+                            <div class="add-addtext" :title="item.Name">{{item.Name}}</div>
                             <div class="add-addtime">{{item.CreatedOn}}</div>
                             <div class="iconBox content-item-iconBox">
                                 <div class="popup">
-                                    <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>
+                                    <div class="option-item" @click.stop="handleOpenFile(item)" :num="index">预览</div>
+                                    <div class="option-item" @click.stop="handleDelete(item.id,'file')">删除</div>
                                     <!-- <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>  
                                     <div class="option-item" @click="handleEdit(item.id)" :num="index">编辑</div>  
                                     <div class="option-item" :num="index">重命名</div>  
-                                    <div class="option-item" @click="handleDelete(item.id)" :num="index">删除</div> 
                                     <div class="option-item" :num="index" @click.stop="handleDepth(item)">设置权限</div>-->
                                 </div>
                                 <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
@@ -115,7 +118,7 @@
                         />
                         <p class="emptyDesc">当前暂无数据</p>
                     </div>
-                    <a-table v-show="data.type=='2'" style="height: 100%;" :scroll="{ y:tableHeight }" :dataSource="FolderList" :columns="columns" :pagination="data.pagination" @change="handleTableChange">
+                    <a-table v-show="data.type=='2'" style="height: 100%;" :scroll="{ y:tableHeight }" :dataSource="FolderList" :columns="columns" :pagination="false" @change="handleTableChange">
                         <template #bodyCell="{ column, index,text, record }">
                           <template v-if="column.key === 'index'">
                               <div>
@@ -139,7 +142,7 @@
                                         <div class="option-item" @click="handleDetail(record.id)" :num="index">查看</div>  
                                         <div class="option-item" @click="handleEdit(record.id)" :num="index">编辑</div>  
                                         <div class="option-item" :num="index">重命名</div>  
-                                        <div class="option-item" @click="handleDelete(record.id)" :num="index">删除</div>
+                                        <div class="option-item" @click="handleDelete(record.id,'folder')" :num="index">删除</div>
                                         <div class="option-item" :num="index" @click.stop="handleDepth(record)">设置权限</div>  
                                     </div>
                                     <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
@@ -147,6 +150,15 @@
                             </div>
                         </template>
                     </a-table>
+                    <div class="pageWrap">
+                        <a-pagination 
+                        show-size-changer
+                        show-quick-jumper
+                        :pageSizeOptions="['10', '20', '50', '80', '100']"
+                        :pageSize="pagination.pageSize"
+                        @showSizeChange="sizeChange"
+                        @change="handleTableChange" v-model:current="pagination.current" :total="pagination.total" :show-total="total => `共 ${total} 条`" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -154,10 +166,12 @@
             <loading-outlined></loading-outlined>
             <span class="loadinglabel">正在加载中，请稍候...</span>
         </div>
-        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon=false" :title="data.recordId?'编辑':'新建'" @success="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue" :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
+        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon=false" :title="data.recordId?'编辑':'新建'" @success="tofolder('','')" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue" :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
         <!-- <add-group :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" ></add-group> -->
         <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
         <NewDepth :isShow="isDepth" v-if="isDepth"  @cancel="isDepth=false" :id="data.SelectKey" :ObjectTypeCode="'100103'" :ObjectName="data.SelectName" />
+        <!-- 图片预览 -->
+        <PhotoPreview v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto=false" />
     </div>
 </template>
 <script setup>
@@ -177,7 +191,7 @@
     dayjs.extend(weekday);
     dayjs.extend(localeData);
     import { useRouter, useRoute } from "vue-router";
-    import { HomeOutlined,SearchOutlined, MoreOutlined, CopyOutlined, SortAscendingOutlined,LeftOutlined, RightOutlined, PlusOutlined, DownOutlined,FolderOutlined,ClockCircleOutlined,FolderViewOutlined,DeleteOutlined,LoadingOutlined } from "@ant-design/icons-vue";
+    import { HomeOutlined,SearchOutlined,UserOutlined, MoreOutlined, CopyOutlined, SortAscendingOutlined,LeftOutlined, RightOutlined, PlusOutlined, DownOutlined,FolderOutlined,ClockCircleOutlined,FolderViewOutlined,DeleteOutlined,LoadingOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     import { formTreeData,girdFormatterValue } from "@/utils/common.js";
     import { message } from "ant-design-vue";
@@ -185,13 +199,18 @@
     import Delete from "@/components/listView/Delete.vue";
     import AddGroup from "@/components/groupDetail/AddGroup.vue";
     import NewDepth from "@/components/information/NewDepth.vue";
+    import PhotoPreview from "@/components/file/PhotoPreview.vue";
     const tablelist=ref();
     const { proxy } = getCurrentInstance();
     const router = useRouter();
     const data = reactive({
         treeData: [
           {
-            text: '相册文件',
+            text: '所有相册',
+            key: 'all'
+        },
+        {
+            text: '我创建的',
             key: 'owner'
         },
         {
@@ -200,11 +219,11 @@
         },
         {
             text: '时光轴',
-            key: 'public'
+            key: 'timeline'
         },
         {
             text: '回收站',
-            key: 'public'
+            key: 'deleted'
         }
       ],
         pageNumber: 1,
@@ -213,7 +232,7 @@
         searchVal: "",
         total: 0,
         isLeft: true,
-        selectedKeys: ["owner"],
+        selectedKeys: ["all"],
         FolderList: [],
         FileList:[],
         columns: [
@@ -268,8 +287,8 @@
         groupList: [],
         isCommon: false,
         recordId:'',
-        objectTypeCode:'100200',
-        sObjectName:'ItemTree',
+        objectTypeCode:'100103',
+        sObjectName:'FileFolder',
 
         isDelete: false,
         deleteDesc: '确定要删除吗？',
@@ -281,6 +300,8 @@
             total:0,//数据总数
             pageSize:10,
             current:1,
+            pageSizeOptions: ['10', '20', '50', '100'],
+            defaultPageSize: 10,
             showTotal:((total)=>{
                 return `共${total}条`
             })
@@ -289,20 +310,26 @@
         type:'1',
         BreadCrumbList:[],
         fileList:[],
-        relatedObjectAttributeValue:'10010000-0000-0000-0000-000000000011',
-        relatedObjectAttributeName:'相册文件',
+        uploadFileList:[],
+        relatedObjectAttributeValue:{value:'10010000-0000-0000-0000-000000000011',name:'相册文件'},
+        relatedObjectAttributeName:'ParentId',
         loading:false,
         isDepth:false,
         SelectKey:'',
-        SelectName:''
+        SelectName:'',
+        folderId:'',
+        folderName:'',
+        isPhoto: false,
+        photoParams: {}
     })
-    const { isDepth,SelectKey,SelectName,loading,relatedObjectAttributeValue,relatedObjectAttributeName,fileList,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
+    const { isPhoto,photoParams,uploadFileList,fileList,folderId,folderName,isDepth,SelectKey,SelectName,loading,relatedObjectAttributeValue,relatedObjectAttributeName,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
          searchVal, total, isLeft, selectedKeys, FolderList, columns, groupList,isCommon,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,pagination,tableHeight } = toRefs(data);
     
     const handleTreeSelect = (keys,{node}) => {
         if(keys&&keys.length){
             data.selectedKeys=keys;
         }
+        data.pagination.current=1;
         getQuery();
     }
     const handleLeftShow = () => {
@@ -310,14 +337,18 @@
     }
     const handleDepth= (item) => {
         if(item){
-            data.SelectKey=item.id
-            data.SelectName=item.Name
+            data.SelectKey=item.id;
+            data.SelectName=item.Name;
+        }
+        else{
+            data.SelectKey=data.folderId;
+            data.SelectName=data.folderName;
         }
         data.isDepth=true;
     }
     const getQuery = () => {
         data.loading=true;
-        let filterQuery='\nParentId\teq\t10010000-0000-0000-0000-000000000011';
+        // let filterQuery='\nParentId\teq\t10010000-0000-0000-0000-000000000011';
         // if(data.selectedKeys[0]=='owner'){
         //     filterQuery='\nOwningUser\teq-userid';
         // }else if(data.selectedKeys[0]=='join'){
@@ -325,58 +356,153 @@
         // }else if(data.selectedKeys[0]=='public'){
         //     filterQuery='\nIsPublic\teq\ttrue';
         // }
-        // proxy.$get(Interface.user.groupList, {
-        //     scope: data.selectedKeys[0],
-        //     search: data.searchVal
-        // }).then(res => {
-        //     data.FolderList = res.listData;
-        // })
         data.FolderList=[];
+        data.FileList=[];
         data.pagination.total = 0;
-        proxy.$post(Interface.list2, {
-            filterId:'',
-            objectTypeCode:'100200',
-            entityName:'ItemTree',
-            filterQuery:filterQuery,
-            search:data.searchVal||'',
-            page: data.pagination.current,
-            rows: data.pagination.pageSize,
-            sort:'SortNumber',
-            order:'ASC',
-            displayColumns:'Name,Quantity,CreatedOn,OwningUser,AvatarImg'
-        }).then(res => {
-            data.listData = res.nodes;
-            data.total = res.pageInfo?res.pageInfo.total:0;
-            data.pagination.total = res.pageInfo?res.pageInfo.total:0;
-            var list = [];
-            for (var i = 0; i < res.nodes.length; i++) {
-                var item = res.nodes[i];
+        let url=Interface.album.queryAlbums;
+        if(data.selectedKeys[0]=='owner'){
+            url=Interface.album.queryOwningAlbums;
+        }
+        let filterQuery='';
+        if(data.folderId){
+            //filterQuery='\nParentId\teq\t'+data.folderId;
+            getFile();
+            return
+        }
+        // if(data.searchVal){
+        //     filterQuery='\nName\tcontains\t'+data.searchVal;
+        // }
+        let d = {
+        actions:[{
+            id: "4270;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+                pageSize: data.pagination.pageSize,
+                pageNumber: data.pagination.current,
+                search: data.searchVal||'',
+                filterQuery: filterQuery,
+                sort:'SortNumber',
+                order:'ASC'
+            }
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(url,obj).then(res=>{
+        if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue&&res.actions[0].returnValue.nodes){
+            let folder=res.actions[0].returnValue;
+            data.listData = folder.nodes;
+            data.total = folder.pageInfo?folder.pageInfo.total:0;
+            data.pagination.total = folder.pageInfo?folder.pageInfo.total:0;
+            let list = [];
+            for (var i = 0; i < folder.nodes.length; i++) {
+                let item = folder.nodes[i];
                 for(var cell in item){
                     if(cell!='id'&&cell!='nameField'){
                         item[cell]=girdFormatterValue(cell,item);
                     }
                     if(cell=='CreatedOn'){
-                        //item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
                         item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD"):'';
                     }
-                }
-                if(!item.AvatarImg){
-                    item.AvatarImg=require('@/assets/img/avatar-r.png');
                 }
                 list.push(item)
             }
             data.FolderList = list;
-        })
+            //getFile();
+        }
+    })
+        // proxy.$post(Interface.list2, {
+        //     filterId:'',
+        //     objectTypeCode:'100200',
+        //     entityName:'ItemTree',
+        //     filterQuery:filterQuery,
+        //     search:data.searchVal||'',
+        //     page: data.pagination.current,
+        //     rows: data.pagination.pageSize,
+        //     sort:'SortNumber',
+        //     order:'ASC',
+        //     displayColumns:'Name,Quantity,CreatedOn,OwningUser'
+        // }).then(res => {
+        //     data.listData = res.nodes;
+        //     data.total = res.pageInfo?res.pageInfo.total:0;
+        //     data.pagination.total = res.pageInfo?res.pageInfo.total:0;
+        //     var list = [];
+        //     for (var i = 0; i < res.nodes.length; i++) {
+        //         var item = res.nodes[i];
+        //         for(var cell in item){
+        //             if(cell!='id'&&cell!='nameField'){
+        //                 item[cell]=girdFormatterValue(cell,item);
+        //             }
+        //             if(cell=='CreatedOn'){
+        //                 //item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
+        //                 item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD"):'';
+        //             }
+        //         }
+        //         list.push(item)
+        //     }
+        //     data.FolderList = list;
+        // })
         setTimeout(function(){
             data.loading=false;
         },500)
     }
-    getQuery();
+    const getFile=()=>{
+        if(data.folderId){
+            let url=Interface.album.queryPhotos;            
+            let d = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    pageSize: data.pagination.pageSize,
+                    pageNumber: data.pagination.current,
+                    search: data.searchVal||'',
+                    albumId:data.folderId,
+                    sort:'SortNumber',
+                    order:'ASC'
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(url,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue&&res.actions[0].returnValue.nodes){
+                let file=res.actions[0].returnValue;
+                data.listData = file.nodes;
+                data.total = file.pageInfo?file.pageInfo.total:0;
+                data.pagination.total = file.pageInfo?file.pageInfo.total:0;
+                let list = [];
+                for (var i = 0; i < file.nodes.length; i++) {
+                    let item = file.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'){
+                            item[cell]=girdFormatterValue(cell,item);
+                        }
+                        if(cell=='CreatedOn'){
+                            item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD"):'';
+                        }
+                    }
+                    list.push(item)
+                }
+                data.FileList = list;
+            }
+        })
+        }
+        setTimeout(function(){
+            data.loading=false;
+        },500)
+    }
     const onSearch = (e)=> {
+        data.pagination.current=1;
         getQuery();
     }
     const onClear = (e)=> {
         data.searchVal='';
+        data.pagination.current=1;
         getQuery();
     }
     const handleMenuClick = (e) => {
@@ -395,20 +521,26 @@
         window.open(routeData.href, '_blank');
     }
     //改变页码
-    const handleTableChange=(pag, filters, sorter)=>{
-      data.pagination.current=pag.current;
-      getQuery();
+    const handleTableChange=(page, pageSize)=>{
+        data.pagination.current=page;
+        data.pagination.pageSize=pageSize;
+        getQuery();
+    }
+    const sizeChange=(current, size)=>{
+        handleTableChange(current, size)
     }
     //新建
     const handleNew = (e) => {
+      data.objectTypeCode='100103';
+      data.sObjectName='FileFolder';
       data.recordId='';
       data.isCommon = true;
     }
     //编辑
-    const handleEdit = (key) => {
-        return
-      console.log(key,2222222)
-      data.recordId=key;
+    const handleEdit = (id) => {
+      data.objectTypeCode='100103';
+      data.sObjectName='FileFolder';
+      data.recordId=id;
       data.isCommon = true;
     }
     // 通用弹窗关闭
@@ -416,8 +548,16 @@
         data.isCommon=false;
     };
     //删除
-    const handleDelete = (key) => {
-        data.recordId=key;
+    const handleDelete = (id,type) => {
+        data.recordId=id;
+        if(type=='folder'){
+            data.objectTypeCode='100103';
+            data.sObjectName='FileFolder';
+        }
+        else{
+            data.objectTypeCode='100100';
+            data.sObjectName='File';
+        }
         data.isDelete = true;
     }
     //删除关闭
@@ -425,112 +565,23 @@
         data.isDelete = false;
     };
     onMounted(() => {
+        getQuery();
         let h = tablelist.value.clientHeight;
         data.tableHeight = h-80-20;
     })
     const tofolder = (id,name) => {
-      data.loading=true;
-      CreatedBreadCrumb(id,name);
-      data.FolderList=[];
-      data.FileList=[];
-      let filterQuery='';
-      if(id){
-        filterQuery='\nParentId\teq\t'+id;
-      }
-      else{
-        filterQuery='\nParentId\teq\t10010000-0000-0000-0000-000000000011'
-      }
-      proxy.$post(Interface.list2, {
-          filterId:'',
-          objectTypeCode:'100200',
-          entityName:'ItemTree',
-          filterQuery:filterQuery,
-          search:'',
-          page: 1,
-          rows: 100,
-          sort:'SortNumber',
-          order:'ASC',
-          displayColumns:'Name,ParentId,Description'
-      }).then(res => {
-          var list = [];
-          if(res&&res.nodes&&res.nodes.length){
-            for (var i = 0; i < res.nodes.length; i++) {
-                var item = res.nodes[i];
-                for(var cell in item){
-                    if(cell!='id'&&cell!='nameField'&&cell!='ParentId'){
-                        item[cell]=girdFormatterValue(cell,item);
-                    }
-                    if(cell=='ParentId'){
-                      item[cell]=item[cell].lookupValue.value;
-                    }
-                    if(cell=='CreatedOn'){
-                        //item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
-                        item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD"):'';
-                    }
-                }
-                list.push(item);
-            }
-          }
-          data.FolderList = list;
-          if(id){
-            getArticle(id);
-          }
-      })
-      setTimeout(function(){
-            data.loading=false;
-        },500)
+        data.folderId=id;
+        data.folderName=name;
+        CreatedBreadCrumb(id,name);
+        data.pagination.current=1;
+        getQuery();
     };
-const getArticle=(id)=>{
-    data.FileList = [];
-    let filterQuery='\nFolderId\teq\t'+id;
-        proxy.$post(Interface.list2, {
-            filterId:'',
-            objectTypeCode:'100100',
-            entityName:'File',
-            filterQuery:filterQuery,
-            search:data.searchVal||'',
-            page: data.pagination.current,
-            rows: data.pagination.pageSize,
-            sort:'SortNumber',
-            order:'ASC',
-            displayColumns:'Name,Quantity,CreatedOn,OwningUser,AvatarImg'
-        }).then(res => {
-            if(res&&res.nodes&&res.nodes.length){
-              var list = [];
-              for (var i = 0; i < res.nodes.length; i++) {
-                  var item = res.nodes[i];
-                  for(var cell in item){
-                      if(cell!='id'&&cell!='nameField'&&cell!='ContentId'&&cell!='SubjectId'){
-                          item[cell]=girdFormatterValue(cell,item);
-                      }
-                      // if(cell=='ContentId'||cell=='SubjectId'){
-                      //   item[cell+'Value']=item[cell].lookupValue.value;
-                      //   item[cell]=girdFormatterValue(cell,item);
-                      // }
-                      // if(cell=='CreatedOn'||cell=='ModifiedOn'){
-                      //     item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
-                      // }
-                      if(cell=='CreatedOn'){
-                            //item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
-                            item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD"):'';
-                        }
-                  }
-                  list.push(item)
-              }
-              data.FileList = list;
-            }
-        })
-  }
-  function handlePreview(id) {
-    // let reUrl = router.resolve({
-    //     path:"/lightning/page/KnowledgeMapDetail",
-    //     query: {
-    //       id: id,
-    //       SubjectId:data.ParentId
-    //     }
-    // })
-    // window.open(reUrl.href); 
-  }
+    const handleOpenFile = (item) => {
+        if(item){
+            data.photoParams = item;
+            data.isPhoto = true;
+        }
+    };
   const CreatedBreadCrumb=(id,name)=>{
     data.SelectKey=id
     data.SelectName=name
@@ -712,7 +763,7 @@ const getArticle=(id)=>{
       }
       .content-item{
         padding: 25px 30px;
-        margin: 0 10px;
+        margin: 0 20px;
         position: relative;
         .content-item-iconBox{
             visibility: hidden;
@@ -736,7 +787,7 @@ const getArticle=(id)=>{
         width: 100%;
         height: auto;
         position: absolute;
-        top: 25%;
+        top: 20%;
         z-index: 1;
         color: #999;
         left: 0;
@@ -745,6 +796,29 @@ const getArticle=(id)=>{
             width: 170px;
         }
       }
+      .pageWrap{
+        text-align: right;
+        padding: 15px;
+      }
+      .ant-pagination{
+            .ant-pagination-item{
+                border: 1px solid #d9d9d9;
+            }
+            .ant-pagination-item:hover{
+                border: 1px solid #1677ff;
+                background: #fff !important;
+            }
+            .ant-pagination-item-active,.ant-pagination-item-active:hover{
+                border: 1px solid #1677ff;
+                background: #1677ff !important;
+                a{
+                    color: #fff;
+                }
+            }
+        } 
+        .card-content{
+            height: calc(~'100% - 70px');
+        }
     }
     .loadingWrap{
         width: 100%;

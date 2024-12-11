@@ -376,5 +376,10 @@ const Interface = {
   uploadFiles:baseUrl + '/file/attachment/upload',//通用附件上传
   getFiles:baseUrl + '/file/attachment/getFiles',//通用获取附件
   deleteFiles:baseUrl + '/file/attachment/deleteFiles',//通用删除附件
+  album:{
+    queryAlbums:baseUrl + '/album/queryAlbums',//获取相册
+    queryPhotos:baseUrl + '/album/queryPhotos',//获取相册图片
+    queryOwningAlbums:baseUrl + '/album/queryOwningAlbums',//获取我创建的相册
+  }
 };
 export default Interface;
