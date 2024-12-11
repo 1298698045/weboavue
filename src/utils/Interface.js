@@ -24,6 +24,9 @@ const Interface = {
     getParticipators: baseUrl + "/aura/workflow/Process/activity/getParticipators", // 获取节点办理人员
     agree: baseUrl + "/workflow/ProcessInstance/task/agree", // 提交流转-审批通过
     disagree: baseUrl + "/workflow/ProcessInstance/task/disagree", // 审批拒绝
+    notice: baseUrl + "/workflow/ProcessInstance/notice", // 催办
+    forward: baseUrl + "/workflow/ProcessInstance/forward", // 传阅
+    countersign: baseUrl + "/aura/workflow/Process/activity/task/insert", // 加签
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",

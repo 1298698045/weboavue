@@ -16,9 +16,9 @@
                         <a-form-item label="当前节点名称：" name="ProcessName">
                             <div class="ProcessName">{{ formState.ProcessName || '' }}</div>
                         </a-form-item>
-                        <a-form-item name="OwningUser" label="代理人：" :rules="[{ required: true, message: '请选择代理人' }]">
-                            <a-select mode="multiple"
-                                v-model:value="formState.OwningUser.Id"
+                        <a-form-item name="executorIdentityId" label="代理人：" :rules="[{ required: true, message: '请选择代理人' }]">
+                            <a-select
+                                v-model:value="formState.executorIdentityId"
                                 :default-active-first-option="false" :filter-option="false"
                                 showSearch @search=" (e) => { searchlookup(e, '8','OwningUser'); } "
                                 @dropdownVisibleChange=" (e) => { searchlookup('', '8','OwningUser'); } "
@@ -26,10 +26,9 @@
                                 <template #suffixIcon></template>
                                 <a-select-option v-for="(option, optionIdx) in OwningUser"
                                     :key="optionIdx" :value="option.ID">
-                                    <a-avatar :size="37">
+                                    <!-- <a-avatar :size="37">
                                         <template #icon><UserOutlined /></template>
-                                        <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
-                                    </a-avatar>
+                                    </a-avatar> -->
                                     {{ option.Name }}
                                 </a-select-option>
                             </a-select>
@@ -51,7 +50,7 @@
                 </div>
             </template>
         </a-modal>
-        <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
+        <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser"></radio-user>
     </div>
 </template>
 <script setup>
@@ -67,51 +66,42 @@
         getCurrentInstance,
         defineExpose,
         defineEmits,
-        computed
+        computed,
     } from "vue";
     import { PieChartOutlined,SearchOutlined,UserOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     import RadioUser from "@/components/commonModal/RadioUser.vue";
+    import { message } from "ant-design-vue";
+    import { unique } from "@/utils/common.js";
     const { proxy } = getCurrentInstance();
     const props = defineProps({
         paramsData: Object,
-        isShow: Boolean
+        isShow: Boolean,
+        ruleLogId: String
     });
     const isModal = ref(true);
     const labelCol = ref({ style: { width: '100px' } });
     const emit = defineEmits(['update-status']);
-    const handleSubmit = () => {
-        handleCancel();
-    }
-    const handleCancel = () => {
-        emit("update-status",false);
-    }
+    const formRef = ref(null);
     const data = reactive({
         top:0,
         OwningUser: [],
         isRadioUser:false,
     });
-    const {
-        top,
-        OwningUser,
-        isRadioUser
-    } = toRefs(data);
+    const { top, OwningUser, isRadioUser } = toRefs(data);
     const formState = reactive({
         ProcessName: "",
         Title:"",
         Priority:"0",
         Description:"",
-        OwningUser: {Id:[]},
-    })
-    const uniqu=(array, name)=>{
-        var arr = []
-        for (var j = 0; j < array.length; j++) {
-            if (JSON.stringify(arr).indexOf(array[j][name]) == -1) {
-                arr.push(array[j])
-            }
-        }
-        return arr
-    }
+        executorIdentityId: ""
+    });
+
+    const executorIdentityName = computed(()=>{
+        let row = data.OwningUser.find(item=>item.ID == formState.executorIdentityId);
+        return row.Name || '';
+    });
+
     const searchlookup = (search, Lktp, fieldApiName) => {
         let obj = {
         actions:[{
@@ -154,17 +144,8 @@
                 })
             });
             data[fieldApiName] = data[fieldApiName].concat(arr);
-            data[fieldApiName] = uniqu(data[fieldApiName],'ID');
-            //console.log(data[fieldApiName])
+            data[fieldApiName] = unique(data[fieldApiName],'ID');
         })
-        // proxy.$get(Interface.uilook, {
-        //         Lktp: Lktp,
-        //         Lksrch: search,
-        //     })
-        //     .then((res) => {
-        //         let listData = res.listData;
-        //         data.OwningUserList = listData;
-        //     });
     };
     const handleOpenLook= (Lktp, fieldApiName) => {
         if(Lktp=='8'){
@@ -175,7 +156,6 @@
         data.isRadioUser = false;
     };
     const getUserData = (params) => {
-      //console.log("params:", params);
       data.isRadioUser = false;
       if(params.id){
         let index = data.OwningUser.findIndex(item=>item.ID==params.id);
@@ -184,7 +164,7 @@
                 ID: params.id,
                 Name: params.name
             });
-            formState.OwningUser.Id.push(params.id);
+            formState.executorIdentityId = params.id;
         }
         if(index>=0){
             message.error("不能重复添加！");
@@ -200,7 +180,51 @@
     const setTop = computed(() => ({
         top: `calc(50% - ${data.top})`
     }));
-    defineExpose({isModal})
+
+
+    const handleSubmit = () => {
+        formRef.value.validate().then(()=>{
+            let obj = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId: props.ruleLogId,
+                        recordInput:{
+                            allowSaveOnDuplicate: false,
+                            apiName: 'WFRuleLog',
+                            objTypeCode: 123,
+                            fields: {
+                                ExecutorIdentityId: formState.executorIdentityId,
+                                ExecutorIdentityName: executorIdentityName.value,
+                                Description: formState.Description
+                            }
+                        }
+                    }
+                }]
+            };
+            let d = {
+                message: JSON.stringify(obj)
+            };
+            proxy.$post(Interface.edit, d).then((res) => {
+                if(res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
+                    message.success("委派成功！");
+                    handleCancel();
+                }else {
+                    message.success("委派失败！");
+                }
+            });
+        }).catch(()=>{
+
+        });
+    };
+
+    const handleCancel = () => {
+        emit("update-status",false);
+    };
+
+    defineExpose({ isModal });
 </script>
 <style lang="less">
     .ant-modal-content{

@@ -37,13 +37,15 @@
                         </a-form-item>
                         <a-form-item label="提醒方式" name="noticeMethod">
                             <a-checkbox-group v-model:value="formState.noticeMethod">
-                                <a-checkbox value="1" name="type">系统消息</a-checkbox>
-                                <a-checkbox value="2" name="type">手机短信</a-checkbox>
-                              </a-checkbox-group>
+                                <a-checkbox value="web" name="type">站内消息</a-checkbox>
+                                <a-checkbox value="app" name="type">移动消息</a-checkbox>
+                                <a-checkbox value="sms" name="type">短信消息</a-checkbox>
+                            </a-checkbox-group>
                         </a-form-item>
                     </a-form>
                 </div>
-                <radio-user :isShow="isRadioUser" v-if="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams"></radio-user>
+                <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser=false" @select="handleSelectUsers" />
+
             </div>
             <template #footer>
                 <div>
@@ -72,11 +74,30 @@
     import { PieChartOutlined, ArrowUpOutlined, ArrowDownOutlined  } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
     import { message } from "ant-design-vue";
-    import RadioUser from "@/components/commonModal/RadioUser.vue";
+    import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
+
     const { proxy } = getCurrentInstance();
+
+
+    const props = defineProps({
+        isShow: Boolean,
+        processInstanceId: String,
+        processInstanceName: String
+    });
+
+    const isModal = ref(true);
+    const labelCol = ref({ style: { width: '100px' } });
+    const emit = defineEmits(['update-status']);
+
+
+    const formState = reactive({
+        Description:"",
+        noticeMethod: ['web']
+    })
+
     const data = reactive({
         nodes: [],
-        isRadioUser: false,
+        isMultipleUser: false,
         selectedRowKeys: [],
         height: document.documentElement.clientHeight - 340,
         pagination: {
@@ -86,39 +107,19 @@
             showTotal: (total) => `共 ${total} 条数据`, // 展示总共有几条数据
         },
     })
-    const { nodes, isRadioUser, selectedRowKeys,height,pagination } = toRefs(data);
-    const props = defineProps({
-        paramsData: Object,
-        isShow: Boolean
-    });
-    const isModal = ref(true);
-    const labelCol = ref({ style: { width: '100px' } });
-    const emit = defineEmits(['update-status']);
-    const handleSubmit = () => {
-        handleCancel();
-    }
-    const handleCancel = () => {
-        emit("update-status",false);
-    }
-    const formState = reactive({
-        ProcessName: "",
-        BusinessUnitId:"",
-        Title:"",
-        Priority:"0",
-        Description:"",
-        BusinessUnitList: [],
-        noticeMethod: []
-    })
+    const { nodes, isMultipleUser, selectedRowKeys,height,pagination } = toRefs(data);
+    
+    
     const columns = [
         {
             title: "姓名",
-            dataIndex: "userName",
+            dataIndex: "name",
             align: "center",
             width: 100,
         },
         {
             title: "部门",
-            dataIndex: "BusinessUnitIdName",
+            dataIndex: "businessUnitIdName",
             align: "center",
             width: 100,
         },
@@ -136,25 +137,34 @@
         onChange: (selectedRowKeys, selectedRows) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
-        // getCheckboxProps: record => ({
-        //     disabled: record.name === 'Disabled User',
-        //     name: record.name,
-        // }),
     };
     const handleAddPeople = () => {
-        data.isRadioUser = true;
-    }
-    const cancelUserModal = (e) => {
-        data.isRadioUser = e;
-    }
+        data.isMultipleUser = true;
+    };
+
     const handleUserParams = (e) => {
         dataSource.value.push({
             key: e.id,
             userName: e.name,
             BusinessUnitIdName: e.BusinessUnitIdName
         })
-        data.isRadioUser = false;
+        data.isMultipleUser = false;
+    };
+
+    const handleSelectUsers = (params) => {
+        let addUsers = params.map(item=>{
+            item.key = item.id;
+            return item;
+        });
+        addUsers.forEach(item=>{
+            let isBook = dataSource.value.some(row=>row.key == item.key);
+            if(!isBook){
+                dataSource.value.push(item);
+            }
+        });
+        data.isMultipleUser = false;
     }
+
     const arrowup=(index)=>{
         if(index!=0){
             let list=dataSource.value;
@@ -176,11 +186,63 @@
         }
     }
     onMounted(()=>{
-        formState.ProcessName = props.paramsData.InstanceIdName;
         window.addEventListener("resize", (e) => {
             data.height = document.documentElement.clientHeight - 340;
         });
-    })
+    });
+
+    const getBoolean = (name) => {
+        let boolean = formState.noticeMethod.some(item=>item == name);
+        return boolean;
+    }
+
+    const handleSubmit = () => {
+        let web = getBoolean('web');
+        let app = getBoolean('app');
+        let sms = getBoolean('sms');
+
+        let toUsers = [];
+        
+        dataSource.value.forEach(item=>{
+            toUsers.push({
+                id: item.id,
+                name: item.name
+            });
+        });
+
+        let obj = {
+            actions:[{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    id: props.processInstanceId,
+                    name: props.processInstanceName,
+                    noticeMessageChannel: {
+                        web: web,
+                        app: app,
+                        sms: sms
+                    },
+                    toUsers: toUsers,
+                    description: formState.Description
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+
+        console.log("Obj", obj);
+
+        return false;
+        props.$post(Interface.workflow.forward, d).then(res=>{
+
+        })
+    }
+    const handleCancel = () => {
+        emit("update-status",false);
+    }
+
     defineExpose({isModal})
 </script>
 <style lang="less">

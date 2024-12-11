@@ -14,14 +14,14 @@
                         :model="formState">
                         <a-form-item label="通知方式" name="noticeMethod">
                             <a-checkbox-group v-model:value="formState.noticeMethod">
-                                <a-checkbox value="1" name="type">短信</a-checkbox>
-                                <a-checkbox value="2" name="type">即时消息</a-checkbox>
-                              </a-checkbox-group>
+                                <a-checkbox value="web" name="type">站内消息</a-checkbox>
+                                <a-checkbox value="app" name="type">移动消息</a-checkbox>
+                                <a-checkbox value="sms" name="type">短信消息</a-checkbox>
+                            </a-checkbox-group>
                         </a-form-item>
                         <a-form-item label="催办消息：" name="Description">
                             <a-textarea :rows="3" v-model:value="formState.Description" />
                         </a-form-item>
-                        
                     </a-form>
                 </div>
             </div>
@@ -51,44 +51,84 @@
     } from "vue";
     import { PieChartOutlined } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
+    import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
     const props = defineProps({
         paramsData: Object,
-        isShow: Boolean
+        isShow: Boolean,
+        processInstanceId: String
     });
     const isModal = ref(true);
     const labelCol = ref({ style: { width: '100px' } });
     const emit = defineEmits(['update-status']);
+
+    const data = reactive({
+        top:0,
+    });
+    const { top } = toRefs(data);
+    
+    const formState = reactive({
+        Description:"",
+        noticeMethod: ['web'],
+        web: true,
+        app: false,
+        sms: false
+    })
+    const modelContentRef = ref(null);
+
+    onMounted(()=>{
+        let h = modelContentRef.value.clientHeight;
+        data.top = (h + 180) / 2 + 'px';
+    });
+
+    const setTop = computed(() => ({
+        top: `calc(50% - ${data.top})`
+    }));
+
+
+    const getBoolean = (name) => {
+        let boolean = formState.noticeMethod.some(item=>item == name);
+        return boolean;
+    }
+
     const handleSubmit = () => {
-        handleCancel();
+        let web = getBoolean('web');
+        let app = getBoolean('app');
+        let sms = getBoolean('sms');
+
+        let obj = {
+            actions:[{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    id: props.processInstanceId,
+                    noticeMessageChannel: {
+                        web: web,
+                        app: app,
+                        sms: sms
+                    },
+                    description: formState.Description
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.workflow.notice, d).then((res) => {
+            if(res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
+                message.success("催办成功！");
+                handleCancel();
+            }else {
+                message.success("催办失败！");
+            }
+        });
     }
     const handleCancel = () => {
         emit("update-status",false);
     }
-    const data = reactive({
-        top:0,
-    });
-    const {
-        top
-    } = toRefs(data);
-    const formState = reactive({
-        ProcessName: "",
-        BusinessUnitId:"",
-        Title:"",
-        Priority:"0",
-        Description:"",
-        BusinessUnitList: [],
-        noticeMethod: []
-    })
-    const modelContentRef = ref(null);
-    onMounted(()=>{
-        formState.ProcessName = props.paramsData.InstanceIdName;
-        let h = modelContentRef.value.clientHeight;
-        data.top = (h + 180) / 2 + 'px';
-    })
-    const setTop = computed(() => ({
-        top: `calc(50% - ${data.top})`
-    }));
+
+
     defineExpose({isModal})
 </script>
 <style lang="less">

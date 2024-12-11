@@ -33,6 +33,9 @@
                         <a-menu-item key="1" @click="handleUrging">
                           催办
                         </a-menu-item>
+                        <!-- <a-menu-item key="6" @click="handleCountersign">
+                            加签
+                        </a-menu-item> -->
                         <a-menu-item key="2" @click="handleCirculation">
                           传阅他人
                         </a-menu-item>
@@ -263,6 +266,9 @@
                             <a-menu-item key="1" @click="handleUrging">
                               催办
                             </a-menu-item>
+                            <a-menu-item key="6" @click="handleCountersign">
+                              加签
+                            </a-menu-item>
                             <a-menu-item key="2" @click="handleCirculation">
                                 传阅他人
                             </a-menu-item>
@@ -283,9 +289,9 @@
         </div>
         <SubmitProcess ref="processRef" v-if="isProcess" :ruleLogId="ruleLogId" :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID" :isShow="isProcess" @update-status="updateStatus" :paramsData="ProcessData" />
         <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" @update-status="updateStatus" :paramsData="RejectionData"  />
-        <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation" :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
-        <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
-        <Urging ref="UrgingRef" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
+        <circulation-modal ref="circulationRef" :processInstanceId="processInstanceId" :processInstanceName="processInstanceName" @update-status="updateStatus" v-if="isCirculation" :isShow="isCirculation"></circulation-modal>
+        <Delegate ref="DelegateRef" :ruleLogId="ruleLogId" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
+        <Urging ref="UrgingRef" :processInstanceId="processInstanceId" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
         <RelateInstance v-if="isRelateInstance" :id="id" :entityApiName="lookEntityApiName" :entityType="lookEntityType" :objectTypeCode="lookObjectTypeCode" :isShow="isRelateInstance" @select="handleSelectLook" @cancel="isRelateInstance=false" />
     </div>
 </template>
@@ -319,6 +325,7 @@
     import RelateInstance from "@/components/workflow/RelateInstance.vue";
     import DetailInfo from "@/components/detail/DetailInfo.vue";
     import FlowForm from "@/components/workflow/FlowForm.vue";
+    import Countersign from "@/components/workflow/Countersign.vue";
 
     import { useRouter, useRoute } from "vue-router";
     import { message } from "ant-design-vue";
@@ -379,11 +386,12 @@
         ruleLogId: route.query.id,
         processId: "",
         processInstanceId: "",
+        processInstanceName: "",
         toActivityID: "",
     })
     const { isEdit,Title,objectTypeCode,sObjectName,tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData,
          isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex,id,fileList,isRelateInstance,lookEntityApiName,lookObjectTypeCode,lookEntityType,
-         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID } = toRefs(data);
+         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID, processInstanceName } = toRefs(data);
 
     const getRuleLogData = () => {
         let obj = {
@@ -404,6 +412,7 @@
             if(res && res.actions && res.actions[0].returnValue){
                 let { ProcessId, ProcessInstanceId, ToActivityID } = res.actions && res.actions[0].returnValue.fields;
                 data.processId = ProcessId.value;
+                data.processInstanceName = ProcessInstanceId.displayValue;
                 data.processInstanceId = ProcessInstanceId.value;
                 data.toActivityID = ToActivityID.value;
             }
@@ -469,6 +478,11 @@
     const handleUrging = () => {
         data.isUrging = true;
     };
+
+    // 加签
+    const handleCountersign = () => {
+
+    }
 
     const getFiles = () => {
         proxy.$get(Interface.flow.files, {
