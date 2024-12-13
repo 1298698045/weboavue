@@ -61,7 +61,7 @@
                       style="color: rgb(163, 163, 163); font-size: 14px"
                     ></CaretDownOutlined>
                   </template>
-                  <template  #title="{ id,name,quantity,isFavor }">
+                  <template  #title="{ id,name,isFavor }">
                     <span>
                             {{ name }}
                             <span class="tree-num">
@@ -74,11 +74,11 @@
                               <span class="tree-btn tree-delete" @click.stop="handleDeleteLeft(id)">
                                 <DeleteOutlined title="删除" />
                               </span> -->
-                              <span class="tree-btn tree-favor" :class="{'tree-favor-active':isFavor||data.leftTreeTop=='我的收藏'}" @click.stop="setFavor(id,name,quantity,isFavor)">
-                                <StarOutlined title="收藏" v-if="!isFavor&&data.leftTreeTop!='我的收藏'" />
-                                <StarFilled title="取消收藏" v-if="(isFavor||data.leftTreeTop=='我的收藏')" />
+                              <span class="tree-btn tree-favor" :class="{'tree-favor-active':isFavor}" @click.stop="setFavor(id,name,isFavor)">
+                                <StarOutlined title="收藏" v-if="!isFavor" />
+                                <StarFilled title="取消收藏" v-if="isFavor" />
                               </span>
-                              {{ quantity }}
+                              <!-- {{ quantity }} -->
                             </span>
                           </span>
                     <!-- <a-dropdown :trigger="['contextmenu']">
@@ -298,7 +298,7 @@
   const getFavorite=()=>{
     gData.value = [];
     gDataAll.value = [];
-    let filterQuery='\nObjectTypeCode\teq\t5080\nOwningUser\teq\t'+data.userId;
+    let filterQuery='\nObjectTypeCode\teq\t5080\nCreatedBy\teq\t'+data.userId;
         proxy.$post(Interface.list2, {
             filterId:'',
             objectTypeCode:'6060',
@@ -329,7 +329,7 @@
                     quantity:0,
                     text:null,
                     value:item.ObjectId,
-                    isFavor:item.isFavor||false
+                    isFavor:true
                   })
               }
               gData.value = list;
@@ -339,31 +339,35 @@
   }
   //收藏选中目录
   const setFavor = (id,name,isFavor)=>{
-    if(id){
-        let filterQuery='\nObjectId\teq\t'+id+'\nOwningUser\teq\t'+data.userId;
-        proxy.$post(Interface.list2, {
-            filterId:'',
-            objectTypeCode:'6060',
-            entityName:'P9f',
-            filterQuery:filterQuery,
-            search:'',
-            page: 1,
-            rows: 10,
-            sort:'CreatedOn',
-            order:'DESC',
-            displayColumns:'Name'
-        }).then(res => {
-            if(res&&res.nodes&&res.nodes.length){
-                message.success("已收藏！");
-            }else{
-                saveFavor(id,name,isFavor);
-            }
-        })
+    if(data.leftTreeTop=='全部目录'){
+          let filterQuery='\nObjectId\teq\t'+id+'\nCreatedBy\teq\t'+data.userId;
+          proxy.$post(Interface.list2, {
+              filterId:'',
+              objectTypeCode:'6060',
+              entityName:'P9f',
+              filterQuery:filterQuery,
+              search:'',
+              page: 1,
+              rows: 10,
+              sort:'CreatedOn',
+              order:'DESC',
+              displayColumns:'Name'
+          }).then(res => {
+              if(res&&res.nodes&&res.nodes.length){
+                  //message.success("已收藏！");
+                  saveFavor(res.nodes[0].id,name,true);
+              }else{
+                  saveFavor(id,name,false);
+              }
+          })
+    }
+    else{
+      saveFavor(id,name,true);
     }
   }
   const saveFavor = (id,name,isFavor)=>{
     if(!isFavor){
-      let url=Interface.edit;
+      let url=Interface.create;
         let d = {
         actions:[{
             id: "2919;a",
@@ -378,8 +382,7 @@
                     Name:name,
                     ObjectId: id,
                     ObjectTypeCode:'5080',
-                    //URL:'',
-                    OwningUser:data.userId
+                    CreatedBy:data.userId
                 }
               }              
             }
@@ -610,17 +613,11 @@
       if(node.folderActionsConfig){
         data.folderActionsConfig=node.folderActionsConfig;
       }
+      //getPrivileges()
     }
     changeTab(data.activeKey);
   };
-  onMounted(()=>{
-    let userInfo=window.localStorage.getItem('userInfo');
-    if(userInfo){
-        userInfo=JSON.parse(userInfo);
-        data.userId=userInfo.userId;
-    }
-    window.addEventListener('resize',changeHeight)
-  })
+  
   function changeHeight(h){
     if(typeof h == 'number'){
       formSearchHeight.value = h;
@@ -964,6 +961,45 @@ const cancelDelete = (e) => {
         message.error("请至少勾选一项！")
     }
  }
+ //获取单个目录权限
+ const getPrivileges=()=>{
+      data.folderActionsConfig={
+          canAdd: false,
+          canAdmin: false,
+          canDelete: false,
+          canRead: false
+      }
+        if(data.SelectKey){
+            let url=Interface.content.folder.getPrivileges;
+            let d = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        id:data.SelectKey,
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue){
+                  data.folderActionsConfig=res.actions[0].returnValue;
+                }
+            })
+        }
+    }
+
+    onMounted(()=>{
+      let userInfo=window.localStorage.getItem('userInfo');
+      if(userInfo){
+          userInfo=JSON.parse(userInfo);
+          data.userId=userInfo.userId;
+      }
+      window.addEventListener('resize',changeHeight)
+    })
   </script>
   <style lang="less" scoped>
   .ContentWrap {
@@ -1087,6 +1123,7 @@ const cancelDelete = (e) => {
                   }
                   .tree-favor-active{
                     color: #ffa741;
+                    display: block;
                   }
                 }
               }

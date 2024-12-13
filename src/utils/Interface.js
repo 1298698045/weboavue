@@ -355,6 +355,7 @@ const Interface = {
       get:baseUrl + '/content/folder/getFolderTree',//获取文档中心目录
       new:baseUrl + '/content/folder/create',//创建文档中心目录
       edit:baseUrl + '/aura/RecordUi/updateRecord',//编辑文档中心目录
+      getPrivileges:baseUrl + '/content/folder/getPrivileges',//获取单个目录权限
     },
     renderView:baseUrl + '/content/text/renderView',//根据知识库模板，和知识内容 合并出显示内容。
   },

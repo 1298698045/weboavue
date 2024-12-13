@@ -76,7 +76,7 @@
             <div class="tableBox">
                 <Editor v-if="isEditor" :mode="'doc'" placeholder="" ref="editorRef" :height="height" @input="getContent" />
                 <div class="tableBox-Bottom">
-                    <div class="tableBox-Bottom-Btn">
+                    <div class="tableBox-Bottom-Btn" @click="addDoc">
                         <span class="tableBox-Bottom-Btn-Icon">
                             <FileTextOutlined />
                         </span>
@@ -171,6 +171,7 @@
       <RelaseInfo v-if="isRelaseInfo" :isShow="isRelaseInfo" :objectTypeCode="objectTypeCode" :id="id" :FolderId="FolderId" @cancel="cancelRelaseInfo" />
       <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
       <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="id" />
+      <AddDocument v-if="isAddDoc" :isShow="isAddDoc" @select="handleSelectDoc" @cancel="isAddDoc=false" />
     </div>
   </template>
   <script setup>
@@ -228,6 +229,7 @@
   import DetailInfoEdit from "@/components/detail/DetailInfoEdit.vue";
   import Delete from "@/components/listView/Delete.vue";
   import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+  import AddDocument from "@/components/information/AddDocument.vue";
   import Interface from "@/utils/Interface.js";
   import { message } from "ant-design-vue";
   const { proxy } = getCurrentInstance();
@@ -271,6 +273,7 @@
     isConfirm:false,
     confirmText:'',
     confirmTitle:'',
+    isAddDoc:false
   });
   const {
     tabs,
@@ -295,7 +298,7 @@
     height,
     FolderId,
     isRadioUser,
-    IsReply,isConfirm,confirmText,confirmTitle
+    IsReply,isConfirm,confirmText,confirmTitle,isAddDoc
   } = toRefs(data);
   const changeTabs = (e) => {
     data.activeKey = e;
@@ -621,6 +624,25 @@ if(route.query.objectTypeCode=='100201'){
     data.isConfirm=true;
     data.confirmText='确定要取消发布吗？'
     data.confirmTitle='取消发布'
+  }
+  //添加文档链接
+  const addDoc=()=>{
+      data.isAddDoc=true;
+    }
+  //选中文档链接
+  const handleSelectDoc=(obj)=>{
+      let reUrl = router.resolve({
+          path:"/lightning/r/Content/view",
+          query: {
+            id: obj.id,
+            objectTypeCode:'100201'
+          }
+      })
+      let html='<a href="'+reUrl.href+'" target="_blank">'+obj.name+'</a>';
+      if(editorRef&&editorRef.value){
+        tinymce.activeEditor.insertContent(html);
+      }
+      data.isAddDoc=false;
   }
   </script>
   <style lang="less" scoped>
