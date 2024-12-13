@@ -754,7 +754,7 @@
         let row = fieldPermissions.find(item=>{
             return item.name == field;
         });
-        let permission = row.permission;
+        let permission = row?.permission || '';
         return permission;
     }
 
@@ -863,7 +863,7 @@
             comps.forEach(item=>{
                 let { row, column } = item.layout;
                 let style = {};
-                if(data.cellData[row][column]){
+                if(data.cellData?.[row]?.[column]){
                     data.cellData[row][column].v = "";
                     data.cellData[row][column].field = item;
                     data.cellData[row][column].subTableData = [];
@@ -1484,6 +1484,7 @@
                 width: 100%;
                 td{
                     overflow: hidden;
+                    color: #333 !important;
                 }
             }
         }

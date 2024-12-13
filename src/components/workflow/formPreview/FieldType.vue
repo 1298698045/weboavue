@@ -1,6 +1,6 @@
 <template>
     <div class="filed">
-        <span class="required" v-if="field?.required">*</span>
+        <span class="required" v-if="print!=1 && field?.required">*</span>
         <div v-if="type=='S'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
@@ -504,6 +504,7 @@
         font-size: 14px !important;
         font-weight: normal !important;
         position: relative;
+        color: #333 !important;
         .searchLook{
             position: relative;
             .searchIcon{
