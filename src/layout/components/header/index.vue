@@ -369,6 +369,12 @@ const getBusinessUnits = () => {
     //console.log("res", res);
     if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
       data.accountList=res.actions[0].returnValue;
+      for(var i=0;i<data.accountList.length;i++){
+        if(data.BusinessUnitId==data.accountList[i].BusinessUnitId){
+          data.currentAccountName=data.accountList[i].FullName;
+          data.userId=data.accountList[i].UserId;
+        }
+      }
     }
   })
 };
@@ -400,9 +406,10 @@ const switchUser= (item) => {
         let userInfo=data.user?JSON.stringify(data.user):'';
         window.localStorage.setItem('token', token);
         window.localStorage.setItem('userInfo', userInfo);
+        store.dispatch('getModules');
         setTimeout(function(){
-          store.dispatch('getModules');
-        },200)
+          window.location.reload();
+        },1000)
     }
     else{
         if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){

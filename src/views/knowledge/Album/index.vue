@@ -8,13 +8,18 @@
                 <span class="headerTitle">相册文件</span>
             </div>
             <div class="headerRight">
-                <a-upload v-model:file-list="fileList" action="#" :showUploadList="false" v-if="data.BreadCrumbList.length"
-                
+                <a-upload v-model:file-list="fileList" action="#" :showUploadList="false" v-if="leftName!='回收站'&&data.BreadCrumbList.length&&Privileges.canAdd"
+                multiple name="file" :customRequest="changeRequest1" :before-upload="beforeUpload" @change="handleChange" accept="image/*"
                 >
                    <a-button class="ml10" type="primary" >上传照片</a-button>
                 </a-upload>
-                <a-button class="ml10" type="primary" @click="handleDepth('')" v-if="data.BreadCrumbList.length">设置权限</a-button>
-                <a-button class="ml10" type="primary" @click="handleNew">新建相册</a-button>
+                <a-upload v-model:file-list="fileList" action="#" :showUploadList="false" v-if="leftName!='回收站'&&data.BreadCrumbList.length&&Privileges.canAdd"
+                multiple name="file" :customRequest="changeRequest2" :before-upload="beforeUpload" @change="handleChange" accept=".zip"
+                >
+                   <a-button class="ml10" type="primary" >上传压缩包</a-button>
+                </a-upload>
+                <a-button class="ml10" type="primary" @click="handleDepth('')" v-if="leftName!='回收站'&&data.BreadCrumbList.length&&Privileges.canAdmin">设置权限</a-button>
+                <a-button class="ml10" type="primary" @click="handleNew" v-if="leftName!='回收站'">新建相册</a-button>
                 <!-- <a-dropdown class="ml10">
                     <template #overlay>
                         <a-menu @click="handleMenuClick">
@@ -57,7 +62,7 @@
                 </div>
                 <div class="head-right-breadcrumb">
                         <a-breadcrumb>
-                          <a-breadcrumb-item><a href="javascript:void(0)" @click="tofolder('','')"><HomeOutlined style="margin-right: 5px;" /> 相册文件</a></a-breadcrumb-item>
+                          <a-breadcrumb-item><a href="javascript:void(0)" @click="tofolder('','')"><HomeOutlined style="margin-right: 5px;" /> {{leftName||''}}</a></a-breadcrumb-item>
                           <a-breadcrumb-item v-for="(item,index) in BreadCrumbList" :key="index"><a href="javascript:void(0)" @click="tofolder(item.id,item.name)">{{item.name||''}}</a></a-breadcrumb-item>
                         </a-breadcrumb>
                       </div>
@@ -72,6 +77,8 @@
                         />
                     </div>
                     <div class="rBtns">
+                        <a-button class="ml10" type="primary" @click="isChangeName=true" v-if="!isChangeName&&leftName!='回收站'&&data.BreadCrumbList.length&&Privileges.canAdd">重命名</a-button>
+                        <a-button class="ml10" @click="isChangeName=false" v-if="isChangeName&&leftName!='回收站'&&data.BreadCrumbList.length&&Privileges.canAdd">取消重命名</a-button>
                         <a-button class="ml10" type="primary" @click="onSearch">查询</a-button>
                         <a-button class="ml10" @click="onClear">重置</a-button>
                         <!-- <a-button class="ml10" type="primary">新建</a-button> -->
@@ -79,29 +86,36 @@
                 </div>
                 <div class="tableWrap" ref="tablelist">
                     <div class="card-content" v-show="data.type=='1'">
-                        <div class="content-item" v-for="(item,index) in FolderList" :key="index" @click="tofolder(item.id,item.Name)">
+                        <div class="content-item" v-for="(item,index) in FolderList" :key="index" @click="handleOpenFolder(item.id,item.Name)" @mouseover="handleMouseOver(item.id,item.Name)">
                             <img :src="require('@/assets/img/filetype/Folder.png')" />
-                            <div class="add-addtext" :title="item.Name">{{item.Name}}</div>
+                            <div class="add-addtext" :title="item.Name" v-if="!isChangeName">{{item.Name}}</div>
+                            <div class="add-addtext" v-if="isChangeName" @click.stop>
+                                <a-input v-model:value="item.Name" @blur="(e)=>{changeName(e,item,'folder')}" @click.stop></a-input>
+                            </div>
                             <div class="add-addtime">{{item.CreatedOn}}</div>
                             <div class="iconBox content-item-iconBox">
                                 <div class="popup">
                                     <!-- <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>  
                                     <div class="option-item" :num="index">重命名</div> -->
-                                    <div class="option-item" @click.stop="handleEdit(item.id)">编辑</div>  
-                                    <div class="option-item" @click.stop="handleDepth(item)">设置权限</div>
-                                    <div class="option-item" @click.stop="handleDelete(item.id,'folder')">删除</div>
+                                    <div class="option-item" @click.stop="handleDetail(item.id)" v-if="Privileges.canRead">打开</div>
+                                    <div class="option-item" @click.stop="handleEdit(item.id)" v-if="Privileges.canAdd">编辑</div>
+                                    <div class="option-item" @click.stop="handleDepth(item)" v-if="Privileges.canAdmin">设置权限</div>
+                                    <div class="option-item" @click.stop="handleDelete(item.id,'folder')" v-if="Privileges.canDelete">删除</div>
                                 </div>
                                 <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
                             </div>
                         </div>
-                        <div class="content-item" v-for="(item,index) in FileList" :key="index" @click="handleOpenFile(item)">
+                        <div class="content-item" v-for="(item,index) in FileList" :key="index" @click="handleOpenFile(item,index)">
                             <img :src="item.ThumbnailUrl||require('@/assets/img/filetype/defaultImg.png')" />
-                            <div class="add-addtext" :title="item.Name">{{item.Name}}</div>
+                            <div class="add-addtext" :title="item.Name" v-if="!isChangeName">{{item.Name}}</div>
+                            <div class="add-addtext" v-if="isChangeName" @click.stop>
+                                <a-input v-model:value="item.Name" @blur="(e)=>{changeName(e,item,'file')}" @click.stop></a-input>
+                            </div>
                             <div class="add-addtime">{{item.CreatedOn}}</div>
                             <div class="iconBox content-item-iconBox">
                                 <div class="popup">
-                                    <div class="option-item" @click.stop="handleOpenFile(item)" :num="index">预览</div>
-                                    <div class="option-item" @click.stop="handleDelete(item.id,'file')">删除</div>
+                                    <div class="option-item" @click.stop="handleOpenFile(item,index)" :num="index" v-if="Privileges.canRead">预览</div>
+                                    <div class="option-item" @click.stop="handleDelete(item.id,'file')" v-if="Privileges.canDelete">删除</div>
                                     <!-- <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>  
                                     <div class="option-item" @click="handleEdit(item.id)" :num="index">编辑</div>  
                                     <div class="option-item" :num="index">重命名</div>  
@@ -177,7 +191,7 @@
 <script setup>
     import {
         ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
-        defineEmits, h
+        defineEmits, h,nextTick
     } from "vue";
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
@@ -186,7 +200,7 @@
     import calendar from 'dayjs/plugin/calendar';
     import weekday from 'dayjs/plugin/weekday';
     import localeData from 'dayjs/plugin/localeData';
-
+    import axios from "axios";
     dayjs.extend(calendar);
     dayjs.extend(weekday);
     dayjs.extend(localeData);
@@ -213,14 +227,14 @@
             text: '我创建的',
             key: 'owner'
         },
-        {
-            text: '最近使用',
-            key: 'join'
-        },
-        {
-            text: '时光轴',
-            key: 'timeline'
-        },
+        // {
+        //     text: '最近使用',
+        //     key: 'relate'
+        // },
+        // {
+        //     text: '时光轴',
+        //     key: 'timeline'
+        // },
         {
             text: '回收站',
             key: 'deleted'
@@ -233,6 +247,7 @@
         total: 0,
         isLeft: true,
         selectedKeys: ["all"],
+        leftName:'所有相册',
         FolderList: [],
         FileList:[],
         columns: [
@@ -320,17 +335,24 @@
         folderId:'',
         folderName:'',
         isPhoto: false,
-        photoParams: {}
+        photoParams: {},
+        Privileges:{
+            canAdd: false,
+            canAdmin: false,
+            canDelete: false,
+            canRead: false
+        },
+        isChangeName:false
     })
-    const { isPhoto,photoParams,uploadFileList,fileList,folderId,folderName,isDepth,SelectKey,SelectName,loading,relatedObjectAttributeValue,relatedObjectAttributeName,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
+    const { isChangeName,Privileges,leftName,isPhoto,photoParams,uploadFileList,fileList,folderId,folderName,isDepth,SelectKey,SelectName,loading,relatedObjectAttributeValue,relatedObjectAttributeName,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
          searchVal, total, isLeft, selectedKeys, FolderList, columns, groupList,isCommon,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,pagination,tableHeight } = toRefs(data);
     
     const handleTreeSelect = (keys,{node}) => {
         if(keys&&keys.length){
             data.selectedKeys=keys;
+            data.leftName=node.text;
         }
-        data.pagination.current=1;
-        getQuery();
+        tofolder('','')
     }
     const handleLeftShow = () => {
         data.isLeft = !data.isLeft;
@@ -359,9 +381,17 @@
         data.FolderList=[];
         data.FileList=[];
         data.pagination.total = 0;
-        let url=Interface.album.queryAlbums;
-        if(data.selectedKeys[0]=='owner'){
+        let url='';
+        if(data.selectedKeys[0]=='all'){
+            url=Interface.album.queryAlbums;
+        }else if(data.selectedKeys[0]=='owner'){
             url=Interface.album.queryOwningAlbums;
+        }
+        else{
+            setTimeout(function(){
+                data.loading=false;
+            },500)
+            return false
         }
         let filterQuery='';
         if(data.folderId){
@@ -496,6 +526,35 @@
             data.loading=false;
         },500)
     }
+    const getPrivileges=()=>{
+        data.Privileges={
+            canAdd: false,
+            canAdmin: false,
+            canDelete: false,
+            canRead: false
+        }
+        if(data.folderId){
+            let url=Interface.album.getPrivileges;
+            let d = {
+                actions:[{
+                    id: "4270;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        id:data.folderId,
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue){
+                    data.Privileges=res.actions[0].returnValue;
+                }
+            })
+        }
+    }
     const onSearch = (e)=> {
         data.pagination.current=1;
         getQuery();
@@ -564,24 +623,133 @@
     const cancelDelete = (e) => {
         data.isDelete = false;
     };
-    onMounted(() => {
-        getQuery();
-        let h = tablelist.value.clientHeight;
-        data.tableHeight = h-80-20;
-    })
+    const beforeUpload=(e)=>{
+        //执行顺序1
+        console.log("beforeUpload",e);
+    }
+    const handleChange = (file) => {
+        //执行顺序2
+        if(file&&file.file){
+            let size=file.file.size;
+            size=size?(size*1/1024).toFixed(2):0;
+            data.uploadFileList.push({
+                uid: file.file.uid,
+                name: file.file.name,
+                url: file.file.url,
+                fileExtension: file.file.name ? (file.file.name).split('.')[1] : '',
+                raw: file.file.originFileObj,
+                Privilege: '',
+                size:size+'kb',
+                isNew:true
+            });
+        }
+    }
+    //上传图片
+    const changeRequest1=(file) => {
+        //执行顺序3
+        nextTick(()=>{
+            if (data.uploadFileList&&data.uploadFileList.length&&data.folderId) {
+                let isHasNew=false;
+                var fd = new FormData();
+                fd.append('parentId', data.folderId);
+                for (var i = 0; i < data.uploadFileList.length; i++) {
+                    var item = data.uploadFileList[i];
+                    if (item.raw&&item.isNew) {
+                        fd.append('files', item.raw);
+                        data.uploadFileList[i].isNew=false;
+                        isHasNew=true;
+                    }
+                }
+                if(isHasNew){
+                    axios({
+                        url: Interface.album.uploadImg,
+                        method: 'POST',
+                        data: fd,
+                        headers: {
+                            'Content-type': 'multipart/form-data',
+                        },
+                    }).then(res=>{
+                        message.success("上传成功！");
+                        getQuery();
+                    }).catch(err => {
+                        console.log('error', err);
+                        message.error("上传失败！");
+                    });
+                }
+            }
+        })
+    }
+    //上传压缩包
+    const changeRequest2=(file) => {
+        //执行顺序3
+        nextTick(()=>{
+            if (data.uploadFileList&&data.uploadFileList.length&&data.folderId) {
+                let isHasNew=false;
+                var fd = new FormData();
+                fd.append('parentId', data.folderId);
+                for (var i = 0; i < data.uploadFileList.length; i++) {
+                    var item = data.uploadFileList[i];
+                    if (item.raw&&item.isNew) {
+                        fd.append('files', item.raw);
+                        data.uploadFileList[i].isNew=false;
+                        isHasNew=true;
+                    }
+                }
+                if(isHasNew){
+                    axios({
+                        url: Interface.album.uploadZip,
+                        method: 'POST',
+                        data: fd,
+                        headers: {
+                            'Content-type': 'multipart/form-data',
+                        },
+                    }).then(res=>{
+                        message.success("上传成功！");
+                        getQuery();
+                    }).catch(err => {
+                        console.log('error', err);
+                        message.error("上传失败！");
+                    });
+                }
+            }
+        })
+    }
+    //鼠标悬浮获取权限
+    const handleMouseOver=(id,name)=>{
+        if(id&&id!=data.folderId){
+            data.folderId=id;
+            data.folderName=name;
+            getPrivileges();
+        }
+    }
+    //加载相册
     const tofolder = (id,name) => {
         data.folderId=id;
         data.folderName=name;
         CreatedBreadCrumb(id,name);
+        //getPrivileges();
         data.pagination.current=1;
         getQuery();
     };
-    const handleOpenFile = (item) => {
-        if(item){
-            data.photoParams = item;
+    //打开相册
+    const handleOpenFolder = (id,name) => {
+        if(data.Privileges.canRead){
+            tofolder(id,name)
+        }
+    };
+    //预览图片
+    const handleOpenFile = (item,index) => {
+        if(item&&data.Privileges.canRead){
+            data.photoParams = {
+                id:item.id,
+                item:item,
+                imageList:data.FileList,
+                index:index
+            };
             data.isPhoto = true;
         }
     };
+//面包屑更新
   const CreatedBreadCrumb=(id,name)=>{
     data.SelectKey=id
     data.SelectName=name
@@ -600,6 +768,50 @@
       data.BreadCrumbList=[];
     }
   }
+  //重命名
+  const changeName=(e,item,type)=>{
+    let url = Interface.edit;
+            let d = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId: item.id,
+                        recordInput:{
+                            allowSaveOnDuplicate: false,
+                            apiName: type=='folder'?'FileFolder':'File',
+                            objTypeCode: type=='folder'?'100103':'100100',
+                            fields: {
+                                Name: item.Name,
+                            }
+                        }
+                    }
+                }]
+            };
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url, obj).then((res) => {
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                    message.success("保存成功！");
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                        message.success(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.success("保存失败！");
+                    }
+                }
+            });
+  }
+    onMounted(() => {
+        getQuery();
+        let h = tablelist.value.clientHeight;
+        data.tableHeight = h-80-20;
+    })
+    
 </script>
 <style lang="less" scoped>
     @import "@/style/addressBook.less";
@@ -772,7 +984,7 @@
             right: 12px;
             .popup{
                 text-align: left;
-                top: 20px;
+                top: 15px;
             }
         }
       }
@@ -818,6 +1030,9 @@
         } 
         .card-content{
             height: calc(~'100% - 70px');
+        }
+        .todoListWrap .leftTree .leftTreeWrap{
+            height: calc(~'100% - 10px');
         }
     }
     .loadingWrap{

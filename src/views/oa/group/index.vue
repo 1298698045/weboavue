@@ -48,7 +48,7 @@
                     <a-table style="height: 100%;" :scroll="{ y:tableHeight }" :dataSource="dataSource" :columns="columns" :pagination="data.pagination" @change="handleTableChange">
                         <template #bodyCell="{ column, text, record }">
                             <div v-if="column.key=='AvatarUrl'">
-                                <img :src="record.AvatarUrl?Interface.viewAvatar+'/Group/'+record.id:defaultImg" :on-error="defaultImg" alt="" class="group_list_avatar"/>
+                                <img :src="record.AvatarUrl?'/'+Interface.viewAvatar+'/Group/'+record.id:defaultImg" :on-error="defaultImg" alt="" class="group_list_avatar"/>
                             </div>
                             <div v-if="column.key=='Name'">
                                 <a href="javascript:;" @click="handleDetail(record.id)" style="color:var(--textColor);">{{ text }}</a>

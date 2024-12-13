@@ -70,7 +70,7 @@
       <div class="detail-scroll">
         <div class="detail-bd">
           <div class="tabContainer containerForm" v-if="activeKey == 0">
-            <div class="tableBox">
+            <!-- <div class="tableBox">
                 <div class="tableBoxWrap">
                     <div class="tableBoxDiv">
                         <div class="tableBoxTop">
@@ -86,7 +86,8 @@
                         <div v-html="content" class="tableBoxContent"></div>
                     </div>
                 </div>
-            </div>
+            </div> -->
+            <div class="tableBox" v-html="data.TemplateContent"></div>
           </div>
           <div class="tabContainer" v-if="activeKey == 1">
             <RelatedAttachment :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" />
@@ -262,9 +263,11 @@
     isFavor:false,
     isPinOnTop:false,
     isAddTask:false,
-    isRelateInstance:false
+    isRelateInstance:false,
+    TemplateContent:null
   });
   const {
+    TemplateContent,
     tabs,
     activeKey,
     id,
@@ -330,7 +333,7 @@
               if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
               let fields=res.actions[0].returnValue.fields;
               data.detail.Title=fields.Title.value;
-              data.content=fields.ContentBody.value;
+              //data.content=fields.ContentBody.value;
               data.detail.ApprovedOn=fields.ApprovedOn.value?dayjs(fields.ApprovedOn.value).format("YYYY-MM-DD HH:mm"):'';
               data.detail.FolderIdName=fields.FolderId.displayValue;
               data.detail.BusinessUnitIdName=fields.BusinessUnitId.displayValue;
@@ -343,7 +346,14 @@
           })
   };
   getDetail();
+  //html反转义
+const htmlDecode=(input)=>{
+  var e = document.createElement('div');
+  e.innerHTML = input;
+  return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+}
   const getContentView = () => {
+    data.TemplateContent='';
     let d = {
               actions:[{
                   id: "2919;a",
@@ -358,9 +368,8 @@
               message: JSON.stringify(d)
           }
           proxy.$post(Interface.content.renderView,obj).then(res=>{
-              if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
-              let fields=res.actions[0].returnValue.fields;
-              
+              if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+                data.TemplateContent=htmlDecode(res.actions[0].returnValue);
               }
           })
   };

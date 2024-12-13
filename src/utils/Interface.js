@@ -383,6 +383,10 @@ const Interface = {
     queryAlbums:baseUrl + '/album/queryAlbums',//获取相册
     queryPhotos:baseUrl + '/album/queryPhotos',//获取相册图片
     queryOwningAlbums:baseUrl + '/album/queryOwningAlbums',//获取我创建的相册
-  }
+    getPrivileges:baseUrl + '/album/getPrivileges',//获取相册权限
+    uploadImg:baseUrl + '/album/upload',//上传照片
+    uploadZip:baseUrl + '/album/upload/zipfile',//上传图片压缩包
+  },
+  getMapFieldValues: baseUrl + "/aura/Lookup/getMapFieldValues", // 查找字段 - 获取目标对象映射字段值
 };
 export default Interface;

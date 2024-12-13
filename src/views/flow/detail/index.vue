@@ -67,7 +67,7 @@
                 <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
                     <div class="leftContent" :class="{'active':!isAside}">
                         <div class="tableBox" style="width: 100%;overflow: auto;" :class="{'active':!isAside}">
-                            <FlowForm ref="flowFormRef" v-if="processId!=''" :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID" />
+                            <FlowForm print="0" ref="flowFormRef" v-if="processId!=''" :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID" />
                         </div>
                         <div class="reqWrap">
                             <div class="reqHead">
@@ -436,7 +436,7 @@
         }
         proxy.$post(Interface.detail, d).then(res=>{
             if(res && res.actions && res.actions[0].returnValue){
-                let { ProcessId, ProcessInstanceId, ToActivityID } = res.actions && res.actions[0].returnValue.fields;
+                let { ProcessId, ProcessInstanceId, ToActivityID, FromActivityId } = res.actions && res.actions[0].returnValue.fields;
                 data.processId = ProcessId.value;
                 data.processInstanceName = ProcessInstanceId.displayValue;
                 data.processInstanceId = ProcessInstanceId.value;

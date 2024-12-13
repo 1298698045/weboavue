@@ -465,7 +465,7 @@ const getDetail = () => {
               data.detail=fields;
               let url=fields.AvatarUrl&&fields.AvatarUrl.value?fields.AvatarUrl.value:'';
               if(url){
-                data.AvatarUrl=Interface.viewAvatar+'/Group/'+data.recordId;
+                data.AvatarUrl='/'+Interface.viewAvatar+'/Group/'+data.recordId;
               }
               else{
                 data.AvatarUrl=require('@/assets/img/avatar-r.png');

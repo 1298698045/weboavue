@@ -29,7 +29,7 @@
                                 <template v-else-if="col.field">
                                     <div>
                                         <!-- {{col.field.name}} = {{col.field.type}} -->
-                                        <FieldType :type="col.field.type" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" />
+                                        <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" />
                                     </div>
                                 </template>
                             </td>
@@ -66,7 +66,7 @@
                                                     </td>
                                                     <!-- <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">{{subIdx+1}}</td> -->
                                                     <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 24px;">
-                                                        <FieldType :type="child.type" :field="child" :list="sub" :select="relatedObjData[col.field.id].select" :search="col.search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)" />
+                                                        <FieldType :type="child.type" :print="print" :field="child" :list="sub" :select="relatedObjData[col.field.id].select" :search="col.search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)" />
                                                     </td>
                                                 </tr>
                                             </a-checkbox-group>
@@ -129,7 +129,11 @@
     const props = defineProps({
         processId: String,
         processInstanceId: String,
-        toActivityID: String
+        toActivityID: String,
+        print: {
+            type: String,
+            default: 0
+        }
     })
     const data = reactive({
         entityId: route.query.entityId,
@@ -516,6 +520,52 @@
         data.attributes = res.attributes;
     }
 
+    const selectLookup = (value, field) => {
+        console.log('comps', data.comps);
+        // console.log(value, field);
+        let findRow = data.attributes.find(item=>field.id == item.name);
+        // console.log("findRow", findRow);
+        let obj = {
+            actions:[{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    objectApiName: data.entityApiName,
+                    objectFieldName: field.id,
+                    objectFieldValue: value,
+                    targetApiName: findRow.referencedEntity.EntityName,
+                    targetObjectTypeCode: findRow.referencedEntity.EntityObjectTypeCode || '',
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        // console.log("obj", obj);
+        proxy.$post(Interface.getMapFieldValues, d).then(res=>{
+            console.log("getMapFieldValues-res", res);
+            let returnValue = res.actions[0].returnValue;
+            
+            for(let key in returnValue){
+                const row = data.comps.find(item=>item.id == key);
+                const type = row.type;
+                if(type=='U' || type=='O' || type=='Y' || type=='Y_MD'){
+                    const { value, displayValue } = returnValue[key];
+                    const isExist = data.search[key].some(v=>v.ID == value);
+                    if(!isExist){
+                        let obj = {
+                            ID: value,
+                            Name: displayValue
+                        };
+                        data.search[key].push(obj);
+                    }
+                }
+                data.list[key] = returnValue[key].value;
+            }
+        })
+    }
+
     const searchlookup = (search, field) => {
         let targetApiName;
         let findRow = data.attributes.find(item=>field.id == item.name);
@@ -855,7 +905,7 @@
             };
             console.log('data.cellData2', data.cellData);
             console.log('mergeRowKeyData', data.mergeRowKeyData);
-            console.clear();
+            // console.clear();
         })
     }
 
@@ -874,7 +924,7 @@
             let styleData = data.cellData[row][col].style;
             for(let styleName in styleData){
                 if(styleName=='fs'){
-                    // style.fontSize = styleData[styleName] + "px";
+                    style.fontSize = styleData[styleName] + "px";
                 }
                 if(styleName == 'bg'){
                     style.background = styleData[styleName].rgb;
@@ -905,6 +955,9 @@
                     if(styleData[styleName].a == 0 && styleData[styleName].v == 1){
                         style.writingMode = "vertical-rl";
                     }
+                }
+                if(styleName=='bl'){
+                    style.fontWeight = 'bold';
                 }
             }
         }
@@ -1273,7 +1326,22 @@
     }
 
     const handleSave = () => {
-        
+        console.log("data.list", data.list);
+        console.log("comps", data.comps);
+
+        let isRequired = false;
+        for(let i = 0; i < data.comps.length; i++){
+            const item = data.comps[i];
+            if(item.required == true && (data.list[item.id] == '' || data.list[item.id] == null || data.list[item.id] == undefined)){
+                message.error(`${item.label}不能为空!`)
+                isRequired = true;
+                break;
+            }
+        }
+        if(isRequired){
+            return false;
+        };
+
         if(data.deleteRelatedData.length){
             deleteRelted();
         }
@@ -1365,11 +1433,16 @@
 
 </script>
 <style lang="less" scoped>
+    @media print{
+        .childTableOption{
+            display: none !important;
+        }
+    }
     .wrap{
         width: 100%;
         /* height: 100vh; */
         /* overflow: auto; */
-        background: #f7f7f7;
+        background: #fff;
         .formTable{
             width: 95%;
             /* min-height: calc(100vh - 130px); */

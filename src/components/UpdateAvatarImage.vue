@@ -217,7 +217,7 @@
           let fields = res.actions[0].returnValue.fields;
           let url=fields.AvatarUrl&&fields.AvatarUrl.value?fields.AvatarUrl.value:'';
           if(url){
-            data.imageUrl=Interface.viewAvatar+'/SystemUser/'+props.id;
+            data.imageUrl='/'+Interface.viewAvatar+'/SystemUser/'+props.id;
           }
           else{
             data.imageUrl=require('@/assets/img/user/MyResume/showEmpAvatar.png');

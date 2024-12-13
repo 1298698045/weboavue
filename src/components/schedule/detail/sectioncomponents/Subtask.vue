@@ -499,7 +499,7 @@ export default {
                 if(userInfo){
                     userInfo=JSON.parse(userInfo);
                     if(userInfo.userId=='jackliu'){
-                        userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+                        data.userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
                     }
                 }
                 let url = Interface.create;

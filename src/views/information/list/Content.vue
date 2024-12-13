@@ -8,8 +8,8 @@
               <span class="headerTitle">文档中心</span>
           </div>
           <div class="headerRight">
-            <a-button type="primary" class="ml10" @click="handleAddLeft('')">新建目录</a-button>
-            <a-button type="primary" class="ml10" @click="handleNew">新建文章</a-button>
+            <a-button type="primary" class="ml10" @click="handleAddLeft('')" :disabled="!folderActionsConfig.canAdd">新建目录</a-button>
+            <a-button type="primary" class="ml10" @click="handleNew" :disabled="!folderActionsConfig.canAdd">新建文章</a-button>
             <a-button type="primary" class="ml10" @click="handleRelease">批量发布</a-button>
             <a-button class="ml10" @click="cancelRelease">批量取消发布</a-button>
           </div>
@@ -65,7 +65,7 @@
                     <span>
                             {{ name }}
                             <span class="tree-num">
-                              <span class="tree-btn tree-add" @click.stop="handleAddLeft(id,name)">
+                              <!-- <span class="tree-btn tree-add" @click.stop="handleAddLeft(id,name)">
                                 <PlusOutlined title="添加子目录" />
                               </span>
                               <span class="tree-btn tree-edit" @click.stop="handleEditLeft(id)">
@@ -73,7 +73,7 @@
                               </span>
                               <span class="tree-btn tree-delete" @click.stop="handleDeleteLeft(id)">
                                 <DeleteOutlined title="删除" />
-                              </span>
+                              </span> -->
                               <span class="tree-btn tree-favor" :class="{'tree-favor-active':isFavor||data.leftTreeTop=='我的收藏'}" @click.stop="setFavor(id,name,quantity,isFavor)">
                                 <StarOutlined title="收藏" v-if="!isFavor&&data.leftTreeTop!='我的收藏'" />
                                 <StarFilled title="取消收藏" v-if="(isFavor||data.leftTreeTop=='我的收藏')" />
@@ -565,11 +565,17 @@
         isConfirm:false,
         confirmText:'',
         confirmTitle:'',
+        folderActionsConfig:{
+            canAdd: false,
+            canAdmin: false,
+            canDelete: false,
+            canRead: false
+        }
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
-  const { CheckList,isConfirm,confirmText,confirmTitle,isNewFolder,selectedKeys,SelectName,SelectKey,relatedObjectAttributeValue,relatedObjectAttributeName,recordId,objectTypeCode,sObjectName,isCommon,isCollapsed, userId,tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields,leftTreeTop} = toRefs(data);
+  const { folderActionsConfig,CheckList,isConfirm,confirmText,confirmTitle,isNewFolder,selectedKeys,SelectName,SelectKey,relatedObjectAttributeValue,relatedObjectAttributeName,recordId,objectTypeCode,sObjectName,isCommon,isCollapsed, userId,tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value,searchVal,SearchFields,leftTreeTop} = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
   let formSearchHeight = ref(null);
@@ -590,10 +596,20 @@
   }
   const onSelect = (keys,{node}) => {
     //console.log(node)
+    
     if(keys&&keys.length){
+      data.folderActionsConfig={
+          canAdd: false,
+          canAdmin: false,
+          canDelete: false,
+          canRead: false
+      }
       data.SelectKey=node.id;
       data.SelectName=node.name;
       data.selectedKeys=[node.id];
+      if(node.folderActionsConfig){
+        data.folderActionsConfig=node.folderActionsConfig;
+      }
     }
     changeTab(data.activeKey);
   };

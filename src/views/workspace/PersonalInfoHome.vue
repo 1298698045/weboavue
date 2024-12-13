@@ -193,7 +193,7 @@
                 let fields=res.actions[0].returnValue.fields;
                 let url=fields.AvatarUrl&&fields.AvatarUrl.value?fields.AvatarUrl.value:'';
                 if(url){
-                  data.avatarUrl=Interface.viewAvatar+'/SystemUser/'+props.id;
+                  data.avatarUrl='/'+Interface.viewAvatar+'/SystemUser/'+props.id;
                 }
                 else{
                   data.avatarUrl=require('@/assets/img/user/MyResume/showEmpAvatar.png');
