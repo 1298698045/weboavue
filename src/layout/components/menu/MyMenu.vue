@@ -44,7 +44,6 @@ const props = defineProps({
 });
 const route = useRoute();
 const router = useRouter();
-
 const data = reactive({
   items: [],
   appTabs: []
@@ -53,7 +52,7 @@ const { items, appTabs } = toRefs(data);
 
 const state = reactive({
   collapsed: false,
-  selectedKeys: [route.name],
+  selectedKeys: [],
   openKeys: [],
   preOpenKeys: [],
   rootSubmenuKeys: [],
@@ -69,15 +68,21 @@ watch(()=> store.state.moduleName, (newVal,oldVal)=>{
       });
       return item;
     });
-    // console.log("route.name", route.name);
-    // state.selectedKeys = [route.name];
   }, 1000);
 }, {immediate: true, deep: true});
 
-watch(()=> route.path, ()=>{
-  state.selectedKeys = [route.name];
-})
+// watch(()=> route.path, ()=>{
+//   state.selectedKeys = [route.name];
+// })
 
+watch(
+  () => route,
+  (newRoute) => {
+    // console.log("menu-route", newRoute.params.sObjectName);
+    state.selectedKeys = [newRoute.params.sObjectName || newRoute.name]; // 确保选中最新的路由名称
+  },
+  { immediate: true, deep: true }
+);
 
 const handleMenu = (e) => {
   // console.log('e', e);
@@ -85,7 +90,6 @@ const handleMenu = (e) => {
 };
 
 const onOpenChange = () => {}
-
 
 </script>
 <style lang="less">

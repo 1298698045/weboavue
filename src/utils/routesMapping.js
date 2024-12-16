@@ -51,7 +51,11 @@ export const routesMapping = {
         BusinessUnitAddresslist: () => import("../views/oa/deptAddressBook/index.vue"),
         PersonalContact: () => import("../views/oa/myAddressBook/index.vue"),
         CollaborationGroup:  () => import("../views/oa/group/index.vue"),
-        OASuggestion: () => import("../views/listView/index.vue")
+        OASuggestion: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        }
+        
     },
     // 知识管理
     content: {
@@ -61,12 +65,27 @@ export const routesMapping = {
         album: () => import("../views/knowledge/Album/index.vue"),
         ContentFolder: () => import("../views/knowledge/Contentfolder/permission.vue"),
         QuestionAnswer: () => import("../views/knowledge/QuestionAnswer/index.vue"),
-        DocumentReadLog: () => import("../views/listView/index.vue"),
-        ContentViewTemplate: () => import("../views/listView/index.vue"),
-        KbSubject: () => import("../views/listView/index.vue"),
+        DocumentReadLog: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        ContentViewTemplate: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        KbSubject: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
         KbMap: () => import("../views/knowledge/KnowledgeMap/index.vue"),
-        ContentChannel: () => import("../views/listView/index.vue"),
-        KbArticleSearch: () => import("../views/listView/index.vue"),
+        ContentChannel: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        KbArticleSearch: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
         FileManager: () => import("../views/fileAdmin/index.vue"),
         videomanager: () => import("../views/knowledge/Video/Home.vue"),
         KnowledgeAddWizard: () => import("../views/knowledge/KnowledgeMap/NewKbArticle.vue"),
@@ -77,18 +96,42 @@ export const routesMapping = {
     DocumentRule: {
         RuleArticle: () => import("../views/knowledge/RuleArticle/myhome/index.vue"), // 我的制度
         RuleArticle: () => import("../views/knowledge/RuleArticle/home/index.vue"), // 制度台账
-        KbArticleVersion: () => import("../views/listView/index.vue"),
-        KbArticleAbolish: () => import("../views/listView/index.vue"),
+        KbArticleVersion: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        KbArticleAbolish: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
     },
     // 行政管理
     administration: {
-        ReceptionMeal: () => import("../views/listView/index.vue"),
+        ReceptionMeal: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
         VehicleReservation: () => import("../views/Vehicle/VehicleApply.vue"),
-        VehicleUse: () => import("../views/listView/index.vue"),
-        VehicleMaintain: () => import("../views/listView/index.vue"),
-        SealUse: () => import("../views/listView/index.vue"),
-        GoingAbroad: () => import("../views/listView/index.vue"),
-        vehicle: () => import("../views/listView/index.vue"),
+        VehicleUse: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        VehicleMaintain: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        SealUse: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        GoingAbroad: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        vehicle: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
     },
     // 值班管理
     dutyShift: {
@@ -97,15 +140,30 @@ export const routesMapping = {
         DutyshiftNurse: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
         DutyshiftLeaderAgent: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
         DeptDutyShift: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
-        WorkshiftDeptDutyshiftQuery: () => import("../views/listView/index.vue"),
-        DutyShiftSearch: () => import("../views/listView/index.vue"),
-        DuthshiftLog: () => import("../views/listView/index.vue"),
-        DutyShiftReport: () => import("../views/listView/index.vue"),
+        WorkshiftDeptDutyshiftQuery: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        DutyShiftSearch: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        DuthshiftLog: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        DutyShiftReport: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
     },
     // 社区交流
     chatter: {
         Chatter: () => import("../views/knowledge/QuestionAnswer/index2.vue"),
-        ChatterStatusManager: () => import("../views/listView/index.vue"),
+        ChatterStatusManager: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
     },
     // 档案管理
     archivemanage: {
@@ -133,15 +191,36 @@ export const routesMapping = {
     },
     // 科研成果
     ResearchResult: {
-        ProjectPaper: () => import("../views/listView/index.vue"),
-        ProjectBook: () => import("../views/listView/index.vue"),
-        ProjectPatent: () => import("../views/listView/index.vue"),
-        ProjectConference: () => import("../views/listView/index.vue"),
-        ProjectJournal: () => import("../views/listView/index.vue"),
+        ProjectPaper: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        ProjectBook: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        ProjectPatent: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        ProjectConference: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        ProjectJournal: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
     },
     // 科研经费
     ResearchFee: {
-        ProjectBudget: () => import("../views/listView/index.vue"),
-        ProjectExpenditure: () => import("../views/listView/index.vue"),
+        ProjectBudget: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
+        ProjectExpenditure: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
     }
 }

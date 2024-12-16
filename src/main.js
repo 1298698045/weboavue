@@ -14,7 +14,7 @@ import "@/style/theme.css";
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');
-const cors = require('cors');
+// const cors = require('cors');
 const app = createApp(App);
 moment.locale('zh-cn');
 app.config.globalProperties.$moment = moment;

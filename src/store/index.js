@@ -131,14 +131,22 @@ export default createStore({
           const savedRoutes = [];
           subModules.forEach(item=>{
             let subPath  = item.navAction.url.startsWith("/") ? item.navAction.url : "/" + item.navAction.url;
-            if(subPath .indexOf('?')!=-1){
+            if(subPath.indexOf('?')!=-1){
               subPath = subPath .split('?')[0]
+            };
+            let obj = routesMapping[developerName][item.name];
+            let componentPath = obj;
+            if(typeof obj == 'object'){
+              componentPath = obj.component;
             }
-            const componentPath = routesMapping[developerName][item.name];
-
+            // const componentPath = routesMapping[developerName][item.name];
+            // console.log("componentPath:", componentPath);
             // 处理通用列表
-            if(`${componentPath}`.indexOf('listView/index.vue')!=-1){
-              subPath = subPath.replace(/\/o.*$/, '/:sObjectName');
+            // if(`${componentPath}`.indexOf('listView/index.vue')!=-1){
+            if(typeof obj == 'object'){
+              // subPath = subPath.replace(/\/o.*$/, '/:sObjectName');
+              subPath = subPath.replace(/\/o\/[^/]+$/, '/o/:sObjectName');
+              // console.log("subPath", subPath);
             }
 
             // 先检查路由是否已经存在
@@ -157,6 +165,7 @@ export default createStore({
                 children: [],
               };
               // console.log("componentPath", componentPath);
+
               router.addRoute(developerName, {
                 ...newRoute,
                 component: componentPath,
@@ -169,21 +178,22 @@ export default createStore({
 
           //parentRoute 相当于存储的是当前模块的整一个路由
           const routes = router.getRoutes();
-          console.log("routes:", routes)
+          // console.log("routes:", routes)
           let children = serializeRoutes(parentRoute.children);
           parentRoute.children = children;
           // console.log("parentRoute", parentRoute);
           // console.log("getRoutes", routes);
 
           const newRoutes = serializeRoutes(routes);
-          console.log("newRoutes", newRoutes);
+          // console.log("newRoutes", newRoutes);
 
           if(localStorage.getItem('savedRoutes')){
             let localRoutes = JSON.parse(localStorage.getItem('savedRoutes'));
-            console.log("localRoutes", localRoutes);
+            // console.log("localRoutes", localRoutes);
           }
           localStorage.setItem('savedRoutes', JSON.stringify(newRoutes));
           commit('setModuleName', returnValue.label);
+
           setTimeout(()=>{
             router.push(subModules[0].navAction.url);
           },100)

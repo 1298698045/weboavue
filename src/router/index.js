@@ -416,7 +416,7 @@ function restoreRoutes2() {
             const childRoute = {
               path: child.path,
               name: child.name,
-              component:eval(child.component),
+              component: eval(child.component),
               meta: child.meta || {}
             };
             router.addRoute(child.meta.parentName, childRoute);
@@ -446,10 +446,23 @@ if (localStorage.getItem('savedRoutes')) {
   store.commit("setModuleName", moduleName);
 }
 router.beforeEach((to, from, next)=>{
-  // console.log("to", to, from, next);
   if(to.meta.name == '通用列表1'){
-    to.name = to.params.sObjectName;
+    // debugger
+    console.log("to", to, from, next);
+    console.log(localStorage.getItem("appCode"))
+    // to.name = to.params.sObjectName;
+    next({
+      ...to,
+      replace: true,
+      name: to.params.sObjectName,
+      meta: {
+        ...to.meta,
+        appCode:  localStorage.getItem("appCode"),
+        moduleName: localStorage.getItem("moduleName"),
+      }
+    });
+  }else {
+    next();
   }
-  next();
-})
+});
 export default router;
