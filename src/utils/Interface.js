@@ -207,7 +207,7 @@ const Interface = {
     list: "/localData/scheduleTable/calendar.all.getlist.json"
   },
   leaderSchedule: {
-    list: "/localData/leaderSchedule/calendar.leader.getlist.json"
+    list:  baseUrl + "/ui.calendar.components/filterCalendars",//领导日程
   },
   // 会议活动
   meetingActivity: {
