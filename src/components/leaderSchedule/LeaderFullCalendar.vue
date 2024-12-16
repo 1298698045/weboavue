@@ -597,7 +597,8 @@
                     "startDateTime": props.startDateTime,
                     "endDateTime": props.endDateTime,
                     "calendarType": 'month',
-                    "queryEvents": true
+                    "queryEvents": true,
+                    "filterId":'79183c45-0e58-4860-8354-bce2d7a475c9'
                 }
 
             }]
@@ -615,7 +616,8 @@
         }
         data.scheduleList =[];
         data.resources=[];
-        proxy.$post(Interface.schedule.list,obj).then(res=>{
+        data.calendarOptions.events=[];
+        proxy.$post(Interface.leaderSchedule.list,obj).then(res=>{
             fullCalendarRef.value.getApi().view.calendar.changeView(data.calendarOptions.initialView);
             setTimeout(function(){
                 fullCalendarRef.value.getApi().gotoDate(new Date(data.currentDate));
@@ -630,48 +632,52 @@
                 // }
             },200)
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
-                        let scheduleItems = res.actions[0].returnValue[0].calendarItems;
+                        
                         let obj = {};
-                        let peopleList=['OA管理员','王虎','王芳','刘敏','贾京津','蔡宁','张英','李默闻','陈兴德','滕红红','李占江','张骏','孟庆玲','郭敬源'];
+                        let peopleList=[];
+                        peopleList=res.actions[0].returnValue;
                         peopleList.forEach((item,index)=>{
                             let roomitem={
-                                id:item,
-                                title:item
+                                id:item.calendar.Id||'',
+                                title:item.calendar.Name||''
                             }
                             data.resources.push(roomitem);
                             fullCalendarRef.value.getApi().view.calendar.addResource(roomitem);
                         })
-                        scheduleItems.forEach((item,index)=>{
-                            let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
-                            if(!obj[daydate]){
-                                obj[daydate] = [];
-                            }
-                            item.StartDateTime=item.StartDateTime?dayjs(item.StartDateTime).format("YYYY-MM-DD HH:mm"):'';
-                            item.EndDateTime=item.EndDateTime?dayjs(item.EndDateTime).format("YYYY-MM-DD HH:mm"):'';
-                            obj[daydate].push(item);
-                            let remainder = index % 4;
-                            let event={
-                                id: item.Id,
-                                resourceId:item.Who||'',
-                                title: item.Subject||'',
-                                start: item.StartDateTime,
-                                end: item.EndDateTime,
-                                Who:item.Who||'',
-                                Location:item.Location||item.Where||'',
-                                Phone:item.Phone||'',
-                                CreatedByName:item.CreatedByName||'',
-                                Description:item.Description||item.What||'',
-                                backgroundColor: colors[remainder], // 该事件的背景颜色
-                                borderColor: colors[remainder], // 该事件的边框颜色
-                                textColor: '#FFF' // 该事件的文字颜色
-                            }
-                            if(fullCalendarRef.value.getApi().view.calendar.getEventById(item.Id)){
-                                fullCalendarRef.value.getApi().view.calendar.getEventById(item.Id).remove();
-                            }
-                            // data.calendarOptions.events.push(event);
-                            fullCalendarRef.value.getApi().view.calendar.addEvent(event);
-                        })
-                        
+
+                        for(var i=0;i<peopleList.length;i++){
+                            let scheduleItems = peopleList[i].calendarItems;
+                            scheduleItems.forEach((item,index)=>{
+                                let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
+                                if(!obj[daydate]){
+                                    obj[daydate] = [];
+                                }
+                                item.StartDateTime=item.StartDateTime?dayjs(item.StartDateTime).format("YYYY-MM-DD HH:mm"):'';
+                                item.EndDateTime=item.EndDateTime?dayjs(item.EndDateTime).format("YYYY-MM-DD HH:mm"):'';
+                                obj[daydate].push(item);
+                                let remainder = index % 4;
+                                let event={
+                                    id: item.Id,
+                                    resourceId:peopleList[i].calendar.Id||'',
+                                    title: item.Subject||'',
+                                    start: item.StartDateTime,
+                                    end: item.EndDateTime,
+                                    Who:item.Who||'',
+                                    Location:item.Location||item.Where||'',
+                                    Phone:item.Phone||'',
+                                    CreatedByName:item.CreatedByName||'',
+                                    Description:item.Description||item.What||'',
+                                    backgroundColor: colors[remainder], // 该事件的背景颜色
+                                    borderColor: colors[remainder], // 该事件的边框颜色
+                                    textColor: '#FFF' // 该事件的文字颜色
+                                }
+                                if(fullCalendarRef.value.getApi().view.calendar.getEventById(item.Id)){
+                                    fullCalendarRef.value.getApi().view.calendar.getEventById(item.Id).remove();
+                                }
+                                // data.calendarOptions.events.push(event);
+                                fullCalendarRef.value.getApi().view.calendar.addEvent(event);
+                            })
+                        }
                         data.scheduleList = obj;      
             }
         })

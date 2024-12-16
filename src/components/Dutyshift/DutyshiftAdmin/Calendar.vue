@@ -285,7 +285,7 @@
     const backNowTime=(e)=>{
         if(e==2){
             currentDate.value = dayjs(new Date());
-            data.monthValue=dayjs(new Date(), monthFormat);
+            data.monthValue=dayjs(new Date());
             emit("refresh", dayjs(data.monthValue).format("YYYY-MM"));
         }
         else if(e==1){

@@ -337,8 +337,8 @@
         }
     }
     .searchMenuBox{
-        border: 1px solid #e3e3e5;
-        padding: 5px;
+        //border: 1px solid #e3e3e5;
+        //padding: 5px;
         .menuRow{
             display: flex;
             /* align-items: center; */

@@ -25,7 +25,10 @@
                     </a-carousel>
                     <div class="photoHeadInfo">
                         <div class="photoName">
-                            {{ detail.Name||'' }}{{ detail.FileExtension?'.'+detail.FileExtension:'' }}
+                            <!-- {{ detail.Name||'' }}{{ detail.FileExtension?'.'+detail.FileExtension:'' }} -->
+                            <span class="icon" title="退出" @click="handleClose">
+                                <ArrowLeftOutlined />
+                            </span>
                         </div>
                         <div class="photoIcons">
                             <span class="icon" title="全屏" @click="handleFullScreen">
@@ -52,23 +55,28 @@
                     </div>
                     <div class="fileName">{{ detail.Name||'' }}{{ detail.FileExtension?'.'+detail.FileExtension:'' }}</div>
                     <div class="optionLike">
-                        <div class="optionItem">
-                            <i class="iconfont icon-pinglun"></i>
+                        <div class="optionItem" title="评论" @click="isShowCommitBtn=!isShowCommitBtn">
+                            <!-- <i class="iconfont icon-pinglun"></i> -->
+                            <MessageFilled />
+                            <br />
                             <span class="num">{{ total }}</span>
                         </div>
-                        <div class="optionItem" @click="setLike">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"
+                        <div class="optionItem" @click="setLike" title="点赞">
+                            <!-- <svg viewBox="0 0 24 24" aria-hidden="true"
                                 class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi">
                                 <g>
                                     <path
                                         d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z">
                                     </path>
                                 </g>
-                            </svg>
+                            </svg> -->
+                            <LikeFilled />
+                            <br />
                             <span class="num">0</span>
                         </div>
                     </div>
                     <div class="fileCommentBox">
+                        <div class="commentTitle">热门评论</div>
                         <div class="commentList">
                             <div class="empty" v-if="commentList.length==0">
                                 <img
@@ -78,24 +86,29 @@
                                 <p class="emptyDesc">当前暂无数据</p>
                             </div>
                             <div v-for="(item,index) in commentList" :key="index">
+                                <div class="filecommentList">
+                                    <div class="avatar">
+                                    <img :src="require('@/assets/img/avatar-r.png')" alt="" />
+                                </div>
                                 <div class="commentItem">
                                     <p class="commentName">{{item.Name||item.CreatedBy}}：</p>
                                     <p class="desc">{{item.Body}}</p>
                                     <div class="bottomInfo">
                                         <span class="time">{{item.CreatedOn}}</span>
                                         <div class="icons">
-                                            <span class="icon" @click="handleCommentReply(item)">
+                                            <span class="icon" @click="handleCommentReply(item)" title="评论">
                                                 <i class="iconfont icon-pinglun"></i>
                                             </span>
-                                            <span class="icon" @click="setCommentLike(item)">
-                                                <svg viewBox="0 0 24 24" aria-hidden="true"
+                                            <span class="icon" @click="setCommentLike(item)" title="点赞">
+                                                <!-- <svg viewBox="0 0 24 24" aria-hidden="true"
                                                     class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi">
                                                     <g>
                                                         <path
                                                             d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z">
                                                         </path>
                                                     </g>
-                                                </svg>
+                                                </svg> -->
+                                                <i class="iconfont icon-zan2"></i>
                                             </span>
                                             <a-popconfirm
                                                 title="是否确定删除?"
@@ -103,7 +116,7 @@
                                                 cancel-text="取消"
                                                 @confirm="handleDeleteComment(item)"
                                             >
-                                                <span class="icon">
+                                                <span class="icon" title="删除">
                                                     <i class="iconfont icon-yishanchu"></i>
                                                 </span>
                                             </a-popconfirm>
@@ -111,28 +124,32 @@
                                         </div>
                                     </div>
                                 </div>
+                                </div>
                                 <div class="replyBox" v-if="item.isReplay">
                                     <div class="inpRow">
                                         <a-input v-model:value="replyComment" placeholder="输入回复内容"></a-input>
                                     </div>
                                     <div class="btnRow">
-                                        <a-button type="primary" @click="sendCommentReplay(item)">回复</a-button>
+                                        <a-button type="primary" @click="sendCommentReplay(item)" :class="{'nocommit':!replyComment}">回复</a-button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="inpRow">
-                            <a-input v-model:value="comment" placeholder="输入评论内容"></a-input>
-                        </div>
-                        <div class="btnRow">
-                            <a-button type="primary" @click="sendComment">评论</a-button>
+                        <div class="fileCommentListBottom">
+                            <div class="inpRow">
+                                <a-input v-model:value="comment" placeholder="发布你的评论"></a-input>
+                            </div>
+                            <div class="btnRow">
+                                <a-button v-if="isShowCommitBtn" type="primary" @click="sendComment" :class="{'nocommit':!comment}">评论</a-button>
+                                <i v-if="!isShowCommitBtn" class="iconfont icon-zan2 icon-zan3" title="点赞"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="closeIcon" @click="handleClose" title="关闭">
+            <!-- <div class="closeIcon" @click="handleClose" title="关闭">
                 <CloseOutlined />
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -168,7 +185,10 @@
         UserOutlined,
         CloseOutlined,
         LeftOutlined,
-        RightOutlined
+        RightOutlined,
+        ArrowLeftOutlined,
+        LikeFilled,
+        MessageFilled
     } from "@ant-design/icons-vue";
     import Swiper from 'swiper';
     import 'swiper/swiper-bundle.css'; // 导入 Swiper 样式
@@ -222,8 +242,9 @@
         currentUserName:'',
         currentUserId:'',
         rotate:0,
+        isShowCommitBtn:false
     })
-    const { rotate,currentUserName,currentUserId,total,detail,currentIndex,imageList,id,items, mySwiper, commentList, comment, replyComment } = toRefs(data);
+    const { isShowCommitBtn,rotate,currentUserName,currentUserId,total,detail,currentIndex,imageList,id,items, mySwiper, commentList, comment, replyComment } = toRefs(data);
     const handleClose = () => {
         emit("cancel", false);
     };
@@ -475,9 +496,11 @@
         z-index: 999;
 
         .dModal-box {
-            background: rgba(64, 52, 51, 0.9);
-            width: 95%;
-            height: calc(~"100% - 40px");
+            //background: rgba(64, 52, 51, 0.9);
+            // width: 95%;
+            // height: calc(~"100% - 40px");
+            width: 100%;
+            height: calc(~"100% - -1px");
             position: fixed;
             top: 50%;
             left: 50%;
@@ -504,6 +527,8 @@
                     flex: 1;
                     overflow: hidden;
                     position: relative;
+                    background: #24262A;
+                    opacity: 0.9;
                     .photoHeadInfo{
                         width: 100%;
                         display: flex;
@@ -513,7 +538,7 @@
                         color: #fff;
                         position: absolute;
                         top: 0;
-                        .photoIcons{
+                        .photoIcons,.photoName{
                             .icon{
                                 width: 40px;
                                 height: 40px;
@@ -529,13 +554,18 @@
                                 }
                             }
                         }
+                        .photoName .icon{
+                            font-size: 19px;
+                            line-height: 42px;
+                        }
+                        
                     }
                 }
 
                 .info-box {
-                    width: 350px;
+                    width: 430px;
                     height: 100%;
-                    padding: 16px;
+                    padding: 18px;
                     box-sizing: border-box;
                     overflow: hidden;
                     background: #fff;
@@ -559,20 +589,24 @@
                             flex: 1;
 
                             .name {
-                                color: var(--textColor);
-                                font-size: 14px;
-                                font-weight: bold;
+                                //color: var(--textColor);
+                                color: #000;
+                                font-size: 15px;
+                                font-weight: bolder;
+                                margin-top: 3px;
                             }
 
                             .time {
                                 margin-top: 5px;
+                                font-size: 13px;
+                                color: #939393;
                             }
                         }
                     }
 
                     .fileName {
-                        padding: 10px 0 5px 0;
-                        border-bottom: 1px solid #e2e3e5;
+                        padding: 15px 0;
+                        border-bottom: 1px solid #eee;
                     }
 
                     .optionLike {
@@ -581,40 +615,56 @@
                         padding: 10px;
 
                         .optionItem {
-                            display: flex;
+                            //display: flex;
                             align-items: center;
-                            margin: 0 10px;
+                            margin: 0 35px;
                             cursor: pointer;
-
+                            font-size: 20px;
+                            color: #888;
                             svg {
                                 width: 17px;
-                                fill: #333;
+                                fill: #444;
                             }
 
                             .num {
                                 padding-left: 5px;
+                                margin-top: 5px !important;
+                                font-size: 15px;
                             }
                             .icon-pinglun{
                                 font-size: 14px;
                             }
                         }
+                        .optionItem:hover{
+                            color: #ff8200;
+                        }
                     }
 
                     .fileCommentBox {
                         height: calc(~"100% - 110px");
-                        background: #f4f4f4;
-                        padding: 10px;
-
+                        //background: #f4f4f4;
+                        padding: 10px 0;
+.commentTitle{
+    font-size: 14px;
+    width: 100%;
+    color: #333;
+    font-weight: bold;
+    position: relative;
+    top: -15px;
+    left: 2px;
+}
                         .commentList {
-                            height: calc(~"100% - 85px");
+                            height: calc(~"100% - 120px");
                             overflow-y: auto;
                         }
 
                         .commentItem {
-                            border-bottom: 1px solid #e2e3e5;
-                            margin-bottom: 5px;
+                            border-bottom: 1px solid #eee;
+                            margin-bottom: 7px;
+                            flex: 1;
                             .commentName {
-                                color: var(--textColor);
+                                //color: var(--textColor);
+                                color: #ff8200;
                             }
 
                             .desc {
@@ -626,14 +676,20 @@
                         .replyBox{
                             background: #fff;
                             padding: 10px;
+                            justify-content: center;
+                            align-items: center;
+                            flex-direction: row;
+                            display: flex;
+                            position: relative;
+                            top: -4px;
                         }
 
                         .bottomInfo {
                             display: flex;
                             justify-content: space-between;
                             align-items: center;
-                            padding-bottom: 5px;
-                            zoom: 0.9;
+                            padding-bottom: 10px;
+                            font-size: 13px;
                             svg {
                                 width: 17px;
                                 position: relative;
@@ -644,23 +700,107 @@
                                 display: flex;
                                 align-items: center;
                             }
-                            .icon-pinglun,.icon-yishanchu{
+                            .icon-pinglun,.icon-yishanchu,.icon-zan2{
                                 font-size: 14px;
                             }
-
                             .icon {
                                 display: inline-block;
-                                padding: 0 5px;
+                                padding: 0 10px;
                                 cursor: pointer;
+                                color: #86909c;
+                            }
+                            .icon:hover {
+                                color: #ff8200;
                             }
                             .time{
                                 color: #86909c;
                             }
                         }
-
+                        .inpRow{
+                                flex: 1;
+                                :deep .ant-input{
+                                    padding: 6px 11px;
+                                    background: #f0f1f4;
+                                    border: 0 !important;
+                                    border-radius: 6px !important;
+                                    //height: 38px;
+                                }
+                                :deep .ant-input:focus{
+                                    //border-color: #ff8200 !important;
+                                    box-shadow: 0 0 0 1px #ff8200;
+                                }
+                            }
                         .btnRow {
                             text-align: right;
-                            margin-top: 15px;
+                                margin-top: 0;
+                                margin-left: 12px;
+                                :deep .ant-btn-primary{
+                                    background-color: #ff8200;
+                                    width: 74px;
+                                    border-radius: 30px !important;
+                                    //height: 36px;
+                                    span{
+                                        letter-spacing: -1px;
+                                    }
+                                }
+                                .nocommit{
+                                    pointer-events: none;
+                                    opacity: 0.5;
+                                    cursor: not-allowed;
+                                }
+
+                        }
+                        .fileCommentListBottom{
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            flex-direction:row;
+                            position: relative;
+                            top: 10px;
+                            width: 100%;
+                            .inpRow{
+                                flex: 1;
+                                :deep .ant-input{
+                                    padding: 6px 11px;
+                                    background: #f0f1f4;
+                                    border: 0 !important;
+                                    border-radius: 6px !important;
+                                    height: 38px;
+                                }
+                                :deep .ant-input:focus{
+                                    //border-color: #ff8200 !important;
+                                    box-shadow: 0 0 0 1px #ff8200;
+                                }
+                            }
+                            .btnRow {
+                                text-align: right;
+                                margin-top: 0;
+                                margin-left: 12px;
+                                :deep .ant-btn-primary{
+                                    background-color: #ff8200;
+                                    width: 74px;
+                                    border-radius: 30px !important;
+                                    height: 36px;
+                                    span{
+                                        letter-spacing: -1px;
+                                    }
+                                }
+                                .nocommit{
+                                    pointer-events: none;
+                                    opacity: 0.5;
+                                    cursor: not-allowed;
+                                }
+                                .icon-zan3{
+                                    font-size: 20px;
+                                    color: #939393;
+                                    width: 25px;
+                                    display: block;
+                                    cursor: pointer;
+                                }
+                                .icon-zan3:hover{
+                                    color: #ff8200;
+                                }
+                            }
                         }
                     }
                 }
@@ -698,14 +838,27 @@
     //     //display: none !important;
     // }
     :deep(.slick-arrow.custom-slick-arrow) {
-    width: 25px;
-    height: 25px;
+    width: 60px;
+    height: 60px;
     font-size: 25px;
     color: #fff !important;
-    background-color: rgba(31, 45, 61, 0.11);
+    background-color: rgba(54, 54, 54, 0.8);
     transition: ease all 0.3s;
-    opacity: 0.5;
+    opacity: 0.9;
     z-index: 1;
+    border-radius: 50%;
+    display: flex !important;
+    justify-content: center !important;
+    .anticon-left{
+        position: relative;
+        left: -2px;
+    }
+    }
+    :deep(.slick-arrow.slick-prev) {
+        left: 20px !important;
+    }
+    :deep(.slick-arrow.slick-next) {
+        right: 20px !important;
     }
     :deep(.slick-arrow.custom-slick-arrow:before) {
     display: none;
@@ -713,6 +866,7 @@
     :deep(.slick-arrow.custom-slick-arrow:hover) {
     color: #fff !important;
     opacity: 1;
+    background: rgba(30, 30, 30, 0.9);
     }
     :deep(.slick-thumb) {
         bottom: 0px;
@@ -721,8 +875,14 @@
     :deep(.slick-thumb li) {
         width: 60px;
         height: 45px;
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+        border: 4px solid #24262A;
     }
-
+    :deep .slick-thumb li.slick-active{
+        border: 4px solid #fa7d3c;
+    }
     :deep(.slick-thumb li img) {
         width: 100%;
         height: 100%;
@@ -777,6 +937,18 @@
             width: 100px;
         }
       }
+      .avatar{
+            img{
+                width: 34px;
+            }
+            margin-right: 10px;
+        }
+        .filecommentList{
+            display: flex;
+            .desc{
+                color: #333;
+            }
+        }
     }
     
 </style>

@@ -283,4 +283,23 @@ padding-bottom: 0 !important;
     left: 10px;
   }
 }
+.head-operate{
+  .container{
+    padding: 0 10px;
+    line-height: 25px;
+    .head-operate-item{
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+.head-operate-item {
+  cursor: pointer;
+  .groupBtn{
+    margin-right: 15px;
+  }
+}
+input[aria-hidden=true]{
+  display: none !important;
+}
 </style>

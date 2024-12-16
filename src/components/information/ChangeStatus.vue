@@ -85,7 +85,7 @@
         window.addEventListener("resize", (e) => {
             data.height = document.documentElement.clientHeight - 300;
         });
-        let h = ChangeStatusModelContentRef.value.clientHeight;
+        let h = document.documentElement.clientHeight - 300;
             data.top = (h + 180) / 2 + 'px';
         });
     const setTop = computed(() => ({

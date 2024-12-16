@@ -271,7 +271,7 @@
     const backNowTime=(e)=>{
         if(e==2){
             currentDate.value = dayjs(new Date());
-            data.monthValue=dayjs(new Date(), monthFormat);
+            data.monthValue=dayjs(new Date());
         }
         else if(e==1){
             data.week=week0;

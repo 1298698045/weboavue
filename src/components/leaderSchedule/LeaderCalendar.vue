@@ -97,7 +97,7 @@
     import ShareCalendar from "@/components/schedule/ShareCalendar.vue";
     import ImportSchedule from "@/components/schedule/ImportSchedule.vue";
     // 详情
-    import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal.vue";
+    import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal2.vue";
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
@@ -233,7 +233,7 @@
     const backNowTime=(e)=>{
         if(e==2){
             currentDate.value = dayjs(new Date());
-            data.monthValue=dayjs(new Date(), monthFormat);
+            data.monthValue=dayjs(new Date());
         }
         else if(e==1){
             data.week=week0;

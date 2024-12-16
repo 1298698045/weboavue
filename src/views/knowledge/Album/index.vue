@@ -97,7 +97,7 @@
                                 <div class="popup">
                                     <!-- <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>  
                                     <div class="option-item" :num="index">重命名</div> -->
-                                    <div class="option-item" @click.stop="handleDetail(item.id)" v-if="Privileges.canRead">打开</div>
+                                    <div class="option-item" @click.stop="handleOpenFolder(item.id)" v-if="Privileges.canRead">打开</div>
                                     <div class="option-item" @click.stop="handleEdit(item.id)" v-if="Privileges.canAdd">编辑</div>
                                     <div class="option-item" @click.stop="handleDepth(item)" v-if="Privileges.canAdmin">设置权限</div>
                                     <div class="option-item" @click.stop="handleDelete(item.id,'folder')" v-if="Privileges.canDelete">删除</div>
@@ -114,8 +114,10 @@
                             <div class="add-addtime">{{item.CreatedOn}}</div>
                             <div class="iconBox content-item-iconBox">
                                 <div class="popup">
-                                    <div class="option-item" @click.stop="handleOpenFile(item,index)" :num="index" v-if="Privileges.canRead">预览</div>
-                                    <div class="option-item" @click.stop="handleDelete(item.id,'file')" v-if="Privileges.canDelete">删除</div>
+                                    <div class="option-item" @click.stop="handleOpenFile(item,index)" :num="index" v-if="Privileges.canRead&&leftName!='回收站'">预览</div>
+                                    <div class="option-item" @click.stop="handleDelete(item.id,'file')" v-if="Privileges.canDelete&&leftName!='回收站'">删除</div>
+                                    <div class="option-item" @click.stop="handleDelete(item.id,'file')" v-if="leftName=='回收站'">彻底删除</div>
+                                    <div class="option-item" @click.stop="handleRecovery(item.id)" v-if="leftName=='回收站'">还原</div>
                                     <!-- <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>  
                                     <div class="option-item" @click="handleEdit(item.id)" :num="index">编辑</div>  
                                     <div class="option-item" :num="index">重命名</div>  
@@ -153,9 +155,8 @@
                             <div v-if="column.key=='Action'">
                                 <div class="iconBox">
                                     <div class="popup">
-                                        <div class="option-item" @click="handleDetail(record.id)" :num="index">查看</div>  
+                                        <div class="option-item" @click="handleOpenFolder(record.id)" :num="index">查看</div>  
                                         <div class="option-item" @click="handleEdit(record.id)" :num="index">编辑</div>  
-                                        <div class="option-item" :num="index">重命名</div>  
                                         <div class="option-item" @click="handleDelete(record.id,'folder')" :num="index">删除</div>
                                         <div class="option-item" :num="index" @click.stop="handleDepth(record)">设置权限</div>  
                                     </div>
@@ -186,6 +187,7 @@
         <NewDepth :isShow="isDepth" v-if="isDepth"  @cancel="isDepth=false" :id="data.SelectKey" :ObjectTypeCode="'100103'" :ObjectName="data.SelectName" />
         <!-- 图片预览 -->
         <PhotoPreview v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto=false" />
+        <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="confirmOk" :id="recordId" />
     </div>
 </template>
 <script setup>
@@ -214,6 +216,7 @@
     import AddGroup from "@/components/groupDetail/AddGroup.vue";
     import NewDepth from "@/components/information/NewDepth.vue";
     import PhotoPreview from "@/components/file/PhotoPreview.vue";
+    import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
     const tablelist=ref();
     const { proxy } = getCurrentInstance();
     const router = useRouter();
@@ -342,9 +345,13 @@
             canDelete: false,
             canRead: false
         },
-        isChangeName:false
+        isChangeName:false,
+        isConfirm:false,
+        confirmText:'',
+        confirmTitle:'',
+        checkList:[]
     })
-    const { isChangeName,Privileges,leftName,isPhoto,photoParams,uploadFileList,fileList,folderId,folderName,isDepth,SelectKey,SelectName,loading,relatedObjectAttributeValue,relatedObjectAttributeName,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
+    const { checkList,isConfirm,confirmText,confirmTitle,isChangeName,Privileges,leftName,isPhoto,photoParams,uploadFileList,fileList,folderId,folderName,isDepth,SelectKey,SelectName,loading,relatedObjectAttributeValue,relatedObjectAttributeName,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
          searchVal, total, isLeft, selectedKeys, FolderList, columns, groupList,isCommon,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,pagination,tableHeight } = toRefs(data);
     
     const handleTreeSelect = (keys,{node}) => {
@@ -386,12 +393,16 @@
             url=Interface.album.queryAlbums;
         }else if(data.selectedKeys[0]=='owner'){
             url=Interface.album.queryOwningAlbums;
+        }else if(data.selectedKeys[0]=='deleted'){
+            data.folderId='';
+            getFile();
+            return
         }
         else{
             setTimeout(function(){
                 data.loading=false;
             },500)
-            return false
+            return
         }
         let filterQuery='';
         if(data.folderId){
@@ -437,7 +448,9 @@
                         item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD"):'';
                     }
                 }
-                list.push(item)
+                if(item.Name.indexOf(data.searchVal)!=-1){
+                    list.push(item)
+                }
             }
             data.FolderList = list;
             //getFile();
@@ -509,18 +522,61 @@
                 for (var i = 0; i < file.nodes.length; i++) {
                     let item = file.nodes[i];
                     for(var cell in item){
-                        if(cell!='id'&&cell!='nameField'){
+                        if(cell!='id'&&cell!='nameField'&&cell!='DeletionStateCode'){
                             item[cell]=girdFormatterValue(cell,item);
                         }
                         if(cell=='CreatedOn'){
                             item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD"):'';
                         }
+                        if(cell=='DeletionStateCode'){
+                            item[cell]=item[cell]?item[cell].selected:false;
+                        }
                     }
-                    list.push(item)
+                    if(!item.DeletionStateCode){
+                        if(item.Name.indexOf(data.searchVal)!=-1){
+                            list.push(item)
+                        }
+                    }
                 }
                 data.FileList = list;
             }
         })
+        }
+        else if(data.selectedKeys[0]=='deleted'){
+            let url=Interface.list2;
+            let obj={
+                filterId:'',
+                objectTypeCode:'100100',
+                entityName:'File',
+                filterQuery:'\nDeletionStateCode\teq\ttrue',
+                search:data.searchVal||'',
+                page: data.pagination.current,
+                rows: data.pagination.pageSize,
+                sort:'SortNumber',
+                order:'ASC',
+                displayColumns:'Name,ThumbnailUrl,CreatedOn'
+            }
+            proxy.$post(url, obj).then(res => {
+                if(res&&res.nodes.length){
+                    data.listData = res.nodes;
+                    data.total = res.pageInfo?res.pageInfo.total:0;
+                    data.pagination.total = res.pageInfo?res.pageInfo.total:0;
+                    let list = [];
+                    for (var i = 0; i < res.nodes.length; i++) {
+                        let item = res.nodes[i];
+                        for(var cell in item){
+                            if(cell!='id'&&cell!='nameField'){
+                                item[cell]=girdFormatterValue(cell,item);
+                            }
+                            if(cell=='CreatedOn'){
+                                item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD"):'';
+                            }
+                        }
+                        list.push(item)
+                    }
+                    data.FileList = list;
+                }
+            })
         }
         setTimeout(function(){
             data.loading=false;
@@ -533,7 +589,7 @@
             canDelete: false,
             canRead: false
         }
-        if(data.folderId){
+        if(data.SelectKey){
             let url=Interface.album.getPrivileges;
             let d = {
                 actions:[{
@@ -541,7 +597,7 @@
                     descriptor: "",
                     callingDescriptor: "UNKNOWN",
                     params: {
-                        id:data.folderId,
+                        id:data.SelectKey,
                     }
                 }]
             };
@@ -606,23 +662,137 @@
     const handleCommonCancel = (params) => {
         data.isCommon=false;
     };
+    //还原
+    const handleRecovery = (id) => {
+        data.recordId=id;
+        data.objectTypeCode='100100';
+        data.sObjectName='File';
+        data.confirmText='确定要还原该文件吗？';
+        data.confirmTitle='还原';
+        data.isConfirm=true;
+    }
     //删除
     const handleDelete = (id,type) => {
         data.recordId=id;
         if(type=='folder'){
             data.objectTypeCode='100103';
             data.sObjectName='FileFolder';
+            data.isDelete = true;
         }
         else{
             data.objectTypeCode='100100';
             data.sObjectName='File';
+            if(data.selectedKeys[0]=='deleted'){
+                data.confirmText='确定要永久删除该文件吗？'
+            }else{
+                data.confirmText='确定要放入回收站吗？'
+            }
+            data.confirmTitle='删除'
+            data.isConfirm=true;
         }
-        data.isDelete = true;
     }
     //删除关闭
     const cancelDelete = (e) => {
         data.isDelete = false;
     };
+
+//确认回调
+const confirmOk=(id)=>{
+    data.isConfirm=false
+    if(data.confirmTitle=='批量删除'){
+        BatchHandleDeleteEmail2();
+    }else if(data.confirmTitle=='还原'){
+        handleRowDelete(id,0);
+    }
+    else{
+        handleRowDelete(id,1);
+    }
+}
+//逻辑删除&还原照片
+const handleRowDelete=(id,type)=>{
+    let url=Interface.edit;
+            let d = {
+            actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId:id,
+                        recordInput: {
+                            allowSaveOnDuplicate: false,
+                            apiName: 'File',
+                            objTypeCode: '100100',
+                            fields: {
+                                DeletionStateCode:type*1==1?1:'False',
+                                FileTypeCode:0
+                            }
+                        }              
+                    }
+                }]
+            };
+            if(data.selectedKeys[0]=='deleted'&&type*1==1){
+                url=Interface.delete;
+                d = {
+                    actions: [{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        recordId: id,
+                        apiName: 'File',
+                        objTypeCode: '100100',
+                    }
+                    }]
+                };
+            }
+            let obj = {
+                message: JSON.stringify(d)
+            }
+            proxy.$post(url,obj).then(res=>{
+                if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
+                    message.success(type*1==1?"删除成功！":"还原成功！");
+                    //data.pagination.current=1;
+                    getQuery();
+                }
+                else{
+                    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
+                        message.success(res.actions[0].errorMessage);
+                    }
+                    else{
+                        message.success(type*1==1?"删除失败！":"还原失败！");
+                    }
+                }
+            });
+}
+//批量删除
+const BatchHandleDeleteEmail=()=>{
+    console.log(data.checkList)
+    if(data.checkList&&data.checkList.length){
+        if(data.selectedKeys[0]=='deleted'){
+            data.confirmText='确定要批量永久删除吗？'
+        }else{
+            data.confirmText='确定要批量删除吗？'
+        }
+        data.recordId='';
+        data.confirmTitle='批量删除';
+        data.isConfirm=true;
+    }else{
+        message.error("至少需要勾选一个");
+    }
+}
+const BatchHandleDeleteEmail2=()=>{
+    if(data.checkList&&data.checkList.length){
+        for(var i=0;i<data.checkList.length;i++){
+            let item={id:data.checkList[i]};
+            if(item.id){
+                handleRowDelete(item.id,1);
+            }
+        }
+        setTimeout(function(){
+            data.checkList=[];
+        },2000)
+    }
+}
     const beforeUpload=(e)=>{
         //执行顺序1
         console.log("beforeUpload",e);
@@ -716,9 +886,9 @@
     }
     //鼠标悬浮获取权限
     const handleMouseOver=(id,name)=>{
-        if(id&&id!=data.folderId){
-            data.folderId=id;
-            data.folderName=name;
+        if(id&&id!=data.SelectKey){
+            data.SelectKey=id;
+            data.SelectName=name;
             getPrivileges();
         }
     }
@@ -727,7 +897,6 @@
         data.folderId=id;
         data.folderName=name;
         CreatedBreadCrumb(id,name);
-        //getPrivileges();
         data.pagination.current=1;
         getQuery();
     };

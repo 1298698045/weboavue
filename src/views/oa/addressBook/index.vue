@@ -435,6 +435,7 @@
         } else {
             getGroupList();
         }
+        data.treeId='';
         data.activeKey = '1';
         data.pageNumber=1;
         getQuery();
