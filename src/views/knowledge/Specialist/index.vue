@@ -44,10 +44,10 @@
           </div>
         </div> -->
         <div class="SpecialistWrapList">
-            <div class="SpecialistItem" v-for="index in 6" :key="index">
+            <div class="SpecialistItem" v-for="(item,index) in listData" :key="index">
                   <div class="item_title">
                     <div style="font-size: 14px;line-height:30px;float: left;">专家：</div>
-                    <div style="cursor:pointer;font-size: 14px;line-height:30px;float: left;">管理员</div>
+                    <div style="cursor:pointer;font-size: 14px;line-height:30px;float: left;">{{item.FullName||'暂无'}}</div>
                   </div>
                   <div style="width: 98%;height: 3px;position: relative;margin: 0px auto">
                     <div style="width: 100%;height: 1px;font-size: 0px;"></div>
@@ -68,14 +68,14 @@
                           </td>
                           <td width="15"></td>
                           <td width="*" valign="top">
-                            <div class="content"><font class="ftitle">岗位：</font>总经理</div>
-                            <div class="content"><font class="ftitle">部门：</font>聚才林-业务发展部</div>
+                            <div class="content"><font class="ftitle">岗位：</font>{{item.PostId||'暂无'}}</div>
+                            <div class="content"><font class="ftitle">部门：</font>{{item.BusinessUnitId||'暂无'}}</div>
                             <div class="content" style="height: 44px;overflow: hidden;" title="关键字">
                               <font class="ftitle">关键字：</font>
-                              <span>法务咨询</span>&nbsp;
+                              <span>{{item.KeyWords||'暂无'}}</span>&nbsp;
                             </div>
                             <div class="content" style="height: 22px;overflow: hidden;">
-                              <div class="d_btn" onclick="openurl('/sms/SmsMessageEdit.jsp?hrmid=4')">发送短信</div>
+                              <div class="d_btn" @click="openSendEmail(item)">发送邮件</div>
                             </div>
                           </td>
                         </tr>
@@ -85,7 +85,10 @@
                       <div style="width: 100%;height: 15px;border-bottom: 1px #eaeaea solid;font-size: 0px;"></div>
                       <div style="width: 65px;line-height: 30px;position: absolute;top: 0px;left: 10px;background: #F9F9F9;text-align: center;">专家简介</div>
                     </div>
-                    <div class="content_def">建立健全公司知识产权和商业秘密保护体系。从公司研发、销售、客服、经销商包括客户等环节进行规范保护； 负责公司法律纠纷、诉讼的处理及跟踪； 负责公司合同文本的法律审核、提供法律意见； 负责审核公司各项规章制度、确保公司各项规章制度的合法、规范、严谨；建立健全公司知识产权和商业秘密保护体系。从公司研发、销售、客服、经销商包括客户等环节进行规范保护； 负责公司法律纠纷、诉讼的处理及跟踪； 负责公司合同文本的法律审核、提供法律意见； 负责审核公司各项规章制度、确保公司各项规章制度的合法、规范、严谨；</div>
+                    <div class="content_def">
+                      {{item.Description||'暂无'}}
+                    </div>
+                    <!-- <div class="content_def">建立健全公司知识产权和商业秘密保护体系。从公司研发、销售、客服、经销商包括客户等环节进行规范保护； 负责公司法律纠纷、诉讼的处理及跟踪； 负责公司合同文本的法律审核、提供法律意见； 负责审核公司各项规章制度、确保公司各项规章制度的合法、规范、严谨；建立健全公司知识产权和商业秘密保护体系。从公司研发、销售、客服、经销商包括客户等环节进行规范保护； 负责公司法律纠纷、诉讼的处理及跟踪； 负责公司合同文本的法律审核、提供法律意见； 负责审核公司各项规章制度、确保公司各项规章制度的合法、规范、严谨；</div> -->
                   </div>
                   <div style="width: 98%;margin: 0px auto;height: 30px;position: relative;">
                     <div style="width: 100%;height: 15px;border-bottom: 1px #eaeaea solid;font-size: 0px;"></div>
@@ -94,44 +97,12 @@
                   <div>
                     <table class="Econtent" width="100%">
                       <tbody>
-                        <tr height="18px">
-                          <td width="*" title="移动建模图片附件-1624677446131">
-                            <a href="javascript:openFullWindowHaveBar('/docs/docs/DocDsp.jsp?id=27033&amp;isOpenFirstAss=0')">移动建模图片附件-1624677446131</a>
+                        <tr height="18px" v-for="(child,childIndex) in item.childData" :key="childIndex">
+                          <td width="*" :title="child.Name||''">
+                            <a href="javascript:')">{{child.Name||''}}</a>
                           </td>
                           <td width="70">
-                            <font class="font">2021-06-26</font>
-                          </td>
-                        </tr>
-                        <tr height="18px">
-                          <td width="*" title="【维森集团】公司知识产权申请及维护标准">
-                            <a href="javascript:openFullWindowHaveBar('/docs/docs/DocDsp.jsp?id=7985&amp;isOpenFirstAss=0')">【维森集团】公司知识产权申请及维护标准</a>
-                          </td>
-                          <td width="70">
-                            <font class="font">2020-05-13</font>
-                          </td>
-                        </tr>
-                        <tr height="18px">
-                          <td width="*" title="关于集团公司2020年诉讼、仲裁、法律纠纷的法务协助规范">
-                            <a href="javascript:openFullWindowHaveBar('/docs/docs/DocDsp.jsp?id=7984&amp;isOpenFirstAss=0')">关于集团公司2020年诉讼、仲裁、法律纠纷的法务协助规范</a>
-                          </td>
-                          <td width="70">
-                            <font class="font">2020-05-13</font>
-                          </td>
-                        </tr>
-                        <tr height="18px">
-                          <td width="*" title="关于集团公司重大经济活动谈判法务协助流程的提交规范">
-                            <a href="javascript:openFullWindowHaveBar('/docs/docs/DocDsp.jsp?id=7983&amp;isOpenFirstAss=0')">关于集团公司重大经济活动谈判法务协助流程的提交规范</a>
-                          </td>
-                          <td width="70">
-                            <font class="font">2020-05-13</font>
-                          </td>
-                        </tr>
-                        <tr height="18px">
-                          <td width="*" title="维森集团2020年合同签署范本及法务条款更新">
-                            <a href="javascript:openFullWindowHaveBar('/docs/docs/DocDsp.jsp?id=7982&amp;isOpenFirstAss=0')">维森集团2020年合同签署范本及法务条款更新</a>
-                          </td>
-                          <td width="70">
-                            <font class="font">2020-05-13</font>
+                            <font class="font">{{child.CreatedOn||''}}</font>
                           </td>
                         </tr>
                       </tbody>
@@ -161,6 +132,17 @@ import {
   defineProps,
   h
 } from "vue";
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+dayjs.locale('zh-cn');
+import calendar from 'dayjs/plugin/calendar';
+import weekday from 'dayjs/plugin/weekday';
+import localeData from 'dayjs/plugin/localeData';
+import axios from "axios";
+dayjs.extend(calendar);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
 import {
   SwapLeftOutlined,
   SwapRightOutlined,
@@ -172,50 +154,11 @@ import { girdFormatterValue } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import RadioUser from "@/components/commonModal/MultipleUser.vue";
 import Delete from "@/components/listView/Delete.vue";
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
+const route = useRoute();
 const { proxy } = getCurrentInstance();
 const PersonnelLst = ref();
-var columns = [
-  {
-    title: "序号",
-    dataIndex: "index",
-    key: "index",
-    width:80
-  },
-  {
-    title: "排序",
-    dataIndex: "",
-    key: "sort",
-  },
-  {
-    title: "姓名",
-    dataIndex: "FullName",
-  },
-  {
-    title: "部门",
-    dataIndex: "BusinessUnitIdName",
-  },
-  {
-    title: "角色",
-    dataIndex: "RoleCode",
-  },
-  {
-    title: "电话",
-    dataIndex: "MobilePhone",
-  },
-  {
-    title: "邮箱",
-    dataIndex: "EMailAddress",
-  },
-  {
-    title: "职位",
-    dataIndex: "JobTitle",
-  },
-  {
-    title: "操作",
-    key: "Action",
-    width: 120,
-  },
-];
 const props = defineProps({
   id: String,
 });
@@ -274,60 +217,92 @@ const data = reactive({
 });
 const changeTabs = (e) => {
       data.activeKey = e;
+      data.pagination.current=1;
       getQuery();
   };
-const columnList = toRaw(columns);
 const { height,activeKey,tabs,listData, searchVal,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,isRadioUser } = toRefs(data);
 const getQuery = () => {
-  // proxy.$get(Interface.user.groupUser, {}).then((res) => {
-  //   data.listData = res.rows;
-  // });
-  data.listData=[];
+  //data.listData=[];
   data.pagination.total = 0;
-  let filterQuery='\nGroupId\teq\t'+props.id;
-  if(data.activeKey==0){
-      filterQuery+='\nRoleCode\teq\t0';
+  let filterQuery='';
+    if(data.activeKey==0){
+      //filterQuery+='\nRoleCode\teq\t0';
     }
     if(data.activeKey==1){
-      filterQuery+='\nRoleCode\teq\t2';
+      //filterQuery+='\nRoleCode\teq\t2';
+    }
+    if(data.pagination.current==1){
+      data.listData=[];
     }
         proxy.$post(Interface.list2, {
             filterId:'',
-            objectTypeCode:'90',
-            entityName:'GroupMembership',
+            objectTypeCode:'8',
+            entityName:'SystemUser',
             filterQuery:filterQuery,
             search:data.searchVal||'',
             page: data.pagination.current,
             rows: data.pagination.pageSize,
-            sort:'DisplayOrder',
+            sort:'EmployeeId',
             order:'ASC',
-            displayColumns:'RegardingObjectIdName,PhotoUrl,FullName,BusinessUnitIdName,RoleCode,MobilePhone,EMailAddress,WorkStatus'
+            displayColumns:'FullName,AvatarImg,BusinessUnitId,PostId,KeyWords,JobTitle,EmployeeId,MobilePhone,InternalEMailAddress,OwningUser'
         }).then(res => {
-            var list = [];
             data.total = res.pageInfo?res.pageInfo.total:0;
             data.pagination.total = res.pageInfo?res.pageInfo.total:0;
             //console.log(pagination)
             for (var i = 0; i < res.nodes.length; i++) {
                 var item = res.nodes[i];
                 for(var cell in item){
-                    if(cell!='id'&&cell!='nameField'&&cell!='PhotoUrl'){
+                    if(cell!='id'&&cell!='nameField'&&cell!='AvatarImg'){
                         item[cell]=girdFormatterValue(cell,item);
                     }
-                    if(cell=='RegardingObjectIdName'){
-                        item['FullName']=item[cell];
+                    if(cell=='AvatarImg'){
+                      item[cell]=girdFormatterValue(cell,item)||'@/assets/img/avatar-r.png';
                     }
                 }
-                list.push(item)
-            }
-            data.listData = list;
-            
+                if(!item.AvatarImg){
+                    item.AvatarImg='@/assets/img/avatar-r.png';
+                }
+                data.listData.push(item);
+                getItemList(item.id,i);
+            }            
         })
 };
+const getItemList=(id,index)=>{
+  data.listData[index]['childData'] =[];
+  let filterQuery='\nEmployeeId\teq\t'+id;
+  proxy.$post(Interface.list2, {
+            filterId:'',
+            objectTypeCode:'30026',
+            entityName:'HREmployeeBook',
+            filterQuery:filterQuery,
+            search:'',
+            page: 1,
+            rows: 50,
+            displayColumns:'Name'
+        }).then(res => {
+            let list = [];
+            for (var i = 0; i < res.nodes.length; i++) {
+                let item = res.nodes[i];
+                for(var cell in item){
+                    if(cell!='id'&&cell!='nameField'){
+                        item[cell]=girdFormatterValue(cell,item);
+                    }
+                    if(cell=='CreatedOn'){
+                        item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD"):'';
+                    }
+                }
+                list.push(item);
+            }
+            data.listData[index]['childData'] = list;
+        })
+}
 const onSearch = (e) => {
+  data.pagination.current=1;
   getQuery();
 };
 const onClear = (e) => {
   data.searchVal='';
+  data.pagination.current=1;
   getQuery();
 };
 //改变页码
@@ -336,11 +311,10 @@ const handleTableChange=(page, pageSize)=>{
     data.pagination.current=page;
     data.pagination.pageSize=pageSize;
     getQuery();
-  }
-  const sizeChange=(current, size)=>{
-    handleTableChange(current, size)
-  }
-//getQuery();
+}
+const sizeChange=(current, size)=>{
+  handleTableChange(current, size)
+}
 // 添加成员
 const AddPeople = () => {
   data.isRadioUser = true;
@@ -353,7 +327,6 @@ const AddAdmin = () => {
 };
 const refreshPeople=(e)=>{
   getQuery();
-  emit("load","");
 }
 const closeUser = (e) => {
   data.isRadioUser = false;
@@ -407,15 +380,53 @@ const handleDelete = (key) => {
 const cancelDelete = (e) => {
     data.isDelete = false;
 };
+//发送邮件
+const openSendEmail= (item) => {
+        let url = router.resolve({
+            path:'/email',
+            name: "Email",
+            query: {
+                Id:item.id,
+                Name:item.FullName,
+                type:1
+            },
+        });
+        window.open(url.href);
+    };
 onMounted(() => {
   let h = document.documentElement.clientHeight;
-      //data.tableHeight = h-565;
-      data.height=h-80;
-      window.addEventListener("resize", (e) => {
-        let h = document.documentElement.clientHeight;
-        //data.tableHeight = h-565;
-        data.height=h-80;
-      });
+  //data.tableHeight = h-565;
+  data.height=h-80;
+  window.addEventListener("resize", (e) => {
+    let h = document.documentElement.clientHeight;
+    //data.tableHeight = h-565;
+    data.height=h-80;
+  });
+  window.addEventListener(
+            "scroll",
+            function () {
+            if (document.getElementsByClassName("panel").length) {
+            } else {
+                return;
+            }
+            var clientHeight =
+                document.getElementsByClassName("panel")[0].clientHeight;
+            var scrollTop =
+                document.getElementsByClassName("panel")[0].scrollTop;
+            var scrollHeight =
+                document.getElementsByClassName("panel")[0].scrollHeight;
+            if (
+                scrollTop &&
+                clientHeight &&
+                (clientHeight + scrollTop >= scrollHeight)
+            ) {
+                data.pagination.current = data.pagination.current + 1;
+                getQuery();
+            }
+            },
+            true
+        );
+  getQuery();
 })
 </script>
 <style lang="less">

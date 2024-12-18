@@ -84,7 +84,7 @@
                             文档
                         </span>
                     </div>
-                    <div class="tableBox-Bottom-Btn">
+                    <div class="tableBox-Bottom-Btn" @click="handleAddLink('WFProcessInstance')">
                         <span class="tableBox-Bottom-Btn-Icon">
                             <NodeIndexOutlined />
                         </span>
@@ -92,7 +92,7 @@
                             流程
                         </span>
                     </div>
-                    <div class="tableBox-Bottom-Btn">
+                    <div class="tableBox-Bottom-Btn" @click="handleAddLink('SystemUser')">
                         <span class="tableBox-Bottom-Btn-Icon">
                             <UserOutlined />
                         </span>
@@ -116,14 +116,17 @@
                             任务
                         </span>
                     </div>
-                    <div class="tableBox-Bottom-Btn">
-                        <span class="tableBox-Bottom-Btn-Icon">
-                            <PaperClipOutlined />
-                        </span>
-                        <span class="tableBox-Bottom-Btn-Label">
-                            附件
-                        </span>
-                    </div>
+                    <a-upload v-model:file-list="fileList" action :showUploadList="false" multiple name="file" 
+                    :customRequest="changeRequest" :before-upload="beforeUpload" @change="handleChange">
+                      <div class="tableBox-Bottom-Btn">
+                          <span class="tableBox-Bottom-Btn-Icon">
+                              <PaperClipOutlined />
+                          </span>
+                          <span class="tableBox-Bottom-Btn-Label">
+                              附件
+                          </span>
+                      </div>
+                    </a-upload>
                 </div>
             </div>
           </div>
@@ -172,6 +175,7 @@
       <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
       <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="id" />
       <AddDocument v-if="isAddDoc" :isShow="isAddDoc" @select="handleSelectDoc" @cancel="isAddDoc=false" />
+      <AddLink v-if="isAddLink" :isShow="isAddLink" @select="handleSelectLink" :entityApiName="sObjectName2" @cancel="isAddLink=false" />
     </div>
   </template>
   <script setup>
@@ -183,7 +187,9 @@
     getCurrentInstance,
     defineEmits,
     toRaw,
+    nextTick
   } from "vue";
+  import axios from "axios";
   import dayjs from 'dayjs';
   import 'dayjs/locale/zh-cn';
   import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
@@ -230,6 +236,7 @@
   import Delete from "@/components/listView/Delete.vue";
   import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
   import AddDocument from "@/components/information/AddDocument.vue";
+  import AddLink from "@/components/information/AddLink.vue";
   import Interface from "@/utils/Interface.js";
   import { message } from "ant-design-vue";
   const { proxy } = getCurrentInstance();
@@ -252,6 +259,7 @@
     id: route.query.id,
     objectTypeCode: route.query.objectTypeCode,
     sObjectName:'Content',
+    sObjectName2:'',
     detail: {},
     isNotes: false,
     isStatus: false,
@@ -273,9 +281,16 @@
     isConfirm:false,
     confirmText:'',
     confirmTitle:'',
-    isAddDoc:false
+    isAddDoc:false,
+    fileList:[],
+    fileList1:[],
+    isAddLink:false
   });
   const {
+    sObjectName2,
+    isAddLink,
+    fileList,
+    fileList1,
     tabs,
     activeKey,
     id,
@@ -644,6 +659,98 @@ if(route.query.objectTypeCode=='100201'){
       }
       data.isAddDoc=false;
   }
+  //添加 流程/用户 链接
+  const handleAddLink=(name)=>{
+    data.sObjectName2=name;
+    data.isAddLink=true;
+  }
+  //选中 流程/用户 链接
+  const handleSelectLink=(obj)=>{
+      let reUrl = router.resolve({
+          path:"/lightning/r/Workflow/instance/detail",
+          query: {
+            id: obj.id,
+            reurl:'/lightning/o/workflow/doing'
+          }
+      })
+      let html='<a href="'+reUrl.href+'" target="_blank">'+obj.name+'</a>';
+      if(data.sObjectName2=='SystemUser'){
+        html='<span>'+obj.name+'</span>';
+      }
+      if(editorRef&&editorRef.value){
+        tinymce.activeEditor.insertContent(html);
+      }
+      data.isAddLink=false;
+  }
+  //去重
+  const unique = (list) => {
+        for (var i = 0; i < list.length; i++) {
+            for (var j = i + 1; j < list.length; j++) {
+                if (list[i].uid == list[j].uid) {
+                    list.splice(j, 1)
+                    j--;
+                }
+            }
+        }
+        return list;
+    }
+    const beforeUpload=(e)=>{
+        //执行顺序1
+        console.log("beforeUpload",e);
+    }
+    const handleChange = (file) => {
+        //执行顺序2
+        if(file&&file.file){
+            let size=file.file.size;
+            size=size?(size*1/1024).toFixed(2):0;
+            data.fileList1.push({
+                uid: file.file.uid,
+                name: file.file.name,
+                url: file.file.url,
+                fileExtension: file.file.name ? (file.file.name).split('.')[1] : '',
+                raw: file.file.originFileObj,
+                Privilege: '',
+                size:size+'kb',
+                isNew:true
+            });
+        }
+        data.fileList1=unique(data.fileList1);
+    }
+    const changeRequest=(file) => {
+        //执行顺序3
+        nextTick(()=>{
+            if (data.fileList1&&data.fileList1.length&&data.id) {
+                let isHasNew=false;
+                var fd = new FormData();
+                fd.append('parentId', data.id);
+                fd.append('entityName', 'Content');
+                for (var i = 0; i < data.fileList1.length; i++) {
+                    var item = data.fileList1[i];
+                    if (item.raw&&item.isNew) {
+                        fd.append('files', item.raw);
+                        data.fileList1[i].isNew=false;
+                        isHasNew=true;
+                    }
+                }
+                if(isHasNew){
+                    axios({
+                        url: Interface.uploadFiles,
+                        method: 'POST',
+                        data: fd,
+                        headers: {
+                            'Content-type': 'multipart/form-data',
+                        },
+                    }).then(res=>{
+                        message.success("上传成功！");
+                        //changeTabs(2);
+                    }).catch(err => {
+                        console.log('error', err);
+                        message.error("上传失败！");
+                    });
+                }
+            }
+        })
+    }
   </script>
   <style lang="less" scoped>
   .editorWrap{
