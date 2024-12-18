@@ -389,5 +389,23 @@ const Interface = {
     uploadZip:baseUrl + '/album/upload/zipfile',//上传图片压缩包
   },
   getMapFieldValues: baseUrl + "/aura/Lookup/getMapFieldValues", // 查找字段 - 获取目标对象映射字段值
+  report: {
+    config: "/localData/report/config.json",
+    list: "/localData/report/list.json",
+    category: "/localData/report/category.json",
+    categoryListData: "/localData/report/tableList.json",
+    newReport: baseUrl + "/aura/analytics/reporting/runpage/newReport", // 新建报表
+    reportDesign: {
+        tree: "/localData/report/reportDesign/tree.json",
+        // metaData: "/localData/report/reportDesign/reportMetaData.json",
+        metaData: baseUrl + "/aura/analytics/reporting/runpage/describeReport", // 获取报表元数据
+        saveReport: baseUrl + "/aura/analytics/reporting/runpage/saveReport", // 报表保存
+        // runReport: baseUrl + "/aura/analytics/reporting/runpage/runReport", // 报表运行
+        runReport: "/localData/report/reportDesign/runReport.json",
+        runReport2: "/localData/report/reportDesign/runReport_group.json",
+        describeReport: baseUrl + "/aura/analytics/reporting/runpage/describeReport", // 获取报表元数据
+        runReportNew: baseUrl + "/aura/analytics/reporting/runpage/runReport", // 报表运行
+    }
+  },
 };
 export default Interface;

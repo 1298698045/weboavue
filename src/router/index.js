@@ -345,6 +345,32 @@ const staticRoutes = [
     path: "/lightning/r/Workflow/instance/detail",
     name: "FlowDetail",
     component: () => import("../views/flow/detail/index.vue")
+  },
+  {
+    path: "/o/Report/common/home",
+    name: "report",
+    component: Layout,
+    meta: {
+      name: "Report",
+      icon: "huiyihuodong",
+    },
+    children: [
+      {
+        path: "/o/Report/common/home",
+        name: "CommonReportHome",
+        // component: () => import("../views/report/home/index.vue"),
+      },
+      {
+        path: "/lightning/o/Report/home",
+        name: "report",
+        component: () => import("../views/report/home/index.vue")
+      }
+    ]
+  },
+  {
+    path: "/lightning/o/Report/preview",
+    name: "ReportPreview",
+    component: () => import("../views/report/preview/index.vue"),
   }
 ];
 

@@ -91,6 +91,9 @@ a {
 .flex {
     display: flex;
 }
+.flex-col{
+    flex: 1 1 auto;
+}
 .justify-start {
     justify-content: flex-start;
 }
@@ -145,7 +148,9 @@ a {
 .items-center {
     align-items: center;
 }
-
+.no-flex{
+    flex: none;
+}
 .radiusNone {
     border-radius: 0;
 }

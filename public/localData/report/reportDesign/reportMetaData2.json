@@ -1,0 +1,733 @@
+{"actions":[{"id":"576;a","state":"SUCCESS","returnValue":{
+  "attributes" : {
+    "describeUrl" : "/services/data/v61.0/analytics/reports/00O0o000009Dp2REAS/describe",
+    "instancesUrl" : "/services/data/v61.0/analytics/reports/00O0o000009Dp2REAS/instances",
+    "reportId" : "00O0o000009Dp2REAS",
+    "reportName" : "商业机会1",
+    "type" : "Report"
+  },
+  "allData" : true,
+  "factMap" : {
+    "T!0" : {
+      "aggregates" : [ {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "0!T" : {
+      "aggregates" : [ {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "0!0_0" : {
+      "aggregates" : [ {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Edge Communications",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : "00190000015a7I3AAI"
+        }, {
+          "label" : "Customer - Direct",
+          "recordId" : "00190000015a7I3AAI",
+          "value" : "Customer - Direct"
+        }, {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "Edge Emergency Generator",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : "0069000000OZLuPAAX"
+        }, {
+          "label" : "￥35,000.00",
+          "value" : {
+            "amount" : 35000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥21,000.00",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : {
+            "amount" : 21000,
+            "currency" : null
+          }
+        }, {
+          "label" : "60%",
+          "value" : 60
+        }, {
+          "label" : "3,585",
+          "value" : 3585
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Electronics",
+          "recordId" : "00190000015a7I3AAI",
+          "value" : "Electronics"
+        } ]
+      } ]
+    },
+    "T!T" : {
+      "aggregates" : [ {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "T!0_0" : {
+      "aggregates" : [ {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "0!0" : {
+      "aggregates" : [ {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000.000000000000000000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "￥35,000.00",
+        "value" : 35000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    }
+  },
+  "groupingsAcross" : {
+    "groupings" : [ {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "0_0",
+        "label" : "Existing Customer - Replacement",
+        "value" : "Existing Customer - Replacement"
+      } ],
+      "key" : "0",
+      "label" : "liu jack",
+      "value" : "0059000000390WhAAI"
+    } ]
+  },
+  "groupingsDown" : {
+    "groupings" : [ {
+      "groupings" : [ ],
+      "key" : "0",
+      "label" : "Id. Decision Makers",
+      "value" : "Id. Decision Makers"
+    } ]
+  },
+  "hasDetailRows" : true,
+  "hasExceededTabularRowLimit" : false,
+  "picklistColors" : { },
+  "reportExtendedMetadata" : {
+    "aggregateColumnInfo" : {
+      "s!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "金额 总和"
+      },
+      "a!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "平均金额"
+      },
+      "RowCount" : {
+        "dataType" : "int",
+        "label" : "记录计数"
+      },
+      "mx!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "最大值 金额"
+      },
+      "m!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "最小值 金额"
+      }
+    },
+    "availableDashboardSettings" : null,
+    "detailColumnInfo" : {
+      "FULL_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "User.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Owner.Name",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "业务机会所有人",
+        "uniqueCountable" : true
+      },
+      "ACCOUNT_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Account.Name",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "AccountId",
+          "lookupEntityName" : "Account"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Account.Name",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "客户名",
+        "uniqueCountable" : true
+      },
+      "ACCOUNT_TYPE" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Account.Type",
+        "fieldInfo" : {
+          "entityName" : "Account",
+          "fieldName" : "Type"
+        },
+        "filterValues" : [ {
+          "apiName" : "Customer - Direct",
+          "label" : "Customer - Direct",
+          "name" : "Customer - Direct"
+        }, {
+          "apiName" : "Customer - Channel",
+          "label" : "Customer - Channel",
+          "name" : "Customer - Channel"
+        }, {
+          "apiName" : "Channel Partner / Reseller",
+          "label" : "Channel Partner / Reseller",
+          "name" : "Channel Partner / Reseller"
+        }, {
+          "apiName" : "Installation Partner",
+          "label" : "Installation Partner",
+          "name" : "Installation Partner"
+        }, {
+          "apiName" : "Technology Partner",
+          "label" : "Technology Partner",
+          "name" : "Technology Partner"
+        }, {
+          "apiName" : "Other",
+          "label" : "Other",
+          "name" : "Other"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Account.Type",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "客户类型",
+        "uniqueCountable" : true
+      },
+      "ROLLUP_DESCRIPTION" : {
+        "dataType" : "string",
+        "entityColumnName" : "UserRole.RollupDescription",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Owner.UserRole.RollupDescription",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "所有人角色",
+        "uniqueCountable" : true
+      },
+      "OPPORTUNITY_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Opportunity.Name",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "Name",
+          "lookupEntityName" : "Opportunity"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Name",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "业务机会名",
+        "uniqueCountable" : true
+      },
+      "AMOUNT" : {
+        "dataType" : "currency",
+        "entityColumnName" : "Opportunity.Amount",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Amount",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "金额",
+        "uniqueCountable" : true
+      },
+      "EXP_AMOUNT" : {
+        "dataType" : "currency",
+        "entityColumnName" : "Opportunity.ExpectedRevenue",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "ExpectedRevenue"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.ExpectedRevenue",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "预期收入",
+        "uniqueCountable" : true
+      },
+      "PROBABILITY" : {
+        "dataType" : "percent",
+        "entityColumnName" : "Opportunity.Probability",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Probability",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "可能性 (%)",
+        "uniqueCountable" : true
+      },
+      "AGE" : {
+        "dataType" : "double",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "帐龄",
+        "uniqueCountable" : true
+      },
+      "CLOSE_DATE" : {
+        "dataType" : "date",
+        "entityColumnName" : "Opportunity.CloseDate",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "CloseDate"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.CloseDate",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "结束日期",
+        "uniqueCountable" : true
+      },
+      "CREATED_DATE" : {
+        "dataType" : "date",
+        "entityColumnName" : "Opportunity.CreatedDate",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.CreatedDate",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "创建日期",
+        "uniqueCountable" : true
+      },
+      "OWNER_DIVISION" : {
+        "dataType" : "string",
+        "entityColumnName" : "User.Division",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Owner.Division",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "业务机会所有人：分部",
+        "uniqueCountable" : true
+      },
+      "INDUSTRY" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Account.Industry",
+        "fieldInfo" : {
+          "entityName" : "Account",
+          "fieldName" : "Industry"
+        },
+        "filterValues" : [ {
+          "apiName" : "Agriculture",
+          "label" : "Agriculture",
+          "name" : "Agriculture"
+        }, {
+          "apiName" : "Apparel",
+          "label" : "Apparel",
+          "name" : "Apparel"
+        }, {
+          "apiName" : "Banking",
+          "label" : "Banking",
+          "name" : "Banking"
+        }, {
+          "apiName" : "Biotechnology",
+          "label" : "Biotechnology",
+          "name" : "Biotechnology"
+        }, {
+          "apiName" : "Chemicals",
+          "label" : "Chemicals",
+          "name" : "Chemicals"
+        }, {
+          "apiName" : "Communications",
+          "label" : "Communications",
+          "name" : "Communications"
+        }, {
+          "apiName" : "Construction",
+          "label" : "Construction",
+          "name" : "Construction"
+        }, {
+          "apiName" : "Consulting",
+          "label" : "Consulting",
+          "name" : "Consulting"
+        }, {
+          "apiName" : "Education",
+          "label" : "Education",
+          "name" : "Education"
+        }, {
+          "apiName" : "Electronics",
+          "label" : "Electronics",
+          "name" : "Electronics"
+        }, {
+          "apiName" : "Energy",
+          "label" : "Energy",
+          "name" : "Energy"
+        }, {
+          "apiName" : "Engineering",
+          "label" : "Engineering",
+          "name" : "Engineering"
+        }, {
+          "apiName" : "Entertainment",
+          "label" : "Entertainment",
+          "name" : "Entertainment"
+        }, {
+          "apiName" : "Environmental",
+          "label" : "Environmental",
+          "name" : "Environmental"
+        }, {
+          "apiName" : "Finance",
+          "label" : "Finance",
+          "name" : "Finance"
+        }, {
+          "apiName" : "Food & Beverage",
+          "label" : "Food & Beverage",
+          "name" : "Food & Beverage"
+        }, {
+          "apiName" : "Government",
+          "label" : "Government",
+          "name" : "Government"
+        }, {
+          "apiName" : "Healthcare",
+          "label" : "Healthcare",
+          "name" : "Healthcare"
+        }, {
+          "apiName" : "Hospitality",
+          "label" : "Hospitality",
+          "name" : "Hospitality"
+        }, {
+          "apiName" : "Insurance",
+          "label" : "Insurance",
+          "name" : "Insurance"
+        }, {
+          "apiName" : "Machinery",
+          "label" : "Machinery",
+          "name" : "Machinery"
+        }, {
+          "apiName" : "Manufacturing",
+          "label" : "Manufacturing",
+          "name" : "Manufacturing"
+        }, {
+          "apiName" : "Media",
+          "label" : "Media",
+          "name" : "Media"
+        }, {
+          "apiName" : "Not For Profit",
+          "label" : "Not For Profit",
+          "name" : "Not For Profit"
+        }, {
+          "apiName" : "Recreation",
+          "label" : "Recreation",
+          "name" : "Recreation"
+        }, {
+          "apiName" : "Retail",
+          "label" : "Retail",
+          "name" : "Retail"
+        }, {
+          "apiName" : "Shipping",
+          "label" : "Shipping",
+          "name" : "Shipping"
+        }, {
+          "apiName" : "Technology",
+          "label" : "Technology",
+          "name" : "Technology"
+        }, {
+          "apiName" : "Telecommunications",
+          "label" : "Telecommunications",
+          "name" : "Telecommunications"
+        }, {
+          "apiName" : "Transportation",
+          "label" : "Transportation",
+          "name" : "Transportation"
+        }, {
+          "apiName" : "Utilities",
+          "label" : "Utilities",
+          "name" : "Utilities"
+        }, {
+          "apiName" : "Other",
+          "label" : "Other",
+          "name" : "Other"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Account.Industry",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "行业",
+        "uniqueCountable" : true
+      }
+    },
+    "groupingColumnInfo" : {
+      "STAGE_NAME" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Opportunity.StageName",
+        "filterValues" : [ {
+          "apiName" : "Prospecting",
+          "label" : "Prospecting",
+          "name" : "Prospecting"
+        }, {
+          "apiName" : "Qualification",
+          "label" : "Qualification",
+          "name" : "Qualification"
+        }, {
+          "apiName" : "Needs Analysis",
+          "label" : "Needs Analysis",
+          "name" : "Needs Analysis"
+        }, {
+          "apiName" : "Value Proposition",
+          "label" : "Value Proposition",
+          "name" : "Value Proposition"
+        }, {
+          "apiName" : "Id. Decision Makers",
+          "label" : "Id. Decision Makers",
+          "name" : "Id. Decision Makers"
+        }, {
+          "apiName" : "Perception Analysis",
+          "label" : "Perception Analysis",
+          "name" : "Perception Analysis"
+        }, {
+          "apiName" : "Proposal/Price Quote",
+          "label" : "Proposal/Price Quote",
+          "name" : "Proposal/Price Quote"
+        }, {
+          "apiName" : "Negotiation/Review",
+          "label" : "Negotiation/Review",
+          "name" : "Negotiation/Review"
+        }, {
+          "apiName" : "Closed Won",
+          "label" : "Closed Won",
+          "name" : "Closed Won"
+        }, {
+          "apiName" : "Closed Lost",
+          "label" : "Closed Lost",
+          "name" : "Closed Lost"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.StageName",
+        "groupingLevel" : 0,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "阶段",
+        "uniqueCountable" : true
+      },
+      "CREATED" : {
+        "dataType" : "string",
+        "entityColumnName" : "User.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.CreatedBy.Name",
+        "groupingLevel" : 0,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "创建人",
+        "uniqueCountable" : true
+      },
+      "TYPE" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Opportunity.Type",
+        "filterValues" : [ {
+          "apiName" : "Existing Customer - Upgrade",
+          "label" : "Existing Customer - Upgrade",
+          "name" : "Existing Customer - Upgrade"
+        }, {
+          "apiName" : "Existing Customer - Replacement",
+          "label" : "Existing Customer - Replacement",
+          "name" : "Existing Customer - Replacement"
+        }, {
+          "apiName" : "Existing Customer - Downgrade",
+          "label" : "Existing Customer - Downgrade",
+          "name" : "Existing Customer - Downgrade"
+        }, {
+          "apiName" : "New Customer",
+          "label" : "New Customer",
+          "name" : "New Customer"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Type",
+        "groupingLevel" : 1,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "类型",
+        "uniqueCountable" : true
+      }
+    }
+  },
+  "reportMetadata" : {
+    "aggregates" : [ "s!AMOUNT", "a!AMOUNT", "mx!AMOUNT", "m!AMOUNT", "RowCount" ],
+    "chart" : {
+      "chartType" : "Donut",
+      "combineSmallGroups" : true,
+      "groupingColorPalette" : "DEFAULT",
+      "groupings" : [ "STAGE_NAME" ],
+      "hasLegend" : true,
+      "legendPosition" : "Right",
+      "referenceLineColors" : [ null ],
+      "referenceLineValues" : [ null ],
+      "showChartPercentages" : false,
+      "showChartTotal" : true,
+      "showChartValues" : true,
+      "summaries" : [ "s!AMOUNT" ],
+      "summaryAxisLocations" : [ "Y" ],
+      "summaryColors" : [ null ],
+      "summaryVisualizationTypes" : [ "Column" ],
+      "title" : "商业机会漏斗"
+    },
+    "crossFilters" : [ ],
+    "currency" : null,
+    "dashboardSetting" : null,
+    "description" : null,
+    "detailColumns" : [ "FULL_NAME", "ACCOUNT_NAME", "ACCOUNT_TYPE", "ROLLUP_DESCRIPTION", "OPPORTUNITY_NAME", "AMOUNT", "EXP_AMOUNT", "PROBABILITY", "AGE", "CLOSE_DATE", "CREATED_DATE", "OWNER_DIVISION", "INDUSTRY" ],
+    "developerName" : "X1_zG3",
+    "division" : null,
+    "folderId" : "0059000000390WhAAI",
+    "groupingsAcross" : [ {
+      "dateGranularity" : "None",
+      "name" : "CREATED",
+      "sortAggregate" : null,
+      "sortOrder" : "Asc"
+    }, {
+      "dateGranularity" : "None",
+      "name" : "TYPE",
+      "sortAggregate" : null,
+      "sortOrder" : "Asc"
+    } ],
+    "groupingsDown" : [ {
+      "dateGranularity" : "None",
+      "name" : "STAGE_NAME",
+      "sortAggregate" : null,
+      "sortOrder" : "Asc"
+    } ],
+    "hasDetailRows" : true,
+    "hasRecordCount" : true,
+    "historicalSnapshotDates" : [ ],
+    "id" : "00O0o000009Dp2REAS",
+    "name" : "商业机会1",
+    "presentationOptions" : {
+      "hasStackedSummaries" : false
+    },
+    "reportBooleanFilter" : null,
+    "reportFilters" : [ {
+      "column" : "TYPE",
+      "filterType" : "fieldValue",
+      "isRunPageEditable" : true,
+      "operator" : "equals",
+      "value" : "Existing Customer - Downgrade,Existing Customer - Replacement"
+    } ],
+    "reportFormat" : "MATRIX",
+    "reportType" : {
+      "label" : "业务机会",
+      "type" : "Opportunity"
+    },
+    "saveRoleHierarchy" : true,
+    "scope" : "organization",
+    "showGrandTotal" : true,
+    "showSubtotals" : true,
+    "sortBy" : [ ],
+    "standardDateFilter" : {
+      "column" : "CLOSE_DATE",
+      "durationValue" : "CUSTOM",
+      "endDate" : "2018-12-28",
+      "startDate" : "1900-12-01"
+    },
+    "standardFilters" : [ {
+      "name" : "terr",
+      "value" : "all"
+    }, {
+      "name" : "open",
+      "value" : "all"
+    }, {
+      "name" : "probability",
+      "value" : ">0"
+    } ],
+    "supportsRoleHierarchy" : true,
+    "userOrHierarchyFilterId" : null
+  }
+},"error":[],"storable":true}],"context":{"mode":"PROD","app":"one:one","pathPrefix":"","fwuid":"MTlpRlBKWTh5V3VoZVJjLURPWjQ0d2hZX25NdHFVdGpDN3BnWlROY1ZGT3cyNTAuOC4zLTYuNC41","mlr":1,"uad":1,"coos":1,"descriptorUids":{},"loaded":{"APPLICATION@markup://one:one":"SPu3nALse3BHDrJeS2MmPw"},"globalValueProviders":[{"type":"$Global","values":{"eswConfigDeveloperName":{"writable":true,"defaultValue":""},"isVoiceOver":{"writable":true,"defaultValue":false},"setupAppContextId":{"writable":true,"defaultValue":""},"density":{"writable":true,"value":"VIEW_TWO"},"srcdoc":{"writable":false,"defaultValue":false},"appContextId":{"writable":true,"value":"06m90000000yYkGAAU"},"dynamicTypeSize":{"writable":true,"defaultValue":""},"appContextDeveloperName":{"writable":true,"value":"LightningSales"}}}],"enableAccessChecks":true,"dns":"c","ls":1,"lairn":[],"laerc":[],"lav":"61","csp":1,"lgef":["com.salesforce.locker.temporaryGate"],"cpr":"https://static.lightning.force.com/ap45","mna":{"lightning":"interop"},"arse":1,"acaf":1,"services":["markup://force:initServiceSfdc","markup://lightning:configProvider","markup://force:salesforceScopedModuleResolver","markup://force:ldsEngineCreator","markup://instrumentation:locatorService","markup://force:lwcReportingService"]},"perfSummary":{"version":"core","request":82,"actions":{"576;a":{"total":73,"db":18}},"actionsTotal":73,"overhead":0}}

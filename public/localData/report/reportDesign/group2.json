@@ -1,0 +1,1725 @@
+{"actions":[{"id":"578;a","state":"SUCCESS","returnValue":{
+  "attributes" : {
+    "describeUrl" : "/services/data/v61.0/analytics/reports/00OGB00000DyicF2AR/describe",
+    "instancesUrl" : "/services/data/v61.0/analytics/reports/00OGB00000DyicF2AR/instances",
+    "reportId" : "00OGB00000DyicF2AR",
+    "reportName" : "业务机会组行两级",
+    "type" : "Report"
+  },
+  "allData" : true,
+  "chartData" : {
+    "allData" : true,
+    "factMap" : {
+      "0!T" : {
+        "aggregates" : [ {
+          "label" : "￥751,136.00",
+          "value" : 751135.999999999999897000
+        } ]
+      },
+      "T!T" : {
+        "aggregates" : [ {
+          "label" : "￥751,136.00",
+          "value" : 751135.999999999999897000
+        } ]
+      }
+    },
+    "groupingsDown" : {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ]
+    }
+  },
+  "factMap" : {
+    "0!T" : {
+      "aggregates" : [ {
+        "label" : "￥127,210.00",
+        "value" : 127210.000000000000000000
+      }, {
+        "label" : "￥15,901.25",
+        "value" : 15901.250000000000000000
+      }, {
+        "label" : "￥13,636.00",
+        "value" : 13635.999999999999897000
+      }, {
+        "label" : "8",
+        "value" : 8
+      } ],
+      "rows" : [ ]
+    },
+    "0_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥127,210.00",
+        "value" : 127210.000000000000000000
+      }, {
+        "label" : "￥15,901.25",
+        "value" : 15901.250000000000000000
+      }, {
+        "label" : "￥13,636.00",
+        "value" : 13635.999999999999897000
+      }, {
+        "label" : "8",
+        "value" : 8
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "222",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : "0060o00001FTjedAAD"
+        }, {
+          "label" : "Perception Analysis",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : "Perception Analysis"
+        }, {
+          "label" : "￥1,111.00",
+          "value" : {
+            "amount" : 1111,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥777.70",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : {
+            "amount" : 777.6999999999999,
+            "currency" : null
+          }
+        }, {
+          "label" : "70%",
+          "value" : 70
+        }, {
+          "label" : "1,913",
+          "value" : 1913
+        }, {
+          "label" : "2019-5-28",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : "2019-05-28"
+        }, {
+          "label" : "2019-5-13",
+          "value" : "2019-05-13"
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "4444444",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : "0060o00001FTjenAAD"
+        }, {
+          "label" : "Perception Analysis",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : "Perception Analysis"
+        }, {
+          "label" : "￥44.00",
+          "value" : {
+            "amount" : 44,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥30.80",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : {
+            "amount" : 30.799999999999997,
+            "currency" : null
+          }
+        }, {
+          "label" : "70%",
+          "value" : 70
+        }, {
+          "label" : "1,913",
+          "value" : 1913
+        }, {
+          "label" : "2019-5-21",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : "2019-05-21"
+        }, {
+          "label" : "2019-5-13",
+          "value" : "2019-05-13"
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "55",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : "0060o00001FTjexAAD"
+        }, {
+          "label" : "Value Proposition",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : "Value Proposition"
+        }, {
+          "label" : "￥55.00",
+          "value" : {
+            "amount" : 55,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥27.50",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : {
+            "amount" : 27.5,
+            "currency" : null
+          }
+        }, {
+          "label" : "50%",
+          "value" : 50
+        }, {
+          "label" : "1,913",
+          "value" : 1913
+        }, {
+          "label" : "2019-5-27",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : "2019-05-27"
+        }, {
+          "label" : "2019-5-13",
+          "value" : "2019-05-13"
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "协和",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : "0060o00001JSLVbAAP"
+        }, {
+          "label" : "Prospecting",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : "Prospecting"
+        }, {
+          "label" : "￥25,000.00",
+          "value" : {
+            "amount" : 25000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥2,500.00",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : {
+            "amount" : 2500,
+            "currency" : null
+          }
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "1,761",
+          "value" : 1761
+        }, {
+          "label" : "2019-10-31",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : "2019-10-31"
+        }, {
+          "label" : "2019-10-12",
+          "value" : "2019-10-12"
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "潜在客户",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : "0060o00001e7tOUAAY"
+        }, {
+          "label" : "Prospecting",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : "Prospecting"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : null
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "647",
+          "value" : 647
+        }, {
+          "label" : "2022-11-2",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : "2022-11-02"
+        }, {
+          "label" : "2022-10-30",
+          "value" : "2022-10-30"
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "购买计算机",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : "0069000000Q7WdQAAV"
+        }, {
+          "label" : "Prospecting",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : "Prospecting"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : null
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "3,551",
+          "value" : 3551
+        }, {
+          "label" : "2014-11-30",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : "2014-11-30"
+        }, {
+          "label" : "2014-11-17",
+          "value" : "2014-11-17"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "软件产品需求",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : "00690000018rdxGAAQ"
+        }, {
+          "label" : "Prospecting",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : "Prospecting"
+        }, {
+          "label" : "￥100,000.00",
+          "value" : {
+            "amount" : 100000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥10,000.00",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : {
+            "amount" : 10000,
+            "currency" : null
+          }
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "2,106",
+          "value" : 2106
+        }, {
+          "label" : "2018-11-30",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : "2018-11-30"
+        }, {
+          "label" : "2018-11-1",
+          "value" : "2018-11-01"
+        }, {
+          "label" : "-",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "初步接触",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : "006GB00001j3ZwFYAU"
+        }, {
+          "label" : "Qualification",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : "Qualification"
+        }, {
+          "label" : "￥1,000.00",
+          "value" : {
+            "amount" : 1000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥300.00",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : {
+            "amount" : 300,
+            "currency" : null
+          }
+        }, {
+          "label" : "30%",
+          "value" : 30
+        }, {
+          "label" : "205",
+          "value" : 205
+        }, {
+          "label" : "2024-1-31",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : "2024-01-31"
+        }, {
+          "label" : "2024-1-15",
+          "value" : "2024-01-15"
+        }, {
+          "label" : "-",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : null
+        } ]
+      } ]
+    },
+    "1!T" : {
+      "aggregates" : [ {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "2!T" : {
+      "aggregates" : [ {
+        "label" : "￥15,000.00",
+        "value" : 15000.000000000000000000
+      }, {
+        "label" : "￥15,000.00",
+        "value" : 15000.000000000000000000
+      }, {
+        "label" : "￥1,500.00",
+        "value" : 1500.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "T!T" : {
+      "aggregates" : [ {
+        "label" : "￥1,137,210.00",
+        "value" : 1137210.000000000000000000
+      }, {
+        "label" : "￥56,860.50",
+        "value" : 56860.500000000000000000
+      }, {
+        "label" : "￥751,136.00",
+        "value" : 751135.999999999999897000
+      }, {
+        "label" : "20",
+        "value" : 20
+      } ],
+      "rows" : [ ]
+    },
+    "3!T" : {
+      "aggregates" : [ {
+        "label" : "￥220,000.00",
+        "value" : 220000.000000000000000000
+      }, {
+        "label" : "￥55,000.00",
+        "value" : 55000.000000000000000000
+      }, {
+        "label" : "￥206,000.00",
+        "value" : 206000.000000000000000000
+      }, {
+        "label" : "4",
+        "value" : 4
+      } ],
+      "rows" : [ ]
+    },
+    "4!T" : {
+      "aggregates" : [ {
+        "label" : "￥175,000.00",
+        "value" : 175000.000000000000000000
+      }, {
+        "label" : "￥58,333.33",
+        "value" : 58333.333333333333333333
+      }, {
+        "label" : "￥151,000.00",
+        "value" : 151000.000000000000000000
+      }, {
+        "label" : "3",
+        "value" : 3
+      } ],
+      "rows" : [ ]
+    },
+    "5!T" : {
+      "aggregates" : [ {
+        "label" : "￥265,000.00",
+        "value" : 265000.000000000000000000
+      }, {
+        "label" : "￥132,500.00",
+        "value" : 132500.000000000000000000
+      }, {
+        "label" : "￥134,000.00",
+        "value" : 134000.000000000000000000
+      }, {
+        "label" : "2",
+        "value" : 2
+      } ],
+      "rows" : [ ]
+    },
+    "6!T" : {
+      "aggregates" : [ {
+        "label" : "￥100,000.00",
+        "value" : 100000.000000000000000000
+      }, {
+        "label" : "￥100,000.00",
+        "value" : 100000.000000000000000000
+      }, {
+        "label" : "￥10,000.00",
+        "value" : 10000.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "1_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "Burlington Textiles Weaving Plant Generator",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : "0069000000OZLuIAAX"
+        }, {
+          "label" : "Closed Won",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : "Closed Won"
+        }, {
+          "label" : "￥235,000.00",
+          "value" : {
+            "amount" : 235000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥235,000.00",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : {
+            "amount" : 235000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : null
+        }, {
+          "label" : "Web",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : "Web"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : "New Customer"
+        } ]
+      } ]
+    },
+    "3_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥220,000.00",
+        "value" : 220000.000000000000000000
+      }, {
+        "label" : "￥55,000.00",
+        "value" : 55000.000000000000000000
+      }, {
+        "label" : "￥206,000.00",
+        "value" : 206000.000000000000000000
+      }, {
+        "label" : "4",
+        "value" : 4
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "Edge Emergency Generator",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : "0069000000OZLu3AAH"
+        }, {
+          "label" : "Closed Won",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : "Closed Won"
+        }, {
+          "label" : "￥75,000.00",
+          "value" : {
+            "amount" : 75000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥75,000.00",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : {
+            "amount" : 75000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : null
+        }, {
+          "label" : "Word of mouth",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : "Word of mouth"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : "New Customer"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "Edge Installation",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : "0069000000OZLuAAAX"
+        }, {
+          "label" : "Closed Won",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : "Closed Won"
+        }, {
+          "label" : "￥50,000.00",
+          "value" : {
+            "amount" : 50000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥50,000.00",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : {
+            "amount" : 50000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : null
+        }, {
+          "label" : "Word of mouth",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : "Word of mouth"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "Edge Emergency Generator",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : "0069000000OZLuPAAX"
+        }, {
+          "label" : "Id. Decision Makers",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : "Id. Decision Makers"
+        }, {
+          "label" : "￥35,000.00",
+          "value" : {
+            "amount" : 35000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥21,000.00",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : {
+            "amount" : 21000,
+            "currency" : null
+          }
+        }, {
+          "label" : "60%",
+          "value" : 60
+        }, {
+          "label" : "3,591",
+          "value" : 3591
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : null
+        }, {
+          "label" : "Existing Customer - Replacement",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : "Existing Customer - Replacement"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "Edge SLA",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : "0069000000OZLuBAAX"
+        }, {
+          "label" : "Closed Won",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : "Closed Won"
+        }, {
+          "label" : "￥60,000.00",
+          "value" : {
+            "amount" : 60000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥60,000.00",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : {
+            "amount" : 60000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : null
+        }, {
+          "label" : "Word of mouth",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : "Word of mouth"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      } ]
+    },
+    "5_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥265,000.00",
+        "value" : 265000.000000000000000000
+      }, {
+        "label" : "￥132,500.00",
+        "value" : 132500.000000000000000000
+      }, {
+        "label" : "￥134,000.00",
+        "value" : 134000.000000000000000000
+      }, {
+        "label" : "2",
+        "value" : 2
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "Grand Hotels Kitchen Generator",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : "0069000000OZLtzAAH"
+        }, {
+          "label" : "Id. Decision Makers",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : "Id. Decision Makers"
+        }, {
+          "label" : "￥15,000.00",
+          "value" : {
+            "amount" : 15000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥9,000.00",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : {
+            "amount" : 9000,
+            "currency" : null
+          }
+        }, {
+          "label" : "60%",
+          "value" : 60
+        }, {
+          "label" : "3,591",
+          "value" : 3591
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : null
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "Grand Hotels Guest Portable Generators",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : "0069000000OZLu2AAH"
+        }, {
+          "label" : "Value Proposition",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : "Value Proposition"
+        }, {
+          "label" : "￥250,000.00",
+          "value" : {
+            "amount" : 250000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥125,000.00",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : {
+            "amount" : 125000,
+            "currency" : null
+          }
+        }, {
+          "label" : "50%",
+          "value" : 50
+        }, {
+          "label" : "3,591",
+          "value" : 3591
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : null
+        }, {
+          "label" : "Employee Referral",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : "Employee Referral"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      } ]
+    },
+    "4_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥175,000.00",
+        "value" : 175000.000000000000000000
+      }, {
+        "label" : "￥58,333.33",
+        "value" : 58333.333333333333333333
+      }, {
+        "label" : "￥151,000.00",
+        "value" : 151000.000000000000000000
+      }, {
+        "label" : "3",
+        "value" : 3
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "GenePoint Standby Generator",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : "0069000000OZLtyAAH"
+        }, {
+          "label" : "Closed Won",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : "Closed Won"
+        }, {
+          "label" : "￥85,000.00",
+          "value" : {
+            "amount" : 85000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥85,000.00",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : {
+            "amount" : 85000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : null
+        }, {
+          "label" : "Partner",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : "Partner"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : "New Customer"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "GenePoint Lab Generators",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : "0069000000OZLu7AAH"
+        }, {
+          "label" : "Id. Decision Makers",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : "Id. Decision Makers"
+        }, {
+          "label" : "￥60,000.00",
+          "value" : {
+            "amount" : 60000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥36,000.00",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : {
+            "amount" : 36000,
+            "currency" : null
+          }
+        }, {
+          "label" : "60%",
+          "value" : 60
+        }, {
+          "label" : "3,591",
+          "value" : 3591
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "GenePoint SLA",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : "0069000000OZLu8AAH"
+        }, {
+          "label" : "Closed Won",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : "Closed Won"
+        }, {
+          "label" : "￥30,000.00",
+          "value" : {
+            "amount" : 30000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥30,000.00",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : {
+            "amount" : 30000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : null
+        }, {
+          "label" : "Partner",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : "Partner"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      } ]
+    },
+    "2_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥15,000.00",
+        "value" : 15000.000000000000000000
+      }, {
+        "label" : "￥15,000.00",
+        "value" : 15000.000000000000000000
+      }, {
+        "label" : "￥1,500.00",
+        "value" : 1500.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "Dickenson Mobile Generators",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : "0069000000OZLtvAAH"
+        }, {
+          "label" : "Qualification",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : "Qualification"
+        }, {
+          "label" : "￥15,000.00",
+          "value" : {
+            "amount" : 15000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥1,500.00",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : {
+            "amount" : 1500,
+            "currency" : null
+          }
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "3,591",
+          "value" : 3591
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : null
+        }, {
+          "label" : "Purchased List",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : "Purchased List"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : "New Customer"
+        } ]
+      } ]
+    },
+    "6_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥100,000.00",
+        "value" : 100000.000000000000000000
+      }, {
+        "label" : "￥100,000.00",
+        "value" : 100000.000000000000000000
+      }, {
+        "label" : "￥10,000.00",
+        "value" : 10000.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "CEO",
+          "value" : "CEO"
+        }, {
+          "label" : "Pyramid Emergency Generators",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : "0069000000OZLu5AAH"
+        }, {
+          "label" : "Prospecting",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : "Prospecting"
+        }, {
+          "label" : "￥100,000.00",
+          "value" : {
+            "amount" : 100000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥10,000.00",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : {
+            "amount" : 10000,
+            "currency" : null
+          }
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "3,591",
+          "value" : 3591
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : null
+        }, {
+          "label" : "Phone Inquiry",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : "Phone Inquiry"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : null
+        } ]
+      } ]
+    }
+  },
+  "groupingsAcross" : {
+    "groupings" : [ ]
+  },
+  "groupingsDown" : {
+    "groupings" : [ {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "0_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "0",
+      "label" : "-",
+      "value" : null
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "1_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "1",
+      "label" : "Burlington Textiles Corp of America",
+      "value" : "00190000015a7I4AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "2_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "2",
+      "label" : "Dickenson plc",
+      "value" : "00190000015a7I6AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "3_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "3",
+      "label" : "Edge Communications",
+      "value" : "00190000015a7I3AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "4_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "4",
+      "label" : "GenePoint",
+      "value" : "00190000015a7I0AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "5_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "5",
+      "label" : "Grand Hotels & Resorts Ltd",
+      "value" : "00190000015a7I7AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "6_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "6",
+      "label" : "Pyramid Construction Inc.",
+      "value" : "00190000015a7I5AAI"
+    } ]
+  },
+  "hasDetailRows" : true,
+  "hasExceededTabularRowLimit" : false,
+  "picklistColors" : { },
+  "reportExtendedMetadata" : {
+    "aggregateColumnInfo" : {
+      "s!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "金额 总和"
+      },
+      "a!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "平均金额"
+      },
+      "RowCount" : {
+        "dataType" : "int",
+        "label" : "记录计数"
+      },
+      "s!EXP_AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "预期收入 总和"
+      }
+    },
+    "availableDashboardSettings" : null,
+    "detailColumnInfo" : {
+      "ROLLUP_DESCRIPTION" : {
+        "dataType" : "string",
+        "entityColumnName" : "UserRole.RollupDescription",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Owner.UserRole.RollupDescription",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "所有人角色",
+        "uniqueCountable" : true
+      },
+      "OPPORTUNITY_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Opportunity.Name",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "Name",
+          "lookupEntityName" : "Opportunity"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Name",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "业务机会名",
+        "uniqueCountable" : true
+      },
+      "STAGE_NAME" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Opportunity.StageName",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "StageName"
+        },
+        "filterValues" : [ {
+          "apiName" : "Prospecting",
+          "label" : "Prospecting",
+          "name" : "Prospecting"
+        }, {
+          "apiName" : "Qualification",
+          "label" : "Qualification",
+          "name" : "Qualification"
+        }, {
+          "apiName" : "Needs Analysis",
+          "label" : "Needs Analysis",
+          "name" : "Needs Analysis"
+        }, {
+          "apiName" : "Value Proposition",
+          "label" : "Value Proposition",
+          "name" : "Value Proposition"
+        }, {
+          "apiName" : "Id. Decision Makers",
+          "label" : "Id. Decision Makers",
+          "name" : "Id. Decision Makers"
+        }, {
+          "apiName" : "Perception Analysis",
+          "label" : "Perception Analysis",
+          "name" : "Perception Analysis"
+        }, {
+          "apiName" : "Proposal/Price Quote",
+          "label" : "Proposal/Price Quote",
+          "name" : "Proposal/Price Quote"
+        }, {
+          "apiName" : "Negotiation/Review",
+          "label" : "Negotiation/Review",
+          "name" : "Negotiation/Review"
+        }, {
+          "apiName" : "Closed Won",
+          "label" : "Closed Won",
+          "name" : "Closed Won"
+        }, {
+          "apiName" : "Closed Lost",
+          "label" : "Closed Lost",
+          "name" : "Closed Lost"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.StageName",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "阶段",
+        "uniqueCountable" : true
+      },
+      "AMOUNT" : {
+        "dataType" : "currency",
+        "entityColumnName" : "Opportunity.Amount",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Amount",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "金额",
+        "uniqueCountable" : true
+      },
+      "EXP_AMOUNT" : {
+        "dataType" : "currency",
+        "entityColumnName" : "Opportunity.ExpectedRevenue",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "ExpectedRevenue"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.ExpectedRevenue",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "预期收入",
+        "uniqueCountable" : true
+      },
+      "PROBABILITY" : {
+        "dataType" : "percent",
+        "entityColumnName" : "Opportunity.Probability",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Probability",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "可能性 (%)",
+        "uniqueCountable" : true
+      },
+      "AGE" : {
+        "dataType" : "double",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "帐龄",
+        "uniqueCountable" : true
+      },
+      "CLOSE_DATE" : {
+        "dataType" : "date",
+        "entityColumnName" : "Opportunity.CloseDate",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "CloseDate"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.CloseDate",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "结束日期",
+        "uniqueCountable" : true
+      },
+      "CREATED_DATE" : {
+        "dataType" : "date",
+        "entityColumnName" : "Opportunity.CreatedDate",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.CreatedDate",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "创建日期",
+        "uniqueCountable" : true
+      },
+      "NEXT_STEP" : {
+        "dataType" : "string",
+        "entityColumnName" : "Opportunity.NextStep",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "NextStep"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.NextStep",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "下一步",
+        "uniqueCountable" : true
+      },
+      "LEAD_SOURCE" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Opportunity.LeadSource",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "LeadSource"
+        },
+        "filterValues" : [ {
+          "apiName" : "Web",
+          "label" : "Web",
+          "name" : "Web"
+        }, {
+          "apiName" : "Phone Inquiry",
+          "label" : "Phone Inquiry",
+          "name" : "Phone Inquiry"
+        }, {
+          "apiName" : "Partner Referral",
+          "label" : "Partner Referral",
+          "name" : "Partner Referral"
+        }, {
+          "apiName" : "Purchased List",
+          "label" : "Purchased List",
+          "name" : "Purchased List"
+        }, {
+          "apiName" : "Other",
+          "label" : "Other",
+          "name" : "Other"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.LeadSource",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "潜在客户来源",
+        "uniqueCountable" : true
+      },
+      "TYPE" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Opportunity.Type",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "Type"
+        },
+        "filterValues" : [ {
+          "apiName" : "Existing Customer - Upgrade",
+          "label" : "Existing Customer - Upgrade",
+          "name" : "Existing Customer - Upgrade"
+        }, {
+          "apiName" : "Existing Customer - Replacement",
+          "label" : "Existing Customer - Replacement",
+          "name" : "Existing Customer - Replacement"
+        }, {
+          "apiName" : "Existing Customer - Downgrade",
+          "label" : "Existing Customer - Downgrade",
+          "name" : "Existing Customer - Downgrade"
+        }, {
+          "apiName" : "New Customer",
+          "label" : "New Customer",
+          "name" : "New Customer"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Type",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "类型",
+        "uniqueCountable" : true
+      }
+    },
+    "groupingColumnInfo" : {
+      "ACCOUNT_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Account.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Account.Name",
+        "groupingLevel" : 0,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "客户名",
+        "uniqueCountable" : true
+      },
+      "FULL_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "User.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Owner.Name",
+        "groupingLevel" : 1,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "业务机会所有人",
+        "uniqueCountable" : true
+      }
+    }
+  },
+  "reportMetadata" : {
+    "aggregates" : [ "s!AMOUNT", "a!AMOUNT", "s!EXP_AMOUNT", "RowCount" ],
+    "chart" : {
+      "chartType" : "Horizontal Bar",
+      "groupings" : [ "FULL_NAME" ],
+      "hasLegend" : false,
+      "legendPosition" : null,
+      "referenceLineColors" : [ null ],
+      "referenceLineValues" : [ null ],
+      "showChartPercentages" : false,
+      "showChartTotal" : false,
+      "showChartValues" : false,
+      "summaries" : [ "s!EXP_AMOUNT" ],
+      "summaryAxisLocations" : [ "Y" ],
+      "summaryColors" : [ "#00A1E0" ],
+      "summaryVisualizationTypes" : [ "Column" ],
+      "title" : "业务机会所有人"
+    },
+    "crossFilters" : [ ],
+    "currency" : null,
+    "dashboardSetting" : null,
+    "description" : null,
+    "detailColumns" : [ "ROLLUP_DESCRIPTION", "OPPORTUNITY_NAME", "STAGE_NAME", "AMOUNT", "EXP_AMOUNT", "PROBABILITY", "AGE", "CLOSE_DATE", "CREATED_DATE", "NEXT_STEP", "LEAD_SOURCE", "TYPE" ],
+    "developerName" : "new_report_Ajn",
+    "division" : null,
+    "folderId" : "0059000000390WhAAI",
+    "groupingsAcross" : [ ],
+    "groupingsDown" : [ {
+      "dateGranularity" : "None",
+      "name" : "ACCOUNT_NAME",
+      "sortAggregate" : null,
+      "sortOrder" : "Asc"
+    }, {
+      "dateGranularity" : "None",
+      "name" : "FULL_NAME",
+      "sortAggregate" : null,
+      "sortOrder" : "Asc"
+    } ],
+    "hasDetailRows" : true,
+    "hasRecordCount" : true,
+    "historicalSnapshotDates" : [ ],
+    "id" : "00OGB00000DyicF2AR",
+    "name" : "业务机会组行两级",
+    "presentationOptions" : {
+      "hasStackedSummaries" : true
+    },
+    "reportBooleanFilter" : null,
+    "reportFilters" : [ ],
+    "reportFormat" : "SUMMARY",
+    "reportType" : {
+      "label" : "业务机会",
+      "type" : "Opportunity"
+    },
+    "saveRoleHierarchy" : true,
+    "scope" : "organization",
+    "showGrandTotal" : true,
+    "showSubtotals" : true,
+    "sortBy" : [ ],
+    "standardDateFilter" : {
+      "column" : "CLOSE_DATE",
+      "durationValue" : "CUSTOM",
+      "endDate" : null,
+      "startDate" : null
+    },
+    "standardFilters" : [ {
+      "name" : "terr",
+      "value" : "all"
+    }, {
+      "name" : "open",
+      "value" : "all"
+    }, {
+      "name" : "probability",
+      "value" : ">0"
+    } ],
+    "supportsRoleHierarchy" : true,
+    "userOrHierarchyFilterId" : null
+  }
+},"error":[],"storable":true}],"context":{"mode":"PROD","app":"one:one","pathPrefix":"","fwuid":"MTlpRlBKWTh5V3VoZVJjLURPWjQ0d2hZX25NdHFVdGpDN3BnWlROY1ZGT3cyNTAuOC4zLTYuNC41","mlr":1,"uad":1,"coos":1,"descriptorUids":{},"loaded":{"APPLICATION@markup://one:one":"SPu3nALse3BHDrJeS2MmPw"},"globalValueProviders":[{"type":"$Global","values":{"eswConfigDeveloperName":{"writable":true,"defaultValue":""},"isVoiceOver":{"writable":true,"defaultValue":false},"setupAppContextId":{"writable":true,"defaultValue":""},"density":{"writable":true,"value":"VIEW_TWO"},"srcdoc":{"writable":false,"defaultValue":false},"appContextId":{"writable":true,"value":"06m90000000yYkGAAU"},"dynamicTypeSize":{"writable":true,"defaultValue":""},"appContextDeveloperName":{"writable":true,"value":"LightningSales"}}}],"enableAccessChecks":true,"dns":"c","ls":1,"lairn":[],"laerc":[],"lav":"61","csp":1,"lgef":["com.salesforce.locker.temporaryGate"],"cpr":"https://static.lightning.force.com/ap45","mna":{"lightning":"interop"},"arse":1,"acaf":1,"services":["markup://force:initServiceSfdc","markup://lightning:configProvider","markup://force:salesforceScopedModuleResolver","markup://force:ldsEngineCreator","markup://instrumentation:locatorService","markup://force:lwcReportingService"]},"perfSummary":{"version":"core","request":91,"actions":{"578;a":{"total":83,"db":29}},"actionsTotal":83,"overhead":0}}

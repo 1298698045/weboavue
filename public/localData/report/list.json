@@ -1,0 +1,318 @@
+{
+  "actions": [
+      {
+          "id": "964;a",
+          "state": "SUCCESS",
+          "returnValue": {
+              "result": [
+                  {
+                      "LastModifiedDate": "2024-07-23T03:19:44.000Z",
+                      "LastModifiedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "CreatedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "Description": null,
+                      "NumSubscriptions": 0,
+                      "FolderName": "专用报表",
+                      "Name": "业务机会不分组",
+                      "LastRunDate": "2024-07-23T03:19:51.000Z",
+                      "CreatedById": "0059000000390WhAAI",
+                      "OwnerId": "0059000000390WhAAI",
+                      "CreatedDate": "2024-07-23T03:19:44.000Z",
+                      "Id": "00OGB00000DyicF2AR",
+                      "LastModifiedById": "0059000000390WhAAI",
+                      "sobjectType": "Report"
+                  },
+                  {
+                      "LastModifiedDate": "2024-07-22T03:04:49.000Z",
+                      "LastModifiedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "CreatedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "Description": null,
+                      "NumSubscriptions": 0,
+                      "FolderName": "专用报表",
+                      "Name": "商业机会1",
+                      "LastRunDate": "2024-07-23T03:14:54.000Z",
+                      "CreatedById": "0059000000390WhAAI",
+                      "OwnerId": "0059000000390WhAAI",
+                      "CreatedDate": "2018-12-22T06:09:25.000Z",
+                      "Id": "00O0o000009Dp2REAS",
+                      "LastModifiedById": "0059000000390WhAAI",
+                      "sobjectType": "Report"
+                  },
+                  {
+                      "LastModifiedDate": "2024-07-23T01:58:21.000Z",
+                      "LastModifiedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "CreatedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "Description": null,
+                      "NumSubscriptions": 0,
+                      "FolderName": "专用报表",
+                      "Name": "联系人和客户 报表",
+                      "LastRunDate": "2024-07-23T02:52:29.000Z",
+                      "CreatedById": "0059000000390WhAAI",
+                      "OwnerId": "0059000000390WhAAI",
+                      "CreatedDate": "2024-07-22T06:00:31.000Z",
+                      "Id": "00OGB00000DyiUK2AZ",
+                      "LastModifiedById": "0059000000390WhAAI",
+                      "sobjectType": "Report"
+                  },
+                  {
+                      "LastModifiedDate": "2024-02-10T16:21:24.000Z",
+                      "LastModifiedBy": {
+                          "Id": "00590000003ELThAAO",
+                          "Name": "Process Automated",
+                          "sobjectType": "User"
+                      },
+                      "Description": "已经创建了哪些编配工作项目，每个工作项目的当前状态是什么？",
+                      "CreatedBy": {
+                          "Id": "00590000003ELThAAO",
+                          "Name": "Process Automated",
+                          "sobjectType": "User"
+                      },
+                      "NumSubscriptions": 0,
+                      "FolderName": "公用报表",
+                      "Name": "示例报表：编配工作项目",
+                      "LastRunDate": null,
+                      "CreatedById": "00590000003ELThAAO",
+                      "OwnerId": "00D90000000yvHGEAY",
+                      "CreatedDate": "2024-02-10T16:21:24.000Z",
+                      "Id": "00OGB00000DUy6z2AD",
+                      "LastModifiedById": "00590000003ELThAAO",
+                      "sobjectType": "Report"
+                  },
+                  {
+                      "LastModifiedDate": "2019-08-14T05:44:31.000Z",
+                      "LastModifiedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "CreatedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "Description": null,
+                      "NumSubscriptions": 0,
+                      "FolderName": "专用报表",
+                      "Name": "我的客户联系人",
+                      "LastRunDate": "2024-07-22T04:19:59.000Z",
+                      "CreatedById": "0059000000390WhAAI",
+                      "OwnerId": "0059000000390WhAAI",
+                      "CreatedDate": "2014-11-24T14:20:12.000Z",
+                      "Id": "00O900000080tYREAY",
+                      "LastModifiedById": "0059000000390WhAAI",
+                      "sobjectType": "Report"
+                  },
+                  {
+                      "LastModifiedDate": "2024-07-22T03:38:44.000Z",
+                      "LastModifiedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "CreatedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "Description": null,
+                      "NumSubscriptions": 0,
+                      "FolderName": "专用报表",
+                      "Name": "商业机会矩阵",
+                      "LastRunDate": "2024-07-22T03:38:52.000Z",
+                      "CreatedById": "0059000000390WhAAI",
+                      "OwnerId": "0059000000390WhAAI",
+                      "CreatedDate": "2020-04-05T15:57:39.000Z",
+                      "Id": "00O0o00000Av92hEAB",
+                      "LastModifiedById": "0059000000390WhAAI",
+                      "sobjectType": "Report"
+                  },
+                  {
+                      "LastModifiedDate": "2020-04-10T12:26:43.000Z",
+                      "LastModifiedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "CreatedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "Description": null,
+                      "NumSubscriptions": 0,
+                      "FolderName": "专用报表",
+                      "Name": "客户",
+                      "LastRunDate": "2024-07-22T02:16:38.000Z",
+                      "CreatedById": "0059000000390WhAAI",
+                      "OwnerId": "0059000000390WhAAI",
+                      "CreatedDate": "2018-12-22T06:05:39.000Z",
+                      "Id": "00O0o000009Dp2CEAS",
+                      "LastModifiedById": "0059000000390WhAAI",
+                      "sobjectType": "Report"
+                  },
+                  {
+                      "LastModifiedDate": "2014-12-06T01:32:45.000Z",
+                      "LastModifiedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "Description": "What tasks are incomplete on existing projects, milestones and tasks?",
+                      "CreatedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "NumSubscriptions": 0,
+                      "FolderName": "Milestones PM",
+                      "Name": "Milestones and Open Tasks by Proj (LPM1)",
+                      "LastRunDate": "2022-11-18T09:23:27.000Z",
+                      "CreatedById": "0059000000390WhAAI",
+                      "OwnerId": "00l90000000gWg5AAE",
+                      "CreatedDate": "2014-12-06T01:32:45.000Z",
+                      "Id": "00O90000008VXBsEAO",
+                      "LastModifiedById": "0059000000390WhAAI",
+                      "sobjectType": "Report"
+                  },
+                  {
+                      "LastModifiedDate": "2014-12-06T01:32:44.000Z",
+                      "LastModifiedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "Description": "What Milestones are open and what budget has been used.",
+                      "CreatedBy": {
+                          "Id": "0059000000390WhAAI",
+                          "Name": "liu jack",
+                          "sobjectType": "User"
+                      },
+                      "NumSubscriptions": 0,
+                      "FolderName": "Milestones PM",
+                      "Name": "Active Projects Open Milestones",
+                      "LastRunDate": "2024-04-26T10:05:11.000Z",
+                      "CreatedById": "0059000000390WhAAI",
+                      "OwnerId": "00l90000000gWg5AAE",
+                      "CreatedDate": "2014-12-06T01:32:44.000Z",
+                      "Id": "00O90000008VXBnEAO",
+                      "LastModifiedById": "0059000000390WhAAI",
+                      "sobjectType": "Report"
+                  }
+              ],
+              "totalCount": 9
+          },
+          "error": []
+      }
+  ],
+  "context": {
+      "mode": "PROD",
+      "app": "one:one",
+      "pathPrefix": "",
+      "fwuid": "WFIwUmVJdmtIRnI3MTFpX0d6c1VwQWhZX25NdHFVdGpDN3BnWlROY1ZGT3cyNTAuOC4zLTYuNC41",
+      "mlr": 1,
+      "uad": 1,
+      "coos": 1,
+      "descriptorUids": {},
+      "loaded": {
+          "APPLICATION@markup://one:one": "JPhj9GLwocVj8Fy4XHAreA"
+      },
+      "globalValueProviders": [
+          {
+              "type": "$Global",
+              "values": {
+                  "eswConfigDeveloperName": {
+                      "writable": true,
+                      "defaultValue": ""
+                  },
+                  "isVoiceOver": {
+                      "writable": true,
+                      "defaultValue": false
+                  },
+                  "setupAppContextId": {
+                      "writable": true,
+                      "defaultValue": ""
+                  },
+                  "density": {
+                      "writable": true,
+                      "value": "VIEW_TWO"
+                  },
+                  "srcdoc": {
+                      "writable": false,
+                      "defaultValue": false
+                  },
+                  "appContextId": {
+                      "writable": true,
+                      "value": "06m90000000yYkGAAU"
+                  },
+                  "dynamicTypeSize": {
+                      "writable": true,
+                      "defaultValue": ""
+                  },
+                  "appContextDeveloperName": {
+                      "writable": true,
+                      "value": "LightningSales"
+                  }
+              }
+          }
+      ],
+      "enableAccessChecks": true,
+      "dns": "c",
+      "ls": 1,
+      "lairn": [],
+      "laerc": [],
+      "lav": "61",
+      "csp": 1,
+      "lgef": [
+          "com.salesforce.locker.temporaryGate"
+      ],
+      "cpr": "https://static.lightning.force.com/ap45",
+      "mna": {
+          "lightning": "interop"
+      },
+      "arse": 1,
+      "acaf": 1,
+      "services": [
+          "markup://force:initServiceSfdc",
+          "markup://lightning:configProvider",
+          "markup://force:salesforceScopedModuleResolver",
+          "markup://force:ldsEngineCreator",
+          "markup://instrumentation:locatorService",
+          "markup://force:lwcReportingService"
+      ]
+  },
+  "perfSummary": {
+      "version": "core",
+      "request": 22,
+      "actions": {
+          "964;a": {
+              "total": 14,
+              "db": 2
+          }
+      },
+      "actionsTotal": 14,
+      "overhead": 0
+  }
+}

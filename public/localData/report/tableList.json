@@ -1,0 +1,122 @@
+{"actions":[{"id":"3967;a","state":"SUCCESS","returnValue":[ {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/Opportunity",
+  "description" : "/img/rptoppt.gif",
+  "isCustomReportType" : false,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "业务机会",
+  "lastUsedDate" : "2024-07-23T03:19:44.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "Opportunity"
+}, {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/ContactList",
+  "description" : "/img/rptacctmail.gif",
+  "isCustomReportType" : false,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "联系人和客户",
+  "lastUsedDate" : "2024-07-22T06:00:31.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "ContactList"
+}, {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/AccountList",
+  "description" : "/img/rptacctlist.gif",
+  "isCustomReportType" : false,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "客户",
+  "lastUsedDate" : "2022-11-24T16:12:55.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "AccountList"
+}, {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityTrend",
+  "description" : "/img/rptoppttrend.gif",
+  "isCustomReportType" : false,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "业务机会趋势",
+  "lastUsedDate" : "2018-12-20T00:46:38.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "OpportunityTrend"
+}, {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestones_with_Tasks_with_Expenses__c",
+  "description" : "Milestones with Tasks with Expenses",
+  "isCustomReportType" : true,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "Milestones with Tasks with Expenses",
+  "lastUsedDate" : "2014-12-06T01:32:49.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "Milestones_with_Tasks_with_Expenses__c"
+}, {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestones_with_Tasks_with_Times__c",
+  "description" : "Milestones with Tasks with Times",
+  "isCustomReportType" : true,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "Milestones with Tasks with Times",
+  "lastUsedDate" : "2014-12-06T01:32:49.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "Milestones_with_Tasks_with_Times__c"
+}, {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$Project_Snapshot__c",
+  "description" : "/s.gif",
+  "isCustomReportType" : false,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "Project Snapshot",
+  "lastUsedDate" : "2014-12-06T01:32:48.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "CustomEntity$Project_Snapshot__c"
+}, {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestone1_Tasks__c",
+  "description" : "Basic Task Listing.",
+  "isCustomReportType" : true,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "Tasks",
+  "lastUsedDate" : "2014-12-06T01:32:48.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "Milestone1_Tasks__c"
+}, {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/Projects_Milestones_Tasks__c",
+  "description" : "A list of tasks with Milestones and Project",
+  "isCustomReportType" : true,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "Projects, Milestones and Tasks",
+  "lastUsedDate" : "2014-12-06T01:32:48.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "Projects_Milestones_Tasks__c"
+}, {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestone1_Projects__c",
+  "description" : "Milestone1 - Project Reports",
+  "isCustomReportType" : true,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "Projects (PM)",
+  "lastUsedDate" : "2014-12-06T01:32:47.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "Milestone1_Projects__c"
+}, {
+  "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestone1_Projects_Milestones__c",
+  "description" : "Projects and Milestones",
+  "isCustomReportType" : true,
+  "isDataCloudReportType" : false,
+  "isHidden" : false,
+  "isHistorical" : false,
+  "label" : "Projects + Milestones",
+  "lastUsedDate" : "2014-12-06T01:32:44.000+0000",
+  "supportsJoinedFormat" : true,
+  "type" : "Milestone1_Projects_Milestones__c"
+} ],"error":[],"storable":true}],"context":{"mode":"PROD","app":"one:one","pathPrefix":"","fwuid":"WFIwUmVJdmtIRnI3MTFpX0d6c1VwQWhZX25NdHFVdGpDN3BnWlROY1ZGT3cyNTAuOC4zLTYuNC41","mlr":1,"uad":1,"coos":1,"descriptorUids":{},"loaded":{"APPLICATION@markup://one:one":"JPhj9GLwocVj8Fy4XHAreA"},"globalValueProviders":[{"type":"$Global","values":{"eswConfigDeveloperName":{"writable":true,"defaultValue":""},"isVoiceOver":{"writable":true,"defaultValue":false},"setupAppContextId":{"writable":true,"defaultValue":""},"density":{"writable":true,"value":"VIEW_TWO"},"srcdoc":{"writable":false,"defaultValue":false},"appContextId":{"writable":true,"value":"06m90000000yYkGAAU"},"dynamicTypeSize":{"writable":true,"defaultValue":""},"appContextDeveloperName":{"writable":true,"value":"LightningSales"}}}],"enableAccessChecks":true,"dns":"c","ls":1,"lairn":[],"laerc":[],"lav":"61","csp":1,"lgef":["com.salesforce.locker.temporaryGate"],"cpr":"https://static.lightning.force.com/ap45","mna":{"lightning":"interop"},"arse":1,"acaf":1,"services":["markup://force:initServiceSfdc","markup://lightning:configProvider","markup://force:salesforceScopedModuleResolver","markup://force:ldsEngineCreator","markup://instrumentation:locatorService","markup://force:lwcReportingService"]},"perfSummary":{"version":"core","request":218,"actions":{"3967;a":{"total":210,"db":90}},"actionsTotal":210,"overhead":0}}

@@ -1,0 +1,1330 @@
+{"actions":[{"id":"3968;a","state":"SUCCESS","returnValue":[ {
+  "label" : "客户和联系人",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/AccountList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "客户",
+    "supportsJoinedFormat" : true,
+    "type" : "AccountList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContactList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "联系人和客户",
+    "supportsJoinedFormat" : true,
+    "type" : "ContactList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/AccountPartner",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括合作伙伴的客户",
+    "supportsJoinedFormat" : true,
+    "type" : "AccountPartner"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/AccountTeam",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括客户团队的客户",
+    "supportsJoinedFormat" : true,
+    "type" : "AccountTeam"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/AccountContactRole",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括联系人角色的客户",
+    "supportsJoinedFormat" : true,
+    "type" : "AccountContactRole"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/AccountAsset",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有资产的客户",
+    "supportsJoinedFormat" : true,
+    "type" : "AccountAsset"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContactAsset",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括资产的联系人",
+    "supportsJoinedFormat" : true,
+    "type" : "ContactAsset"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/AccountAuditHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "客户历史",
+    "supportsJoinedFormat" : false,
+    "type" : "AccountAuditHistory"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContactAuditHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "联系人历史",
+    "supportsJoinedFormat" : false,
+    "type" : "ContactAuditHistory"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/DandBCompanyAccount",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括和不包括客户的D&B 公司",
+    "supportsJoinedFormat" : true,
+    "type" : "DandBCompanyAccount"
+  } ]
+}, {
+  "label" : "业务机会",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Opportunity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "业务机会",
+    "supportsJoinedFormat" : true,
+    "type" : "Opportunity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityProduct",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括产品的业务机会",
+    "supportsJoinedFormat" : true,
+    "type" : "OpportunityProduct"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityContact",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括联系人角色的业务机会",
+    "supportsJoinedFormat" : true,
+    "type" : "OpportunityContact"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityPartner",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括合作伙伴的业务机会",
+    "supportsJoinedFormat" : true,
+    "type" : "OpportunityPartner"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityCompetitor",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括竞争对手的业务机会",
+    "supportsJoinedFormat" : true,
+    "type" : "OpportunityCompetitor"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "业务机会历史",
+    "supportsJoinedFormat" : true,
+    "type" : "OpportunityHistory"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityFieldAuditHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "机会字段历史",
+    "supportsJoinedFormat" : false,
+    "type" : "OpportunityFieldAuditHistory"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityTrend",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "业务机会趋势",
+    "supportsJoinedFormat" : true,
+    "type" : "OpportunityTrend"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityContactProduct",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括联系人角色和产品的业务机会",
+    "supportsJoinedFormat" : false,
+    "type" : "OpportunityContactProduct"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/QuoteProduct",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括报价和报价行项目的业务机会",
+    "supportsJoinedFormat" : true,
+    "type" : "QuoteProduct"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/QuoteDocument",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括报价和报价 PDF的业务机会",
+    "supportsJoinedFormat" : true,
+    "type" : "QuoteDocument"
+  } ]
+}, {
+  "label" : "客户支持报表",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CaseList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "个案",
+    "supportsJoinedFormat" : true,
+    "type" : "CaseList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CaseHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "个案有效期",
+    "supportsJoinedFormat" : true,
+    "type" : "CaseHistory"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CaseContactRole",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括联系人角色的个案",
+    "supportsJoinedFormat" : true,
+    "type" : "CaseContactRole"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CaseAsset",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括资产的个案",
+    "supportsJoinedFormat" : true,
+    "type" : "CaseAsset"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CaseSolution",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有解决方案的个案",
+    "supportsJoinedFormat" : true,
+    "type" : "CaseSolution"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CaseArticle",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有文章的个案",
+    "supportsJoinedFormat" : true,
+    "type" : "CaseArticle"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CaseAuditHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "个案历史",
+    "supportsJoinedFormat" : false,
+    "type" : "CaseAuditHistory"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/SolutionList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "解决方案",
+    "supportsJoinedFormat" : true,
+    "type" : "SolutionList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/SolutionCategory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "解决方案类别",
+    "supportsJoinedFormat" : true,
+    "type" : "SolutionCategory"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/SolutionAuditHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "解决方案历史",
+    "supportsJoinedFormat" : false,
+    "type" : "SolutionAuditHistory"
+  } ]
+}, {
+  "label" : "潜在客户",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/LeadList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "潜在客户",
+    "supportsJoinedFormat" : true,
+    "type" : "LeadList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityLead",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "潜在客户（包括已转换潜在客户信息）",
+    "supportsJoinedFormat" : true,
+    "type" : "OpportunityLead"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/LeadAuditHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "潜在客户历史",
+    "supportsJoinedFormat" : false,
+    "type" : "LeadAuditHistory"
+  } ]
+}, {
+  "label" : "市场活动",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CampaignList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "市场活动",
+    "supportsJoinedFormat" : true,
+    "type" : "CampaignList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CampaignContact",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括联系人的市场活动",
+    "supportsJoinedFormat" : true,
+    "type" : "CampaignContact"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CampaignLead",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括潜在客户的市场活动",
+    "supportsJoinedFormat" : true,
+    "type" : "CampaignLead"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityCampaign",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括业务机会的市场活动",
+    "supportsJoinedFormat" : true,
+    "type" : "OpportunityCampaign"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CampaignWithCampaignMembers",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括市场活动成员的市场活动",
+    "supportsJoinedFormat" : true,
+    "type" : "CampaignWithCampaignMembers"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CampaignLeadLifetime",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括潜在客户和已转换潜在客户信息的市场活动",
+    "supportsJoinedFormat" : true,
+    "type" : "CampaignLeadLifetime"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CampaignInfluence",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包含受影响的业务机会的市场活动",
+    "supportsJoinedFormat" : false,
+    "type" : "CampaignInfluence"
+  } ]
+}, {
+  "label" : "活动",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Activity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "任务与事件",
+    "supportsJoinedFormat" : true,
+    "type" : "Activity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/EventAttendee",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有被邀请人的事件",
+    "supportsJoinedFormat" : true,
+    "type" : "EventAttendee"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/EmailStatus",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "HTML 电子邮件状态",
+    "supportsJoinedFormat" : true,
+    "type" : "EmailStatus"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/AccountActivity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括客户的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "AccountActivity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContactActivity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括联系人的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "ContactActivity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OpportunityActivity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括业务机会的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "OpportunityActivity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/LeadActivity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括潜在客户的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "LeadActivity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CampaignActivity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括市场活动的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "CampaignActivity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CaseActivity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括个案的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "CaseActivity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/SolutionActivity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括解决方案的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "SolutionActivity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContractActivity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括合同的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "ContractActivity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ProductActivity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括产品的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "ProductActivity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ActivityCustomEntity$EPMLive__Issue__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括Issue的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "ActivityCustomEntity$EPMLive__Issue__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ActivityCustomEntity$EPMLive__Project__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括Project的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "ActivityCustomEntity$EPMLive__Project__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ActivityCustomEntity$VCSSAP__VCSEmail__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括VCSEmail的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "ActivityCustomEntity$VCSSAP__VCSEmail__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ActivityCustomEntity$VCSSAP__VCS_MailBox_Config__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括VCS_MailBox_Config的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "ActivityCustomEntity$VCSSAP__VCS_MailBox_Config__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ActivityCustomEntity$EPMLive__Task__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括Task的活动",
+    "supportsJoinedFormat" : true,
+    "type" : "ActivityCustomEntity$EPMLive__Task__c"
+  } ]
+}, {
+  "label" : "合同和订单",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContractList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "合同",
+    "supportsJoinedFormat" : true,
+    "type" : "ContractList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContractApproval",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括批准的合同",
+    "supportsJoinedFormat" : true,
+    "type" : "ContractApproval"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContractAuditHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "合同历史",
+    "supportsJoinedFormat" : false,
+    "type" : "ContractAuditHistory"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContractOrder",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括订单的合同",
+    "supportsJoinedFormat" : true,
+    "type" : "ContractOrder"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContractOrderItem",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括订单和产品的合同",
+    "supportsJoinedFormat" : true,
+    "type" : "ContractOrderItem"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ContractContactRole",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括联系人角色的合同",
+    "supportsJoinedFormat" : true,
+    "type" : "ContractContactRole"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OrderList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "订单",
+    "supportsJoinedFormat" : true,
+    "type" : "OrderList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OrderItemList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括产品的订单",
+    "supportsJoinedFormat" : true,
+    "type" : "OrderItemList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/OrderAuditHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "订单历史",
+    "supportsJoinedFormat" : false,
+    "type" : "OrderAuditHistory"
+  } ]
+}, {
+  "label" : "价格手册、产品和资产",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ProductList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "产品",
+    "supportsJoinedFormat" : true,
+    "type" : "ProductList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ProductOpportunity",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括业务机会的产品",
+    "supportsJoinedFormat" : true,
+    "type" : "ProductOpportunity"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/PricebookProduct",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括产品的价格手册",
+    "supportsJoinedFormat" : true,
+    "type" : "PricebookProduct"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ProductAsset",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括资产的产品",
+    "supportsJoinedFormat" : true,
+    "type" : "ProductAsset"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/AssetWithProduct",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "资产",
+    "supportsJoinedFormat" : true,
+    "type" : "AssetWithProduct"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/AssetCase",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括个案的资产",
+    "supportsJoinedFormat" : true,
+    "type" : "AssetCase"
+  } ]
+}, {
+  "label" : "管理报表",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/User",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "用户",
+    "supportsJoinedFormat" : true,
+    "type" : "User"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/ReportList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "报表",
+    "supportsJoinedFormat" : true,
+    "type" : "ReportList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/DocumentList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "文档",
+    "supportsJoinedFormat" : true,
+    "type" : "DocumentList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/LoginIpEmail",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "新登录位置",
+    "supportsJoinedFormat" : true,
+    "type" : "LoginIpEmail"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/TwoFactorMethodsInfo",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "身份验证方法",
+    "supportsJoinedFormat" : true,
+    "type" : "TwoFactorMethodsInfo"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CollabGroup",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "协作小组报表",
+    "supportsJoinedFormat" : true,
+    "type" : "CollabGroup"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CollabGroupFeedPosts",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "协作小组摘要帖子报表",
+    "supportsJoinedFormat" : true,
+    "type" : "CollabGroupFeedPosts"
+  } ]
+}, {
+  "label" : "文件和内容报表",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Content",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "内容报表",
+    "supportsJoinedFormat" : true,
+    "type" : "Content"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Workspace",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "文档库和用户报表",
+    "supportsJoinedFormat" : true,
+    "type" : "Workspace"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/File",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "文件和内容报表",
+    "supportsJoinedFormat" : true,
+    "type" : "File"
+  } ]
+}, {
+  "label" : "报价",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/QuoteWithoutOpp",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括报价行项目和报价 PDF的报价",
+    "supportsJoinedFormat" : true,
+    "type" : "QuoteWithoutOpp"
+  } ]
+}, {
+  "label" : "个人",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/IndividualList",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "个人",
+    "supportsJoinedFormat" : true,
+    "type" : "IndividualList"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/IndividualAuditHistory",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "个人历史",
+    "supportsJoinedFormat" : false,
+    "type" : "IndividualAuditHistory"
+  } ]
+}, {
+  "label" : "其他报表",
+  "reportTypes" : [ {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$EPMLive__Issue__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Issue",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$EPMLive__Issue__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$EPMLive__Issue__c@EPMLive__Issue__c.EPMLive__Project__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Project 的Issue",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$EPMLive__Issue__c@EPMLive__Issue__c.EPMLive__Project__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$EPMLive__Project__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Project",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$EPMLive__Project__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$EPMLive__Project__c@EPMLive__Project__c.EPMLive__Related_Campaign__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Related Campaign 的Project",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$EPMLive__Project__c@EPMLive__Project__c.EPMLive__Related_Campaign__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$EPMLive__Project__c@EPMLive__Project__c.EPMLive__Related_Opportunity__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Related Opportunity 的Project",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$EPMLive__Project__c@EPMLive__Project__c.EPMLive__Related_Opportunity__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$Milestone1_Milestone__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Milestone",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$Milestone1_Milestone__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$Milestone1_Milestone__c@Milestone1_Milestone__c.Parent_Milestone__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Parent Milestone 的Milestone",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$Milestone1_Milestone__c@Milestone1_Milestone__c.Parent_Milestone__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$Milestone1_Milestone__c@Milestone1_Milestone__c.Predecessor_Milestone__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Predecessor Milestone 的Milestone",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$Milestone1_Milestone__c@Milestone1_Milestone__c.Predecessor_Milestone__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntityCustomEntity$Milestone1_Milestone__c$Milestone1_Task__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "包括Task的Milestone",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntityCustomEntity$Milestone1_Milestone__c$Milestone1_Task__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntityCustomEntity$Milestone1_Milestone__c$Milestone1_Task__c@Milestone1_Task__c.Predecessor_Task__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有Task和 Predecessor Task 的Milestone",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntityCustomEntity$Milestone1_Milestone__c$Milestone1_Task__c@Milestone1_Task__c.Predecessor_Task__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$Project_Snapshot__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Project Snapshot",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$Project_Snapshot__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__User_Inbox__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "User Inbox",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__User_Inbox__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__VCSEmail__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "VCSEmail",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__VCSEmail__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__Account__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Account 的VCSEmail",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__Account__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__Case__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Case 的VCSEmail",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__Case__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__Contact__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Contact 的VCSEmail",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__Contact__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__Lead__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Lead 的VCSEmail",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__Lead__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__Opportunity__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Oportunidad 的VCSEmail",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__Opportunity__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__RepliedBy__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 RepliedBy 的VCSEmail",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__RepliedBy__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__RepliesTo__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 VCSEmail 的VCSEmail",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__RepliesTo__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__User_Inbox__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 User Inbox 的VCSEmail",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__VCSEmail__c@VCSSAP__VCSEmail__c.VCSSAP__User_Inbox__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntityAuditHistory$VCSSAP__VCSEmail__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "VCSEmail历史",
+    "supportsJoinedFormat" : false,
+    "type" : "CustomEntityAuditHistory$VCSSAP__VCSEmail__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$VCSSAP__VCS_MailBox_Config__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "VCS_MailBox_Config",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$VCSSAP__VCS_MailBox_Config__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntityAuditHistory$VCSSAP__VCS_MailBox_Config__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "VCS_MailBox_Config历史",
+    "supportsJoinedFormat" : false,
+    "type" : "CustomEntityAuditHistory$VCSSAP__VCS_MailBox_Config__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$EPMLive__Task__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Task",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$EPMLive__Task__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$EPMLive__Task__c@EPMLive__Task__c.EPMLive__Project__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 Project 的Task",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$EPMLive__Task__c@EPMLive__Task__c.EPMLive__Project__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$Employee__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "员工档案",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$Employee__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntity$Employee__c@Employee__c.yewu1__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "具有 业务品牌 的员工档案",
+    "supportsJoinedFormat" : true,
+    "type" : "CustomEntity$Employee__c@Employee__c.yewu1__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/CustomEntityAuditHistory$Employee__c",
+    "description" : null,
+    "isCustomReportType" : false,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "员工档案历史",
+    "supportsJoinedFormat" : false,
+    "type" : "CustomEntityAuditHistory$Employee__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/screen_flows_prebuilt_crt__c",
+    "description" : "了解将执行哪些流，以及用户完成每个流屏幕所需的时间。",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "屏幕流",
+    "supportsJoinedFormat" : true,
+    "type" : "screen_flows_prebuilt_crt__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/flow_orchestration_run_ootb_crt_two_four_eight__c",
+    "description" : "找出创建了哪些编配运行。",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "编配运行 Spring '24",
+    "supportsJoinedFormat" : true,
+    "type" : "flow_orchestration_run_ootb_crt_two_four_eight__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/flow_orchestration_stage_run_ootb_crt_two_four_eight__c",
+    "description" : "找出创建了哪些编配阶段运行以及每个运行的当前状态。",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "编配阶段运行 Spring '24",
+    "supportsJoinedFormat" : true,
+    "type" : "flow_orchestration_stage_run_ootb_crt_two_four_eight__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/flow_orchestration_step_run_ootb_crt_two_four_eight__c",
+    "description" : "找出创建了哪些编配步骤运行以及每个运行的当前状态。",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "编配步骤运行 Spring '24",
+    "supportsJoinedFormat" : true,
+    "type" : "flow_orchestration_step_run_ootb_crt_two_four_eight__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/flow_orchestration_work_item_ootb_crt_two_four_eight__c",
+    "description" : "找出创建了哪些编配工作项目，谁是相关的被分配者，以及每个工作项目的当前状态。",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "编配工作项目 Spring '24",
+    "supportsJoinedFormat" : true,
+    "type" : "flow_orchestration_work_item_ootb_crt_two_four_eight__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/flow_orchestration_log_ootb_crt_two_four_eight__c",
+    "description" : "找出创建了哪些编配运行日志，以及在相关的编配运行中发生了什么。",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "编配运行日志 Spring '24",
+    "supportsJoinedFormat" : true,
+    "type" : "flow_orchestration_log_ootb_crt_two_four_eight__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestones_with_Tasks_with_Expenses__c",
+    "description" : "Milestones with Tasks with Expenses",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Milestones with Tasks with Expenses",
+    "supportsJoinedFormat" : true,
+    "type" : "Milestones_with_Tasks_with_Expenses__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/MilestoneTaskExp__c",
+    "description" : "Milestones, Tasks, and Times",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Milestone and Tasks and Expenses",
+    "supportsJoinedFormat" : true,
+    "type" : "MilestoneTaskExp__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Projects_Milestones_Tasks__c",
+    "description" : "A list of tasks with Milestones and Project",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Projects, Milestones and Tasks",
+    "supportsJoinedFormat" : true,
+    "type" : "Projects_Milestones_Tasks__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestones_with_Tasks_with_Times__c",
+    "description" : "Milestones with Tasks with Times",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Milestones with Tasks with Times",
+    "supportsJoinedFormat" : true,
+    "type" : "Milestones_with_Tasks_with_Times__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestone1_Projects__c",
+    "description" : "Milestone1 - Project Reports",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Projects (PM)",
+    "supportsJoinedFormat" : true,
+    "type" : "Milestone1_Projects__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestone1_Milestones_Tasks__c",
+    "description" : "Milestones to Tasks",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Milestones + Tasks",
+    "supportsJoinedFormat" : true,
+    "type" : "Milestone1_Milestones_Tasks__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestone1_Tasks__c",
+    "description" : "Basic Task Listing.",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Tasks",
+    "supportsJoinedFormat" : true,
+    "type" : "Milestone1_Tasks__c"
+  }, {
+    "describeUrl" : "/services/data/v61.0/analytics/report-types/Milestone1_Projects_Milestones__c",
+    "description" : "Projects and Milestones",
+    "isCustomReportType" : true,
+    "isDataCloudReportType" : false,
+    "isHidden" : false,
+    "isHistorical" : false,
+    "label" : "Projects + Milestones",
+    "supportsJoinedFormat" : true,
+    "type" : "Milestone1_Projects_Milestones__c"
+  } ]
+} ],"error":[],"storable":true}],"context":{"mode":"PROD","app":"one:one","pathPrefix":"","fwuid":"WFIwUmVJdmtIRnI3MTFpX0d6c1VwQWhZX25NdHFVdGpDN3BnWlROY1ZGT3cyNTAuOC4zLTYuNC41","mlr":1,"uad":1,"coos":1,"descriptorUids":{},"loaded":{"APPLICATION@markup://one:one":"JPhj9GLwocVj8Fy4XHAreA"},"globalValueProviders":[{"type":"$Global","values":{"eswConfigDeveloperName":{"writable":true,"defaultValue":""},"isVoiceOver":{"writable":true,"defaultValue":false},"setupAppContextId":{"writable":true,"defaultValue":""},"density":{"writable":true,"value":"VIEW_TWO"},"srcdoc":{"writable":false,"defaultValue":false},"appContextId":{"writable":true,"value":"06m90000000yYkGAAU"},"dynamicTypeSize":{"writable":true,"defaultValue":""},"appContextDeveloperName":{"writable":true,"value":"LightningSales"}}}],"enableAccessChecks":true,"dns":"c","ls":1,"lairn":[],"laerc":[],"lav":"61","csp":1,"lgef":["com.salesforce.locker.temporaryGate"],"cpr":"https://static.lightning.force.com/ap45","mna":{"lightning":"interop"},"arse":1,"acaf":1,"services":["markup://force:initServiceSfdc","markup://lightning:configProvider","markup://force:salesforceScopedModuleResolver","markup://force:ldsEngineCreator","markup://instrumentation:locatorService","markup://force:lwcReportingService"]},"perfSummary":{"version":"core","request":114,"actions":{"3968;a":{"total":104,"db":17}},"actionsTotal":104,"overhead":0}}

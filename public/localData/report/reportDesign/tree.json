@@ -1,0 +1,3955 @@
+{"actions":[{"id":"568;a","state":"SUCCESS","returnValue":{
+  "attributes" : {
+    "describeUrl" : "/services/data/v61.0/analytics/reports/00O0o000009Dp2REAS/describe",
+    "instancesUrl" : "/services/data/v61.0/analytics/reports/00O0o000009Dp2REAS/instances",
+    "reportId" : "00O0o000009Dp2REAS",
+    "reportName" : "商业机会1",
+    "type" : "Report"
+  },
+  "reportExtendedMetadata" : {
+    "aggregateColumnInfo" : {
+      "s!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "金额 总和"
+      },
+      "a!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "平均金额"
+      },
+      "RowCount" : {
+        "dataType" : "int",
+        "label" : "记录计数"
+      },
+      "mx!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "最大值 金额"
+      },
+      "m!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "最小值 金额"
+      }
+    },
+    "availableDashboardSettings" : null,
+    "detailColumnInfo" : {
+      "FULL_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "User.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Owner.Name",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "业务机会所有人",
+        "uniqueCountable" : true
+      },
+      "ACCOUNT_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Account.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Account.Name",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "客户名",
+        "uniqueCountable" : true
+      },
+      "ACCOUNT_TYPE" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Account.Type",
+        "filterValues" : [ {
+          "apiName" : "Customer - Direct",
+          "label" : "Customer - Direct",
+          "name" : "Customer - Direct"
+        }, {
+          "apiName" : "Customer - Channel",
+          "label" : "Customer - Channel",
+          "name" : "Customer - Channel"
+        }, {
+          "apiName" : "Channel Partner / Reseller",
+          "label" : "Channel Partner / Reseller",
+          "name" : "Channel Partner / Reseller"
+        }, {
+          "apiName" : "Installation Partner",
+          "label" : "Installation Partner",
+          "name" : "Installation Partner"
+        }, {
+          "apiName" : "Technology Partner",
+          "label" : "Technology Partner",
+          "name" : "Technology Partner"
+        }, {
+          "apiName" : "Other",
+          "label" : "Other",
+          "name" : "Other"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Account.Type",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "客户类型",
+        "uniqueCountable" : true
+      },
+      "ROLLUP_DESCRIPTION" : {
+        "dataType" : "string",
+        "entityColumnName" : "UserRole.RollupDescription",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Owner.UserRole.RollupDescription",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "所有人角色",
+        "uniqueCountable" : true
+      },
+      "OPPORTUNITY_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Opportunity.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Name",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "业务机会名",
+        "uniqueCountable" : true
+      },
+      "AMOUNT" : {
+        "dataType" : "currency",
+        "entityColumnName" : "Opportunity.Amount",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Amount",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "金额",
+        "uniqueCountable" : true
+      },
+      "EXP_AMOUNT" : {
+        "dataType" : "currency",
+        "entityColumnName" : "Opportunity.ExpectedRevenue",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.ExpectedRevenue",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "预期收入",
+        "uniqueCountable" : true
+      },
+      "PROBABILITY" : {
+        "dataType" : "percent",
+        "entityColumnName" : "Opportunity.Probability",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Probability",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "可能性 (%)",
+        "uniqueCountable" : true
+      },
+      "AGE" : {
+        "dataType" : "double",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "帐龄",
+        "uniqueCountable" : true
+      },
+      "CLOSE_DATE" : {
+        "dataType" : "date",
+        "entityColumnName" : "Opportunity.CloseDate",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.CloseDate",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "结束日期",
+        "uniqueCountable" : true
+      },
+      "CREATED_DATE" : {
+        "dataType" : "date",
+        "entityColumnName" : "Opportunity.CreatedDate",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.CreatedDate",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "创建日期",
+        "uniqueCountable" : true
+      },
+      "OWNER_DIVISION" : {
+        "dataType" : "string",
+        "entityColumnName" : "User.Division",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Owner.Division",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "业务机会所有人：分部",
+        "uniqueCountable" : true
+      },
+      "INDUSTRY" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Account.Industry",
+        "filterValues" : [ {
+          "apiName" : "Agriculture",
+          "label" : "Agriculture",
+          "name" : "Agriculture"
+        }, {
+          "apiName" : "Apparel",
+          "label" : "Apparel",
+          "name" : "Apparel"
+        }, {
+          "apiName" : "Banking",
+          "label" : "Banking",
+          "name" : "Banking"
+        }, {
+          "apiName" : "Biotechnology",
+          "label" : "Biotechnology",
+          "name" : "Biotechnology"
+        }, {
+          "apiName" : "Chemicals",
+          "label" : "Chemicals",
+          "name" : "Chemicals"
+        }, {
+          "apiName" : "Communications",
+          "label" : "Communications",
+          "name" : "Communications"
+        }, {
+          "apiName" : "Construction",
+          "label" : "Construction",
+          "name" : "Construction"
+        }, {
+          "apiName" : "Consulting",
+          "label" : "Consulting",
+          "name" : "Consulting"
+        }, {
+          "apiName" : "Education",
+          "label" : "Education",
+          "name" : "Education"
+        }, {
+          "apiName" : "Electronics",
+          "label" : "Electronics",
+          "name" : "Electronics"
+        }, {
+          "apiName" : "Energy",
+          "label" : "Energy",
+          "name" : "Energy"
+        }, {
+          "apiName" : "Engineering",
+          "label" : "Engineering",
+          "name" : "Engineering"
+        }, {
+          "apiName" : "Entertainment",
+          "label" : "Entertainment",
+          "name" : "Entertainment"
+        }, {
+          "apiName" : "Environmental",
+          "label" : "Environmental",
+          "name" : "Environmental"
+        }, {
+          "apiName" : "Finance",
+          "label" : "Finance",
+          "name" : "Finance"
+        }, {
+          "apiName" : "Food & Beverage",
+          "label" : "Food & Beverage",
+          "name" : "Food & Beverage"
+        }, {
+          "apiName" : "Government",
+          "label" : "Government",
+          "name" : "Government"
+        }, {
+          "apiName" : "Healthcare",
+          "label" : "Healthcare",
+          "name" : "Healthcare"
+        }, {
+          "apiName" : "Hospitality",
+          "label" : "Hospitality",
+          "name" : "Hospitality"
+        }, {
+          "apiName" : "Insurance",
+          "label" : "Insurance",
+          "name" : "Insurance"
+        }, {
+          "apiName" : "Machinery",
+          "label" : "Machinery",
+          "name" : "Machinery"
+        }, {
+          "apiName" : "Manufacturing",
+          "label" : "Manufacturing",
+          "name" : "Manufacturing"
+        }, {
+          "apiName" : "Media",
+          "label" : "Media",
+          "name" : "Media"
+        }, {
+          "apiName" : "Not For Profit",
+          "label" : "Not For Profit",
+          "name" : "Not For Profit"
+        }, {
+          "apiName" : "Recreation",
+          "label" : "Recreation",
+          "name" : "Recreation"
+        }, {
+          "apiName" : "Retail",
+          "label" : "Retail",
+          "name" : "Retail"
+        }, {
+          "apiName" : "Shipping",
+          "label" : "Shipping",
+          "name" : "Shipping"
+        }, {
+          "apiName" : "Technology",
+          "label" : "Technology",
+          "name" : "Technology"
+        }, {
+          "apiName" : "Telecommunications",
+          "label" : "Telecommunications",
+          "name" : "Telecommunications"
+        }, {
+          "apiName" : "Transportation",
+          "label" : "Transportation",
+          "name" : "Transportation"
+        }, {
+          "apiName" : "Utilities",
+          "label" : "Utilities",
+          "name" : "Utilities"
+        }, {
+          "apiName" : "Other",
+          "label" : "Other",
+          "name" : "Other"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Account.Industry",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "行业",
+        "uniqueCountable" : true
+      }
+    },
+    "groupingColumnInfo" : {
+      "STAGE_NAME" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Opportunity.StageName",
+        "filterValues" : [ {
+          "apiName" : "Prospecting",
+          "label" : "Prospecting",
+          "name" : "Prospecting"
+        }, {
+          "apiName" : "Qualification",
+          "label" : "Qualification",
+          "name" : "Qualification"
+        }, {
+          "apiName" : "Needs Analysis",
+          "label" : "Needs Analysis",
+          "name" : "Needs Analysis"
+        }, {
+          "apiName" : "Value Proposition",
+          "label" : "Value Proposition",
+          "name" : "Value Proposition"
+        }, {
+          "apiName" : "Id. Decision Makers",
+          "label" : "Id. Decision Makers",
+          "name" : "Id. Decision Makers"
+        }, {
+          "apiName" : "Perception Analysis",
+          "label" : "Perception Analysis",
+          "name" : "Perception Analysis"
+        }, {
+          "apiName" : "Proposal/Price Quote",
+          "label" : "Proposal/Price Quote",
+          "name" : "Proposal/Price Quote"
+        }, {
+          "apiName" : "Negotiation/Review",
+          "label" : "Negotiation/Review",
+          "name" : "Negotiation/Review"
+        }, {
+          "apiName" : "Closed Won",
+          "label" : "Closed Won",
+          "name" : "Closed Won"
+        }, {
+          "apiName" : "Closed Lost",
+          "label" : "Closed Lost",
+          "name" : "Closed Lost"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.StageName",
+        "groupingLevel" : 0,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "阶段",
+        "uniqueCountable" : true
+      },
+      "CREATED" : {
+        "dataType" : "string",
+        "entityColumnName" : "User.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.CreatedBy.Name",
+        "groupingLevel" : 0,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "创建人",
+        "uniqueCountable" : true
+      },
+      "TYPE" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Opportunity.Type",
+        "filterValues" : [ {
+          "apiName" : "Existing Customer - Upgrade",
+          "label" : "Existing Customer - Upgrade",
+          "name" : "Existing Customer - Upgrade"
+        }, {
+          "apiName" : "Existing Customer - Replacement",
+          "label" : "Existing Customer - Replacement",
+          "name" : "Existing Customer - Replacement"
+        }, {
+          "apiName" : "Existing Customer - Downgrade",
+          "label" : "Existing Customer - Downgrade",
+          "name" : "Existing Customer - Downgrade"
+        }, {
+          "apiName" : "New Customer",
+          "label" : "New Customer",
+          "name" : "New Customer"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Type",
+        "groupingLevel" : 1,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "类型",
+        "uniqueCountable" : true
+      }
+    }
+  },
+  "reportMetadata" : {
+    "aggregates" : [ "s!AMOUNT", "a!AMOUNT", "mx!AMOUNT", "m!AMOUNT", "RowCount" ],
+    "chart" : {
+      "chartType" : "Donut",
+      "combineSmallGroups" : true,
+      "groupingColorPalette" : "DEFAULT",
+      "groupings" : [ "STAGE_NAME" ],
+      "hasLegend" : true,
+      "legendPosition" : "Right",
+      "referenceLineColors" : [ null ],
+      "referenceLineValues" : [ null ],
+      "showChartPercentages" : false,
+      "showChartTotal" : true,
+      "showChartValues" : true,
+      "summaries" : [ "s!AMOUNT" ],
+      "summaryAxisLocations" : [ "Y" ],
+      "summaryColors" : [ null ],
+      "summaryVisualizationTypes" : [ "Column" ],
+      "title" : "商业机会漏斗"
+    },
+    "crossFilters" : [ ],
+    "currency" : null,
+    "dashboardSetting" : null,
+    "description" : null,
+    "detailColumns" : [ "FULL_NAME", "ACCOUNT_NAME", "ACCOUNT_TYPE", "ROLLUP_DESCRIPTION", "OPPORTUNITY_NAME", "AMOUNT", "EXP_AMOUNT", "PROBABILITY", "AGE", "CLOSE_DATE", "CREATED_DATE", "OWNER_DIVISION", "INDUSTRY" ],
+    "developerName" : "X1_zG3",
+    "division" : null,
+    "folderId" : "0059000000390WhAAI",
+    "groupingsAcross" : [ {
+      "dateGranularity" : "None",
+      "name" : "CREATED",
+      "sortAggregate" : null,
+      "sortOrder" : "Asc"
+    }, {
+      "dateGranularity" : "None",
+      "name" : "TYPE",
+      "sortAggregate" : null,
+      "sortOrder" : "Asc"
+    } ],
+    "groupingsDown" : [ {
+      "dateGranularity" : "None",
+      "name" : "STAGE_NAME",
+      "sortAggregate" : null,
+      "sortOrder" : "Asc"
+    } ],
+    "hasDetailRows" : true,
+    "hasRecordCount" : true,
+    "historicalSnapshotDates" : [ ],
+    "id" : "00O0o000009Dp2REAS",
+    "name" : "商业机会1",
+    "presentationOptions" : {
+      "hasStackedSummaries" : false
+    },
+    "reportBooleanFilter" : null,
+    "reportFilters" : [
+      {
+        "column": "TYPE",
+        "filterType": "fieldValue",
+        "isRunPageEditable": true,
+        "operator": "equals",
+        "value": "Existing Customer - Upgrade,Existing Customer - Replacement"
+      }
+    ],
+    "reportFormat" : "MATRIX",
+    "reportType" : {
+      "label" : "业务机会",
+      "type" : "Opportunity"
+    },
+    "saveRoleHierarchy" : true,
+    "scope" : "organization",
+    "showGrandTotal" : true,
+    "showSubtotals" : true,
+    "sortBy" : [ ],
+    "standardDateFilter" : {
+      "column" : "CLOSE_DATE",
+      "durationValue" : "CUSTOM",
+      "endDate" : "2018-12-28",
+      "startDate" : "1900-12-01"
+    },
+    "standardFilters" : [ {
+      "name" : "terr",
+      "value" : "all"
+    }, {
+      "name" : "open",
+      "value" : "all"
+    }, {
+      "name" : "probability",
+      "value" : ">0"
+    } ],
+    "supportsRoleHierarchy" : true,
+    "userOrHierarchyFilterId" : null
+  },
+  "reportTypeMetadata" : {
+    "categories" : [ {
+      "columns" : {
+        "CREATED" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.CreatedBy.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "创建人",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CREATED_ALIAS" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Alias",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.CreatedBy.Alias",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "创建人别名",
+          "maxLength" : 8,
+          "uniqueCountable" : true
+        },
+        "LAST_UPDATE_BY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.LastModifiedBy.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "上次修改人",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "LAST_UPDATE_BY_ALIAS" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Alias",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.LastModifiedBy.Alias",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "上次修改人别名",
+          "maxLength" : 8,
+          "uniqueCountable" : true
+        },
+        "OPPORTUNITY_NAME" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Opportunity.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "业务机会名",
+          "maxLength" : 120,
+          "uniqueCountable" : true
+        },
+        "TYPE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Opportunity.Type",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "Existing Customer - Upgrade",
+            "label" : "Existing Customer - Upgrade",
+            "name" : "Existing Customer - Upgrade"
+          }, {
+            "apiName" : "Existing Customer - Replacement",
+            "label" : "Existing Customer - Replacement",
+            "name" : "Existing Customer - Replacement"
+          }, {
+            "apiName" : "Existing Customer - Downgrade",
+            "label" : "Existing Customer - Downgrade",
+            "name" : "Existing Customer - Downgrade"
+          }, {
+            "apiName" : "New Customer",
+            "label" : "New Customer",
+            "name" : "New Customer"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Type",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "类型",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "LEAD_SOURCE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Opportunity.LeadSource",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "Web",
+            "label" : "Web",
+            "name" : "Web"
+          }, {
+            "apiName" : "Phone Inquiry",
+            "label" : "Phone Inquiry",
+            "name" : "Phone Inquiry"
+          }, {
+            "apiName" : "Partner Referral",
+            "label" : "Partner Referral",
+            "name" : "Partner Referral"
+          }, {
+            "apiName" : "Purchased List",
+            "label" : "Purchased List",
+            "name" : "Purchased List"
+          }, {
+            "apiName" : "Other",
+            "label" : "Other",
+            "name" : "Other"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.LeadSource",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "潜在客户来源",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "PARTNER_NAME" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.PrimaryPartnerAccount.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "主要合作伙伴",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "AMOUNT" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "currency",
+          "entityColumnName" : "Opportunity.Amount",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Amount",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "金额",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "OPP_QUANTITY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "double",
+          "entityColumnName" : "Opportunity.TotalOpportunityQuantity",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.TotalOpportunityQuantity",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "业务机会数量",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "EXP_AMOUNT" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "currency",
+          "entityColumnName" : "Opportunity.ExpectedRevenue",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.ExpectedRevenue",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "预期收入",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CLOSED" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "boolean",
+          "entityColumnName" : "Opportunity.IsClosed",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "真",
+            "label" : "真",
+            "name" : "真"
+          }, {
+            "apiName" : "假",
+            "label" : "假",
+            "name" : "假"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.IsClosed",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "已结束",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "WON" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "boolean",
+          "entityColumnName" : "Opportunity.IsWon",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "真",
+            "label" : "真",
+            "name" : "真"
+          }, {
+            "apiName" : "假",
+            "label" : "假",
+            "name" : "假"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.IsWon",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "已赢得",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CLOSE_DATE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "entityColumnName" : "Opportunity.CloseDate",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.CloseDate",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "结束日期",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CLOSE_DATE2" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "entityColumnName" : "Opportunity.CloseDate",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.CloseDate",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "结束日期 (2)",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CLOSE_MONTH" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "结束月份",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "LAST_STAGE_CHANGE_DATE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "entityColumnName" : "Opportunity.LastStageChangeDate",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.LastStageChangeDate",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "上次阶段更改日期",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "NEXT_STEP" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Opportunity.NextStep",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.NextStep",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "下一步",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "STAGE_NAME" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Opportunity.StageName",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "Prospecting",
+            "label" : "Prospecting",
+            "name" : "Prospecting"
+          }, {
+            "apiName" : "Qualification",
+            "label" : "Qualification",
+            "name" : "Qualification"
+          }, {
+            "apiName" : "Needs Analysis",
+            "label" : "Needs Analysis",
+            "name" : "Needs Analysis"
+          }, {
+            "apiName" : "Value Proposition",
+            "label" : "Value Proposition",
+            "name" : "Value Proposition"
+          }, {
+            "apiName" : "Id. Decision Makers",
+            "label" : "Id. Decision Makers",
+            "name" : "Id. Decision Makers"
+          }, {
+            "apiName" : "Perception Analysis",
+            "label" : "Perception Analysis",
+            "name" : "Perception Analysis"
+          }, {
+            "apiName" : "Proposal/Price Quote",
+            "label" : "Proposal/Price Quote",
+            "name" : "Proposal/Price Quote"
+          }, {
+            "apiName" : "Negotiation/Review",
+            "label" : "Negotiation/Review",
+            "name" : "Negotiation/Review"
+          }, {
+            "apiName" : "Closed Won",
+            "label" : "Closed Won",
+            "name" : "Closed Won"
+          }, {
+            "apiName" : "Closed Lost",
+            "label" : "Closed Lost",
+            "name" : "Closed Lost"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.StageName",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "阶段",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "PROBABILITY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "percent",
+          "entityColumnName" : "Opportunity.Probability",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Probability",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "可能性 (%)",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "AGE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "double",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "帐龄",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "STAGE_DURATION" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "double",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "阶段持续时间",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "FORECAST_CATEGORY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Opportunity.ForecastCategoryName",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "Omitted",
+            "label" : "Omitted",
+            "name" : "Omitted"
+          }, {
+            "apiName" : "Pipeline",
+            "label" : "Pipeline",
+            "name" : "Pipeline"
+          }, {
+            "apiName" : "Best Case",
+            "label" : "Best Case",
+            "name" : "Best Case"
+          }, {
+            "apiName" : "Commit",
+            "label" : "Commit",
+            "name" : "Commit"
+          }, {
+            "apiName" : "Closed",
+            "label" : "Closed",
+            "name" : "Closed"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.ForecastCategoryName",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "预测类别",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "OPPORTUNITY_ID" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "id",
+          "entityColumnName" : "Opportunity.Id",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Id",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "业务机会 ID",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "LAST_ACTIVITY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "entityColumnName" : "Opportunity.LastActivityDate",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.LastActivityDate",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "上次活动日期",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "DESCRIPTION" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "textarea",
+          "entityColumnName" : "Opportunity.Description",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Description",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "描述",
+          "maxLength" : 32000,
+          "uniqueCountable" : false
+        },
+        "HASOPPLINEITEM" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "boolean",
+          "entityColumnName" : "Opportunity.HasOpportunityLineItem",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "真",
+            "label" : "真",
+            "name" : "真"
+          }, {
+            "apiName" : "假",
+            "label" : "假",
+            "name" : "假"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.HasOpportunityLineItem",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "具有产品",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CREATED_DATE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "entityColumnName" : "Opportunity.CreatedDate",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.CreatedDate",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "创建日期",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "LAST_UPDATE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "entityColumnName" : "Opportunity.LastModifiedDate",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.LastModifiedDate",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "上次修改日期",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "PRIVATE" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "boolean",
+          "entityColumnName" : "Opportunity.IsPrivate",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "真",
+            "label" : "真",
+            "name" : "真"
+          }, {
+            "apiName" : "假",
+            "label" : "假",
+            "name" : "假"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.IsPrivate",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "专用",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "PUSH_COUNT" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "double",
+          "entityColumnName" : "Opportunity.PushCount",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.PushCount",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "推送计数",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CAMPAIGN_SOURCE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Campaign.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Campaign.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "主要市场活动来源",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "SYNCED_QUOTE_NAME" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Quote.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.SyncedQuote.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "同步的报价",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        }
+      },
+      "label" : "业务机会信息",
+      "labelSuffix" : null
+    }, {
+      "columns" : {
+        "FULL_NAME" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "业务机会所有人",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ROLLUP_DESCRIPTION" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "UserRole.RollupDescription",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.UserRole.RollupDescription",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "所有人角色",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "ALIAS" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Alias",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.Alias",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "业务机会所有人别名",
+          "maxLength" : 8,
+          "uniqueCountable" : true
+        },
+        "OWNER_EMAIL" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "email",
+          "entityColumnName" : "User.Email",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.Email",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "业务机会所有人电子邮件",
+          "maxLength" : 128,
+          "uniqueCountable" : true
+        },
+        "OWNER_PHONE" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "phone",
+          "entityColumnName" : "User.Phone",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.Phone",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "业务机会所有人：电话",
+          "maxLength" : 40,
+          "uniqueCountable" : true
+        },
+        "OWNER_MOBILE_PHONE" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "phone",
+          "entityColumnName" : "User.MobilePhone",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.MobilePhone",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "业务机会所有人：手机",
+          "maxLength" : 40,
+          "uniqueCountable" : true
+        },
+        "OWNER_MANAGER" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.Manager.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "业务机会所有人：经理",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "OWNER_TITLE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Title",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.Title",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "业务机会所有人：职称",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "OWNER_COMPANY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.CompanyName",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.CompanyName",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "业务机会所有人：公司",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "OWNER_DEPARTMENT" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Department",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.Department",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "业务机会所有人：部门",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "OWNER_DIVISION" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Division",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.Division",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "业务机会所有人：分部",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "OWNER_PROFILE" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "业务机会所有人：简档",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "OWNER_ACTIVE" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "boolean",
+          "entityColumnName" : "User.IsActive",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "真",
+            "label" : "真",
+            "name" : "真"
+          }, {
+            "apiName" : "假",
+            "label" : "假",
+            "name" : "假"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Owner.IsActive",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "业务机会所有人：启用",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        }
+      },
+      "label" : "业务机会所有人信息",
+      "labelSuffix" : null
+    }, {
+      "columns" : {
+        "ACCOUNT_NAME" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "客户名",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "ACCOUNT_OWNER" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Owner.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "客户所有人",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ACCOUNT_OWNER_ALIAS" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "User.Alias",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Owner.Alias",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "客户所有人别名",
+          "maxLength" : 8,
+          "uniqueCountable" : true
+        },
+        "PARENT_NAME" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Parent.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "母公司",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "PARENT_ID" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "id",
+          "entityColumnName" : "Account.Parent",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.ParentId",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "母公司 ID",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "SALES" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "currency",
+          "entityColumnName" : "Account.AnnualRevenue",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.AnnualRevenue",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "年收入",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ACCOUNT_TYPE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Account.Type",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "Customer - Direct",
+            "label" : "Customer - Direct",
+            "name" : "Customer - Direct"
+          }, {
+            "apiName" : "Customer - Channel",
+            "label" : "Customer - Channel",
+            "name" : "Customer - Channel"
+          }, {
+            "apiName" : "Channel Partner / Reseller",
+            "label" : "Channel Partner / Reseller",
+            "name" : "Channel Partner / Reseller"
+          }, {
+            "apiName" : "Installation Partner",
+            "label" : "Installation Partner",
+            "name" : "Installation Partner"
+          }, {
+            "apiName" : "Technology Partner",
+            "label" : "Technology Partner",
+            "name" : "Technology Partner"
+          }, {
+            "apiName" : "Other",
+            "label" : "Other",
+            "name" : "Other"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Type",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "客户类型",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "ACCOUNT_SITE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.Site",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Site",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "客户站点",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "INDUSTRY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Account.Industry",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "Agriculture",
+            "label" : "Agriculture",
+            "name" : "Agriculture"
+          }, {
+            "apiName" : "Apparel",
+            "label" : "Apparel",
+            "name" : "Apparel"
+          }, {
+            "apiName" : "Banking",
+            "label" : "Banking",
+            "name" : "Banking"
+          }, {
+            "apiName" : "Biotechnology",
+            "label" : "Biotechnology",
+            "name" : "Biotechnology"
+          }, {
+            "apiName" : "Chemicals",
+            "label" : "Chemicals",
+            "name" : "Chemicals"
+          }, {
+            "apiName" : "Communications",
+            "label" : "Communications",
+            "name" : "Communications"
+          }, {
+            "apiName" : "Construction",
+            "label" : "Construction",
+            "name" : "Construction"
+          }, {
+            "apiName" : "Consulting",
+            "label" : "Consulting",
+            "name" : "Consulting"
+          }, {
+            "apiName" : "Education",
+            "label" : "Education",
+            "name" : "Education"
+          }, {
+            "apiName" : "Electronics",
+            "label" : "Electronics",
+            "name" : "Electronics"
+          }, {
+            "apiName" : "Energy",
+            "label" : "Energy",
+            "name" : "Energy"
+          }, {
+            "apiName" : "Engineering",
+            "label" : "Engineering",
+            "name" : "Engineering"
+          }, {
+            "apiName" : "Entertainment",
+            "label" : "Entertainment",
+            "name" : "Entertainment"
+          }, {
+            "apiName" : "Environmental",
+            "label" : "Environmental",
+            "name" : "Environmental"
+          }, {
+            "apiName" : "Finance",
+            "label" : "Finance",
+            "name" : "Finance"
+          }, {
+            "apiName" : "Food & Beverage",
+            "label" : "Food & Beverage",
+            "name" : "Food & Beverage"
+          }, {
+            "apiName" : "Government",
+            "label" : "Government",
+            "name" : "Government"
+          }, {
+            "apiName" : "Healthcare",
+            "label" : "Healthcare",
+            "name" : "Healthcare"
+          }, {
+            "apiName" : "Hospitality",
+            "label" : "Hospitality",
+            "name" : "Hospitality"
+          }, {
+            "apiName" : "Insurance",
+            "label" : "Insurance",
+            "name" : "Insurance"
+          }, {
+            "apiName" : "Machinery",
+            "label" : "Machinery",
+            "name" : "Machinery"
+          }, {
+            "apiName" : "Manufacturing",
+            "label" : "Manufacturing",
+            "name" : "Manufacturing"
+          }, {
+            "apiName" : "Media",
+            "label" : "Media",
+            "name" : "Media"
+          }, {
+            "apiName" : "Not For Profit",
+            "label" : "Not For Profit",
+            "name" : "Not For Profit"
+          }, {
+            "apiName" : "Recreation",
+            "label" : "Recreation",
+            "name" : "Recreation"
+          }, {
+            "apiName" : "Retail",
+            "label" : "Retail",
+            "name" : "Retail"
+          }, {
+            "apiName" : "Shipping",
+            "label" : "Shipping",
+            "name" : "Shipping"
+          }, {
+            "apiName" : "Technology",
+            "label" : "Technology",
+            "name" : "Technology"
+          }, {
+            "apiName" : "Telecommunications",
+            "label" : "Telecommunications",
+            "name" : "Telecommunications"
+          }, {
+            "apiName" : "Transportation",
+            "label" : "Transportation",
+            "name" : "Transportation"
+          }, {
+            "apiName" : "Utilities",
+            "label" : "Utilities",
+            "name" : "Utilities"
+          }, {
+            "apiName" : "Other",
+            "label" : "Other",
+            "name" : "Other"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Industry",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "行业",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "RATING" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Account.Rating",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "Hot",
+            "label" : "Hot",
+            "name" : "Hot"
+          }, {
+            "apiName" : "Warm",
+            "label" : "Warm",
+            "name" : "Warm"
+          }, {
+            "apiName" : "Cold",
+            "label" : "Cold",
+            "name" : "Cold"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Rating",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "分级",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "SIC" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.Sic",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Sic",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "SIC 代码",
+          "maxLength" : 20,
+          "uniqueCountable" : true
+        },
+        "TICKER" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "string",
+          "entityColumnName" : "Account.TickerSymbol",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.TickerSymbol",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "公司股票代码",
+          "maxLength" : 20,
+          "uniqueCountable" : true
+        },
+        "EMPLOYEES" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "double",
+          "entityColumnName" : "Account.NumberOfEmployees",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.NumberOfEmployees",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "员工",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "OWNERSHIP" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Account.Ownership",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "Public",
+            "label" : "Public",
+            "name" : "Public"
+          }, {
+            "apiName" : "Private",
+            "label" : "Private",
+            "name" : "Private"
+          }, {
+            "apiName" : "Subsidiary",
+            "label" : "Subsidiary",
+            "name" : "Subsidiary"
+          }, {
+            "apiName" : "Other",
+            "label" : "Other",
+            "name" : "Other"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Ownership",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "所有权",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "ACCOUNT_NUMBER" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.AccountNumber",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.AccountNumber",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "客户编号",
+          "maxLength" : 40,
+          "uniqueCountable" : true
+        },
+        "ACCOUNT_ID" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "id",
+          "entityColumnName" : "Opportunity.Account",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.AccountId",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "客户 ID",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ACCOUNT_LAST_ACTIVITY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "entityColumnName" : "Account.LastActivityDate",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.LastActivityDate",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "客户：上次活动",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ACCOUNT_CREATED_DATE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "entityColumnName" : "Account.CreatedDate",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.CreatedDate",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "客户：创建日期",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ACCOUNT_LAST_UPDATE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "entityColumnName" : "Account.LastModifiedDate",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.LastModifiedDate",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "客户：上次修改日期",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ACCOUNT_DESCRIPTION" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "textarea",
+          "entityColumnName" : "Account.Description",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Description",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "客户备注",
+          "maxLength" : 32000,
+          "uniqueCountable" : false
+        }
+      },
+      "label" : "客户：一般",
+      "labelSuffix" : null
+    }, {
+      "columns" : {
+        "ADDRESS1_COUNTRY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.BillingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.BillingCountry",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "开单国家/地区",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "ADDRESS1_ZIP" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.BillingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.BillingPostalCode",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "开单邮政编码",
+          "maxLength" : 20,
+          "uniqueCountable" : true
+        },
+        "ADDRESS1_STATE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.BillingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.BillingState",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "开单州/省",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "ADDRESS1_CITY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.BillingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.BillingCity",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "开单城市",
+          "maxLength" : 40,
+          "uniqueCountable" : true
+        },
+        "ADDRESS1_STREET" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "string",
+          "entityColumnName" : "Account.BillingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.BillingStreet",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "开单街道",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "ADDRESS1_LINE1" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "开单地址第 1 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ADDRESS1_LINE2" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "开单地址第 2 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ADDRESS1_LINE3" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "开单地址第 3 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ADDRESS2_COUNTRY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.ShippingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.ShippingCountry",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "发货国家/地区",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "ADDRESS2_ZIP" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.ShippingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.ShippingPostalCode",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "发货邮政编码",
+          "maxLength" : 20,
+          "uniqueCountable" : true
+        },
+        "ADDRESS2_STATE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.ShippingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.ShippingState",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "发货州/省",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "ADDRESS2_CITY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.ShippingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.ShippingCity",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "发货城市",
+          "maxLength" : 40,
+          "uniqueCountable" : true
+        },
+        "ADDRESS2_STREET" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "string",
+          "entityColumnName" : "Account.ShippingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.ShippingStreet",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "发货街道",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "ADDRESS2_LINE1" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "发货地址第 1 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ADDRESS2_LINE2" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "发货地址第 2 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "ADDRESS2_LINE3" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "发货地址第 3 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        }
+      },
+      "label" : "客户：地址",
+      "labelSuffix" : null
+    }, {
+      "columns" : {
+        "PHONE1" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "phone",
+          "entityColumnName" : "Account.Phone",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Phone",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "电话",
+          "maxLength" : 40,
+          "uniqueCountable" : true
+        },
+        "PHONE2" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "phone",
+          "entityColumnName" : "Account.Fax",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Fax",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "传真",
+          "maxLength" : 40,
+          "uniqueCountable" : true
+        },
+        "URL" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "url",
+          "entityColumnName" : "Account.Website",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Website",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "网址",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        }
+      },
+      "label" : "客户：电话/传真",
+      "labelSuffix" : null
+    }, {
+      "columns" : {
+        "CONTACT" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "主要联系人",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CON.TITLE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.Title",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.Title",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "联系人：职务",
+          "maxLength" : 128,
+          "uniqueCountable" : true
+        },
+        "CON.PHONE" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "phone",
+          "entityColumnName" : "Contact.Phone",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.Phone",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "联系人：电话",
+          "maxLength" : 40,
+          "uniqueCountable" : true
+        },
+        "CON.EMAIL" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "email",
+          "entityColumnName" : "Contact.Email",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.Email",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "联系人：电子邮件",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        }
+      },
+      "label" : "主要联系人",
+      "labelSuffix" : null
+    }, {
+      "columns" : {
+        "CON.ADDRESS2_COUNTRY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.MailingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.MailingCountry",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "邮寄地址 - 国家/地区",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS2_ZIP" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.MailingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.MailingPostalCode",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "邮寄地址 - 邮政编码",
+          "maxLength" : 20,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS2_STATE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.MailingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.MailingState",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "邮寄地址 - 州/省",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS2_CITY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.MailingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.MailingCity",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "邮寄地址 - 城市",
+          "maxLength" : 40,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS2_STREET" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.MailingAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.MailingStreet",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "邮寄地址 - 街道",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS2_LINE1" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "邮寄地址第 1 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS2_LINE2" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "邮寄地址第 2 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS2_LINE3" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "邮寄地址第 3 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS1_COUNTRY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.OtherAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.OtherCountry",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "其它国家/地区",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS1_ZIP" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.OtherAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.OtherPostalCode",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "其它邮政编码",
+          "maxLength" : 20,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS1_STATE" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.OtherAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.OtherState",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "其它州/省",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS1_CITY" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.OtherAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.OtherCity",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "其它城市",
+          "maxLength" : 40,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS1_STREET" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "string",
+          "entityColumnName" : "Contact.OtherAddress",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Contact.OtherStreet",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "其它街道",
+          "maxLength" : 255,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS1_LINE1" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "其他地址第 1 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS1_LINE2" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "其他地址第 2 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "CON.ADDRESS1_LINE3" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "其他地址第 3 行",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        }
+      },
+      "label" : "联系人：地址",
+      "labelSuffix" : null
+    }, {
+      "columns" : {
+        "Opportunity.CurrentGenerators__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Opportunity.CurrentGenerators__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.CurrentGenerators__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "Current Generator(s)",
+          "maxLength" : 100,
+          "uniqueCountable" : true
+        },
+        "Opportunity.DeliveryInstallationStatus__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Opportunity.DeliveryInstallationStatus__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "In progress",
+            "label" : "In progress",
+            "name" : "In progress"
+          }, {
+            "apiName" : "Yet to begin",
+            "label" : "Yet to begin",
+            "name" : "Yet to begin"
+          }, {
+            "apiName" : "Completed",
+            "label" : "Completed",
+            "name" : "Completed"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.DeliveryInstallationStatus__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "Delivery/Installation Status",
+          "maxLength" : 0,
+          "uniqueCountable" : true
+        },
+        "Opportunity.MainCompetitors__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Opportunity.MainCompetitors__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.MainCompetitors__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "Main Competitor(s)",
+          "maxLength" : 100,
+          "uniqueCountable" : true
+        },
+        "Opportunity.OrderNumber__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Opportunity.OrderNumber__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.OrderNumber__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "Order Number",
+          "maxLength" : 8,
+          "uniqueCountable" : true
+        },
+        "Opportunity.TrackingNumber__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Opportunity.TrackingNumber__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.TrackingNumber__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "Tracking Number",
+          "maxLength" : 12,
+          "uniqueCountable" : true
+        }
+      },
+      "label" : "业务机会：自定义信息",
+      "labelSuffix" : null
+    }, {
+      "columns" : {
+        "Account.ywpp123__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.ywpp123__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.ywpp123__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : true,
+          "label" : "业务品牌123",
+          "maxLength" : 15,
+          "uniqueCountable" : true
+        },
+        "Account.gongshi1__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.gongshi1__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.gongshi1__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "公式1",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "Account.Xtext1__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "string",
+          "entityColumnName" : "Account.Xtext1__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : null,
+          "filterable" : false,
+          "fullyQualifiedName" : "Opportunity.Account.Xtext1__c",
+          "inactiveFilterValues" : null,
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "加密文本1",
+          "maxLength" : 175,
+          "uniqueCountable" : false
+        },
+        "Account.location1__Latitude__s" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "double",
+          "entityColumnName" : "Account.location1__Latitude__s",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.location1__Latitude__s",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "地理定位 (纬度)",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "Account.location1__Longitude__s" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "double",
+          "entityColumnName" : "Account.location1__Longitude__s",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.location1__Longitude__s",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "地理定位 (经度)",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "Account.selects__c" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "multipicklist",
+          "entityColumnName" : "Account.selects__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "男",
+            "label" : "男",
+            "name" : "男"
+          }, {
+            "apiName" : "女",
+            "label" : "女",
+            "name" : "女"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.selects__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "多项选择",
+          "maxLength" : 0,
+          "uniqueCountable" : false
+        },
+        "Account.datetime1__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "datetime",
+          "entityColumnName" : "Account.datetime1__c",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.datetime1__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "日期时间",
+          "maxLength" : 0,
+          "uniqueCountable" : true
+        },
+        "Account.time__c" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "time",
+          "entityColumnName" : "Account.time__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.time__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "时间1",
+          "maxLength" : 0,
+          "uniqueCountable" : true
+        },
+        "Account.email1__c" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "email",
+          "entityColumnName" : "Account.email1__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.email1__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "电子邮件",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "Account.percentage1__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "percent",
+          "entityColumnName" : "Account.percentage1__c",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.percentage1__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "百分比",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "Account.autocode__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "string",
+          "entityColumnName" : "Account.autocode__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.autocode__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "自动编号",
+          "maxLength" : 30,
+          "uniqueCountable" : true
+        },
+        "Account.Active__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Account.Active__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "No",
+            "label" : "No",
+            "name" : "No"
+          }, {
+            "apiName" : "Yes",
+            "label" : "Yes",
+            "name" : "Yes"
+          }, {
+            "apiName" : "123123",
+            "label" : "123123",
+            "name" : "123123"
+          }, {
+            "apiName" : "1,2",
+            "label" : "1,2",
+            "name" : "1,2"
+          }, {
+            "apiName" : "1",
+            "label" : "1",
+            "name" : "1"
+          }, {
+            "apiName" : "2",
+            "label" : "2",
+            "name" : "2"
+          }, {
+            "apiName" : "3",
+            "label" : "3",
+            "name" : "3"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.Active__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "Active",
+          "maxLength" : 0,
+          "uniqueCountable" : true
+        },
+        "Account.CustomerPriority__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Account.CustomerPriority__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "High",
+            "label" : "High",
+            "name" : "High"
+          }, {
+            "apiName" : "Low",
+            "label" : "Low",
+            "name" : "Low"
+          }, {
+            "apiName" : "Medium",
+            "label" : "Medium",
+            "name" : "Medium"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.CustomerPriority__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "Customer Priority",
+          "maxLength" : 0,
+          "uniqueCountable" : true
+        },
+        "Account.NumberofLocations__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "double",
+          "entityColumnName" : "Account.NumberofLocations__c",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.NumberofLocations__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "Number of Locations",
+          "maxLength" : null,
+          "uniqueCountable" : true
+        },
+        "Account.RTF1__c" : {
+          "allowedInCustomDetailFormula" : false,
+          "bucketable" : false,
+          "dataType" : "string",
+          "entityColumnName" : "Account.RTF1__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.RTF1__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "RTF",
+          "maxLength" : 32768,
+          "uniqueCountable" : false
+        },
+        "Account.SLA__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Account.SLA__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "Gold",
+            "label" : "Gold",
+            "name" : "Gold"
+          }, {
+            "apiName" : "Silver",
+            "label" : "Silver",
+            "name" : "Silver"
+          }, {
+            "apiName" : "Platinum",
+            "label" : "Platinum",
+            "name" : "Platinum"
+          }, {
+            "apiName" : "Bronze",
+            "label" : "Bronze",
+            "name" : "Bronze"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.SLA__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "SLA",
+          "maxLength" : 0,
+          "uniqueCountable" : true
+        },
+        "Account.SLAExpirationDate__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "date",
+          "entityColumnName" : "Account.SLAExpirationDate__c",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.SLAExpirationDate__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "SLA Expiration Date",
+          "maxLength" : 0,
+          "uniqueCountable" : true
+        },
+        "Account.SLASerialNumber__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Account.SLASerialNumber__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.SLASerialNumber__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "SLA Serial Number",
+          "maxLength" : 10,
+          "uniqueCountable" : true
+        },
+        "Account.UpsellOpportunity__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "picklist",
+          "entityColumnName" : "Account.UpsellOpportunity__c",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ {
+            "apiName" : "Maybe",
+            "label" : "Maybe",
+            "name" : "Maybe"
+          }, {
+            "apiName" : "No",
+            "label" : "No",
+            "name" : "No"
+          }, {
+            "apiName" : "Yes",
+            "label" : "Yes",
+            "name" : "Yes"
+          } ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.UpsellOpportunity__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "Upsell Opportunity",
+          "maxLength" : 0,
+          "uniqueCountable" : true
+        },
+        "Account.wewq1__c" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : false,
+          "dataType" : "datetime",
+          "entityColumnName" : "Account.wewq1__c",
+          "fieldToFieldFilterable" : true,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Account.wewq1__c",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : true,
+          "isLookup" : false,
+          "label" : "w",
+          "maxLength" : 0,
+          "uniqueCountable" : true
+        }
+      },
+      "label" : "客户：自定义信息",
+      "labelSuffix" : null
+    }, {
+      "columns" : {
+        "TERR2_NAME" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Territory2.Name",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Territory2.Name",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : true,
+          "label" : "区域名称",
+          "maxLength" : 80,
+          "uniqueCountable" : true
+        },
+        "TERR2_DESC" : {
+          "allowedInCustomDetailFormula" : true,
+          "bucketable" : true,
+          "dataType" : "string",
+          "entityColumnName" : "Territory2.Description",
+          "fieldToFieldFilterable" : false,
+          "filterValues" : [ ],
+          "filterable" : true,
+          "fullyQualifiedName" : "Opportunity.Territory2.Description",
+          "inactiveFilterValues" : [ ],
+          "isCustom" : false,
+          "isLookup" : false,
+          "label" : "区域说明",
+          "maxLength" : 1000,
+          "uniqueCountable" : true
+        }
+      },
+      "label" : "区域信息",
+      "labelSuffix" : null
+    } ],
+    "dataTypeFilterOperatorMap" : {
+      "date" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      } ],
+      "string" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      }, {
+        "label" : "包含",
+        "name" : "contains"
+      }, {
+        "label" : "不包含",
+        "name" : "notContain"
+      }, {
+        "label" : "起始字符",
+        "name" : "startsWith"
+      } ],
+      "double" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      } ],
+      "picklist" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      }, {
+        "label" : "包含",
+        "name" : "contains"
+      }, {
+        "label" : "不包含",
+        "name" : "notContain"
+      }, {
+        "label" : "起始字符",
+        "name" : "startsWith"
+      } ],
+      "textarea" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      }, {
+        "label" : "包含",
+        "name" : "contains"
+      }, {
+        "label" : "不包含",
+        "name" : "notContain"
+      }, {
+        "label" : "起始字符",
+        "name" : "startsWith"
+      } ],
+      "percent" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      } ],
+      "url" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      }, {
+        "label" : "包含",
+        "name" : "contains"
+      }, {
+        "label" : "不包含",
+        "name" : "notContain"
+      }, {
+        "label" : "起始字符",
+        "name" : "startsWith"
+      } ],
+      "datetime" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      } ],
+      "boolean" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      } ],
+      "phone" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      }, {
+        "label" : "包含",
+        "name" : "contains"
+      }, {
+        "label" : "不包含",
+        "name" : "notContain"
+      }, {
+        "label" : "起始字符",
+        "name" : "startsWith"
+      } ],
+      "currency" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      } ],
+      "id" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "起始字符",
+        "name" : "startsWith"
+      } ],
+      "time" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      } ],
+      "email" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "小于",
+        "name" : "lessThan"
+      }, {
+        "label" : "大于",
+        "name" : "greaterThan"
+      }, {
+        "label" : "小于或等于",
+        "name" : "lessOrEqual"
+      }, {
+        "label" : "大于或等于",
+        "name" : "greaterOrEqual"
+      }, {
+        "label" : "包含",
+        "name" : "contains"
+      }, {
+        "label" : "不包含",
+        "name" : "notContain"
+      }, {
+        "label" : "起始字符",
+        "name" : "startsWith"
+      } ],
+      "multipicklist" : [ {
+        "label" : "等于",
+        "name" : "equals"
+      }, {
+        "label" : "不等于",
+        "name" : "notEqual"
+      }, {
+        "label" : "包括",
+        "name" : "includes"
+      }, {
+        "label" : "不包括",
+        "name" : "excludes"
+      } ]
+    },
+    "dateGranularityInfos" : [ {
+      "label" : "日",
+      "value" : "Day"
+    }, {
+      "label" : "日历星期",
+      "value" : "Week"
+    }, {
+      "label" : "日历月",
+      "value" : "Month"
+    }, {
+      "label" : "日历季度",
+      "value" : "Quarter"
+    }, {
+      "label" : "日历年度",
+      "value" : "Year"
+    }, {
+      "label" : "会计星期",
+      "value" : "FiscalWeek"
+    }, {
+      "label" : "会计周期",
+      "value" : "FiscalPeriod"
+    }, {
+      "label" : "会计季度",
+      "value" : "FiscalQuarter"
+    }, {
+      "label" : "会计年度",
+      "value" : "FiscalYear"
+    }, {
+      "label" : "日历月份",
+      "value" : "MonthInYear"
+    }, {
+      "label" : "日历日期",
+      "value" : "DayInMonth"
+    } ],
+    "divisionInfo" : null,
+    "hasOuterJoin" : false,
+    "isExternalObjectReport" : false,
+    "isHistorical" : false,
+    "objectRelationships" : [ {
+      "label" : "业务机会",
+      "primaryEntityField" : "OPPORTUNITY_ID",
+      "relatedObjects" : [ {
+        "label" : "业务机会摘要",
+        "relatedEntity" : "OpportunityFeed",
+        "relatedEntityJoinField" : "ParentId"
+      }, {
+        "label" : "产品",
+        "relatedEntity" : "OpportunityLineItem",
+        "relatedEntityJoinField" : "OpportunityId"
+      }, {
+        "label" : "合作伙伴",
+        "relatedEntity" : "Partner-AccountTo",
+        "relatedEntityJoinField" : "Opportunity"
+      }, {
+        "label" : "报价",
+        "relatedEntity" : "Quote",
+        "relatedEntityJoinField" : "OpportunityId"
+      }, {
+        "label" : "活动",
+        "relatedEntity" : "Activity",
+        "relatedEntityJoinField" : "WhatId"
+      }, {
+        "label" : "竞争对手",
+        "relatedEntity" : "OpportunityCompetitor",
+        "relatedEntityJoinField" : "OpportunityId"
+      }, {
+        "label" : "联系人角色",
+        "relatedEntity" : "OCR-Contact",
+        "relatedEntityJoinField" : "Opportunity"
+      }, {
+        "label" : "订单",
+        "relatedEntity" : "Order",
+        "relatedEntityJoinField" : "Opportunity"
+      }, {
+        "label" : "CollaborationGroupRecord-Group",
+        "relatedEntity" : "CollaborationGroupRecord-Group",
+        "relatedEntityJoinField" : "Record"
+      }, {
+        "label" : "Projects",
+        "relatedEntity" : "EPMLive__Project__c",
+        "relatedEntityJoinField" : "EPMLive__Related_Opportunity__c"
+      }, {
+        "label" : "Slack Messages",
+        "relatedEntity" : "slackv2__Slack_Message__c",
+        "relatedEntityJoinField" : "slackv2__Opportunity__c"
+      }, {
+        "label" : "VCSEmails",
+        "relatedEntity" : "VCSSAP__VCSEmail__c",
+        "relatedEntityJoinField" : "VCSSAP__Opportunity__c"
+      } ]
+    } ],
+    "objects" : [ {
+      "apiName" : "Account",
+      "label" : "客户"
+    }, {
+      "apiName" : "Profile",
+      "label" : "简档"
+    }, {
+      "apiName" : "Contact",
+      "label" : "联系人"
+    }, {
+      "apiName" : "QuoteDocument",
+      "label" : "报价 PDF"
+    }, {
+      "apiName" : "Campaign",
+      "label" : "市场活动"
+    }, {
+      "apiName" : "User",
+      "label" : "用户"
+    }, {
+      "apiName" : "PricebookEntry",
+      "label" : "价格手册条目"
+    }, {
+      "apiName" : "OpportunityHistory",
+      "label" : "业务机会历史"
+    }, {
+      "apiName" : "Quote",
+      "label" : "报价"
+    }, {
+      "apiName" : "Product2",
+      "label" : "产品"
+    }, {
+      "apiName" : "Territory2",
+      "label" : "区域"
+    }, {
+      "apiName" : "Pricebook2",
+      "label" : "价格手册"
+    }, {
+      "apiName" : "Opportunity",
+      "label" : "业务机会"
+    }, {
+      "apiName" : "QuoteLineItem",
+      "label" : "报价行项目"
+    }, {
+      "apiName" : "UserRole",
+      "label" : "角色"
+    }, {
+      "apiName" : "OpportunityLineItem",
+      "label" : "业务机会产品"
+    } ],
+    "scopeInfo" : {
+      "defaultValue" : "organization",
+      "values" : [ {
+        "allowsDivision" : false,
+        "label" : "我的业务机会",
+        "value" : "user"
+      }, {
+        "allowsDivision" : false,
+        "label" : "我的团队的业务机会",
+        "value" : "team"
+      }, {
+        "allowsDivision" : false,
+        "label" : "我的区域的业务机会",
+        "value" : "myterrs"
+      }, {
+        "allowsDivision" : true,
+        "label" : "全部业务机会",
+        "value" : "organization"
+      }, {
+        "allowsDivision" : false,
+        "label" : "我的区域的业务机会",
+        "value" : "myterrs"
+      }, {
+        "allowsDivision" : false,
+        "label" : "我的区域团队的业务机会",
+        "value" : "my_team_territory"
+      } ]
+    },
+    "standardDateFilterDurationGroups" : [ {
+      "label" : "",
+      "standardDateFilterDurations" : [ {
+        "endDate" : "2024-07-29",
+        "label" : "自定义",
+        "startDate" : "2024-07-30",
+        "value" : "CUSTOM"
+      } ]
+    }, {
+      "label" : "会计年度",
+      "standardDateFilterDurations" : [ {
+        "endDate" : "2024-12-31",
+        "label" : "当前会计年度",
+        "startDate" : "2024-01-01",
+        "value" : "THIS_FISCAL_YEAR"
+      }, {
+        "endDate" : "2023-12-31",
+        "label" : "上一个会计年度",
+        "startDate" : "2023-01-01",
+        "value" : "LAST_FISCAL_YEAR"
+      }, {
+        "endDate" : "2023-12-31",
+        "label" : "前两个会计年度",
+        "startDate" : "2022-01-01",
+        "value" : "LAST_N_FISCAL_YEARS:2"
+      }, {
+        "endDate" : "2022-12-31",
+        "label" : "两个会计年度之前",
+        "startDate" : "2022-01-01",
+        "value" : "LAST_N_FISCAL_YEARS_AGO:2"
+      }, {
+        "endDate" : "2025-12-31",
+        "label" : "下一个会计年度",
+        "startDate" : "2025-01-01",
+        "value" : "NEXT_FISCAL_YEAR"
+      }, {
+        "endDate" : "2024-12-31",
+        "label" : "当前和上一个会计年度",
+        "startDate" : "2023-01-01",
+        "value" : "THIS_AND_LAST_FISCAL_YEAR:2"
+      }, {
+        "endDate" : "2024-12-31",
+        "label" : "当前和前两个会计年度",
+        "startDate" : "2022-01-01",
+        "value" : "THIS_AND_LAST_N_FISCAL_YEARS:2"
+      }, {
+        "endDate" : "2025-12-31",
+        "label" : "当前和下一个会计年度",
+        "startDate" : "2024-01-01",
+        "value" : "THIS_AND_NEXT_FISCAL_YEAR"
+      } ]
+    }, {
+      "label" : "会计季度",
+      "standardDateFilterDurations" : [ {
+        "endDate" : "2024-09-30",
+        "label" : "当前会计季度",
+        "startDate" : "2024-07-01",
+        "value" : "THIS_FISCAL_QUARTER"
+      }, {
+        "endDate" : "2024-12-31",
+        "label" : "当前和下一个会计季度",
+        "startDate" : "2024-07-01",
+        "value" : "THIS_AND_NEXT_FISCAL_QUARTER"
+      }, {
+        "endDate" : "2024-09-30",
+        "label" : "当前和上一个会计季度",
+        "startDate" : "2024-04-01",
+        "value" : "LAST_AND_THIS_FISCAL_QUARTER"
+      }, {
+        "endDate" : "2024-12-31",
+        "label" : "下一个会计季度",
+        "startDate" : "2024-10-01",
+        "value" : "NEXT_FISCAL_QUARTER"
+      }, {
+        "endDate" : "2024-06-30",
+        "label" : "上一个会计季度",
+        "startDate" : "2024-04-01",
+        "value" : "LAST_FISCAL_QUARTER"
+      }, {
+        "endDate" : "2025-06-30",
+        "label" : "当前和未来三个会计季度",
+        "startDate" : "2024-07-01",
+        "value" : "THIS_AND_NEXT_N_FISCAL_QUARTERS:3"
+      } ]
+    }, {
+      "label" : "会计周期",
+      "standardDateFilterDurations" : [ {
+        "endDate" : "2024-06-30",
+        "label" : "上一个会计周期",
+        "startDate" : "2024-06-01",
+        "value" : "LAST_FISCAL_PERIOD"
+      }, {
+        "endDate" : "2024-07-31",
+        "label" : "此会计周期",
+        "startDate" : "2024-07-01",
+        "value" : "THIS_FISCAL_PERIOD"
+      }, {
+        "endDate" : "2024-08-31",
+        "label" : "下一个会计周期",
+        "startDate" : "2024-08-01",
+        "value" : "NEXT_FISCAL_PERIOD"
+      }, {
+        "endDate" : "2024-07-31",
+        "label" : "当前和上一个会计周期",
+        "startDate" : "2024-06-01",
+        "value" : "LAST_AND_THIS_FISCAL_PERIOD"
+      }, {
+        "endDate" : "2024-08-31",
+        "label" : "当前和下一个会计周期",
+        "startDate" : "2024-07-01",
+        "value" : "THIS_AND_NEXT_FISCAL_PERIOD"
+      } ]
+    }, {
+      "label" : "日历年度",
+      "standardDateFilterDurations" : [ {
+        "endDate" : "2024-12-31",
+        "label" : "当前日历年度",
+        "startDate" : "2024-01-01",
+        "value" : "THIS_YEAR"
+      }, {
+        "endDate" : "2023-12-31",
+        "label" : "上一个日历年度",
+        "startDate" : "2023-01-01",
+        "value" : "LAST_YEAR"
+      }, {
+        "endDate" : "2023-12-31",
+        "label" : "前两个日历年度",
+        "startDate" : "2022-01-01",
+        "value" : "LAST_N_YEARS:2"
+      }, {
+        "endDate" : "2022-12-31",
+        "label" : "两个日历年度之前",
+        "startDate" : "2022-01-01",
+        "value" : "LAST_N_YEARS_AGO:2"
+      }, {
+        "endDate" : "2025-12-31",
+        "label" : "下一个日历年度",
+        "startDate" : "2025-01-01",
+        "value" : "NEXT_YEAR"
+      }, {
+        "endDate" : "2024-12-31",
+        "label" : "当前和上一个日历年度",
+        "startDate" : "2023-01-01",
+        "value" : "THIS_AND_LAST_YEAR:2"
+      }, {
+        "endDate" : "2024-12-31",
+        "label" : "当前和前两个日历年度",
+        "startDate" : "2022-01-01",
+        "value" : "THIS_AND_LAST_N_YEARS:2"
+      }, {
+        "endDate" : "2025-12-31",
+        "label" : "当前和下一个日历年度",
+        "startDate" : "2024-01-01",
+        "value" : "THIS_AND_NEXT_YEAR"
+      } ]
+    }, {
+      "label" : "日历季度",
+      "standardDateFilterDurations" : [ {
+        "endDate" : "2024-09-30",
+        "label" : "当前日历季度",
+        "startDate" : "2024-07-01",
+        "value" : "THIS_QUARTER"
+      }, {
+        "endDate" : "2024-12-31",
+        "label" : "当前和下一个日历季度",
+        "startDate" : "2024-07-01",
+        "value" : "THIS_AND_NEXT_QUARTER"
+      }, {
+        "endDate" : "2024-09-30",
+        "label" : "当前和上一个日历季度",
+        "startDate" : "2024-04-01",
+        "value" : "LAST_AND_THIS_QUARTER"
+      }, {
+        "endDate" : "2024-12-31",
+        "label" : "下一个日历季度",
+        "startDate" : "2024-10-01",
+        "value" : "NEXT_QUARTER"
+      }, {
+        "endDate" : "2024-06-30",
+        "label" : "上一个日历季度",
+        "startDate" : "2024-04-01",
+        "value" : "LAST_QUARTER"
+      }, {
+        "endDate" : "2025-06-30",
+        "label" : "当前和未来三个日历季度",
+        "startDate" : "2024-07-01",
+        "value" : "THIS_AND_NEXT_N_QUARTERS:3"
+      } ]
+    }, {
+      "label" : "日历月",
+      "standardDateFilterDurations" : [ {
+        "endDate" : "2024-06-30",
+        "label" : "上月",
+        "startDate" : "2024-06-01",
+        "value" : "LAST_MONTH"
+      }, {
+        "endDate" : "2024-07-31",
+        "label" : "本月",
+        "startDate" : "2024-07-01",
+        "value" : "THIS_MONTH"
+      }, {
+        "endDate" : "2024-08-31",
+        "label" : "下月",
+        "startDate" : "2024-08-01",
+        "value" : "NEXT_MONTH"
+      }, {
+        "endDate" : "2024-07-31",
+        "label" : "当前和上一个月份",
+        "startDate" : "2024-06-01",
+        "value" : "LAST_AND_THIS_MONTH"
+      }, {
+        "endDate" : "2024-08-31",
+        "label" : "当前和下一个月份",
+        "startDate" : "2024-07-01",
+        "value" : "THIS_AND_NEXT_MONTH"
+      } ]
+    }, {
+      "label" : "日历星期",
+      "standardDateFilterDurations" : [ {
+        "endDate" : "2024-07-27",
+        "label" : "上星期",
+        "startDate" : "2024-07-21",
+        "value" : "LAST_WEEK"
+      }, {
+        "endDate" : "2024-08-03",
+        "label" : "本星期",
+        "startDate" : "2024-07-28",
+        "value" : "THIS_WEEK"
+      }, {
+        "endDate" : "2024-08-10",
+        "label" : "下星期",
+        "startDate" : "2024-08-04",
+        "value" : "NEXT_WEEK"
+      } ]
+    }, {
+      "label" : "日",
+      "standardDateFilterDurations" : [ {
+        "endDate" : "2024-07-29",
+        "label" : "昨天",
+        "startDate" : "2024-07-29",
+        "value" : "YESTERDAY"
+      }, {
+        "endDate" : "2024-07-30",
+        "label" : "今天",
+        "startDate" : "2024-07-30",
+        "value" : "TODAY"
+      }, {
+        "endDate" : "2024-07-31",
+        "label" : "明天",
+        "startDate" : "2024-07-31",
+        "value" : "TOMORROW"
+      }, {
+        "endDate" : "2024-07-30",
+        "label" : "过去 7 天",
+        "startDate" : "2024-07-24",
+        "value" : "LAST_N_DAYS:7"
+      }, {
+        "endDate" : "2024-07-30",
+        "label" : "过去 30 天",
+        "startDate" : "2024-07-01",
+        "value" : "LAST_N_DAYS:30"
+      }, {
+        "endDate" : "2024-07-30",
+        "label" : "过去 60 天",
+        "startDate" : "2024-06-01",
+        "value" : "LAST_N_DAYS:60"
+      }, {
+        "endDate" : "2024-07-30",
+        "label" : "过去 90 天",
+        "startDate" : "2024-05-02",
+        "value" : "LAST_N_DAYS:90"
+      }, {
+        "endDate" : "2024-07-30",
+        "label" : "过去 120 天",
+        "startDate" : "2024-04-02",
+        "value" : "LAST_N_DAYS:120"
+      }, {
+        "endDate" : "2024-08-05",
+        "label" : "未来 7 天",
+        "startDate" : "2024-07-30",
+        "value" : "NEXT_N_DAYS:7"
+      }, {
+        "endDate" : "2024-08-28",
+        "label" : "未来 30 天",
+        "startDate" : "2024-07-30",
+        "value" : "NEXT_N_DAYS:30"
+      }, {
+        "endDate" : "2024-09-27",
+        "label" : "未来 60 天",
+        "startDate" : "2024-07-30",
+        "value" : "NEXT_N_DAYS:60"
+      }, {
+        "endDate" : "2024-10-27",
+        "label" : "未来 90 天",
+        "startDate" : "2024-07-30",
+        "value" : "NEXT_N_DAYS:90"
+      }, {
+        "endDate" : "2024-11-26",
+        "label" : "未来 120 天",
+        "startDate" : "2024-07-30",
+        "value" : "NEXT_N_DAYS:120"
+      } ]
+    } ],
+    "standardFilterInfos" : {
+      "probability" : {
+        "type" : "PICKLIST",
+        "filterValues" : [ {
+          "apiName" : null,
+          "label" : "全部",
+          "name" : ">0"
+        }, {
+          "apiName" : null,
+          "label" : "> 90%",
+          "name" : "gt90"
+        }, {
+          "apiName" : null,
+          "label" : "> 80%",
+          "name" : "gt80"
+        }, {
+          "apiName" : null,
+          "label" : "> 70%",
+          "name" : "gt70"
+        }, {
+          "apiName" : null,
+          "label" : "> 60%",
+          "name" : "gt60"
+        }, {
+          "apiName" : null,
+          "label" : "> 50%",
+          "name" : "gt50"
+        }, {
+          "apiName" : null,
+          "label" : "> 40%",
+          "name" : "gt40"
+        }, {
+          "apiName" : null,
+          "label" : "> 30%",
+          "name" : "gt30"
+        }, {
+          "apiName" : null,
+          "label" : "> 20%",
+          "name" : "gt20"
+        }, {
+          "apiName" : null,
+          "label" : "> 10%",
+          "name" : "gt10"
+        }, {
+          "apiName" : null,
+          "label" : "< 90%",
+          "name" : "lt90"
+        }, {
+          "apiName" : null,
+          "label" : "< 80%",
+          "name" : "lt80"
+        }, {
+          "apiName" : null,
+          "label" : "< 70%",
+          "name" : "lt70"
+        }, {
+          "apiName" : null,
+          "label" : "< 60%",
+          "name" : "lt60"
+        }, {
+          "apiName" : null,
+          "label" : "< 50%",
+          "name" : "lt50"
+        }, {
+          "apiName" : null,
+          "label" : "< 40%",
+          "name" : "lt40"
+        }, {
+          "apiName" : null,
+          "label" : "< 30%",
+          "name" : "lt30"
+        }, {
+          "apiName" : null,
+          "label" : "< 20%",
+          "name" : "lt20"
+        }, {
+          "apiName" : null,
+          "label" : "< 10%",
+          "name" : "lt10"
+        } ],
+        "label" : "可能性"
+      },
+      "terr" : {
+        "type" : "PICKLIST",
+        "filterValues" : [ {
+          "apiName" : null,
+          "label" : "全部",
+          "name" : "all"
+        }, {
+          "apiName" : null,
+          "label" : "缺少区域",
+          "name" : "terr2Missing"
+        } ],
+        "label" : "区域"
+      },
+      "open" : {
+        "type" : "PICKLIST",
+        "filterValues" : [ {
+          "apiName" : null,
+          "label" : "任何",
+          "name" : "all"
+        }, {
+          "apiName" : null,
+          "label" : "未处理",
+          "name" : "open"
+        }, {
+          "apiName" : null,
+          "label" : "已结束",
+          "name" : "closed"
+        }, {
+          "apiName" : null,
+          "label" : "已结束并赢得客户",
+          "name" : "closedwon"
+        } ],
+        "label" : "业务机会状态"
+      }
+    },
+    "supportsJoinedFormat" : true
+  }
+},"error":[],"storable":true}],"context":{"mode":"PROD","app":"one:one","pathPrefix":"","fwuid":"MTlpRlBKWTh5V3VoZVJjLURPWjQ0d2hZX25NdHFVdGpDN3BnWlROY1ZGT3cyNTAuOC4zLTYuNC41","mlr":1,"uad":1,"coos":1,"descriptorUids":{},"loaded":{"APPLICATION@markup://one:one":"SPu3nALse3BHDrJeS2MmPw"},"globalValueProviders":[{"type":"$Global","values":{"eswConfigDeveloperName":{"writable":true,"defaultValue":""},"isVoiceOver":{"writable":true,"defaultValue":false},"setupAppContextId":{"writable":true,"defaultValue":""},"density":{"writable":true,"value":"VIEW_TWO"},"srcdoc":{"writable":false,"defaultValue":false},"appContextId":{"writable":true,"value":"06m90000000yYkGAAU"},"dynamicTypeSize":{"writable":true,"defaultValue":""},"appContextDeveloperName":{"writable":true,"value":"LightningSales"}}}],"enableAccessChecks":true,"dns":"c","ls":1,"lairn":[],"laerc":[],"lav":"61","csp":1,"lgef":["com.salesforce.locker.temporaryGate"],"cpr":"https://static.lightning.force.com/ap45","mna":{"lightning":"interop"},"arse":1,"acaf":1,"services":["markup://force:initServiceSfdc","markup://lightning:configProvider","markup://force:salesforceScopedModuleResolver","markup://force:ldsEngineCreator","markup://instrumentation:locatorService","markup://force:lwcReportingService"]},"perfSummary":{"version":"core","request":108,"actions":{"568;a":{"total":98,"db":13}},"actionsTotal":98,"overhead":0}}

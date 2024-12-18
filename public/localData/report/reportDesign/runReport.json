@@ -1,0 +1,1418 @@
+{"actions":[{"id":"574;a","state":"SUCCESS","returnValue":{
+  "attributes" : {
+    "describeUrl" : "/services/data/v61.0/analytics/reports/00O900000080tYREAY/describe",
+    "instancesUrl" : "/services/data/v61.0/analytics/reports/00O900000080tYREAY/instances",
+    "reportId" : "00O900000080tYREAY",
+    "reportName" : "我的客户联系人",
+    "type" : "Report"
+  },
+  "allData" : true,
+  "factMap" : {
+    "T!T" : {
+      "aggregates" : [ {
+        "label" : "21",
+        "value" : 21
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "Frank",
+          "recordId" : "0039000001AK1NhAAL",
+          "value" : "0039000001AK1NhAAL"
+        }, {
+          "label" : "Edna",
+          "recordId" : "0039000001AK1NhAAL",
+          "value" : "0039000001AK1NhAAL"
+        }, {
+          "label" : "Ms.",
+          "recordId" : "0039000001AK1NhAAL",
+          "value" : "Ms."
+        }, {
+          "label" : "VP, Technology",
+          "recordId" : "0039000001AK1NhAAL",
+          "value" : "VP, Technology"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "345 Shoreline Park<br>Mountain View, CA 94043<br>USA",
+          "value" : "345 Shoreline Park<br>Mountain View, CA 94043<br>USA"
+        }, {
+          "label" : "(650) 867-3450",
+          "value" : "(650) 867-3450"
+        }, {
+          "label" : "(650) 867-7686",
+          "recordId" : "0039000001AK1NhAAL",
+          "value" : "(650) 867-7686"
+        }, {
+          "label" : "(650) 867-9895",
+          "value" : "(650) 867-9895"
+        }, {
+          "label" : "efrank@genepoint.com",
+          "recordId" : "0039000001AK1NhAAL",
+          "value" : "efrank@genepoint.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "GenePoint",
+          "recordId" : "0039000001AK1NhAAL",
+          "value" : "00190000015a7I0AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "James",
+          "recordId" : "0039000001AK1NeAAL",
+          "value" : "0039000001AK1NeAAL"
+        }, {
+          "label" : "Ashley",
+          "recordId" : "0039000001AK1NeAAL",
+          "value" : "0039000001AK1NeAAL"
+        }, {
+          "label" : "Ms.",
+          "recordId" : "0039000001AK1NeAAL",
+          "value" : "Ms."
+        }, {
+          "label" : "VP, Finance",
+          "recordId" : "0039000001AK1NeAAL",
+          "value" : "VP, Finance"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "Kings Park, 17th Avenue, Team Valley Trading Estate,<br>Gateshead, Tyne and Wear NE26 3HS<br>United Kingdom",
+          "value" : "Kings Park, 17th Avenue, Team Valley Trading Estate,<br>Gateshead, Tyne and Wear NE26 3HS<br>United Kingdom"
+        }, {
+          "label" : "+44 191 4956203",
+          "value" : "+44 191 4956203"
+        }, {
+          "label" : "+44 191 3456234",
+          "recordId" : "0039000001AK1NeAAL",
+          "value" : "+44 191 3456234"
+        }, {
+          "label" : "+44 191 4956620",
+          "value" : "+44 191 4956620"
+        }, {
+          "label" : "ajames@uog.com",
+          "recordId" : "0039000001AK1NeAAL",
+          "value" : "ajames@uog.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "United Oil & Gas, UK",
+          "recordId" : "0039000001AK1NeAAL",
+          "value" : "00190000015a7I1AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "D'Cruz",
+          "recordId" : "0039000001AK1NgAAL",
+          "value" : "0039000001AK1NgAAL"
+        }, {
+          "label" : "Liz",
+          "recordId" : "0039000001AK1NgAAL",
+          "value" : "0039000001AK1NgAAL"
+        }, {
+          "label" : "Ms.",
+          "recordId" : "0039000001AK1NgAAL",
+          "value" : "Ms."
+        }, {
+          "label" : "VP, Production",
+          "recordId" : "0039000001AK1NgAAL",
+          "value" : "VP, Production"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "10 Tagore Lane<br>Singapore, Singapore 787472<br>Singapore",
+          "value" : "10 Tagore Lane<br>Singapore, Singapore 787472<br>Singapore"
+        }, {
+          "label" : "(650) 450-8810",
+          "value" : "(650) 450-8810"
+        }, {
+          "label" : "(650) 345-6637",
+          "recordId" : "0039000001AK1NgAAL",
+          "value" : "(650) 345-6637"
+        }, {
+          "label" : "(650) 450-8820",
+          "value" : "(650) 450-8820"
+        }, {
+          "label" : "ldcruz@uog.com",
+          "recordId" : "0039000001AK1NgAAL",
+          "value" : "ldcruz@uog.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "United Oil & Gas, Singapore",
+          "recordId" : "0039000001AK1NgAAL",
+          "value" : "00190000015a7I2AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Ripley",
+          "recordId" : "0039000001AK1NfAAL",
+          "value" : "0039000001AK1NfAAL"
+        }, {
+          "label" : "Tom",
+          "recordId" : "0039000001AK1NfAAL",
+          "value" : "0039000001AK1NfAAL"
+        }, {
+          "label" : "Mr.",
+          "recordId" : "0039000001AK1NfAAL",
+          "value" : "Mr."
+        }, {
+          "label" : "Regional General Manager",
+          "recordId" : "0039000001AK1NfAAL",
+          "value" : "Regional General Manager"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "9 Tagore Lane<br>Singapore, Singapore 787472<br>Singapore",
+          "value" : "9 Tagore Lane<br>Singapore, Singapore 787472<br>Singapore"
+        }, {
+          "label" : "(650) 450-8810",
+          "value" : "(650) 450-8810"
+        }, {
+          "label" : "(650) 345-7636",
+          "recordId" : "0039000001AK1NfAAL",
+          "value" : "(650) 345-7636"
+        }, {
+          "label" : "(650) 450-8820",
+          "value" : "(650) 450-8820"
+        }, {
+          "label" : "tripley@uog.com",
+          "recordId" : "0039000001AK1NfAAL",
+          "value" : "tripley@uog.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "United Oil & Gas, Singapore",
+          "recordId" : "0039000001AK1NfAAL",
+          "value" : "00190000015a7I2AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Forbes",
+          "recordId" : "0039000001AK1NSAA1",
+          "value" : "0039000001AK1NSAA1"
+        }, {
+          "label" : "Sean",
+          "recordId" : "0039000001AK1NSAA1",
+          "value" : "0039000001AK1NSAA1"
+        }, {
+          "label" : "Mr.",
+          "recordId" : "0039000001AK1NSAA1",
+          "value" : "Mr."
+        }, {
+          "label" : "CFO",
+          "recordId" : "0039000001AK1NSAA1",
+          "value" : "CFO"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "312 Constitution Place<br>Austin, TX 78767<br>USA",
+          "value" : "312 Constitution Place<br>Austin, TX 78767<br>USA"
+        }, {
+          "label" : "(512) 757-6000",
+          "value" : "(512) 757-6000"
+        }, {
+          "label" : "(512) 757-4561",
+          "recordId" : "0039000001AK1NSAA1",
+          "value" : "(512) 757-4561"
+        }, {
+          "label" : "(512) 757-9000",
+          "value" : "(512) 757-9000"
+        }, {
+          "label" : "sean@edge.com",
+          "recordId" : "0039000001AK1NSAA1",
+          "value" : "sean@edge.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Edge Communications",
+          "recordId" : "0039000001AK1NSAA1",
+          "value" : "00190000015a7I3AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Gonzalez",
+          "recordId" : "0039000001AK1NRAA1",
+          "value" : "0039000001AK1NRAA1"
+        }, {
+          "label" : "Rose",
+          "recordId" : "0039000001AK1NRAA1",
+          "value" : "0039000001AK1NRAA1"
+        }, {
+          "label" : "Ms.",
+          "recordId" : "0039000001AK1NRAA1",
+          "value" : "Ms."
+        }, {
+          "label" : "SVP, Procurement",
+          "recordId" : "0039000001AK1NRAA1",
+          "value" : "SVP, Procurement"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "313 Constitution Place<br>Austin, TX 78767<br>USA",
+          "value" : "313 Constitution Place<br>Austin, TX 78767<br>USA"
+        }, {
+          "label" : "(512) 757-6000",
+          "value" : "(512) 757-6000"
+        }, {
+          "label" : "(512) 757-9340",
+          "recordId" : "0039000001AK1NRAA1",
+          "value" : "(512) 757-9340"
+        }, {
+          "label" : "(512) 757-9000",
+          "value" : "(512) 757-9000"
+        }, {
+          "label" : "rose@edge.com",
+          "recordId" : "0039000001AK1NRAA1",
+          "value" : "rose@edge.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Edge Communications",
+          "recordId" : "0039000001AK1NRAA1",
+          "value" : "00190000015a7I3AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Rogers",
+          "recordId" : "0039000001AK1NTAA1",
+          "value" : "0039000001AK1NTAA1"
+        }, {
+          "label" : "Jack",
+          "recordId" : "0039000001AK1NTAA1",
+          "value" : "0039000001AK1NTAA1"
+        }, {
+          "label" : "Mr.",
+          "recordId" : "0039000001AK1NTAA1",
+          "value" : "Mr."
+        }, {
+          "label" : "VP, Facilities",
+          "recordId" : "0039000001AK1NTAA1",
+          "value" : "VP, Facilities"
+        }, {
+          "label" : "USA",
+          "value" : "USA"
+        }, {
+          "label" : "27215",
+          "value" : "27215"
+        }, {
+          "label" : "NC",
+          "value" : "NC"
+        }, {
+          "label" : "Burlington",
+          "value" : "Burlington"
+        }, {
+          "label" : "525 S. Lexington Ave",
+          "value" : "525 S. Lexington Ave"
+        }, {
+          "label" : "(336) 222-7000",
+          "value" : "(336) 222-7000"
+        }, {
+          "label" : "-",
+          "recordId" : "0039000001AK1NTAA1",
+          "value" : null
+        }, {
+          "label" : "(336) 222-8000",
+          "value" : "(336) 222-8000"
+        }, {
+          "label" : "jrogers@burlington.com",
+          "recordId" : "0039000001AK1NTAA1",
+          "value" : "jrogers@burlington.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Burlington Textiles Corp of America",
+          "recordId" : "0039000001AK1NTAA1",
+          "value" : "00190000015a7I4AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Stumuller",
+          "recordId" : "0039000001AK1NUAA1",
+          "value" : "0039000001AK1NUAA1"
+        }, {
+          "label" : "Pat",
+          "recordId" : "0039000001AK1NUAA1",
+          "value" : "0039000001AK1NUAA1"
+        }, {
+          "label" : "Ms.",
+          "recordId" : "0039000001AK1NUAA1",
+          "value" : "Ms."
+        }, {
+          "label" : "SVP, Administration and Finance",
+          "recordId" : "0039000001AK1NUAA1",
+          "value" : "SVP, Administration and Finance"
+        }, {
+          "label" : "France",
+          "value" : "France"
+        }, {
+          "label" : "75251",
+          "value" : "75251"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "Paris",
+          "value" : "Paris"
+        }, {
+          "label" : "2 Place Jussieu",
+          "value" : "2 Place Jussieu"
+        }, {
+          "label" : "(014) 427-4427",
+          "value" : "(014) 427-4427"
+        }, {
+          "label" : "(014) 454-6364",
+          "recordId" : "0039000001AK1NUAA1",
+          "value" : "(014) 454-6364"
+        }, {
+          "label" : "(014) 427-4428",
+          "value" : "(014) 427-4428"
+        }, {
+          "label" : "pat@pyramid.net",
+          "recordId" : "0039000001AK1NUAA1",
+          "value" : "pat@pyramid.net"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Pyramid Construction Inc.",
+          "recordId" : "0039000001AK1NUAA1",
+          "value" : "00190000015a7I5AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Young",
+          "recordId" : "0039000001AK1NVAA1",
+          "value" : "0039000001AK1NVAA1"
+        }, {
+          "label" : "Andy",
+          "recordId" : "0039000001AK1NVAA1",
+          "value" : "0039000001AK1NVAA1"
+        }, {
+          "label" : "Mr",
+          "recordId" : "0039000001AK1NVAA1",
+          "value" : "Mr"
+        }, {
+          "label" : "SVP, Operations",
+          "recordId" : "0039000001AK1NVAA1",
+          "value" : "SVP, Operations"
+        }, {
+          "label" : "USA",
+          "value" : "USA"
+        }, {
+          "label" : "66045",
+          "value" : "66045"
+        }, {
+          "label" : "KS",
+          "value" : "KS"
+        }, {
+          "label" : "Lawrence",
+          "value" : "Lawrence"
+        }, {
+          "label" : "1301 Hoch Drive",
+          "value" : "1301 Hoch Drive"
+        }, {
+          "label" : "(785) 241-6200",
+          "value" : "(785) 241-6200"
+        }, {
+          "label" : "(785) 265-5350",
+          "recordId" : "0039000001AK1NVAA1",
+          "value" : "(785) 265-5350"
+        }, {
+          "label" : "(785) 241-6201",
+          "value" : "(785) 241-6201"
+        }, {
+          "label" : "a_young@dickenson.com",
+          "recordId" : "0039000001AK1NVAA1",
+          "value" : "a_young@dickenson.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Dickenson plc",
+          "recordId" : "0039000001AK1NVAA1",
+          "value" : "00190000015a7I6AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Barr",
+          "recordId" : "0039000001AK1NWAA1",
+          "value" : "0039000001AK1NWAA1"
+        }, {
+          "label" : "Tim",
+          "recordId" : "0039000001AK1NWAA1",
+          "value" : "0039000001AK1NWAA1"
+        }, {
+          "label" : "Mr.",
+          "recordId" : "0039000001AK1NWAA1",
+          "value" : "Mr."
+        }, {
+          "label" : "SVP, Administration and Finance",
+          "recordId" : "0039000001AK1NWAA1",
+          "value" : "SVP, Administration and Finance"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "2335 N. Michigan Avenue, Suite 1500<br>Chicago, IL 60601, USA",
+          "value" : "2335 N. Michigan Avenue, Suite 1500<br>Chicago, IL 60601, USA"
+        }, {
+          "label" : "(312) 596-1000",
+          "value" : "(312) 596-1000"
+        }, {
+          "label" : "(312) 596-1230",
+          "recordId" : "0039000001AK1NWAA1",
+          "value" : "(312) 596-1230"
+        }, {
+          "label" : "(312) 596-1500",
+          "value" : "(312) 596-1500"
+        }, {
+          "label" : "barr_tim@grandhotels.com",
+          "recordId" : "0039000001AK1NWAA1",
+          "value" : "barr_tim@grandhotels.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Grand Hotels & Resorts Ltd",
+          "recordId" : "0039000001AK1NWAA1",
+          "value" : "00190000015a7I7AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Bond",
+          "recordId" : "0039000001AK1NXAA1",
+          "value" : "0039000001AK1NXAA1"
+        }, {
+          "label" : "John",
+          "recordId" : "0039000001AK1NXAA1",
+          "value" : "0039000001AK1NXAA1"
+        }, {
+          "label" : "Mr.",
+          "recordId" : "0039000001AK1NXAA1",
+          "value" : "Mr."
+        }, {
+          "label" : "VP, Facilities",
+          "recordId" : "0039000001AK1NXAA1",
+          "value" : "VP, Facilities"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "2334 N. Michigan Avenue, Suite 1500<br>Chicago, IL 60601, USA",
+          "value" : "2334 N. Michigan Avenue, Suite 1500<br>Chicago, IL 60601, USA"
+        }, {
+          "label" : "(312) 596-1000",
+          "value" : "(312) 596-1000"
+        }, {
+          "label" : "(312) 596-1563",
+          "recordId" : "0039000001AK1NXAA1",
+          "value" : "(312) 596-1563"
+        }, {
+          "label" : "(312) 596-1500",
+          "value" : "(312) 596-1500"
+        }, {
+          "label" : "bond_john@grandhotels.com",
+          "recordId" : "0039000001AK1NXAA1",
+          "value" : "bond_john@grandhotels.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Grand Hotels & Resorts Ltd",
+          "recordId" : "0039000001AK1NXAA1",
+          "value" : "00190000015a7I7AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Levy",
+          "recordId" : "0039000001AK1NaAAL",
+          "value" : "0039000001AK1NaAAL"
+        }, {
+          "label" : "Babara",
+          "recordId" : "0039000001AK1NaAAL",
+          "value" : "0039000001AK1NaAAL"
+        }, {
+          "label" : "Ms.",
+          "recordId" : "0039000001AK1NaAAL",
+          "value" : "Ms."
+        }, {
+          "label" : "SVP, Operations",
+          "recordId" : "0039000001AK1NaAAL",
+          "value" : "SVP, Operations"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "620 SW 5th Avenue Suite 400<br>Portland, Oregon 97204<br>United States",
+          "value" : "620 SW 5th Avenue Suite 400<br>Portland, Oregon 97204<br>United States"
+        }, {
+          "label" : "(503) 421-7800",
+          "value" : "(503) 421-7800"
+        }, {
+          "label" : "(503) 421-5451",
+          "recordId" : "0039000001AK1NaAAL",
+          "value" : "(503) 421-5451"
+        }, {
+          "label" : "(503) 421-7801",
+          "value" : "(503) 421-7801"
+        }, {
+          "label" : "b.levy@expressl&t.net",
+          "recordId" : "0039000001AK1NaAAL",
+          "value" : "b.levy@expressl&t.net"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Express Logistics and Transport",
+          "recordId" : "0039000001AK1NaAAL",
+          "value" : "00190000015a7I8AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Davis",
+          "recordId" : "0039000001AK1NbAAL",
+          "value" : "0039000001AK1NbAAL"
+        }, {
+          "label" : "Josh",
+          "recordId" : "0039000001AK1NbAAL",
+          "value" : "0039000001AK1NbAAL"
+        }, {
+          "label" : "Mr.",
+          "recordId" : "0039000001AK1NbAAL",
+          "value" : "Mr."
+        }, {
+          "label" : "Director, Warehouse Mgmt",
+          "recordId" : "0039000001AK1NbAAL",
+          "value" : "Director, Warehouse Mgmt"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "621 SW 5th Avenue Suite 400<br>Portland, Oregon 97204<br>United States",
+          "value" : "621 SW 5th Avenue Suite 400<br>Portland, Oregon 97204<br>United States"
+        }, {
+          "label" : "(503) 421-7800",
+          "value" : "(503) 421-7800"
+        }, {
+          "label" : "(503) 421-4387",
+          "recordId" : "0039000001AK1NbAAL",
+          "value" : "(503) 421-4387"
+        }, {
+          "label" : "(503) 421-7801",
+          "value" : "(503) 421-7801"
+        }, {
+          "label" : "j.davis@expressl&t.net",
+          "recordId" : "0039000001AK1NbAAL",
+          "value" : "j.davis@expressl&t.net"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "Express Logistics and Transport",
+          "recordId" : "0039000001AK1NbAAL",
+          "value" : "00190000015a7I8AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Grey",
+          "recordId" : "0039000001AK1NcAAL",
+          "value" : "0039000001AK1NcAAL"
+        }, {
+          "label" : "Jane",
+          "recordId" : "0039000001AK1NcAAL",
+          "value" : "0039000001AK1NcAAL"
+        }, {
+          "label" : "Ms.",
+          "recordId" : "0039000001AK1NcAAL",
+          "value" : "Ms."
+        }, {
+          "label" : "Dean of Administration",
+          "recordId" : "0039000001AK1NcAAL",
+          "value" : "Dean of Administration"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "888 N Euclid <br>Hallis Center, Room 501<br>Tucson, AZ 85721<br>United States",
+          "value" : "888 N Euclid <br>Hallis Center, Room 501<br>Tucson, AZ 85721<br>United States"
+        }, {
+          "label" : "(520) 773-9050",
+          "value" : "(520) 773-9050"
+        }, {
+          "label" : "(520) 773-4539",
+          "recordId" : "0039000001AK1NcAAL",
+          "value" : "(520) 773-4539"
+        }, {
+          "label" : "(520) 773-9060",
+          "value" : "(520) 773-9060"
+        }, {
+          "label" : "jane_gray@uoa.edu",
+          "recordId" : "0039000001AK1NcAAL",
+          "value" : "jane_gray@uoa.edu"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "University of Arizona",
+          "recordId" : "0039000001AK1NcAAL",
+          "value" : "00190000015a7I9AAI"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Green",
+          "recordId" : "0039000001AK1NiAAL",
+          "value" : "0039000001AK1NiAAL"
+        }, {
+          "label" : "Avi",
+          "recordId" : "0039000001AK1NiAAL",
+          "value" : "0039000001AK1NiAAL"
+        }, {
+          "label" : "Mr.",
+          "recordId" : "0039000001AK1NiAAL",
+          "value" : "Mr."
+        }, {
+          "label" : "CFO",
+          "recordId" : "0039000001AK1NiAAL",
+          "value" : "CFO"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "1302 Avenue of the Americas <br>New York, NY 10019<br>USA",
+          "value" : "1302 Avenue of the Americas <br>New York, NY 10019<br>USA"
+        }, {
+          "label" : "(212) 842-5500",
+          "value" : "(212) 842-5500"
+        }, {
+          "label" : "(212) 842-2383",
+          "recordId" : "0039000001AK1NiAAL",
+          "value" : "(212) 842-2383"
+        }, {
+          "label" : "(212) 842-5501",
+          "value" : "(212) 842-5501"
+        }, {
+          "label" : "agreen@uog.com",
+          "recordId" : "0039000001AK1NiAAL",
+          "value" : "agreen@uog.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "United Oil & Gas Corp.",
+          "recordId" : "0039000001AK1NiAAL",
+          "value" : "00190000015a7IAAAY"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Pavlova",
+          "recordId" : "0039000001AK1NYAA1",
+          "value" : "0039000001AK1NYAA1"
+        }, {
+          "label" : "Stella",
+          "recordId" : "0039000001AK1NYAA1",
+          "value" : "0039000001AK1NYAA1"
+        }, {
+          "label" : "Ms.",
+          "recordId" : "0039000001AK1NYAA1",
+          "value" : "Ms."
+        }, {
+          "label" : "SVP, Production",
+          "recordId" : "0039000001AK1NYAA1",
+          "value" : "SVP, Production"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "1303 Avenue of the Americas <br>New York, NY 10019<br>USA",
+          "value" : "1303 Avenue of the Americas <br>New York, NY 10019<br>USA"
+        }, {
+          "label" : "(212) 842-5500",
+          "value" : "(212) 842-5500"
+        }, {
+          "label" : "(212) 842-5501",
+          "recordId" : "0039000001AK1NYAA1",
+          "value" : "(212) 842-5501"
+        }, {
+          "label" : "(212) 842-5501",
+          "value" : "(212) 842-5501"
+        }, {
+          "label" : "spavlova@uog.com",
+          "recordId" : "0039000001AK1NYAA1",
+          "value" : "spavlova@uog.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "United Oil & Gas Corp.",
+          "recordId" : "0039000001AK1NYAA1",
+          "value" : "00190000015a7IAAAY"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Boyle",
+          "recordId" : "0039000001AK1NZAA1",
+          "value" : "0039000001AK1NZAA1"
+        }, {
+          "label" : "Lauren",
+          "recordId" : "0039000001AK1NZAA1",
+          "value" : "0039000001AK1NZAA1"
+        }, {
+          "label" : "Ms.",
+          "recordId" : "0039000001AK1NZAA1",
+          "value" : "Ms."
+        }, {
+          "label" : "SVP, Technology",
+          "recordId" : "0039000001AK1NZAA1",
+          "value" : "SVP, Technology"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "1304 Avenue of the Americas <br>New York, NY 10019<br>USA",
+          "value" : "1304 Avenue of the Americas <br>New York, NY 10019<br>USA"
+        }, {
+          "label" : "(212) 842-5500",
+          "value" : "(212) 842-5500"
+        }, {
+          "label" : "(212) 842-5611",
+          "recordId" : "0039000001AK1NZAA1",
+          "value" : "(212) 842-5611"
+        }, {
+          "label" : "(212) 842-5501",
+          "value" : "(212) 842-5501"
+        }, {
+          "label" : "lboyle@uog.com",
+          "recordId" : "0039000001AK1NZAA1",
+          "value" : "lboyle@uog.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "United Oil & Gas Corp.",
+          "recordId" : "0039000001AK1NZAA1",
+          "value" : "00190000015a7IAAAY"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Song",
+          "recordId" : "0039000001AK1NdAAL",
+          "value" : "0039000001AK1NdAAL"
+        }, {
+          "label" : "Arthur",
+          "recordId" : "0039000001AK1NdAAL",
+          "value" : "0039000001AK1NdAAL"
+        }, {
+          "label" : "Mr.",
+          "recordId" : "0039000001AK1NdAAL",
+          "value" : "Mr."
+        }, {
+          "label" : "CEO",
+          "recordId" : "0039000001AK1NdAAL",
+          "value" : "CEO"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "1301 Avenue of the Americas <br>New York, NY 10019<br>USA",
+          "value" : "1301 Avenue of the Americas <br>New York, NY 10019<br>USA"
+        }, {
+          "label" : "(212) 842-5500",
+          "value" : "(212) 842-5500"
+        }, {
+          "label" : "(212) 842-4535",
+          "recordId" : "0039000001AK1NdAAL",
+          "value" : "(212) 842-4535"
+        }, {
+          "label" : "(212) 842-5501",
+          "value" : "(212) 842-5501"
+        }, {
+          "label" : "asong@uog.com",
+          "recordId" : "0039000001AK1NdAAL",
+          "value" : "asong@uog.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "United Oil & Gas Corp.",
+          "recordId" : "0039000001AK1NdAAL",
+          "value" : "00190000015a7IAAAY"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Nedaerk",
+          "recordId" : "0039000001AK1NjAAL",
+          "value" : "0039000001AK1NjAAL"
+        }, {
+          "label" : "Siddartha",
+          "recordId" : "0039000001AK1NjAAL",
+          "value" : "0039000001AK1NjAAL"
+        }, {
+          "label" : "Ms.",
+          "recordId" : "0039000001AK1NjAAL",
+          "value" : "Ms."
+        }, {
+          "label" : "-",
+          "recordId" : "0039000001AK1NjAAL",
+          "value" : null
+        }, {
+          "label" : "US",
+          "value" : "US"
+        }, {
+          "label" : "94087",
+          "value" : "94087"
+        }, {
+          "label" : "CA",
+          "value" : "CA"
+        }, {
+          "label" : "San Francisco",
+          "value" : "San Francisco"
+        }, {
+          "label" : "The Landmark @ One Market",
+          "value" : "The Landmark @ One Market"
+        }, {
+          "label" : "(415) 901-7000",
+          "value" : "(415) 901-7000"
+        }, {
+          "label" : "-",
+          "recordId" : "0039000001AK1NjAAL",
+          "value" : null
+        }, {
+          "label" : "(415) 901-7002",
+          "value" : "(415) 901-7002"
+        }, {
+          "label" : "-",
+          "recordId" : "0039000001AK1NjAAL",
+          "value" : null
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "sForce",
+          "recordId" : "0039000001AK1NjAAL",
+          "value" : "00190000015a7IBAAY"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Llorrac",
+          "recordId" : "0039000001AK1NkAAL",
+          "value" : "0039000001AK1NkAAL"
+        }, {
+          "label" : "Jake",
+          "recordId" : "0039000001AK1NkAAL",
+          "value" : "0039000001AK1NkAAL"
+        }, {
+          "label" : "Mr.",
+          "recordId" : "0039000001AK1NkAAL",
+          "value" : "Mr."
+        }, {
+          "label" : "-",
+          "recordId" : "0039000001AK1NkAAL",
+          "value" : null
+        }, {
+          "label" : "US",
+          "value" : "US"
+        }, {
+          "label" : "94087",
+          "value" : "94087"
+        }, {
+          "label" : "CA",
+          "value" : "CA"
+        }, {
+          "label" : "San Francisco",
+          "value" : "San Francisco"
+        }, {
+          "label" : "The Landmark @ One Market",
+          "value" : "The Landmark @ One Market"
+        }, {
+          "label" : "(415) 901-7000",
+          "value" : "(415) 901-7000"
+        }, {
+          "label" : "-",
+          "recordId" : "0039000001AK1NkAAL",
+          "value" : null
+        }, {
+          "label" : "(415) 901-7002",
+          "value" : "(415) 901-7002"
+        }, {
+          "label" : "-",
+          "recordId" : "0039000001AK1NkAAL",
+          "value" : null
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "sForce",
+          "recordId" : "0039000001AK1NkAAL",
+          "value" : "00190000015a7IBAAY"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "liu",
+          "recordId" : "0039000001HgjaTAAR",
+          "value" : "0039000001HgjaTAAR"
+        }, {
+          "label" : "jack",
+          "recordId" : "0039000001HgjaTAAR",
+          "value" : "0039000001HgjaTAAR"
+        }, {
+          "label" : "Mr.",
+          "recordId" : "0039000001HgjaTAAR",
+          "value" : "Mr."
+        }, {
+          "label" : "-",
+          "recordId" : "0039000001HgjaTAAR",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "1",
+          "value" : "1"
+        }, {
+          "label" : "-",
+          "recordId" : "0039000001HgjaTAAR",
+          "value" : null
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "jackliu185@sina.com",
+          "recordId" : "0039000001HgjaTAAR",
+          "value" : "jackliu185@sina.com"
+        }, {
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        }, {
+          "label" : "测试地址",
+          "recordId" : "0039000001HgjaTAAR",
+          "value" : "00190000019mlFIAAY"
+        } ]
+      } ]
+    }
+  },
+  "groupingsAcross" : {
+    "groupings" : [ ]
+  },
+  "groupingsDown" : {
+    "groupings" : [ ]
+  },
+  "hasDetailRows" : true,
+  "hasExceededTabularRowLimit" : false,
+  "picklistColors" : { },
+  "reportExtendedMetadata" : {
+    "aggregateColumnInfo" : {
+      "RowCount" : {
+        "dataType" : "int",
+        "label" : "记录计数"
+      }
+    },
+    "availableDashboardSettings" : null,
+    "detailColumnInfo" : {
+      "LAST_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Contact.Name",
+        "fieldInfo" : {
+          "entityName" : "Contact",
+          "fieldName" : "LastName",
+          "lookupEntityName" : "Contact"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Contact.LastName",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "姓氏",
+        "uniqueCountable" : true
+      },
+      "FIRST_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Contact.Name",
+        "fieldInfo" : {
+          "entityName" : "Contact",
+          "fieldName" : "FirstName",
+          "lookupEntityName" : "Contact"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Contact.FirstName",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "名字",
+        "uniqueCountable" : true
+      },
+      "SALUTATION" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Contact.Name",
+        "fieldInfo" : {
+          "entityName" : "Contact",
+          "fieldName" : "Salutation"
+        },
+        "filterValues" : [ {
+          "apiName" : "Mr.",
+          "label" : "Mr.",
+          "name" : "Mr."
+        }, {
+          "apiName" : "Ms.",
+          "label" : "Ms.",
+          "name" : "Ms."
+        }, {
+          "apiName" : "Mrs.",
+          "label" : "Mrs.",
+          "name" : "Mrs."
+        }, {
+          "apiName" : "Dr.",
+          "label" : "Dr.",
+          "name" : "Dr."
+        }, {
+          "apiName" : "Prof.",
+          "label" : "Prof.",
+          "name" : "Prof."
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Contact.Salutation",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "称谓",
+        "uniqueCountable" : true
+      },
+      "TITLE" : {
+        "dataType" : "string",
+        "entityColumnName" : "Contact.Title",
+        "fieldInfo" : {
+          "entityName" : "Contact",
+          "fieldName" : "Title"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Contact.Title",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "职务",
+        "uniqueCountable" : true
+      },
+      "ADDRESS2_COUNTRY" : {
+        "dataType" : "string",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "邮寄地址 - 国家/地区",
+        "uniqueCountable" : true
+      },
+      "ADDRESS2_ZIP" : {
+        "dataType" : "string",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "邮寄地址 - 邮政编码",
+        "uniqueCountable" : true
+      },
+      "ADDRESS2_STATE" : {
+        "dataType" : "string",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "邮寄地址 - 州/省",
+        "uniqueCountable" : true
+      },
+      "ADDRESS2_CITY" : {
+        "dataType" : "string",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "邮寄地址 - 城市",
+        "uniqueCountable" : true
+      },
+      "ADDRESS2_STREET" : {
+        "dataType" : "string",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "邮寄地址 - 街道",
+        "uniqueCountable" : true
+      },
+      "PHONE1" : {
+        "dataType" : "phone",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "电话",
+        "uniqueCountable" : true
+      },
+      "PHONE3" : {
+        "dataType" : "phone",
+        "entityColumnName" : "Contact.MobilePhone",
+        "fieldInfo" : {
+          "entityName" : "Contact",
+          "fieldName" : "MobilePhone"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Contact.MobilePhone",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "手机",
+        "uniqueCountable" : true
+      },
+      "PHONE2" : {
+        "dataType" : "phone",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "传真",
+        "uniqueCountable" : true
+      },
+      "EMAIL" : {
+        "dataType" : "email",
+        "entityColumnName" : "Contact.Email",
+        "fieldInfo" : {
+          "entityName" : "Contact",
+          "fieldName" : "Email"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Contact.Email",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "电子邮件",
+        "uniqueCountable" : true
+      },
+      "OWNER_FULL_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "User.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Contact.Account.Owner.Name",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "客户所有人",
+        "uniqueCountable" : true
+      },
+      "ACCOUNT.NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Account.Name",
+        "fieldInfo" : {
+          "entityName" : "Contact",
+          "fieldName" : "AccountId",
+          "lookupEntityName" : "Account"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Contact.Account.Name",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "客户名",
+        "uniqueCountable" : true
+      }
+    },
+    "groupingColumnInfo" : { }
+  },
+  "reportMetadata" : {
+    "aggregates" : [ "RowCount" ],
+    "chart" : null,
+    "crossFilters" : [ ],
+    "currency" : null,
+    "dashboardSetting" : null,
+    "description" : null,
+    "detailColumns" : [ "LAST_NAME", "FIRST_NAME", "SALUTATION", "TITLE", "ADDRESS2_COUNTRY", "ADDRESS2_ZIP", "ADDRESS2_STATE", "ADDRESS2_CITY", "ADDRESS2_STREET", "PHONE1", "PHONE3", "PHONE2", "EMAIL", "OWNER_FULL_NAME", "ACCOUNT.NAME" ],
+    "developerName" : "new_report2",
+    "division" : null,
+    "folderId" : "0059000000390WhAAI",
+    "groupingsAcross" : [ ],
+    "groupingsDown" : [ ],
+    "hasDetailRows" : true,
+    "hasRecordCount" : true,
+    "historicalSnapshotDates" : [ ],
+    "id" : "00O900000080tYREAY",
+    "name" : "我的客户联系人",
+    "presentationOptions" : {
+      "hasStackedSummaries" : false
+    },
+    "reportBooleanFilter" : null,
+    "reportFilters" : [ ],
+    "reportFormat" : "TABULAR",
+    "reportType" : {
+      "label" : "联系人和客户",
+      "type" : "ContactList"
+    },
+    "scope" : "organization",
+    "showGrandTotal" : true,
+    "showSubtotals" : true,
+    "sortBy" : [ ],
+    "standardDateFilter" : {
+      "column" : "CREATED_DATE",
+      "durationValue" : "CUSTOM",
+      "endDate" : "2018-12-31",
+      "startDate" : "1900-11-17"
+    },
+    "standardFilters" : null,
+    "supportsRoleHierarchy" : false,
+    "userOrHierarchyFilterId" : null
+  }
+},"error":[],"storable":true}],"context":{"mode":"PROD","app":"one:one","pathPrefix":"","fwuid":"MTlpRlBKWTh5V3VoZVJjLURPWjQ0d2hZX25NdHFVdGpDN3BnWlROY1ZGT3cyNTAuOC4zLTYuNC41","mlr":1,"uad":1,"coos":1,"descriptorUids":{},"loaded":{"APPLICATION@markup://one:one":"SPu3nALse3BHDrJeS2MmPw"},"globalValueProviders":[{"type":"$Global","values":{"eswConfigDeveloperName":{"writable":true,"defaultValue":""},"isVoiceOver":{"writable":true,"defaultValue":false},"setupAppContextId":{"writable":true,"defaultValue":""},"density":{"writable":true,"value":"VIEW_TWO"},"srcdoc":{"writable":false,"defaultValue":false},"appContextId":{"writable":true,"value":"06m90000000yYkGAAU"},"dynamicTypeSize":{"writable":true,"defaultValue":""},"appContextDeveloperName":{"writable":true,"value":"LightningSales"}}}],"enableAccessChecks":true,"dns":"c","ls":1,"lairn":[],"laerc":[],"lav":"61","csp":1,"lgef":["com.salesforce.locker.temporaryGate"],"cpr":"https://static.lightning.force.com/ap45","mna":{"lightning":"interop"},"arse":1,"acaf":1,"services":["markup://force:initServiceSfdc","markup://lightning:configProvider","markup://force:salesforceScopedModuleResolver","markup://force:ldsEngineCreator","markup://instrumentation:locatorService","markup://force:lwcReportingService"]},"perfSummary":{"version":"core","request":80,"actions":{"574;a":{"total":71,"db":23}},"actionsTotal":71,"overhead":0}}

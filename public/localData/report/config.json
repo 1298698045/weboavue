@@ -1,0 +1,568 @@
+{
+  "actions": [
+      {
+          "id": "884;a",
+          "state": "SUCCESS",
+          "returnValue": {
+              "entityLabel": "报表",
+              "mixedColumns": [
+                  {
+                      "isIconShown": true,
+                      "isRequired": true,
+                      "apiName": "Name",
+                      "idFieldApiName": "Id",
+                      "idFolderFieldApiName": "Id",
+                      "dataType": "STRING",
+                      "folderFieldApiName": "Name",
+                      "isDefaultVisible": true,
+                      "id": "Name|Name|Id|Id",
+                      "label": "名称",
+                      "isSearchableColumn": true,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "Description",
+                      "dataType": "STRING",
+                      "isDefaultVisible": true,
+                      "id": "Description|||",
+                      "label": "描述",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "isRequired": true,
+                      "apiName": "FolderName",
+                      "idFieldApiName": "OwnerId",
+                      "idFolderFieldApiName": "ParentId",
+                      "dataType": "STRING",
+                      "folderFieldApiName": "ParentName",
+                      "isDefaultVisible": true,
+                      "id": "FolderName|ParentName|OwnerId|ParentId",
+                      "label": "文件夹",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "CreatedBy.Name",
+                      "idFieldApiName": "CreatedBy.Id",
+                      "idFolderFieldApiName": "CreatedBy.Id",
+                      "folderFieldApiName": "CreatedBy.Name",
+                      "isDefaultVisible": true,
+                      "id": "CreatedBy.Name|CreatedBy.Name|CreatedBy.Id|CreatedBy.Id",
+                      "label": "创建人",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "CreatedDate",
+                      "dataType": "DATETIME",
+                      "folderFieldApiName": "CreatedDate",
+                      "isDefaultVisible": true,
+                      "id": "CreatedDate|CreatedDate||",
+                      "label": "创建日期",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "LastModifiedBy.Name",
+                      "idFieldApiName": "LastModifiedBy.Id",
+                      "idFolderFieldApiName": "LastModifiedBy.Id",
+                      "folderFieldApiName": "LastModifiedBy.Name",
+                      "isDefaultVisible": false,
+                      "id": "LastModifiedBy.Name|LastModifiedBy.Name|LastModifiedBy.Id|LastModifiedBy.Id",
+                      "label": "上次修改人",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "LastModifiedDate",
+                      "dataType": "DATETIME",
+                      "folderFieldApiName": "LastModifiedDate",
+                      "isDefaultVisible": false,
+                      "id": "LastModifiedDate|LastModifiedDate||",
+                      "label": "上次修改日期",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "LastRunDate",
+                      "dataType": "DATETIME",
+                      "isDefaultVisible": false,
+                      "id": "LastRunDate|||",
+                      "label": "报表最后运行日期",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "NumSubscriptions",
+                      "dataType": "BOOLEAN",
+                      "isDefaultVisible": true,
+                      "id": "NumSubscriptions|||",
+                      "label": "已订购",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  }
+              ],
+              "pageTitle": "报表",
+              "folderNameFieldName": "FolderName",
+              "canPersonalize": true,
+              "timeZone": {
+                  "ID": "Asia/Shanghai"
+              },
+              "nameField": "Name",
+              "maxFolderDepth": 3,
+              "entityLabelPlural": "报表",
+              "navSections": [
+                  {
+                      "label": "报表",
+                      "items": [
+                          {
+                              "isDefault": true,
+                              "rootEntityScope": "mru",
+                              "innerEntityScope": "mru",
+                              "id": "mru",
+                              "label": "我最近用过",
+                              "searchLabel": "搜索最近报表...",
+                              "emptyLabel": "转到全部报表，查看可用内容。"
+                          },
+                          {
+                              "rootEntityScope": "created",
+                              "innerEntityScope": "created",
+                              "id": "created",
+                              "label": "由我创建",
+                              "searchLabel": "搜索由我创建的报表...",
+                              "emptyLabel": "创建首个报表不会为时过早。"
+                          },
+                          {
+                              "rootEntityScope": "mine",
+                              "innerEntityScope": "mine",
+                              "id": "mine",
+                              "label": "专用报表",
+                              "searchLabel": "搜索专用报表...",
+                              "emptyLabel": "您没有任何专用报表。没关系。"
+                          },
+                          {
+                              "rootEntityScope": "organizationOwned",
+                              "innerEntityScope": "organizationOwned",
+                              "id": "organizationOwned",
+                              "label": "公用报表",
+                              "searchLabel": "搜索公用报表...",
+                              "emptyLabel": "在某人创建公用报表时，您将在此处找到。"
+                          },
+                          {
+                              "rootEntityScope": "everything",
+                              "innerEntityScope": "everything",
+                              "innerFolderScope": "userFolders",
+                              "id": "everything",
+                              "label": "所有报表",
+                              "searchLabel": "搜索所有报表...",
+                              "emptyLabel": "在您获取报表访问权限时，您将在此处找到。"
+                          }
+                      ]
+                  },
+                  {
+                      "label": "文件夹",
+                      "items": [
+                          {
+                              "isDefault": true,
+                              "rootFolderScope": "userFolders",
+                              "innerEntityScope": "everything",
+                              "innerFolderScope": "userFolders",
+                              "id": "userFolders",
+                              "label": "全部文件夹",
+                              "searchLabel": "搜索所有文件夹...",
+                              "emptyLabel": "在您获取文件夹访问权限时，您将在此处找到。"
+                          },
+                          {
+                              "rootFolderScope": "userFoldersCreatedByMe",
+                              "innerEntityScope": "everything",
+                              "innerFolderScope": "userFoldersCreatedByMe",
+                              "id": "userFoldersCreatedByMe",
+                              "label": "由我创建",
+                              "searchLabel": "搜索由我创建的文件夹...",
+                              "emptyLabel": "在创建文件夹时，您将在此处找到。"
+                          },
+                          {
+                              "rootFolderScope": "userFoldersSharedWithMe",
+                              "innerEntityScope": "everything",
+                              "innerFolderScope": "userFolders",
+                              "id": "userFoldersSharedWithMe",
+                              "label": "与我共享",
+                              "searchLabel": "搜索与我共享的文件夹...",
+                              "emptyLabel": "在某人与您共享文件夹时，您将在此处找到。"
+                          }
+                      ]
+                  },
+                  {
+                      "label": "收藏夹",
+                      "items": [
+                          {
+                              "isDefault": true,
+                              "isFolderFavorite": true,
+                              "isEntityFavorite": true,
+                              "id": "favoriteItems",
+                              "label": "所有收藏夹",
+                              "searchLabel": "搜索收藏夹...",
+                              "emptyLabel": "在收藏报表或文件夹时，您将在此处找到。"
+                          }
+                      ]
+                  }
+              ],
+              "folderColumns": [
+                  {
+                      "isIconShown": true,
+                      "isRequired": true,
+                      "idFolderFieldApiName": "Id",
+                      "folderFieldApiName": "Name",
+                      "dataType": "STRING",
+                      "isDefaultVisible": true,
+                      "id": "|Name||Id",
+                      "label": "名称",
+                      "isSearchableColumn": true,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "idFolderFieldApiName": "CreatedBy.Id",
+                      "folderFieldApiName": "CreatedBy.Name",
+                      "isDefaultVisible": true,
+                      "id": "|CreatedBy.Name||CreatedBy.Id",
+                      "label": "创建人",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "folderFieldApiName": "CreatedDate",
+                      "dataType": "DATETIME",
+                      "isDefaultVisible": true,
+                      "id": "|CreatedDate||",
+                      "label": "创建日期",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "idFolderFieldApiName": "LastModifiedBy.Id",
+                      "folderFieldApiName": "LastModifiedBy.Name",
+                      "isDefaultVisible": true,
+                      "id": "|LastModifiedBy.Name||LastModifiedBy.Id",
+                      "label": "上次修改人",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "folderFieldApiName": "LastModifiedDate",
+                      "dataType": "DATETIME",
+                      "isDefaultVisible": true,
+                      "id": "|LastModifiedDate||",
+                      "label": "上次修改日期",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  }
+              ],
+              "entityColumns": [
+                  {
+                      "isRequired": true,
+                      "apiName": "Name",
+                      "idFieldApiName": "Id",
+                      "dataType": "STRING",
+                      "isDefaultVisible": true,
+                      "id": "Name||Id|",
+                      "label": "报表名称",
+                      "isSearchableColumn": true,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "Description",
+                      "dataType": "STRING",
+                      "isDefaultVisible": true,
+                      "id": "Description|||",
+                      "label": "描述",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "isRequired": true,
+                      "apiName": "FolderName",
+                      "idFieldApiName": "OwnerId",
+                      "dataType": "STRING",
+                      "isDefaultVisible": true,
+                      "id": "FolderName||OwnerId|",
+                      "label": "文件夹",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "CreatedBy.Name",
+                      "idFieldApiName": "CreatedBy.Id",
+                      "isDefaultVisible": true,
+                      "id": "CreatedBy.Name||CreatedBy.Id|",
+                      "label": "创建人",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "CreatedDate",
+                      "dataType": "DATETIME",
+                      "isDefaultVisible": true,
+                      "id": "CreatedDate|||",
+                      "label": "创建日期",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "LastModifiedBy.Name",
+                      "idFieldApiName": "LastModifiedBy.Id",
+                      "isDefaultVisible": false,
+                      "id": "LastModifiedBy.Name||LastModifiedBy.Id|",
+                      "label": "上次修改人",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "LastModifiedDate",
+                      "dataType": "DATETIME",
+                      "isDefaultVisible": false,
+                      "id": "LastModifiedDate|||",
+                      "label": "上次修改日期",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "LastRunDate",
+                      "dataType": "DATETIME",
+                      "isDefaultVisible": false,
+                      "id": "LastRunDate|||",
+                      "label": "报表最后运行日期",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  },
+                  {
+                      "apiName": "NumSubscriptions",
+                      "dataType": "BOOLEAN",
+                      "isDefaultVisible": true,
+                      "id": "NumSubscriptions|||",
+                      "label": "已订阅",
+                      "isSearchableColumn": false,
+                      "isSortableColumn": true
+                  }
+              ],
+              "personalization": {
+                  "entityColumns": [
+                      {
+                          "id": "Name||Id|",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "FolderName||OwnerId|",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "Description|||",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "CreatedBy.Name||CreatedBy.Id|",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "CreatedDate|||",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "NumSubscriptions|||",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "LastRunDate|||",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "LastModifiedDate|||",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "LastModifiedBy.Name||LastModifiedBy.Id|",
+                          "isVisible": true
+                      }
+                  ],
+                  "mixedColumns": [
+                      {
+                          "id": "Name|Name|Id|Id",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "Description|||",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "FolderName|ParentName|OwnerId|ParentId",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "CreatedBy.Name|CreatedBy.Name|CreatedBy.Id|CreatedBy.Id",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "CreatedDate|CreatedDate||",
+                          "isVisible": true
+                      },
+                      {
+                          "id": "LastModifiedBy.Name|LastModifiedBy.Name|LastModifiedBy.Id|LastModifiedBy.Id",
+                          "isVisible": false
+                      },
+                      {
+                          "id": "LastModifiedDate|LastModifiedDate||",
+                          "isVisible": false
+                      },
+                      {
+                          "id": "LastRunDate|||",
+                          "isVisible": false
+                      },
+                      {
+                          "id": "NumSubscriptions|||",
+                          "isVisible": true
+                      }
+                  ],
+                  "folderColumns": [
+                      {
+                          "width": 269,
+                          "id": "|Name||Id",
+                          "isVisible": true
+                      },
+                      {
+                          "width": 269,
+                          "id": "|CreatedBy.Name||CreatedBy.Id",
+                          "isVisible": true
+                      },
+                      {
+                          "width": 269,
+                          "id": "|CreatedDate||",
+                          "isVisible": true
+                      },
+                      {
+                          "width": 269,
+                          "id": "|LastModifiedBy.Name||LastModifiedBy.Id",
+                          "isVisible": true
+                      },
+                      {
+                          "width": 269,
+                          "id": "|LastModifiedDate||",
+                          "isVisible": true
+                      }
+                  ]
+              },
+              "trace": [],
+              "integrationComponent": "folder:analyticsIntegration",
+              "entityApiName": "Report",
+              "folderJoinFieldName": "OwnerId",
+              "specialFolderScopes": [
+                  {
+                      "id": "mine",
+                      "folderId": "0059000000390WhAAI",
+                      "label": "专用报表"
+                  },
+                  {
+                      "id": "organizationOwned",
+                      "folderId": "00D90000000yvHGEAY",
+                      "label": "公用报表"
+                  }
+              ],
+              "bulkActions": [],
+              "canCreateFolders": true,
+              "entityIconMap": {
+                  "Folder": "utility:open_folder"
+              },
+              "pageIcon": "standard:report",
+              "canManageRootFolder": false
+          },
+          "error": []
+      }
+  ],
+  "context": {
+      "mode": "PROD",
+      "app": "one:one",
+      "pathPrefix": "",
+      "fwuid": "WFIwUmVJdmtIRnI3MTFpX0d6c1VwQWhZX25NdHFVdGpDN3BnWlROY1ZGT3cyNTAuOC4zLTYuNC41",
+      "mlr": 1,
+      "uad": 1,
+      "coos": 1,
+      "descriptorUids": {},
+      "loaded": {
+          "APPLICATION@markup://one:one": "JPhj9GLwocVj8Fy4XHAreA"
+      },
+      "globalValueProviders": [
+          {
+              "type": "$Global",
+              "values": {
+                  "eswConfigDeveloperName": {
+                      "writable": true,
+                      "defaultValue": ""
+                  },
+                  "isVoiceOver": {
+                      "writable": true,
+                      "defaultValue": false
+                  },
+                  "setupAppContextId": {
+                      "writable": true,
+                      "defaultValue": ""
+                  },
+                  "density": {
+                      "writable": true,
+                      "value": "VIEW_TWO"
+                  },
+                  "srcdoc": {
+                      "writable": false,
+                      "defaultValue": false
+                  },
+                  "appContextId": {
+                      "writable": true,
+                      "value": "06m90000000yYkGAAU"
+                  },
+                  "dynamicTypeSize": {
+                      "writable": true,
+                      "defaultValue": ""
+                  },
+                  "appContextDeveloperName": {
+                      "writable": true,
+                      "value": "LightningSales"
+                  }
+              }
+          }
+      ],
+      "enableAccessChecks": true,
+      "dns": "c",
+      "ls": 1,
+      "lairn": [],
+      "laerc": [],
+      "lav": "61",
+      "csp": 1,
+      "lgef": [
+          "com.salesforce.locker.temporaryGate"
+      ],
+      "cpr": "https://static.lightning.force.com/ap45",
+      "mna": {
+          "lightning": "interop"
+      },
+      "arse": 1,
+      "acaf": 1,
+      "services": [
+          "markup://force:initServiceSfdc",
+          "markup://lightning:configProvider",
+          "markup://force:salesforceScopedModuleResolver",
+          "markup://force:ldsEngineCreator",
+          "markup://instrumentation:locatorService",
+          "markup://force:lwcReportingService"
+      ]
+  },
+  "perfSummary": {
+      "version": "core",
+      "request": 33,
+      "actions": {
+          "884;a": {
+              "total": 24,
+              "db": 2
+          }
+      },
+      "actionsTotal": 24,
+      "overhead": 0
+  }
+}

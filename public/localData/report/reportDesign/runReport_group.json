@@ -1,0 +1,2871 @@
+{"actions":[{"id":"569;a","state":"SUCCESS","returnValue":{
+  "attributes" : {
+    "describeUrl" : "/services/data/v61.0/analytics/reports/00OGB00000DyicF2AR/describe",
+    "instancesUrl" : "/services/data/v61.0/analytics/reports/00OGB00000DyicF2AR/instances",
+    "reportId" : "00OGB00000DyicF2AR",
+    "reportName" : "业务机会组行两级",
+    "type" : "Report"
+  },
+  "allData" : true,
+  "chartData" : {
+    "allData" : true,
+    "factMap" : {
+      "0!T" : {
+        "aggregates" : [ {
+          "label" : "3",
+          "value" : 3
+        }, {
+          "label" : "3",
+          "value" : 3
+        } ]
+      },
+      "1!T" : {
+        "aggregates" : [ {
+          "label" : "10",
+          "value" : 10
+        }, {
+          "label" : "10",
+          "value" : 10
+        } ]
+      },
+      "10!T" : {
+        "aggregates" : [ {
+          "label" : "8",
+          "value" : 8
+        }, {
+          "label" : "8",
+          "value" : 8
+        } ]
+      },
+      "0_0!T" : {
+        "aggregates" : [ {
+          "label" : "3",
+          "value" : 3
+        }, {
+          "label" : "3",
+          "value" : 3
+        } ]
+      },
+      "2!T" : {
+        "aggregates" : [ {
+          "label" : "1",
+          "value" : 1
+        }, {
+          "label" : "1",
+          "value" : 1
+        } ]
+      },
+      "3!T" : {
+        "aggregates" : [ {
+          "label" : "5",
+          "value" : 5
+        }, {
+          "label" : "5",
+          "value" : 5
+        } ]
+      },
+      "T!T" : {
+        "aggregates" : [ {
+          "label" : "40",
+          "value" : 40
+        }, {
+          "label" : "40",
+          "value" : 40
+        } ]
+      },
+      "4!T" : {
+        "aggregates" : [ {
+          "label" : "3",
+          "value" : 3
+        }, {
+          "label" : "3",
+          "value" : 3
+        } ]
+      },
+      "5!T" : {
+        "aggregates" : [ {
+          "label" : "3",
+          "value" : 3
+        }, {
+          "label" : "3",
+          "value" : 3
+        } ]
+      },
+      "6!T" : {
+        "aggregates" : [ {
+          "label" : "4",
+          "value" : 4
+        }, {
+          "label" : "4",
+          "value" : 4
+        } ]
+      },
+      "7_0!T" : {
+        "aggregates" : [ {
+          "label" : "1",
+          "value" : 1
+        }, {
+          "label" : "1",
+          "value" : 1
+        } ]
+      },
+      "7!T" : {
+        "aggregates" : [ {
+          "label" : "1",
+          "value" : 1
+        }, {
+          "label" : "1",
+          "value" : 1
+        } ]
+      },
+      "8!T" : {
+        "aggregates" : [ {
+          "label" : "1",
+          "value" : 1
+        }, {
+          "label" : "1",
+          "value" : 1
+        } ]
+      },
+      "1_0!T" : {
+        "aggregates" : [ {
+          "label" : "10",
+          "value" : 10
+        }, {
+          "label" : "10",
+          "value" : 10
+        } ]
+      },
+      "9!T" : {
+        "aggregates" : [ {
+          "label" : "1",
+          "value" : 1
+        }, {
+          "label" : "1",
+          "value" : 1
+        } ]
+      },
+      "3_0!T" : {
+        "aggregates" : [ {
+          "label" : "5",
+          "value" : 5
+        }, {
+          "label" : "5",
+          "value" : 5
+        } ]
+      },
+      "10_0!T" : {
+        "aggregates" : [ {
+          "label" : "8",
+          "value" : 8
+        }, {
+          "label" : "8",
+          "value" : 8
+        } ]
+      },
+      "5_0!T" : {
+        "aggregates" : [ {
+          "label" : "3",
+          "value" : 3
+        }, {
+          "label" : "3",
+          "value" : 3
+        } ]
+      },
+      "4_0!T" : {
+        "aggregates" : [ {
+          "label" : "3",
+          "value" : 3
+        }, {
+          "label" : "3",
+          "value" : 3
+        } ]
+      },
+      "9_0!T" : {
+        "aggregates" : [ {
+          "label" : "1",
+          "value" : 1
+        }, {
+          "label" : "1",
+          "value" : 1
+        } ]
+      },
+      "2_0!T" : {
+        "aggregates" : [ {
+          "label" : "1",
+          "value" : 1
+        }, {
+          "label" : "1",
+          "value" : 1
+        } ]
+      },
+      "8_0!T" : {
+        "aggregates" : [ {
+          "label" : "1",
+          "value" : 1
+        }, {
+          "label" : "1",
+          "value" : 1
+        } ]
+      },
+      "6_0!T" : {
+        "aggregates" : [ {
+          "label" : "4",
+          "value" : 4
+        }, {
+          "label" : "4",
+          "value" : 4
+        } ]
+      }
+    },
+    "groupingsDown" : {
+      "groupings" : [ {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "0_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "0",
+        "label" : "University of Arizona",
+        "value" : "00190000015a7I9AAI"
+      }, {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "1_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "1",
+        "label" : "United Oil & Gas Corp.",
+        "value" : "00190000015a7IAAAY"
+      }, {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "2_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "2",
+        "label" : "Pyramid Construction Inc.",
+        "value" : "00190000015a7I5AAI"
+      }, {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "3_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "3",
+        "label" : "Grand Hotels & Resorts Ltd",
+        "value" : "00190000015a7I7AAI"
+      }, {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "4_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "4",
+        "label" : "GenePoint",
+        "value" : "00190000015a7I0AAI"
+      }, {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "5_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "5",
+        "label" : "Express Logistics and Transport",
+        "value" : "00190000015a7I8AAI"
+      }, {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "6_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "6",
+        "label" : "Edge Communications",
+        "value" : "00190000015a7I3AAI"
+      }, {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "7_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "7",
+        "label" : "Dickenson plc",
+        "value" : "00190000015a7I6AAI"
+      }, {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "8_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "8",
+        "label" : "Burlington Textiles Corp of America",
+        "value" : "00190000015a7I4AAI"
+      }, {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "9_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "9",
+        "label" : "测试地址",
+        "value" : "00190000019mlFIAAY"
+      }, {
+        "groupings" : [ {
+          "groupings" : [ ],
+          "key" : "10_0",
+          "label" : "liu jack",
+          "value" : "0059000000390WhAAI"
+        } ],
+        "key" : "10",
+        "label" : "-",
+        "value" : null
+      } ]
+    }
+  },
+  "factMap" : {
+    "0!T" : {
+      "aggregates" : [ {
+        "label" : "￥240,000.00",
+        "value" : 240000.000000000000000000
+      }, {
+        "label" : "￥80,000.00",
+        "value" : 80000.000000000000000000
+      }, {
+        "label" : "￥215,000.00",
+        "value" : 215000.000000000000000000
+      }, {
+        "label" : "3",
+        "value" : 3
+      } ],
+      "rows" : [ ]
+    },
+    "0_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥240,000.00",
+        "value" : 240000.000000000000000000
+      }, {
+        "label" : "￥80,000.00",
+        "value" : 80000.000000000000000000
+      }, {
+        "label" : "￥215,000.00",
+        "value" : 215000.000000000000000000
+      }, {
+        "label" : "3",
+        "value" : 3
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "University of AZ SLA",
+          "recordId" : "0069000000OZLuHAAX",
+          "value" : "0069000000OZLuHAAX"
+        }, {
+          "label" : "￥90,000.00",
+          "value" : {
+            "amount" : 90000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥90,000.00",
+          "recordId" : "0069000000OZLuHAAX",
+          "value" : {
+            "amount" : 90000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuHAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuHAAX",
+          "value" : null
+        }, {
+          "label" : "Public Relations",
+          "recordId" : "0069000000OZLuHAAX",
+          "value" : "Public Relations"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuHAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "University of AZ Portable Generators",
+          "recordId" : "0069000000OZLu4AAH",
+          "value" : "0069000000OZLu4AAH"
+        }, {
+          "label" : "￥50,000.00",
+          "value" : {
+            "amount" : 50000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥50,000.00",
+          "recordId" : "0069000000OZLu4AAH",
+          "value" : {
+            "amount" : 50000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu4AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu4AAH",
+          "value" : null
+        }, {
+          "label" : "Public Relations",
+          "recordId" : "0069000000OZLu4AAH",
+          "value" : "Public Relations"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLu4AAH",
+          "value" : "New Customer"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "University of AZ Installations",
+          "recordId" : "0069000000OZLuFAAX",
+          "value" : "0069000000OZLuFAAX"
+        }, {
+          "label" : "￥100,000.00",
+          "value" : {
+            "amount" : 100000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥75,000.00",
+          "recordId" : "0069000000OZLuFAAX",
+          "value" : {
+            "amount" : 75000,
+            "currency" : null
+          }
+        }, {
+          "label" : "75%",
+          "value" : 75
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuFAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuFAAX",
+          "value" : null
+        }, {
+          "label" : "Employee Referral",
+          "recordId" : "0069000000OZLuFAAX",
+          "value" : "Employee Referral"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuFAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      } ]
+    },
+    "1!T" : {
+      "aggregates" : [ {
+        "label" : "￥3,440,000.00",
+        "value" : 3440000.000000000000000000
+      }, {
+        "label" : "￥344,000.00",
+        "value" : 344000.000000000000000000
+      }, {
+        "label" : "￥2,793,000.00",
+        "value" : 2793000.000000000000000000
+      }, {
+        "label" : "10",
+        "value" : 10
+      } ],
+      "rows" : [ ]
+    },
+    "10!T" : {
+      "aggregates" : [ {
+        "label" : "￥127,210.00",
+        "value" : 127210.000000000000000000
+      }, {
+        "label" : "￥15,901.25",
+        "value" : 15901.250000000000000000
+      }, {
+        "label" : "￥13,636.00",
+        "value" : 13635.999999999999897000
+      }, {
+        "label" : "8",
+        "value" : 8
+      } ],
+      "rows" : [ ]
+    },
+    "2!T" : {
+      "aggregates" : [ {
+        "label" : "￥100,000.00",
+        "value" : 100000.000000000000000000
+      }, {
+        "label" : "￥100,000.00",
+        "value" : 100000.000000000000000000
+      }, {
+        "label" : "￥10,000.00",
+        "value" : 10000.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "T!T" : {
+      "aggregates" : [ {
+        "label" : "￥5,992,210.00",
+        "value" : 5992210.000000000000000000
+      }, {
+        "label" : "￥149,805.25",
+        "value" : 149805.250000000000000000
+      }, {
+        "label" : "￥4,763,636.00",
+        "value" : 4763635.999999999999897000
+      }, {
+        "label" : "40",
+        "value" : 40
+      } ],
+      "rows" : [ ]
+    },
+    "3!T" : {
+      "aggregates" : [ {
+        "label" : "￥915,000.00",
+        "value" : 915000.000000000000000000
+      }, {
+        "label" : "￥183,000.00",
+        "value" : 183000.000000000000000000
+      }, {
+        "label" : "￥784,000.00",
+        "value" : 784000.000000000000000000
+      }, {
+        "label" : "5",
+        "value" : 5
+      } ],
+      "rows" : [ ]
+    },
+    "4!T" : {
+      "aggregates" : [ {
+        "label" : "￥175,000.00",
+        "value" : 175000.000000000000000000
+      }, {
+        "label" : "￥58,333.33",
+        "value" : 58333.333333333333333333
+      }, {
+        "label" : "￥151,000.00",
+        "value" : 151000.000000000000000000
+      }, {
+        "label" : "3",
+        "value" : 3
+      } ],
+      "rows" : [ ]
+    },
+    "5!T" : {
+      "aggregates" : [ {
+        "label" : "￥420,000.00",
+        "value" : 420000.000000000000000000
+      }, {
+        "label" : "￥140,000.00",
+        "value" : 140000.000000000000000000
+      }, {
+        "label" : "￥344,000.00",
+        "value" : 344000.000000000000000000
+      }, {
+        "label" : "3",
+        "value" : 3
+      } ],
+      "rows" : [ ]
+    },
+    "6!T" : {
+      "aggregates" : [ {
+        "label" : "￥220,000.00",
+        "value" : 220000.000000000000000000
+      }, {
+        "label" : "￥55,000.00",
+        "value" : 55000.000000000000000000
+      }, {
+        "label" : "￥206,000.00",
+        "value" : 206000.000000000000000000
+      }, {
+        "label" : "4",
+        "value" : 4
+      } ],
+      "rows" : [ ]
+    },
+    "7_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥15,000.00",
+        "value" : 15000.000000000000000000
+      }, {
+        "label" : "￥15,000.00",
+        "value" : 15000.000000000000000000
+      }, {
+        "label" : "￥1,500.00",
+        "value" : 1500.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "Dickenson Mobile Generators",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : "0069000000OZLtvAAH"
+        }, {
+          "label" : "￥15,000.00",
+          "value" : {
+            "amount" : 15000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥1,500.00",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : {
+            "amount" : 1500,
+            "currency" : null
+          }
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : null
+        }, {
+          "label" : "Purchased List",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : "Purchased List"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLtvAAH",
+          "value" : "New Customer"
+        } ]
+      } ]
+    },
+    "7!T" : {
+      "aggregates" : [ {
+        "label" : "￥15,000.00",
+        "value" : 15000.000000000000000000
+      }, {
+        "label" : "￥15,000.00",
+        "value" : 15000.000000000000000000
+      }, {
+        "label" : "￥1,500.00",
+        "value" : 1500.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "1_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥3,440,000.00",
+        "value" : 3440000.000000000000000000
+      }, {
+        "label" : "￥344,000.00",
+        "value" : 344000.000000000000000000
+      }, {
+        "label" : "￥2,793,000.00",
+        "value" : 2793000.000000000000000000
+      }, {
+        "label" : "10",
+        "value" : 10
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "United Oil Standby Generators",
+          "recordId" : "0069000000OZLuMAAX",
+          "value" : "0069000000OZLuMAAX"
+        }, {
+          "label" : "￥120,000.00",
+          "value" : {
+            "amount" : 120000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥120,000.00",
+          "recordId" : "0069000000OZLuMAAX",
+          "value" : {
+            "amount" : 120000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuMAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuMAAX",
+          "value" : null
+        }, {
+          "label" : "External Referral",
+          "recordId" : "0069000000OZLuMAAX",
+          "value" : "External Referral"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuMAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "United Oil SLA",
+          "recordId" : "0069000000OZLu1AAH",
+          "value" : "0069000000OZLu1AAH"
+        }, {
+          "label" : "￥120,000.00",
+          "value" : {
+            "amount" : 120000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥120,000.00",
+          "recordId" : "0069000000OZLu1AAH",
+          "value" : {
+            "amount" : 120000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu1AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu1AAH",
+          "value" : null
+        }, {
+          "label" : "Partner",
+          "recordId" : "0069000000OZLu1AAH",
+          "value" : "Partner"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLu1AAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "United Oil Refinery Generators",
+          "recordId" : "0069000000OZLuEAAX",
+          "value" : "0069000000OZLuEAAX"
+        }, {
+          "label" : "￥915,000.00",
+          "value" : {
+            "amount" : 915000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥915,000.00",
+          "recordId" : "0069000000OZLuEAAX",
+          "value" : {
+            "amount" : 915000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuEAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuEAAX",
+          "value" : null
+        }, {
+          "label" : "Partner",
+          "recordId" : "0069000000OZLuEAAX",
+          "value" : "Partner"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLuEAAX",
+          "value" : "New Customer"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "United Oil Refinery Generators",
+          "recordId" : "0069000000OZLu0AAH",
+          "value" : "0069000000OZLu0AAH"
+        }, {
+          "label" : "￥270,000.00",
+          "value" : {
+            "amount" : 270000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥202,500.00",
+          "recordId" : "0069000000OZLu0AAH",
+          "value" : {
+            "amount" : 202500,
+            "currency" : null
+          }
+        }, {
+          "label" : "75%",
+          "value" : 75
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu0AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu0AAH",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu0AAH",
+          "value" : null
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLu0AAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "United Oil Plant Standby Generators",
+          "recordId" : "0069000000OZLuOAAX",
+          "value" : "0069000000OZLuOAAX"
+        }, {
+          "label" : "￥675,000.00",
+          "value" : {
+            "amount" : 675000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥135,000.00",
+          "recordId" : "0069000000OZLuOAAX",
+          "value" : {
+            "amount" : 135000,
+            "currency" : null
+          }
+        }, {
+          "label" : "20%",
+          "value" : 20
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuOAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuOAAX",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuOAAX",
+          "value" : null
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuOAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "United Oil Office Portable Generators",
+          "recordId" : "0069000000OZLtwAAH",
+          "value" : "0069000000OZLtwAAH"
+        }, {
+          "label" : "￥125,000.00",
+          "value" : {
+            "amount" : 125000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥112,500.00",
+          "recordId" : "0069000000OZLtwAAH",
+          "value" : {
+            "amount" : 112500,
+            "currency" : null
+          }
+        }, {
+          "label" : "90%",
+          "value" : 90
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLtwAAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtwAAH",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtwAAH",
+          "value" : null
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLtwAAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "United Oil Installations",
+          "recordId" : "0069000000OZLuCAAX",
+          "value" : "0069000000OZLuCAAX"
+        }, {
+          "label" : "￥270,000.00",
+          "value" : {
+            "amount" : 270000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥270,000.00",
+          "recordId" : "0069000000OZLuCAAX",
+          "value" : {
+            "amount" : 270000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuCAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuCAAX",
+          "value" : null
+        }, {
+          "label" : "Partner",
+          "recordId" : "0069000000OZLuCAAX",
+          "value" : "Partner"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuCAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "United Oil Installations",
+          "recordId" : "0069000000OZLu9AAH",
+          "value" : "0069000000OZLu9AAH"
+        }, {
+          "label" : "￥270,000.00",
+          "value" : {
+            "amount" : 270000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥243,000.00",
+          "recordId" : "0069000000OZLu9AAH",
+          "value" : {
+            "amount" : 243000,
+            "currency" : null
+          }
+        }, {
+          "label" : "90%",
+          "value" : 90
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu9AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu9AAH",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu9AAH",
+          "value" : null
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLu9AAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "United Oil Installations",
+          "recordId" : "0069000000OZLuJAAX",
+          "value" : "0069000000OZLuJAAX"
+        }, {
+          "label" : "￥235,000.00",
+          "value" : {
+            "amount" : 235000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥235,000.00",
+          "recordId" : "0069000000OZLuJAAX",
+          "value" : {
+            "amount" : 235000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuJAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuJAAX",
+          "value" : null
+        }, {
+          "label" : "External Referral",
+          "recordId" : "0069000000OZLuJAAX",
+          "value" : "External Referral"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuJAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "United Oil Emergency Generators",
+          "recordId" : "0069000000OZLuKAAX",
+          "value" : "0069000000OZLuKAAX"
+        }, {
+          "label" : "￥440,000.00",
+          "value" : {
+            "amount" : 440000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥440,000.00",
+          "recordId" : "0069000000OZLuKAAX",
+          "value" : {
+            "amount" : 440000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuKAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuKAAX",
+          "value" : null
+        }, {
+          "label" : "External Referral",
+          "recordId" : "0069000000OZLuKAAX",
+          "value" : "External Referral"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuKAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      } ]
+    },
+    "8!T" : {
+      "aggregates" : [ {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "9!T" : {
+      "aggregates" : [ {
+        "label" : "￥105,000.00",
+        "value" : 105000.000000000000000000
+      }, {
+        "label" : "￥105,000.00",
+        "value" : 105000.000000000000000000
+      }, {
+        "label" : "￥10,500.00",
+        "value" : 10500.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ ]
+    },
+    "3_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥915,000.00",
+        "value" : 915000.000000000000000000
+      }, {
+        "label" : "￥183,000.00",
+        "value" : 183000.000000000000000000
+      }, {
+        "label" : "￥784,000.00",
+        "value" : 784000.000000000000000000
+      }, {
+        "label" : "5",
+        "value" : 5
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "Grand Hotels SLA",
+          "recordId" : "0069000000OZLuLAAX",
+          "value" : "0069000000OZLuLAAX"
+        }, {
+          "label" : "￥90,000.00",
+          "value" : {
+            "amount" : 90000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥90,000.00",
+          "recordId" : "0069000000OZLuLAAX",
+          "value" : {
+            "amount" : 90000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuLAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuLAAX",
+          "value" : null
+        }, {
+          "label" : "External Referral",
+          "recordId" : "0069000000OZLuLAAX",
+          "value" : "External Referral"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuLAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Grand Hotels Kitchen Generator",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : "0069000000OZLtzAAH"
+        }, {
+          "label" : "￥15,000.00",
+          "value" : {
+            "amount" : 15000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥9,000.00",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : {
+            "amount" : 9000,
+            "currency" : null
+          }
+        }, {
+          "label" : "60%",
+          "value" : 60
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : null
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLtzAAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Grand Hotels Guest Portable Generators",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : "0069000000OZLu2AAH"
+        }, {
+          "label" : "￥250,000.00",
+          "value" : {
+            "amount" : 250000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥125,000.00",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : {
+            "amount" : 125000,
+            "currency" : null
+          }
+        }, {
+          "label" : "50%",
+          "value" : 50
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : null
+        }, {
+          "label" : "Employee Referral",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : "Employee Referral"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLu2AAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Grand Hotels Generator Installations",
+          "recordId" : "0069000000OZLuDAAX",
+          "value" : "0069000000OZLuDAAX"
+        }, {
+          "label" : "￥350,000.00",
+          "value" : {
+            "amount" : 350000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥350,000.00",
+          "recordId" : "0069000000OZLuDAAX",
+          "value" : {
+            "amount" : 350000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuDAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuDAAX",
+          "value" : null
+        }, {
+          "label" : "External Referral",
+          "recordId" : "0069000000OZLuDAAX",
+          "value" : "External Referral"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuDAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Grand Hotels Emergency Generators",
+          "recordId" : "0069000000OZLuNAAX",
+          "value" : "0069000000OZLuNAAX"
+        }, {
+          "label" : "￥210,000.00",
+          "value" : {
+            "amount" : 210000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥210,000.00",
+          "recordId" : "0069000000OZLuNAAX",
+          "value" : {
+            "amount" : 210000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuNAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuNAAX",
+          "value" : null
+        }, {
+          "label" : "External Referral",
+          "recordId" : "0069000000OZLuNAAX",
+          "value" : "External Referral"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLuNAAX",
+          "value" : "New Customer"
+        } ]
+      } ]
+    },
+    "10_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥127,210.00",
+        "value" : 127210.000000000000000000
+      }, {
+        "label" : "￥15,901.25",
+        "value" : 15901.250000000000000000
+      }, {
+        "label" : "￥13,636.00",
+        "value" : 13635.999999999999897000
+      }, {
+        "label" : "8",
+        "value" : 8
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "软件产品需求",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : "00690000018rdxGAAQ"
+        }, {
+          "label" : "￥100,000.00",
+          "value" : {
+            "amount" : 100000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥10,000.00",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : {
+            "amount" : 10000,
+            "currency" : null
+          }
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "2,108",
+          "value" : 2108
+        }, {
+          "label" : "2018-11-30",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : "2018-11-30"
+        }, {
+          "label" : "2018-11-1",
+          "value" : "2018-11-01"
+        }, {
+          "label" : "-",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "00690000018rdxGAAQ",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "购买计算机",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : "0069000000Q7WdQAAV"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : null
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "3,553",
+          "value" : 3553
+        }, {
+          "label" : "2014-11-30",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : "2014-11-30"
+        }, {
+          "label" : "2014-11-17",
+          "value" : "2014-11-17"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000Q7WdQAAV",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "潜在客户",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : "0060o00001e7tOUAAY"
+        }, {
+          "label" : "-",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : null
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "649",
+          "value" : 649
+        }, {
+          "label" : "2022-11-2",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : "2022-11-02"
+        }, {
+          "label" : "2022-10-30",
+          "value" : "2022-10-30"
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001e7tOUAAY",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "协和",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : "0060o00001JSLVbAAP"
+        }, {
+          "label" : "￥25,000.00",
+          "value" : {
+            "amount" : 25000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥2,500.00",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : {
+            "amount" : 2500,
+            "currency" : null
+          }
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "1,763",
+          "value" : 1763
+        }, {
+          "label" : "2019-10-31",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : "2019-10-31"
+        }, {
+          "label" : "2019-10-12",
+          "value" : "2019-10-12"
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001JSLVbAAP",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "初步接触",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : "006GB00001j3ZwFYAU"
+        }, {
+          "label" : "￥1,000.00",
+          "value" : {
+            "amount" : 1000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥300.00",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : {
+            "amount" : 300,
+            "currency" : null
+          }
+        }, {
+          "label" : "30%",
+          "value" : 30
+        }, {
+          "label" : "207",
+          "value" : 207
+        }, {
+          "label" : "2024-1-31",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : "2024-01-31"
+        }, {
+          "label" : "2024-1-15",
+          "value" : "2024-01-15"
+        }, {
+          "label" : "-",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "006GB00001j3ZwFYAU",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "55",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : "0060o00001FTjexAAD"
+        }, {
+          "label" : "￥55.00",
+          "value" : {
+            "amount" : 55,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥27.50",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : {
+            "amount" : 27.5,
+            "currency" : null
+          }
+        }, {
+          "label" : "50%",
+          "value" : 50
+        }, {
+          "label" : "1,915",
+          "value" : 1915
+        }, {
+          "label" : "2019-5-27",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : "2019-05-27"
+        }, {
+          "label" : "2019-5-13",
+          "value" : "2019-05-13"
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjexAAD",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "4444444",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : "0060o00001FTjenAAD"
+        }, {
+          "label" : "￥44.00",
+          "value" : {
+            "amount" : 44,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥30.80",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : {
+            "amount" : 30.799999999999997,
+            "currency" : null
+          }
+        }, {
+          "label" : "70%",
+          "value" : 70
+        }, {
+          "label" : "1,915",
+          "value" : 1915
+        }, {
+          "label" : "2019-5-21",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : "2019-05-21"
+        }, {
+          "label" : "2019-5-13",
+          "value" : "2019-05-13"
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjenAAD",
+          "value" : null
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "222",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : "0060o00001FTjedAAD"
+        }, {
+          "label" : "￥1,111.00",
+          "value" : {
+            "amount" : 1111,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥777.70",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : {
+            "amount" : 777.6999999999999,
+            "currency" : null
+          }
+        }, {
+          "label" : "70%",
+          "value" : 70
+        }, {
+          "label" : "1,915",
+          "value" : 1915
+        }, {
+          "label" : "2019-5-28",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : "2019-05-28"
+        }, {
+          "label" : "2019-5-13",
+          "value" : "2019-05-13"
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0060o00001FTjedAAD",
+          "value" : null
+        } ]
+      } ]
+    },
+    "5_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥420,000.00",
+        "value" : 420000.000000000000000000
+      }, {
+        "label" : "￥140,000.00",
+        "value" : 140000.000000000000000000
+      }, {
+        "label" : "￥344,000.00",
+        "value" : 344000.000000000000000000
+      }, {
+        "label" : "3",
+        "value" : 3
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "Express Logistics Standby Generator",
+          "recordId" : "0069000000OZLtxAAH",
+          "value" : "0069000000OZLtxAAH"
+        }, {
+          "label" : "￥220,000.00",
+          "value" : {
+            "amount" : 220000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥220,000.00",
+          "recordId" : "0069000000OZLtxAAH",
+          "value" : {
+            "amount" : 220000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLtxAAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtxAAH",
+          "value" : null
+        }, {
+          "label" : "Trade Show",
+          "recordId" : "0069000000OZLtxAAH",
+          "value" : "Trade Show"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLtxAAH",
+          "value" : "New Customer"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Express Logistics SLA",
+          "recordId" : "0069000000OZLuGAAX",
+          "value" : "0069000000OZLuGAAX"
+        }, {
+          "label" : "￥120,000.00",
+          "value" : {
+            "amount" : 120000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥84,000.00",
+          "recordId" : "0069000000OZLuGAAX",
+          "value" : {
+            "amount" : 84000,
+            "currency" : null
+          }
+        }, {
+          "label" : "70%",
+          "value" : 70
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuGAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuGAAX",
+          "value" : null
+        }, {
+          "label" : "External Referral",
+          "recordId" : "0069000000OZLuGAAX",
+          "value" : "External Referral"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuGAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Express Logistics Portable Truck Generators",
+          "recordId" : "0069000000OZLu6AAH",
+          "value" : "0069000000OZLu6AAH"
+        }, {
+          "label" : "￥80,000.00",
+          "value" : {
+            "amount" : 80000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥40,000.00",
+          "recordId" : "0069000000OZLu6AAH",
+          "value" : {
+            "amount" : 40000,
+            "currency" : null
+          }
+        }, {
+          "label" : "50%",
+          "value" : 50
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu6AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu6AAH",
+          "value" : null
+        }, {
+          "label" : "External Referral",
+          "recordId" : "0069000000OZLu6AAH",
+          "value" : "External Referral"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLu6AAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      } ]
+    },
+    "4_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥175,000.00",
+        "value" : 175000.000000000000000000
+      }, {
+        "label" : "￥58,333.33",
+        "value" : 58333.333333333333333333
+      }, {
+        "label" : "￥151,000.00",
+        "value" : 151000.000000000000000000
+      }, {
+        "label" : "3",
+        "value" : 3
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "GenePoint Standby Generator",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : "0069000000OZLtyAAH"
+        }, {
+          "label" : "￥85,000.00",
+          "value" : {
+            "amount" : 85000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥85,000.00",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : {
+            "amount" : 85000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : null
+        }, {
+          "label" : "Partner",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : "Partner"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLtyAAH",
+          "value" : "New Customer"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "GenePoint SLA",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : "0069000000OZLu8AAH"
+        }, {
+          "label" : "￥30,000.00",
+          "value" : {
+            "amount" : 30000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥30,000.00",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : {
+            "amount" : 30000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : null
+        }, {
+          "label" : "Partner",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : "Partner"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLu8AAH",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "GenePoint Lab Generators",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : "0069000000OZLu7AAH"
+        }, {
+          "label" : "￥60,000.00",
+          "value" : {
+            "amount" : 60000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥36,000.00",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : {
+            "amount" : 36000,
+            "currency" : null
+          }
+        }, {
+          "label" : "60%",
+          "value" : 60
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu7AAH",
+          "value" : null
+        } ]
+      } ]
+    },
+    "9_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥105,000.00",
+        "value" : 105000.000000000000000000
+      }, {
+        "label" : "￥105,000.00",
+        "value" : 105000.000000000000000000
+      }, {
+        "label" : "￥10,500.00",
+        "value" : 10500.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "333 Deal",
+          "recordId" : "0069000000QASJYAA5",
+          "value" : "0069000000QASJYAA5"
+        }, {
+          "label" : "￥105,000.00",
+          "value" : {
+            "amount" : 105000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥10,500.00",
+          "recordId" : "0069000000QASJYAA5",
+          "value" : {
+            "amount" : 10500,
+            "currency" : null
+          }
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "3,540",
+          "value" : 3540
+        }, {
+          "label" : "2014-11-30",
+          "recordId" : "0069000000QASJYAA5",
+          "value" : "2014-11-30"
+        }, {
+          "label" : "2014-11-30",
+          "value" : "2014-11-30"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000QASJYAA5",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000QASJYAA5",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000QASJYAA5",
+          "value" : null
+        } ]
+      } ]
+    },
+    "2_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥100,000.00",
+        "value" : 100000.000000000000000000
+      }, {
+        "label" : "￥100,000.00",
+        "value" : 100000.000000000000000000
+      }, {
+        "label" : "￥10,000.00",
+        "value" : 10000.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "Pyramid Emergency Generators",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : "0069000000OZLu5AAH"
+        }, {
+          "label" : "￥100,000.00",
+          "value" : {
+            "amount" : 100000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥10,000.00",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : {
+            "amount" : 10000,
+            "currency" : null
+          }
+        }, {
+          "label" : "10%",
+          "value" : 10
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : null
+        }, {
+          "label" : "Phone Inquiry",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : "Phone Inquiry"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu5AAH",
+          "value" : null
+        } ]
+      } ]
+    },
+    "8_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "￥235,000.00",
+        "value" : 235000.000000000000000000
+      }, {
+        "label" : "1",
+        "value" : 1
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "Burlington Textiles Weaving Plant Generator",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : "0069000000OZLuIAAX"
+        }, {
+          "label" : "￥235,000.00",
+          "value" : {
+            "amount" : 235000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥235,000.00",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : {
+            "amount" : 235000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : null
+        }, {
+          "label" : "Web",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : "Web"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLuIAAX",
+          "value" : "New Customer"
+        } ]
+      } ]
+    },
+    "6_0!T" : {
+      "aggregates" : [ {
+        "label" : "￥220,000.00",
+        "value" : 220000.000000000000000000
+      }, {
+        "label" : "￥55,000.00",
+        "value" : 55000.000000000000000000
+      }, {
+        "label" : "￥206,000.00",
+        "value" : 206000.000000000000000000
+      }, {
+        "label" : "4",
+        "value" : 4
+      } ],
+      "rows" : [ {
+        "dataCells" : [ {
+          "label" : "Edge SLA",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : "0069000000OZLuBAAX"
+        }, {
+          "label" : "￥60,000.00",
+          "value" : {
+            "amount" : 60000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥60,000.00",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : {
+            "amount" : 60000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : null
+        }, {
+          "label" : "Word of mouth",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : "Word of mouth"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuBAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Edge Installation",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : "0069000000OZLuAAAX"
+        }, {
+          "label" : "￥50,000.00",
+          "value" : {
+            "amount" : 50000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥50,000.00",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : {
+            "amount" : 50000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : null
+        }, {
+          "label" : "Word of mouth",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : "Word of mouth"
+        }, {
+          "label" : "Existing Customer - Upgrade",
+          "recordId" : "0069000000OZLuAAAX",
+          "value" : "Existing Customer - Upgrade"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Edge Emergency Generator",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : "0069000000OZLu3AAH"
+        }, {
+          "label" : "￥75,000.00",
+          "value" : {
+            "amount" : 75000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥75,000.00",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : {
+            "amount" : 75000,
+            "currency" : null
+          }
+        }, {
+          "label" : "100%",
+          "value" : 100
+        }, {
+          "label" : "0",
+          "value" : 0
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : null
+        }, {
+          "label" : "Word of mouth",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : "Word of mouth"
+        }, {
+          "label" : "New Customer",
+          "recordId" : "0069000000OZLu3AAH",
+          "value" : "New Customer"
+        } ]
+      }, {
+        "dataCells" : [ {
+          "label" : "Edge Emergency Generator",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : "0069000000OZLuPAAX"
+        }, {
+          "label" : "￥35,000.00",
+          "value" : {
+            "amount" : 35000,
+            "currency" : null
+          }
+        }, {
+          "label" : "￥21,000.00",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : {
+            "amount" : 21000,
+            "currency" : null
+          }
+        }, {
+          "label" : "60%",
+          "value" : 60
+        }, {
+          "label" : "3,593",
+          "value" : 3593
+        }, {
+          "label" : "2012-9-17",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : "2012-09-17"
+        }, {
+          "label" : "2014-10-8",
+          "value" : "2014-10-08"
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : null
+        }, {
+          "label" : "-",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : null
+        }, {
+          "label" : "Existing Customer - Replacement",
+          "recordId" : "0069000000OZLuPAAX",
+          "value" : "Existing Customer - Replacement"
+        } ]
+      } ]
+    }
+  },
+  "groupingsAcross" : {
+    "groupings" : [ ]
+  },
+  "groupingsDown" : {
+    "groupings" : [ {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "0_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "0",
+      "label" : "University of Arizona",
+      "value" : "00190000015a7I9AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "1_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "1",
+      "label" : "United Oil & Gas Corp.",
+      "value" : "00190000015a7IAAAY"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "2_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "2",
+      "label" : "Pyramid Construction Inc.",
+      "value" : "00190000015a7I5AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "3_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "3",
+      "label" : "Grand Hotels & Resorts Ltd",
+      "value" : "00190000015a7I7AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "4_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "4",
+      "label" : "GenePoint",
+      "value" : "00190000015a7I0AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "5_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "5",
+      "label" : "Express Logistics and Transport",
+      "value" : "00190000015a7I8AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "6_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "6",
+      "label" : "Edge Communications",
+      "value" : "00190000015a7I3AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "7_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "7",
+      "label" : "Dickenson plc",
+      "value" : "00190000015a7I6AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "8_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "8",
+      "label" : "Burlington Textiles Corp of America",
+      "value" : "00190000015a7I4AAI"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "9_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "9",
+      "label" : "测试地址",
+      "value" : "00190000019mlFIAAY"
+    }, {
+      "groupings" : [ {
+        "groupings" : [ ],
+        "key" : "10_0",
+        "label" : "liu jack",
+        "value" : "0059000000390WhAAI"
+      } ],
+      "key" : "10",
+      "label" : "-",
+      "value" : null
+    } ]
+  },
+  "hasDetailRows" : true,
+  "hasExceededTabularRowLimit" : false,
+  "picklistColors" : { },
+  "reportExtendedMetadata" : {
+    "aggregateColumnInfo" : {
+      "s!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "金额 总和"
+      },
+      "a!AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "平均金额"
+      },
+      "RowCount" : {
+        "dataType" : "int",
+        "label" : "记录计数"
+      },
+      "s!EXP_AMOUNT" : {
+        "dataType" : "currency",
+        "label" : "预期收入 总和"
+      }
+    },
+    "availableDashboardSettings" : null,
+    "detailColumnInfo" : {
+      "OPPORTUNITY_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Opportunity.Name",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "Name",
+          "lookupEntityName" : "Opportunity"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Name",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "业务机会名",
+        "uniqueCountable" : true
+      },
+      "AMOUNT" : {
+        "dataType" : "currency",
+        "entityColumnName" : "Opportunity.Amount",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Amount",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "金额",
+        "uniqueCountable" : true
+      },
+      "EXP_AMOUNT" : {
+        "dataType" : "currency",
+        "entityColumnName" : "Opportunity.ExpectedRevenue",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "ExpectedRevenue"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.ExpectedRevenue",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "预期收入",
+        "uniqueCountable" : true
+      },
+      "PROBABILITY" : {
+        "dataType" : "percent",
+        "entityColumnName" : "Opportunity.Probability",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Probability",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "可能性 (%)",
+        "uniqueCountable" : true
+      },
+      "AGE" : {
+        "dataType" : "double",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "帐龄",
+        "uniqueCountable" : true
+      },
+      "CLOSE_DATE" : {
+        "dataType" : "date",
+        "entityColumnName" : "Opportunity.CloseDate",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "CloseDate"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.CloseDate",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "结束日期",
+        "uniqueCountable" : true
+      },
+      "CREATED_DATE" : {
+        "dataType" : "date",
+        "entityColumnName" : "Opportunity.CreatedDate",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.CreatedDate",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "创建日期",
+        "uniqueCountable" : true
+      },
+      "NEXT_STEP" : {
+        "dataType" : "string",
+        "entityColumnName" : "Opportunity.NextStep",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "NextStep"
+        },
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.NextStep",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "下一步",
+        "uniqueCountable" : true
+      },
+      "LEAD_SOURCE" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Opportunity.LeadSource",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "LeadSource"
+        },
+        "filterValues" : [ {
+          "apiName" : "Web",
+          "label" : "Web",
+          "name" : "Web"
+        }, {
+          "apiName" : "Phone Inquiry",
+          "label" : "Phone Inquiry",
+          "name" : "Phone Inquiry"
+        }, {
+          "apiName" : "Partner Referral",
+          "label" : "Partner Referral",
+          "name" : "Partner Referral"
+        }, {
+          "apiName" : "Purchased List",
+          "label" : "Purchased List",
+          "name" : "Purchased List"
+        }, {
+          "apiName" : "Other",
+          "label" : "Other",
+          "name" : "Other"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.LeadSource",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "潜在客户来源",
+        "uniqueCountable" : true
+      },
+      "TYPE" : {
+        "dataType" : "picklist",
+        "entityColumnName" : "Opportunity.Type",
+        "fieldInfo" : {
+          "entityName" : "Opportunity",
+          "fieldName" : "Type"
+        },
+        "filterValues" : [ {
+          "apiName" : "Existing Customer - Upgrade",
+          "label" : "Existing Customer - Upgrade",
+          "name" : "Existing Customer - Upgrade"
+        }, {
+          "apiName" : "Existing Customer - Replacement",
+          "label" : "Existing Customer - Replacement",
+          "name" : "Existing Customer - Replacement"
+        }, {
+          "apiName" : "Existing Customer - Downgrade",
+          "label" : "Existing Customer - Downgrade",
+          "name" : "Existing Customer - Downgrade"
+        }, {
+          "apiName" : "New Customer",
+          "label" : "New Customer",
+          "name" : "New Customer"
+        } ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Type",
+        "inactiveFilterValues" : [ ],
+        "isLookup" : false,
+        "label" : "类型",
+        "uniqueCountable" : true
+      }
+    },
+    "groupingColumnInfo" : {
+      "ACCOUNT_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "Account.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Account.Name",
+        "groupingLevel" : 0,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "客户名",
+        "uniqueCountable" : true
+      },
+      "FULL_NAME" : {
+        "dataType" : "string",
+        "entityColumnName" : "User.Name",
+        "filterValues" : [ ],
+        "filterable" : true,
+        "fullyQualifiedName" : "Opportunity.Owner.Name",
+        "groupingLevel" : 1,
+        "inactiveFilterValues" : [ ],
+        "isLookup" : true,
+        "label" : "业务机会所有人",
+        "uniqueCountable" : true
+      }
+    }
+  },
+  "reportMetadata" : {
+    "aggregates" : [ "s!AMOUNT", "a!AMOUNT", "s!EXP_AMOUNT", "RowCount" ],
+    "chart" : {
+      "chartType" : "Scatter Grouped",
+      "groupingColorPalette" : "DEFAULT",
+      "groupings" : [ "ACCOUNT_NAME", "FULL_NAME" ],
+      "hasLegend" : true,
+      "legendPosition" : "Right",
+      "referenceLineColors" : [ null, null ],
+      "referenceLineValues" : [ null, null ],
+      "showChartPercentages" : false,
+      "showChartTotal" : false,
+      "showChartValues" : false,
+      "summaries" : [ "RowCount", "RowCount" ],
+      "summaryAxisLocations" : [ "X", "Y" ],
+      "summaryColors" : [ null, null ],
+      "summaryVisualizationTypes" : [ "Column", "Column" ],
+      "title" : "业务机会所有人"
+    },
+    "crossFilters" : [ ],
+    "currency" : null,
+    "dashboardSetting" : null,
+    "description" : null,
+    "detailColumns" : [ "OPPORTUNITY_NAME", "AMOUNT", "EXP_AMOUNT", "PROBABILITY", "AGE", "CLOSE_DATE", "CREATED_DATE", "NEXT_STEP", "LEAD_SOURCE", "TYPE" ],
+    "developerName" : "new_report_Ajn",
+    "division" : null,
+    "folderId" : "0059000000390WhAAI",
+    "groupingsAcross" : [ ],
+    "groupingsDown" : [ {
+      "dateGranularity" : "None",
+      "name" : "ACCOUNT_NAME",
+      "sortAggregate" : null,
+      "sortOrder" : "Desc"
+    }, {
+      "dateGranularity" : "None",
+      "name" : "FULL_NAME",
+      "sortAggregate" : null,
+      "sortOrder" : "Asc"
+    } ],
+    "hasDetailRows" : true,
+    "hasRecordCount" : true,
+    "historicalSnapshotDates" : [ ],
+    "id" : "00OGB00000DyicF2AR",
+    "name" : "业务机会组行两级",
+    "presentationOptions" : {
+      "hasStackedSummaries" : true
+    },
+    "reportBooleanFilter" : null,
+    "reportFilters" : [ ],
+    "reportFormat" : "SUMMARY",
+    "reportType" : {
+      "label" : "业务机会",
+      "type" : "Opportunity"
+    },
+    "saveRoleHierarchy" : true,
+    "scope" : "organization",
+    "showGrandTotal" : true,
+    "showSubtotals" : true,
+    "sortBy" : [ {
+      "sortColumn" : "OPPORTUNITY_NAME",
+      "sortOrder" : "Desc"
+    } ],
+    "standardDateFilter" : {
+      "column" : "CLOSE_DATE",
+      "durationValue" : "CUSTOM",
+      "endDate" : null,
+      "startDate" : null
+    },
+    "standardFilters" : [ {
+      "name" : "terr",
+      "value" : "all"
+    }, {
+      "name" : "open",
+      "value" : "all"
+    }, {
+      "name" : "probability",
+      "value" : ">0"
+    } ],
+    "supportsRoleHierarchy" : true,
+    "userOrHierarchyFilterId" : null
+  }
+},"error":[],"storable":true}],"context":{"mode":"PROD","app":"one:one","pathPrefix":"","fwuid":"eGx3MHlRT1lEMUpQaWVxbGRUM1h0Z2hZX25NdHFVdGpDN3BnWlROY1ZGT3cyNTAuOC4zLTYuNC41","mlr":1,"uad":1,"coos":1,"descriptorUids":{},"loaded":{"APPLICATION@markup://one:one":"_fRMkF9Ajl5QX7799WhIUA"},"globalValueProviders":[{"type":"$Global","values":{"eswConfigDeveloperName":{"writable":true,"defaultValue":""},"isVoiceOver":{"writable":true,"defaultValue":false},"setupAppContextId":{"writable":true,"defaultValue":""},"density":{"writable":true,"value":"VIEW_TWO"},"srcdoc":{"writable":false,"defaultValue":false},"appContextId":{"writable":true,"value":"06m90000000yYkGAAU"},"dynamicTypeSize":{"writable":true,"defaultValue":""},"appContextDeveloperName":{"writable":true,"value":"LightningSales"}}}],"enableAccessChecks":true,"dns":"c","ls":1,"lairn":[],"laerc":[],"lav":"61","csp":1,"lgef":["com.salesforce.locker.temporaryGate"],"cpr":"https://static.lightning.force.com/ap45","mna":{"lightning":"interop"},"arse":1,"acaf":1,"services":["markup://force:initServiceSfdc","markup://lightning:configProvider","markup://force:salesforceScopedModuleResolver","markup://force:ldsEngineCreator","markup://instrumentation:locatorService","markup://force:lwcReportingService"]},"perfSummary":{"version":"core","request":90,"actions":{"569;a":{"total":81,"db":17}},"actionsTotal":81,"overhead":0}}
