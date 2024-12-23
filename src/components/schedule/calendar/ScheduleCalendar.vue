@@ -9,15 +9,15 @@
             <a-button class="ml10" @click="openImport">导入日历</a-button> -->
         <!-- </div>
     </div> -->
-    <div class="calendarWrap">
+    <div class="calendarWrap" ref="calendarWrap">
         <div class="leftBox" v-if="!isCollapsed">
             
-            <div class="calendarListGroup myCalendars">
+            <div class="calendarListGroup myCalendars" ref="calendarList1">
                 <div class="calendarPanelHeader">
                     <h2>我的日历</h2>
                     <div class="calendarSettingsMenu">
                         <div class="svgiconbtn">
-                            <a-dropdown :placement="placement">
+                            <!-- <a-dropdown :placement="placement">
                                 <div class="groupBtn">
                                     <Icon name="Settings" width="15" hight="15" fill="#747474" />
                                 </div>
@@ -26,17 +26,17 @@
                                         <a-menu-item @click="CreateCalendar(0,'8')">新建日历</a-menu-item>
                                     </a-menu>
                                 </template>
-                            </a-dropdown>
+                            </a-dropdown> -->
                         </div>
                     </div>
                 </div>
-                <ol class="calendarList">
+                <ol class="calendarList calendarList1">
                     <template v-for="(item,index) in CalendarsData" :key="index">
-                        <li class="calendarListItem" v-if="item.calendar.CalendarListPanelSection=='MY_CALENDARS'||item.calendar.CalendarTypeCode=='8'">
+                        <li class="calendarListItem" v-if="item.calendar.Id==data.CurrentUserId">
                             <div class="calendarLabel">
                                 <!-- <input checked="checked" type="checkbox" class="uiInput--checkbox"> -->
                                 <label class="calendarItemLabel">
-                                    <div :style="{'background-color':(item.calendar.Color&&item.calendar.checked?item.calendar.Color:'#fff'),'border':'1px solid '+(item.calendar.Color&&item.calendar.checked?item.calendar.Color:'#bbb')}" @click="changeShow(item)" title="点击显示/隐藏日历" class="visibilityToggle"></div>
+                                    <div :style="{'background-color':(item.calendar.Color&&item.calendar.IsDisplayed?item.calendar.Color:'#fff'),'border':'1px solid '+(item.calendar.Color&&item.calendar.IsDisplayed?item.calendar.Color:'#bbb')}" @click="changeShow(item)" title="点击显示/隐藏日历" class="visibilityToggle"></div>
                                     <span :title="item.calendar.Name||''">{{item.calendar.Name||''}}</span>
                                 </label>
                             </div>
@@ -48,39 +48,39 @@
                                         </div>
                                         <template #overlay>
                                             <a-menu>
-                                                <a-menu-item @click="onlyShow(item.calendar.id)" v-if="item.calendar.CalendarActionsConfig.canShowOnlyCalendar">仅显示此日历</a-menu-item>
-                                                <a-menu-item @click="openShare(item.calendar.id)" v-if="item.calendar.CalendarActionsConfig.isCalendarShareable">共享日历</a-menu-item>
+                                                <a-menu-item @click="onlyShow(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.canShowOnlyCalendar">仅显示此日历</a-menu-item>
+                                                <a-menu-item @click="openShare(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.isCalendarShareable">共享日历</a-menu-item>
                                                 <a-menu-item @click="handleAddSchedule(item.calendar)" v-if="item.calendar.CalendarActionsConfig.canAddEvent">添加事件</a-menu-item>
-                                                <a-menu-item @click="CreateCalendar(item.calendar.id,'8')" v-if="item.calendar.CalendarActionsConfig.isCalendarEditable">编辑日历</a-menu-item>
-                                                <a-menu-item @click="handleDeleteCalendar(item.calendar.id)" v-if="item.calendar.CalendarActionsConfig.isCalendarDeletable">移除日历</a-menu-item>
+                                                <a-menu-item @click="CreateCalendar(item.calendar.Id,'8')" v-if="item.calendar.CalendarActionsConfig.isCalendarEditable">编辑日历</a-menu-item>
+                                                <a-menu-item @click="handleDeleteCalendar(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.isCalendarDeletable">移除日历</a-menu-item>
                                                 <a-menu-divider />
                                                 <a-menu-item v-if="item.calendar.CalendarActionsConfig.canModifyColor">
                                                     <ul class="scrollable">
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#e1b4e8')"><span class="colorItem" style="background-color: #e1b4e8;"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#c2c9e7')"><span class="colorItem" style="background-color: #c2c9e7;"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#a6d5f8')"><span class="colorItem" style="background-color: #a6d5f8"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#96dfd3')"><span class="colorItem" style="background-color: #96dfd3"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#96e9b9')"><span class="colorItem" style="background-color: #96e9b9"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f9ea93')"><span class="colorItem" style="background-color: #f9ea93"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f9ce94')"><span class="colorItem" style="background-color: #f9ce94"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#bc35bc')"><span class="colorItem" style="background-color: #bc35bc"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#5679c1')"><span class="colorItem" style="background-color: #5679c1"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#3e8ede')"><span class="colorItem" style="background-color: #3e8ede"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#00aea9')"><span class="colorItem" style="background-color: #00aea9"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#3eba4d')"><span class="colorItem" style="background-color: #3eba4d"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f6bc26')"><span class="colorItem" style="background-color: #f6bc26"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f7931e')"><span class="colorItem" style="background-color: #f7931e"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#570d8c')"><span class="colorItem" style="background-color: #570d8c"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#001970')"><span class="colorItem" style="background-color: #001970"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#0b2399')"><span class="colorItem" style="background-color: #0b2399"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#0a7476')"><span class="colorItem" style="background-color: #0a7476"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#0a6b51')"><span class="colorItem" style="background-color: #0a6b51"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#b67d11')"><span class="colorItem" style="background-color: #b67d11"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#b75d0d')"><span class="colorItem" style="background-color: #b75d0d"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#e1b4e8')"><span class="colorItem" style="background-color: #e1b4e8;"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#c2c9e7')"><span class="colorItem" style="background-color: #c2c9e7;"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#a6d5f8')"><span class="colorItem" style="background-color: #a6d5f8"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#96dfd3')"><span class="colorItem" style="background-color: #96dfd3"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#96e9b9')"><span class="colorItem" style="background-color: #96e9b9"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#f9ea93')"><span class="colorItem" style="background-color: #f9ea93"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#f9ce94')"><span class="colorItem" style="background-color: #f9ce94"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#bc35bc')"><span class="colorItem" style="background-color: #bc35bc"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#5679c1')"><span class="colorItem" style="background-color: #5679c1"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#3e8ede')"><span class="colorItem" style="background-color: #3e8ede"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#00aea9')"><span class="colorItem" style="background-color: #00aea9"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#3eba4d')"><span class="colorItem" style="background-color: #3eba4d"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#f6bc26')"><span class="colorItem" style="background-color: #f6bc26"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#f7931e')"><span class="colorItem" style="background-color: #f7931e"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#570d8c')"><span class="colorItem" style="background-color: #570d8c"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#001970')"><span class="colorItem" style="background-color: #001970"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#0b2399')"><span class="colorItem" style="background-color: #0b2399"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#0a7476')"><span class="colorItem" style="background-color: #0a7476"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#0a6b51')"><span class="colorItem" style="background-color: #0a6b51"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#b67d11')"><span class="colorItem" style="background-color: #b67d11"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#b75d0d')"><span class="colorItem" style="background-color: #b75d0d"></span></li>
                                                     </ul>
                                                 </a-menu-item>
                                                 <a-menu-item class="selcustom" @click="$('.ant-dropdown').show()" v-if="item.calendar.CalendarActionsConfig.canModifyColor">选择自定义颜色
-                                                    <el-color-picker :teleported="false" v-model="item.calendar.Color" @change="function(val){setColor(item.calendar.id,val)}" show-alpha></el-color-picker>
+                                                    <el-color-picker :teleported="false" v-model="item.calendar.Color" @change="function(val){setColor(item.calendar.Id,val)}" show-alpha></el-color-picker>
                                                 </a-menu-item>
                                             </a-menu>
                                         </template>
@@ -92,7 +92,7 @@
                 </ol>
             </div>
 
-            <div class="calendarListGroup myCalendars">
+            <div class="calendarListGroup myCalendars" ref="calendarList2">
                 <div class="calendarPanelHeader">
                     <h2>其他日历</h2>
                     <div class="calendarSettingsMenu">
@@ -103,20 +103,20 @@
                                 </div>
                                 <template #overlay>
                                     <a-menu>
-                                        <a-menu-item @click="CreateCalendar2(0,'4003')">添加日历</a-menu-item>
+                                        <a-menu-item @click="CreateCalendar2(0,'20006')">添加日历</a-menu-item>
                                     </a-menu>
                                 </template>
                             </a-dropdown>
                         </div>
                     </div>
                 </div>
-                <ol class="calendarList">
-                    <template v-for="(item,index) in CalendarsData" :key="index">
+                <ol class="calendarList calendarList2" :style="{height:height2+'px'}">
+                    <template v-for="(item,index) in OtherCalendarList" :key="index">
                         <li class="calendarListItem" v-if="item.calendar.CalendarListPanelSection!='MY_CALENDARS'||item.calendar.CalendarTypeCode=='4003'">
                             <div class="calendarLabel">
                                 <!-- <input checked="checked" type="checkbox" class="uiInput--checkbox"> -->
                                 <label class="calendarItemLabel">
-                                    <div :style="{'background-color':(item.calendar.Color&&item.calendar.checked?item.calendar.Color:'#fff'),'border':'1px solid '+(item.calendar.Color&&item.calendar.checked?item.calendar.Color:'#bbb')}" @click="changeShow(item)" title="点击显示/隐藏日历" class="visibilityToggle"></div>
+                                    <div :style="{'background-color':(item.calendar.Color&&item.calendar.IsDisplayed?item.calendar.Color:'#fff'),'border':'1px solid '+(item.calendar.Color&&item.calendar.IsDisplayed?item.calendar.Color:'#bbb')}" @click="changeShow(item)" title="点击显示/隐藏日历" class="visibilityToggle"></div>
                                     <span :title="item.calendar.Name||''">{{item.calendar.Name||''}}</span>
                                 </label>
                             </div>
@@ -128,39 +128,39 @@
                                         </div>
                                         <template #overlay>
                                             <a-menu>
-                                                <a-menu-item @click="onlyShow(item.calendar.id)" v-if="item.calendar.CalendarActionsConfig.canShowOnlyCalendar">仅显示此日历</a-menu-item>
-                                                <a-menu-item @click="openShare(item.calendar.id)" v-if="item.calendar.CalendarActionsConfig.isCalendarShareable">共享日历</a-menu-item>
+                                                <a-menu-item @click="onlyShow(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.canShowOnlyCalendar">仅显示此日历</a-menu-item>
+                                                <a-menu-item @click="openShare(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.isCalendarShareable">共享日历</a-menu-item>
                                                 <a-menu-item @click="handleAddSchedule(item.calendar)" v-if="item.calendar.CalendarActionsConfig.canAddEvent">添加事件</a-menu-item>
-                                                <a-menu-item @click="CreateCalendar(item.calendar.id,'4003')" v-if="item.calendar.CalendarActionsConfig.isCalendarEditable">编辑日历</a-menu-item>
-                                                <a-menu-item @click="handleDeleteCalendar(item.calendar.id)" v-if="item.calendar.CalendarActionsConfig.isCalendarDeletable">移除日历</a-menu-item>
+                                                <a-menu-item @click="CreateCalendar((item.calendar.ValueId||item.calendar.Id),'20006')" v-if="item.calendar.CalendarActionsConfig.isCalendarEditable">编辑日历</a-menu-item>
+                                                <a-menu-item @click="handleDeleteCalendar(item.calendar.ValueId||item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.isCalendarDeletable">移除日历</a-menu-item>
                                                 <a-menu-divider />
                                                 <a-menu-item v-if="item.calendar.CalendarActionsConfig.canModifyColor">
                                                     <ul class="scrollable">
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#e1b4e8')"><span class="colorItem" style="background-color: #e1b4e8;"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#c2c9e7')"><span class="colorItem" style="background-color: #c2c9e7;"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#a6d5f8')"><span class="colorItem" style="background-color: #a6d5f8"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#96dfd3')"><span class="colorItem" style="background-color: #96dfd3"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#96e9b9')"><span class="colorItem" style="background-color: #96e9b9"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f9ea93')"><span class="colorItem" style="background-color: #f9ea93"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f9ce94')"><span class="colorItem" style="background-color: #f9ce94"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#bc35bc')"><span class="colorItem" style="background-color: #bc35bc"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#5679c1')"><span class="colorItem" style="background-color: #5679c1"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#3e8ede')"><span class="colorItem" style="background-color: #3e8ede"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#00aea9')"><span class="colorItem" style="background-color: #00aea9"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#3eba4d')"><span class="colorItem" style="background-color: #3eba4d"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f6bc26')"><span class="colorItem" style="background-color: #f6bc26"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f7931e')"><span class="colorItem" style="background-color: #f7931e"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#570d8c')"><span class="colorItem" style="background-color: #570d8c"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#001970')"><span class="colorItem" style="background-color: #001970"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#0b2399')"><span class="colorItem" style="background-color: #0b2399"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#0a7476')"><span class="colorItem" style="background-color: #0a7476"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#0a6b51')"><span class="colorItem" style="background-color: #0a6b51"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#b67d11')"><span class="colorItem" style="background-color: #b67d11"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#b75d0d')"><span class="colorItem" style="background-color: #b75d0d"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#e1b4e8')"><span class="colorItem" style="background-color: #e1b4e8;"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#c2c9e7')"><span class="colorItem" style="background-color: #c2c9e7;"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#a6d5f8')"><span class="colorItem" style="background-color: #a6d5f8"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#96dfd3')"><span class="colorItem" style="background-color: #96dfd3"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#96e9b9')"><span class="colorItem" style="background-color: #96e9b9"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#f9ea93')"><span class="colorItem" style="background-color: #f9ea93"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#f9ce94')"><span class="colorItem" style="background-color: #f9ce94"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#bc35bc')"><span class="colorItem" style="background-color: #bc35bc"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#5679c1')"><span class="colorItem" style="background-color: #5679c1"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#3e8ede')"><span class="colorItem" style="background-color: #3e8ede"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#00aea9')"><span class="colorItem" style="background-color: #00aea9"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#3eba4d')"><span class="colorItem" style="background-color: #3eba4d"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#f6bc26')"><span class="colorItem" style="background-color: #f6bc26"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#f7931e')"><span class="colorItem" style="background-color: #f7931e"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#570d8c')"><span class="colorItem" style="background-color: #570d8c"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#001970')"><span class="colorItem" style="background-color: #001970"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#0b2399')"><span class="colorItem" style="background-color: #0b2399"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#0a7476')"><span class="colorItem" style="background-color: #0a7476"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#0a6b51')"><span class="colorItem" style="background-color: #0a6b51"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#b67d11')"><span class="colorItem" style="background-color: #b67d11"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor((item.calendar.ValueId||item.calendar.Id),'#b75d0d')"><span class="colorItem" style="background-color: #b75d0d"></span></li>
                                                     </ul>
                                                 </a-menu-item>
                                                 <a-menu-item class="selcustom" @click="$('.ant-dropdown').show()" v-if="item.calendar.CalendarActionsConfig.canModifyColor">选择自定义颜色
-                                                    <el-color-picker :teleported="false" v-model="item.calendar.Color" @change="function(val){setColor(item.calendar.id,val)}" show-alpha></el-color-picker>
+                                                    <el-color-picker :teleported="false" v-model="item.calendar.Color" @change="function(val){setColor((item.calendar.ValueId||item.calendar.Id),val)}" show-alpha></el-color-picker>
                                                 </a-menu-item>
                                             </a-menu>
                                         </template>
@@ -174,7 +174,7 @@
                         <li class="calendarListItem">
                             <div class="calendarLabel">
                                 <label class="calendarItemLabel">
-                                    <div :style="{'background-color':(item.calendar.Color&&item.calendar.checked?item.calendar.Color:'#fff'),'border':'1px solid '+(item.calendar.Color&&item.calendar.checked?item.calendar.Color:'#bbb')}" @click="changeShow(item)" title="点击显示/隐藏日历" class="visibilityToggle"></div>
+                                    <div :style="{'background-color':(item.calendar.Color&&item.calendar.IsDisplayed?item.calendar.Color:'#fff'),'border':'1px solid '+(item.calendar.Color&&item.calendar.IsDisplayed?item.calendar.Color:'#bbb')}" @click="changeShow(item)" title="点击显示/隐藏日历" class="visibilityToggle"></div>
                                     <span :title="item.calendar.Name||''">{{item.calendar.Name||''}}</span>
                                 </label>
                             </div>
@@ -186,39 +186,39 @@
                                         </div>
                                         <template #overlay>
                                             <a-menu>
-                                                <a-menu-item @click="onlyShow(item.calendar.id)" v-if="item.calendar.CalendarActionsConfig.canShowOnlyCalendar">仅显示此日历</a-menu-item>
-                                                <a-menu-item @click="openShare(item.calendar.id)" v-if="item.calendar.CalendarActionsConfig.isCalendarShareable">共享日历</a-menu-item>
+                                                <a-menu-item @click="onlyShow(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.canShowOnlyCalendar">仅显示此日历</a-menu-item>
+                                                <a-menu-item @click="openShare(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.isCalendarShareable">共享日历</a-menu-item>
                                                 <a-menu-item @click="handleAddSchedule(item.calendar)" v-if="item.calendar.CalendarActionsConfig.canAddEvent">添加事件</a-menu-item>
-                                                <a-menu-item @click="CreateCalendar(item.calendar.id,'4003')" v-if="item.calendar.CalendarActionsConfig.isCalendarEditable">编辑日历</a-menu-item>
-                                                <a-menu-item @click="handleDeleteCalendar(item.calendar.id)" v-if="item.calendar.CalendarActionsConfig.isCalendarDeletable">移除日历</a-menu-item>
+                                                <a-menu-item @click="CreateCalendar(item.calendar.Id,'20006')" v-if="item.calendar.CalendarActionsConfig.isCalendarEditable">编辑日历</a-menu-item>
+                                                <a-menu-item @click="handleDeleteCalendar(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.isCalendarDeletable">移除日历</a-menu-item>
                                                 <a-menu-divider />
                                                 <a-menu-item v-if="item.calendar.CalendarActionsConfig.canModifyColor">
                                                     <ul class="scrollable">
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#e1b4e8')"><span class="colorItem" style="background-color: #e1b4e8;"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#c2c9e7')"><span class="colorItem" style="background-color: #c2c9e7;"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#a6d5f8')"><span class="colorItem" style="background-color: #a6d5f8"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#96dfd3')"><span class="colorItem" style="background-color: #96dfd3"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#96e9b9')"><span class="colorItem" style="background-color: #96e9b9"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f9ea93')"><span class="colorItem" style="background-color: #f9ea93"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f9ce94')"><span class="colorItem" style="background-color: #f9ce94"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#bc35bc')"><span class="colorItem" style="background-color: #bc35bc"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#5679c1')"><span class="colorItem" style="background-color: #5679c1"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#3e8ede')"><span class="colorItem" style="background-color: #3e8ede"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#00aea9')"><span class="colorItem" style="background-color: #00aea9"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#3eba4d')"><span class="colorItem" style="background-color: #3eba4d"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f6bc26')"><span class="colorItem" style="background-color: #f6bc26"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#f7931e')"><span class="colorItem" style="background-color: #f7931e"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#570d8c')"><span class="colorItem" style="background-color: #570d8c"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#001970')"><span class="colorItem" style="background-color: #001970"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#0b2399')"><span class="colorItem" style="background-color: #0b2399"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#0a7476')"><span class="colorItem" style="background-color: #0a7476"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#0a6b51')"><span class="colorItem" style="background-color: #0a6b51"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#b67d11')"><span class="colorItem" style="background-color: #b67d11"></span></li>
-                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.id,'#b75d0d')"><span class="colorItem" style="background-color: #b75d0d"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#e1b4e8')"><span class="colorItem" style="background-color: #e1b4e8;"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#c2c9e7')"><span class="colorItem" style="background-color: #c2c9e7;"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#a6d5f8')"><span class="colorItem" style="background-color: #a6d5f8"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#96dfd3')"><span class="colorItem" style="background-color: #96dfd3"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#96e9b9')"><span class="colorItem" style="background-color: #96e9b9"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#f9ea93')"><span class="colorItem" style="background-color: #f9ea93"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#f9ce94')"><span class="colorItem" style="background-color: #f9ce94"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#bc35bc')"><span class="colorItem" style="background-color: #bc35bc"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#5679c1')"><span class="colorItem" style="background-color: #5679c1"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#3e8ede')"><span class="colorItem" style="background-color: #3e8ede"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#00aea9')"><span class="colorItem" style="background-color: #00aea9"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#3eba4d')"><span class="colorItem" style="background-color: #3eba4d"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#f6bc26')"><span class="colorItem" style="background-color: #f6bc26"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#f7931e')"><span class="colorItem" style="background-color: #f7931e"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#570d8c')"><span class="colorItem" style="background-color: #570d8c"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#001970')"><span class="colorItem" style="background-color: #001970"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#0b2399')"><span class="colorItem" style="background-color: #0b2399"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#0a7476')"><span class="colorItem" style="background-color: #0a7476"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#0a6b51')"><span class="colorItem" style="background-color: #0a6b51"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#b67d11')"><span class="colorItem" style="background-color: #b67d11"></span></li>
+                                                        <li class="calendarCalendarColorMenuItem" @click="setColor(item.calendar.Id,'#b75d0d')"><span class="colorItem" style="background-color: #b75d0d"></span></li>
                                                     </ul>
                                                 </a-menu-item>
                                                 <a-menu-item class="selcustom" @click="$('.ant-dropdown').show()" v-if="item.calendar.CalendarActionsConfig.canModifyColor">选择自定义颜色
-                                                    <el-color-picker :teleported="false" v-model="item.calendar.Color" @change="function(val){setColor(item.calendar.id,val)}" show-alpha></el-color-picker>
+                                                    <el-color-picker :teleported="false" v-model="item.calendar.Color" @change="function(val){setColor(item.calendar.Id,val)}" show-alpha></el-color-picker>
                                                 </a-menu-item>
                                             </a-menu>
                                         </template>
@@ -285,14 +285,14 @@
             </div>
         </div>
         <NewCalendar :isShow="isNewCalendar" v-if="isNewCalendar" @cancel="isNewCalendar=false;" :id="CalendarId" :CalendarTypeCode="CalendarTypeCode" @selectVal="refreshScheduleVal" />
-        <AddCalendar :isShow="isAddCalendar" v-if="isAddCalendar" @cancel="isAddCalendar=false;" />
+        <AddCalendar :isShow="isAddCalendar" v-if="isAddCalendar" @cancel="isAddCalendar=false;" @selectVal="getOtherCalendarList" />
         <NewSchedule :isShow="isSchedule" v-if="isSchedule" @cancel="cancelNewSchedule" />
         <AddSchedule :isShow="isAddSchedule" :id="id" v-if="isAddSchedule" :paramsTime="paramsTime" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" @selectVal="handleNewScheduleVal" :calendarType="formState.type" :RegardingObjectTypeCode="RegardingObjectTypeCode" :RegardingObjectId=RegardingObjectId :RegardingObjectIdName="RegardingObjectIdName" :BgColor="BgColor" />
         <ImportSchedule :isShow="isImport" v-if="isImport"  @cancel="cancelImport" />
         <ShareCalendar :isShow="isShare" v-if="isShare"  @cancel="cancelShare" :id="CalendarId" />
         <ScheduleDetailModal ref="ScheduleDetailModal1" :isShow="isScheduleDetail" v-if="isScheduleDetail" :id="id" @cancel="isScheduleDetail=false" @selectVal="handleNewScheduleVal" @handleDelete="handleDelete" @edit="handleOpenEdit" />
         <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshScheduleVal" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
-        <DeleteCalendar :isShow="isDeleteCalendar" :desc="deleteDesc" @cancel="cancelDeleteCalendar" @ok="refreshScheduleVal" :sObjectName="sObjectName2" :recordId="id" :objTypeCode="objectTypeCode2" :external="external" />
+        <DeleteCalendar :isShow="isDeleteCalendar" :desc="deleteDesc" @cancel="cancelDeleteCalendar" @ok="refreshCalendarList" :sObjectName="sObjectName2" :recordId="id" :objTypeCode="objectTypeCode2" :external="external" />
     </div>
 </template>
 <script setup>
@@ -350,14 +350,10 @@
     const DayCalendarWrap=ref(null);
     const WeekVueWrap=ref(null);
     const ScheduleDetailModal1=ref(null);
-    onMounted(()=>{
-        nextTick(()=>{
-            calendarTypeChange(data.calendarType);
-        })
-    })
     const { proxy } = getCurrentInstance();
     const formRef = ref();
     const monthFormat = 'YYYY/MM';
+    const emit = defineEmits(['getCalendarActionsConfig']);
     const data = reactive({
         activeKey: "1",
         statusList: [
@@ -435,19 +431,35 @@
         CurrentUserId:'',
         CurrentUserName:'',
         isDeleteCalendar:false,
-        objectTypeCode2:'4003',
-        sObjectName2:'Calendar',
+        objectTypeCode2:'20006',
+        sObjectName2:'CalendarFollow',
         RegardingObjectTypeCode:'',
         RegardingObjectId:'',
         RegardingObjectIdName:'',
         BgColor:'',
-        CalendarsData:[]
+        CalendarsData:[],
+        OtherCalendarList:[],
+        height2:0,
+        CalendarActionsConfig:{
+            canAddEvent: false,
+            canDragAndDropItems: false,
+            canModifyColor: false,
+            canShowOnlyCalendar: false,
+            isCalendarDeletable: false,
+            isCalendarEditable: false,
+            isCalendarShareable: false,
+            isCalendarToggleable: false,
+            isCalendarUnsubscribable: false,
+        }
     });
-    const { activeKey,MyCalendarList, PublicCalendarList,myCalendarCurrent, statusList, statusCurrent, searchVal, userListTree, userListTreeAll,meetingList,
+    const { CalendarActionsConfig,height2,OtherCalendarList,activeKey,MyCalendarList, PublicCalendarList,myCalendarCurrent, statusList, statusCurrent, searchVal, userListTree, userListTreeAll,meetingList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isAddSchedule,treeId,isAddCalendar,isNewCalendar,CalendarId,CalendarTypeCode,RegardingObjectTypeCode,RegardingObjectId,RegardingObjectIdName,BgColor,placement,CalendarsData,
          isShare, isImport, fileParams, paramsTime, isCollapsed,isScheduleDetail,id,startTime,endTime,objectTypeCode,sObjectName,isDelete,objectTypeCode2,sObjectName2,isDeleteCalendar,deleteDesc,external,calendarView,CurrentUserId,CurrentUserName} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"];
     const FullCalendarWrap=ref(null);
+    const calendarWrap=ref(null);
+    const calendarList1=ref(null);
+    const calendarList2=ref(null);
     const calendarTypeChange=(e)=>{
         data.calendarType=e;
         if(e==2){
@@ -615,39 +627,59 @@
     //getPeople();
     const getCalendarList= (CalendarsData) => {
         data.CalendarsData=CalendarsData;
-        //getMyCalendarList(list);
-        //getPublicCalendarList();
+        if(data.CalendarsData&&data.CalendarsData.length){
+            data.CalendarActionsConfig=data.CalendarsData[0].calendar.CalendarActionsConfig;
+        }
+        emit("getCalendarActionsConfig", data.CalendarActionsConfig);
     }
-    const getMyCalendarList= (list) => {
-        let filterQuery='\nPrimaryUserId\teq\t'+data.CurrentUserId;
-        proxy.$post(Interface.list2, {
-            filterId:'',
-            objectTypeCode:'4003',
-            entityName:'Calendar',
-            filterQuery:filterQuery,
-            search:'',
-            page: 1,
-            rows: 100,
-            sort:'CreatedOn',
-            order:'asc',
-            displayColumns:'CalendarId,Name,Color,CalendarTypeCode,PrimaryUserId,IsPublic'
-        }).then(res => {
-            if(res&&res.nodes){}else{return}
-            for (var i = 0; i < res.nodes.length; i++) {
-                var item = res.nodes[i];
-                for(var cell in item){
-                    if(cell!='id'&&cell!='nameField'&&cell!='CalendarTypeCode'){
-                        item[cell]=girdFormatterValue(cell,item);
-                    }
-                    if(cell=='CalendarTypeCode'){
-                        item[cell]=item[cell]?item[cell].value:'';
-                    }
-                    if(!item.id){
-                        item.id=item.CalendarId;
-                    }
-                    item.checked=true;
-                }
-                data.MyCalendarList.push(item)
+    const getMyCalendarList= () => {
+        // let filterQuery='\nPrimaryUserId\teq\t'+data.CurrentUserId;
+        // proxy.$post(Interface.list2, {
+        //     filterId:'',
+        //     objectTypeCode:'4003',
+        //     entityName:'Calendar',
+        //     filterQuery:filterQuery,
+        //     search:'',
+        //     page: 1,
+        //     rows: 100,
+        //     sort:'CreatedOn',
+        //     order:'asc',
+        //     displayColumns:'CalendarId,Name,Color,CalendarTypeCode,PrimaryUserId,IsPublic'
+        // }).then(res => {
+        //     if(res&&res.nodes){}else{return}
+        //     for (var i = 0; i < res.nodes.length; i++) {
+        //         var item = res.nodes[i];
+        //         for(var cell in item){
+        //             if(cell!='id'&&cell!='nameField'&&cell!='CalendarTypeCode'){
+        //                 item[cell]=girdFormatterValue(cell,item);
+        //             }
+        //             if(cell=='CalendarTypeCode'){
+        //                 item[cell]=item[cell]?item[cell].value:'';
+        //             }
+        //             if(!item.id){
+        //                 item.id=item.CalendarId;
+        //             }
+        //             item.checked=true;
+        //         }
+        //         data.MyCalendarList.push(item)
+        //     }
+        // })
+    }
+    const getOtherCalendarList= () => {
+        data.OtherCalendarList=[];
+        proxy.$post(Interface.schedule.getOtherCalendar,{}).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
+                let peopleList=[];
+                peopleList=res.actions[0].returnValue;
+                peopleList.forEach((item,index)=>{
+                    // if(item.calendar.OwnerId&&item.calendar.OwnerId!=data.CurrentUserId){
+                    //     item.calendar.CalendarListPanelSection='Other_CALENDARS';
+                    //     data.OtherCalendarList.push(item);
+                    // }
+                    item.calendar.CalendarListPanelSection='Other_CALENDARS';
+                    //item.calendar.IsDisplayed=true;
+                    data.OtherCalendarList.push(item);
+                })
             }
         })
     }
@@ -685,16 +717,6 @@
             }
         })
     }
-
-    let userInfo=window.localStorage.getItem('userInfo');
-    if(userInfo){
-        userInfo=JSON.parse(userInfo);
-        let userId=userInfo.userId;
-        data.CurrentUserId=userId;
-        data.CurrentUserName=userInfo.userName;
-        //getCalendarList()
-    }
-    
 
     const currentDate = ref(dayjs());
     const getListData = value => {
@@ -736,7 +758,7 @@
         // data.isSchedule =  true;
         data.id='';
         data.RegardingObjectTypeCode='4003';
-        data.RegardingObjectId=item.id;
+        data.RegardingObjectId=item.Id;
         data.RegardingObjectIdName=item.Name;
         data.BgColor=item.Color;
         data.isAddSchedule = true;
@@ -767,11 +789,12 @@
         data.isShare = e;
     }
     const changeShow=(item)=>{
-        data.CalendarsData.forEach(ite=>{
-            if(ite.calendar.id==item.calendar.id){
-                ite.calendar.checked=!ite.calendar.checked;
-            }
-        })
+        item.calendar.IsDisplayed=!item.calendar.IsDisplayed
+        // data.CalendarsData.forEach(ite=>{
+        //     if(ite.calendar.Id==item.calendar.Id){
+        //         ite.calendar.IsDisplayed=!ite.calendar.IsDisplayed;
+        //     }
+        // })
         nextTick(()=>{
             FullCalendarWrap.value.refreshShow(data.CalendarsData);
         })
@@ -779,9 +802,9 @@
     //仅显示此日历
     const onlyShow=(id)=>{
         data.CalendarsData.forEach(item=>{
-            item.calendar.checked=false;
-            if(item.calendar.id==id){
-                item.calendar.checked=true;
+            item.calendar.IsDisplayed=false;
+            if(item.calendar.Id==id){
+                item.calendar.IsDisplayed=true;
             }
         })
         nextTick(()=>{
@@ -867,10 +890,11 @@
                         recordId: id,
                         recordInput:{
                             allowSaveOnDuplicate: false,
-                            apiName: 'Calendar',
-                            objTypeCode: '4003',
+                            apiName: 'CalendarFollow',
+                            objTypeCode: '20006',
                             fields: {
                                 Color:color,
+                                CreatedBy:data.CurrentUserId
                             }
                         }
                     }
@@ -882,7 +906,12 @@
             proxy.$post(url, obj).then((res) => {
                 message.success("设置成功！");
                 data.CalendarsData.forEach(item=>{
-                    if(item.calendar.id==id){
+                    if(item.calendar.Id==id){
+                        item.calendar.Color=color;
+                    }
+                })
+                data.OtherCalendarList.forEach(item=>{
+                    if(item.calendar.Id==id){
                         item.calendar.Color=color;
                     }
                 })
@@ -898,6 +927,36 @@
             });
         }
     }
+    const refreshCalendarList=()=>{
+        getOtherCalendarList();
+    }
+    onMounted(()=>{
+        if(calendarWrap&&calendarWrap.value){
+            let h = calendarWrap.value.clientHeight-105;
+            let h1 = calendarList1.value.clientHeight;
+            let h2=h-h1;
+            data.height2=h2;
+        }
+        window.addEventListener("resize", (e) => {
+            if(calendarWrap&&calendarWrap.value){
+                let h = calendarWrap.value.clientHeight-105;
+                let h1 = calendarList1.value.clientHeight;
+                let h2=h-h1;
+                data.height2=h2+45;
+            }
+        });
+        let userInfo=window.localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo=JSON.parse(userInfo);
+            let userId=userInfo.userId;
+            data.CurrentUserId=userId;
+            data.CurrentUserName=userInfo.userName;
+        }
+        nextTick(()=>{
+            calendarTypeChange(data.calendarType);
+            getOtherCalendarList();
+        })
+    })
 </script>
 <style lang="less" scoped>
     .headerCalendar{
@@ -1258,6 +1317,17 @@
         }
         .el-color-picker__trigger{
             width: 100%;
+        }
+    }
+    .calendarWrap{
+        .calendarList1{
+            display: block;
+            overflow-y: auto;
+            max-height: 300px !important;
+        }
+        .calendarList2{
+            display: block;
+            overflow-y: auto;
         }
     }
 </style>

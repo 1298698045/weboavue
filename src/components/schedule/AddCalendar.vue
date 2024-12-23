@@ -21,18 +21,18 @@
                                                     <a-menu @click="handleMenu">
                                                         <a-menu-item v-for="(item,index) in menus" :key="item.key" :num="index">
                                                             <!-- <UserOutlined v-if="item.name=='人员'" /> -->
-                                                             <div class="sectionItemImg" v-if="item.name=='人员'"><img src="data:image/png;base64,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" alt="" data-v-bf3d5b96=""></div>
+                                                             <div class="sectionItemImg" :class="{'sectionItemImg2':currentMenu!='人员'}" v-if="item.name=='人员'"><img src="data:image/png;base64,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" alt="" data-v-bf3d5b96=""></div>
                                                             <!-- <CalendarOutlined v-if="item.name=='公共日历和资源'" /> -->
-                                                             <div class="sectionItemImg sectionItemImg2" v-if="item.name=='公共日历和资源'"><svg fill="#fff" focusable="false" aria-hidden="true" viewBox="0 0 100 100" part="icon" lwc-5eng04crq1j="" data-key="event" class="slds-icon"><g lwc-5eng04crq1j=""><path d="M76 42H24a2 2 0 00-2 2v30a6 6 0 006 6h44a6 6 0 006-6V44a2 2 0 00-2-2zM40 70a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm14 14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm14 14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm4-30h-5v-2c0-2.2-1.8-4-4-4s-4 1.8-4 4v2H41v-2c0-2.2-1.8-4-4-4s-4 1.8-4 4v2h-5a6 6 0 00-6 6v2c0 1.1.9 2 2 2h52a2 2 0 002-2v-2a6 6 0 00-6-6z" lwc-5eng04crq1j=""></path></g></svg></div>
+                                                             <div class="sectionItemImg" :class="{'sectionItemImg2':currentMenu!='公共日历和资源'}" v-if="item.name=='公共日历和资源'"><svg fill="#fff" focusable="false" aria-hidden="true" viewBox="0 0 100 100" part="icon" lwc-5eng04crq1j="" data-key="event" class="slds-icon"><g lwc-5eng04crq1j=""><path d="M76 42H24a2 2 0 00-2 2v30a6 6 0 006 6h44a6 6 0 006-6V44a2 2 0 00-2-2zM40 70a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm14 14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm14 14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm4-30h-5v-2c0-2.2-1.8-4-4-4s-4 1.8-4 4v2H41v-2c0-2.2-1.8-4-4-4s-4 1.8-4 4v2h-5a6 6 0 00-6 6v2c0 1.1.9 2 2 2h52a2 2 0 002-2v-2a6 6 0 00-6-6z" lwc-5eng04crq1j=""></path></g></svg></div>
                                                             {{item.name}}
                                                         </a-menu-item>
                                                     </a-menu>
                                                 </template>
                                                 <a-button>
                                                     <!-- <UserOutlined v-if="currentMenu=='人员'" />-->
-                                                    <div class="sectionItemImg" v-if="currentMenu=='人员'"><img src="data:image/png;base64,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" alt="" data-v-bf3d5b96=""></div>
+                                                    <div class="sectionItemImg" :class="{'sectionItemImg2':currentMenu!='人员'}" v-if="currentMenu=='人员'"><img src="data:image/png;base64,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" alt="" data-v-bf3d5b96=""></div>
                                                     <!-- <CalendarOutlined v-if="currentMenu=='公共日历和资源'" /> -->
-                                                     <div class="sectionItemImg sectionItemImg2" v-if="currentMenu=='公共日历和资源'"><svg fill="#fff" focusable="false" aria-hidden="true" viewBox="0 0 100 100" part="icon" lwc-5eng04crq1j="" data-key="event" class="slds-icon"><g lwc-5eng04crq1j=""><path d="M76 42H24a2 2 0 00-2 2v30a6 6 0 006 6h44a6 6 0 006-6V44a2 2 0 00-2-2zM40 70a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm14 14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm14 14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm4-30h-5v-2c0-2.2-1.8-4-4-4s-4 1.8-4 4v2H41v-2c0-2.2-1.8-4-4-4s-4 1.8-4 4v2h-5a6 6 0 00-6 6v2c0 1.1.9 2 2 2h52a2 2 0 002-2v-2a6 6 0 00-6-6z" lwc-5eng04crq1j=""></path></g></svg></div>
+                                                     <div class="sectionItemImg" :class="{'sectionItemImg2':currentMenu!='公共日历和资源'}" v-if="currentMenu=='公共日历和资源'"><svg fill="#fff" focusable="false" aria-hidden="true" viewBox="0 0 100 100" part="icon" lwc-5eng04crq1j="" data-key="event" class="slds-icon"><g lwc-5eng04crq1j=""><path d="M76 42H24a2 2 0 00-2 2v30a6 6 0 006 6h44a6 6 0 006-6V44a2 2 0 00-2-2zM40 70a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm14 14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm14 14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm4-30h-5v-2c0-2.2-1.8-4-4-4s-4 1.8-4 4v2H41v-2c0-2.2-1.8-4-4-4s-4 1.8-4 4v2h-5a6 6 0 00-6 6v2c0 1.1.9 2 2 2h52a2 2 0 002-2v-2a6 6 0 00-6-6z" lwc-5eng04crq1j=""></path></g></svg></div>
                                                     <!-- <DownOutlined />-->
                                                     <div class="IconWrapContent" hight="15" data-v-69a58868="" data-v-8def4144=""><span class="svgicon" data-v-69a58868=""><svg width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></span></div>
                                                 </a-button>
@@ -41,12 +41,13 @@
                                                 mode="multiple" :placeholder="'搜索 '+currentMenu"
                                                 :default-active-first-option="false" :filter-option="false"
                                                 :not-found-content="null" @search="handleSearch" @change="handleChange"
-                                                @dropdownVisibleChange="getPeople">
+                                                @dropdownVisibleChange="(e)=>{getOptions('')}">
                                                 <template #suffixIcon>
                                                     <SearchOutlined class="ant-select-suffix" />
                                                 </template>
-                                                <a-select-option :value="item.ID" v-for="(item,index) in peoples" :key="index">
-                                                    <div class="sectionItemImg sectionItemImgSmall"><img src="data:image/png;base64,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" alt="" data-v-bf3d5b96=""></div>
+                                                <a-select-option :value="item.ID" v-for="(item,index) in options" :key="index">
+                                                    <div class="sectionItemImg sectionItemImgSmall" v-if="currentMenu=='人员'"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAYAAAA5ZDbSAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAABeBJREFUeJzt3d+LVVUUB/C11tUS0iy10QjBjH5ZhhGp6JCIYpTQU7+kF4X6B3oReugheogekqgXKftBQQXaDxTCsl+mIU1BqVSKzYtK/sjIkjB1fb893Dt0sRzvzJ2z99kz6/MH3LXO+c7Zs8+++5wrEkIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCGE1IKknN3UdK43I3UBUAV4nIvSSXichcM7sWwCQREZJ/Aug3s90kt4nIh2Z2ImvDoTMAbnf3t939DDvk7n+7+5sA5ubuP1wAyWnu/kanoV4gaLj7KySvzH08oQ2Ape5+tJtwzwv6MMne3McVRATAGnc/O1LhtoV8BsAjuY9vTCO5eqSDPS9kRMiZAFjm7ueqDLgV8lkAd+U+3uEq8p6Q5AwAe81saop6AI6p6q1mdjxFvZFkuRsYDgDrU4UrImJmPSRfTFVvTAOwouph+UJKHKqLGqLZXGbsE5E7ctQHsLPRaBR1+1TUEM3mvWmWcEVEzGwxgPm56g9HaQE/Gj0MTTFDNIBLVfWoiEzO3MevZna1qp7L2UenirmCVfVOyRyuiIiZTSM5L3cfnSomYJKLcvfQppiJVkkB35K7hwEk5+TuoVPFBCwi1+VuoE2dehlUSQFPyd1Am2SraN0qKeDLcjfQZmLuBjpVUsB1ui05m7uBTpUU8KncDbSpUy+DKingw7kbaHModwOdKingA7kbaPNz7gY6VUzAqvpt7h4GqGpf7h46VVLAX+buoc2O3A10qqSA+wHszd0HgG/MrE7zgUEVE7CIiKq+VYMe3sndw1AU83WhiAiAHpIHzeySTPX/UtWZZvZbjvrDUdQVbGbHRGRDxhbWlxSuSGFXsIgIgOkkD5hZ6uXCkySvK+0pxKKuYBERMzuqqmtT1yX5eGnhFoukufuWVNtl3f1djrEHx7MjOdndf0gQ7p6BB8dDYgCucff9FYb7I8kZuY9zTCM5w913VRDu9tZrIEJuJCe4+3PujhEI1kk+QzLLvXYYBIAF7v5FF+FuI5ntyYnQAZIKYBHJ19z9RAehHnf3DQAW5O69CqN66k+yISLzRGQugNnS3DhPETmpqv0isltVd6uq5+wzhBD+X3FDNMmbAKxS1SOq+qqqnq64npFcKSLTVXWLqh6pst6Y1Jo4LXH391q3MQMTpP0A7mFFy4itWflXbfVOu/s6AMU82VBrJBskH3D3votMhj9vvdqh66DZfGFpr7tvHmTmDXd/n2RvVX9coxrJcSRXu/u+i93mnHfi9wF4AsCNQznxrRHiBgBr3X3PEGvuBLCyrkHXqik2/989SPIpM7u+m88CcNDMdpH8XkT6ReSYNDesq6pOJNkjIrNV9TYAC81sZpf1+lT1SVXdqqrs5rNGpdaweLGhuPbc/VMW9IB45QBMdffXcwczkrzpBQCX5z6/WYdoAPeRfMnMenL2URUAB1V1jZl9kquHLFt2SI5393Wq+sFoDVdExMxmkvzY3Z9mc9k0ueRXMMnJADaZ2bLUtXMCsMXMVqlq0icTkwYMYIqqfiQZX2aWE4AdqrrSzP5IVTPZEE1yAsnNMkbDFRExs16Sm0iOT1YzVSEAz5tZnV6FlIWZLQfwbKp6SYZoACtUdWuKWqUgucTMtlddp/KASRqA78wsfrKmDYCvzWxh1atelQ/RJJdGuP9lZvNJVr5NKEXAD1Vdo1Qpzk2KSdaYn1gNYnHVBVIEPCtBjVLNqrpApZOs1vJcnV5gVisAzjUajUrviau+gmv1fXMNVX5+ins+OAxNBDzKVR2wAzhTcY1imVnl3yxVGnBrlSb7u63qKsV7vyofolV1Y9U1SpXi3KRYi74CwE9mNr3qWiUBcMjMbq56A0CKK/h3VV0V/4v/BeC0qj6cYndHklm0mX1mZncD+CVFvToDcEhVl5vZzhT1Um/ZmSQij5G838zmACjmtw+6YWanAOxV1Y2q+nLqfVkhhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYRQsn8A/YlVlZ60LnYAAAAASUVORK5CYII=" alt="" data-v-bf3d5b96=""></div>
+                                                    <div class="sectionItemImg sectionItemImgSmall" v-if="currentMenu=='公共日历和资源'"><svg fill="#fff" focusable="false" aria-hidden="true" viewBox="0 0 100 100" part="icon" lwc-5eng04crq1j="" data-key="event" class="slds-icon"><g lwc-5eng04crq1j=""><path d="M76 42H24a2 2 0 00-2 2v30a6 6 0 006 6h44a6 6 0 006-6V44a2 2 0 00-2-2zM40 70a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm14 14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm14 14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm0-14a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4c0-1.1.9-2 2-2h4a2 2 0 012 2zm4-30h-5v-2c0-2.2-1.8-4-4-4s-4 1.8-4 4v2H41v-2c0-2.2-1.8-4-4-4s-4 1.8-4 4v2h-5a6 6 0 00-6 6v2c0 1.1.9 2 2 2h52a2 2 0 002-2v-2a6 6 0 00-6-6z" lwc-5eng04crq1j=""></path></g></svg></div>
                                                     {{item.Name}}
                                                 </a-select-option>
                                             </a-select>
@@ -107,7 +108,7 @@
         id: String
     });
     const formRef = ref();
-    const emit = defineEmits(["cancel"]);
+    const emit = defineEmits(["cancel","select-val"]);
     const handleCancel = () => {
         emit("cancel", false);
     };
@@ -128,7 +129,7 @@
         listData: [],
         rightCode: '2',
         users: [],
-        peoples: [],
+        options: [],
         userInfoId:'',
         sectionItemBottomShow:false
     });
@@ -140,7 +141,7 @@
         listData,
         rightCode,
         users,
-        peoples,
+        options,
         userInfoId,
         sectionItemBottomShow
     } = toRefs(data);
@@ -162,71 +163,88 @@
                 data.userInfoId='2ec00cf2-a484-4136-8fef-e2a2719c5ed6';
             }
         }
-        getAccess();
+        //getAccess();
     });
     const setTop = computed(() => ({
         top: `calc(50% - ${data.top})`
     }));
-    // 添加权限
+    // 添加日历
     const handleAddPrem = () => {
-        // console.log("data",data.users, data.rightCode);
-        // var objecsts = "";
-        // proxy.$get(Interface.schedule.addAccess,{
-        //     objecsts: data.users.join(","),
-        //     rightCode: data.rightCode
-        // }).then(res=>{
-        //     message.success("添加成功！");
-        //     getAccess();
-        // })
-        return
         let ObjectType='';
         if(data.currentMenu=='人员'){
-            ObjectType='8';
+            ObjectType='User';
         }else if(data.currentMenu=='公共日历和资源'){
-            ObjectType='4003';
+            ObjectType='公共资源';
         }
         if(data.users&&data.users.length){
-            let ObjectName=[];
-            data.peoples.map((item) => {
+            // let url=Interface.schedule.addOtherCalendar;
+            // data.options.map((item) => {
+            //     for(var i=0;i<data.users.length;i++){
+            //         if(data.users[i]&&item.ID&&data.users[i]==item.ID&&item.Name&&item.Name!='undefined'){
+            //             let d = {
+            //                 actions:[{
+            //                     id: "2669;a",
+            //                     descriptor: "",
+            //                     callingDescriptor: "UNKNOWN",
+            //                     params: {
+            //                         publisherId: data.users[i],
+            //                         label: item.Name,
+            //                         type: ObjectType
+            //                     }
+            //                 }]
+            //             };
+            //             let obj = {
+            //                 message: JSON.stringify(d)
+            //             }
+            //             proxy.$post(url, obj).then((res) => {
+            //                 message.success("添加成功！");
+            //             });
+            //         }
+            //     }
+            // });
+            let url = Interface.create;
+            let num=0;
+            data.options.map((item) => {
                 for(var i=0;i<data.users.length;i++){
                     if(data.users[i]&&item.ID&&data.users[i]==item.ID&&item.Name&&item.Name!='undefined'){
-                        ObjectName.push(item.Name)
+                        let d = {
+                            actions:[{
+                                id: "2919;a",
+                                descriptor: "",
+                                callingDescriptor: "UNKNOWN",
+                                params: {
+                                    recordInput:{
+                                        allowSaveOnDuplicate: false,
+                                        apiName: 'CalendarFollow',
+                                        objTypeCode: '20006',
+                                        fields: {
+                                            Name: item.Name,
+                                            Color:'rgb(207, 235, 254)',
+                                            IsDisplay:true,
+                                            CalendarId:item.ID,
+                                            CreatedBy:data.userInfoId
+                                        }
+                                    }
+                                }
+                            }]
+                        };
+                        if(props.id){
+                            url = Interface.edit;
+                            d.actions[0].params.recordId = props.id;
+                        }
+                        let obj = {
+                            message: JSON.stringify(d)
+                        }
+                        proxy.$post(url, obj).then((res) => {
+                            num+=1;
+                            if(num==data.users.length){
+                                message.success("添加成功！");
+                                emit("cancel", '');
+                                emit("select-val", '');
+                            }
+                        });
                     }
                 }
-            });
-            ObjectName=ObjectName.join(",");
-            let url = Interface.create;
-            let d = {
-                actions:[{
-                    id: "2919;a",
-                    descriptor: "",
-                    callingDescriptor: "UNKNOWN",
-                    params: {
-                        // recordId: props.id,
-                        recordInput:{
-                            allowSaveOnDuplicate: false,
-                            apiName: 'CalendarShare',
-                            objTypeCode: '20376',
-                            fields: {
-                                ObjectId: data.users.join(","),
-                                ObjectName: ObjectName,
-                                Name: ObjectName,
-                                SharedRights: data.rightCode,
-                                AccessLevel: data.rightCode,
-                                ObjectTypeName: data.currentMenu,
-                                ObjectType:ObjectType,
-                                CalendarId:(props.id?props.id:(data.userInfoId&&data.userInfoId!='undefined'?data.userInfoId:''))
-                            }
-                        }
-                    }
-                }]
-            };
-            let obj = {
-                message: JSON.stringify(d)
-            }
-            proxy.$post(url, obj).then((res) => {
-                message.success("添加成功！");
-                getAccess();
             });
         }
         else{
@@ -234,6 +252,7 @@
         }
     }
     const handleMenu = (e)=> {
+        data.users=[];
         data.currentMenu = data.menus.find(item=>item.key==e.key).name;
     }
 
@@ -280,17 +299,91 @@
         
     };
     const handleSearch = (val) =>{
-        getPeople(val);
+        getOptions(val);
     }
     const handleChange = (e) => {
 
     }
-    const getPeople = (val="")=>{
-        proxy.$get(Interface.uilook,{
-            Lktp: 30020,
-            lksrch: val
-        }).then(res=>{
-            data.peoples = res.listData;
+    const getOptions = (val)=>{
+        // proxy.$get(Interface.uilook,{
+        //     Lktp: 30020,
+        //     lksrch: val
+        // }).then(res=>{
+        //     data.options = res.listData;
+        // })
+        if(data.currentMenu=='人员'){
+            getUser(val);
+        }else if(data.currentMenu=='公共日历和资源'){
+            getCalendar(val);
+        }
+    }
+    const getUser = (e) => {
+        let filterQuery='';
+        if(e){
+            filterQuery="\nFullName\tcontains\t"+e;
+        }
+        let d = {
+            filterId: "",
+            objectTypeCode:'8',
+            entityName:'SystemUser',
+            filterQuery: filterQuery,
+            page: 1,
+            rows: 20,
+            displayColumns:'FullName,OrganizationId,BusinessUnitId,EmployeeId'
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            var list = [];
+            if(res&&res.nodes){
+                for (var i = 0; i < res.nodes.length; i++) {
+                    var item = res.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'&&cell!='AvatarImg'){
+                            item[cell]=girdFormatterValue(cell,item);
+                        }
+                        if(cell=='AvatarImg'){
+                            item[cell]=girdFormatterValue(cell,item)||'@/assets/img/avatar-r.png';
+                        }
+                    }
+                    if(!item.AvatarImg){
+                        item.AvatarImg='@/assets/img/avatar-r.png';
+                    }
+                    item.Name=item.FullName;
+                    item.ID = item.id;
+                    list.push(item)
+                }
+            }
+            data.options = list;
+        })
+    }
+    const getCalendar=(e)=>{
+        let filterQuery='\nIsPublic\teq\ttrue';
+        if(e){
+            filterQuery="\nName\tcontains\t"+e;
+        }
+        let d = {
+            filterId: "",
+            objectTypeCode:'4003',
+            entityName:'Calendar',
+            filterQuery: filterQuery,
+            page: 1,
+            rows: 20,
+            displayColumns:'Name,CalendarId'
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            var list = [];
+            if(res&&res.nodes){
+                for (var i = 0; i < res.nodes.length; i++) {
+                    var item = res.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'){
+                            item[cell]=girdFormatterValue(cell,item);
+                        }
+                    }
+                    item.ID = item.CalendarId;
+                    list.push(item)
+                }
+            }
+            data.options = list;
         })
     }
     // 删除已添加人
@@ -319,7 +412,7 @@
         proxy.$post(Interface.delete, d).then(res => {
             if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                 message.success("删除成功");
-                getAccess();
+                //getAccess();
             } else {
             if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
                 message.error(res.actions[0].errorMessage);
@@ -356,7 +449,7 @@
             }
             proxy.$post(url, obj).then((res) => {
                 message.success("设置成功！");
-                getAccess();
+                //getAccess();
             });
     }
 </script>
@@ -469,7 +562,7 @@
         .ant-btn:active{
                 z-index: 1 !important;
         }
-        :deep .ant-select-show-search:where(.css-dev-only-do-not-override-kqecok).ant-select:not(.ant-select-customize-input) .ant-select-selector{
+        :deep .ant-select-selector{
             border-radius: 0 4px 4px 0 !important;
             margin-left: -1px !important;
             min-height: 38px;
@@ -507,6 +600,10 @@
     }
     .sectionItemImg2{
         background: #939393;
+    }
+    .IconWrapContent{
+        position: relative;
+        top: 4px;
     }
     .ant-select-selection-item-content .sectionItemImgSmall{
         width: 18px;

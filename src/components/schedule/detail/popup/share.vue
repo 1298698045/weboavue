@@ -8,8 +8,8 @@
       >
       <template #reference>
           <div class="head-operate-item svgiconbtn" style="margin-right:10px">
-            <svgicon width="16px" height="16px" class="icon" name="gongxiang"/>
-            <span class="title">共享</span>
+            <svgicon width="20px" height="25px" class="icon" name="gongxiang"/>
+            <span class="title"></span>
           </div>
       </template>
       <div class="popup">

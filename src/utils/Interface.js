@@ -202,9 +202,11 @@ const Interface = {
     sharedList: "/localData/schedule/calendar.shared.mylist.json",
     updatecontentaccess: "/localData/schedule/calendar.shared.right.json",
     addAccess: "/localData/schedule/calendar.share.json",
+    addOtherCalendar:baseUrl+"/ui.calendar.components/addSharedCalendar",//添加其他日历
+    getOtherCalendar:baseUrl + "/ui.calendar.components/fellow/getFellows",//获取其他日历
   },
   scheduleTable: {
-    list: "/localData/scheduleTable/calendar.all.getlist.json"
+    list: baseUrl + "/ui.calendar.components/fellow/getFellowCalendars",//获取关注人的日程一览表
   },
   leaderSchedule: {
     list:  baseUrl + "/ui.calendar.components/filterCalendars",//领导日程
@@ -365,15 +367,21 @@ const Interface = {
     saveComponent: baseUrl + "/aura/dashboard/saveComponent",
     loadComponents: baseUrl + "/aura/dashboard/loadComponents", // 加载组件数据
   },
+  commonstatus:{
+    query:baseUrl + "/weibo/queryStatus",//拉取会议等对象发布的
+    comment:baseUrl + "/weibo/status/comment/search",//获取状态评论列表
+  },
   status:{
     submit:baseUrl + "/weibo/status/submit",//发布状态
-    query:baseUrl + "/weibo/queryStatus",//拉取个人可以查看的状态、投票、问题
+    query:baseUrl + "/weibo/status/search",//拉取个人可以查看的状态、投票、问题
+    mine:baseUrl+"/weibo/status/mine/query",//拉取我发布的
   },
   question:{
     submit:baseUrl + "/weibo/question/submit",//发布问题
+    query:baseUrl + "/weibo/status/qa/search",//拉取知识问答列表
   },
   poll:{
-    submit:baseUrl + "/weibo/question/submit",//发布问题
+    submit:baseUrl + "/weibo/poll/submit",//发布投票
   },
   uploadAvatar:baseUrl + '/file/avatar/upload',//通用头像上传
   viewAvatar:baseUrl + '/file/avaterPreview',//头像查看

@@ -46,6 +46,15 @@ const staticRoutes = [
           icon: "xiaozu",
         },
       },
+      {
+        path: "/lightning/o/Document/readlog/home",
+        name: "DocumentReadLog1",
+        component: () => import("../views/knowledge/ReadLog/index.vue"),
+        meta: {
+          name: "最近浏览",
+          icon: "xiaozu",
+        },
+      },
     ]
   },
   {
@@ -338,6 +347,15 @@ const staticRoutes = [
     component: () => import("../views/workspace/MyResume.vue"),
     meta: {
       name: "我的简历",
+      icon: "huiyihuodong",
+    },
+  },
+  {
+    path: "/MessageHome",
+    name: "MessageHome",
+    component: () => import("../views/MessageHome/index.vue"),
+    meta: {
+      name: "消息",
       icon: "huiyihuodong",
     },
   },

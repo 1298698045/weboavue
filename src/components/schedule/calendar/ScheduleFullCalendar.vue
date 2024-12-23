@@ -197,6 +197,17 @@
             date: "",
             time: ""
         },
+        CalendarActionsConfig:{
+            canAddEvent: false,
+            canDragAndDropItems: false,
+            canModifyColor: false,
+            canShowOnlyCalendar: false,
+            isCalendarDeletable: false,
+            isCalendarEditable: false,
+            isCalendarShareable: false,
+            isCalendarToggleable: false,
+            isCalendarUnsubscribable: false,
+        },
         calendarOptions:{
             plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin], //需要加载的插件 
             initialView: props.calendarView, //初始视图
@@ -332,7 +343,7 @@
         data.calendarOptions.initialView=newVal;
     },{deep: true, immediate: true})
     const weeks = toRaw(['周日', '周一', '周二', '周三', '周四', '周五', '周六']);
-    const { height, weekList, scheduleList, times, currentDate, paramsTime,calendarOptions } = toRefs(data);
+    const { CalendarActionsConfig,height, weekList, scheduleList, times, currentDate, paramsTime,calendarOptions } = toRefs(data);
     const ScheduleFullCalendarRef = ref(null);
     const fullCalendarRef = ref(null);
     onMounted(() => {
@@ -400,7 +411,8 @@
             if(text=='移动事件或者拓展事件'&&info[0]){
                 let e={
                   paramsTime:obj,
-                  Id:info[0].id
+                  Id:info[0].id,
+                  extendedProps:{CalendarActionsConfig:{isCalendarEditable:data.CalendarActionsConfig.isCalendarEditable}}
                 }
                 if(!info[0].id){
                     //getQuery2(obj2);
@@ -413,7 +425,8 @@
             if((text=='拖动日程触发'||text=='时间调整结束后触发')&&info.event){
                 let e={
                     paramsTime:obj,
-                    Id:info.event.id
+                    Id:info.event.id,
+                    extendedProps:{CalendarActionsConfig:{isCalendarEditable:data.CalendarActionsConfig.isCalendarEditable}}
                 }
                 if(!info.event.id){
                     //getQuery2(obj2);
@@ -442,6 +455,10 @@
         if(!e.Id){
             e.Id=e.id;
         }
+        if(!e.extendedProps.CalendarActionsConfig.isCalendarDeletable){
+            message.info("该日程无删除权限！");
+            return false
+        }
         emit("handleDelete", e);
     }
     //编辑
@@ -449,9 +466,17 @@
         if(!e.Id){
             e.Id=e.id;
         }
+        if(!e.extendedProps.CalendarActionsConfig.isCalendarEditable){
+            message.info("该日程无编辑权限！");
+            return false
+        }
         emit("openEdit", e);
     }
     const openEdit2 = (e) => {
+        if(!e.extendedProps.CalendarActionsConfig.isCalendarEditable){
+            message.info("该日程无编辑权限！");
+            return false
+        }
         let url = Interface.edit;
         let d = {
             actions:[{
@@ -488,6 +513,10 @@
     }
     //新建
     const openNew = (obj) => {
+        if(!data.CalendarActionsConfig.canAddEvent){
+            message.info("当前日历无新建权限！");
+            return false
+        }
         emit("openNew", obj);
     }
     //详情
@@ -615,7 +644,7 @@
                         }
                     }
                     item.calendar.Color='#'+item.calendar.Color;
-                    item.calendar.checked=item.calendar.CalendarItemsAccessible;
+                    //item.calendar.IsDisplayed=true;
                     CalendarsData.push(item)
                 })
                 emit("getCalendarList", CalendarsData);
@@ -678,9 +707,10 @@
     const refreshShow=(CalendarsData)=>{
         if(CalendarsData&&CalendarsData.length){
             //console.log(CalendarsData,111111111111)
+            data.CalendarActionsConfig=CalendarsData[0].calendar.CalendarActionsConfig;
             data.calendarOptions.events=[];
             CalendarsData.forEach((ite,idx)=>{
-                if(ite.calendar.checked){
+                if(ite.calendar.IsDisplayed){
                     let scheduleItems = ite.calendarItems;
                     scheduleItems.forEach((item,index)=>{
                         let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
@@ -701,6 +731,7 @@
                             borderColor: ite.calendar.Color?ite.calendar.Color:colors[0], // 该事件的边框颜色
                             textColor: getComplementaryColor(ite.calendar.Color?ite.calendar.Color:colors[0]), // 该事件的文字颜色
                             editable:ite.calendar.CalendarActionsConfig.canDragAndDropItems,//是否允许拖拽
+                            CalendarActionsConfig:ite.calendar.CalendarActionsConfig//权限
                         }
                         data.calendarOptions.events.push(event);
                     })

@@ -366,7 +366,7 @@
             //filterQuery+='\nCreatedBy\teq\t'+data.OwningUser;
             filterQuery+='\nCreatedBy\teq-userid';
         }
-        let url=Interface.status.query;
+        let url=Interface.question.query;
                 let d = {
                 actions:[{
                     id: "2919;a",

@@ -29,6 +29,9 @@
           </a-col>
         </a-row>
       </div>
+      <ScheduleDetailModal ref="ScheduleDetailModal1" :isShow="isScheduleDetail" v-if="isScheduleDetail" :id="id" @cancel="isScheduleDetail=false" @selectVal="refreshScheduleVal" @handleDelete="handleDelete" @edit="handleOpenEdit" />
+      <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshScheduleVal" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
+      <AddSchedule :isShow="isAddSchedule" :id="id" v-if="isAddSchedule" :paramsTime="paramsTime" @cancel="isAddSchedule=false" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" @selectVal="refreshScheduleVal" :calendarType="''" />
     </div>
   </template>
   <script setup>
@@ -44,7 +47,8 @@
     // import Dtable from "@/components/Dtable.vue";
     import Ntable from "@/components/Ntable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
-  
+    import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal2.vue";
+    import Delete from "@/components/listView/Delete.vue";
     import { useRouter, useRoute } from "vue-router";
     import useWorkAdmin from "@/utils/flow/workAdmin";
     import { formTreeData,girdFormatterValue } from "@/utils/common.js";
@@ -52,7 +56,7 @@
     //console.log("tabList", tabList);
     const route = useRoute();
     const router = useRouter();
-  
+    const ScheduleDetailModal1=ref(null);
     const x = 3;
     const y = 2;
     const z = 1;
@@ -173,17 +177,40 @@
       isModal: false,
       searchVal: "",
       treeId: "",
+      isScheduleDetail: false,
       id: "",
       formSearchFilterquery:"",
       SearchFields:[],
-      isAddSchedule:false
+      isAddSchedule:false,
+      objectTypeCode:'4200',
+      sObjectName:'ActivityPointer',
+      isDelete: false,
+      deleteDesc: '确定要删除吗？',
+      external:false,
+      CalendarActionsConfig:{
+            canAddEvent: false,
+            canDragAndDropItems: false,
+            canModifyColor: false,
+            canShowOnlyCalendar: false,
+            isCalendarDeletable: false,
+            isCalendarEditable: false,
+            isCalendarShareable: false,
+            isCalendarToggleable: false,
+            isCalendarUnsubscribable: false,
+        },
+        paramsTime: {
+            date: "",
+            time: "",
+            end:"",
+            endDate:""
+        },
     });
     const handleCollapsed = () => {
       data.isCollapsed = !data.isCollapsed;
       changeHeight();
     };
   
-    const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, searchVal,
+    const { paramsTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,CalendarActionsConfig,isScheduleDetail,isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, searchVal,
       treeId, id, SearchFields,isAddSchedule } = toRefs(data);
     const tabContent = ref(null);
     const contentRef = ref(null);
@@ -238,6 +265,20 @@
             field: 'ids',
             checkbox: true
           },
+          {
+              field: "Action",
+              title: "操作",
+              formatter: function formatter(value, row, index) {
+                var str = `
+                  <div class="iconBox">
+              <div class="popup">
+              <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}')">查看</div>
+              </div>
+              <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
+          `
+                return str;
+              }
+          },
         ];
     proxy.$get(Interface.listView.getFilterInfo, {
       entityType: data.entityType,
@@ -249,7 +290,19 @@
       let fields = res.actions[0].returnValue.fields;
       fields.forEach(item => {
         if(item.name){
-          columnslist.push({
+          if(item.name=='Subject'){
+            columnslist.push({
+            field: item.name,
+            title: item.label,
+            sortable: true,
+            formatter: function formatter(value, row, index) {
+              let val=girdFormatterValue(item.name,row);
+              return `<a href="javascript:void(0)" onclick="handleDetail('${row.id}')">${val}</a>`;
+            }
+          });
+          }
+          else{
+            columnslist.push({
             field: item.name,
             title: item.label,
             sortable: true,
@@ -257,6 +310,7 @@
               return girdFormatterValue(item.name,row);
             }
           });
+          }
         }
       })
       columns.value=columnslist;
@@ -331,6 +385,40 @@
         getColumns(data.queryParams.filterId);
     }
     
+    //详情
+    const handleDetail = (id) => {
+        data.id=id;
+        nextTick(()=>{
+            data.isScheduleDetail = true;
+        })
+    }
+    window.handleDetail=handleDetail;
+    // 编辑
+    const handleOpenEdit = (e) => {
+        data.paramsTime={
+            date: "",
+            time: ""
+        }
+        if(e.paramsTime){
+            data.paramsTime=e.paramsTime
+        }
+        data.id=e.Id;
+        data.isAddSchedule = true;
+    }
+    //删除
+    const handleDelete = (e) => {
+        data.id=e.Id;
+        data.isDelete = true;
+    }
+    //删除关闭
+    const cancelDelete = (e) => {
+        data.isDelete = false;
+    };
+    const refreshScheduleVal=(e)=>{
+        nextTick(()=>{
+          getTabs();
+        })
+    }
   </script>
   <style lang="less">
     @import "@/style/flow/treeList.less";
@@ -387,4 +475,19 @@
           width: auto !important;
         }
     }
+    :deep .iconBox{
+  text-align: center;
+  .popup{
+    text-align: left;
+    top: 20px;
+  }
+  .moreaction{
+    padding: 0px 1px;
+    width: 18px;
+    border: 1px solid #dedede;
+    border-radius: 4px;
+    position: relative;
+    top: 1px;
+  }
+}
   </style>

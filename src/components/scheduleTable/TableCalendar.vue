@@ -54,10 +54,10 @@
             </div>
         </div>
         <AddSchedule :isShow="isAddSchedule" :id="id" v-if="isAddSchedule" :paramsTime="paramsTime" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" @selectVal="handleNewScheduleVal" :calendarType="formState.type" />
-        <ImportSchedule :isShow="isImport"  @cancel="cancelImport" />
-        <ShareCalendar :isShow="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
+        <ImportSchedule v-if="isImport" :isShow="isImport"  @cancel="cancelImport" />
+        <ShareCalendar v-if="isShare" :isShow="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
         <ScheduleDetailModal :isShow="isScheduleDetail" v-if="isScheduleDetail" :id="id" @cancel="isScheduleDetail=false" @selectVal="handleNewScheduleVal" @handleDelete="handleDelete" @edit="handleOpenEdit" />
-        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
+        <Delete v-if="isDelete" :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
     </div>
 </template>
 <script setup>
@@ -97,7 +97,7 @@
     import ShareCalendar from "@/components/schedule/ShareCalendar.vue";
     import ImportSchedule from "@/components/schedule/ImportSchedule.vue";
     // 详情
-    import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal.vue";
+    import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal2.vue";
     import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
@@ -112,8 +112,8 @@
         userListTree: [],
         meetingList: {},
         monthValue: dayjs(new Date()),
-        calendarType: 2,
-        calendarView:'resourceTimelineMonth',
+        calendarType: 1,
+        calendarView:'resourceTimelineWeek',
         currentTime: dayjs(),
         startWeekTime: "",
         endWeekTime: "",

@@ -177,7 +177,7 @@
         data.listData = [];
         data.total = 0;
         let filterQuery='\nRegardingObjectId\teq\t'+props.id;
-        let url=Interface.status.query;
+        let url=Interface.commonstatus.query;
                 let d = {
                 actions:[{
                     id: "2919;a",

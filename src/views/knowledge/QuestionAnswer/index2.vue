@@ -395,11 +395,13 @@
         //     }
         // })
         filterQuery='\nChatterTypeCode\teq\t'+data.activeKey;
+        let url=Interface.status.query;
         if(data.selectmenu==2){
             //filterQuery+='\nCreatedBy\teq\t'+data.OwningUser;
-            filterQuery+='\nCreatedBy\teq-userid';
+            //filterQuery+='\nCreatedBy\teq-userid';
+            url=Interface.status.mine;
+            filterQuery='';
         }
-        let url=Interface.status.query;
                 let d = {
                 actions:[{
                     id: "2919;a",
@@ -534,6 +536,9 @@
                     }
                 }]
             };
+            if(data.activeKey=='1'){
+                url=Interface.question.submit;
+            }
             if(data.activeKey=='30400'){
                 url=Interface.poll.submit;
                 d.actions[0].options=data.VoteOptions;

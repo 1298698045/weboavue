@@ -381,6 +381,9 @@ const sendContent= () => {
                     }
                 }]
             };
+            if(data.activeKey=='1'){
+                url=Interface.question.submit;
+            }
             if(data.activeKey=='30400'){
                 url=Interface.poll.submit;
                 d.actions[0].options=data.VoteOptions;

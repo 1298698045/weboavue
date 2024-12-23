@@ -16,9 +16,9 @@
                         <i class="iconfont icon-rilishitu"></i>
                     </a-radio-button>
                 </dRadioGroup>
-                <a-button type="primary" class="ml10" @click="handleAddSchedule">新建日程</a-button>
-                <a-button class="ml10" @click="openShare">共享日历</a-button>
-                <a-button class="ml10" @click="openImport">导入日程</a-button>
+                <a-button type="primary" class="ml10" @click="handleAddSchedule" v-if="CalendarActionsConfig.canAddEvent">新建日程</a-button>
+                <a-button class="ml10" @click="openShare" v-if="CalendarActionsConfig.isCalendarShareable">共享日历</a-button>
+                <a-button class="ml10" @click="openImport" v-if="CalendarActionsConfig.canAddEvent">导入日程</a-button>
             </div>
         </div>
         <div class="calendarBody">
@@ -42,7 +42,7 @@
             </div> -->
             <div class="calendarRight">
                 <ListView v-if="current==0" :layoutName="layoutName" />
-                <CalendarVue v-if="current==1" />
+                <CalendarVue v-if="current==1" @getCalendarActionsConfig="getCalendarActionsConfig" />
             </div>
         </div>
         <NewSchedule :isShow="isSchedule" v-if="isSchedule" @cancel="cancelNewSchedule" />
@@ -95,9 +95,20 @@
         },
         objectTypeCode:'4200',
         sObjectName:'ActivityPointer',
-        layoutName:'MyActivityPointer'
+        layoutName:'MyActivityPointer',
+        CalendarActionsConfig:{
+            canAddEvent: false,
+            canDragAndDropItems: false,
+            canModifyColor: false,
+            canShowOnlyCalendar: false,
+            isCalendarDeletable: false,
+            isCalendarEditable: false,
+            isCalendarShareable: false,
+            isCalendarToggleable: false,
+            isCalendarUnsubscribable: false,
+        }
     });
-    const { current, isSchedule, isAddSchedule, isShare, isImport, fileParams, size,id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
+    const { CalendarActionsConfig,current, isSchedule, isAddSchedule, isShare, isImport, fileParams, size,id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
     const changeRadioGroup = (e) => {
         data.current = e;
     }
@@ -129,6 +140,11 @@
     const handleNewScheduleVal = (e) => {
         data.isAddSchedule = false;
         //onSearch();
+    }
+    const getCalendarActionsConfig=(e)=>{
+        if(e){
+            data.CalendarActionsConfig=e;
+        }
     }
 </script>
 <style lang="less" scoped>

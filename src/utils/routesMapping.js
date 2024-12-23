@@ -51,11 +51,18 @@ export const routesMapping = {
         BusinessUnitAddresslist: () => import("../views/oa/deptAddressBook/index.vue"),
         PersonalContact: () => import("../views/oa/myAddressBook/index.vue"),
         CollaborationGroup:  () => import("../views/oa/group/index.vue"),
+        CampaignSms: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
+        },
         OASuggestion: {
             component: () => import("../views/listView/index.vue"),
             isCommon: true
+        },
+        SmsMessageLog: {
+            component: () => import("../views/listView/index.vue"),
+            isCommon: true
         }
-        
     },
     // 知识管理
     content: {

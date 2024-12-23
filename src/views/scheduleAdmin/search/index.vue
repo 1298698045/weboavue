@@ -78,7 +78,9 @@
       <ReleaseFlow v-if="isRelease" :isShow="isRelease" :id="ProcessInstanceId" @cancel="cancelRelase"></ReleaseFlow>
       <NewCategory v-if="isCategory" @cancel="cancelCategory" :isShow="isCategory" :id="treeId" ObjectTypeCode="流程" />
       <EditFlowDefine v-if="isEditFlow" :isShow="isEditFlow" :id="id" @cancel="cancelEditFlowDefine" />
-      <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" />
+      <AddSchedule :isShow="isAddSchedule" :id="id" v-if="isAddSchedule" :paramsTime="paramsTime" @cancel="isAddSchedule=false" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" @selectVal="refreshScheduleVal" :calendarType="''"  />
+      <ScheduleDetailModal ref="ScheduleDetailModal1" :isShow="isScheduleDetail" v-if="isScheduleDetail" :id="id" @cancel="isScheduleDetail=false" @selectVal="refreshScheduleVal" @handleDelete="handleDelete" @edit="handleOpenEdit" />
+      <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshScheduleVal" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
     </div>
   </template>
   <script setup>
@@ -94,7 +96,8 @@
     // import Dtable from "@/components/Dtable.vue";
     import Ntable from "@/components/Ntable.vue";
     import ListFormSearch from "@/components/ListFormSearch.vue";
-  
+    import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal2.vue";
+    import Delete from "@/components/listView/Delete.vue";
     import NewCategory from "@/components/workflow/NewCategory.vue";
     import EditFlowDefine from "@/components/workflow/EditFlowDefine.vue";
     import Delegate from "@/components/workflow/Delegate.vue";
@@ -109,7 +112,7 @@
     console.log("tabList", tabList);
     const route = useRoute();
     const router = useRouter();
-  
+    const ScheduleDetailModal1=ref(null);
     const x = 3;
     const y = 2;
     const z = 1;
@@ -315,6 +318,7 @@
       isCategory: false,
       treeId: "",
       isEditFlow: false,
+      isScheduleDetail: false,
       id: "",
       isJump: false,
       isCountersign: false,
@@ -322,14 +326,36 @@
       ProcessInstanceId: "",
       formSearchFilterquery:"",
       SearchFields:[],
-      isAddSchedule:false
+      isAddSchedule:false,
+      objectTypeCode:'4200',
+      sObjectName:'ActivityPointer',
+      isDelete: false,
+      deleteDesc: '确定要删除吗？',
+      external:false,
+      CalendarActionsConfig:{
+            canAddEvent: false,
+            canDragAndDropItems: false,
+            canModifyColor: false,
+            canShowOnlyCalendar: false,
+            isCalendarDeletable: false,
+            isCalendarEditable: false,
+            isCalendarShareable: false,
+            isCalendarToggleable: false,
+            isCalendarUnsubscribable: false,
+        },
+        paramsTime: {
+            date: "",
+            time: "",
+            end:"",
+            endDate:""
+        },
     });
     const handleCollapsed = () => {
       data.isCollapsed = !data.isCollapsed;
       changeHeight();
     };
   
-    const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
+    const { paramsTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,CalendarActionsConfig,isScheduleDetail,isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
       isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId,SearchFields,isAddSchedule } = toRefs(data);
     //   console.log("tabs", data.tabs);
     const tabContent = ref(null);
@@ -395,29 +421,10 @@
               field: "Action",
               title: "操作",
               formatter: function formatter(value, row, index) {
-                var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.textValue:'';
-                var ProcessIdName=row.ProcessId?row.ProcessId.lookupValue.displayName:'';
-                var ProcessId=row.ProcessId?row.ProcessId.lookupValue.value:'';
-                var WFRuleLogId=row.WFRuleLogId?row.WFRuleLogId.textValue:'';
-                var ExecutorIdentityName=row.ExecutorIdentityName?row.ExecutorIdentityName.textValue:'';
                 var str = `
                   <div class="iconBox">
               <div class="popup">
-              <div class="option-item" id=${ProcessInstanceId} onclick="handleTo('${ProcessInstanceId}')">查看</div>
-              <div class="option-item" onclick="EditFlow('${row.id}')">打印</div>  
-              <div class="option-item" onclick="handleJump('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">跳转</div>
-              <div class="option-item" id=${WFRuleLogId} onclick="handleCountersign('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">加签</div>
-              <div class="option-item" onclick="DelegateFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">委派</div>  
-              <div class="option-item" id=${WFRuleLogId} onclick="handleTo('${WFRuleLogId}')">撤销</div>
-              <div class="option-item" id=${WFRuleLogId} onclick="handleTo('${WFRuleLogId}')">结束</div>
-              <div class="option-item" id=${WFRuleLogId} onclick="handleRelase('${ProcessInstanceId}')">发布</div>
-              </div>
-              <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
-          `
-          str = `
-                  <div class="iconBox">
-              <div class="popup">
-              <div class="option-item" id=${ProcessInstanceId} onclick="handleTo('${ProcessInstanceId}')">查看</div>
+              <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}')">查看</div>
               </div>
               <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
           `
@@ -433,8 +440,20 @@
       if(res&&res.actions&&res.actions[0]){}else{return}
       let fields = res.actions[0].returnValue.fields;
       fields.forEach(item => {
-        if(item.name!='ProcessInstanceId'&&item.name!='WFRuleLogId'&&item.name!='ExecutorIdentityName'){
-          columnslist.push({
+        if(item.name){
+          if(item.name=='Subject'){
+            columnslist.push({
+            field: item.name,
+            title: item.label,
+            sortable: true,
+            formatter: function formatter(value, row, index) {
+              let val=girdFormatterValue(item.name,row);
+              return `<a href="javascript:void(0)" onclick="handleDetail('${row.id}')">${val}</a>`;
+            }
+          });
+          }
+          else{
+            columnslist.push({
             field: item.name,
             title: item.label,
             sortable: true,
@@ -442,6 +461,8 @@
               return girdFormatterValue(item.name,row);
             }
           });
+          }
+          
         }
       })
       columns.value=columnslist;
@@ -486,14 +507,8 @@
     }
     const DelegateRef = ref();
   
-    function handleTo(WFRuleLogId) {
-      console.log("WFRuleLogId", WFRuleLogId);
-      router.push({
-        path: "/detail",
-        query: {
-          id: WFRuleLogId
-        }
-      });
+    function handleTo(id) {
+      handleDetail(id)
     }
     const EditFlow = (id) => {
       console.log("id", id);
@@ -729,6 +744,40 @@
     }
     const cancelAddSchedule = (e) => {
         data.isAddSchedule = e;
+    }
+    //详情
+    const handleDetail = (id) => {
+        data.id=id;
+        nextTick(()=>{
+            data.isScheduleDetail = true;
+        })
+    }
+    window.handleDetail=handleDetail;
+// 编辑
+const handleOpenEdit = (e) => {
+        data.paramsTime={
+            date: "",
+            time: ""
+        }
+        if(e.paramsTime){
+            data.paramsTime=e.paramsTime
+        }
+        data.id=e.Id;
+        data.isAddSchedule = true;
+    }
+    //删除
+    const handleDelete = (e) => {
+        data.id=e.Id;
+        data.isDelete = true;
+    }
+    //删除关闭
+    const cancelDelete = (e) => {
+        data.isDelete = false;
+    };
+    const refreshScheduleVal=(e)=>{
+        nextTick(()=>{
+          getTabs();
+        })
     }
   </script>
   <style lang="less">

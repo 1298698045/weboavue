@@ -43,8 +43,8 @@
                 <CalendarVue v-if="current==1" @openDateNew="handleOpenDateNew" />
             </div>
         </div>
-        <NewSchedule :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal" :paramsTime="paramsTime" />
+        <NewSchedule v-if="isSchedule" :isShow="isSchedule" @cancel="cancelNewSchedule" />
+        <AddSchedule v-if="isAddSchedule" :isShow="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal" :paramsTime="paramsTime" />
     </div>
 </template>
 <script setup>
