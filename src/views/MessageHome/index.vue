@@ -7,7 +7,7 @@
                         <div class=""><span
                                 class="ud__avatar ud__avatar-filled ud__avatar-circle ud__avatar-image larkc-avatar larkw-avatar navHeader_avatar"
                                 style="width: 32px; height: 32px;"><img class="ud__avatar__image"
-                                    src="https://internal-api-lark-file.feishu.cn/api/avatar/v1/v3_00hq_fc6123dd-0b2d-421b-8e8f-60267cb317ag/96x96_q70.webp"
+                                    src="https://s1-imfile.feishucdn.com/static-resource/v1/v3_00hq_fc6123dd-0b2d-421b-8e8f-60267cb317ag~?image_size=96x96&cut_type=&quality=_q70&format=webp&sticker_format=.webp"
                                     alt=""></span></div>
                     </div>
                     <div class="quick-jump-enter">
@@ -56,7 +56,7 @@
                                 class="ud__badge__badge ud__badge-has-no-child utgm304 u1ewtqcl u1lmfglv uibjyge u1abmfm4 u9yszdx u1nbblvp uifp7yv u1ov4xf1 u1asdtw4 u1hd9hm2 u10pi13n u1wirg6b uqzzkal unmn6fi u1xvp9sr ud__badge-topRight ud__badge-red-filled">
                                 <div class="ud__badge__badge__content">2</div>
                             </sup></span></div>
-                    <div class="navbarMenu" data-tip="tip-videoconference" @click="handleTo('/MeetingManage/Meeting')"><span
+                    <div class="navbarMenu" data-tip="tip-videoconference" @click="handleTo('/lightning/o/Meeting/home')"><span
                             class="universe-icon navbarMenu-icon navbarMenu-icon-active"><svg width="1em" height="1em"
                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -73,7 +73,7 @@
                                     d="M2 3C.895 3 0 4.007 0 5.25v13.5C0 19.992.895 21 2 21h14c1.105 0 2-1.008 2-2.25v-2.847l3.02 2.42c1.333.75 2.98-.213 2.98-1.743V7.42c0-1.53-1.647-2.493-2.98-1.743L18 8.097V5.25C18 4.007 17.105 3 16 3H2Zm2 6a2 2 0 1 1 4 0 2 2 0 0 1-4 0Z"
                                     fill="currentColor"></path>
                             </svg></span><span class="navbarMenu-content">会议</span></div>
-                    <div class="navbarMenu" data-tip="tip-calendar" @click="handleTo('/Workplan/eventhome')"><span
+                    <div class="navbarMenu" data-tip="tip-calendar" @click="handleTo('/lightning/o/Event/home')"><span
                             class="universe-icon navbarMenu-icon navbarMenu-icon-active"><svg width="1em" height="1em"
                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M2 6h20v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6Z" fill="#336DF4"></path>
@@ -111,7 +111,7 @@
                             </svg></span>
                             <span class="navbarMenu-content">云文档</span>
                         </div> -->
-                    <div class="navbarMenu" data-tip="tip-contacts" @click="handleTo('/addresslist/OrganizationAddresslist')"><span
+                    <div class="navbarMenu" data-tip="tip-contacts" @click="handleTo('/lightning/Addresslist/Org/home')"><span
                             class="universe-icon navbarMenu-icon navbarMenu-icon-active"><svg width="1em" height="1em"
                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -1047,7 +1047,7 @@
                                                                                                                                                 </div>
                                                                                                                                                 <div
                                                                                                                                                     class="list_items">
-                                                                                                                                                    <div class="messageList-row-wrapper"
+                                                                                                                                                    <!-- <div class="messageList-row-wrapper"
                                                                                                                                                         style="width: 100%; top: 0px; left: 0px; position: absolute; transform: translate(0px, 0px);">
                                                                                                                                                         <div class="messageItem-wrapper message-last"
                                                                                                                                                             data-id="7451094630579388419">
@@ -1070,8 +1070,8 @@
                                                                                                                                                                 </div>
                                                                                                                                                             </div>
                                                                                                                                                         </div>
-                                                                                                                                                    </div>
-                                                                                                                                                    <div class="messageList-row-wrapper" v-for="(item,index) in messageList" :key="index" style="width: 100%; top: 0px; left: 0px; position: absolute; transform: translate(0px, 44px);" >
+                                                                                                                                                    </div> -->
+                                                                                                                                                    <div class="messageList-row-wrapper" v-for="(item,index) in messageList" :key="index">
                                                                                                                                                         <div class="messageItem-wrapper message-last"
                                                                                                                                                             data-id="7451094876155838468">
                                                                                                                                                             <div
@@ -1669,6 +1669,9 @@
     const getData = () => {
       
     }
+    const appendText=(e)=>{
+        console.log(e)
+    }
     const sendMessage=()=>{
         if(data.messagetext){
             data.messageList.push({
@@ -1676,6 +1679,7 @@
                 text:data.messagetext
             })
             message.success("发送成功！");
+            data.messagetext='';
         }
         else{
             message.error("消息内容不能为空！");
@@ -1760,10 +1764,12 @@
     .messageList-row-wrapper{
         position: relative !important;
     }
-    .scroller_content{
+    .messageList .scroller_content{
         height: 100%;
+        overflow:visible;
     }
     .list_items{
+        padding-top: 10px;
         height: calc(~'100% - 10px');
     }
     // ._2b17aec6,.dc56891e{

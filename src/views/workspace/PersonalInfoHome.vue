@@ -1,7 +1,7 @@
 <template>
     <div class="PersonalInfoWrap">
       <div class="preview-header">
-        <div class="icon-circle-base">
+        <div class="icon-circle-base" @click="handleChangeAvatar" title="点击设置个人头像">
           <img class="img" :src="data.avatarUrl" :on-error="defaultImg" alt="" />
         </div>
         <div class="leftBox">
@@ -327,6 +327,7 @@ getDetail();
             justify-content: center;
             position: relative;
             top: 0px;
+            cursor: pointer;
             img {
                 width: 20px;
                 height: 20px;

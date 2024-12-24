@@ -78,9 +78,10 @@
                     </div>
                     <div class="rBtns">
                         <a-button class="ml10" type="primary" @click="isChangeName=true" v-if="!isChangeName&&leftName!='回收站'&&data.BreadCrumbList.length&&Privileges.canAdd">重命名</a-button>
-                        <a-button class="ml10" @click="isChangeName=false" v-if="isChangeName&&leftName!='回收站'&&data.BreadCrumbList.length&&Privileges.canAdd">取消重命名</a-button>
-                        <a-button class="ml10" type="primary" @click="onSearch">查询</a-button>
-                        <a-button class="ml10" @click="onClear">重置</a-button>
+                        <a-button class="ml10" type="primary" @click="changeNameSave" v-if="isChangeName&&leftName!='回收站'&&data.BreadCrumbList.length&&Privileges.canAdd">保存</a-button>
+                        <a-button class="ml10" @click="getQuery" v-if="isChangeName&&leftName!='回收站'&&data.BreadCrumbList.length&&Privileges.canAdd">取消重命名</a-button>
+                        <a-button class="ml10" type="primary" @click="onSearch" v-if="!isChangeName">查询</a-button>
+                        <a-button class="ml10" @click="onClear" v-if="!isChangeName">重置</a-button>
                         <!-- <a-button class="ml10" type="primary">新建</a-button> -->
                     </div>
                 </div>
@@ -90,7 +91,7 @@
                             <img :src="require('@/assets/img/filetype/Folder.png')" />
                             <div class="add-addtext" :title="item.Name" v-if="!isChangeName">{{item.Name}}</div>
                             <div class="add-addtext" v-if="isChangeName" @click.stop>
-                                <a-input v-model:value="item.Name" @blur="(e)=>{changeName(e,item,'folder')}" @click.stop></a-input>
+                                <a-input v-model:value="item.Name" @blur="(e)=>{changeName2(e,item,'folder')}" @click.stop></a-input>
                             </div>
                             <div class="add-addtime">{{item.CreatedOn}}</div>
                             <div class="iconBox content-item-iconBox">
@@ -109,7 +110,7 @@
                             <img :src="item.ThumbnailUrl||require('@/assets/img/filetype/defaultImg.png')" />
                             <div class="add-addtext" :title="item.Name" v-if="!isChangeName">{{item.Name}}</div>
                             <div class="add-addtext" v-if="isChangeName" @click.stop>
-                                <a-input v-model:value="item.Name" @blur="(e)=>{changeName(e,item,'file')}" @click.stop></a-input>
+                                <a-input v-model:value="item.Name" @blur="(e)=>{changeName2(e,item,'file')}" @click.stop></a-input>
                             </div>
                             <div class="add-addtime">{{item.CreatedOn}}</div>
                             <div class="iconBox content-item-iconBox">
@@ -376,6 +377,7 @@
         data.isDepth=true;
     }
     const getQuery = () => {
+        data.isChangeName=false;
         data.loading=true;
         // let filterQuery='\nParentId\teq\t10010000-0000-0000-0000-000000000011';
         // if(data.selectedKeys[0]=='owner'){
@@ -886,6 +888,7 @@ const BatchHandleDeleteEmail2=()=>{
     }
     //鼠标悬浮获取权限
     const handleMouseOver=(id,name)=>{
+        console.log(id,name,data.SelectKey)
         if(id&&id!=data.SelectKey){
             data.SelectKey=id;
             data.SelectName=name;
@@ -937,6 +940,17 @@ const BatchHandleDeleteEmail2=()=>{
       data.BreadCrumbList=[];
     }
   }
+  //保存重命名
+  const changeNameSave=()=>{
+    if(data.FileList&&data.FileList.length){
+        for(var i=0;i<data.FileList.length;i++){
+            let item=data.FileList[i];
+            changeName('',item,'file');
+        }
+        message.success("保存成功！");
+    }
+    data.isChangeName=false;
+  }
   //重命名
   const changeName=(e,item,type)=>{
     let url = Interface.edit;
@@ -963,7 +977,7 @@ const BatchHandleDeleteEmail2=()=>{
             }
             proxy.$post(url, obj).then((res) => {
                 if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
-                    message.success("保存成功！");
+                    //message.success("保存成功！");
                 }
                 else{
                     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
@@ -974,6 +988,10 @@ const BatchHandleDeleteEmail2=()=>{
                     }
                 }
             });
+  }
+  //重命名2
+  const changeName2=(e,item,type)=>{
+
   }
     onMounted(() => {
         getQuery();
