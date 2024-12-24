@@ -16,7 +16,7 @@
                                 </template>
                                 <template v-else-if="col.field">
                                     <div>
-                                        <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" />
+                                        <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" />
                                     </div>
                                 </template>
                             </td>
@@ -1474,6 +1474,10 @@
         };
         // console.log("relatedList", relatedList);
         return relatedList;
+    }
+
+    const changeSuggestion = (val, field) => {
+        data.list[field.id] = val;
     }
 
     defineExpose({handleSave});

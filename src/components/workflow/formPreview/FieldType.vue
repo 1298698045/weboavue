@@ -136,6 +136,31 @@
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
                 <a-textarea v-else :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" :rows="4" />
+                <div>
+                    <a-popover placement="right">
+                        <a-button type="link">选意见</a-button>
+                        <template #content>
+                            <div class="suggestionWrap">
+                                <div class="suggestion-list">
+                                    <div class="suggestion-item" v-for="(option, optionIdx) in suggestions" :key="optionIdx" @click="selectSuggestion(option, field)">
+                                        {{option.name}}
+                                    </div>
+                                </div>
+                                <div class="suggestion-footer">
+                                    <span class="label">创建意见</span>
+                                    <div class="add-form">
+                                        <a-input class="suggestion-inp" placeholder="请输入新的意见"></a-input>
+                                        <a-button size="small" type="primary">保存</a-button>
+                                    </div>
+                                    <!-- <a-button size="small" type="primary">创建意见</a-button> -->
+                                </div>
+                            </div>
+                        </template>
+                    </a-popover>
+                    <div class="signImg">
+                        <img src="@/assets/img/sign.png" alt="">
+                    </div>
+                </div>
             </span>
         </div>
         <div v-else-if="type=='B'">
@@ -293,7 +318,7 @@
     });
     
 
-    const emit = defineEmits(['openlook','setValue','lookup','select']);
+    const emit = defineEmits(['openlook','setValue','lookup','select','suggestion']);
 
     // const formState = reactive({
 
@@ -422,9 +447,27 @@
             },
         ],
         inputValue1: 10,
-        // search: {}
+        // search: {},
+        suggestions: [
+            {
+                id: 1,
+                name: "123"
+            },
+            {
+                id: 2,
+                name: "123123"
+            },
+            {
+                id: 3,
+                name: "123123"
+            },
+            {
+                id: 4,
+                name: "122385673"
+            }
+        ]
     });
-    const { fileList, options, inputValue1 } = toRefs(data);
+    const { fileList, options, inputValue1, suggestions } = toRefs(data);
 
     const handleOpenLook = () => {
         if(props.field?.permission == 16){
@@ -496,6 +539,10 @@
             console.log("data.search", data.search);
         })
     }
+    const selectSuggestion = (option, field) => {
+        let name = option.name;
+        emit("suggestion", name, field)
+    }
 </script>
 <style lang="less" scoped>
     .filed{
@@ -519,6 +566,45 @@
             top: 12px;
             left: 10px;
             z-index: 99;
+        }
+        .signImg{
+            img{
+                max-width: 120px;
+                max-height: 56px;
+            }
+        }
+    }
+    .suggestionWrap{
+        width: 200px;
+        .suggestion-list{
+            min-height: 100px;
+            max-height: 400px;
+            overflow-y: auto;
+            .suggestion-item{
+                height: 30px;
+                line-height: 30px;
+                padding: 0 10px;
+                &:hover{
+                    background: #f4f4f4;
+                    cursor: pointer;
+                }
+            }
+        }
+        .suggestion-footer{
+            border-top: 1px solid #e2e3e5;
+            padding: 5px 10px;
+            .label{
+                font-size: 12px;
+                color: #666;
+            }
+            .add-form{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .suggestion-inp{
+                    margin-right: 10px;
+                }
+            }
         }
     }
 </style>
