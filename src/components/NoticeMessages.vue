@@ -9,7 +9,7 @@
       >
         <template #title>
           <div>
-            消息中心
+            通知
           </div>
         </template>
         <div class="modalContainer">

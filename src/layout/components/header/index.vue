@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="header-end">
-        <div class="header-toobar-plugin signPlugin">
+        <div class="header-toobar-plugin signPlugin" title="考勤打卡">
           <a-popover overlayClassName="signPlugin" trigger="click">
             <template #title>
               <div class="popup-header">
@@ -96,12 +96,16 @@
             <span>考勤</span>
           </a-popover>
         </div>
-        <div class="header-toobar-plugin" @click="handleOpenEmail">
-          <!-- <BellOutlined style="font-size: 18px;" /> -->
+        <div class="header-toobar-plugin" @click="handleOpenEmail" title="邮箱">
+          <!-- <MessageFilled style="font-size: 18px;" /> -->
           <i class="iconfont icon-youjian" style="font-size: 18px;"></i>
         </div>
-        <div class="header-toobar-plugin" @click="hanldeOpenNotice">
-          <!-- <BellOutlined style="font-size: 18px;" /> -->
+        <div class="header-toobar-plugin MessageOut" @click="handleOpenMessage" title="消息" style="margin-left: 8px;">
+          <MessageFilled style="font-size: 16px;" />
+          <!-- <i class="iconfont icon-消息" style="font-size: 18px;"></i> -->
+        </div>
+        <div class="header-toobar-plugin" @click="hanldeOpenNotice" title="通知">
+          <!-- <MessageFilled style="font-size: 18px;" /> -->
           <i class="iconfont icon-xiaoxizhongxin" style="font-size: 18px;"></i>
         </div>
         <div class="header-info">
@@ -192,7 +196,7 @@
 <script setup>
 import "@/style/header.less";
 import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance, defineProps, defineEmits } from "vue";
-import { DownOutlined, SearchOutlined, BellOutlined, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined,CheckCircleFilled } from "@ant-design/icons-vue";
+import { DownOutlined, SearchOutlined, MessageFilled, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined,CheckCircleFilled } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
 import NoticeMessages from "@/components/NoticeMessages.vue";
 import Logo from "../header/components/logo.vue";
@@ -303,6 +307,16 @@ const handleOpenEmail= () => {
     });
     window.open(url.href);
     //window.location.href=url.href;
+}
+const handleOpenMessage= () => {
+    let url = router.resolve({
+        path:'/MessageHome',
+        name: "MessageHome",
+        query: {
+            
+        },
+    });
+    window.open(url.href);
 }
 //个人信息
 const handleInfo = () => {
