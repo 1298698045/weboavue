@@ -500,7 +500,7 @@
 <style lang="less" scoped>
     .filed{
         padding: 5px;
-        min-width: 100px;
+        /* min-width: 100px; */
         font-size: 14px !important;
         font-weight: normal !important;
         position: relative;

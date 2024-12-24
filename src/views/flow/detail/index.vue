@@ -67,7 +67,7 @@
                 <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
                     <div class="leftContent" :class="{'active':!isAside}">
                         <div class="tableBox" style="width: 100%;overflow: auto;" :class="{'active':!isAside}">
-                            <FlowForm print="0" ref="flowFormRef" v-if="processId!=''" :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID" />
+                            <FlowFormNew print="0" ref="flowFormRef" v-if="processId!=''" :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID" />
                         </div>
                         <div class="reqWrap">
                             <div class="reqHead">
@@ -341,6 +341,7 @@
     import RelateInstance from "@/components/workflow/RelateInstance.vue";
     import DetailInfo from "@/components/detail/DetailInfo.vue";
     import FlowForm from "@/components/workflow/FlowForm.vue";
+    import FlowFormNew from "@/components/workflow/FlowFormNew.vue";
     import Countersign from "@/components/workflow/Countersign.vue";
     import Jump from "@/components/workflow/Jump.vue";
     import Confirm from "@/components/commonModal/Confirm.vue";
@@ -695,7 +696,7 @@ const handleSave = () => {
         })
     }
     watch(()=>route.query.id,(newVal,oldVal)=>{
-        getDetail();
+        // getDetail();
     },{deep: true, immediate: true})
 
 </script>

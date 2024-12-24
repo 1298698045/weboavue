@@ -17,7 +17,8 @@
     EditOutlined
   } from "@ant-design/icons-vue";
   import { message } from "ant-design-vue";
-  import FlowForm from "@/components/workflow/FlowForm.vue";
+  // import FlowForm from "@/components/workflow/FlowForm.vue";
+  import FlowForm from "@/components/workflow/FlowFormNew.vue";
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
   import { useRouter, useRoute } from "vue-router";
