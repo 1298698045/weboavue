@@ -134,18 +134,27 @@ export default createStore({
             if(subPath.indexOf('?')!=-1){
               subPath = subPath .split('?')[0]
             };
+
             let obj = routesMapping[developerName][item.name];
             let componentPath = obj;
-            if(typeof obj == 'object'){
-              componentPath = obj.component;
+            // if(typeof obj == 'object'){
+            //   componentPath = obj.component;
+            // }
+
+            let splitPaths = subPath.split("/");
+            if(splitPaths.length == 4 && subPath.indexOf("/lightning/o/") != -1){
+              componentPath = () => import("../views/listView/index.vue");
+              subPath = subPath.replace(/\/o\/[^/]+$/, '/o/:sObjectName');
             }
+
+
             // const componentPath = routesMapping[developerName][item.name];
             // console.log("componentPath:", componentPath);
             // 处理通用列表
             // if(`${componentPath}`.indexOf('listView/index.vue')!=-1){
             if(typeof obj == 'object'){
               // subPath = subPath.replace(/\/o.*$/, '/:sObjectName');
-              subPath = subPath.replace(/\/o\/[^/]+$/, '/o/:sObjectName');
+              // subPath = subPath.replace(/\/o\/[^/]+$/, '/o/:sObjectName');
               // console.log("subPath", subPath);
             }
 

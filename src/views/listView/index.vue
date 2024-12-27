@@ -441,6 +441,7 @@
     console.log("route.params.sObjectName", newVal, oldVal);
     data.sObjectName = route.params.sObjectName;
     data.entityType = route.params.sObjectName;
+    data.queryParams.entityType = route.params.sObjectName;
     getMetadataInitialLoad().then(res => {
       console.log("resAsync", res);
       data.initialData = res.actions[0].returnValue;
