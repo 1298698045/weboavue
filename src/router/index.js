@@ -45,16 +45,7 @@ const staticRoutes = [
           name: "通用列表1",
           icon: "xiaozu",
         },
-      },
-      {
-        path: "/lightning/o/Document/readlog/home",
-        name: "DocumentReadLog1",
-        component: () => import("../views/knowledge/ReadLog/index.vue"),
-        meta: {
-          name: "最近浏览",
-          icon: "xiaozu",
-        },
-      },
+      }
     ]
   },
   {

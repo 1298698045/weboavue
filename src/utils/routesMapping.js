@@ -12,17 +12,18 @@ export const routesMapping = {
         home: () => import("../views/NotFound.vue"),
         WorkflowDoinglist: () => import("../views/flow/todoList/index.vue"),
         WorkflowDonelist: () => import("../views/flow/completed/index.vue"),
-        WorkflowFollowlist: () => import("../views/NotFound.vue"),
+        WorkflowFollowlist: () => import("../views/flow/follow/index.vue"),
         WorkflowMine: () => import("../views/flow/myStart/index.vue"),
         WorkflowSuperviselist: () => import("../views/NotFound.vue"),
-        ProcessInstanceHome: () => import("../views/NotFound.vue"),
+        ProcessInstanceHome: () => import("../views/flow/search/index.vue"),
         WfInstanceAttachFile: () => import("../views/NotFound.vue"),
         WFFormSearch: () => import("../views/flow/formSearch/index.vue"),
-        InstaceDashboard: () => import("../views/NotFound.vue"),
+        InstaceDashboard: () => import("../views/flow/InstaceDashboard/index.vue"),
         wftask: () => import("../views/NotFound.vue"),
         WFInstance: () => import("../views/flow/workAdmin/index.vue"),
         wfdefinition: () => import("../views/flow/seeting/index.vue"),
         WorkflowSuperviselist:() => import("../views/flow/Supervise/index.vue"),
+        WorkflowDelegate:() => import("../views/flow/agentTask/index.vue"),
     },
     // 日程管理
     Workplan: {
@@ -72,10 +73,7 @@ export const routesMapping = {
         album: () => import("../views/knowledge/Album/index.vue"),
         ContentFolder: () => import("../views/knowledge/Contentfolder/permission.vue"),
         QuestionAnswer: () => import("../views/knowledge/QuestionAnswer/index.vue"),
-        DocumentReadLog: {
-            component: () => import("../views/listView/index.vue"),
-            isCommon: true
-        },
+        DocumentReadLog: ()=>import("../views/knowledge/ReadLog/index.vue"),
         ContentViewTemplate: {
             component: () => import("../views/listView/index.vue"),
             isCommon: true

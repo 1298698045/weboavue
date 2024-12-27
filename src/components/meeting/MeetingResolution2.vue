@@ -5,7 +5,7 @@
           <div class="panel-title">会议决议</div>
           <div class="panel-btn">
             <a-button class="ml10" type="primary" @click="handleNew">新建</a-button>
-            <a-button class="ml10" type="primary">发布投票</a-button>
+            <a-button class="ml10" type="primary" @click="handlePoll">生成投票</a-button>
           </div>
         </div>
         <div class="panel-bd panel-bd1">
@@ -18,10 +18,10 @@
               </template>
               <template v-if="column.key === 'Votes'">
                   <div class="vote-shur-btn" @click="meetingPoll(record.VoteId,'','')" v-show="record.HasVote">
-                      <span title="点击取消表决" class="iconfont icon-zan1"><LikeOutlined style="color: #f53f3f;" /><span class="votesnum">{{record.Votes||'0'}}</span></span>
+                      <span title="点击取消表决" class="iconfont"><LikeOutlined style="color: #f53f3f;" /><span class="votesnum">{{record.Votes||'0'}}</span></span>
                   </div>
                   <div class="vote-shur-btn" @click="meetingPoll('',record.ValueId,record.OwningUser)" v-show="!record.HasVote">
-                      <span title="点击表决" class="iconfont icon-zan2"><LikeOutlined /><span class="votesnum">{{record.Votes||'0'}}</span></span>
+                      <span title="点击表决" class="iconfont"><LikeOutlined /><span class="votesnum">{{record.Votes||'0'}}</span></span>
                   </div>
               </template>
               <template v-if="column.key === 'Action'">
@@ -63,8 +63,17 @@
       </div>
       <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="onSearch"></radio-user>
       <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal" @ok="onSearch"></radio-dept>
-      <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
+      <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @success="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :relatedObjectAttributeName="relatedObjectAttributeName" :relatedObjectAttributeValue="relatedObjectAttributeValue"></common-form-modal>
       <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+      <ReleasePoll 
+        v-if="isPoll"
+        :isShow="isPoll"
+        :id="props.id"
+        @load="onSearch"
+        @cancel="isPoll=false"
+        :listData="listData"
+        :Name="MeetingName"
+      />
     </div>
   </template>
   <script setup>
@@ -97,6 +106,7 @@
   import RadioDept from "@/components/commonModal/RadioDept.vue";
   import Delete from "@/components/listView/Delete.vue";
   import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+  import ReleasePoll from "@/components/meeting/ReleasePoll.vue";
   const { proxy } = getCurrentInstance();
   const TopicsLst = ref();
   var columns = [
@@ -178,10 +188,14 @@
     Checkin:null,
     Checkin1:null,
     Checkin2:null,
-    height:100
+    height:100,
+    isPoll:false,
+    relatedObjectAttributeName:'',
+    relatedObjectAttributeValue:{ID:'',Name:''},
+    MeetingName:''
   });
   const columnList = toRaw(columns);
-  const { listData, height,searchVal,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,isCommon,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept } = toRefs(data);
+  const { MeetingName,relatedObjectAttributeName,relatedObjectAttributeValue,isPoll,listData, height,searchVal,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,isCommon,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept } = toRefs(data);
   const getQuery = () => {
     // proxy.$get(Interface.user.groupUser, {}).then((res) => {
     //   data.listData = res.rows;
@@ -212,8 +226,8 @@
               search:data.searchVal||'',
               page: data.pagination.current,
               rows: data.pagination.pageSize,
-              sort:'ModifiedOn',
-              order:'desc',
+              sort:'CreatedOn',
+              order:'asc',
               displayColumns:'Name,Description,Votes,CreatedOn'
           }).then(res => {
               var list = [];
@@ -351,25 +365,8 @@
     const handleView= (id) => {
         window.open('/#/lightning/r/Workflow/instance/detail?id='+id+'&reurl=');
     };
-  onMounted(() => {
-    let h = document.documentElement.clientHeight;
-      data.tableHeight = h-310;
-      data.height=h-120;
-      if(props.type=='modal'){
-        data.tableHeight = h-470;
-        data.height=h-285;
-      }
-      window.addEventListener("resize", (e) => {
-        let h = document.documentElement.clientHeight;
-        data.tableHeight = h-310;
-        data.height=h-120;
-        if(props.type=='modal'){
-          data.tableHeight = h-470;
-          data.height=h-285;
-        }
-      });
-  })
-  const meetingPoll=(VoteId,ValueId,OwningUser)=>{
+    //表决/取消表决
+    const meetingPoll=(VoteId,ValueId,OwningUser)=>{
             // if (VoteId) {
             //     var d = {
             //         objTypeCode: 5009,
@@ -416,6 +413,59 @@
             //     })
             // }
   }
+    //发布投票
+    const handlePoll=()=>{
+      data.isPoll=true;
+    }
+    //获取会议详情
+      const getDetail = () => {
+        let d = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                  recordId: props.id,
+                  apiName:'MeetingRec',
+                  objTypeCode: 5000
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(Interface.detail,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
+              let fields=res.actions[0].returnValue.fields;
+              data.MeetingName=fields.Name&&fields.Name.value?fields.Name.value:'';
+              data.relatedObjectAttributeName='MeetingId';
+              data.relatedObjectAttributeValue={
+                value:props.id||'',
+                name:data.MeetingName,
+              }
+            }
+        })
+    }
+  onMounted(() => {
+    getDetail();
+    let h = document.documentElement.clientHeight;
+      data.tableHeight = h-310;
+      data.height=h-120;
+      if(props.type=='modal'){
+        data.tableHeight = h-470;
+        data.height=h-285;
+      }
+      window.addEventListener("resize", (e) => {
+        let h = document.documentElement.clientHeight;
+        data.tableHeight = h-310;
+        data.height=h-120;
+        if(props.type=='modal'){
+          data.tableHeight = h-470;
+          data.height=h-285;
+        }
+      });
+  })
+  
   </script>
   <style lang="less">
   .MeetingResolutionWrap {

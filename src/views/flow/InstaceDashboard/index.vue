@@ -1,5 +1,5 @@
 <template>
-    <div class="wrappper reportFormWrap">
+    <div class="wrappper InstaceDashboardWrap">
         <div class="headerBar">
             <div class="headerLeft">
                 <div class="icon-circle-base">
@@ -42,58 +42,54 @@
                                     </div>      
                                     <div class="statistics-right">
                                         <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.ResTotalNum||0}}</div>      
-                                        <div class="statistics-name">总预约次数</div> 
+                                        <div class="statistics-name">发起总数</div> 
                                     </div> 
-                                    <!-- <div>
-                                        <div class="countItemTitle">
-                                        会议室预约次数
-                                        </div>
-                                        <p>总预约次数：{{countObj.ResTotalNum}}</p>
-                                        <p>我的预约次数：{{countObj.MyResNum}}</p>
-                                    </div> -->
                                 </li>
                                 <li class="countItem">
                                     <div class="statistics-left">
-                                        <UserOutlined style="color: rgb(141, 193, 57);" />
+                                        <ExclamationCircleOutlined style="color: red;" />
                                     </div>      
                                     <div class="statistics-right">
                                         <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.MyResNum||0}}</div>      
-                                        <div class="statistics-name">我的预约次数</div> 
+                                        <div class="statistics-name">逾期总数</div> 
                                     </div> 
                                 </li>
                                 <li class="countItem">
                                     <div class="statistics-left">
-                                        <FundProjectionScreenOutlined style="color: rgb(58, 200, 210);" />
+                                        <ClockCircleOutlined style="color: rgb(58, 200, 210);" />
                                     </div>      
                                     <div class="statistics-right">
                                         <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.OrgNum||0}}</div>      
-                                        <div class="statistics-name">会议室数量</div> 
+                                        <div class="statistics-name">待办总数</div> 
                                     </div> 
-                                    <!-- <div>
-                                        <div class="countItemTitle">
-                                            会议室数量
-                                        </div>
-                                        <p>会议室数量：{{countObj.OrgNum}}</p>
-                                    </div> -->
+                                </li>
+                                <li class="countItem">
+                                    <div class="statistics-left">
+                                        <CheckCircleOutlined style="color: rgb(141, 193, 57);" />
+                                    </div>      
+                                    <div class="statistics-right">
+                                        <div class="statistics-count" name="ContractNumber" style="color: #000;">{{countObj.OrgNum||0}}</div>      
+                                        <div class="statistics-name">已完结</div> 
+                                    </div> 
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="panel">
                         <div class="panel-head">
-                            <div class="panel-title">预约次数统计折线图：</div>
+                            <div class="panel-title">统计图表：</div>
                             <div class="panel-btn">
                             </div>
                         </div>
                         <div class="room">
-                            <div class="roomHead">
-                                <div class="roomTitle">会议室：</div>
-                                <div class="roomCheck">
-                                    <div class="roomCheckItem" :class="{'active':item.checkbox==true}" @click="handleSelectRoom(item)" v-for="(item,index) in rooms" :key="index">
-                                        {{item.Name}}
-                                    </div>
-                                    <div class="roomCheckItem default" @click="clearRoomSelect">清除选择</div>
-                                </div>
+                            <div class="tabWrap panel-bd-tabWrap">
+                                <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
+                                    <a-tab-pane v-for="(item, index) in tabs" :key="index">
+                                        <template #tab>
+                                            <span>{{ item.label }}</span>
+                                        </template>
+                                    </a-tab-pane>
+                                </a-tabs>
                             </div>
                             <div class="roomBody">
                                 <div id="canvas" ref="chartMain" style="width: 100%; height: 400px"></div>
@@ -102,7 +98,7 @@
                     </div>
                     <div class="panel">
                         <div class="panel-head">
-                            <div class="panel-title">预约次数统计列表：</div>
+                            <div class="panel-title">明细列表：</div>
                             <div class="panel-btn">
                                 <!-- <a-button :icon="h(UndoOutlined)"></a-button> -->
                                 <a-button class="ml10" :icon="h(UndoOutlined)"></a-button>
@@ -121,28 +117,40 @@
                             <table class="roomTable" v-if="activeKey==0">
                                 <thead>
                                     <tr>
-                                        <th>会议室</th>
-                                        <th v-for="(item,index) in xData" :key="index">{{item}}</th>
+                                        <th>序号</th>
+                                        <th>部门</th>
+                                        <th>部门编码</th>
+                                        <th>逾期数量</th>
+                                        <th>待办数量</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item,index) in seriesData" :key="index">
-                                        <td>{{item.name||''}}</td>
-                                        <td v-for="(row,idx) in item.data" :key="idx">{{row||0}}</td>
+                                    <tr v-for="(item,index) in xData" :key="index">
+                                        <td>{{index+1}}</td>
+                                        <td>{{item||''}}</td>
+                                        <td></td>
+                                        <td>{{seriesData[1].data[index]||0}}</td>
+                                        <td>{{seriesData[0].data[index]||0}}</td>
                                     </tr>
                                 </tbody>
                             </table>
                             <table class="roomTable" v-if="activeKey==1">
                                 <thead>
                                     <tr>
+                                        <th>序号</th>
                                         <th>姓名</th>
-                                        <th v-for="(item,index) in xData2" :key="index">{{item}}</th>
+                                        <th>部门</th>
+                                        <th>逾期数量</th>
+                                        <th>待办数量</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item,index) in seriesData2" :key="index">
-                                        <td>{{item.name||''}}</td>
-                                        <td v-for="(row,idx) in item.data" :key="idx">{{row||0}}</td>
+                                    <tr v-for="(item,index) in xData" :key="index">
+                                        <td>{{index+1}}</td>
+                                        <td>{{'管理员'}}</td>
+                                        <td>{{item||''}}</td>
+                                        <td>{{seriesData[1].data[index]||0}}</td>
+                                        <td>{{seriesData[0].data[index]||0}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -170,7 +178,7 @@
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
     import { girdFormatterValue } from "@/utils/common.js";
-    import { SearchOutlined, UndoOutlined,InfoCircleOutlined,FundProjectionScreenOutlined,UserOutlined,PieChartOutlined } from "@ant-design/icons-vue";
+    import { SearchOutlined,UndoOutlined,ClockCircleOutlined,InfoCircleOutlined,CheckCircleOutlined,ExclamationCircleOutlined,PieChartOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     import * as echarts from "echarts";
@@ -186,16 +194,19 @@
         xData2: [],
         seriesData2: [],
         listData: [],
-        year: dayjs(new Date()),
+        year: dayjs(new Date('2023-01-01')),
         countObj: {},
         rooms: [],
         selectRoom: [],
         tabs: [
             {
-            label: "会议室",
+            label: "部门",
             },
             {
             label: "人员",
+            },
+            {
+            label: "流程",
             },
         ],
         activeKey: 0,
@@ -294,13 +305,37 @@
         }).then(res=> {
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
                 let statdata=res.actions[0].returnValue;
+                statdata.xdata=['信息中心','消化内科','儿科','五区','六区','耳鼻咽喉','呼吸内科','呼吸与重症医学科','四区','骨科'];
+                statdata.lineData=["待办","逾期"];
                 data.countObj = statdata;
                 data.xData = statdata.xData||statdata.xdata;
                 data.lineData = statdata.lineData;
-                data.seriesData = statdata.seriesData.map(item=>{
-                    item.type = 'line';
-                    return item;
-                })
+                // data.seriesData = statdata.seriesData.map(item=>{
+                //     item.type = 'bar';
+                //     return item;
+                // })
+                data.seriesData=[
+                {
+                    type:'bar',
+                    name:'待办',
+                    label: {
+                    show: true,
+                    //rotate: 60,
+                    position: "top",
+                    },
+                    data:[2,3,2,4,6,8,3,5,1,5]
+                },
+                {
+                    type:'bar',
+                    name:'逾期',
+                    label: {
+                    show: true,
+                    //rotate: 60,
+                    position: "top",
+                    },
+                    data:[1,2,1,1,2,3,1,1,2,4]
+                }
+                ]
             }
             loadChart();
         })
@@ -370,7 +405,7 @@
             },
             xAxis: {
                 type: 'category',
-                boundaryGap: false,
+                //boundaryGap: false,
                 data: data.xData
             },
             yAxis: {
@@ -452,12 +487,12 @@
                     display: flex;
 
                     .countItem {
-                        width: 18%;
+                        width: 25%;
                         min-height: 100px;
                         border: 1px solid #dedede;
                         font-size: 14px;
                         border-radius: 4px;
-                        margin-right: 20px;
+                        margin-right: 15px;
                         padding: 10px;
 
                         .countItemTitle {
@@ -469,12 +504,15 @@
                             margin-top: 10px;
                         }
                     }
+                    .countItem:last-child{
+                        margin-right: 1px;
+                    }
                 }
 
                 .room {
-                    border: 1px solid #dedede;
+                    //border: 1px solid #dedede;
                     /* height: 300px; */
-                    border-radius: 4px;
+                    //border-radius: 4px;
 
                     .roomHead {
                         display: flex;
@@ -555,10 +593,12 @@
     .headerBar{
         position: relative;
         background: transparent;
+        height: 8px;
         .headerLeft{
             display: none;
         }
         .headerRight{
+            display: none;
             .panel-head-top-right{
                     display: flex;
                     width: 200px;
@@ -587,6 +627,7 @@
             .countItem{
                 background: #fff;
                 padding: 15px 16px !important;
+                padding-left: 18px !important;
                 box-shadow: none !important;
                 border: none !important;
                 .statistics-left{
@@ -629,7 +670,7 @@
         width: 80px;
         background: transparent;
     }
-    .reportFormWrap{
+    .InstaceDashboardWrap{
         overflow: auto;
         .panel-all{
             overflow: hidden;
@@ -637,6 +678,9 @@
         }
         .center{
             height: auto;
+        }
+        .panel .panel-head{
+            margin-bottom: 10px !important;
         }
     }
 </style>

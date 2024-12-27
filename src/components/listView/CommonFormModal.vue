@@ -373,6 +373,7 @@ const handleData = (res) => {
             })
           }
           if(props.relatedObjectAttributeName == col.localId){
+            console.log(11111)
             formState[col.localId] = props.relatedObjectAttributeValue.value;
             data.search[col.localId].push({
               ID: props.relatedObjectAttributeValue.value,

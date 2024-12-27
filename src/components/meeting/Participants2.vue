@@ -82,10 +82,20 @@
             <a-button class="ml10" type="primary" @click="AddPeople">邀请参与人</a-button>
           </div>
         </div>
+        <div class="tabWrap panel-bd-tabWrap">
+            <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
+                <a-tab-pane v-for="(item, index) in tabs" :key="index">
+                    <template #tab>
+                        <span>{{ item.label }}</span>
+                    </template>
+                </a-tab-pane>
+            </a-tabs>
+        </div>
         <div class="panel-bd panel-bd2">
           <div class="peopleHeader">
             <div class="left">
               <a-input
+                v-if="activeKey*1==0"
                 v-model:value="OwningBusinessUnitName"
                 placeholder="部门"
                 class="searchitem"
@@ -97,20 +107,26 @@
                 class="searchitem"
                 @search="onSearch"
               ></a-input>
-              <a-select v-model:value="StatusCode" placeholder="接受状态" class="searchitem">
+              <a-select v-model:value="StatusCode" placeholder="接受状态" class="searchitem" v-if="activeKey*1==0">
                     <a-select-option value="">全部</a-select-option>
                     <a-select-option value="0">未接受</a-select-option>
                     <a-select-option value="1">已接受</a-select-option>
                     <a-select-option value="2">已拒绝</a-select-option>
               </a-select>
-              <a-select v-model:value="CheckinStatus" placeholder="签到状态" class="searchitem">
+              <a-select v-model:value="CheckinStatus" placeholder="签到状态" class="searchitem" v-if="activeKey*1==0">
                 <a-select-option value="">全部</a-select-option>
                 <a-select-option value="1">未签到</a-select-option>
                 <a-select-option value="2">已签到</a-select-option>
               </a-select>
-              <!-- <a-date-picker show-time autoclear valueFormat="YYYY-MM-DD HH:mm" placeholder="签到时间" v-model:value="Checkin"></a-date-picker> -->
-              <!-- <a-range-picker show-time class="radiusNone" valueFormat="YYYY-MM-DD HH:mm:ss" @change="(e)=>{changeRangeDate(e)}" /> -->
-                <a-select v-model:value="IsLate" placeholder="是否迟到" class="searchitem">
+              <a-select v-model:value="ClockType" placeholder="打卡类型" class="searchitem" v-if="activeKey*1==1">
+                    <a-select-option value="">全部</a-select-option>
+                    <a-select-option value="1">签到</a-select-option>
+                    <a-select-option value="2">会议中签到</a-select-option>
+                    <a-select-option value="3">签退</a-select-option>
+              </a-select>
+              <!-- <a-date-picker show-time autoclear valueFormat="YYYY-MM-DD HH:mm" placeholder="打卡时间" v-model:value="CreatedOn" v-if="activeKey*1==1"></a-date-picker> -->
+              <a-range-picker show-time class="radiusNone" valueFormat="YYYY-MM-DD HH:mm:ss" @change="(e)=>{changeRangeDate(e)}" v-if="activeKey*1==1" />
+                <a-select v-model:value="IsLate" placeholder="是否迟到" class="searchitem" v-if="activeKey*1==0">
                     <a-select-option value="">全部</a-select-option>
                     <a-select-option value="0">否</a-select-option>
                     <a-select-option value="1">是</a-select-option>
@@ -124,7 +140,7 @@
             </div>
           </div>
           <a-table :columns="columns" :dataSource="listData" :scroll="{ y:tableHeight }" :pagination="false" @change="handleTableChange">
-            <template #bodyCell="{ column, index,record }">
+            <template #bodyCell="{ column, index, record }">
               <template v-if="column.key === 'index'">
                 <div>
                   {{ index + 1 }}
@@ -140,12 +156,13 @@
                 </div>
                 <!-- <a-button type="text" size="small" @click="handleDelete(record.id)" :num="index">删除</a-button> -->
               </template>
-              <!-- <template v-if="column.key === 'index'">
-                <div>
-                  {{ index + 1 }}
-                </div>
+              <template v-if="column.key === 'ClockType'">
+                <div v-if="record.ClockType*1==1">签到</div>
+                <div v-else-if="record.ClockType*1==2">会议中签到</div>
+                <div v-else-if="record.ClockType*1==3">签退</div>
+                <div v-else>{{record.ClockType||''}}</div>
               </template>
-              <template v-if="column.key === 'sort'">
+              <!-- <template v-if="column.key === 'sort'">
                 <div class="sortIcon">
                   <ArrowUpOutlined />
                   <ArrowDownOutlined />
@@ -204,7 +221,7 @@
   import Delete from "@/components/listView/Delete.vue";
   const { proxy } = getCurrentInstance();
   const PersonnelLst = ref();
-  var columns = [
+  var columns0 = [
   {
       title: "序号",
       dataIndex: "index",
@@ -256,6 +273,54 @@
       key: "Action",
       width: 120,
     },
+  ];
+  var columns1 = [
+  {
+      title: "序号",
+      dataIndex: "index",
+      key: "index",
+      width: 80,
+  },
+  {
+      title: "姓名",
+      dataIndex: "CreatedBy",
+      key: "CreatedBy"
+  },
+  {
+      title: "打卡类型",
+      dataIndex: "ClockType",
+      key: "ClockType"
+  },
+  {
+      title: "打卡时间",
+      dataIndex: "CreatedOn",
+      key: "CreatedOn"
+  },
+  {
+      title: "打卡地址",
+      dataIndex: "Location",
+      key: "Location"
+  },
+  {
+      title: "标志建筑",
+      dataIndex: "BuildingName",
+      key: "BuildingName"
+  },
+  {
+      title: "经度",
+      dataIndex: "Latitude",
+      key: "Latitude"
+  },
+  {
+      title: "纬度",
+      dataIndex: "Longitude",
+      key: "Longitude"
+  },
+    // {
+    //   title: "操作",
+    //   key: "Action",
+    //   width: 120,
+    // },
   ];
   const props = defineProps({
     id: String,
@@ -309,40 +374,72 @@
     SignoffQty:0,
     RejectQty:0,
     DayoffQty:0,
+    activeKey: 0,
+    tabs: [
+        {
+        label: "参会人员",
+        },
+        {
+        label: "打卡记录",
+        },
+    ],
+    columns:columns0,
+    ClockType:null,
+    CreatedOn:null
   });
-  const columnList = toRaw(columns);
-  const { listData,PeopleQty,AcceptQty,JoinQty,SignoffQty,RejectQty,DayoffQty,height,searchVal,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept,IsLate } = toRefs(data);
+  //const columnList = toRaw(columns);
+  const { ClockType,CreatedOn,columns,tabs,activeKey,listData,PeopleQty,AcceptQty,JoinQty,SignoffQty,RejectQty,DayoffQty,height,searchVal,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept,IsLate } = toRefs(data);
+  const changeTabs = (e) => {
+      data.activeKey = e;
+      data.pagination.current=1;
+      getQuery();
+  };
   const getQuery = () => {
-    // proxy.$get(Interface.user.groupUser, {}).then((res) => {
-    //   data.listData = res.rows;
-    // });
     data.listData=[];
     data.pagination.total = 0;
     let filterQuery='\nMeetingId\teq\t'+props.id;
-    if(data.StatusCode){
+    let displayColumns='OwningBusinessUnit,InviteeId,Checkin,Location,LateMinutes,Checkout,StatusCode,Description';
+    data.columns=columns0;
+    data.objectTypeCode='5002';
+    data.sObjectName='MeetingAudience';
+    if(data.activeKey*1==1){
+      filterQuery='\nRegardingObjectId\teq\t'+props.id;
+      displayColumns='CreatedBy,ClockType,CreatedOn,Location,BuildingName,Latitude,Longitude';
+      data.columns=columns1;
+      data.objectTypeCode='5010';
+      data.sObjectName='ActivityClockRecord';
+      if(data.ClockType){
+        filterQuery+='\nClockType\teq\t'+data.ClockType;
+      }
+      if(data.CreatedOn){
+        filterQuery+='\nCreatedOn\tbetween\t'+data.CreatedOn;
+      }
+    }
+    else{
+      if(data.StatusCode){
         filterQuery+='\nStatusCode\teq\t'+data.StatusCode;
+      }
+      if(data.CheckinStatus){
+          filterQuery+='\nCheckinStatus\teq\t'+data.CheckinStatus;
+      }
+      if(data.OwningBusinessUnitName){
+        filterQuery+='\nOwningBusinessUnitName\tcontains\t'+data.OwningBusinessUnitName;
+      }
+      if(data.IsLate){
+        filterQuery+='\nCheckin\tge\t'+data.IsLate;
+      }
     }
-    if(data.CheckinStatus){
-        filterQuery+='\nCheckinStatus\teq\t'+data.CheckinStatus;
-    }
-    if(data.OwningBusinessUnitName){
-      filterQuery+='\nOwningBusinessUnitName\tcontains\t'+data.OwningBusinessUnitName;
-    }
-    if(data.IsLate){
-      filterQuery+='\nCheckin\tge\t'+data.IsLate;
-    }
-    
           proxy.$post(Interface.list2, {
               filterId:'',
-              objectTypeCode:'5002',
-              entityName:'MeetingAudience',
+              objectTypeCode:data.objectTypeCode,
+              entityName:data.sObjectName,
               filterQuery:filterQuery,
               search:data.searchVal||'',
               page: data.pagination.current,
               rows: data.pagination.pageSize,
               sort:'ModifiedOn',
               order:'desc',
-              displayColumns:'OwningBusinessUnit,InviteeId,Checkin,Location,LateMinutes,Checkout,StatusCode,Description'
+              displayColumns:displayColumns
           }).then(res => {
               var list = [];
               data.total = res.pageInfo?res.pageInfo.total:0;
@@ -372,17 +469,21 @@
     data.CheckinStatus=null;
     data.Checkin=null;
     data.IsLate=null;
+    data.ClockType=null;
+    data.CreatedOn=null;
     getQuery();
   };
   const changeRangeDate = (e) => {
         //console.log("e",e,item);
         if(e&&e.length){
-            data.Checkin=e.join(',');
+            //data.Checkin=e.join(',');
+            data.CreatedOn=e.join(',');
             data.Checkin1=e[0];
             data.Checkin2=e[1];
         }
         else{
-            data.Checkin='';
+            //data.Checkin='';
+            data.CreatedOn='';
         }
     }
   //改变页码
@@ -499,18 +600,18 @@
   }
   onMounted(() => {
     let h= document.documentElement.clientHeight;
-      data.tableHeight = h-450;
+      data.tableHeight = h-490;
       data.height=h-215;
       if(props.type=='modal'){
-        data.tableHeight = h-620;
+        data.tableHeight = h-660;
         data.height=h-385;
       }
       window.addEventListener("resize", (e) => {
         let h= document.documentElement.clientHeight;
-        data.tableHeight = h-450;
+        data.tableHeight = h-490;
         data.height=h-215;
         if(props.type=='modal'){
-          data.tableHeight = h-620;
+          data.tableHeight = h-660;
           data.height=h-385;
         }
       });
@@ -675,7 +776,7 @@
         }
     }
     .ParticipantsWrap .panel-bd2{
-      height: calc(~'100% - 165px') !important;
+      height: calc(~'100% - 205px') !important;
     }
     .ParticipantsWrap .ant-table-body{
       height: 100% !important;
@@ -696,26 +797,36 @@
             }
         }
     } 
-    .ParticipantsWrap .panel-top .statistics-right{
-      float: left !important;
-      position: relative;
-      left: 8px;
-    }
-    .ParticipantsWrap .panel-top .statistics-left{
-      float: right !important;
-      width: calc(~'100% - 80px') !important;
-    }
-    .ParticipantsWrap .panel-top .statistics-name {
-        font-size: 12px;
-        position: relative;
-        top: 30px;
-    }
-    .ParticipantsWrap .panel-top .statistics-count {
-        font-weight: 700;
-        font-size: 26px;
-        color: #555;
-        position: relative;
-        top: -25px;
-    }
+    .ParticipantsWrap{
+      .panel{
+        .panel-top{
+          .statistics-right{
+            float: left !important;
+            position: relative;
+            left: 8px;
+          }
+          .statistics-left{
+            float: right !important;
+            width: calc(~'100% - 80px') !important;
+          }
+          .statistics-name {
+              font-size: 12px;
+              position: relative;
+              top: 30px;
+          }
+          .statistics-count {
+              font-weight: 700;
+              font-size: 26px;
+              color: #555;
+              position: relative;
+              top: -25px;
+          }
+        }
+        .tabWrap{
+          position: relative;
+          top: -12px;
+        }
+      }
+    } 
   </style>
   

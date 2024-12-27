@@ -392,29 +392,10 @@ const getColumns = (id) => {
             field: "Action",
             title: "操作",
             formatter: function formatter(value, row, index) {
-              var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.textValue:'';
-              var ProcessIdName=row.ProcessId?row.ProcessId.lookupValue.displayName:'';
-              var ProcessId=row.ProcessId?row.ProcessId.lookupValue.value:'';
-              var WFRuleLogId=row.WFRuleLogId?row.WFRuleLogId.textValue:'';
-              var ExecutorIdentityName=row.ExecutorIdentityName?row.ExecutorIdentityName.textValue:'';
-              var str = `
+        var str = `
                 <div class="iconBox">
             <div class="popup">
-            <div class="option-item" id=${ProcessInstanceId} onclick="handleTo('${ProcessInstanceId}')">查看</div>
-            <div class="option-item" onclick="EditFlow('${row.id}')">打印</div>  
-            <div class="option-item" onclick="handleJump('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">跳转</div>
-            <div class="option-item" id=${WFRuleLogId} onclick="handleCountersign('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">加签</div>
-            <div class="option-item" onclick="DelegateFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">委派</div>  
-            <div class="option-item" id=${WFRuleLogId} onclick="handleTo('${WFRuleLogId}')">撤销</div>
-            <div class="option-item" id=${WFRuleLogId} onclick="handleTo('${WFRuleLogId}')">结束</div>
-            <div class="option-item" id=${WFRuleLogId} onclick="handleRelase('${ProcessInstanceId}')">发布</div>
-            </div>
-            <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
-        `
-        str = `
-                <div class="iconBox">
-            <div class="popup">
-            <div class="option-item" id=${ProcessInstanceId} onclick="handleTo('${ProcessInstanceId}')">查看</div>
+            <div class="option-item" id=${row.id} onclick="handleDetailView('${row.id}')">查看</div>
             </div>
             <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
         `
@@ -430,15 +411,29 @@ const getColumns = (id) => {
     if(res&&res.actions&&res.actions[0]){}else{return}
     let fields = res.actions[0].returnValue.fields;
     fields.forEach(item => {
-      if(item.name!='ProcessInstanceId'&&item.name!='WFRuleLogId'&&item.name!='ExecutorIdentityName'){
-        columnslist.push({
-          field: item.name,
-          title: item.label,
-          sortable: true,
-          formatter: function formatter(value, row, index) {
-            return girdFormatterValue(item.name,row);
+      if(item.name){
+        if(item.name=='Name'){
+            columnslist.push({
+              field: item.name,
+              title: item.label,
+              sortable: true,
+              formatter: function formatter(value, row, index) {
+                let val=girdFormatterValue(item.name,row);
+                return `<a href="javascript:void(0)" onclick="handleDetailView('${row.id}')">${val}</a>`;
+              }
+            });
           }
-        });
+          else{
+            columnslist.push({
+              field: item.name,
+              title: item.label,
+              sortable: true,
+              formatter: function formatter(value, row, index) {
+                return girdFormatterValue(item.name,row);
+              }
+            });
+          }
+        
       }
     })
     columns.value=columnslist;
@@ -720,6 +715,11 @@ const getColumns = (id) => {
   const cancelEditFlowDefine = (e) => {
     data.isEditFlow = e;
   }
+  //打开详情页
+  const handleDetailView=(id)=>{
+      window.open('/#/Meeting/detail?id='+(id||''));
+  }
+  window.handleDetailView=handleDetailView;
 </script>
 <style lang="less">
   @import "@/style/flow/treeList.less";

@@ -5,10 +5,10 @@
         <div class="icon-circle-base">
           <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
         </div>
-        <span class="headerTitle">会议查询</span>
+        <span class="headerTitle">流程代理</span>
       </div>
       <div class="headerRight">
-        <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
+        <a-button type="primary" class="ml10" @click="handleNew">新建代理</a-button>
       </div>
     </div>
     <div class="todo-content">
@@ -56,7 +56,7 @@
                   <a-button class="ml10">批量取消发布</a-button> -->
               </div>
             </div>
-            <list-form-search ref="searchRef" @search="handleSearch" entityApiName="MeetingRec" :SearchFields="SearchFields"
+            <list-form-search ref="searchRef" @search="handleSearch" :entityApiName="data.queryParams.entityName" :SearchFields="SearchFields"
               @update-height="changeHeight"></list-form-search>
             <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
               <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
@@ -299,8 +299,8 @@
     activeKey: 0,
     queryParams: {
       filterId:'',
-      objectTypeCode:'5000',
-      entityName:'MeetingRec',
+      objectTypeCode:'123',
+      entityName:'WFRuleLog',
       filterQuery:'',
       //filterQuery:'\nCreatedBy\teq-userid',
       //displayColumns:'ProcessInstanceNumber,Name,ProcessId,StateCode,ExpiredOn,AttachQty,CreatedBy,CurrentStepName,CreatedOn,BusinessUnitId,ModifiedOn,Priority,ProcessInstanceId,WFRuleLogId,ExecutorIdentityName',
@@ -378,7 +378,7 @@
         data.queryParams.filterQuery+=filterquery;
       }
       if(data.treeId){
-        data.queryParams.filterQuery+='\nOwningBusinessUnit\tin\t'+data.treeId;
+        //data.queryParams.filterQuery+='\nOwningBusinessUnit\tin\t'+data.treeId;
       }
       gridRef.value.loadGrid(data.queryParams);
   }
@@ -392,10 +392,11 @@ const getColumns = (id) => {
             field: "Action",
             title: "操作",
             formatter: function formatter(value, row, index) {
-              var str = `
+              var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.lookupValue.value:'';
+        var str = `
                 <div class="iconBox">
             <div class="popup">
-            <div class="option-item" id=${row.id} onclick="handleDetailView('${row.id}')">查看</div>
+            <div class="option-item" id=${ProcessInstanceId} onclick="handleDetailView('${ProcessInstanceId}')">查看</div>
             </div>
             <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
         `
@@ -419,11 +420,12 @@ const getColumns = (id) => {
               sortable: true,
               formatter: function formatter(value, row, index) {
                 let val=girdFormatterValue(item.name,row);
-                return `<a href="javascript:void(0)" onclick="handleDetailView('${row.id}')">${val}</a>`;
+                var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.lookupValue.value:'';
+                return `<a href="javascript:void(0)" onclick="handleDetailView('${ProcessInstanceId}')">${val}</a>`;
               }
             });
           }
-          else{
+          else if(item.name!='ProcessInstanceId'){
             columnslist.push({
               field: item.name,
               title: item.label,
@@ -448,8 +450,8 @@ const getColumns = (id) => {
   // 获取tabs
   const getTabs = () => {
     proxy.$get(Interface.getTabs, {
-      entityName:'MeetingRec',
-      layoutName:'MeetingSearch'
+      entityName:data.queryParams.entityName,
+      layoutName:'agentTask'
     }).then(res => {
       //console.log("tabs", res)
       if(res&&res.tabs&&res.tabs.length){
@@ -717,7 +719,14 @@ const getColumns = (id) => {
   }
   //打开详情页
   const handleDetailView=(id)=>{
-      window.open('/#/Meeting/detail?id='+(id||''));
+    let reUrl = router.resolve({
+        path:"/lightning/r/Workflow/instance/detail",
+        query: {
+          id: id,
+          reurl:'/lightning/page/workflow/delegate'
+        }
+    })
+    window.open(reUrl.href); 
   }
   window.handleDetailView=handleDetailView;
 </script>

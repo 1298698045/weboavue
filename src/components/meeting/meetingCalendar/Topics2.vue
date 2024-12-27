@@ -10,6 +10,7 @@
         <div class="panel-bd panel-bd1">
             <div id="main-content">
                 <table class="table1">
+                  <tbody>
                     <tr>
                         <td colspan="1" class="trtitle">会议主题：</td>
                         <td colspan="2" class="righttd">{{detailData.Name?detailData.Name.value:''}}</td>
@@ -24,22 +25,25 @@
                     </tr>
                     <tr>
                         <td colspan="1" class="trtitle">会议内容：</td>
-                        <td colspan="2" class="righttd"><div style="min-height: 80px;" v-html="detailData.Description?detailData.Description.value:''"></div></td>
+                        <td colspan="2" class="righttd">
+                          <div style="min-height: 80px;" v-html="detailData.Description?detailData.Description.value:''"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="1" class="trtitle">参会人：</td>
                         <td colspan="2" class="righttd">{{detailData.Attachs?detailData.Attachs.value:''}}</td>
                     </tr>
+                  </tbody>
                 </table>
             </div>
         </div>
       </div>
-      <div class="panel" :style="{ height: (height-330) + 'px'}">
+      <div class="panel" :style="{ height: (height-330>300?height-330:300) + 'px'}">
         <div class="panel-head">
           <div class="panel-title">会议议题</div>
           <div class="panel-btn">
             <a-button class="ml10" type="primary" @click="handleNew">新建</a-button>
-            <a-button class="ml10" type="primary">添加议题</a-button>
+            <a-button class="ml10" type="primary" @click="handleAddTopic">添加议题</a-button>
           </div>
         </div>
         <div class="panel-bd panel-bd1">
@@ -51,9 +55,11 @@
                     </div>
                 </template>
                 <template v-if="column.key === 'StatusCode'">
-                    <div v-if="record.StatusCode==0">草稿</div>
-                    <div v-if="record.StatusCode==1">审批中</div>
-                    <div v-if="record.StatusCode==3">审批通过</div>
+                    <div v-if="record.StatusCode*1==0">草稿</div>
+                    <div v-else-if="record.StatusCode*1==1">审批中</div>
+                    <div v-else-if="record.StatusCode*1==2">审批不通过</div>
+                    <div v-else-if="record.StatusCode*1==3">审批通过</div>
+                    <div v-else>{{record.StatusCode||''}}</div>
                 </template>
               <template v-if="column.key === 'Action'">
                 <div class="iconBox">
@@ -94,8 +100,9 @@
       </div>
       <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="onSearch"></radio-user>
       <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal" @ok="onSearch"></radio-dept>
-      <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
+      <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :relatedObjectAttributeName="relatedObjectAttributeName" :relatedObjectAttributeValue="relatedObjectAttributeValue"></common-form-modal>
       <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+      <AddTopic v-if="isAddTopic" :isShow="isAddTopic" @select="handleSelectTopic" :entityApiName="sObjectName" @cancel="isAddTopic=false" />
     </div>
   </template>
   <script setup>
@@ -138,6 +145,7 @@
   import RadioDept from "@/components/commonModal/RadioDept.vue";
   import Delete from "@/components/listView/Delete.vue";
   import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+  import AddTopic from "@/components/meeting/AddTopic.vue";
   import { useRouter, useRoute } from "vue-router";
   const router = useRouter();
   const route = useRoute();
@@ -151,6 +159,12 @@
       width: 80,
   },
   {
+      title: "名称",
+      dataIndex: "Name",
+      key: "Name",
+      width: 240,
+  },
+  {
       title: "议题内容",
       dataIndex: "Description",
       key: "Description"
@@ -159,7 +173,7 @@
       title: "审批状态",
       dataIndex: "StatusCode",
       key: "StatusCode",
-      width: 200,
+      width: 120,
   },
   {
       title: "提交科室",
@@ -171,18 +185,18 @@
       title: "提交人",
       dataIndex: "CreatedBy",
       key: "CreatedBy",
-      width: 200,
+      width: 120,
   },
   {
       title: "提交时间",
       dataIndex: "CreatedOn",
       key: "CreatedOn",
-      width: 200,
+      width: 150,
   },
     {
       title: "操作",
       key: "Action",
-      width: 120,
+      width: 100,
     },
   ];
   const props = defineProps({
@@ -234,10 +248,13 @@
     Checkin1:null,
     Checkin2:null,
     height:100,
-    detailData:{}
+    detailData:{},
+    relatedObjectAttributeName:'',
+    relatedObjectAttributeValue:{ID:'',Name:''},
+    isAddTopic:false,
   });
   const columnList = toRaw(columns);
-  const { listData, detailData,height,searchVal,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,isCommon,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept } = toRefs(data);
+  const { isAddTopic,relatedObjectAttributeName,relatedObjectAttributeValue,listData, detailData,height,searchVal,OwningBusinessUnitName,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,isCommon,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,Checkin,Checkin1,Checkin2,isRadioDept } = toRefs(data);
   const getQuery = () => {
     // proxy.$get(Interface.user.groupUser, {}).then((res) => {
     //   data.listData = res.rows;
@@ -396,22 +413,72 @@
   const handleNew = (e) => {
       data.recordId='';
       data.isCommon = true;
-    }
-    //编辑
-    const handleEdit = (key) => {
-      data.recordId=key;
-      data.isCommon = true;
-    }
-    // 通用弹窗关闭
-    const handleCommonCancel = (params) => {
-        data.isCommon=false;
-    };
-    //查看
-    const handleView= (id) => {
-        window.open('/#/lightning/r/Workflow/instance/detail?id='+id+'&reurl=');
-    };
+  }
+  //编辑
+  const handleEdit = (key) => {
+    data.recordId=key;
+    data.isCommon = true;
+  }
+  // 通用弹窗关闭
+  const handleCommonCancel = (params) => {
+      data.isCommon=false;
+  };
+  //查看
+  const handleView= (id) => {
+      window.open('/#/lightning/r/Workflow/instance/detail?id='+id+'&reurl=');
+  };
+  //打印
+  const printForm=()=>{
+    let url = router.resolve({
+            path:'/printMeetingBasic',
+            name: "PrintMeetingBasic",
+            query: {
+                id: props.id,
+            },
+        });
+        window.open(url.href);
+  }
+  //添加议题
+  const handleAddTopic=(name)=>{
+    data.isAddTopic=true;
+  }
+  //选中议题
+  const handleSelectTopic=(e)=>{
+    let url=Interface.edit;
+    let d = {
+      actions:[{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordId: e.id,
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName: data.sObjectName,
+                objTypeCode: data.objectTypeCode,
+                fields: {
+                  MeetingId: props.id,
+                }
+              }              
+            }
+        }]
+      };
+      let obj = {
+          message: JSON.stringify(d)
+      }
+      proxy.$post(url,obj).then(res=>{
+        message.success("添加成功！");
+        data.isAddTopic=false;
+        onSearch();
+      });
+  }
   onMounted(() => {
       data.detailData=props.detailData;
+      data.relatedObjectAttributeName='MeetingId';
+      data.relatedObjectAttributeValue={
+        value:props.id||'',
+        name:data.detailData.Name?data.detailData.Name.value:'',
+      }
       let h = document.documentElement.clientHeight;
       data.tableHeight = h-325;
       data.height=h-137;
@@ -429,17 +496,7 @@
         }
       });
   })
-  //打印
-  const printForm=()=>{
-    let url = router.resolve({
-            path:'/printMeetingBasic',
-            name: "PrintMeetingBasic",
-            query: {
-                id: props.id,
-            },
-        });
-        window.open(url.href);
-  }
+  
   </script>
   <style lang="less">
   .TopicsWrap {
