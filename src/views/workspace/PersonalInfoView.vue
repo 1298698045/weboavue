@@ -19,7 +19,7 @@
                                 </div>
                                 <div class="hrm-my-card-basicInfo-left-imgwrap-op">
                                     <div class="ant-col-6">
-                                        <div class="hrm-my-card-basicInfo-icon-circle" title="发送短信">
+                                        <div class="hrm-my-card-basicInfo-icon-circle" @click="handleOpenMessage" title="发送短信">
                                             <MessageFilled />
                                         </div>
                                     </div>
@@ -29,7 +29,7 @@
                                         </div>
                                     </div>
                                     <div class="ant-col-6">
-                                        <div class="hrm-my-card-basicInfo-icon-circle" title="新建日程">
+                                        <div class="hrm-my-card-basicInfo-icon-circle" @click="handleOpenSchedule" title="查看日程">
                                             <ScheduleFilled />
                                         </div>
                                     </div>
@@ -348,6 +348,28 @@ const getDetail = () => {
     let url = router.resolve({
         path:'/email',
         name: "Email",
+        query: {
+            
+        },
+    });
+    window.open(url.href);
+    //window.location.href=url.href;
+}
+const handleOpenMessage= () => {
+    let url = router.resolve({
+        path:'/MessageHome',
+        name: "MessageHome",
+        query: {
+            
+        },
+    });
+    window.open(url.href);
+    //window.location.href=url.href;
+}
+const handleOpenSchedule= () => {
+    let url = router.resolve({
+        path:'/lightning/o/Event/home',
+        //name: "eventhome",
         query: {
             
         },

@@ -170,6 +170,16 @@
     const { proxy } = getCurrentInstance();
     const emit = defineEmits(['openNew','handleDetail','openEdit','handleDelete','select-val','calendarDayChange']);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
+    const textColors=[
+        {
+            bgColor:'#CFEBFE',
+            textColor:'rgb(3, 45, 96)'
+        },
+        {
+            bgColor:'#d2f1ec',
+            textColor:'rgb(3, 45, 96)'
+        }
+    ]
     const props = defineProps({
         id:String,
         currentTime: [Object],
@@ -337,7 +347,18 @@
             },
             // 切换视图时触发
             datesSet: view => {},
-        }
+        },
+        CalendarActionsConfig:{
+            canAddEvent: false,
+            canDragAndDropItems: false,
+            canModifyColor: false,
+            canShowOnlyCalendar: false,
+            isCalendarDeletable: false,
+            isCalendarEditable: false,
+            isCalendarShareable: false,
+            isCalendarToggleable: false,
+            isCalendarUnsubscribable: false,
+        },
     });
     watch(()=>props.startDateTime,(newVal,oldVal)=>{
         data.currentDate = dayjs(newVal).format("YYYY-MM-DD");
@@ -348,7 +369,7 @@
         data.calendarOptions.initialView=newVal;
     },{deep: true, immediate: true})
     const weeks = toRaw(['周日', '周一', '周二', '周三', '周四', '周五', '周六']);
-    const { height, weekList, scheduleList, times, currentDate, paramsTime,calendarOptions } = toRefs(data);
+    const { CalendarActionsConfig,height, weekList, scheduleList, times, currentDate, paramsTime,calendarOptions } = toRefs(data);
     const LeaderFullCalendarRef = ref(null);
     const fullCalendarRef = ref(null);
     onMounted(() => {
@@ -426,7 +447,8 @@
             if(text=='移动事件或者拓展事件'&&info[0]){
                 let e={
                   paramsTime:obj,
-                  Id:info[0].id
+                  Id:info[0].id,
+                  extendedProps:{CalendarActionsConfig:{isCalendarEditable:data.CalendarActionsConfig.isCalendarEditable}}
                 }
                 if(!info[0].id){
                     //getQuery2(obj2);
@@ -439,7 +461,8 @@
             if((text=='拖动日程触发'||text=='时间调整结束后触发')&&info.event){
                 let e={
                     paramsTime:obj,
-                    Id:info.event.id
+                    Id:info.event.id,
+                    extendedProps:{CalendarActionsConfig:{isCalendarEditable:data.CalendarActionsConfig.isCalendarEditable}}
                 }
                 if(!info.event.id){
                     //getQuery2(obj2);
@@ -468,6 +491,10 @@
         if(!e.Id){
             e.Id=e.id;
         }
+        if(!e.extendedProps.CalendarActionsConfig.isCalendarDeletable){
+            message.info("该日程无删除权限！");
+            return false
+        }
         emit("handleDelete", e);
     }
     //编辑
@@ -475,9 +502,17 @@
         if(!e.Id){
             e.Id=e.id;
         }
+        if(!e.extendedProps.CalendarActionsConfig.isCalendarEditable){
+            message.info("该日程无编辑权限！");
+            return false
+        }
         emit("openEdit", e);
     }
     const openEdit2 = (e) => {
+        if(!e.extendedProps.CalendarActionsConfig.isCalendarEditable){
+            message.info("该日程无编辑权限！");
+            return false
+        }
         let url = Interface.edit;
         let d = {
             actions:[{
@@ -514,6 +549,10 @@
     }
     //新建
     const openNew = (obj) => {
+        if(!data.CalendarActionsConfig.canAddEvent){
+            message.info("当前日历无新建权限！");
+            return false
+        }
         emit("openNew", obj);
     }
     //详情
@@ -586,6 +625,15 @@
         let num = endIndex - index;
         return num * 60 + 'px';
     }
+    const getComplementaryColor=(color)=>{
+        let textColor='#fff';
+        textColors.forEach((item,index)=>{
+            if(item.bgColor==color){
+                textColor=item.textColor;
+            }
+        })
+        return textColor
+    }
     const getQuery = () => {
         data.paramsTime.date = data.currentDate;
         let d = {
@@ -643,9 +691,11 @@
                             }
                             data.resources.push(roomitem);
                             fullCalendarRef.value.getApi().view.calendar.addResource(roomitem);
+                            data.CalendarActionsConfig=peopleList[0].calendar.CalendarActionsConfig;
                         })
 
                         for(var i=0;i<peopleList.length;i++){
+                            let ite=peopleList[i];
                             let scheduleItems = peopleList[i].calendarItems;
                             scheduleItems.forEach((item,index)=>{
                                 let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
@@ -667,9 +717,14 @@
                                     Phone:item.Phone||'',
                                     CreatedByName:item.CreatedByName||'',
                                     Description:item.Description||item.What||'',
-                                    backgroundColor: colors[remainder], // 该事件的背景颜色
-                                    borderColor: colors[remainder], // 该事件的边框颜色
-                                    textColor: '#FFF' // 该事件的文字颜色
+                                    // backgroundColor: colors[remainder], // 该事件的背景颜色
+                                    // borderColor: colors[remainder], // 该事件的边框颜色
+                                    // textColor: '#FFF' // 该事件的文字颜色
+                                    backgroundColor: ite.calendar.Color?ite.calendar.Color:colors[0], // 该事件的背景颜色
+                                    borderColor: ite.calendar.Color?ite.calendar.Color:colors[0], // 该事件的边框颜色
+                                    textColor: getComplementaryColor(ite.calendar.Color?ite.calendar.Color:colors[0]), // 该事件的文字颜色
+                                    editable:ite.calendar.CalendarActionsConfig.canDragAndDropItems,//是否允许拖拽
+                                    CalendarActionsConfig:ite.calendar.CalendarActionsConfig//权限
                                 }
                                 if(fullCalendarRef.value.getApi().view.calendar.getEventById(item.Id)){
                                     fullCalendarRef.value.getApi().view.calendar.getEventById(item.Id).remove();
@@ -918,9 +973,7 @@
         :deep .fc .fc-scrollgrid{
             border: 0 !important;
         }
-        :deep .fc .fc-scrollgrid-section-sticky > *{
-            // position: relative;
-        }
+        
         :deep .fc .fc-button:disabled {
             opacity: 0.3 !important;
         }
