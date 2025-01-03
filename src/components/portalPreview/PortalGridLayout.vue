@@ -91,7 +91,7 @@
     </grid-layout>
 </template>
 <script setup>
-    import { ref, reactive, toRefs, onMounted, getCurrentInstance, watch } from "vue";
+    import { ref, reactive, toRefs, onMounted, getCurrentInstance, watch, defineExpose } from "vue";
     import { PlusSquareOutlined, CopyOutlined, DeleteOutlined } from '@ant-design/icons-vue';
     import ListCom from "@/components/portal/widget/List.vue";
     import IconGrid from "@/components/portal/widget/IconGrid.vue";
@@ -326,7 +326,10 @@
         if(props.dashboardId){
             getQuery();
         }
-    },{immediate: true})
+    },{immediate: true});
+
+    defineExpose({ getQuery });
+
 
 </script>
 <style lang="less" scoped>

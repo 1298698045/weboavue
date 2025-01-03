@@ -39,8 +39,6 @@
                                 <a-select
                                     v-model:value="item.name"
                                     style="width: 200px"
-                                    @focus="focus"
-                                    @change="handleChange"
                                     >
                                     <a-select-option :value="item.name" v-for="(item,index) in listData" :key="index">{{item.title}}</a-select-option>
                                 </a-select>
@@ -88,6 +86,82 @@
     })
     const emit = defineEmits(['cancel','load']);
     const modelContentRef = ref(null);
+    
+    const data = reactive({
+        listData: [],
+        targetKeys: [],
+        selectedKeys: [],
+        list:[
+            {
+                label:'',
+                name: "",
+                sort: ""
+            }
+        ],
+        top: ""
+    })
+    const { listData, targetKeys, selectedKeys, list, top } = toRefs(data);
+    const formState = reactive({
+        name: "",
+        apiname: "",
+        resource: "",
+        role: []
+    })
+    const mockData = [];
+    for (let i = 0; i < 20; i++) {
+        mockData.push({
+            key: i.toString(),
+            title: `content${i + 1}`,
+            description: `description of content${i + 1}`,
+            // disabled: i % 3 < 1,
+        });
+    }
+    const oriTargetKeys = mockData.filter(item => +item.key % 3 > 1).map(item => item.key);
+    const disabled = ref(false);
+    // const targetKeys = ref(oriTargetKeys);
+    // const selectedKeys = ref(['1', '4']);
+    const handleChange = (nextTargetKeys, direction, moveKeys) => {
+        // console.log('targetKeys: ', nextTargetKeys);
+        // console.log('direction: ', direction);
+        // console.log('moveKeys: ', moveKeys);
+        if(direction == 'right'){
+            const currentKeys = nextTargetKeys.filter(key => !moveKeys.includes(key));
+            currentKeys.push(...moveKeys);
+            data.targetKeys = currentKeys;
+        }
+    };
+    const handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+        // console.log('sourceSelectedKeys: ', sourceSelectedKeys);
+        // console.log('targetSelectedKeys: ', targetSelectedKeys);
+    };
+    const handleScroll = (direction, e) => {
+        // console.log('direction:', direction);
+        // console.log('target:', e.target);
+    };
+
+    const handleMoveUp = () => {
+        let firstSelectedIndex = data.targetKeys.findIndex(item=>item==data.selectedKeys[0]);
+        if(firstSelectedIndex > 0){
+            const itemsToMove = data.selectedKeys.slice();
+            console.log("itemsToMove", itemsToMove)
+            for(const item of itemsToMove){
+                const currentIndex = data.targetKeys.indexOf(item);
+                data.targetKeys.splice(currentIndex, 1);
+                data.targetKeys.splice(currentIndex - 1, 0, item);
+            }
+        }
+    }
+    const handleMoveDown = () => {
+        const lastSelectedIndex = data.targetKeys.indexOf(data.selectedKeys[data.selectedKeys.length - 1]);
+          if (lastSelectedIndex < data.targetKeys.length - 1) {
+            const itemsToMove = data.selectedKeys.slice().reverse();
+            for (const item of itemsToMove) {
+              const currentIndex = data.targetKeys.indexOf(item);
+              data.targetKeys.splice(currentIndex, 1);
+              data.targetKeys.splice(currentIndex + 1, 0, item);
+            }
+        }
+    }
     const getData = ()=> {
         proxy.$get(Interface.listView.getListView, {
             id: props.recordId
@@ -132,6 +206,14 @@
         }else if(formState.resource=='3'){
             visibility='SHARED';
         }
+
+        let isEmptySort = data.list.every(item=>{
+            return item.name == '' || item.sort == ''
+        });
+        if(isEmptySort){
+            message.error("排序字段和排序方式不能为空！");
+            return false;
+        }
         let url = Interface.listView.updateListView;
             let d = {
                 actions:[{
@@ -148,8 +230,7 @@
                         listViewFieldCriteria: null,
                         listViewScope: null,
                         shareIds: null,
-                        orderedOrderBy:data.list
-                        
+                        orderedByInfo: data.list
                     }
                 }]
             };
@@ -166,83 +247,13 @@
                         message.success(res.actions[0].errorMessage);
                     }
                     else{
-                        message.success("保存失败");
+                        message.error("保存失败");
                     }
                 }
                 setTimeout(function(){
                     emit("cancel", false);
                 },1000)
             })
-    }
-    const data = reactive({
-        listData: [],
-        targetKeys: [],
-        selectedKeys: [],
-        list:[
-            {
-                label:'',
-                name: "",
-                sort: ""
-            }
-        ],
-        top: ""
-    })
-    const { listData, targetKeys, selectedKeys, list, top } = toRefs(data);
-    const formState = reactive({
-        name: "",
-        apiname: "",
-        resource: "",
-        role: []
-    })
-    const mockData = [];
-    for (let i = 0; i < 20; i++) {
-        mockData.push({
-            key: i.toString(),
-            title: `content${i + 1}`,
-            description: `description of content${i + 1}`,
-            // disabled: i % 3 < 1,
-        });
-    }
-    const oriTargetKeys = mockData.filter(item => +item.key % 3 > 1).map(item => item.key);
-    const disabled = ref(false);
-    // const targetKeys = ref(oriTargetKeys);
-    // const selectedKeys = ref(['1', '4']);
-    const handleChange = (nextTargetKeys, direction, moveKeys) => {
-        console.log('targetKeys: ', nextTargetKeys);
-        console.log('direction: ', direction);
-        console.log('moveKeys: ', moveKeys);
-    };
-    const handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
-        console.log('sourceSelectedKeys: ', sourceSelectedKeys);
-        console.log('targetSelectedKeys: ', targetSelectedKeys);
-    };
-    const handleScroll = (direction, e) => {
-        console.log('direction:', direction);
-        console.log('target:', e.target);
-    };
-
-    const handleMoveUp = () => {
-        let firstSelectedIndex = data.targetKeys.findIndex(item=>item==data.selectedKeys[0]);
-        if(firstSelectedIndex > 0){
-            const itemsToMove = data.selectedKeys.slice();
-            console.log("itemsToMove", itemsToMove)
-            for(const item of itemsToMove){
-                const currentIndex = data.targetKeys.indexOf(item);
-                data.targetKeys.splice(currentIndex, 1);
-                data.targetKeys.splice(currentIndex - 1, 0, item);
-            }
-        }
-    }
-    const handleMoveDown = () => {
-        const lastSelectedIndex = data.targetKeys.indexOf(data.selectedKeys[data.selectedKeys.length - 1]);
-          if (lastSelectedIndex < data.targetKeys.length - 1) {
-            const itemsToMove = data.selectedKeys.slice().reverse();
-            for (const item of itemsToMove) {
-              const currentIndex = data.targetKeys.indexOf(item);
-              data.targetKeys.splice(currentIndex, 1);
-              data.targetKeys.splice(currentIndex + 1, 0, item);
-            }
-        }
     }
 
     const getQuery = ()=> {

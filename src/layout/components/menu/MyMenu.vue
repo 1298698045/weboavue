@@ -79,13 +79,17 @@ watch(
   () => route,
   (newRoute) => {
     // console.log("menu-route", newRoute.params.sObjectName);
-    state.selectedKeys = [newRoute.params.sObjectName || newRoute.name]; // 确保选中最新的路由名称
+    // state.selectedKeys = [newRoute.params.sObjectName || newRoute.name]; // 确保选中最新的路由名称
+    let menuName = localStorage.getItem("menuName");
+    state.selectedKeys = [newRoute.params.sObjectName || menuName || newRoute.name];
   },
   { immediate: true, deep: true }
 );
 
 const handleMenu = (e) => {
-  // console.log('e', e);
+  console.log('e', e);
+  let menuName = e.item.navAction.devNameOrId;
+  localStorage.setItem("menuName", menuName);
   router.push(e.item.navAction.url);
 };
 

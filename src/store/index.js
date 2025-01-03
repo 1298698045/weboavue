@@ -202,7 +202,7 @@ export default createStore({
           }
           localStorage.setItem('savedRoutes', JSON.stringify(newRoutes));
           commit('setModuleName', returnValue.label);
-
+          localStorage.setItem("menuName", subModules[0].name);
           setTimeout(()=>{
             router.push(subModules[0].navAction.url);
           },100)

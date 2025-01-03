@@ -45,9 +45,18 @@ const staticRoutes = [
           name: "通用列表1",
           icon: "xiaozu",
         },
+      },
+      {
+        path: "/lightning/page/dashboard",
+        name: "DashboardHome",
+        meta: {
+          name: "DashboardHome"
+        },
+        component: () => import("../views/home/commonHome.vue"),
       }
     ]
   },
+  
   {
     path: "/lightning/r/group/view",
     name: "GroupDetail",
@@ -481,23 +490,29 @@ if (localStorage.getItem('savedRoutes')) {
   store.commit("setModuleName", moduleName);
 }
 router.beforeEach((to, from, next)=>{
-  if(to.meta.name == '通用列表1'){
-    // debugger
-    console.log("to", to, from, next);
-    console.log(localStorage.getItem("appCode"))
-    // to.name = to.params.sObjectName;
-    next({
-      ...to,
-      replace: true,
-      name: to.params.sObjectName,
-      meta: {
-        ...to.meta,
-        appCode:  localStorage.getItem("appCode"),
-        moduleName: localStorage.getItem("moduleName"),
-      }
-    });
+  const route = router.resolve(to.path);
+  if(route.matched.length > 0){
+    if(to.meta.name == '通用列表1'){
+      // debugger
+      console.log("to", to, from, next);
+      console.log(localStorage.getItem("appCode"))
+      // to.name = to.params.sObjectName;
+      next({
+        ...to,
+        replace: true,
+        name: to.params.sObjectName,
+        meta: {
+          ...to.meta,
+          appCode:  localStorage.getItem("appCode"),
+          moduleName: localStorage.getItem("moduleName"),
+        }
+      });
+    } else {
+      next();
+    }
   }else {
-    next();
+    localStorage.clear();
+    next({name: 'Login'});
   }
 });
 export default router;
