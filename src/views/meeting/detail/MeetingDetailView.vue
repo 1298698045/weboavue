@@ -140,7 +140,7 @@
           </div> -->
         </div>
         <div class="tabContainer" v-if="activeKey == 6">
-            <RelatedAttachment :id="data.id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="'5000'" />
+            <RelatedAttachment :id="data.id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="'5000'" :entityName="sObjectName" />
         </div>
         <div class="tabContainer" v-if="activeKey == 7">
             <Comment :title="'会议讨论'" :id="data.id" :RegardingObjectTypeCode="'5000'" />

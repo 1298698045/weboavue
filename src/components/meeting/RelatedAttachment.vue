@@ -167,7 +167,7 @@
       width: 200,
   },
   {
-      title: "关联时间",
+      title: "创建时间",
       dataIndex: "CreatedOn",
       key: "CreatedOn",
       width: 200,

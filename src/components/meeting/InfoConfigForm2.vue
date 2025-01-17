@@ -880,7 +880,7 @@
                             // ContactUser:'',
                             // HostName:'',
                             // MeetingMgrId:'',
-                            // OwningUser:formState.OwningUser.Id,
+                            OwningUser:formState.OwningUser.Id,
                             // MeetingService_HandleBy_1:'',
                             // MeetingItem_ApplyBy_1:'',
                             // MeetingItem_OwningBusinessUnit_1:''

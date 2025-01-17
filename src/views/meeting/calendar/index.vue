@@ -9,7 +9,7 @@
             </div>
             <div class="headerRight">
                 <a-button type="primary" @click="handleAddMeeting">新建会议</a-button>
-                <a-button type="primary" v-if="current==1" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button>
+                <!-- <a-button type="primary" v-if="current==1" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button> -->
             </div>
         </div>
         <div class="calendarBody">

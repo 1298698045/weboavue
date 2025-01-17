@@ -90,7 +90,7 @@
             <div class="tableBox" v-html="data.TemplateContent"></div>
           </div>
           <div class="tabContainer" v-if="activeKey == 1">
-            <RelatedAttachment :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" />
+            <RelatedAttachment :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" :entityName="sObjectName" />
           </div>
           <div class="tabContainer" v-if="activeKey == 2">
             <div class="detailContent">

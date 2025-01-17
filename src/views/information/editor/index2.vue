@@ -136,7 +136,7 @@
             </div>
           </div>
           <div class="tabContainer" v-if="activeKey == 2">
-            <RelatedAttachment :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" />
+            <RelatedAttachment :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" :entityName="sObjectName" />
           </div>
           <span class="wea-doc-detail-content-text-sub"><span>最后由</span><span>&nbsp;&nbsp;&nbsp;{{detail.ModifiedBy ||'暂无'}}&nbsp;&nbsp;</span><span> 编辑于 {{detail.ModifiedOn ||' '}} </span>&nbsp;&nbsp;<span> 阅读 ({{detail.ReadCount ||0}})</span></span>
         </div>

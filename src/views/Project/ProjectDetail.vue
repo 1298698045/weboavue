@@ -92,7 +92,7 @@
             <ProjectMember ref="PersonnelLst" :load="refreshPeople" :id="id" :type="'page'" />
           </div>
           <div class="tabContainer" v-if="activeKey == 5">
-            <RelatedAttachment :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" />
+            <RelatedAttachment :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" :entityName="sObjectName" />
           </div>
           <div class="tabContainer" v-if="activeKey == 6">
             <Comment :id="id" :title="'讨论留言'" :RegardingObjectTypeCode="objectTypeCode" />
