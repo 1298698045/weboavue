@@ -3,7 +3,7 @@
         <a-modal v-model:open="props.isShow" width="850px" :style="setTop" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
-                    跳转
+                    退回
                  </div>
             </template>
             <div class="modalContainer" ref="modelContentRef">
@@ -16,7 +16,7 @@
                             <a-form-item label="当前节点名称">
                                 <p>	{{ processInstanceName }}</p>
                             </a-form-item>
-                            <a-form-item label="跳转指定节点" name="toActivityId" :rules="{required: true, message: '请选择退回节点'}">
+                            <a-form-item label="退回指定节点" name="toActivityId" :rules="{required: true, message: '请选择退回节点'}">
                                 <!-- <a-select v-model:value="formState.toActivityId" :show-search="true" :filter-option="filterOption" @change="changeNode">
                                     <a-select-option v-for="(row,idx) in nodes" :key="idx"
                                         :value="row.id" :label="row.name">{{row.name}}</a-select-option>
@@ -73,7 +73,7 @@
             </div>
             <template #footer>
                 <div>
-                    <a-button type="primary" @click.prevent="handleSubmit">保存</a-button>
+                    <a-button type="primary" @click.prevent="handleSubmit">退回</a-button>
                     <a-button @click="handleCancel">关闭</a-button>
                 </div>
             </template>
@@ -376,13 +376,13 @@
             message: JSON.stringify(obj)
         };
         
-        proxy.$post(Interface.workflow.jump, d).then(res=>{
+        proxy.$post(Interface.workflow.return, d).then(res=>{
             if(res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
-                message.success("跳转成功！");
+                message.success("退回成功！");
                 emit("update-status",false);
                 emit("ok",false);
             }else {
-                message.error("跳转失败！");
+                message.error("退回失败！");
             }
         })
     }

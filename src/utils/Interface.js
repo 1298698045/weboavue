@@ -11,25 +11,28 @@ const Interface = {
   applist: "/localData/applist.json",
   workflow: {
     //processList: "/localData/process.search.json",
-    processType: baseUrl + "/workflow/Process/getCategories",//新建流程分类
-    getAuthorizedProcess: baseUrl + "/workflow/Process/getAuthorizedProcess",//获取当前用户可以访问的流程
-    getCommonUses: baseUrl + "/workflow/Process/getCommonUses",//获取常用流程
-    getFavorites:baseUrl + "/workflow/Process/getFavorites",//获取收藏流程
-    new:baseUrl + "/workflow/ProcessInstance/new",//新建流程
+    processType: baseUrl + "/aura/workflow/Process/getCategories",//新建流程分类
+    getAuthorizedProcess: baseUrl + "/aura/workflow/Process/getAuthorizedProcess",//获取当前用户可以访问的流程
+    getCommonUses: baseUrl + "/aura/workflow/Process/getCommonUses",//获取常用流程
+    getFavorites:baseUrl + "/aura/workflow/Process/getFavorites",//获取收藏流程
+    new:baseUrl + "/aura/workflow/ProcessInstance/new",//新建流程
     getProcessDefinitionInfo: baseUrl + "/aura/workflow/Process/getProcessDefinitionInfo", // 获取流程定义简要
     getRelatedObjects: baseUrl + "/objectmanager/object/getRelatedObjects", // 根据对象ID，包括主表、子表信息
     updateRecordBatch: baseUrl + "/aura/RecordUi/updateRecordBatch", // 保存表单 - 同时保存主子表
     getPermission: baseUrl + "/aura/workflow/definition/activity/getPermission", // 流程节点权限
     getTransitions: baseUrl + "/aura/workflow/Process/activity/getTransitions", // 获取节点转移路径
-    getParticipators: baseUrl + "/aura/workflow/Process/activity/getParticipators", // 获取节点办理人员
-    agree: baseUrl + "/workflow/ProcessInstance/task/agree", // 提交流转-审批通过
-    disagree: baseUrl + "/workflow/ProcessInstance/task/disagree", // 审批拒绝
-    notice: baseUrl + "/workflow/ProcessInstance/notice", // 催办
-    forward: baseUrl + "/workflow/ProcessInstance/forward", // 传阅
+    getParticipators: baseUrl + "/aura/workflow/ProcessInstance/activity/getParticipators", // 获取节点办理人员
+    agree: baseUrl + "/aura/workflow/ProcessInstance/task/agree", // 提交流转-审批通过
+    disagree: baseUrl + "/aura/workflow/ProcessInstance/task/disagree", // 审批拒绝
+    notice: baseUrl + "/aura/workflow/ProcessInstance/notice", // 催办
+    forward: baseUrl + "/aura/workflow/ProcessInstance/forward", // 传阅
     countersign: baseUrl + "/aura/workflow/Process/activity/task/insert", // 加签
-    jump: baseUrl + "/workflow/ProcessInstance/jump", // 跳转
-    withdraw: baseUrl + "/workflow/ProcessInstance/withdraw", // 撤销
-    delete: baseUrl + "/workflow/ProcessInstance/delete", // 删除流程实例
+    jump: baseUrl + "/aura/workflow/ProcessInstance/jump", // 跳转
+    withdraw: baseUrl + "/aura/workflow/ProcessInstance/withdraw", // 撤销
+    delete: baseUrl + "/aura/workflow/ProcessInstance/delete", // 删除流程实例
+    delegate: baseUrl + "/aura/workflow/ProcessInstance/task/delegate", // 委派/转代理
+    getReturnActivities: baseUrl + "/aura/workflow/ProcessInstance/task/getReturnActivities", // 获取可退回节点集合与办理人
+    return: baseUrl + "/aura/workflow/ProcessInstance/task/return", // 退回
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",

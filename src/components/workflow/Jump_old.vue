@@ -3,7 +3,7 @@
         <a-modal v-model:open="props.isShow" width="800px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
-                    传阅
+                    跳转
                  </div>
             </template>
             <div class="modalContainer">
@@ -12,6 +12,15 @@
                         ref="formRef"
                         :label-col="labelCol"
                         :model="formState">
+                        <a-form-item label="当前节点名称">
+                            <p>	{{ processInstanceName }}</p>
+                        </a-form-item>
+                        <a-form-item label="跳转到节点" name="toActivityId" :rules="{required: true, message: '请选择跳转到节点'}">
+                            <a-select v-model:value="formState.toActivityId" @change="changeNode">
+                                <a-select-option v-for="(row,idx) in nodes" :key="idx"
+                                    :value="row.id">{{row.name}}</a-select-option>
+                            </a-select>
+                        </a-form-item>
                         <a-form-item label="办理人员：">
                             <div class="flex">
                                 <a-input placeholder="请输入搜索字符" v-model:value="searchVal" @change="handleSearch"></a-input>
@@ -32,20 +41,12 @@
                                 </a-table>
                             </div>
                         </a-form-item>
-                        <a-form-item label="留言：" name="Description">
-                            <a-textarea :rows="3" v-model:value="formState.Description" />
-                        </a-form-item>
-                        <a-form-item label="提醒方式" name="noticeMethod">
-                            <a-checkbox-group v-model:value="formState.noticeMethod">
-                                <a-checkbox value="web" name="type">站内消息</a-checkbox>
-                                <a-checkbox value="app" name="type">移动消息</a-checkbox>
-                                <a-checkbox value="sms" name="type">短信消息</a-checkbox>
-                            </a-checkbox-group>
+                        <a-form-item label="备注" name="description">
+                            <a-textarea :rows="3" v-model:value="formState.description" />
                         </a-form-item>
                     </a-form>
                 </div>
                 <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser=false" @select="handleSelectUsers" />
-
             </div>
             <template #footer>
                 <div>
@@ -70,50 +71,35 @@
         defineExpose,
         defineEmits,
         toRaw,
-        nextTick,
         computed
     } from "vue";
     import { PieChartOutlined, ArrowUpOutlined, ArrowDownOutlined  } from "@ant-design/icons-vue";
-    import Interface from "@/utils/Interface.js";
     import { message } from "ant-design-vue";
+
+    import Interface from "@/utils/Interface.js";
     import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 
     const { proxy } = getCurrentInstance();
-
-
+    const formRef = ref();
     const props = defineProps({
+        paramsData: Object,
         isShow: Boolean,
         processInstanceId: String,
-        processInstanceName: String
+        processInstanceName: String,
+        processId: String,
+        ruleLogId: String
     });
-
     const isModal = ref(true);
     const labelCol = ref({ style: { width: '100px' } });
     const emit = defineEmits(['update-status']);
-
-
+    
     const formState = reactive({
-        Description:"",
-        noticeMethod: ['web']
+        ProcessName: "",
+        toActivityId: "",
+        toActivityName: "",
+        Remark: "",
+        description: ""
     })
-
-    const data = reactive({
-        nodes: [],
-        isMultipleUser: false,
-        selectedRowKeys: [],
-        height: document.documentElement.clientHeight - 340,
-        pagination: {
-            pageIndex: 1,
-            pageSize: 5,
-            total: 0,
-            showTotal: (total) => `共 ${total} 条数据`, // 展示总共有几条数据
-        },
-        searchVal: "",
-        recordUsers: []
-    })
-    const { nodes, isMultipleUser, selectedRowKeys, height, pagination, searchVal, recordUsers } = toRefs(data);
-    
-    
     const columns = [
         {
             title: "姓名",
@@ -135,9 +121,25 @@
             align: "center"
         },
     ]
-    const dataSource = ref([]);
+    const dataSource = ref([
+        
+    ]);
     const columnsList = toRaw(columns);
-
+    const data = reactive({
+        nodes: [],
+        isMultipleUser: false,
+        selectedRowKeys: [],
+        height: document.documentElement.clientHeight - 340,
+        pagination: {
+            pageIndex: 1,
+            pageSize: 5,
+            total: 0,
+            showTotal: (total) => `共 ${total} 条数据`, // 展示总共有几条数据
+        },
+        searchVal: "",
+        recordUsers: []
+    })
+    const { nodes, isMultipleUser, selectedRowKeys, height, pagination, searchVal, recordUsers } = toRefs(data);
     const rowSelection = computed(()=>{
         return {
             onChange: (selectedRowKeys, selectedRows) => {
@@ -146,27 +148,15 @@
             selectedRowKeys: data.selectedRowKeys,
             preserveSelectedRowKeys: true
         }
-    })
-
+    });
+    const handleAddPeople = () => {
+        data.isMultipleUser = true;
+    }
     const handleSearch = (e) => {
         dataSource.value = data.recordUsers.filter(item=>{
             return item.name.indexOf(data.searchVal) != -1;
         })
     };
-
-    const handleAddPeople = () => {
-        data.isMultipleUser = true;
-    };
-
-    const handleUserParams = (e) => {
-        dataSource.value.push({
-            key: e.id,
-            userName: e.name,
-            BusinessUnitIdName: e.BusinessUnitIdName
-        })
-        data.isMultipleUser = false;
-    };
-
     const handleSelectUsers = (params) => {
         let addUsers = params.map(item=>{
             item.key = item.id;
@@ -204,82 +194,93 @@
             dataSource.value=list;
         }
     }
+    const getProcessNodes = () => {
+        let d = {
+            filterId: "",
+            entityType: "WFStep",
+            filterQuery: "ProcessId\teq\t" + props.processId
+        }
+        proxy.$get(Interface.list2, d).then(res=>{
+            let list = res.nodes;
+            let temp = [];
+            list.forEach(item=>{
+                temp.push({
+                    id: item.id,
+                    name: item.Name.textValue
+                })
+            });
+            data.nodes = temp;
+        })
+    }
+    getProcessNodes();
+
+    const changeNode = (e) => {
+        let row = data.nodes.find(item=>item.id==formState.toActivityId);
+        formState.toActivityName = row.name;
+    }
+
     onMounted(()=>{
         window.addEventListener("resize", (e) => {
             data.height = document.documentElement.clientHeight - 340;
         });
-    });
-
-    const getBoolean = (name) => {
-        let boolean = formState.noticeMethod.some(item=>item == name);
-        return boolean;
-    }
-
+    })
+    
     const handleSubmit = () => {
-        let web = getBoolean('web');
-        let app = getBoolean('app');
-        let sms = getBoolean('sms');
-
-        let toUsers = [];
-
-        if(dataSource.value.length == 0){
-            message.error("请添加办理人员！");
-            return false;
-        }
-
-        const list = dataSource.value.filter(item=>{
-            return data.selectedRowKeys.find(row=>{
-                return item.key == row;
-            })
-        });
-
-        if(list.length == 0){
-            message.error("请选择办理人员！");
-            return false;
-        }
-
-        list.forEach(item=>{
-            toUsers.push({
-                id: item.id,
-                name: item.name
-            });
-        });
-
-        let obj = {
-            actions:[{
-                id: "2919;a",
-                descriptor: "",
-                callingDescriptor: "UNKNOWN",
-                params: {
-                    processInstanceId: props.processInstanceId,
-                    name: props.processInstanceName,
-                    noticeMessageChannel: {
-                        web: web,
-                        app: app,
-                        sms: sms
-                    },
-                    toUsers: toUsers,
-                    description: formState.Description
-                }
-            }]
-        };
-        let d = {
-            message: JSON.stringify(obj)
-        };
-
-        proxy.$post(Interface.workflow.forward, d).then(res=>{
-            if(res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
-                message.success("传阅成功！");
-                handleCancel();
-            }else {
-                message.error("传阅失败！");
+        formRef.value.validate().then(() => {
+            let toUsers = [];
+            if(dataSource.value.length == 0){
+                message.error("请添加办理人员！");
+                return false;
             }
-        })
+            const list = dataSource.value.filter(item=>{
+                return data.selectedRowKeys.find(row=>{
+                    return item.key == row;
+                })
+            });
+            if(list.length == 0){
+                message.error("请选择办理人员！");
+                return false;
+            }
+            list.forEach(item=>{
+                toUsers.push({
+                    id: item.id,
+                    name: item.name
+                });
+            });
+            let obj = {
+                actions:[{
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
+                    params: {
+                        ruleLogId: props.ruleLogId,
+                        processInstanceId: props.processInstanceId,
+                        toActivityId: formState.toActivityId,
+                        toActivityName: formState.toActivityName,
+                        toUsers: toUsers,
+                        description: formState.description
+                    }
+                }]
+            };
+            let d = {
+                message: JSON.stringify(obj)
+            };
+            proxy.$post(Interface.workflow.jump, d).then(res=>{
+                if(res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
+                    message.success("跳转成功！");
+                    handleCancel();
+                }else {
+                    message.error("跳转失败！");
+                }
+            })
+        }).catch((err) => {
+            console.log("error", err);
+        });
+                
     }
     const handleCancel = () => {
         emit("update-status",false);
     }
-
     defineExpose({isModal})
 </script>
 <style lang="less">
@@ -338,6 +339,13 @@
             }
             :where(.css-dev-only-do-not-override-kqecok).ant-form-item{
                 margin-bottom: 10px;
+            }
+            :where(.css-dev-only-do-not-override-kqecok).ant-form-item .ant-form-item-control-input-content p{
+                width: auto;
+                font-size: 14px;
+                display: inline-block;
+                flex: unset;
+                padding: 0 !important;
             }
         }
     }

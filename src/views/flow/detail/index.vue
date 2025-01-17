@@ -33,6 +33,9 @@
                         <a-menu-item key="1" @click="handleUrging">
                           催办
                         </a-menu-item>
+                        <a-menu-item key="10" @click="handleReturn">
+                            退回
+                        </a-menu-item>
                         <a-menu-item key="6" @click="handleCountersign">
                             加签
                         </a-menu-item>
@@ -300,15 +303,17 @@
             </div>
         </div>
         <SubmitProcess ref="processRef" v-if="isProcess" :ruleLogId="ruleLogId" :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID" :isShow="isProcess" @update-status="updateStatus" :paramsData="ProcessData" />
-        <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" :ruleLogId="ruleLogId" :processId="processId" :processInstanceId="processInstanceId" :fromActivityId="fromActivityId" @update-status="updateStatus" />
+        <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" :ruleLogId="ruleLogId" :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID" :fromActivityId="fromActivityId" @update-status="updateStatus" />
         <circulation-modal ref="circulationRef" :processInstanceId="processInstanceId" :processInstanceName="processInstanceName" @update-status="updateStatus" v-if="isCirculation" :isShow="isCirculation"></circulation-modal>
         <Delegate ref="DelegateRef" :ruleLogId="ruleLogId" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
         <Urging ref="UrgingRef" :processInstanceId="processInstanceId" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
         <RelateInstance v-if="isRelateInstance" :id="id" :entityApiName="lookEntityApiName" :entityType="lookEntityType" :objectTypeCode="lookObjectTypeCode" :isShow="isRelateInstance" @select="handleSelectLook" @cancel="isRelateInstance=false" />
         <Countersign v-if="isCountersign" :isShow="isCountersign" :processInstanceId="processInstanceId" :processInstanceName="processInstanceName" :processId="processId" :paramsData="ProcessData" @update-status="isCountersign=false" />
-        <Jump v-if="isJump" :isShow="isJump" :ruleLogId="ruleLogId" :processInstanceId="processInstanceId" :processInstanceName="processInstanceName" :processId="processId" :paramsData="{}" @update-status="isJump=false" />
+        <!-- <Jump_old v-if="isJump" :isShow="isJump" :ruleLogId="ruleLogId" :processInstanceId="processInstanceId" :processInstanceName="processInstanceName" :processId="processId" :paramsData="{}" @update-status="isJump=false" /> -->
         <Confirm v-if="isConfirm" :isShow="isConfirm" title="撤销流程" :desc="revokeDesc" @cancel="isConfirm=false" @ok="revokeFlow"></Confirm>
         <Delete v-if="isDelete" :isShow="isDelete" desc="您确定删除该工作流吗?" :external="true" @cancel="isDelete=false" @ok="deleteFlow"></Delete>
+        <Return v-if="isReturn" :isShow="isReturn" :ruleLogId="ruleLogId" :processId="processId" :processInstanceId="processInstanceId" :processInstanceName="processInstanceName" :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus" @ok="initLoad"></Return>
+        <Jump v-if="isJump" :isShow="isJump" :ruleLogId="ruleLogId" :processId="processId" :processInstanceId="processInstanceId" :processInstanceName="processInstanceName" :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus" @ok="initLoad"></Jump>
     </div>
 </template>
 <script setup>
@@ -346,6 +351,8 @@
     import Jump from "@/components/workflow/Jump.vue";
     import Confirm from "@/components/commonModal/Confirm.vue";
     import Delete from "@/components/listView/Delete.vue";
+    import Return from "@/components/workflow/Return.vue";
+
 
     import { useRouter, useRoute } from "vue-router";
     import { message } from "ant-design-vue";
@@ -413,12 +420,13 @@
         isConfirm: false,
         revokeDesc: "是否撤销该事务吗？撤销后进入发起人的退件箱，发起人可以进行删除",
         isDelete: false,
-        fromActivityId: ""
+        fromActivityId: "",
+        isReturn: false
     })
     const { isEdit,Title,objectTypeCode,sObjectName,tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData,
          isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex,id,fileList,isRelateInstance,lookEntityApiName,lookObjectTypeCode,lookEntityType,
          pageCurrent, ruleLogId, processId, processInstanceId, toActivityID, 
-         processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete, fromActivityId } = toRefs(data);
+         processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete, fromActivityId, isReturn } = toRefs(data);
 
     const getRuleLogData = () => {
         let obj = {
@@ -481,6 +489,7 @@
         data.isCirculation = false;
         data.isModal = false;
         data.isUrging = false;
+        data.isReturn = false;
     }
     const CirculationData = reactive({
         params: {}
@@ -506,6 +515,10 @@
     const handleUrging = () => {
         data.isUrging = true;
     };
+
+    const handleReturn = () => {
+        data.isReturn = true;
+    }
 
     // 加签
     const handleCountersign = () => {
@@ -698,6 +711,11 @@ const handleSave = () => {
     watch(()=>route.query.id,(newVal,oldVal)=>{
         // getDetail();
     },{deep: true, immediate: true})
+
+    const initLoad = () => {
+        getRuleLogData();
+        getDetail();
+    }
 
 </script>
 <style lang="less" scoped>

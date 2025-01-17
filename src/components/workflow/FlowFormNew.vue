@@ -246,6 +246,7 @@
         if(res && res.actions && res.actions[0] && res.actions[0].returnValue){
             let fields = res.actions[0].returnValue.fields;
             // console.log("data.comps", data.comps);
+            console.log("data.list", data.list, fields)
             for(let key in data.list){
                 let type = data.comps.find(item=>item.id == key).type;
                 // console.log("type:",type);
@@ -256,8 +257,11 @@
                         Name: fields[key].displayValue
                     }]
                 }
+                try{
+                    data.list[key] = fields[key]?.value;
+                }catch(err){
 
-                data.list[key] = fields[key].value;
+                }
             }
             // console.log("list", data.list);
         }

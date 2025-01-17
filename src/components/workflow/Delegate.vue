@@ -190,24 +190,17 @@
                     descriptor: "",
                     callingDescriptor: "UNKNOWN",
                     params: {
-                        recordId: props.ruleLogId,
-                        recordInput:{
-                            allowSaveOnDuplicate: false,
-                            apiName: 'WFRuleLog',
-                            objTypeCode: 123,
-                            fields: {
-                                ExecutorIdentityId: formState.executorIdentityId,
-                                ExecutorIdentityName: executorIdentityName.value,
-                                Description: formState.Description
-                            }
-                        }
+                        ruleLogId: props.ruleLogId,
+                        executorId: formState.executorIdentityId,
+                        executorName: executorIdentityName.value,
+                        descripiton: formState.Description
                     }
                 }]
             };
             let d = {
                 message: JSON.stringify(obj)
             };
-            proxy.$post(Interface.edit, d).then((res) => {
+            proxy.$post(Interface.workflow.delegate, d).then((res) => {
                 if(res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
                     message.success("委派成功！");
                     handleCancel();

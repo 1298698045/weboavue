@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="850px" :style="setTop" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+        <a-modal v-model:open="props.isShow" width="600px" :style="setTop" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
                     审批拒绝
@@ -12,13 +12,13 @@
                         ref="formRef"
                         :label-col="labelCol"
                         :model="formState">
-                        <a-form-item label="退回类型：" name="noticeMethod">
+                        <!-- <a-form-item label="退回类型：" name="noticeMethod">
                             <a-radio-group v-model:value="formState.noticeMethod">
                                 <a-radio value="p">退回上一环节</a-radio>
                                 <a-radio value="s">退回发起人</a-radio>
                                 <a-radio value="b">退回指定节点</a-radio>
                               </a-radio-group>
-                        </a-form-item>
+                        </a-form-item> -->
                         <template v-if="formState.noticeMethod=='b'">
                             <div>
                                 <a-form-item label="退回节点" name="toActivityId" :rules="{required: true, message: '请选择退回节点'}">
@@ -92,7 +92,8 @@
         ruleLogId: String,
         processId: String,
         processInstanceId: String,
-        fromActivityId: String
+        fromActivityId: String,
+        toActivityId: String
     });
 
     const formRef = ref();
@@ -237,35 +238,35 @@
     }));
 
     const handleSubmit = () => {
-        let toUsers = [];
-        if(formState.noticeMethod == 'b'){
-            formRef.value.validate().then((res) => {
-                if(dataSource.value.length == 0){
-                    message.error("请添加办理人员！");
-                    return false;
-                }
-                const list = dataSource.value.filter(item=>{
-                    return data.selectedRowKeys.find(row=>{
-                        return item.key == row;
-                    })
-                });
-                if(list.length == 0){
-                    message.error("请选择办理人员！");
-                    return false;
-                }
-                list.forEach(item=>{
-                    toUsers.push({
-                        id: item.id,
-                        name: item.name
-                    });
-                });
-                console.log("toUsers", toUsers);
-            }).catch(err=>{
-                console.log("err", err);
+        // let toUsers = [];
+        // if(formState.noticeMethod == 'b'){
+        //     formRef.value.validate().then((res) => {
+        //         if(dataSource.value.length == 0){
+        //             message.error("请添加办理人员！");
+        //             return false;
+        //         }
+        //         const list = dataSource.value.filter(item=>{
+        //             return data.selectedRowKeys.find(row=>{
+        //                 return item.key == row;
+        //             })
+        //         });
+        //         if(list.length == 0){
+        //             message.error("请选择办理人员！");
+        //             return false;
+        //         }
+        //         list.forEach(item=>{
+        //             toUsers.push({
+        //                 id: item.id,
+        //                 name: item.name
+        //             });
+        //         });
+        //         console.log("toUsers", toUsers);
+        //     }).catch(err=>{
+        //         console.log("err", err);
 
-                return false;
-            })
-        };
+        //         return false;
+        //     })
+        // };
 
         
 
@@ -277,10 +278,10 @@
                 params: {
                     ruleLogId: props.ruleLogId,
                     processInstanceId: props.processInstanceId,
-                    fromActivityId: props.fromActivityId,
+                    fromActivityId: props.toActivityId,
                     description: formState.description,
                     deadline: 3,
-                    transitions: []
+                    // transitions: []
                 }
             }]
         };
@@ -288,7 +289,6 @@
             message: JSON.stringify(obj)
         };
 
-        return false;
         proxy.$post(Interface.workflow.disagree, d).then(res=>{
 
         })

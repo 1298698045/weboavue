@@ -7,22 +7,21 @@
                  </div>
             </template>
             <div class="modalContainer">
-                <a-tabs v-model:activeKey="activeKey">
+                <!-- <a-tabs v-model:activeKey="activeKey">
                     <a-tab-pane key="1" tab="审批流转"></a-tab-pane>
                     <a-tab-pane key="2" tab="留言"></a-tab-pane>
-                </a-tabs>
+                </a-tabs> -->
                 <div class="modalCenter" :style="{ height: height + 'px!important' }">
                     <a-form
-                        v-if="activeKey=='1'"
                         ref="formRef"
                         :label-col="labelCol"
                         :model="formState">
-                        <a-form-item label="操作类型：">
+                        <!-- <a-form-item label="操作类型：">
                             <a-radio-group v-model:value="formState.operationType">
                                 <a-radio :value="1">提交流转</a-radio>
-                                <!-- <a-radio value="2">跳转</a-radio> -->
+                                <a-radio value="2">跳转</a-radio>
                               </a-radio-group>
-                        </a-form-item>
+                        </a-form-item> -->
                         <a-form-item label="下一环节：" v-if="splitType!=2">
                             <a-radio-group v-model:value="activityId" @change="changeActivity">
                                 <a-radio :value="item.ToActivityId" v-for="(item, index) in transitions">{{item.To.name}}</a-radio>
@@ -96,8 +95,6 @@
                                 <a-checkbox value="sms" name="type">短信消息</a-checkbox>
                             </a-checkbox-group>
                         </a-form-item>
-                    </a-form>
-                    <a-form v-if="activeKey=='2'">
                         <a-form-item label="留言:" name="Description">
                             <a-textarea :rows="3" v-model:value="formState.description" />
                         </a-form-item>
@@ -347,6 +344,20 @@
         };
         proxy.$post(Interface.workflow.getParticipators, d).then(res=>{
             console.log("getParticipators", res);
+            console.log("transitions:", transitions.value);
+            let list = res.actions[0].returnValue;
+            let temp = [];
+            list.forEach(item=>{
+                data.listData[0].selectPeoples.push(item.UserId);
+                let obj = {
+                    id: item.UserId,
+                    key: item.UserId,
+                    name: item.Name,
+                    businessUnitIdName: item.BusinessUnitIdName
+                }
+                temp.push(obj);
+            });
+            data.listData[0].peopleList = temp;
         })
     };
     
@@ -481,8 +492,9 @@
                 callingDescriptor: "UNKNOWN",
                 params: {
                     ruleLogId: props.ruleLogId,
+                    processId: props.processId,
                     processInstanceId: props.processInstanceId,
-                    fromActivityId: data.fromActivityId,
+                    fromActivityId: props.toActivityID,
                     description: formState.description,
                     deadline: formState.deadline,
                     transitions: transitions
@@ -496,7 +508,12 @@
         // console.log("obj", obj);
 
         proxy.$post(Interface.workflow.agree, d).then(res=>{
-
+            if(res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
+                message.success("提交流转成功！");
+                emit("update-status",false);
+            }else {
+                message.error("提交流转失败！");
+            }
         })
 
 
