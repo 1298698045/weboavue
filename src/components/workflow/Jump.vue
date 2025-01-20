@@ -1,13 +1,13 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="850px" :style="setTop" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+        <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
                     跳转
                  </div>
             </template>
             <div class="modalContainer" ref="modelContentRef">
-                <div class="modalCenter">
+                <div class="modalCenter" :style="{ height: height + 'px!important' }">
                     <a-form
                         ref="formRef"
                         :label-col="labelCol"
@@ -60,8 +60,8 @@
                         </a-form-item>
                         <a-form-item label="办理类型：" name="activityTypeCode">
                             <a-select v-model:value="formState.activityTypeCode">
-                                <a-select-option value="1">原路执行</a-select-option>
-                                <a-select-option value="2">到被退回节点</a-select-option>
+                                <a-select-option value="1">仅执行不流转</a-select-option>
+                                <a-select-option value="2">执行流转</a-select-option>
                             </a-select>
                         </a-form-item>
                         <a-form-item label="留言：" name="description">
@@ -120,7 +120,7 @@
         display: 'flex',
         width: "100%",
     })
-    const emit = defineEmits(['update-status']);
+    const emit = defineEmits(['update-status','ok']);
     const columns = [
         {
             title: "姓名",
@@ -167,9 +167,10 @@
             showTotal: (total) => `共 ${total} 条数据`, // 展示总共有几条数据
         },
         searchVal: "",
-        recordUsers: []
+        recordUsers: [],
+        height: document.documentElement.clientHeight - 300,
     });
-    const { top, nodes, isMultipleUser, selectedRowKeys, pagination, searchVal, recordUsers  } = toRefs(data);
+    const { top, nodes, isMultipleUser, selectedRowKeys, pagination, searchVal, recordUsers, height } = toRefs(data);
 
     const filterOption = (input, option) => {
       return option.label.toLowerCase().includes(input.toLowerCase());
@@ -379,8 +380,8 @@
         proxy.$post(Interface.workflow.jump, d).then(res=>{
             if(res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
                 message.success("跳转成功！");
-                emit("update-status",false);
-                emit("ok",false);
+                emit("update-status", false);
+                emit("ok", false);
             }else {
                 message.error("跳转失败！");
             }

@@ -16,7 +16,7 @@
                             <p>	{{ processInstanceName }}</p>
                         </a-form-item>
                         <a-form-item label="需要加签节点" name="toActivityId" :rules="{required: true, message: '请选择需要加签的节点'}">
-                            <a-select v-model:value="formState.toActivityId">
+                            <a-select v-model:value="formState.toActivityId" @change="changeNodes">
                                 <a-select-option v-for="(row,idx) in nodes" :key="idx"
                                     :value="row.id">{{row.name}}</a-select-option>
                             </a-select>
@@ -46,6 +46,9 @@
                                     </template>
                                 </a-table>
                             </div>
+                        </a-form-item>
+                        <a-form-item label="办理期限：" name="deadline">
+                            <a-input v-model:value="formState.deadline"></a-input>
                         </a-form-item>
                         <a-form-item label="备注" name="description">
                             <a-textarea :rows="3" v-model:value="formState.description" />
@@ -91,7 +94,9 @@
         isShow: Boolean,
         processInstanceId: String,
         processInstanceName: String,
-        processId: String
+        processId: String,
+        ruleLogId: String,
+        toActivityID: String
     });
     const isModal = ref(true);
     const labelCol = ref({ style: { width: '100px' } });
@@ -102,8 +107,12 @@
         toActivityId: "",
         Remark: "",
         insertType: "51",
-        description: ""
-    })
+        description: "",
+        deadline: "",
+        toActivityName: ""
+    });
+
+
     const columns = [
         {
             title: "姓名",
@@ -131,7 +140,7 @@
         nodes: [],
         isMultipleUser: false,
         selectedRowKeys: [],
-        height: document.documentElement.clientHeight - 340,
+        height: document.documentElement.clientHeight - 300,
         pagination: {
             pageIndex: 1,
             pageSize: 5,
@@ -225,6 +234,11 @@
                 })
             });
             data.nodes = temp;
+            if(props.toActivityID){
+                formState.toActivityId = props.toActivityID;
+                const row = data.nodes.find(item=>item.id == formState.toActivityId);
+                formState.toActivityName = row.name;
+            }
         })
     }
     getProcessNodes();
@@ -235,6 +249,10 @@
         });
     })
 
+    const changeNodes = (e) => {
+        const row = data.nodes.find(item=>item.id == formState.toActivityId);
+        formState.toActivityName = row.name;
+    }
     
     const handleSubmit = () => {
         formRef.value.validate().then(() => {
@@ -263,19 +281,29 @@
                     name: item.name
                 });
             });
-
+            const transitions = [
+                {
+                    deadline: formState.deadline,
+                    insertType: formState.insertType,
+                    toActivityId: formState.toActivityId,
+                    toActivityName: formState.toActivityName,
+                    toUsers: toUsers
+                }
+            ];
             let obj = {
                 actions:[{
                     id: "2919;a",
                     descriptor: "",
                     callingDescriptor: "UNKNOWN",
                     params: {
+                        ruleLogId: props.ruleLogId,
+                        processId: props.processId,
                         processInstanceId: props.processInstanceId,
-                        name: props.processInstanceName,
-                        activityId: formState.toActivityId,
-                        activityTypeCode: formState.insertType,
-                        toUsers: toUsers,
-                        description: formState.description
+                        fromActivityId: props.toActivityID,
+                        fromActivityName: props.processInstanceName,
+                        description: formState.description,
+                        transitions: transitions,
+                        // toUsers: toUsers,
                     }
                 }]
             };

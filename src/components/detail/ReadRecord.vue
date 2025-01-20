@@ -6,32 +6,34 @@
                     传阅记录
                 </div> -->
                 <div class="tabWrap">
-                <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
-                    <a-tab-pane v-for="(item, index) in tabs" :key="index">
-                    <template #tab>
-                        <span>
-                        {{ item.label }}
-                        </span>
-                    </template>
-                    </a-tab-pane>
-                </a-tabs>
+                    <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
+                        <a-tab-pane v-for="(item, index) in tabs" :key="index">
+                            <template #tab>
+                                <span>
+                                    {{ item.label }}
+                                </span>
+                            </template>
+                        </a-tab-pane>
+                    </a-tabs>
                 </div>
                 <div class="panel-btn">
                 </div>
             </div>
             <div class="panel-bd" v-show="activeKey==0">
                 <!-- <Dtable name="recordGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable> -->
-                <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height" :isCollapsed="isCollapsed"></Ntable>
+                <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height"
+                    :isCollapsed="isCollapsed"></Ntable>
             </div>
             <div class="panel-bd" v-show="activeKey==1">
                 <!-- <Dtable name="browsingHistory" ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>-->
-                <Ntable ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.list2" :tableHeight="height" :isCollapsed="isCollapsed"></Ntable>
+                <Ntable ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.list2" :tableHeight="height"
+                    :isCollapsed="isCollapsed"></Ntable>
             </div>
         </div>
     </div>
 </template>
 <script setup>
-    import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance } from "vue";
+    import { ref, toRefs, reactive, toRaw, onMounted, watch, getCurrentInstance, defineProps } from "vue";
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
     import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
@@ -53,6 +55,11 @@
     const { proxy } = getCurrentInstance();
     const gridRef = ref(null);
     const browsingHistoryRef = ref(null);
+
+    const props = defineProps({
+        processInstanceId: String
+    })
+
     var columns = ref([
         // {
         //     title: "序号",
@@ -101,89 +108,85 @@
     const data = reactive({
         list: [],
         list2: [],
-        height:document.documentElement.clientHeight - 200,
-        activeKey:0,
+        height: document.documentElement.clientHeight - 200,
+        activeKey: 0,
         tabs: [
-      {
-        label: "传阅记录",
-      },
-      {
-        label: "浏览记录",
-      },
-    ],
-    queryParams1: {
-        filterId:'',
-        objectTypeCode:'124',
-        entityName:'WFInstanceNotifyMembers',
-        filterQuery:'\nProcessInstanceId\teq\t'+route.query.id,
-        displayColumns:'CreatedOn,CreatedBy,ReceiverId,IsRead',
-        sort:'CreatedOn',
-        order:'desc'
-      },
-    queryParams2: {
-        filterId:'',
-        objectTypeCode:'2021',
-        entityName:'RecordReadLog',
-        filterQuery:'\nObjectId\teq\t'+route.query.id,
-        displayColumns:'CreatedOn,CreatedBy,IPAddr,BrowserName,ReadOn',
-        sort:'CreatedOn',
-        order:'desc'
-      },
+            {
+                label: "传阅记录",
+            },
+            {
+                label: "浏览记录",
+            },
+        ],
+        queryParams1: {
+            filterId: '',
+            objectTypeCode: '124',
+            entityName: 'WFInstanceNotifyMembers',
+            filterQuery: '\nProcessInstanceId\teq\t' + props.processInstanceId,
+            displayColumns: 'CreatedOn,CreatedBy,ReceiverId,IsRead',
+            sort: 'CreatedOn',
+            order: 'desc'
+        },
+        queryParams2: {
+            filterId: '',
+            objectTypeCode: '2021',
+            entityName: 'RecordReadLog',
+            filterQuery: '\nObjectId\teq\t' + route.query.id,
+            displayColumns: 'CreatedOn,CreatedBy,IPAddr,BrowserName,ReadOn',
+            sort: 'CreatedOn',
+            order: 'desc'
+        },
     })
-    const { list, list2,height,activeKey,tabs } = toRefs(data);
+    const { list, list2, height, activeKey, tabs } = toRefs(data);
     // const columnList = toRaw(columns);
     // const columnList2 = toRaw(columns2);
     const changeTabs = (e) => {
         data.activeKey = e;
-        if(e==0){
+        if (e == 0) {
             gridRef.value.loadGrid(data.queryParams1);
-        }else{
+        } else {
             //browsingHistoryRef.value.loadGrid();
             browsingHistoryRef.value.loadGrid(data.queryParams2);
         }
     };
     const getList = async () => {
-        // await proxy.$get(Interface.readlogList,{
-        //     processInstanceId: "9fd5ec7f-86c8-44e2-b7ee-aa73f7730c2c"
-        // }).then(res=>{
-        //     data.list2 = res.rows;
-        // })
         gridRef.value.loadGrid(data.queryParams1);
-    }
-    onMounted(()=>{
+    };
+
+    onMounted(() => {
         window.addEventListener("resize", (e) => {
             data.height = document.documentElement.clientHeight - 200;
-        });        
+        });
         getList();
     })
 </script>
 <style lang="less">
-    .readWrap{
+    .readWrap {
         width: 100%;
-        .tabWrap{
-          width: 100%;
-          height: 30px;
-          line-height: 30px;
-          //border-bottom: 1px solid #d9d9d9;
+
+        .tabWrap {
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
         }
-        .ant-tabs-tab{
-        //   padding: 14px 24px !important;
-        //   padding-top: 0 !important;
-        //   margin-left: 0 !important;
-        //   font-size: 14px !important;
-        //   color: #484848 !important;
-          padding: 9px 8px !important;
-          padding-top: 0 !important;
-          margin-right: 24px !important;
-          font-size: 14px !important;
+
+        .ant-tabs-tab {
+            padding: 9px 8px !important;
+            padding-top: 0 !important;
+            margin-right: 24px !important;
+            font-size: 14px !important;
         }
     }
-    .ant-btn.ant-btn-text,.ant-btn.ant-btn-text:hover{
+
+    .ant-btn.ant-btn-text,
+    .ant-btn.ant-btn-text:hover {
         color: var(--textColor);
     }
-    .panel{
+
+    .panel {
         padding: 20px 20px 17px 20px;
-        .panel-head{
+
+        .panel-head {
             padding: 0px;
         }
     }

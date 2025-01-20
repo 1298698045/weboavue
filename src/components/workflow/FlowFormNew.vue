@@ -703,7 +703,7 @@
                 callingDescriptor: "UNKNOWN",
                 params: {
                     processId: data.processId,
-                    activityId: data.toActivityID
+                    activityId: props.toActivityID
                 }
             }]
         };

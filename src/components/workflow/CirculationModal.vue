@@ -101,7 +101,7 @@
         nodes: [],
         isMultipleUser: false,
         selectedRowKeys: [],
-        height: document.documentElement.clientHeight - 340,
+        height: document.documentElement.clientHeight - 300,
         pagination: {
             pageIndex: 1,
             pageSize: 5,

@@ -160,7 +160,7 @@
     })
     const data = reactive({
         activeKey: '1',
-        height: document.documentElement.clientHeight - 390,
+        height: document.documentElement.clientHeight - 300,
         isRadioUser: false,
         selectedRowKeys: [],
         pagination: {

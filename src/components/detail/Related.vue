@@ -11,14 +11,15 @@
             </div>
             <div class="panel-bd">
                 <!-- <Dtable name="relatedGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.instanceList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable> -->
-                <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height" :isCollapsed="isCollapsed"></Ntable>
+                <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height"
+                    :isCollapsed="isCollapsed"></Ntable>
             </div>
         </div>
     </div>
 </template>
 <script setup>
     import "@/style/common.less";
-    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, toRaw,defineEmits } from "vue";
+    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, toRaw, defineEmits, defineProps } from "vue";
     import dayjs from 'dayjs';
     import 'dayjs/locale/zh-cn';
     import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
@@ -40,7 +41,9 @@
     const route = useRoute();
     const router = useRouter();
     const { proxy } = getCurrentInstance();
-    
+    const props = defineProps({
+        processInstanceId: String
+    })
     const gridRef = ref(null);
     const fileGridRef = ref(null);
     const data = reactive({
@@ -48,19 +51,19 @@
         selectedRowKeys: [],
         loading: false,
         isCollapsed: false,
-        fileList:[],
-        height:document.documentElement.clientHeight - 200,
+        fileList: [],
+        height: document.documentElement.clientHeight - 200,
         queryParams: {
-            filterId:'',
-            objectTypeCode:'128',
-            entityName:'WFProcessInstanceRelated',
-            filterQuery:'\nProcessInstanceId\teq\t'+route.query.id,
-            displayColumns:'Name,CreatedOn,CreatedBy',
-            sort:'CreatedOn',
-            order:'desc'
+            filterId: '',
+            objectTypeCode: '128',
+            entityName: 'WFProcessInstanceRelated',
+            filterQuery: '\nProcessInstanceId\teq\t' + props.processInstanceId,
+            displayColumns: 'Name,CreatedOn,CreatedBy',
+            sort: 'CreatedOn',
+            order: 'desc'
         },
     });
-    const { isCollapsed,height } = toRefs(data);
+    const { isCollapsed, height } = toRefs(data);
 
     const columns = ref([
         {
@@ -80,7 +83,7 @@
             field: "CreatedBy"
         },
     ]);
-    
+
     const gridUrl = ref(Interface.draftsList);
 
     const onSelectChange = selectedRowKeys => {
@@ -88,10 +91,10 @@
         data.selectedRowKeys = selectedRowKeys;
     };
     const emit = defineEmits(['addRelateInstance']);
-    const addRelateInstance = ()=>{
+    const addRelateInstance = () => {
         emit("addRelateInstance");
     }
-    onMounted(()=>{
+    onMounted(() => {
         window.addEventListener("resize", (e) => {
             data.height = document.documentElement.clientHeight - 200;
         });
@@ -110,15 +113,19 @@
     };
 </script>
 <style lang="less" scoped>
-    .relatedWrap{
+    .relatedWrap {
         width: 100%;
     }
-    .ant-btn.ant-btn-text,.ant-btn.ant-btn-text:hover{
+
+    .ant-btn.ant-btn-text,
+    .ant-btn.ant-btn-text:hover {
         color: var(--textColor);
     }
-    .panel{
+
+    .panel {
         padding: 20px 20px 17px 20px;
-        .panel-head{
+
+        .panel-head {
             padding: 0px;
         }
     }

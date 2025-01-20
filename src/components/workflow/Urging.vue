@@ -150,7 +150,7 @@
         .modalCenter{
             padding: 10px 15px;
             box-sizing: border-box;
-            height: 300px;
+            height: 300px !important;
             overflow-y: auto;
             .form-tip {
                 font-size: 12px;

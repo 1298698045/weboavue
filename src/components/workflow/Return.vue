@@ -1,13 +1,13 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="850px" :style="setTop" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+        <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
                     退回
                  </div>
             </template>
             <div class="modalContainer" ref="modelContentRef">
-                <div class="modalCenter">
+                <div class="modalCenter" :style="{ height: height + 'px!important' }">
                     <a-form
                         ref="formRef"
                         :label-col="labelCol"
@@ -167,9 +167,10 @@
             showTotal: (total) => `共 ${total} 条数据`, // 展示总共有几条数据
         },
         searchVal: "",
-        recordUsers: []
+        recordUsers: [],
+        height: document.documentElement.clientHeight - 300,
     });
-    const { top, nodes, isMultipleUser, selectedRowKeys, pagination, searchVal, recordUsers  } = toRefs(data);
+    const { top, nodes, isMultipleUser, selectedRowKeys, pagination, searchVal, recordUsers, height  } = toRefs(data);
 
     const filterOption = (input, option) => {
       return option.label.toLowerCase().includes(input.toLowerCase());
