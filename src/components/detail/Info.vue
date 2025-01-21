@@ -147,7 +147,7 @@
             filterQuery: '\nProcessInstanceId\teq\t' + props.processInstanceId,
             displayColumns: 'FromActivityName,ToActivityName,StatusCode,SourceType,StateCode,ToIdentityName,ExecutorIdentityName,CreatedByName,CreatedOn,ModifiedOn,TimeCost,Deadline,IsRead,,Description',
             sort: 'CreatedOn',
-            order: 'desc'
+            order: 'ASC'
         },
     })
     const { list, id, objectTypeCode, sObjectName, height, ApproveList } = toRefs(data);
@@ -167,7 +167,7 @@
             page: 1,
             rows: 100,
             sort: 'CreatedOn',
-            order: 'DESC',
+            order: 'ASC',
             displayColumns: 'Name,CreatedOn,ExecutorIdentityName,ToActivityName,StatusCodeName,RuleLogStateCodeName'
         }).then(res => {
             if (res && res.nodes && res.nodes.length) {

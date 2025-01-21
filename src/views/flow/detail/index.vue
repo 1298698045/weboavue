@@ -4,10 +4,10 @@
             <div class="leftBox">
                 <div class="title">
                     <span class="backText" @click="backToList"> « 返回列表</span>
-                    <span v-if="!isEdit" @click="EditTitle">{{data.Title||'02 差旅费报销流程 院领导 jackliu3 2023-09-22'}}&nbsp;
+                    <span v-if="!isEdit" @click="EditTitle">{{ Title }}&nbsp;
                         <EditOutlined />
                     </span>
-                    <a-input ref="detailTitleInputDom" v-if="isEdit" v-model:value="data.Title" class="detailTitleInput"
+                    <a-input ref="detailTitleInputDom" v-if="isEdit" v-model:value="Title" class="detailTitleInput"
                         @blur="handleSave"></a-input>
                 </div>
                 <div class="tabWrap">
@@ -23,11 +23,11 @@
                 </div>
             </div>
             <div class="rightBox">
-                <a-button class="ml10" @click="openZW">正文</a-button>
-                <a-button type="primary" class="ml10" @click="handSave">保存表单</a-button>
-                <a-button type="primary" danger class="ml10" @click="handleRejection">审批拒绝</a-button>
+                <!-- <a-button class="ml10" @click="openZW">正文</a-button> -->
+                <a-button class="ml10" @click="handSave">保存表单</a-button>
                 <a-button type="primary" class="ml10" @click="handleSubmitProcess">提交流程</a-button>
-                <a-dropdown :trigger="['hover']" class="ml10">
+                <a-button class="ml10" @click="handleRejection">审批拒绝</a-button>
+                <a-dropdown :trigger="['click']" class="ml10">
                     <span class="btn-drop">
                         <UnorderedListOutlined style="color: #1D2129;" />
                     </span>
@@ -258,7 +258,9 @@
                     </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey==1">
-                    <div class="detailContent"></div>
+                    <div class="detailContent">
+                        <iframe :src="iframeSrc" frameborder="0" style="width: 100%;height: 100%;"></iframe>
+                    </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey==2">
                     <Related :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" />
@@ -268,7 +270,7 @@
                 </div>
                 <div class="tabContainer" v-if="activeKey==4">
                     <div class="detailContent">
-                        <DetailInfo class="DetailInfo" :id="id" :objectTypeCode="objectTypeCode"
+                        <DetailInfo class="DetailInfo" :id="id"  :processInstanceId="processInstanceId" :objectTypeCode="objectTypeCode"
                             :entityApiName="sObjectName" />
                     </div>
                 </div>
@@ -461,12 +463,13 @@
         revokeDesc: "是否撤销该事务吗？撤销后进入发起人的退件箱，发起人可以进行删除",
         isDelete: false,
         fromActivityId: "",
-        isReturn: false
+        isReturn: false,
+        iframeSrc: "",
     })
     const { isEdit, Title, objectTypeCode, sObjectName, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData,
         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID,
-        processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete, fromActivityId, isReturn } = toRefs(data);
+        processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete, fromActivityId, isReturn, iframeSrc } = toRefs(data);
 
     const getRuleLogData = () => {
         let obj = {
@@ -491,6 +494,8 @@
                 data.processInstanceId = ProcessInstanceId.value;
                 data.toActivityID = ToActivityId.value;
                 data.fromActivityId = FromActivityId.value;
+                data.iframeSrc = "/iframe/wflow/editors/Monitor2.html?flowid=" + data.processId;
+                getDetail();
             }
         });
     };
@@ -682,7 +687,7 @@
                 descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                    recordId: data.id,
+                    recordId: data.processInstanceId,
                     apiName: data.sObjectName,
                     objTypeCode: data.objectTypeCode
                 }
@@ -755,7 +760,7 @@
 
     const initLoad = () => {
         getRuleLogData();
-        getDetail();
+        // getDetail();
     }
 
 </script>

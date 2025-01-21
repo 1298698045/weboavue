@@ -10,8 +10,10 @@
                         </div>
                         <div class="sectionCol_body">
                             <div class="ownerName">
-                                <span v-if="attr.attributes.type=='B'">{{list[attr.localId].displayValue=='true'||list[attr.localId].displayValue==true?'是':'否'}}</span>
-                                <span v-else-if="attr.attributes.type=='z'||attr.attributes.type=='X'"><span v-html="list[attr.localId]?.displayValue"></span></span>
+                                <span
+                                    v-if="attr.attributes.type=='B'">{{list[attr.localId].displayValue=='true'||list[attr.localId].displayValue==true?'是':'否'}}</span>
+                                <span v-else-if="attr.attributes.type=='z'||attr.attributes.type=='X'"><span
+                                        v-html="list[attr.localId]?.displayValue"></span></span>
                                 <span v-else>{{list[attr.localId]?.displayValue}}</span>
                             </div>
                         </div>
@@ -29,23 +31,24 @@
     const props = defineProps({
         id: String,
         objectTypeCode: [Number, String],
-        entityApiName: String
+        entityApiName: String,
+        processInstanceId: String
     });
     const detailInfoModal = ref(null);
     const data = reactive({
         layoutList: [],
         list: {},
-        height:100,
+        height: 100,
     });
-    const { layoutList, list,height } = toRefs(data);
+    const { layoutList, list, height } = toRefs(data);
     const getLayout = () => {
         let obj = {
-            actions:[{
+            actions: [{
                 id: "7366;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                    recordId: props.id,
+                    recordId: props.processInstanceId,
                     entityApiName: props.entityApiName,
                     defaultFieldValues: {
                         entityId: ""
@@ -62,7 +65,7 @@
         let d = {
             message: JSON.stringify(obj)
         }
-        proxy.$post(Interface.formCommon.layout, d).then(res=>{
+        proxy.$post(Interface.formCommon.layout, d).then(res => {
             console.log("res", res);
             let { layout, record } = res.actions[0].returnValue;
             data.layoutList = layout.sections;
@@ -72,7 +75,7 @@
     getLayout();
     const getDetail = () => {
         let obj = {
-            actions:[{
+            actions: [{
                 id: "4270;a",
                 descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
                 callingDescriptor: "UNKNOWN",
@@ -85,39 +88,43 @@
         let d = {
             message: JSON.stringify(obj)
         }
-        proxy.$post(Interface.detail, d).then(res=>{
+        proxy.$post(Interface.detail, d).then(res => {
             console.log("res", res);
         })
     };
     // getDetail();
     onMounted(() => {
-    let h = document.documentElement.clientHeight;
-        data.height=h-355;
+        let h = document.documentElement.clientHeight;
+        data.height = h - 355;
         window.addEventListener("resize", (e) => {
             let h = document.documentElement.clientHeight;
-            data.height=h-355;
+            data.height = h - 355;
         });
     })
 </script>
 <style lang="less" scoped>
-    .detailInfo{
-        .fh-section{
+    .detailInfo {
+        .fh-section {
             margin-bottom: 8px;
-            .fh-section-label{
+
+            .fh-section-label {
                 background: #f2f2f2;
                 padding: 0 15px;
                 line-height: 32px;
                 border-radius: 4px;
             }
-            .section-content{
+
+            .section-content {
                 overflow: visible;
                 visibility: visible;
                 opacity: 1;
                 height: auto;
-                .sectionRow{
+
+                .sectionRow {
                     padding: 0 16px;
                     display: flex;
-                    .sectionCol{
+
+                    .sectionCol {
                         margin-left: 0;
                         margin-right: 16px;
                         padding: 8px 4px;
@@ -126,26 +133,32 @@
                         border-bottom: 1px solid #c9c9c9;
                         display: flex;
                         align-items: center;
-                        .sectionCol_label{
+
+                        .sectionCol_label {
                             width: 23%;
                         }
-                        .sectionCol_body{
+
+                        .sectionCol_body {
                             display: flex;
                             align-items: center;
-                            .ownerName{
+
+                            .ownerName {
                                 display: flex;
-                                .uiImage{
+
+                                .uiImage {
                                     width: 24px;
                                     height: 24px;
                                     border-radius: 50%;
                                     overflow: hidden;
                                     margin-right: 4px;
-                                    img{
+
+                                    img {
                                         width: 100%;
                                         height: 100%;
                                     }
                                 }
-                                a{
+
+                                a {
                                     margin: 0 2px;
                                     color: #0b5cab;
                                 }
@@ -155,12 +168,13 @@
                 }
             }
         }
-        .fh-section-label{
-            width:100%;
-            font-weight:700;
-            height:30px;
-            line-height:30px;
-            padding-left:10px;
+
+        .fh-section-label {
+            width: 100%;
+            font-weight: 700;
+            height: 30px;
+            line-height: 30px;
+            padding-left: 10px;
 
             font-size: 14px;
             color: #868686;
@@ -170,22 +184,27 @@
             border-radius: 0 !important;
             margin-bottom: 10px;
         }
-        .slds-form-element{
+
+        .slds-form-element {
             display: flex;
             padding: 10px 10px 10px 15px;
             padding-left: 0;
         }
-        .fh-section .sectionCol{
+
+        .fh-section .sectionCol {
             border-bottom: 0 !important;
         }
-        .fh-section .sectionCol_label{
+
+        .fh-section .sectionCol_label {
             min-width: 168px;
             color: #000;
         }
-        .fh-section .forcePageBlockItem{
+
+        .fh-section .forcePageBlockItem {
             border-bottom: 0;
         }
-        .fh-section .sectionCol_body{
+
+        .fh-section .sectionCol_body {
             border-bottom: 1px solid #dedede !important;
             padding-left: 10px;
             padding-bottom: 5px;
@@ -193,7 +212,8 @@
             flex: 1;
             height: 30px;
             margin-right: 25px;
-            .sectionCol_static{
+
+            .sectionCol_static {
                 white-space: normal;
                 word-break: break-all;
             }

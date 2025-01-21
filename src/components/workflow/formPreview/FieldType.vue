@@ -135,32 +135,34 @@
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-textarea v-else :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" :rows="4" />
-                <div>
-                    <a-popover placement="right">
-                        <a-button type="link">选意见</a-button>
-                        <template #content>
-                            <div class="suggestionWrap">
-                                <div class="suggestion-list">
-                                    <div class="suggestion-item" v-for="(option, optionIdx) in suggestions" :key="optionIdx" @click="selectSuggestion(option, field)">
-                                        {{option.name}}
+                <template v-else>
+                    <a-textarea :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" :rows="4" />
+                    <div>
+                        <a-popover placement="right">
+                            <a-button type="link">选意见</a-button>
+                            <template #content>
+                                <div class="suggestionWrap">
+                                    <div class="suggestion-list">
+                                        <div class="suggestion-item" v-for="(option, optionIdx) in suggestions" :key="optionIdx" @click="selectSuggestion(option, field)">
+                                            {{option.name}}
+                                        </div>
+                                    </div>
+                                    <div class="suggestion-footer">
+                                        <span class="label">创建意见</span>
+                                        <div class="add-form">
+                                            <a-input class="suggestion-inp" placeholder="请输入新的意见"></a-input>
+                                            <a-button size="small" type="primary">保存</a-button>
+                                        </div>
+                                        <!-- <a-button size="small" type="primary">创建意见</a-button> -->
                                     </div>
                                 </div>
-                                <div class="suggestion-footer">
-                                    <span class="label">创建意见</span>
-                                    <div class="add-form">
-                                        <a-input class="suggestion-inp" placeholder="请输入新的意见"></a-input>
-                                        <a-button size="small" type="primary">保存</a-button>
-                                    </div>
-                                    <!-- <a-button size="small" type="primary">创建意见</a-button> -->
-                                </div>
-                            </div>
-                        </template>
-                    </a-popover>
-                    <div class="signImg">
-                        <img src="@/assets/img/sign.png" alt="">
+                            </template>
+                        </a-popover>
+                        <div class="signImg">
+                            <img src="@/assets/img/sign.png" alt="">
+                        </div>
                     </div>
-                </div>
+                </template>
             </span>
         </div>
         <div v-else-if="type=='B'">
@@ -552,6 +554,8 @@
         font-weight: normal !important;
         position: relative;
         color: #333 !important;
+        overflow: hidden;
+        display: flex;
         .searchLook{
             position: relative;
             .searchIcon{
@@ -562,10 +566,10 @@
             }
         }
         .required{
-            position: absolute;
+            /* position: absolute;
             top: 12px;
             left: 10px;
-            z-index: 99;
+            z-index: 99; */
         }
         .signImg{
             img{
