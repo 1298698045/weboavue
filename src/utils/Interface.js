@@ -1,4 +1,4 @@
-const baseUrl = 'api';
+const baseUrl = "api";
 const Interface = {
   // 待办事务
   todoList: {
@@ -11,17 +11,20 @@ const Interface = {
   applist: "/localData/applist.json",
   workflow: {
     //processList: "/localData/process.search.json",
-    processType: baseUrl + "/aura/workflow/Process/getCategories",//新建流程分类
-    getAuthorizedProcess: baseUrl + "/aura/workflow/Process/getAuthorizedProcess",//获取当前用户可以访问的流程
-    getCommonUses: baseUrl + "/aura/workflow/Process/getCommonUses",//获取常用流程
-    getFavorites:baseUrl + "/aura/workflow/Process/getFavorites",//获取收藏流程
-    new:baseUrl + "/aura/workflow/ProcessInstance/new",//新建流程
-    getProcessDefinitionInfo: baseUrl + "/aura/workflow/Process/getProcessDefinitionInfo", // 获取流程定义简要
+    processType: baseUrl + "/aura/workflow/Process/getCategories", //新建流程分类
+    getAuthorizedProcess:
+      baseUrl + "/aura/workflow/Process/getAuthorizedProcess", //获取当前用户可以访问的流程
+    getCommonUses: baseUrl + "/aura/workflow/Process/getCommonUses", //获取常用流程
+    getFavorites: baseUrl + "/aura/workflow/Process/getFavorites", //获取收藏流程
+    new: baseUrl + "/aura/workflow/ProcessInstance/new", //新建流程
+    getProcessDefinitionInfo:
+      baseUrl + "/aura/workflow/Process/getProcessDefinitionInfo", // 获取流程定义简要
     getRelatedObjects: baseUrl + "/objectmanager/object/getRelatedObjects", // 根据对象ID，包括主表、子表信息
     updateRecordBatch: baseUrl + "/aura/RecordUi/updateRecordBatch", // 保存表单 - 同时保存主子表
     getPermission: baseUrl + "/aura/workflow/definition/activity/getPermission", // 流程节点权限
     getTransitions: baseUrl + "/aura/workflow/Process/activity/getTransitions", // 获取节点转移路径
-    getParticipators: baseUrl + "/aura/workflow/ProcessInstance/activity/getParticipators", // 获取节点办理人员
+    getParticipators:
+      baseUrl + "/aura/workflow/ProcessInstance/activity/getParticipators", // 获取节点办理人员
     agree: baseUrl + "/aura/workflow/ProcessInstance/task/agree", // 提交流转-审批通过
     disagree: baseUrl + "/aura/workflow/ProcessInstance/task/disagree", // 审批拒绝
     notice: baseUrl + "/aura/workflow/ProcessInstance/notice", // 催办
@@ -31,7 +34,8 @@ const Interface = {
     withdraw: baseUrl + "/aura/workflow/ProcessInstance/withdraw", // 撤销
     delete: baseUrl + "/aura/workflow/ProcessInstance/delete", // 删除流程实例
     delegate: baseUrl + "/aura/workflow/ProcessInstance/task/delegate", // 委派/转代理
-    getReturnActivities: baseUrl + "/aura/workflow/ProcessInstance/task/getReturnActivities", // 获取可退回节点集合与办理人
+    getReturnActivities:
+      baseUrl + "/aura/workflow/ProcessInstance/task/getReturnActivities", // 获取可退回节点集合与办理人
     return: baseUrl + "/aura/workflow/ProcessInstance/task/return", // 退回
     insert: baseUrl + "/aura/workflow/ProcessInstance/task/insert", // 加签
   },
@@ -58,28 +62,31 @@ const Interface = {
   draftsList: "/localData/wf.instanceowner.search.json",
   //通用列表和视图
   listView: {
-      config: "/localData/entitygrid.config.get.json",
-      // list: "/localData/entitygrid.list.json",
-      list: baseUrl + "/listview/data/getItems",
-      // list: "/listview/filter/listViewPicker",
-      handleActions: "/localData/listview.handle.actions.json",
-      filterList: baseUrl + "/listview/filter/listViewPicker", // 对象筛选器列表
-      getMetadataInitialLoad: baseUrl + "/listview/listViewManager/getMetadataInitialLoad", // 获取元数据
-      getFilterInfo: baseUrl + "/listview/listViewManager/getFilterInfo", // 列头
-      actions: baseUrl + "/listview/Actions/handleAction",
-      actionsrow: baseUrl + "/aura/ui/global/components/ActionsManager/ListviewRecord/handleAction",//行记录按钮
-      actionstop: baseUrl + "/aura/ActionsController/handleAction",//右上角按钮
-      createListView: baseUrl+'/aura/listViewManager/createListView',//创建视图
-      updateListView: baseUrl+'/aura/listViewManager/updateListView',//重命名视图、共享设置、选择要显示字段、保存筛选器
-      deleteListView: baseUrl+'/aura/listViewManager/deleteListView',//删除视图
-      copyListView: baseUrl+'/listview/filter/clone',//复制视图
-      getListView: baseUrl+'/aura/listViewManager/getAdditionalMetadata',//获取单个视图/筛选器
-      pinListView: baseUrl+'/aura/listViewManager/pinListView',//固定视图
-      chartData: baseUrl + "/aura/ObjectHomeChart/getMetadata", // 图表 - 获取列表图表元数据
-      chartList: baseUrl + "/aura/listViewManager/pinListView", // 图表 - 获取列表视图图表
-      chartItems: baseUrl + "/aura/ObjectHomeChart/getChartItems", // 获取图表数据
-      getFilter: "", // 
-      saveFilter: baseUrl + "/aura/listViewManager/updateListView", // 保存筛选器
+    config: "/localData/entitygrid.config.get.json",
+    // list: "/localData/entitygrid.list.json",
+    list: baseUrl + "/listview/data/getItems",
+    // list: "/listview/filter/listViewPicker",
+    handleActions: "/localData/listview.handle.actions.json",
+    filterList: baseUrl + "/listview/filter/listViewPicker", // 对象筛选器列表
+    getMetadataInitialLoad:
+      baseUrl + "/listview/listViewManager/getMetadataInitialLoad", // 获取元数据
+    getFilterInfo: baseUrl + "/listview/listViewManager/getFilterInfo", // 列头
+    actions: baseUrl + "/listview/Actions/handleAction",
+    actionsrow:
+      baseUrl +
+      "/aura/ui/global/components/ActionsManager/ListviewRecord/handleAction", //行记录按钮
+    actionstop: baseUrl + "/aura/ActionsController/handleAction", //右上角按钮
+    createListView: baseUrl + "/aura/listViewManager/createListView", //创建视图
+    updateListView: baseUrl + "/aura/listViewManager/updateListView", //重命名视图、共享设置、选择要显示字段、保存筛选器
+    deleteListView: baseUrl + "/aura/listViewManager/deleteListView", //删除视图
+    copyListView: baseUrl + "/listview/filter/clone", //复制视图
+    getListView: baseUrl + "/aura/listViewManager/getAdditionalMetadata", //获取单个视图/筛选器
+    pinListView: baseUrl + "/aura/listViewManager/pinListView", //固定视图
+    chartData: baseUrl + "/aura/ObjectHomeChart/getMetadata", // 图表 - 获取列表图表元数据
+    chartList: baseUrl + "/aura/listViewManager/pinListView", // 图表 - 获取列表视图图表
+    chartItems: baseUrl + "/aura/ObjectHomeChart/getChartItems", // 获取图表数据
+    getFilter: "", //
+    saveFilter: baseUrl + "/aura/listViewManager/updateListView", // 保存筛选器
   },
   uilook: "/localData/ui.entity.lookup.json",
   entityFilter: "/localData/entity.filter.get.json",
@@ -96,22 +103,22 @@ const Interface = {
     groupUser: "/localData/user/sys.group.member.search.json", // 小组下用户
     sysUser: "/localData/user/sys.user.search.json",
     usersettings: "/localData/user/sys.usersettings.get.json",
-    getBusinessUnits:baseUrl + "/one/user/getBusinessUnits", // 获取登录用户所有兼职部门
-    switchBusinessUnit:baseUrl+"/one/user/switchBusinessUnit", // 登录用户切换
-    switch:baseUrl + "/one/user/switch", // 切换用户
+    getBusinessUnits: baseUrl + "/one/user/getBusinessUnits", // 获取登录用户所有兼职部门
+    switchBusinessUnit: baseUrl + "/one/user/switchBusinessUnit", // 登录用户切换
+    switch: baseUrl + "/one/user/switch", // 切换用户
     getSubordinates: baseUrl + "/one/user/getSubordinates", // 获取我的下属
     getGroupUsers: baseUrl + "/one/group/getGroupUsers", // 获取小组成员
     getLatestUsers: baseUrl + "/one/user/getLatestUsers", // 获取最近使用用户
     getRoleUsers: baseUrl + "/one/group/getRoleUsers", // 获取角色用户列表
-    allUser:baseUrl+"/one/organization/querUsers",//查询所有用户
-    changePwd:baseUrl+"/one/user/changepwd",//修改登录密码
+    allUser: baseUrl + "/one/organization/querUsers", //查询所有用户
+    changePwd: baseUrl + "/one/user/changepwd", //修改登录密码
   },
   saveRecord: "/localData/entity.saverecord.json",
   // 通讯录
   addressBook: {
     lastList: "/localData/addressBook/user.latestuse.getlist.json", // 最近联系人
     addresslist: "/localData/addressBook/addresslist.search.json", // 全部联系人
-  }, 
+  },
   group: {
     list: "/localData/group/sys.group.member.search.json",
     statusList: "/localData/group/chatter.status.search.json", // 动态
@@ -128,18 +135,18 @@ const Interface = {
     read: "/localData/email/email.read.mark.json", // 未读/已读邮件设置
     star: "/localData/email/email.star.mark.json", // 重要邮件
     send: "/localData/email/email.send.json", // 发送邮件
-    saveDraft:baseUrl + "/email/saveDraft", // 保存草稿
-    send:baseUrl + "/email/send", // 发送邮件
-    sendbatch:baseUrl + "/email/sendbatch", // 群发邮件
-    upload:baseUrl + "/email/upload", // 上传邮箱附件
-    inboxSearch:baseUrl + "/email/inbox/search", // 查询收件箱
-    draftboxSearch:baseUrl + "/email/draftbox/search", // 查询草稿箱
-    sentboxSearch:baseUrl + "/email/sentbox/search", // 查询发件箱
-    getMail:baseUrl + "/email/getMail", // 获取单个邮件信息
-    getAttachments:baseUrl + "/email/getAttachments",//获取邮件附件列表
-    deletePermEmail:baseUrl + "/email/deletePermEmail",//删除箱永久删除
-    deleteAttachment:baseUrl + "/email/deleteAttachment",//删除邮件附件
-    copyAttachment:baseUrl + "/email/copyAttachment",//复制邮件附件
+    saveDraft: baseUrl + "/email/saveDraft", // 保存草稿
+    send: baseUrl + "/email/send", // 发送邮件
+    sendbatch: baseUrl + "/email/sendbatch", // 群发邮件
+    upload: baseUrl + "/email/upload", // 上传邮箱附件
+    inboxSearch: baseUrl + "/email/inbox/search", // 查询收件箱
+    draftboxSearch: baseUrl + "/email/draftbox/search", // 查询草稿箱
+    sentboxSearch: baseUrl + "/email/sentbox/search", // 查询发件箱
+    getMail: baseUrl + "/email/getMail", // 获取单个邮件信息
+    getAttachments: baseUrl + "/email/getAttachments", //获取邮件附件列表
+    deletePermEmail: baseUrl + "/email/deletePermEmail", //删除箱永久删除
+    deleteAttachment: baseUrl + "/email/deleteAttachment", //删除邮件附件
+    copyAttachment: baseUrl + "/email/copyAttachment", //复制邮件附件
   },
   meeting: {
     userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织
@@ -154,7 +161,9 @@ const Interface = {
     removeShare: "/localData/meeting/calendar.share.remove.json",
     meetingPeople: "/localData/meeting/meeting.people.search.json", // 详情-参会人员
     detail: "/localData/meeting/entity.recordandlayout.get.json",
-    remind:baseUrl + "/ui.meeting.components/publish"//会议提醒
+    remind: baseUrl + "/ui.meeting.components/publish", //会议提醒
+    audienceDataExport: baseUrl + "/meeting.audience.data/export", //参会人导出
+    checkinRecordExport: baseUrl + "/meeting.checkin.record/export", //打卡记录导出
   },
   meetingRoom: {
     //roomList: "/localData/meetingRoom/meetingroom.reservation.getlist2.json",
@@ -177,7 +186,7 @@ const Interface = {
     commentList: "/localData/fileAdmin/chatter.comment.search.json", // 图片评论列表
     sendComment: "/localData/fileAdmin/chatter.comment.post.json",
     like: "/localData/fileAdmin/chatter.like.post.json",
-    deleteComment: "/localData/fileAdmin/chatter.comment.delete.json"
+    deleteComment: "/localData/fileAdmin/chatter.comment.delete.json",
   },
   information: {
     contentTree: "/localData/information/content.tree.json",
@@ -194,26 +203,26 @@ const Interface = {
     categoryList: "/localData/information/content.category.list.json", // 隶属栏目
     attachmentCategory:
       "/localData/information/attachment.category.getlist.json", // 附件分类
-      commentList: "/localData/information/chatter.comment.search.json", // 图片评论列表
-      sendComment: "/localData/information/chatter.comment.post.json",
-      like: "/localData/information/chatter.like.post.json"
+    commentList: "/localData/information/chatter.comment.search.json", // 图片评论列表
+    sendComment: "/localData/information/chatter.comment.post.json",
+    like: "/localData/information/chatter.like.post.json",
   },
   schedule: {
     //list:"/localData/schedule/calendar.getlist.json",
-    list: baseUrl + "/ui.calendar.components/getAllCalendars",//日程日历
+    list: baseUrl + "/ui.calendar.components/getAllCalendars", //日程日历
     pickList: "/localData/schedule/layout.picklistvalues.get.json",
     save: "/localData/schedule/calendar.event.edit.json", // 保存
     sharedList: "/localData/schedule/calendar.shared.mylist.json",
     updatecontentaccess: "/localData/schedule/calendar.shared.right.json",
     addAccess: "/localData/schedule/calendar.share.json",
-    addOtherCalendar:baseUrl+"/ui.calendar.components/addSharedCalendar",//添加其他日历
-    getOtherCalendar:baseUrl + "/ui.calendar.components/fellow/getFellows",//获取其他日历
+    addOtherCalendar: baseUrl + "/ui.calendar.components/addSharedCalendar", //添加其他日历
+    getOtherCalendar: baseUrl + "/ui.calendar.components/fellow/getFellows", //获取其他日历
   },
   scheduleTable: {
-    list: baseUrl + "/ui.calendar.components/fellow/getFellowCalendars",//获取关注人的日程一览表
+    list: baseUrl + "/ui.calendar.components/fellow/getFellowCalendars", //获取关注人的日程一览表
   },
   leaderSchedule: {
-    list:  baseUrl + "/ui.calendar.components/filterCalendars",//领导日程
+    list: baseUrl + "/ui.calendar.components/filterCalendars", //领导日程
   },
   // 会议活动
   meetingActivity: {
@@ -225,14 +234,14 @@ const Interface = {
     list: "/localData/meetingRpt/resource.type.list.json",
     stat: "/localData/meetingRpt/resource.room.stat.json",
     roomstat: baseUrl + "/meeting/report/room/getSummary",
-    peoplestat: baseUrl + "/meeting/report/people/getSummary"
+    peoplestat: baseUrl + "/meeting/report/people/getSummary",
   },
   // 门户设计
   design: {
     list: "/localData/design/dashboard.data.get.json",
     templateList: "/localData/design/dashboard.widget.data.get.json",
     attrs: "/localData/design/entity.attribute.getlist.json",
-    look: "/localData/design/ui.entity.lookup.json"
+    look: "/localData/design/ui.entity.lookup.json",
   },
   detail: "/localData/entity.detail.get.json",
   delete: "/localData/entity.delete.json",
@@ -250,7 +259,8 @@ const Interface = {
     savePerm: "/localData/flow/process.steppri.save.json",
     deptTree: "/localData/flow/tree.dept.get.json",
     userList: "/localData/flow/user.search.json",
-    editFlowDefineDetail: "/localData/flow/entity.detail.get.editflowdefine.json",
+    editFlowDefineDetail:
+      "/localData/flow/entity.detail.get.editflowdefine.json",
     editProcess: "/localData/flow/process.edit.json",
     handlePeople: "/localData/flow/process.participantor.save.json", // 办理人员
     handleDetail: "/localData/flow/process.participantor.getlist.json", // 办理人员详情
@@ -261,7 +271,7 @@ const Interface = {
     jump: "/localData/flow/process.approve.jump.json", // 跳转
     insertapprove: "/localData/flow/process.instance.insertapprove.json", // 加签
     contentTree: "/localData/flow/content.tree.get.json",
-    publishtocontent:"/localData/flow/prcoess.instance.publishtocontent.json", // 发布
+    publishtocontent: "/localData/flow/prcoess.instance.publishtocontent.json", // 发布
     addSignature: "/localData/flow/process.signature.upload.json", // 新建签名
     deleteSignature: "/localData/flow/process.signature.delete.json", // 删除签名
     datapriAdd: "/localData/flow/process.datapri.add.json", // 添加用户
@@ -273,30 +283,31 @@ const Interface = {
   documentAdmin: {
     tree: "/localData/documentAdmin/tree.get.json",
     processList: "/localData/documentAdmin/wf.process.search.json",
-    processCreate:"/localData/documentAdmin/process.instance.create.json",
-    receivingAdmin: {// 收文管理
-      list: "/localData/documentAdmin/entitygrid.list.json"
+    processCreate: "/localData/documentAdmin/process.instance.create.json",
+    receivingAdmin: {
+      // 收文管理
+      list: "/localData/documentAdmin/entitygrid.list.json",
     },
-    handleActions: "/localData/documentAdmin/listview.handle.actions.json"
+    handleActions: "/localData/documentAdmin/listview.handle.actions.json",
   },
   workspace: {
-    list: "/localData/applicationcenter.getlist.json"
+    list: "/localData/applicationcenter.getlist.json",
   },
   contract: {
     invoice: {
       list: "/localData/contract/entitygrid.list.json",
-      statistics: "/localData/contract/contract.summary.statistics.get.json"
+      statistics: "/localData/contract/contract.summary.statistics.get.json",
     },
     execution: {
       list: "/localData/contract/contract.owner.getlist.json",
-      statistics: "/localData/contract/contract.summary.statistics.get.json"
+      statistics: "/localData/contract/contract.summary.statistics.get.json",
     },
     tree: "/localData/contract/tree.get.json",
     admin: {
       handleActions: "/localData/contract/admin/listview.handle.actions.json",
       config: "/localData/contract/entitygrid.config.get.json",
-      list: "/localData/contract/admin/entitygrid.list.json"
-    }
+      list: "/localData/contract/admin/entitygrid.list.json",
+    },
   },
   files: "/localData/file.attachment.getlist.json",
   attd: {
@@ -306,11 +317,13 @@ const Interface = {
     attdRule: "/localData/attd/attend.rule.get.json",
     batchAddAttd: "/localData/attd/attendance.month.employeebatch.json", // 批量填报考勤
     transferout: "/localData/attd/attendance.employee.month.transferout.json", // 人员调出
-    transferdeptIn: "/localData/attd/attendance.employee.month.transferdept.json",// 人员调入
+    transferdeptIn:
+      "/localData/attd/attendance.employee.month.transferdept.json", // 人员调入
     setAttdLeave: "/localData/attd/attendance.leave.employee.day.set.json", // 填考勤
     globalsettings: "/localData/attd/attendance.globalsettings.get.json",
     notPeopleList: "/localData/attd/attendance.month.employee.lacklist.json", // 未添加人员,
-    clearAttdLeave: "/localData/attd/attendance.employee.monthleave.delete.json", // 清除考勤记录
+    clearAttdLeave:
+      "/localData/attd/attendance.employee.monthleave.delete.json", // 清除考勤记录
     remarksAttd: "/localData/attd/workshift.dept.month.remark.json", // 科室备注
     submitAttd: "/localData/attd/attendance.month.submit.json", // 提交考勤
     monthtips: "/localData/attd/attendace.monthtips.number.json", // 统计上月 本月人数
@@ -320,17 +333,20 @@ const Interface = {
   scheduling: {
     deptMonthList: "/localData/scheduling/workshift.dept.employee.search.json", // 部门按月排班
     workshiftSet: "/localData/scheduling/workshift.employee.day.set.json", // 排班
-    deptGroup: "/localData/scheduling/workshift.month.deptgroup.headerinfo.get.json",
-    monthDeptgroupList: "/localData/scheduling/workshift.month.deptgroup.employee.getlist.json", // 部门组排班
-    deptgroupEmpSort: "/localData/scheduling/workshift.deptgroup.employee.month.sort.json", // 人员排序
+    deptGroup:
+      "/localData/scheduling/workshift.month.deptgroup.headerinfo.get.json",
+    monthDeptgroupList:
+      "/localData/scheduling/workshift.month.deptgroup.employee.getlist.json", // 部门组排班
+    deptgroupEmpSort:
+      "/localData/scheduling/workshift.deptgroup.employee.month.sort.json", // 人员排序
   },
-  entityFilter: baseUrl+'/aura/objectmanager/getTemplateMetadata',//获取对象字段元数据,筛选器可选字段
+  entityFilter: baseUrl + "/aura/objectmanager/getTemplateMetadata", //获取对象字段元数据,筛选器可选字段
   delete: baseUrl + "/aura/RecordUi/delRecord", // 通用删除
   create: baseUrl + "/aura/RecordUi/createRecord", // 通用创建
   edit: baseUrl + "/aura/RecordUi/updateRecord", // 通用编辑
   // 通用弹窗
   formCommon: {
-      layout: baseUrl + "/aura/RecordUi/getRecordCreateDefaults"
+    layout: baseUrl + "/aura/RecordUi/getRecordCreateDefaults",
   },
   pickListValues: baseUrl + "/aura/RecordUi/getPicklistValuesByRecordType", // 获取对象下拉列表字段值
   detail: baseUrl + "/aura/RecordUi/getRecord", // 详情
@@ -338,32 +354,39 @@ const Interface = {
   objFieldData: "/api/aura/objectmanager/getTemplateMetadata", // 获取对象字段元数据
   applist: baseUrl + "/aura/AppLauncher/getAppLauncherMenuData",
   currentApp: baseUrl + "/aura/OneController/getCurrentApp", // 获取模块列表
-  deptTree: baseUrl + "/one/organization/getBusinessUnitTree",//组织树
-  getTabs:baseUrl + "/listview/layout/getDetails",//根据对象获取通用tabs
+  deptTree: baseUrl + "/one/organization/getBusinessUnitTree", //组织树
+  getTabs: baseUrl + "/listview/layout/getDetails", //根据对象获取通用tabs
   lookupObj: {
-      column: baseUrl + "/aura/Lookup/getTopMetada", // 查找对话框 - 获查找字段和列表显示字段
-      list: baseUrl + "/aura/Lookup/getItems", // 查找对话框 - 获查找数据
+    column: baseUrl + "/aura/Lookup/getTopMetada", // 查找对话框 - 获查找字段和列表显示字段
+    list: baseUrl + "/aura/Lookup/getItems", // 查找对话框 - 获查找数据
   },
   list2: baseUrl + "/listview/data/getNodes",
   detailObj: {
-      actions: baseUrl + "/aura/ActionsController/getRecordActions",
-      relatedActions: baseUrl + "/aura/ui/global/components/ActionsManager/RelatedList/handleAction", // 详情页 - 相关列表操作按钮
-      relatedListInfo: baseUrl + "/aura/RelatedListUiController/getRelatedListInfoCollection", // 获取对象相关列表信息集合
-      relatedListColumn: baseUrl + "/aura/RelatedListUiController/getRelatedListInfoByApiName", // 获取单个相关列表 - 列表显示列
-      relatedListActions: baseUrl + "/aura/ui/global/components/ActionsManager/RelatedListRecord/handleAction", // 获取单个相关列表 - 操作按钮
-      relatedListData: baseUrl + "/aura/RelatedListUiController/postRelatedListRecords", // 获取单个相关列表 - 数据
-      compact: baseUrl + "/aura/RecordUi/Layout/getCompact", // 详情标题 - 紧凑布局
+    actions: baseUrl + "/aura/ActionsController/getRecordActions",
+    relatedActions:
+      baseUrl +
+      "/aura/ui/global/components/ActionsManager/RelatedList/handleAction", // 详情页 - 相关列表操作按钮
+    relatedListInfo:
+      baseUrl + "/aura/RelatedListUiController/getRelatedListInfoCollection", // 获取对象相关列表信息集合
+    relatedListColumn:
+      baseUrl + "/aura/RelatedListUiController/getRelatedListInfoByApiName", // 获取单个相关列表 - 列表显示列
+    relatedListActions:
+      baseUrl +
+      "/aura/ui/global/components/ActionsManager/RelatedListRecord/handleAction", // 获取单个相关列表 - 操作按钮
+    relatedListData:
+      baseUrl + "/aura/RelatedListUiController/postRelatedListRecords", // 获取单个相关列表 - 数据
+    compact: baseUrl + "/aura/RecordUi/Layout/getCompact", // 详情标题 - 紧凑布局
   },
-  login:baseUrl + "/auth/doLogin",
-  validate:baseUrl + "/auth/captcha",
-  content:{
-    folder:{
-      get:baseUrl + '/content/folder/getFolderTree',//获取文档中心目录
-      new:baseUrl + '/content/folder/create',//创建文档中心目录
-      edit:baseUrl + '/aura/RecordUi/updateRecord',//编辑文档中心目录
-      getPrivileges:baseUrl + '/content/folder/getPrivileges',//获取单个目录权限
+  login: baseUrl + "/auth/doLogin",
+  validate: baseUrl + "/auth/captcha",
+  content: {
+    folder: {
+      get: baseUrl + "/content/folder/getFolderTree", //获取文档中心目录
+      new: baseUrl + "/content/folder/create", //创建文档中心目录
+      edit: baseUrl + "/aura/RecordUi/updateRecord", //编辑文档中心目录
+      getPrivileges: baseUrl + "/content/folder/getPrivileges", //获取单个目录权限
     },
-    renderView:baseUrl + '/content/text/renderView',//根据知识库模板，和知识内容 合并出显示内容。
+    renderView: baseUrl + "/content/text/renderView", //根据知识库模板，和知识内容 合并出显示内容。
   },
   portal: {
     layoutList: baseUrl + "/aura/dashboard/describeDashboard", // 获取门户、仪表盘设置
@@ -371,34 +394,34 @@ const Interface = {
     saveComponent: baseUrl + "/aura/dashboard/saveComponent",
     loadComponents: baseUrl + "/aura/dashboard/loadComponents", // 加载组件数据
   },
-  commonstatus:{
-    query:baseUrl + "/weibo/queryStatus",//拉取会议等对象发布的
-    comment:baseUrl + "/weibo/status/comment/search",//获取状态评论列表
+  commonstatus: {
+    query: baseUrl + "/weibo/queryStatus", //拉取会议等对象发布的
+    comment: baseUrl + "/weibo/status/comment/search", //获取状态评论列表
   },
-  status:{
-    submit:baseUrl + "/weibo/status/submit",//发布状态
-    query:baseUrl + "/weibo/status/search",//拉取个人可以查看的状态、投票、问题
-    mine:baseUrl+"/weibo/status/mine/query",//拉取我发布的
+  status: {
+    submit: baseUrl + "/weibo/status/submit", //发布状态
+    query: baseUrl + "/weibo/status/search", //拉取个人可以查看的状态、投票、问题
+    mine: baseUrl + "/weibo/status/mine/query", //拉取我发布的
   },
-  question:{
-    submit:baseUrl + "/weibo/question/submit",//发布问题
-    query:baseUrl + "/weibo/status/qa/search",//拉取知识问答列表
+  question: {
+    submit: baseUrl + "/weibo/question/submit", //发布问题
+    query: baseUrl + "/weibo/status/qa/search", //拉取知识问答列表
   },
-  poll:{
-    submit:baseUrl + "/weibo/poll/submit",//发布投票
+  poll: {
+    submit: baseUrl + "/weibo/poll/submit", //发布投票
   },
-  uploadAvatar:baseUrl + '/file/avatar/upload',//通用头像上传
-  viewAvatar:baseUrl + '/file/avaterPreview',//头像查看
-  uploadFiles:baseUrl + '/file/attachment/upload',//通用附件上传
-  getFiles:baseUrl + '/file/attachment/getFiles',//通用获取附件
-  deleteFiles:baseUrl + '/file/attachment/deleteFiles',//通用删除附件
-  album:{
-    queryAlbums:baseUrl + '/album/queryAlbums',//获取相册
-    queryPhotos:baseUrl + '/album/queryPhotos',//获取相册图片
-    queryOwningAlbums:baseUrl + '/album/queryOwningAlbums',//获取我创建的相册
-    getPrivileges:baseUrl + '/album/getPrivileges',//获取相册权限
-    uploadImg:baseUrl + '/album/upload',//上传照片
-    uploadZip:baseUrl + '/album/upload/zipfile',//上传图片压缩包
+  uploadAvatar: baseUrl + "/file/avatar/upload", //通用头像上传
+  viewAvatar: baseUrl + "/file/avaterPreview", //头像查看
+  uploadFiles: baseUrl + "/file/attachment/upload", //通用附件上传
+  getFiles: baseUrl + "/file/attachment/getFiles", //通用获取附件
+  deleteFiles: baseUrl + "/file/attachment/deleteFiles", //通用删除附件
+  album: {
+    queryAlbums: baseUrl + "/album/queryAlbums", //获取相册
+    queryPhotos: baseUrl + "/album/queryPhotos", //获取相册图片
+    queryOwningAlbums: baseUrl + "/album/queryOwningAlbums", //获取我创建的相册
+    getPrivileges: baseUrl + "/album/getPrivileges", //获取相册权限
+    uploadImg: baseUrl + "/album/upload", //上传照片
+    uploadZip: baseUrl + "/album/upload/zipfile", //上传图片压缩包
   },
   getMapFieldValues: baseUrl + "/aura/Lookup/getMapFieldValues", // 查找字段 - 获取目标对象映射字段值
   report: {
@@ -408,16 +431,17 @@ const Interface = {
     categoryListData: "/localData/report/tableList.json",
     newReport: baseUrl + "/aura/analytics/reporting/runpage/newReport", // 新建报表
     reportDesign: {
-        tree: "/localData/report/reportDesign/tree.json",
-        // metaData: "/localData/report/reportDesign/reportMetaData.json",
-        metaData: baseUrl + "/aura/analytics/reporting/runpage/describeReport", // 获取报表元数据
-        saveReport: baseUrl + "/aura/analytics/reporting/runpage/saveReport", // 报表保存
-        // runReport: baseUrl + "/aura/analytics/reporting/runpage/runReport", // 报表运行
-        runReport: "/localData/report/reportDesign/runReport.json",
-        runReport2: "/localData/report/reportDesign/runReport_group.json",
-        describeReport: baseUrl + "/aura/analytics/reporting/runpage/describeReport", // 获取报表元数据
-        runReportNew: baseUrl + "/aura/analytics/reporting/runpage/runReport", // 报表运行
-    }
+      tree: "/localData/report/reportDesign/tree.json",
+      // metaData: "/localData/report/reportDesign/reportMetaData.json",
+      metaData: baseUrl + "/aura/analytics/reporting/runpage/describeReport", // 获取报表元数据
+      saveReport: baseUrl + "/aura/analytics/reporting/runpage/saveReport", // 报表保存
+      // runReport: baseUrl + "/aura/analytics/reporting/runpage/runReport", // 报表运行
+      runReport: "/localData/report/reportDesign/runReport.json",
+      runReport2: "/localData/report/reportDesign/runReport_group.json",
+      describeReport:
+        baseUrl + "/aura/analytics/reporting/runpage/describeReport", // 获取报表元数据
+      runReportNew: baseUrl + "/aura/analytics/reporting/runpage/runReport", // 报表运行
+    },
   },
 };
 export default Interface;

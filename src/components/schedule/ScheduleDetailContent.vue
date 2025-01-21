@@ -520,6 +520,15 @@
   
     }
   }
+
+  //发布
+const handleRelease=()=>{
+  data.isRelease=true;
+}
+window.handleEdit=handleEdit;
+window.handleRemind=handleRemind;
+window.handleRelease=handleRelease;
+window.handleDelete=handleDelete;
   </script>
   <style lang="less" scoped>
   .meetingDetailWrap{

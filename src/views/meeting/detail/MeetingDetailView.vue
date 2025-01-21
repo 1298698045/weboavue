@@ -616,6 +616,11 @@ const handleClickBtn = (devNameOrId) => {
 const getPopupContainer= (triggerNode) => {
   return triggerNode.parentNode || document.body;
 }
+
+window.handleEdit=handleEdit;
+window.handleRemind=handleRemind;
+window.handleRelease=handleRelease;
+window.handleDelete=handleDelete;
 </script>
 <style lang="less" scoped>
 .meetingDetailViewWrap{

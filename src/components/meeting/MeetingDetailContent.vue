@@ -490,6 +490,7 @@ const changeStatus = () => {
 const handleEdit = () =>{
     data.isNewMeeting=true;
   }
+  
   const Edit = () =>{
     data.isNewMeeting=true;
   }
@@ -514,6 +515,7 @@ const Delete= (e) => {
 const deleteOk = (e) => {
   emit('handleDelete', {Id:props.meetingId});
 };
+
 const cancelDelete = (e) => {
   data.isDelete = false;
 };
@@ -521,6 +523,7 @@ const cancelDelete = (e) => {
 const handleRelease=()=>{
   data.isRelease=true;
 }
+
 // 预览
 const handlePreview = () => {
   let url = router.resolve({
@@ -536,6 +539,7 @@ const handlePreview = () => {
 const handleRemind = () => {
   data.isRemind = true;
 };
+
 // 备注
 const handleNotes = () => {
   data.isNotes = true;
@@ -608,6 +612,11 @@ const handleClickBtn = (devNameOrId) => {
 const getPopupContainer= (triggerNode) => {
   return triggerNode.parentNode || document.body;
 }
+
+window.handleEdit=handleEdit;
+window.handleRemind=handleRemind;
+window.handleRelease=handleRelease;
+window.handleDelete=handleDelete;
 </script>
 <style lang="less" scoped>
 .meetingDetailWrap{

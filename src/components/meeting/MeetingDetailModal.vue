@@ -215,6 +215,19 @@
             PersonnelLst.value.getQuery();
         }
     }
+
+    //发布
+const handleRelease=()=>{
+  data.isRelease=true;
+}
+// 提醒
+const handleRemind = () => {
+    data.isRemind = true;
+  };
+window.handleEdit=handleEdit;
+window.handleRemind=handleRemind;
+window.handleRelease=handleRelease;
+window.handleDelete=handleDelete;
 </script>
 <style lang="less">
     @import url('@/style/modal.less');
