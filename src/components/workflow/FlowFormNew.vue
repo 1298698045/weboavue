@@ -1380,10 +1380,19 @@
         console.log("data.list", data.list);
         console.log("comps", data.comps);
 
+        let paramsList = {};
+        data.comps.forEach(item=>{
+            if(item.displayCategory != "RelatedList" && item.permission != 2 && item.permission != 4){
+                paramsList[item.id] = data.list[item.id];
+            }
+        });
+        console.log("paramsList:", paramsList);
+
+        // return false;
         let isRequired = false;
         for(let i = 0; i < data.comps.length; i++){
             const item = data.comps[i];
-            if(item.required == true && (data.list[item.id] == '' || data.list[item.id] == null || data.list[item.id] == undefined)){
+            if(item.required == true && item.id in paramsList && (paramsList[item.id] == '' || paramsList[item.id] == null || paramsList[item.id] == undefined)){
                 message.error(`${item.label}不能为空!`)
                 isRequired = true;
                 break;
@@ -1398,7 +1407,7 @@
         }
 
         let relatedList = saveRelated();
-
+        
         let obj = {
           actions:[{
               id: "2919;a",
@@ -1411,7 +1420,7 @@
                         allowSaveOnDuplicate: false,
                         apiName: data.entityApiName,
                         objTypeCode: data.objTypeCode,
-                        fields: data.list
+                        fields: paramsList
                     }
                 },
                 relatedList: relatedList
@@ -1462,13 +1471,23 @@
                     //     list: newList
                     // });
                     newList.forEach(row=>{
+                        let paramsRow = {
+                            id: row.id
+                        };
+                        item.checkedColumns.forEach(v=>{
+                            if(v.permission != 2 && v.permission != 4){
+                                paramsRow[v.id] = row[v.id];
+                            }
+                        });
+                        // console.log("paramsRow", paramsRow);
+                        // console.log("row", row);
                         let obj = {
                             recordId: row.id || '',
                             recordInput: {
                                 allowSaveOnDuplicate: false,
                                 apiName: item.relatedEntity,
                                 objTypeCode: item.relatedEntityObjectTypeCode,
-                                fields: row
+                                fields: paramsRow
                             }
                         }
                         relatedList.push(obj);
