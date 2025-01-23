@@ -11,10 +11,13 @@
             </div>
             <div class="panel-bd">
                 <!-- <Dtable name="relatedGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.instanceList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable> -->
-                <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height"
-                    :isCollapsed="isCollapsed"></Ntable>
+                <!-- <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height"
+                    :isCollapsed="isCollapsed"></Ntable> -->
+                <Dtable ref="gridRef" name="datagridFilter" :columns="columns" :gridUrl="Interface.list2"
+                :tableHeight="height" :loadFilter="loadFilter"></Dtable>
             </div>
         </div>
+        <RelateInstance v-if="isRelateInstance" :isShow="isRelateInstance" @select="handleSelectLook" @cancel="isRelateInstance=false" />
     </div>
 </template>
 <script setup>
@@ -32,8 +35,11 @@
     dayjs.extend(localeData);
     import useWrokDetail from "@/utils/workDetail";
     import Interface from "@/utils/Interface.js";
-    //import Dtable from "@/components/Dtable.vue";
-    import Ntable from "@/components/Ntable.vue";
+    // import Dtable from "@/components/Dtable.vue";
+    // import Ntable from "@/components/Ntable.vue";
+    import Dtable from "@/components/Dtable_nodes.vue";
+    import RelateInstance from "@/components/workflow/RelateInstance.vue";
+
     const { relatedList, getRelatedWork, files, getFilesWork } = useWrokDetail();
     import { useRouter, useRoute } from "vue-router";
     import { message } from "ant-design-vue";
@@ -58,17 +64,26 @@
             objectTypeCode: '128',
             entityName: 'WFProcessInstanceRelated',
             filterQuery: '\nProcessInstanceId\teq\t' + props.processInstanceId,
-            displayColumns: 'Name,CreatedOn,CreatedBy',
+            displayColumns: 'RelateInstanceId,Name,CreatedOn,CreatedBy',
             sort: 'CreatedOn',
             order: 'desc'
         },
+        isRelateInstance: false
     });
-    const { isCollapsed, height } = toRefs(data);
+    const { isCollapsed, height, isRelateInstance } = toRefs(data);
 
     const columns = ref([
         {
             field: 'ids',
             checkbox: true
+        },
+        {
+            title: "关联流程事务",
+            field: "RelateInstanceId",
+            formatter: function formatter(value, row, index) {
+                let href = "/#/lightning/r/Workflow/instance/view?id="+row.RelateInstanceId2
+                return `<a href="${href}" target="_blank">${row.RelateInstanceId}</a>`
+            }
         },
         {
             title: "关联事务",
@@ -86,13 +101,41 @@
 
     const gridUrl = ref(Interface.draftsList);
 
+    const loadFilter = (res) => {
+        let fields = data.queryParams.displayColumns.split(',');
+        var data0 = { rows: [], total: 0 }
+        if (res) {
+            if (res.nodes) {
+                let list = [];
+                fields.forEach(field => {
+                    list = res.nodes.map(row => {
+                        if(field == 'RelateInstanceId'){
+                            row.RelateInstanceId2 = row.RelateInstanceId.lookupValue.value;
+                        }
+                        if (field != 'id' && field != 'nameField') {
+                            row[field] = girdFormatterValue(field, row);
+                        }
+                        row.LIST_RECORD_ID = row.id;
+                        return row;
+                    })
+                })
+                data0.rows = list;
+            } else {
+                data0.rows = res;
+            }
+        }
+        data0.total = res && res.totalCount ? Number(res.totalCount) : data0.rows.length;
+        return data0
+    }
+
     const onSelectChange = selectedRowKeys => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         data.selectedRowKeys = selectedRowKeys;
     };
     const emit = defineEmits(['addRelateInstance']);
     const addRelateInstance = () => {
-        emit("addRelateInstance");
+        // emit("addRelateInstance");
+        data.isRelateInstance = true;
     }
     onMounted(() => {
         window.addEventListener("resize", (e) => {
@@ -111,6 +154,42 @@
         gridRef.value.loadGrid(data.queryParams);
         //fileGridRef.value.loadGrid();
     };
+
+    //关联事务选中
+    const handleSelectLook = (e) => {
+        let RelateInstanceId = e.id;
+        if(e.ProcessInstanceId2){
+            RelateInstanceId = e.ProcessInstanceId2;
+        };
+        let obj = {
+            actions:[{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                  recordInput: {
+                    allowSaveOnDuplicate: false,
+                    apiName: 'WFProcessInstanceRelated',
+                    objTypeCode: 128,
+                    fields: {
+                        ProcessInstanceId: props.processInstanceId,
+                        RelateInstanceId: RelateInstanceId
+                    }
+                  }
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.create, d).then(res=>{
+            if(res && res.actions && res.actions[0].state == 'SUCCESS'){
+                message.success("添加关联成功!");
+                data.isRelateInstance = false;
+                loadList();
+            }
+        })
+    }
 </script>
 <style lang="less" scoped>
     .relatedWrap {

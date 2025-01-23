@@ -34,7 +34,7 @@
                                     <a-button type="link" @click="handleAddPeople(item, parentIndex)" v-if="item.addPeople">添加人员</a-button>
                                 </div>
                                 <div class="peopleBox">
-                                    <a-table :row-selection="item.rowSelectionConfig" size="small" :pagination="pagination" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
+                                    <a-table :row-selection="item.rowSelectionConfig" size="small" :pagination="false" :scroll="{ y: 200 }" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
                                         <template #bodyCell="{ column,index }">
                                             <template v-if="column.key === 'operation'">
                                                 <span class="iconTop" @click="arrowup(item, index)">
@@ -69,7 +69,7 @@
                                         <a-button :disabled="!item.isMatched" type="link" @click="item.isMatched && handleAddPeople(item, parentIndex)" v-if="item.addPeople">添加人员</a-button>
                                     </div>
                                     <div class="peopleBox">
-                                        <a-table :disabled="!item.isMatched" :row-selection="item.rowSelectionConfig" size="small" :pagination="pagination" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
+                                        <a-table :disabled="!item.isMatched" :row-selection="item.rowSelectionConfig" size="small" :pagination="false" :scroll="{ y: 180 }" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
                                             <template #bodyCell="{ column,index }">
                                                 <template v-if="column.key === 'operation'">
                                                     <span class="iconTop" @click="arrowup(item, index)">
@@ -591,10 +591,11 @@
 		display: none !important
 }
 .collapseItem{
-    background: #f4f4f4;
+    /* background: #f4f4f4; */
     border-radius: 4px;
     padding: 10px 16px 16px 0;
     margin-bottom: 16px;
+    border: 1px solid #3399ff;
     .collapseHead{
         display: flex;
         justify-content: space-between;

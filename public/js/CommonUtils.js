@@ -320,6 +320,11 @@ function ajaxMethodGetData(method, d, callback, errorcallback) {
 }
 function ajaxMethodGetAsyncData(method, d, async, callback, errorcallback) {
     if (!method) return;
+    let headers = {};
+    let token = localStorage.getItem('token');
+    if(token){
+        headers.Authorization = token;
+    }
     var url = method;
              //url += queryString;
          if (d) { 
@@ -327,6 +332,7 @@ function ajaxMethodGetAsyncData(method, d, async, callback, errorcallback) {
          }
              jQuery.ajax({
     async: async, cache: false, dataType: "json",
+    headers: headers,
     data: d,
     beforeSend: function () {
                  

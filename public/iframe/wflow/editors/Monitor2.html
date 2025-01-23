@@ -375,7 +375,8 @@
             editor.graph.container.focus();
 
             var xml2 = document.getElementById("txtStateXml").value;
-            update(editor.graph, xml2);
+            getStateData(editor.graph, xml2);
+            
         }
         /**
 	    * Updates the display of the given graph using the XML data
@@ -383,6 +384,49 @@
         /**
 		 * Updates the display of the given graph using the XML data
 		 */
+
+        function getStateData(graph, xml2){
+            let flowid = getQueryString("flowid");
+            let processInstanceId = getQueryString("processInstanceId");
+            var txtStateXml = document.getElementById("txtStateXml");
+            let obj = {
+                actions:[{
+                    state: "",
+                    id: "",
+                    params: {
+                        processId: flowid,
+                        processInstanceId: processInstanceId,
+                    },
+                    errorMessage: "",
+                    error: []
+                }]
+            };
+            let d = {
+                message: JSON.stringify(obj)
+            };
+            let headers = {};
+            let token = localStorage.getItem('token');
+            if(token){
+                headers.Authorization = token;
+            }
+            jQuery.ajax({
+                url: "/api/aura/workflow/ProcessInstance/process/getGraphState",
+                cache: false,
+                async: true,
+                /*scriptCharset: "utf-8",*/
+                dataType: "text",
+                data: d,
+                headers: headers,
+                type: "POST",
+                success: function (res) {
+                    txtStateXml.value = res;
+                    update(graph, res);
+                },
+                error: function (request, textStatus, errorThrown) {
+                }
+            });
+        }
+
         function update(graph, xml) {
             if (xml != null &&
 				xml.length > 0) {
@@ -552,9 +596,9 @@
         </span><!--
         <div id="zoomActions" style="width: 100%; padding-left: 54px; padding-top: 4px;">
         </div>--->
-        <input type="hidden" id="txtflowId" name="txtflowId" value='<%=SchemeId%>' />
-        <input type="hidden" id="txtFlowLayout" name="txtFlowLayout" value='<%=SchemeXml%>' />
-        <input type="hidden" id="txtStateXml" name="txtStateXml" value='<%=StateXml%>' />
+        <input type="hidden" id="txtflowId" name="txtflowId" />
+        <input type="hidden" id="txtFlowLayout" name="txtFlowLayout" />
+        <input type="hidden" id="txtStateXml" name="txtStateXml" />
         <div id="footer" style=" display: none">
             <p id="status">
                 <!-- Status Here -->

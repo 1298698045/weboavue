@@ -58,7 +58,7 @@
       selectOnCheck: true,
       pagination: true,
       pageNumber: 1,
-      pageSize: 10,
+      pageSize: 20,
       fit: true,
       striped: false,
       rownumbers: true,

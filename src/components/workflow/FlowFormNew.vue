@@ -1407,7 +1407,7 @@
         }
 
         let relatedList = saveRelated();
-        
+
         let obj = {
           actions:[{
               id: "2919;a",
@@ -1472,7 +1472,7 @@
                     // });
                     newList.forEach(row=>{
                         let paramsRow = {
-                            id: row.id
+                            // id: row.id
                         };
                         item.checkedColumns.forEach(v=>{
                             if(v.permission != 2 && v.permission != 4){

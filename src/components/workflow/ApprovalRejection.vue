@@ -33,7 +33,7 @@
                                         <a-button type="link" @click="handleAddPeople">添加人员</a-button>
                                     </div>
                                     <div class="peopleBox">
-                                        <a-table :row-selection="rowSelection" size="small" :pagination="pagination" style="height: 100%;" :dataSource="dataSource" :columns="columns">
+                                        <a-table :row-selection="rowSelection" size="small" :pagination="false" style="height: 100%;" :dataSource="dataSource" :columns="columns">
                                             <template #bodyCell="{ column,index }">
                                                 <template v-if="column.key === 'operation'">
                                                     <span class="iconTop" @click="arrowup(index)">

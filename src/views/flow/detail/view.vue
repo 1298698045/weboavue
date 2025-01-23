@@ -24,9 +24,9 @@
             </div>
             <div class="rightBox">
                 <!-- <a-button class="ml10" @click="openZW">正文</a-button> -->
-                <a-button class="ml10" @click="handSave">保存表单</a-button>
+                <!-- <a-button class="ml10" @click="handSave">保存表单</a-button>
                 <a-button type="primary" class="ml10" @click="handleSubmitProcess">提交流程</a-button>
-                <a-button class="ml10" @click="handleRejection">审批拒绝</a-button>
+                <a-button class="ml10" @click="handleRejection">审批拒绝</a-button> -->
                 <a-dropdown :trigger="['click']" class="ml10">
                     <span class="btn-drop">
                         <UnorderedListOutlined style="color: #1D2129;" />
@@ -36,32 +36,14 @@
                             <a-menu-item key="1" @click="handleUrging">
                                 催办
                             </a-menu-item>
-                            <a-menu-item key="10" @click="handleReturn">
-                                退回
-                            </a-menu-item>
-                            <a-menu-item key="6" @click="handleCountersign">
-                                加签
-                            </a-menu-item>
-                            <a-menu-item key="7" @click="handleJump">
-                                跳转
-                            </a-menu-item>
                             <a-menu-item key="2" @click="handleCirculation">
                                 传阅他人
-                            </a-menu-item>
-                            <a-menu-item key="3" @click="handleDelegate">
-                                委托
                             </a-menu-item>
                             <a-menu-item key="4" @click="printForm">
                                 打印审批单
                             </a-menu-item>
                             <a-menu-item key="5" @click="printForm">
                                 PDF
-                            </a-menu-item>
-                            <a-menu-item key="8" @click="handleRevoke">
-                                撤销
-                            </a-menu-item>
-                            <a-menu-item key="9" @click="handleDelete">
-                                删除
                             </a-menu-item>
                         </a-menu>
                     </template>
@@ -188,9 +170,9 @@
                                                 </span>
                                             </div>
                                             <div class="collapseBd">
-                                                <div class="files" v-if="item.children">
-                                                    <div class="fileItem" v-for="(row, idx) in item.children" :key="row.Id"
-                                                        :idx="idx" @click="openZW(row)">
+                                                <div class="files">
+                                                    <div class="fileItem" v-for="(row, idx) in item.Files" :key="row.Id"
+                                                        :idx="idx">
                                                         <div class="fileItemImg">
                                                             <img :src="require('@/assets/img/filetype/doc.png')"
                                                                 v-if="row.FileExtension == 'ocx' || 
@@ -215,7 +197,7 @@
                                                                 v-else />
                                                         </div>
                                                         <div class="fileItemInfo">
-                                                            <p class="name rowEllipsis">{{row.Name}}</p>
+                                                            <p class="name">{{row.Name}}</p>
                                                             <p class="link">
                                                                 <a href="javascript:;" @click="openZW(row)">查看</a>
                                                                 ·
@@ -249,66 +231,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="files" v-else>
-                                                    <div class="fileItem" @click="openZW(item)">
-                                                        <div class="fileItemImg">
-                                                            <img :src="require('@/assets/img/filetype/doc.png')"
-                                                                v-if="item.fileExtension == 'ocx' || 
-                                                            item.fileExtension == 'docx' || item.fileExtension == 'doc'" />
-                                                            <img :src="require('@/assets/img/filetype/rar.png')"
-                                                                v-else-if="item.fileExtension == 'rar' || 
-                                                            item.fileExtension == 'zip'" />
-                                                            <img :src="require('@/assets/img/filetype/Excel.png')"
-                                                                v-else-if="item.fileExtension == 'xlsx' || 
-                                                            item.fileExtension == 'xls'" />
-                                                            <img :src="require('@/assets/img/filetype/pdf.png')"
-                                                                v-else-if="item.fileExtension == 'pdf'" />
-                                                            <img :src="require('@/assets/img/filetype/TXT.png')"
-                                                                v-else-if="item.fileExtension == 'TXT'||item.fileExtension == 'txt'" />
-                                                            <img :src="require('@/assets/img/filetype/PPT.png')"
-                                                                v-else-if="item.fileExtension == 'ppt'||item.fileExtension == 'pptx'" />
-                                                            <img :src="require('@/assets/img/filetype/video.png')"
-                                                                v-else-if="item.fileExtension == 'mp4'||item.fileExtension == '.mp4'" />
-                                                            <img :src="require('@/assets/img/filetype/defaultImg.png')"
-                                                                v-else-if="item.fileExtension == 'jpg'||item.fileExtension == 'png'||item.fileExtension == 'gif'" />
-                                                            <img :src="require('@/assets/img/filetype/File.png')"
-                                                                v-else />
-                                                        </div>
-                                                        <div class="fileItemInfo">
-                                                            <p class="name rowEllipsis">{{item.name}}</p>
-                                                            <p class="link">
-                                                                <a href="javascript:;" @click="openZW(item)">查看</a>
-                                                                ·
-                                                                <a href="javascript:;" @click="openZW(item)">下载</a>
-                                                            </p>
-                                                            <p class="time">
-                                                                <span>{{item.createdOn}}&nbsp;·</span>
-                                                                &nbsp;
-                                                                <span>{{item.size}}</span>
-                                                            </p>
-                                                        </div>
-                                                        <div class="iconOpera">
-                                                            <a-dropdown trigger="click">
-                                                                <DownOutlined style="font-size: 12px;" />
-                                                                <template #overlay>
-                                                                    <a-menu>
-                                                                        <a-menu-item>
-                                                                            <a href="javascript:;"
-                                                                                @click="openZW(item)">查看</a>
-                                                                        </a-menu-item>
-                                                                        <a-menu-item>
-                                                                            <a-popconfirm title="是否确定要删除？" ok-text="确定"
-                                                                                cancel-text="取消" @confirm="confirm"
-                                                                                @cancel="cancel">
-                                                                                <a href="javascript:;">删除</a>
-                                                                            </a-popconfirm>
-                                                                        </a-menu-item>
-                                                                    </a-menu>
-                                                                </template>
-                                                            </a-dropdown>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -326,7 +248,7 @@
                     <Related :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==3">
-                    <Attachment :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" />
+                    <Attachment :id="id" @addRelateInstance="addRelateInstance" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==4">
                     <div class="detailContent">
@@ -454,7 +376,7 @@
     import Confirm from "@/components/commonModal/Confirm.vue";
     import Delete from "@/components/listView/Delete.vue";
     import Return from "@/components/workflow/Return.vue";
-    import { formTreeData } from "@/utils/common.js";
+
 
     import { useRouter, useRoute } from "vue-router";
     import { message } from "ant-design-vue";
@@ -514,7 +436,7 @@
         isEdit: false,
         ruleLogId: route.query.id,
         processId: "",
-        processInstanceId: "",
+        processInstanceId: route.query.id,
         processInstanceName: "",
         toActivityID: "",
         isCountersign: false,
@@ -555,13 +477,11 @@
                 data.toActivityID = ToActivityId.value;
                 data.fromActivityId = FromActivityId.value;
                 data.iframeSrc = "/iframe/wflow/editors/Monitor2.html?flowid=" + data.processId + "&processInstanceId=" + data.processInstanceId;
-                getFiles();
                 getDetail();
             }
         });
     };
-    getRuleLogData();
-
+    // getRuleLogData();
 
     const detailTitleInputDom = ref(null);
     const changeTabs = (e) => {
@@ -698,29 +618,22 @@
     }
 
     const getFiles = () => {
-        proxy.$get(Interface.getFiles, {
-            parentId: data.processInstanceId
+        proxy.$get(Interface.flow.files, {
+            InstanceId: "",
+            InstanceState: 1,
+            right: 16
         }).then(res => {
-            // data.categoryFiles = res.actions[0].returnValue;
-            let list = res.actions[0].returnValue.map(item=>{
-                let size = item.fileSize;
-                size = size ? (size * 1 / 1024).toFixed(2) : 0;
-                size = size + 'kb';
-                item.size = size;
-                return item;
-            });
-            data.categoryFiles = formTreeData(list, 'id', 'parentId');
-            console.log("data.categoryFiles:", data.categoryFiles);
+            data.categoryFiles = res.CategoryFiles
         })
     };
-    // getFiles();
+    getFiles();
     const changePagination = (e) => {
 
     };
     const openZW = (row) => {
         let url = '';
-        if (row && row.fileExtension == 'pdf') {
-            url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent('../../resources/uploadfiles' + row.viewUrl) + "";
+        if (row && row.FileExtension == 'pdf') {
+            url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent('../../resources/uploadfiles' + row.ViewLinkUrl) + "";
         }
         window.open(url);
     }
@@ -739,45 +652,6 @@
             },
         });
         window.open(url.href);
-    }
-    //添加关联事务
-    const addRelateInstance = () => {
-        data.isRelateInstance = true;
-    }
-    //关联事务选中
-    const handleSelectLook = (e) => {
-        let RelateInstanceId = e.id;
-        if(e.ProcessInstanceId2){
-            RelateInstanceId = e.ProcessInstanceId2;
-        };
-        let obj = {
-            actions:[{
-                id: "2919;a",
-                descriptor: "",
-                callingDescriptor: "UNKNOWN",
-                params: {
-                  recordInput: {
-                    allowSaveOnDuplicate: false,
-                    apiName: 'WFProcessInstanceRelated',
-                    objTypeCode: 128,
-                    fields: {
-                        ProcessInstanceId: data.processInstanceId,
-                        RelateInstanceId: RelateInstanceId
-                    }
-                  }
-                }
-            }]
-        };
-        let d = {
-            message: JSON.stringify(obj)
-        };
-        proxy.$post(Interface.create, d).then(res=>{
-            if(res && res.actions && res.actions[0].state == 'SUCCESS'){
-                message.success("添加关联成功!");
-                data.isRelateInstance = false;
-            }
-        })
-        // data.isRelateInstance = false;
     }
     const getDetail = () => {
         let d = {
@@ -804,6 +678,7 @@
             }
         })
     };
+    getDetail();
     const handleSave = () => {
         data.isEdit = false;
         let url = Interface.create;
@@ -858,7 +733,7 @@
     }, { deep: true, immediate: true })
 
     const initLoad = () => {
-        getRuleLogData();
+        // getRuleLogData();
         // getDetail();
     }
 
@@ -896,7 +771,7 @@
                         .fileItemImg {
                             width: 40px;
                             height: 40px;
-                            min-width: 40px;
+
                             img {
                                 width: 100%;
                                 height: 100%;
@@ -907,7 +782,7 @@
                             flex: 1;
                             font-size: 14px;
                             margin-left: 10px;
-                            width: calc(100% - 80px);
+
                             .link {
                                 a {
                                     color: #3399ff;
