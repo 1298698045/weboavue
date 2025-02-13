@@ -317,9 +317,9 @@ const getQuery = () => {
     search: data.searchVal || '',
     page: data.pagination.current,
     rows: data.pagination.pageSize,
-    sort: 'ReadedOn',
+    sort: 'ReadOn',
     order: 'desc',
-    displayColumns: 'BusinessUnitName,ReaderId,IsRead,ReadedOn,IPAddr'
+    displayColumns: 'BusinessUnitName,ReaderId,IsRead,ReadOn,IPAddr'
   }).then(res => {
     var list = [];
     data.total = res.pageInfo ? res.pageInfo.total : 0;
