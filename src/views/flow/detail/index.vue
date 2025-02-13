@@ -45,15 +45,15 @@
                             <a-menu-item key="7" @click="handleJump">
                                 跳转
                             </a-menu-item>
-                            <a-menu-item key="2" @click="handleCirculation">
+                            <!-- <a-menu-item key="2" @click="handleCirculation">
                                 传阅他人
-                            </a-menu-item>
+                            </a-menu-item> -->
                             <a-menu-item key="3" @click="handleDelegate">
                                 委托
                             </a-menu-item>
-                            <a-menu-item key="4" @click="printForm">
+                            <!-- <a-menu-item key="4" @click="printForm">
                                 打印审批单
-                            </a-menu-item>
+                            </a-menu-item> -->
                             <a-menu-item key="5" @click="printForm">
                                 PDF
                             </a-menu-item>
@@ -62,6 +62,12 @@
                             </a-menu-item>
                             <a-menu-item key="9" @click="handleDelete">
                                 删除
+                            </a-menu-item>
+                            <a-menu-item key="2" @click="handleCirculation">
+                                传阅他人
+                            </a-menu-item>
+                            <a-menu-item key="4" @click="printForm">
+                                打印审批单
                             </a-menu-item>
                         </a-menu>
                     </template>
@@ -163,7 +169,7 @@
                             <div class="panel">
                                 <div class="panel-head">
                                     <div class="panel-title">
-                                        附件 (0)
+                                        附件 ({{ fileTotal }})
                                     </div>
                                     <div class="panel-btn">
                                         <a-upload v-model:file-list="fileList" action="#" :showUploadList="false">
@@ -190,7 +196,7 @@
                                             <div class="collapseBd">
                                                 <div class="files" v-if="item.children">
                                                     <div class="fileItem" v-for="(row, idx) in item.children" :key="row.Id"
-                                                        :idx="idx" @click="openZW(row)">
+                                                        :idx="idx" @click.stop="openZW(row)">
                                                         <div class="fileItemImg">
                                                             <img :src="require('@/assets/img/filetype/doc.png')"
                                                                 v-if="row.FileExtension == 'ocx' || 
@@ -250,7 +256,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="files" v-else>
-                                                    <div class="fileItem" @click="openZW(item)">
+                                                    <div class="fileItem" @click.stop="openZW(item)">
                                                         <div class="fileItemImg">
                                                             <img :src="require('@/assets/img/filetype/doc.png')"
                                                                 v-if="item.fileExtension == 'ocx' || 
@@ -294,7 +300,7 @@
                                                                     <a-menu>
                                                                         <a-menu-item>
                                                                             <a href="javascript:;"
-                                                                                @click="openZW(item)">查看</a>
+                                                                            @click.stop="openZW(item)">查看</a>
                                                                         </a-menu-item>
                                                                         <a-menu-item>
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
@@ -525,11 +531,12 @@
         fromActivityId: "",
         isReturn: false,
         iframeSrc: "",
+        fileTotal: 0
     })
     const { isEdit, Title, objectTypeCode, sObjectName, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData,
         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID,
-        processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete, fromActivityId, isReturn, iframeSrc } = toRefs(data);
+        processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete, fromActivityId, isReturn, iframeSrc, fileTotal } = toRefs(data);
 
     const getRuleLogData = () => {
         let obj = {
@@ -709,6 +716,7 @@
                 item.size = size;
                 return item;
             });
+            data.fileTotal = list.length;
             data.categoryFiles = formTreeData(list, 'id', 'parentId');
             console.log("data.categoryFiles:", data.categoryFiles);
         })

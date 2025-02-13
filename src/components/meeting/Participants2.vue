@@ -57,7 +57,8 @@
           <div class="ant-card-body">
             <div class="statistics-left">
               <div class="statistics-name">签退</div>
-              <div class="statistics-count" name="ContractNumber" style="color: rgb(179, 123, 248);">{{ SignoffQty || 0 }}
+              <div class="statistics-count" name="ContractNumber" style="color: rgb(179, 123, 248);">{{ SignoffQty || 0
+                }}
               </div>
             </div>
             <div class="statistics-right">
@@ -98,8 +99,8 @@
       <div class="panel-bd panel-bd2">
         <div class="peopleHeader">
           <div class="left">
-            <a-input v-if="activeKey * 1 == 0" v-model:value="OwningBusinessUnitName" placeholder="部门" class="searchitem"
-              @search="onSearch"></a-input>
+            <a-input v-if="activeKey * 1 == 0" v-model:value="OwningBusinessUnitName" placeholder="部门"
+              class="searchitem" @search="onSearch"></a-input>
             <a-input v-model:value="searchVal" placeholder="姓名" class="searchitem" @search="onSearch"></a-input>
             <a-select v-model:value="StatusCode" placeholder="接受状态" class="searchitem" v-if="activeKey * 1 == 0">
               <a-select-option value="">全部</a-select-option>
@@ -333,6 +334,7 @@ const emit = defineEmits(["load"]);
 
 const data = reactive({
   list: [],
+  MeetingName: '',
   selectedRowKeys: [],
   loading: false,
   listData: [],
@@ -390,7 +392,7 @@ const data = reactive({
   CreatedOn: null
 });
 //const columnList = toRaw(columns);
-const { ClockType, CreatedOn, columns, tabs, activeKey, listData, PeopleQty, AcceptQty, JoinQty, SignoffQty, RejectQty, DayoffQty, height, searchVal, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, IsLate } = toRefs(data);
+const { MeetingName, ClockType, CreatedOn, columns, tabs, activeKey, listData, PeopleQty, AcceptQty, JoinQty, SignoffQty, RejectQty, DayoffQty, height, searchVal, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, IsLate } = toRefs(data);
 const changeTabs = (e) => {
   data.activeKey = e;
   data.pagination.current = 1;
@@ -475,34 +477,58 @@ const onClear = (e) => {
   data.CreatedOn = null;
   getQuery();
 };
-const onExport = () => {
-  let url = Interface.meeting.audienceDataExport;
-  if (data.activeKey * 1 == 1) {
-    url = Interface.meeting.checkinRecordExport;
+const windowOpen = (url, fileName) => {
+  var xhr = new XMLHttpRequest();
+  // var fileName = window.fileName + typeName; // 文件名称
+  xhr.open('POST', url, true);
+  xhr.responseType = 'blob';
+
+  //xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
+  //xhr.setRequestHeader('token', window.localStorage.getItem('token'));
+  xhr.onload = function (res) {
+    if (this.status === 200) {
+      var type = xhr.getResponseHeader('Content-Type');
+      var blob = new Blob([this.response], { type: type });
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        /*
+         * For IE
+         * >=IE10
+         */
+        window.navigator.msSaveBlob(blob, fileName);
+      } else {
+        /*
+         * For Non-IE (chrome, firefox)
+         */
+        var URL = window.URL || window.webkitURL;
+        var objectUrl = URL.createObjectURL(blob);
+        if (fileName) {
+          var a = document.createElement('a');
+          if (typeof a.download === 'undefined') {
+            window.location = objectUrl;
+          } else {
+            a.href = objectUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+        } else {
+          window.location = objectUrl;
+        }
+      }
+    }
   }
-  proxy.$get(url, { meetingId: props.id }).then(res => {
-    console.log(res);
-  }).catch(err => {
-    console.log('error', err);
-    message.error("导出失败！");
-  });
-  // url+='?meetingId='+props.id;
-  // let xhr = new XMLHttpRequest();
-  // xhr.open('GET', url, true);
-  // xhr.responseType = 'blob';
-  // xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
-  // xhr.onload = function() {
-  //     if (this.status === 200) {
-  //         var blob = new Blob([this.response], { type: xhr.getResponseHeader('Content-Type') });
-  //         var link = document.createElement('a');
-  //         link.href = window.URL.createObjectURL(blob);
-  //         link.download = fileName;
-  //         document.body.appendChild(link);
-  //         link.click();
-  //         document.body.removeChild(link);
-  //     }
-  // };
-  // xhr.send();
+  xhr.send();
+}
+
+const onExport = () => {
+  let url = Interface.meeting.audienceDataExport + '?meetingId=' + props.id;
+  let text = data.MeetingName + '_参会人员.xls';
+  if (data.activeKey * 1 == 1) {
+    url = Interface.meeting.checkinRecordExport + '?meetingId=' + props.id;
+    text = data.MeetingName + '_打卡记录.xls';
+  }
+  windowOpen(url, text);
 }
 const changeRangeDate = (e) => {
   //console.log("e",e,item);
@@ -563,7 +589,7 @@ const getUserData = (params) => {
             MeetingId: props.id,
             InviteeId: params.id,
             Name: params.name,
-            StatusCode: 1
+            StatusCode: 0
           }
         }
       }
@@ -619,6 +645,7 @@ const getDetail = () => {
   proxy.$post(Interface.detail, obj).then(res => {
     if (res && res.actions && res.actions[0]) {
       let record = res.actions[0].returnValue.fields;
+      data.MeetingName = record.Name ? record.Name.value : '';
       data.PeopleQty = record.PeopleQty ? record.PeopleQty.value : 0;
       data.AcceptQty = record.AcceptQty ? record.AcceptQty.value : 0;
       data.RejectQty = record.RejectQty ? record.RejectQty.value : 0;

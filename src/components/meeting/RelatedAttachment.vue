@@ -19,25 +19,25 @@
                 {{ index + 1 }}
               </div>
             </template>
-            <template v-if="column.key === 'FileExtension'">
-              <div class="FileExtensionTdImg">
+            <template v-if="column.key === 'fileExtension'">
+              <div class="fileExtensionTdImg">
                 <img :src="require('@/assets/img/filetype/doc.png')"
-                  v-if="record.FileExtension == 'ocx' || record.FileExtension == 'docx' || record.FileExtension == 'doc'" />
+                  v-if="record.fileExtension == 'ocx' || record.fileExtension == 'docx' || record.fileExtension == 'doc'" />
                 <img :src="require('@/assets/img/filetype/rar.png')"
-                  v-else-if="record.FileExtension == 'rar' || record.FileExtension == 'zip'" />
+                  v-else-if="record.fileExtension == 'rar' || record.fileExtension == 'zip'" />
                 <img :src="require('@/assets/img/filetype/Excel.png')"
-                  v-else-if="record.FileExtension == 'xlsx' || record.FileExtension == 'xls'" />
-                <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="record.FileExtension == 'pdf'" />
+                  v-else-if="record.fileExtension == 'xlsx' || record.fileExtension == 'xls'" />
+                <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="record.fileExtension == 'pdf'" />
                 <img :src="require('@/assets/img/filetype/TXT.png')"
-                  v-else-if="record.FileExtension == 'TXT' || record.FileExtension == 'txt'" />
+                  v-else-if="record.fileExtension == 'TXT' || record.fileExtension == 'txt'" />
                 <img :src="require('@/assets/img/filetype/PPT.png')"
-                  v-else-if="record.FileExtension == 'ppt' || record.FileExtension == 'pptx'" />
+                  v-else-if="record.fileExtension == 'ppt' || record.fileExtension == 'pptx'" />
                 <img :src="require('@/assets/img/filetype/video.png')"
-                  v-else-if="record.FileExtension == 'mp4' || record.FileExtension == '.mp4'" />
+                  v-else-if="record.fileExtension == 'mp4' || record.fileExtension == '.mp4'" />
                 <img :src="require('@/assets/img/filetype/defaultImg.png')"
-                  v-else-if="record.FileExtension == 'jpg' || record.FileExtension == 'png' || record.FileExtension == 'gif'" />
+                  v-else-if="record.fileExtension == 'jpg' || record.fileExtension == 'png' || record.fileExtension == 'gif'" />
                 <img :src="require('@/assets/img/filetype/File.png')" v-else />
-                <span>{{ record.FileExtension || '' }}</span>
+                <span>{{ record.fileExtension || '' }}</span>
               </div>
             </template>
             <!-- <template v-if="column.key === 'SharedRights'">
@@ -94,6 +94,8 @@
     <AddMeetingShare :isShow="isShare" v-if="isShare" @cancel="onSearch" :id="props.id" />
     <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
       @cancel="isConfirm = false" @ok="deleteFile" :id="recordId" />
+    <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
+    <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
   </div>
 </template>
 <script setup>
@@ -140,9 +142,12 @@ import Delete from "@/components/listView/Delete.vue";
 import CommonFormModal from "@/components/listView/CommonFormModal.vue";
 import AddMeetingShare from "@/components/meeting/AddMeetingShare.vue";
 import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+import ImageView from "@/components/file/ImageView.vue";
+import PdfView from "@/components/file/PdfView.vue";
 const { proxy } = getCurrentInstance();
 const TopicsLst = ref();
 const TaskDetailModal = ref(null);
+//const ImageViewRef = ref(null);
 var columns = [
   {
     title: "序号",
@@ -152,8 +157,8 @@ var columns = [
   },
   {
     title: "类型",
-    dataIndex: "FileExtension",
-    key: "FileExtension",
+    dataIndex: "fileExtension",
+    key: "fileExtension",
     width: 200,
   },
   {
@@ -198,6 +203,7 @@ const emit = defineEmits(["load"]);
 const data = reactive({
   list: [],
   fileList: [],
+  ImageList: [],
   fileList1: [],
   selectedRowKeys: [],
   loading: false,
@@ -240,14 +246,21 @@ const data = reactive({
   isConfirm: false,
   confirmText: '',
   confirmTitle: '',
+  isPhoto: false,
+  photoParams: {},
+  isPdf: false,
+  pdfParams: {},
+  currentUserId: '',
+  currentUserName: ''
 });
 const columnList = toRaw(columns);
-const { listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, isTaskDetail, isShare, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, isConfirm, confirmText, confirmTitle } = toRefs(data);
+const { currentUserId, currentUserName, pdfParams, isPdf, photoParams, ImageList, isPhoto, listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, isTaskDetail, isShare, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, isConfirm, confirmText, confirmTitle } = toRefs(data);
 const getQuery = () => {
   // proxy.$get(Interface.user.groupUser, {}).then((res) => {
   //   data.listData = res.rows;
   // });
   data.listData = [];
+  data.ImageList = [];
   data.pagination.total = 0;
   // let filterQuery='\nParentId\teq\t'+props.id;
   // if(data.StatusCode){
@@ -276,7 +289,7 @@ const getQuery = () => {
   //   rows: data.pagination.pageSize,
   //   sort:'Position',
   //   order:'asc',
-  //   displayColumns:'FileExtension,Name,CreatedOn,CreatedBy,FileLocation,AccessRight'
+  //   displayColumns:'fileExtension,Name,CreatedOn,CreatedBy,FileLocation,AccessRight'
   // }
   let url = Interface.getFiles;
   let d = {
@@ -288,6 +301,7 @@ const getQuery = () => {
   }
   proxy.$post(url, d).then(res => {
     var list = [];
+    var list2 = [];
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue) {
       data.total = res.actions[0].returnValue.length || 0;
       data.pagination.total = res.actions[0].returnValue.length || 0;
@@ -300,66 +314,126 @@ const getQuery = () => {
         if (name) {
           name = name.replaceAll('.' + item.fileExtension, '');
         }
-        list.push({
+        let ite = {
           size: size,
           url: '/' + props.entityName + '/' + item.id + '/' + name,
           fileLocation: item.fileLocation || '',
           uid: item.id,
           id: item.id,
+          downloadUrl: item.downloadUrl || '',
+          viewUrl: item.viewUrl || '',
+          fileExtension: item.fileExtension,
           FileExtension: item.fileExtension,
+          fileSize: item.fileSize,
+          name: item.name,
           Name: item.name,
           CreatedOn: item.createdOn,
           CreatedBy: item.createdByName || '',
-        })
+        };
+        list.push(ite);
+        if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
+          list2.push(ite);
+        }
       }
     }
     data.listData = list;
-
+    data.ImageList = list2;
   })
 };
+const windowOpen = (url, fileName) => {
+  var xhr = new XMLHttpRequest();
+  // var fileName = window.fileName + typeName; // 文件名称
+  xhr.open('POST', url, true);
+  xhr.responseType = 'blob';
+
+  //xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
+  //xhr.setRequestHeader('token', window.localStorage.getItem('token'));
+  xhr.onload = function (res) {
+    if (this.status === 200) {
+      var type = xhr.getResponseHeader('Content-Type');
+      var blob = new Blob([this.response], { type: type });
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        /*
+         * For IE
+         * >=IE10
+         */
+        window.navigator.msSaveBlob(blob, fileName);
+      } else {
+        /*
+         * For Non-IE (chrome, firefox)
+         */
+        var URL = window.URL || window.webkitURL;
+        var objectUrl = URL.createObjectURL(blob);
+        if (fileName) {
+          var a = document.createElement('a');
+          if (typeof a.download === 'undefined') {
+            window.location = objectUrl;
+          } else {
+            a.href = objectUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+        } else {
+          window.location = objectUrl;
+        }
+      }
+    }
+  }
+  xhr.send();
+}
+const openfile = (medittype, RecordID, Name) => {
+  var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
+  var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
+  var iTop = 0; //获得窗口的垂直位置;
+  var iLeft = 0; //获得窗口的水平位置;
+  window.open("https://demo.kinggrid.com/iWebOffice2015/DocumentEdit.jsp?RecordID=" + RecordID + "&EditType=" + medittype + "&FileName=" + encodeURI(encodeURI(Name)) + "&UserName=" + encodeURI(encodeURI(data.currentUserName)), 'iWebOffice2015智能文档中间件示例程序', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
+}
 //预览附件
 const handlePreviewFile = (item) => {
-  let url = '/api/file/attachment/preview' + item.fileLocation;
-  //window.open(url);
-  let xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
-  xhr.responseType = 'blob';
-  xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
-  xhr.setRequestHeader('token', window.localStorage.getItem('token'));
-  xhr.onload = function () {
-    if (this.status === 200) {
-      var blob = new Blob([this.response], { type: xhr.getResponseHeader('Content-Type') });
-      var link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+  let url = '';
+  if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
+    // url = item.viewUrl;
+    // window.open(url);
+    let index = 0;
+    for (var i = 0; i < data.ImageList.length; i++) {
+      let ite = data.ImageList[i];
+      if (ite.id == item.id) {
+        index = i;
+      }
     }
-  };
-  xhr.send();
+    data.photoParams = {
+      id: item.id,
+      item: item,
+      imageList: data.ImageList,
+      index: index
+    };
+    data.isPhoto = true;
+  } else if (item.fileExtension == 'pdf') {
+    url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(item.viewUrl);
+    data.pdfParams = {
+      id: item.id,
+      item: item,
+      imageList: [],
+      index: 0
+    };
+    data.isPdf = true;
+  }
+  else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
+    let medittype = 0;
+    openfile(medittype, item.id, item.Name);
+  }
+  else {
+    downloadFile(item);
+  }
 };
 //下载附件
 const downloadFile = (item) => {
-  let url = '/api/file/attachment/download' + item.fileLocation;
+  let url = item.downloadUrl;
   //window.open(url);
-  let xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
-  xhr.responseType = 'blob';
-  xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
-  xhr.setRequestHeader('token', window.localStorage.getItem('token'));
-  xhr.onload = function () {
-    if (this.status === 200) {
-      var blob = new Blob([this.response], { type: xhr.getResponseHeader('Content-Type') });
-      var link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
-  xhr.send();
+  let text = item.Name || '';
+  windowOpen(url, text);
 };
 //删除附件
 const deleteFile = (id) => {
@@ -495,7 +569,8 @@ const handleDelete = (item) => {
   data.recordId = item.id;
   data.confirmText = '确定要删除吗？'
   data.confirmTitle = '删除'
-  data.isConfirm = true;
+  //data.isConfirm = true;
+  data.isDelete = true;
 }
 //删除关闭
 const cancelDelete = (e) => {
@@ -609,6 +684,12 @@ onMounted(() => {
       data.height = h - 355;
     }
   });
+  let userInfo = window.localStorage.getItem('userInfo');
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+    data.currentUserId = userInfo.userId;
+    data.currentUserName = userInfo.fullName;
+  }
 })
 </script>
 <style lang="less">
@@ -858,7 +939,7 @@ body .ant-table-tbody tr:nth-child(even) {
   }
 }
 
-.FileExtensionTdImg {
+.fileExtensionTdImg {
   display: flex;
   align-items: center;
 

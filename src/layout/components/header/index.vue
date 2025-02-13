@@ -181,7 +181,7 @@
           <div class="app_item" v-for="(item,index) in listApp" :style="{background:item.BgColor}" :key="index" @click="handleGoModule(item)">
             <div class="appBox">
               <div class="iconBox">
-                <img :src="'http://182.92.221.64:10000'+(item.LogoUrl||'/img/apps/icon/ContentPage.png')" alt="">
+                <img :src="item.LogoUrl" alt="">
               </div>
               <div class="app-item-label">{{item.Label}}</div>
             </div>

@@ -126,7 +126,19 @@
                 <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" picker="month" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
             </span>
         </div>
-        <div v-else-if="type=='X' || type=='z' || type=='J' || type=='UC' || type=='UCS'">
+        <div v-else-if="type=='X' || type=='J'">
+            <span class="valText" v-if="print==1">
+                {{ list[field.id] }}
+            </span>
+            <span v-else>
+                <span class="valText" v-if="field?.permission == 4">
+                    {{ list[field.id] }}
+                </span>
+                <span v-else-if="field?.permission == 2"></span>
+                <a-textarea  v-else :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" :rows="2" />
+            </span>
+        </div>
+        <div v-else-if="type=='z' || type=='UC' || type=='UCS'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
             </span>
@@ -571,6 +583,9 @@
             left: 10px;
             z-index: 99; */
         }
+        /* >div{
+            flex: 1;
+        } */
         .signImg{
             img{
                 max-width: 120px;

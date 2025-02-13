@@ -7,7 +7,7 @@
                         <template v-for="(col, colKey, colIndex) in row" :key="colIndex">
                             <td :col="colKey" :rowspan="col.rowspan || 1" :colspan="col.colspan || 1" v-if="isShowCell(key, colKey, col.rowspan, col) && col && col.field?.displayCategory!='RelatedList'" :style="setStyle(key,colKey)">
                                 <template v-if="col.v ||  col.p">
-                                    <span>
+                                    <span :style="setStyleText(key, colKey)">
                                         {{col.v}}
                                     </span>
                                     <span v-if="col.p">
@@ -253,8 +253,8 @@
 
                 if(type=='U' || type=='O' || type=='Y' || type=='Y_MD'){
                     data.search[key] = [{
-                        ID: fields[key].value,
-                        Name: fields[key].displayValue
+                        ID: fields[key]?.value,
+                        Name: fields[key]?.displayValue
                     }]
                 }
                 try{
@@ -970,8 +970,35 @@
                         style.writingMode = "vertical-rl";
                     }
                 }
-                if(styleName=='bl'){
-                    // style.fontWeight = 'bold';
+                if(styleName == 'bl' && styleData[styleName] == 1){
+                    style.fontWeight = "bold";
+                }
+            }
+        }
+        return style;
+    };
+
+    const setStyleText = (row, col) => {
+        let style = {};
+        if(data.cellData[row][col].style){
+            let styleData = data.cellData[row][col].style;
+            for(let styleName in styleData){
+                if(styleName == 'ul'){
+                    let { cl, s } = styleData[styleName];
+                    if(s == 1){
+                        style.borderBottom = "1px solid " + cl.rgb;
+                    }
+                }
+                if(styleName == 'st' && styleData[styleName] != null){
+                    let { s } = styleData[styleName];
+                    if(s == 1){
+                        style.textDecoration = "line-through";
+                    }
+                }
+                if(styleName == 'it'){
+                    if(styleData[styleName] == 1){
+                        style.fontStyle = "italic";
+                    }
                 }
             }
         }
@@ -1534,7 +1561,7 @@
                     /* width: 90px;
                     height: 30px; */
                     /* border: 1px solid #dedede; */
-                    background: transparent !important;
+                    /* background: transparent !important; */
                 }
             }
         }

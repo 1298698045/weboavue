@@ -1,5 +1,6 @@
 const baseUrl = "api";
 const Interface = {
+  pathUrl: "http://192.168.1.200",
   // 待办事务
   todoList: {
     treedata: "/localData/treedata.json",
