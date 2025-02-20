@@ -1,5 +1,5 @@
 <template>
-    <div class="moreMenuBox" :class="{'active':isMenu}" @click.stop="handleClickMenu">
+    <div class="moreMenuBox" :class="{'active':isMenu}" @click.stop="handleMenu">
         <div class="moreBtn">
           <i class="iconfont icon-mulugengduo"></i>
         </div>
@@ -15,7 +15,7 @@
         isShow: false
     });
     const emit = defineEmits(['change']);
-    const handleClickMenu = () => {
+    const handleMenu = () => {
       data.isShow = !data.isShow;
       emit('change', data.isShow);
     };

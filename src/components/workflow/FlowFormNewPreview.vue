@@ -16,13 +16,13 @@
                                 </template>
                                 <template v-else-if="col.field">
                                     <div>
-                                        <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" :suggestions="suggestions" @loadSuggestion="getSuggestionQuery" @delSuggestion="deleteSuggestion" :stateCode="stateCode" />
+                                        <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" />
                                     </div>
                                 </template>
                             </td>
                             <td v-else-if="col && col.field && col.field.displayCategory=='RelatedList'" :colspan="col.colspan" :style="setStyle(key,colKey)" style="background: #fff;padding: 10px;">
-                                <div class="childTableOption" v-if="print!=1 && stateCode!=2">
-                                    <a-button class="ant-btn-icon" @click="handleAddSubTable(col)">
+                                <div class="childTableOption" v-if="print!=1">
+                                    <!-- <a-button class="ant-btn-icon" @click="handleAddSubTable(col)">
                                         <PlusOutlined />
                                     </a-button>
                                     <a-button :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleDelSubTable(col)">
@@ -30,7 +30,7 @@
                                     </a-button>
                                     <a-button :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleCopySubTable(col)">
                                         <CopyOutlined />
-                                    </a-button>
+                                    </a-button> -->
                                     <!-- <a-button @click="handleAddSubTable(col)">添加</a-button>
                                     <a-button class="ml10">批量添加</a-button> -->
                                 </div>
@@ -38,7 +38,7 @@
                                     <table>
                                         <thead>
                                             <tr>
-                                                <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 40px;" v-if="stateCode!=2">操作</td>
+                                                <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 40px;" v-if="print!=1">操作</td>
                                                 <!-- <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 30px;">序号</td> -->
                                                 <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 30px;text-align: center;">
                                                     {{child.label}}
@@ -48,12 +48,12 @@
                                         <tbody>
                                             <a-checkbox-group v-model:value="col.selectedList" style="width: 100%;display: contents;">
                                                 <tr v-for="(sub, subIdx) in col.subTableData" style="width: 100%;">
-                                                    <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;"  v-if="stateCode!=2">
+                                                    <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;" v-if="print!=1">
                                                         <a-checkbox :value="sub.key"></a-checkbox>
                                                     </td>
                                                     <!-- <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">{{subIdx+1}}</td> -->
                                                     <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 24px;">
-                                                        <FieldType :type="child.type" :print="print" :field="child" :list="sub" :select="relatedObjData[col.field.id].select" :search="col.search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)" :stateCode="stateCode" />
+                                                        <FieldType :type="child.type" :print="print" :field="child" :list="sub" :select="relatedObjData[col.field.id].select" :search="col.search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)" />
                                                     </td>
                                                 </tr>
                                             </a-checkbox-group>
@@ -80,9 +80,6 @@
             :localId="fieldData.name"
           ></radio-user>
         <Lookup-filter v-if="isLookup" :isShow="isLookup" :field="fieldData.name" :entityApiName="entityApiName" :lookEntityApiName="lookEntityApiName" :lookObjectTypeCode="lookObjectTypeCode" :objectTypeCode="objTypeCode" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
-        <Delete :external="false" :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="getSuggestionQuery"
-            sObjectName="WFSuggestionLibrary" :recordId="suggestionId"
-            objTypeCode="130" />
     </div>
 </template>
 <script setup>
@@ -105,18 +102,17 @@
         PlusOutlined, MinusOutlined, CopyOutlined
     } from "@ant-design/icons-vue";
     import Interface from "@/utils/Interface.js";
-    import FieldType from "@/components/workflow/formPreview/FieldType.vue";
+    import FieldType from "@/components/workflow/formPreview/FieldTypePreview.vue";
     import RadioDept from "@/components/commonModal/RadioDept.vue";
     import RadioUser from "@/components/commonModal/RadioUser.vue";
     import LookupFilter from "@/components/commonModal/LookupFilter.vue";
-    import Delete from "@/components/listView/Delete.vue";
     import { formNodesValueObj } from "@/utils/common.js";
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
     import { useRoute, useRouter } from "vue-router";
     const router = useRouter();
     const route = useRoute();
-    const emit = defineEmits(["btnPermission", "attachPermission"]);
+
     const props = defineProps({
         processId: String,
         processInstanceId: String,
@@ -124,8 +120,7 @@
         print: {
             type: String,
             default: 0
-        },
-        stateCode: String
+        }
     })
     const data = reactive({
         entityId: route.query.entityId,
@@ -166,17 +161,13 @@
         deleteRelatedData: [], // 删除子表的数据
         masterEntityPermission: {}, // 主表权限
         relatedListEntityPermissions: [], // 子表权限
-        maxRowNum: 0,
-        suggestions: [],
-        isDelete: false,
-        deleteDesc: "确定删除当前意见吗？",
-        suggestionId: ""
+        maxRowNum: 0
     });
     const { entityId, layoutData, rowCount, columnCount, cellData, mergeData, rows, mergeRowColData, 
         isRadioUser, isRadioDept, isLookup, fieldData, entityApiName, lookEntityApiName, lookObjectTypeCode, objectTypeCode, columns, comps, ruleId,
         processId, entityLayoutId, select, isLoad, entityObjectId, attributes, list, search, processInstanceId, objTypeCode, isSub,
         subRecordFieldData, relatedObjData, relatedEntityInfoList, toActivityID, deleteRelatedData,
-        masterEntityPermission, relatedListEntityPermissions, maxRowNum, suggestions, isDelete, deleteDesc, suggestionId
+        masterEntityPermission, relatedListEntityPermissions, maxRowNum
      } = toRefs(data);
 
      const handleSetValue = (field, value) => {
@@ -723,11 +714,10 @@
         let res = await proxy.$post(Interface.workflow.getPermission, d);
         // console.log("permission-res", res);
         let permission = res.actions[0].returnValue;
-        let { masterEntityPermission, relatedListEntityPermissions, flowPermission, attachPermission } = permission;
+        let { masterEntityPermission, relatedListEntityPermissions } = permission;
         data.masterEntityPermission = masterEntityPermission;
         data.relatedListEntityPermissions = relatedListEntityPermissions;
-        emit("btnPermission", flowPermission);
-		emit("attachPermission", attachPermission);
+
         handleFormPerm();
     }
 
@@ -778,30 +768,10 @@
         await getRelatedPicks();
         await getRelatedAttrs();
         await getFlowFormRelatedList();
-        await getPermission();
-        getSuggestionQuery();
+        // await getPermission();
         data.isLoad = true;
     }
     loadQuery();
-
-    const getSuggestionQuery = async () => {
-        let d = {
-            filterId: "",
-            objectTypeCode: 130,
-            entityName: 'WFSuggestionLibrary',
-            filterQuery: "CreatedBy\eq-userid"
-        }
-        const res = await proxy.$get(Interface.list2, d);
-        data.suggestions = res.nodes.map(item=>{
-            item.name = item.Name.textValue;
-            return item;
-        })
-    };
-    
-    const deleteSuggestion = (id) => {
-        data.suggestionId = id;
-        data.isDelete = true;
-    }
     
     const getDetail = async () => {
         let obj = {
@@ -1493,7 +1463,6 @@
 
         proxy.$post(Interface.workflow.updateRecordBatch , d).then(res=>{
             message.success("保存成功！");
-            loadQuery();
         })
     };
 

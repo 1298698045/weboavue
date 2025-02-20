@@ -1,69 +1,70 @@
 <template>
-    <div class="MeetingShareWrap" ref="TopicsLst">
-      <div class="panel" :style="{ height: height + 'px' }">
-        <div class="panel-head">
-          <div class="panel-title">附件</div>
-          <div class="panel-btn">
-            <a-upload v-model:file-list="fileList" action :showUploadList="false" multiple name="file"
-              :customRequest="changeRequest" :before-upload="beforeUpload" @change="handleChange">
-              <a-button class="ml10" type="primary">上传文件</a-button>
-            </a-upload>
-          </div>
+  <div class="MeetingShareWrap" ref="TopicsLst">
+    <div class="panel" :style="{ height: height + 'px' }">
+      <div class="panel-head">
+        <div class="panel-title">附件</div>
+        <div class="panel-btn" v-if="preview != 1 && attachPerm.add">
+          <a-upload v-model:file-list="fileList" :headers="headers" :data="uploadData" :action="Interface.uploadFiles"
+            :showUploadList="false" multiple name="files" @change="handleChange">
+            <a-button class="ml10" type="primary">上传文件</a-button>
+          </a-upload>
         </div>
-        <div class="panel-bd panel-bd1">
-          <a-table :columns="columns" :dataSource="listData" :scroll="{ y: tableHeight }" :pagination="false"
-            @change="handleTableChange">
-            <template #bodyCell="{ column, index, record }">
-              <template v-if="column.key === 'index'">
-                <div>
-                  {{ index + 1 }}
-                </div>
-              </template>
-              <template v-if="column.key === 'FileExtension'">
-                <div class="FileExtensionTdImg">
-                  <img :src="require('@/assets/img/filetype/doc.png')"
-                    v-if="record.FileExtension == 'ocx' || record.FileExtension == 'docx' || record.FileExtension == 'doc'" />
-                  <img :src="require('@/assets/img/filetype/rar.png')"
-                    v-else-if="record.FileExtension == 'rar' || record.FileExtension == 'zip'" />
-                  <img :src="require('@/assets/img/filetype/Excel.png')"
-                    v-else-if="record.FileExtension == 'xlsx' || record.FileExtension == 'xls'" />
-                  <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="record.FileExtension == 'pdf'" />
-                  <img :src="require('@/assets/img/filetype/TXT.png')"
-                    v-else-if="record.FileExtension == 'TXT' || record.FileExtension == 'txt'" />
-                  <img :src="require('@/assets/img/filetype/PPT.png')"
-                    v-else-if="record.FileExtension == 'ppt' || record.FileExtension == 'pptx'" />
-                  <img :src="require('@/assets/img/filetype/video.png')"
-                    v-else-if="record.FileExtension == 'mp4' || record.FileExtension == '.mp4'" />
-                  <img :src="require('@/assets/img/filetype/defaultImg.png')"
-                    v-else-if="record.FileExtension == 'jpg' || record.FileExtension == 'png' || record.FileExtension == 'gif'" />
-                  <img :src="require('@/assets/img/filetype/File.png')" v-else />
-                  <span>{{ record.FileExtension || '' }}</span>
-                </div>
-              </template>
-              <!-- <template v-if="column.key === 'SharedRights'">
+      </div>
+      <div class="panel-bd panel-bd1">
+        <a-table :columns="columns" :dataSource="listData" :scroll="{ y: tableHeight }" :pagination="false"
+          @change="handleTableChange">
+          <template #bodyCell="{ column, index, record }">
+            <template v-if="column.key === 'index'">
+              <div>
+                {{ index + 1 }}
+              </div>
+            </template>
+            <template v-if="column.key === 'FileExtension'">
+              <div class="FileExtensionTdImg">
+                <img :src="require('@/assets/img/filetype/doc.png')"
+                  v-if="record.FileExtension == 'ocx' || record.FileExtension == 'docx' || record.FileExtension == 'doc'" />
+                <img :src="require('@/assets/img/filetype/rar.png')"
+                  v-else-if="record.FileExtension == 'rar' || record.FileExtension == 'zip'" />
+                <img :src="require('@/assets/img/filetype/Excel.png')"
+                  v-else-if="record.FileExtension == 'xlsx' || record.FileExtension == 'xls'" />
+                <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="record.FileExtension == 'pdf'" />
+                <img :src="require('@/assets/img/filetype/TXT.png')"
+                  v-else-if="record.FileExtension == 'TXT' || record.FileExtension == 'txt'" />
+                <img :src="require('@/assets/img/filetype/PPT.png')"
+                  v-else-if="record.FileExtension == 'ppt' || record.FileExtension == 'pptx'" />
+                <img :src="require('@/assets/img/filetype/video.png')"
+                  v-else-if="record.FileExtension == 'mp4' || record.FileExtension == '.mp4'" />
+                <img :src="require('@/assets/img/filetype/defaultImg.png')"
+                  v-else-if="record.FileExtension == 'jpg' || record.FileExtension == 'png' || record.FileExtension == 'gif'" />
+                <img :src="require('@/assets/img/filetype/File.png')" v-else />
+                <span>{{ record.FileExtension || '' }}</span>
+              </div>
+            </template>
+            <!-- <template v-if="column.key === 'SharedRights'">
                   <div v-if="record.SharedRights=='2'">允许查看</div>
                   <div v-if="record.SharedRights=='4'">允许查看和新建任务</div>
                 </template> -->
-              <template v-if="column.key === 'Action'">
-                <div class="iconBox">
-                  <div class="popup">
-                    <div class="option-item" @click="handlePreviewFile(record)" :num="index">查看</div>
-                    <!-- <div class="option-item" @click="handleEdit(record)" :num="index">编辑</div>   -->
-                    <div class="option-item" :num="index">重命名</div>
-                    <div class="option-item" @click="handleDelete(record)" :num="index">删除</div>
-                    <div class="option-item" @click="downloadFile(record)" :num="index">下载</div>
+            <template v-if="column.key === 'Action'">
+              <div class="iconBox">
+                <div class="popup">
+                  <div class="option-item" v-if="attachPerm.read" @click="handlePreviewFile(record)" :num="index">查看
                   </div>
-                  <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation"
-                    data-v-69a58868="">
-                    <path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474"
-                      data-v-69a58868=""></path>
-                  </svg>
+                  <!-- <div class="option-item" @click="handleEdit(record)" :num="index">编辑</div>   -->
+                  <div class="option-item" :num="index">重命名</div>
+                  <div class="option-item" v-if="attachPerm.delete" @click="handleDelete(record)" :num="index">删除</div>
+                  <div class="option-item" @click="downloadFile(record)" :num="index">下载</div>
                 </div>
-                <!-- <a-button type="text" size="small" @click="handlePreviewFile(record)" :num="index">查看</a-button>
+                <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation"
+                  data-v-69a58868="">
+                  <path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474"
+                    data-v-69a58868=""></path>
+                </svg>
+              </div>
+              <!-- <a-button type="text" size="small" @click="handlePreviewFile(record)" :num="index">查看</a-button>
                   <a-button type="text" size="small" @click="handleEdit(record)" :num="index">编辑</a-button>
                   <a-button type="text" size="small" @click="handleDelete(record)" :num="index">删除</a-button> -->
-              </template>
-              <!-- <template v-if="column.key === 'index'">
+            </template>
+            <!-- <template v-if="column.key === 'index'">
                   <div>
                     {{ index + 1 }}
                   </div>
@@ -74,29 +75,31 @@
                     <ArrowDownOutlined />
                   </div>
                 </template> -->
-            </template>
-          </a-table>
-          <div class="pageWrap">
-            <a-pagination show-size-changer show-quick-jumper :pageSizeOptions="['10', '20', '50', '80', '100']"
-              :pageSize="pagination.pageSize" @showSizeChange="sizeChange" @change="handleTableChange"
-              v-model:current="pagination.current" :total="pagination.total" :show-total="total => `共 ${total} 条`" />
-          </div>
+          </template>
+        </a-table>
+        <div class="pageWrap">
+          <a-pagination show-size-changer show-quick-jumper :pageSizeOptions="['10', '20', '50', '80', '100']"
+            :pageSize="pagination.pageSize" @showSizeChange="sizeChange" @change="handleTableChange"
+            v-model:current="pagination.current" :total="pagination.total" :show-total="total => `共 ${total} 条`" />
         </div>
       </div>
-      <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser"
-        @ok="onSearch"></radio-user>
-      <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal"
-        @ok="onSearch"></radio-dept>
-      <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId ? '编辑' : '新建'"
-        @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
-      <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch"
-        :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
-      <AddMeetingShare :isShow="isShare" v-if="isShare" @cancel="onSearch" :id="props.id" />
-      <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
-        @cancel="isConfirm = false" @ok="deleteFile" :id="recordId" />
     </div>
-  </template>
-  <script setup>
+    <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser"
+      @ok="onSearch"></radio-user>
+    <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal"
+      @ok="onSearch"></radio-dept>
+    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId ? '编辑' : '新建'"
+      @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
+    <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch"
+      :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+    <AddMeetingShare :isShow="isShare" v-if="isShare" @cancel="onSearch" :id="props.id" />
+    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
+      @cancel="isConfirm = false" @ok="deleteFile" :id="recordId" />
+    <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
+    <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+  </div>
+</template>
+<script setup>
   import "@/style/common.less";
   import {
     ref,
@@ -120,7 +123,7 @@
   import calendar from 'dayjs/plugin/calendar';
   import weekday from 'dayjs/plugin/weekday';
   import localeData from 'dayjs/plugin/localeData';
-  
+
   dayjs.extend(calendar);
   dayjs.extend(weekday);
   dayjs.extend(localeData);
@@ -140,6 +143,8 @@
   import CommonFormModal from "@/components/listView/CommonFormModal.vue";
   import AddMeetingShare from "@/components/meeting/AddMeetingShare.vue";
   import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+  import ImageView from "@/components/file/ImageView.vue";
+  import PdfView from "@/components/file/PdfView.vue";
   const { proxy } = getCurrentInstance();
   const TopicsLst = ref();
   const TaskDetailModal = ref(null);
@@ -186,11 +191,13 @@
     },
   ];
   const props = defineProps({
-    processInstanceId: String
+    processInstanceId: String,
+    preview: [Number, String],
+    attachPerm: Object
   });
-  
+
   const emit = defineEmits(["load"]);
-  
+  const token = localStorage.getItem("token");
   const data = reactive({
     list: [],
     fileList: [],
@@ -236,9 +243,25 @@
     isConfirm: false,
     confirmText: '',
     confirmTitle: '',
+    uploadData: {
+      parentId: props.processInstanceId,
+      entityName: "WFProcessInstance"
+    },
+    headers: {
+      Authorization: token,
+      Token: token,
+    },
+    ImageList: [],
+    isPhoto: false,
+    isPdf: false,
+    photoParams: {},
+    pdfParams: {}
   });
   const columnList = toRaw(columns);
-  const { listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, isTaskDetail, isShare, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, isConfirm, confirmText, confirmTitle } = toRefs(data);
+  const { listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination,
+    tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, isTaskDetail, isShare, deleteDesc, external,
+    isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, isConfirm, confirmText, confirmTitle,
+    uploadData, headers, ImageList, isPhoto, isPdf, photoParams, pdfParams } = toRefs(data);
   const getQuery = () => {
     data.listData = [];
     data.pagination.total = 0;
@@ -276,30 +299,61 @@
         }
       }
       data.listData = list;
-  
+      data.ImageList = list.filter(item => {
+        return item.FileExtension == 'jpg' || item.FileExtension == 'jpeg' || item.FileExtension == 'png';
+      });
     })
   };
   //预览附件
   const handlePreviewFile = (item) => {
-    let url = '/api/file/attachment/preview' + item.fileLocation;
-    //window.open(url);
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.responseType = 'blob';
-    xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
-    xhr.setRequestHeader('token', window.localStorage.getItem('token'));
-    xhr.onload = function () {
-      if (this.status === 200) {
-        var blob = new Blob([this.response], { type: xhr.getResponseHeader('Content-Type') });
-        var link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    console.log("item", item);
+    // let url = '/api/file/attachment/preview' + item.fileLocation;
+    // //window.open(url);
+    // let xhr = new XMLHttpRequest();
+    // xhr.open('GET', url, true);
+    // xhr.responseType = 'blob';
+    // xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
+    // xhr.setRequestHeader('token', window.localStorage.getItem('token'));
+    // xhr.onload = function () {
+    //   if (this.status === 200) {
+    //     var blob = new Blob([this.response], { type: xhr.getResponseHeader('Content-Type') });
+    //     var link = document.createElement('a');
+    //     link.href = window.URL.createObjectURL(blob);
+    //     link.download = fileName;
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    //   }
+    // };
+    // xhr.send();
+    let url = '';
+    if (item.FileExtension == 'jpg' || item.FileExtension == 'jpeg' || item.FileExtension == 'png') {
+      // url = item.viewUrl;
+      // window.open(url);
+      let index = 0;
+      for (var i = 0; i < data.ImageList.length; i++) {
+        let ite = data.ImageList[i];
+        if (ite.id == item.id) {
+          index = i;
+        }
       }
-    };
-    xhr.send();
+      data.photoParams = {
+        id: item.id,
+        item: item,
+        imageList: data.ImageList,
+        index: index
+      };
+      data.isPhoto = true;
+    } else if (item.FileExtension == 'pdf') {
+      url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(item.viewUrl);
+      data.pdfParams = {
+        id: item.id,
+        item: item,
+        imageList: [],
+        index: 0
+      };
+      data.isPdf = true;
+    }
   };
   //下载附件
   const downloadFile = (item) => {
@@ -430,7 +484,7 @@
         }
       }]
     };
-  
+
     let obj = {
       message: JSON.stringify(d)
     }
@@ -440,9 +494,9 @@
         message.success("添加成功！");
         onSearch();
       }
-  
+
     });
-  
+
   };
   const cancelDeptModal = (params) => {
     data.isRadioDept = params;
@@ -450,7 +504,7 @@
   const handleDeptParams = (params) => {
     console.log("deptData", params);
   };
-  
+
   defineExpose({ getQuery, TopicsLst });
   //删除
   const handleDelete = (item) => {
@@ -493,23 +547,11 @@
     //执行顺序1
     console.log("beforeUpload", e);
   }
-  const handleChange = (file) => {
-    //执行顺序2
-    if (file && file.file) {
-      let size = file.file.size;
-      size = size ? (size * 1 / 1024).toFixed(2) : 0;
-      data.fileList1.push({
-        uid: file.file.uid,
-        name: file.file.name,
-        url: file.file.url,
-        fileExtension: file.file.name ? (file.file.name).split('.')[1] : '',
-        raw: file.file.originFileObj,
-        Privilege: '',
-        size: size + 'kb',
-        isNew: true
-      });
+  const handleChange = (e) => {
+    if (e.file.status == "done") {
+      message.success("上传成功！");
+      getQuery();
     }
-    data.fileList1 = unique(data.fileList1);
   }
   const changeRequest = (file) => {
     //执行顺序3
@@ -572,16 +614,16 @@
       }
     });
   })
-  </script>
-  <style lang="less">
+</script>
+<style lang="less">
   .MeetingShareWrap {
     width: 100%;
-  
+
     .panel {
       margin-bottom: 0;
       padding-bottom: 0;
     }
-  
+
     .share-type {
       .share-type-img {
         width: 20px;
@@ -592,46 +634,46 @@
         top: 5px;
         margin-right: 8px;
       }
-  
+
       img {
         max-width: 100%;
         height: auto;
       }
     }
   }
-  
+
   .peopleHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
   }
-  
+
   .peopleHeader .searchitem {
     width: 170px !important;
     margin-right: 10px;
     border-radius: 4px !important;
-  
+
     .ant-select-selector {
       border-radius: 4px !important;
     }
   }
-  
+
   .peopleHeader .left .ant-picker {
     width: 340px !important;
   }
-  
+
   .MeetingShareWrap {
     .panel {
       padding-top: 15px !important;
       margin-bottom: 0px !important;
     }
-  
+
     .panelt {
       margin-bottom: 20px !important;
       padding: 12px;
     }
-  
+
     .detailContent {
       width: 100%;
       padding: 20px;
@@ -639,12 +681,12 @@
       border-radius: 4px;
       overflow: auto;
     }
-  
+
     .panel-top {
       background: #fff !important;
       padding-bottom: 15px;
       display: flex;
-  
+
       .ant-card {
         width: 330px;
         float: left;
@@ -656,36 +698,36 @@
         border-radius: 2px !important;
         background-color: #fff;
       }
-  
+
       .ant-card-body {
         padding: 10px 15px;
         line-height: 30px !important;
         overflow: hidden;
         position: relative;
       }
-  
+
       .statistics-left {
         float: left;
       }
-  
+
       .statistics-name {
         font-size: 14px;
       }
-  
+
       .statistics-count {
         font-weight: 700;
         font-size: 22px;
         color: #555;
       }
-  
+
       .ant-card-body {
         padding: 10px 15px;
         border-radius: 4px;
       }
-  
+
       .statistics-right {
         float: right;
-  
+
         .anticon {
           font-size: 40px;
           position: relative;
@@ -693,7 +735,7 @@
           color: #108def;
         }
       }
-  
+
       .layui-icon.wancheng {
         font-size: 45px !important;
         margin-top: 12px;
@@ -701,64 +743,64 @@
       }
     }
   }
-  
+
   body .ant-table-tbody td {
     padding: 6.5px 16px !important;
   }
-  
+
   body .ant-table-measure-row td {
     padding: 0 !important;
   }
-  
+
   body .ant-table-wrapper .ant-table-thead>tr>th {
     background-color: #f7fbfe !important;
     padding: 8.5px 16px !important;
   }
-  
+
   body .ant-table-tbody tr:hover,
   body .ant-table-tbody tr:hover td {
     background-color: #e9f7ff !important;
     color: #108def !important;
   }
-  
+
   body .ant-table-tbody tr:nth-child(odd) {
     background-color: rgb(250, 250, 250) !important;
     /* 奇数行背景色 */
   }
-  
+
   body .ant-table-tbody tr:nth-child(even) {
     background-color: #fff !important;
     /* 偶数行背景色 */
   }
-  
+
   .MeetingShareWrap .panelt {
     background: #f0f2f6 !important;
     margin-bottom: 5px !important;
     padding: 0 !important;
   }
-  
+
   .MeetingShareWrap .panel-top {
     background: #f0f2f6 !important;
     padding-bottom: 12px;
   }
-  
+
   .MeetingShareWrap .panel-top .ant-card {
     border-radius: 4px !important;
   }
-  
+
   .MeetingShareWrap .ant-card:first-child {
     margin-left: 0 !important;
   }
-  
+
   .MeetingShareWrap .ant-card:last-child {
     margin-right: 0 !important;
   }
-  
+
   .MeetingShareWrap .pageWrap {
     text-align: right;
     padding: 15px;
   }
-  
+
   .MeetingShareWrap .iconBox .moreaction {
     padding: 0px 1px;
     width: 18px;
@@ -767,16 +809,16 @@
     position: relative;
     top: 1px;
   }
-  
+
   .MeetingShareWrap .iconBox .popup {
     top: 25px;
     right: 0;
     width: max-content;
     min-width: 88px;
   }
-  
+
   .MeetingShareWrap {
-  
+
     .ant-table-wrapper,
     .ant-spin-nested-loading,
     .ant-spin-nested-loading .ant-spin-container,
@@ -785,45 +827,45 @@
       height: 100% !important;
     }
   }
-  
+
   .MeetingShareWrap .panel-bd1 {
     height: calc(~'100% - 115px') !important;
   }
-  
+
   .MeetingShareWrap .ant-table-body {
     height: 100% !important;
   }
-  
+
   .container {
     padding: 10px;
     box-sizing: border-box;
   }
-  
+
   .ant-pagination {
     .ant-pagination-item {
       border: 1px solid #d9d9d9;
     }
-  
+
     .ant-pagination-item:hover {
       border: 1px solid #1677ff;
       background: #fff !important;
     }
-  
+
     .ant-pagination-item-active,
     .ant-pagination-item-active:hover {
       border: 1px solid #1677ff;
       background: #1677ff;
-  
+
       a {
         color: #fff;
       }
     }
   }
-  
+
   .FileExtensionTdImg {
     display: flex;
     align-items: center;
-  
+
     img {
       width: 40px;
       height: 40px;
@@ -831,4 +873,4 @@
       margin-right: 6px;
     }
   }
-  </style>
+</style>

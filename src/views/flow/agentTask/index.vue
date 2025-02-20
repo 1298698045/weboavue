@@ -720,7 +720,7 @@ const getColumns = (id) => {
   //打开详情页
   const handleDetailView=(id)=>{
     let reUrl = router.resolve({
-        path:"/lightning/r/Workflow/instance/detail",
+        path:"/lightning/r/Workflow/instance/view",
         query: {
           id: id,
           reurl:'/lightning/page/workflow/delegate'

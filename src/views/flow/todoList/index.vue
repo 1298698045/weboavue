@@ -146,7 +146,7 @@
       </a-row>
     </div>
     <!-- 委派 -->
-    <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
+    <Delegate ref="DelegateRef" :ruleLogId="ruleLogId" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
     <!-- 跳转 -->
     <Jump v-if="isJump" :isShow="isJump" :paramsData="jumpData.params" @update-status="isJump=false" />
     <!-- 加签 -->
@@ -164,7 +164,7 @@
     <!-- 催办 -->
     <Urging ref="UrgingRef" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
     <!-- 督办 -->
-    <Supervised v-if='isSupervised' :isShow="isSupervised" @cancel="isSupervised=false" @update-status="isSupervised=false" :id="ProcessInstanceId" />
+    <Supervised v-if='isSupervised' :isShow="isSupervised" @cancel="isSupervised=false" @update-status="isSupervised=false" :id="ProcessInstanceId" :name="processName" />
     <!-- 收藏 -->
     <Favor v-if='isFavor' :isShow="isFavor" @cancel="isFavor=false" @update-status="isFavor=false" :id="ProcessInstanceId" />
   </div>
@@ -374,7 +374,9 @@
     isConfirm:false,
     confirmText:'',
     confirmTitle:'',
-    isMenu:false
+    isMenu:false,
+    ruleLogId: "",
+    processName: ""
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
@@ -382,7 +384,7 @@
   };
 
   const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isUrging,isSupervised,isFavor,searchVal,isMenu,
-    isCategory, treeId, id, isJump, isCountersign, isRelease, ProcessInstanceId,SearchFields,isDelete,deleteDesc,isConfirm,confirmText,confirmTitle} = toRefs(data);
+    isCategory, treeId, id, isJump, isCountersign, isRelease, ProcessInstanceId,SearchFields,isDelete,deleteDesc,isConfirm,confirmText,confirmTitle, ruleLogId, processName } = toRefs(data);
   //   console.log("tabs", data.tabs);
   const tabContent = ref(null);
   const contentRef = ref(null);
@@ -441,26 +443,27 @@ const getColumns = (id) => {
             field: "Action",
             title: "操作",
             formatter: function formatter(value, row, index) {
-              var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.textValue:'';
-              var ProcessIdName=row.ProcessId?row.ProcessId.lookupValue.displayName:'';
+              var ProcessInstanceId=row.ProcessInstanceId.lookupValue.value;
+              var ProcessIdName=row.ProcessInstanceId.lookupValue.displayName;
               var ProcessId=row.ProcessId?row.ProcessId.lookupValue.value:'';
-              var WFRuleLogId=row.WFRuleLogId?row.WFRuleLogId.textValue:'';
+              var WFRuleLogId = row.WFRuleLogId?row.WFRuleLogId.textValue:'';
               var ExecutorIdentityName=row.ExecutorIdentityName?row.ExecutorIdentityName.textValue:'';
+              var ruleLogId = row.id;
               var str = `
                 <div class="iconBox">
             <div class="popup">
             <div class="option-item" onclick="handleTo('${ProcessInstanceId}')">办理</div>
-            <div class="option-item" onclick="DelegateFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">委派</div>
-            <div class="option-item" onclick="CirculationFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">传阅</div>
+            <div class="option-item" onclick="DelegateFn('${ProcessInstanceId}','${ruleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">委派</div>
+            <div class="option-item" onclick="CirculationFn('${ProcessInstanceId}','${ruleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">传阅</div>
             <div class="option-item" onclick="printForm('${ProcessInstanceId}')">打印</div>
-            <div class="option-item" onclick="handleSupervised('${ProcessInstanceId}')">督办</div>
+            <div class="option-item" onclick="handleSupervised('${ProcessInstanceId}','${ProcessIdName}')">督办</div>
             <div class="option-item" style="display:none;" onclick="handleJump('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">跳转</div>
             <div class="option-item" style="display:none;" onclick="handleCountersign('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">加签</div>
-            <div class="option-item" style="display:none;" onclick="handleCancel('${WFRuleLogId}')">撤销</div>
-            <div class="option-item" style="display:none;" onclick="handleFinish('${WFRuleLogId}')">结束</div>
+            <div class="option-item" style="display:none;" onclick="handleCancel('${ruleLogId}')">撤销</div>
+            <div class="option-item" style="display:none;" onclick="handleFinish('${ruleLogId}')">结束</div>
             <div class="option-item" style="display:none;" onclick="handleRelase('${ProcessInstanceId}')">发布</div>
             <div class="option-item" style="display:none;" onclick="handleDelete('${ProcessInstanceId}')">删除</div>
-            <div class="option-item" style="display:none;" onclick="UrgingFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">催办</div>
+            <div class="option-item" style="display:none;" onclick="UrgingFn('${ProcessInstanceId}','${ruleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">催办</div>
             <div class="option-item" style="display:none;" onclick="cancelSupervised('${ProcessInstanceId}')">取消督办</div>
             <div class="option-item" style="display:none;" onclick="handleFavor('${ProcessInstanceId}')">收藏</div>
             <div class="option-item" style="display:none;" onclick="cancelFavor('${ProcessInstanceId}')">取消收藏</div>
@@ -609,11 +612,12 @@ const getColumns = (id) => {
     data.isCountersign = true;
   }
   //委派
-  const DelegateFn=(InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName) => {
+  const DelegateFn = (InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName) => {
     // console.log("RuleLogId",RuleLogId, DelegateRef);
     DelegateData.params = {
       InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName
-    }
+    };
+    data.ruleLogId = RuleLogId;
     console.log(DelegateData.params)
     data.isModal = true;
   }
@@ -656,8 +660,9 @@ const getColumns = (id) => {
       data.isUrging = true;
   }
   //督办
-  const handleSupervised = (id) => {
+  const handleSupervised = (id, name) => {
     data.ProcessInstanceId=id;
+    data.processName = name;
     data.isSupervised=true;
   }
   //取消督办

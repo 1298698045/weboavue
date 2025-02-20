@@ -4,8 +4,8 @@
             <div class="leftBox">
                 <div class="title">
                     <span class="backText" @click="backToList"> « 返回列表</span>
-                    <span v-if="!isEdit" @click="EditTitle">{{ Title }}&nbsp;
-                        <EditOutlined />
+                    <span v-if="!isEdit">{{ Title }}&nbsp;
+                        <!-- <EditOutlined /> -->
                     </span>
                     <a-input ref="detailTitleInputDom" v-if="isEdit" v-model:value="Title" class="detailTitleInput"
                         @blur="handleSave"></a-input>
@@ -24,11 +24,9 @@
             </div>
             <div class="rightBox">
                 <!-- <a-button class="ml10" @click="openZW">正文</a-button> -->
-                <template v-if="stateCode == 0">
-                    <a-button class="ml10" @click="handSave">保存表单</a-button>
-                    <a-button type="primary" class="ml10" @click="handleSubmitProcess">提交流程</a-button>
-                    <a-button class="ml10" @click="handleRejection">审批拒绝</a-button>
-                </template>
+                <!-- <a-button class="ml10" @click="handSave">保存表单</a-button>
+                <a-button type="primary" class="ml10" @click="handleSubmitProcess">提交流程</a-button>
+                <a-button class="ml10" @click="handleRejection">审批拒绝</a-button> -->
                 <a-dropdown :trigger="['click']" class="ml10">
                     <span class="btn-drop">
                         <UnorderedListOutlined style="color: #1D2129;" />
@@ -38,32 +36,8 @@
                             <a-menu-item key="1" @click="handleUrging">
                                 催办
                             </a-menu-item>
-                            <a-menu-item key="10" v-if="btnPerm.back" @click="handleReturn">
-                                退回
-                            </a-menu-item>
-                            <a-menu-item key="6" v-if="btnPerm.insert" @click="handleCountersign">
-                                加签
-                            </a-menu-item>
-                            <a-menu-item key="7" v-if="btnPerm.jump" @click="handleJump">
-                                跳转
-                            </a-menu-item>
-                            <!-- <a-menu-item key="2" @click="handleCirculation">
-                                传阅他人
-                            </a-menu-item> -->
-                            <a-menu-item key="3" @click="handleDelegate">
-                                委托
-                            </a-menu-item>
-                            <!-- <a-menu-item key="4" @click="printForm">
-                                打印审批单
-                            </a-menu-item> -->
                             <a-menu-item key="5" @click="printForm">
                                 PDF
-                            </a-menu-item>
-                            <a-menu-item key="8" v-if="btnPerm.cancel" @click="handleRevoke">
-                                撤销
-                            </a-menu-item>
-                            <a-menu-item key="9" @click="handleDelete">
-                                删除
                             </a-menu-item>
                             <a-menu-item key="2" @click="handleCirculation">
                                 传阅他人
@@ -81,12 +55,11 @@
                 <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
                     <div class="leftContent" :class="{'active':!isAside}">
                         <div class="tableBox" style="width: 100%;overflow: auto;" :class="{'active':!isAside}">
-                            <FlowFormNew print="0" ref="flowFormRef" v-if="processId!=''&&toActivityID!=''"
+                            <FlowFormNew print="0" ref="flowFormRef" v-if="processId!=''"
                                 :processId="processId" :processInstanceId="processInstanceId"
-                                :toActivityID="toActivityID" @btnPermission="getBtnPermission"
-                                @attachPermission="getAttachPermission" :stateCode="stateCode" />
+                                :toActivityID="toActivityID" />
                         </div>
-                        <!-- <div class="reqWrap">
+                        <div class="reqWrap">
                             <div class="reqHead">
                                 <a-tabs v-model:activeKey="reqIndex" @change="changeTab">
                                     <a-tab-pane :key="1" tab="流转意见"></a-tab-pane>
@@ -132,55 +105,22 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                     <div class="rightAside">
                         <div class="arrowIcon rightIcon" v-if="isAside" @click="isAside=false"></div>
                         <div class="arrowIcon leftIcon" v-else @click="isAside=true"></div>
                         <div v-if="isAside" class="asideScroll">
-                            <!-- <div class="panel">
-                                <div class="panel-head">
-                                    <div class="panel-title">
-                                        相关事务
-                                    </div>
-                                    <div class="panel-btn">
-                                        <a-button type="text" size="small" @click="addRelateInstance">添加关联</a-button>
-                                    </div>
-                                </div>
-                                <div class="panel-bd">
-                                    <div class="relevantList">
-                                        <div class="empty" v-if="relatedList.length==0">
-                                            <div>
-                                                <img :src="require('@/assets/img/empty.png')" alt="">
-                                                <p class="emptyDesc">当前暂无数据</p>
-                                            </div>
-                                        </div>
-                                        <div class="relevantItem" v-for="(item,index) in relatedList" :key="index">
-                                            <div class="relevantTitle">{{item.Name}}</div>
-                                            <div class="relevantTimerInfo">{{item.CreatedOn}} {{item.CreatedByName}}</div>
-                                            <a-popconfirm title="是否确定要删除？"
-                                                ok-text="确定"
-                                                cancel-text="取消"
-                                                @confirm="confirm"
-                                                @cancel="cancel">
-                                                <DeleteOutlined />
-                                            </a-popconfirm>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="panel">
                                 <div class="panel-head">
                                     <div class="panel-title">
                                         附件 ({{ fileTotal }})
                                     </div>
-                                    <div class="panel-btn" v-if="attachPerm.add">
-                                        <a-upload name="files" :headers="headers" v-model:file-list="fileList"
-                                            :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false"
-                                            @change="changeFiles">
+                                    <!-- <div class="panel-btn">
+                                        <a-upload v-model:file-list="fileList" action="#" :showUploadList="false">
                                             <a-button type="text" size="small">上传文件</a-button>
                                         </a-upload>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="panel-bd">
                                     <div class="collapse">
@@ -200,9 +140,9 @@
                                             </div>
                                             <div class="collapseBd">
                                                 <div class="files" v-if="item.children">
-                                                    <div class="fileItem" v-for="(row, idx) in item.children"
-                                                        :key="row.Id" :idx="idx">
-                                                        <div class="fileItemImg" @click="openZW(row)">
+                                                    <div class="fileItem" v-for="(row, idx) in item.children" :key="row.Id"
+                                                        :idx="idx" @click.stop="openZW(row)">
+                                                        <div class="fileItemImg">
                                                             <img :src="require('@/assets/img/filetype/doc.png')"
                                                                 v-if="row.FileExtension == 'ocx' || 
                                                             row.FileExtension == 'docx' || row.FileExtension == 'doc'" />
@@ -225,13 +165,12 @@
                                                             <img :src="require('@/assets/img/filetype/File.png')"
                                                                 v-else />
                                                         </div>
-                                                        <div class="fileItemInfo" @click="openZW(row)">
-                                                            <p class="name">{{row.Name}}</p>
+                                                        <div class="fileItemInfo">
+                                                            <p class="name rowEllipsis">{{row.Name}}</p>
                                                             <p class="link">
-                                                                <a href="javascript:;" v-if="attachPerm.read"
-                                                                    @click="openZW(row)">查看</a>
+                                                                <a href="javascript:;" @click="openZW(row)">查看</a>
                                                                 ·
-                                                                <a href="javascript:;" @click.stop="downloadFile(row)">下载</a>
+                                                                <a href="javascript:;" @click="openZW(row)">下载</a>
                                                             </p>
                                                             <p class="time">
                                                                 <span>{{row.CreatedOn}}&nbsp;·</span>
@@ -241,14 +180,14 @@
                                                         </div>
                                                         <div class="iconOpera">
                                                             <a-dropdown trigger="click">
-                                                                <DownOutlined style="font-size: 12px;" @click.stop />
+                                                                <DownOutlined style="font-size: 12px;" />
                                                                 <template #overlay>
                                                                     <a-menu>
-                                                                        <a-menu-item v-if="attachPerm.read">
+                                                                        <a-menu-item>
                                                                             <a href="javascript:;"
                                                                                 @click="openZW(row)">查看</a>
                                                                         </a-menu-item>
-                                                                        <a-menu-item v-if="attachPerm.delete">
+                                                                        <a-menu-item>
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
                                                                                 cancel-text="取消" @confirm="confirm"
                                                                                 @cancel="cancel">
@@ -287,16 +226,11 @@
                                                                 v-else />
                                                         </div>
                                                         <div class="fileItemInfo">
-                                                            <p class="name">{{item.name}}</p>
+                                                            <p class="name rowEllipsis">{{item.name}}</p>
                                                             <p class="link">
-                                                                <a href="javascript:;" v-if="attachPerm.read"
-                                                                    @click="openZW(item)">查看</a>
+                                                                <a href="javascript:;" @click="openZW(item)">查看</a>
                                                                 ·
-                                                                <a href="javascript:;"
-                                                                    @click.stop="downloadFile(item)">下载</a>
-                                                            </p>
-                                                            <p class="createBy" style="color: #666;">
-                                                                {{ item.createdByName }}
+                                                                <a href="javascript:;" @click="openZW(item)">下载</a>
                                                             </p>
                                                             <p class="time">
                                                                 <span>{{item.createdOn}}&nbsp;·</span>
@@ -304,16 +238,16 @@
                                                                 <span>{{item.size}}</span>
                                                             </p>
                                                         </div>
-                                                        <div class="iconOpera" @click.stop>
+                                                        <div class="iconOpera">
                                                             <a-dropdown trigger="click">
-                                                                <DownOutlined style="font-size: 12px;" />
+                                                                <!-- <DownOutlined style="font-size: 12px;" /> -->
                                                                 <template #overlay>
                                                                     <a-menu>
-                                                                        <a-menu-item v-if="attachPerm.read">
+                                                                        <a-menu-item>
                                                                             <a href="javascript:;"
-                                                                                @click.stop="openZW(item)">查看</a>
+                                                                            @click.stop="openZW(item)">查看</a>
                                                                         </a-menu-item>
-                                                                        <a-menu-item v-if="attachPerm.delete">
+                                                                        <a-menu-item>
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
                                                                                 cancel-text="取消" @confirm="confirm"
                                                                                 @cancel="cancel">
@@ -340,16 +274,15 @@
                     </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey==2">
-                    <Related :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" />
+                    <Related preview="1" :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==3">
-                    <Attachment :id="id" :processInstanceId="processInstanceId" :attachPerm="attachPerm"
-                        @addRelateInstance="addRelateInstance" />
+                    <Attachment preview="1" :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==4">
                     <div class="detailContent">
-                        <DetailInfo class="DetailInfo" :id="id" :processInstanceId="processInstanceId"
-                            :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
+                        <DetailInfo class="DetailInfo" :id="id"  :processInstanceId="processInstanceId" :objectTypeCode="objectTypeCode"
+                            :entityApiName="sObjectName" />
                     </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey==5">
@@ -434,8 +367,6 @@
             :processInstanceId="processInstanceId" :processInstanceName="processInstanceName"
             :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus" @ok="initLoad">
         </Jump>
-        <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
-        <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
     </div>
 </template>
 <script setup>
@@ -468,15 +399,12 @@
     // import RelateInstance from "@/components/workflow/RelateInstance.vue";
     import DetailInfo from "@/components/detail/DetailInfo.vue";
     import FlowForm from "@/components/workflow/FlowForm.vue";
-    import FlowFormNew from "@/components/workflow/FlowFormNew.vue";
+    import FlowFormNew from "@/components/workflow/FlowFormNewPreview.vue";
     import Countersign from "@/components/workflow/Countersign.vue";
     import Jump from "@/components/workflow/Jump.vue";
     import Confirm from "@/components/commonModal/Confirm.vue";
     import Delete from "@/components/listView/Delete.vue";
     import Return from "@/components/workflow/Return.vue";
-    import ImageView from "@/components/file/ImageView.vue";
-    import PdfView from "@/components/file/PdfView.vue";
-
     import { formTreeData } from "@/utils/common.js";
 
     import { useRouter, useRoute } from "vue-router";
@@ -485,7 +413,7 @@
     const router = useRouter();
 
     const flowFormRef = ref(null);
-    const token = localStorage.getItem("token");
+
     const data = reactive({
         tabs: [
             {
@@ -535,9 +463,9 @@
         lookEntityType: "",
         Title: '',
         isEdit: false,
-        ruleLogId: route.query.id,
+        ruleLogId: "",
         processId: "",
-        processInstanceId: "",
+        processInstanceId: route.query.id,
         processInstanceName: "",
         toActivityID: "",
         isCountersign: false,
@@ -548,47 +476,22 @@
         fromActivityId: "",
         isReturn: false,
         iframeSrc: "",
-        fileTotal: 0,
-        btnPerm: {},
-        attachPerm: {},
-        stateCode: 0,
-        uploadData: {
-            parentId: "",
-            entityName: "WFProcessInstance"
-        },
-        headers: {
-            Authorization: token,
-            Token: token,
-        },
-        isPhoto: false,
-        photoParams: {},
-        ImageList: [],
-        pdfParams: {},
-        isPdf: false
+        fileTotal: 0
     })
     const { isEdit, Title, objectTypeCode, sObjectName, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData,
         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID,
-        processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete,
-        fromActivityId, isReturn, iframeSrc, fileTotal, btnPerm, attachPerm, stateCode,
-        uploadData, headers, isPhoto, photoParams, ImageList, pdfParams, isPdf } = toRefs(data);
+        processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete, fromActivityId, isReturn, iframeSrc, fileTotal } = toRefs(data);
 
-    const changeFiles = (e) => {
-        // console.log("e", e);
-        if (e.file.status == "done") {
-            message.success("上传成功！");
-            getFiles();
-        }
-    }
-    const getRuleLogData = () => {
+    const getProcessInstanceDetail = () => {
         let obj = {
             actions: [{
                 id: "4270;a",
                 descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                    recordId: data.ruleLogId,
-                    apiName: "WFRuleLog"
+                    recordId: data.processInstanceId,
+                    apiName: "WFProcessInstance"
                 }
             }]
         }
@@ -597,21 +500,16 @@
         }
         proxy.$post(Interface.detail, d).then(res => {
             if (res && res.actions && res.actions[0].returnValue) {
-                let { ProcessId, ProcessInstanceId, ToActivityId, FromActivityId, StateCode } = res.actions[0].returnValue.fields;
+                let { ProcessId, ProcessInstanceId, ToActivityId, FromActivityId } = res.actions[0].returnValue.fields;
                 data.processId = ProcessId.value;
                 data.processInstanceName = ProcessInstanceId.displayValue;
-                data.processInstanceId = ProcessInstanceId.value;
-                data.toActivityID = ToActivityId.value;
-                data.fromActivityId = FromActivityId.value;
-                data.stateCode = StateCode.value;
-                data.uploadData.parentId = data.processInstanceId;
                 data.iframeSrc = "/iframe/wflow/editors/Monitor2.html?flowid=" + data.processId + "&processInstanceId=" + data.processInstanceId;
                 getFiles();
                 getDetail();
             }
         });
     };
-    getRuleLogData();
+    getProcessInstanceDetail();
 
 
     const detailTitleInputDom = ref(null);
@@ -753,15 +651,12 @@
             parentId: data.processInstanceId
         }).then(res => {
             // data.categoryFiles = res.actions[0].returnValue;
-            let list = res.actions[0].returnValue.map(item => {
+            let list = res.actions[0].returnValue.map(item=>{
                 let size = item.fileSize;
                 size = size ? (size * 1 / 1024).toFixed(2) : 0;
                 size = size + 'kb';
                 item.size = size;
                 return item;
-            });
-            data.ImageList = list.filter(item => {
-                return item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png';
             });
             data.fileTotal = list.length;
             data.categoryFiles = formTreeData(list, 'id', 'parentId');
@@ -773,85 +668,11 @@
 
     };
     const openZW = (row) => {
-        // let url = '';
-        // if (row && row.fileExtension == 'pdf') {
-        //     url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent('../../resources/uploadfiles' + row.viewUrl) + "";
-        // }
-        // window.open(url);
-        let index = 0;
-        for (var i = 0; i < data.ImageList.length; i++) {
-            let item = data.ImageList[i];
-            if (item.id == row.id) {
-                index = i;
-            }
+        let url = '';
+        if (row && row.fileExtension == 'pdf') {
+            url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent('../../resources/uploadfiles' + row.viewUrl) + "";
         }
-        if (row.fileExtension == 'jpg' || row.fileExtension == 'jpeg' || row.fileExtension == 'png') {
-            data.photoParams = {
-                id: row.id,
-                item: row,
-                imageList: data.ImageList,
-                index: index
-            };
-            data.isPhoto = true;
-        } else if (row.fileExtension == 'pdf') {
-            // let url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(row.viewUrl);
-            data.pdfParams = {
-                id: row.id,
-                item: row,
-                imageList: [],
-                index: 0
-            };
-            data.isPdf = true;
-        }
-    };
-
-    const downloadFile = (item) => {
-        let url = item.downloadUrl;
-        let text = item.name || '';
-        windowOpen(url, text);
-    };
-    const windowOpen = (url, fileName) => {
-        var xhr = new XMLHttpRequest();
-        // var fileName = window.fileName + typeName; // 文件名称
-        xhr.open('POST', url, true);
-        xhr.responseType = 'blob';
-
-        //xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
-        //xhr.setRequestHeader('token', window.localStorage.getItem('token'));
-        xhr.onload = function (res) {
-            if (this.status === 200) {
-                var type = xhr.getResponseHeader('Content-Type');
-                var blob = new Blob([this.response], { type: type });
-                if (typeof window.navigator.msSaveBlob !== 'undefined') {
-                    /*
-                     * For IE
-                     * >=IE10
-                     */
-                    window.navigator.msSaveBlob(blob, fileName);
-                } else {
-                    /*
-                     * For Non-IE (chrome, firefox)
-                     */
-                    var URL = window.URL || window.webkitURL;
-                    var objectUrl = URL.createObjectURL(blob);
-                    if (fileName) {
-                        var a = document.createElement('a');
-                        if (typeof a.download === 'undefined') {
-                            window.location = objectUrl;
-                        } else {
-                            a.href = objectUrl;
-                            a.download = fileName;
-                            document.body.appendChild(a);
-                            a.click();
-                            a.remove();
-                        }
-                    } else {
-                        window.location = objectUrl;
-                    }
-                }
-            }
-        }
-        xhr.send();
+        window.open(url);
     }
     //保存
     const handSave = () => {
@@ -876,32 +697,32 @@
     //关联事务选中
     const handleSelectLook = (e) => {
         let RelateInstanceId = e.id;
-        if (e.ProcessInstanceId2) {
+        if(e.ProcessInstanceId2){
             RelateInstanceId = e.ProcessInstanceId2;
         };
         let obj = {
-            actions: [{
+            actions:[{
                 id: "2919;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                    recordInput: {
-                        allowSaveOnDuplicate: false,
-                        apiName: 'WFProcessInstanceRelated',
-                        objTypeCode: 128,
-                        fields: {
-                            ProcessInstanceId: data.processInstanceId,
-                            RelateInstanceId: RelateInstanceId
-                        }
+                  recordInput: {
+                    allowSaveOnDuplicate: false,
+                    apiName: 'WFProcessInstanceRelated',
+                    objTypeCode: 128,
+                    fields: {
+                        ProcessInstanceId: data.processInstanceId,
+                        RelateInstanceId: RelateInstanceId
                     }
+                  }
                 }
             }]
         };
         let d = {
             message: JSON.stringify(obj)
         };
-        proxy.$post(Interface.create, d).then(res => {
-            if (res && res.actions && res.actions[0].state == 'SUCCESS') {
+        proxy.$post(Interface.create, d).then(res=>{
+            if(res && res.actions && res.actions[0].state == 'SUCCESS'){
                 message.success("添加关联成功!");
                 data.isRelateInstance = false;
             }
@@ -991,16 +812,6 @@
         // getDetail();
     }
 
-    const getBtnPermission = (e) => {
-        console.log("getBtnPermission", e);
-        data.btnPerm = e;
-    };
-
-    const getAttachPermission = (e) => {
-        console.log("getAttachPermission", e);
-        data.attachPerm = e;
-    };
-
 </script>
 <style lang="less" scoped>
     .collapse {
@@ -1036,7 +847,6 @@
                             width: 40px;
                             height: 40px;
                             min-width: 40px;
-
                             img {
                                 width: 100%;
                                 height: 100%;
@@ -1048,7 +858,6 @@
                             font-size: 14px;
                             margin-left: 10px;
                             width: calc(100% - 80px);
-                            overflow-wrap: break-word;
                             .link {
                                 a {
                                     color: #3399ff;

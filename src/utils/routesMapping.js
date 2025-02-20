@@ -24,6 +24,8 @@ export const routesMapping = {
         wfdefinition: () => import("../views/flow/seeting/index.vue"),
         WorkflowSuperviselist:() => import("../views/flow/Supervise/index.vue"),
         WorkflowDelegate:() => import("../views/flow/agentTask/index.vue"),
+        WorkflowDraft: () => import("../views/flow/drafts/index.vue"),
+        WorkflowForwardRead: () => import("../views/flow/receivedCirculation/index.vue")
     },
     // 日程管理
     Workplan: {

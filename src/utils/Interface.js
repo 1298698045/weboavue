@@ -39,6 +39,7 @@ const Interface = {
       baseUrl + "/aura/workflow/ProcessInstance/task/getReturnActivities", // 获取可退回节点集合与办理人
     return: baseUrl + "/aura/workflow/ProcessInstance/task/return", // 退回
     insert: baseUrl + "/aura/workflow/ProcessInstance/task/insert", // 加签
+    close: baseUrl + "/aura/workflow/ProcessInstance/task/close", // 结束
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",
@@ -444,5 +445,6 @@ const Interface = {
       runReportNew: baseUrl + "/aura/analytics/reporting/runpage/runReport", // 报表运行
     },
   },
+  pdf: baseUrl + "/file/previewpdf/"
 };
 export default Interface;

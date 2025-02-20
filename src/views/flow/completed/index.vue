@@ -450,7 +450,7 @@ const getColumns = (id) => {
     field: "Action",
     title: "操作",
     formatter: function formatter(value, row, index) {
-      var ProcessInstanceId = row.ProcessInstanceId ? row.ProcessInstanceId.textValue : '';
+      var ProcessInstanceId = row.ProcessInstanceId.lookupValue.value;
       var ProcessIdName = row.ProcessId ? row.ProcessId.lookupValue.displayName : '';
       var ProcessId = row.ProcessId ? row.ProcessId.lookupValue.value : '';
       var WFRuleLogId = row.WFRuleLogId ? row.WFRuleLogId.textValue : '';
@@ -498,7 +498,8 @@ const getColumns = (id) => {
             formatter: function formatter(value, row, index) {
               let result = girdFormatterValue(item.name, row);
               var ProcessInstanceId = row.ProcessInstanceId ? row.ProcessInstanceId.textValue : '';
-              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/detail?id=' + ProcessInstanceId + '&reurl=/lightning/o/workflow/done/list" target="_blank">' + result + '</a>';
+              let id = row.id;
+              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/detail?id=' + id + '&reurl=/lightning/o/workflow/done/list" target="_blank">' + result + '</a>';
             }
           });
         }

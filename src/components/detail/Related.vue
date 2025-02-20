@@ -5,7 +5,7 @@
                 <div class="panel-title">
                     关联事务
                 </div>
-                <div class="panel-btn">
+                <div class="panel-btn" v-if="preview!=1">
                     <a-button type="primary" @click="addRelateInstance">添加关联</a-button>
                 </div>
             </div>
@@ -14,10 +14,14 @@
                 <!-- <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height"
                     :isCollapsed="isCollapsed"></Ntable> -->
                 <Dtable ref="gridRef" name="datagridFilter" :columns="columns" :gridUrl="Interface.list2"
-                :tableHeight="height" :loadFilter="loadFilter"></Dtable>
+                    :tableHeight="height" :loadFilter="loadFilter"></Dtable>
             </div>
         </div>
-        <RelateInstance v-if="isRelateInstance" :isShow="isRelateInstance" @select="handleSelectLook" @cancel="isRelateInstance=false" />
+        <RelateInstance v-if="isRelateInstance" :isShow="isRelateInstance" @select="handleSelectLook"
+            @cancel="isRelateInstance=false" />
+        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="loadList"
+            sObjectName="WFProcessInstanceRelated" :recordId="rowId"
+            objTypeCode="128" :external="false" />
     </div>
 </template>
 <script setup>
@@ -39,6 +43,7 @@
     // import Ntable from "@/components/Ntable.vue";
     import Dtable from "@/components/Dtable_nodes.vue";
     import RelateInstance from "@/components/workflow/RelateInstance.vue";
+    import Delete from "@/components/listView/Delete.vue";
 
     const { relatedList, getRelatedWork, files, getFilesWork } = useWrokDetail();
     import { useRouter, useRoute } from "vue-router";
@@ -48,8 +53,10 @@
     const router = useRouter();
     const { proxy } = getCurrentInstance();
     const props = defineProps({
-        processInstanceId: String
-    })
+        processInstanceId: String,
+        preview: [Number, String]
+    });
+    console.log("props", props.preview)
     const gridRef = ref(null);
     const fileGridRef = ref(null);
     const data = reactive({
@@ -68,9 +75,12 @@
             sort: 'CreatedOn',
             order: 'desc'
         },
-        isRelateInstance: false
+        isRelateInstance: false,
+        isDelete: false,
+        deleteDesc: "确定删除当前关联事务？",
+        rowId: ""
     });
-    const { isCollapsed, height, isRelateInstance } = toRefs(data);
+    const { isCollapsed, height, isRelateInstance, isDelete, deleteDesc, rowId } = toRefs(data);
 
     const columns = ref([
         {
@@ -78,10 +88,25 @@
             checkbox: true
         },
         {
+            field: 'Action',
+            title: "操作",
+            formatter: function formatter(value, row, index) {
+                let id = row.id;
+                let str = props.preview != 1 ?  `
+                  <div class="iconBox">
+                    <div class="popup">
+                    <div class="option-item" onclick="handleDelete('${id}')">删除</div>
+                    </div>
+                    <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
+                ` : '';
+                return str;
+            }
+        },
+        {
             title: "关联流程事务",
             field: "RelateInstanceId",
             formatter: function formatter(value, row, index) {
-                let href = "/#/lightning/r/Workflow/instance/view?id="+row.RelateInstanceId2
+                let href = "/#/lightning/r/Workflow/instance/view?id=" + row.RelateInstanceId2
                 return `<a href="${href}" target="_blank">${row.RelateInstanceId}</a>`
             }
         },
@@ -109,7 +134,7 @@
                 let list = [];
                 fields.forEach(field => {
                     list = res.nodes.map(row => {
-                        if(field == 'RelateInstanceId'){
+                        if (field == 'RelateInstanceId') {
                             row.RelateInstanceId2 = row.RelateInstanceId.lookupValue.value;
                         }
                         if (field != 'id' && field != 'nameField') {
@@ -158,38 +183,44 @@
     //关联事务选中
     const handleSelectLook = (e) => {
         let RelateInstanceId = e.id;
-        if(e.ProcessInstanceId2){
+        if (e.ProcessInstanceId2) {
             RelateInstanceId = e.ProcessInstanceId2;
         };
         let obj = {
-            actions:[{
+            actions: [{
                 id: "2919;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                  recordInput: {
-                    allowSaveOnDuplicate: false,
-                    apiName: 'WFProcessInstanceRelated',
-                    objTypeCode: 128,
-                    fields: {
-                        ProcessInstanceId: props.processInstanceId,
-                        RelateInstanceId: RelateInstanceId
+                    recordInput: {
+                        allowSaveOnDuplicate: false,
+                        apiName: 'WFProcessInstanceRelated',
+                        objTypeCode: 128,
+                        fields: {
+                            ProcessInstanceId: props.processInstanceId,
+                            RelateInstanceId: RelateInstanceId
+                        }
                     }
-                  }
                 }
             }]
         };
         let d = {
             message: JSON.stringify(obj)
         };
-        proxy.$post(Interface.create, d).then(res=>{
-            if(res && res.actions && res.actions[0].state == 'SUCCESS'){
+        proxy.$post(Interface.create, d).then(res => {
+            if (res && res.actions && res.actions[0].state == 'SUCCESS') {
                 message.success("添加关联成功!");
                 data.isRelateInstance = false;
                 loadList();
             }
         })
-    }
+    };
+
+    const handleDelete = (id) => {
+        data.rowId = id;
+        data.isDelete = true;
+    };
+    window.handleDelete = handleDelete;
 </script>
 <style lang="less" scoped>
     .relatedWrap {
@@ -206,6 +237,24 @@
 
         .panel-head {
             padding: 0px;
+        }
+    }
+
+    :deep .iconBox {
+        text-align: center;
+
+        .popup {
+            text-align: left;
+            top: 20px;
+        }
+
+        .moreaction {
+            padding: 0px 1px;
+            width: 18px;
+            border: 1px solid #dedede;
+            border-radius: 4px;
+            position: relative;
+            top: 1px;
         }
     }
 </style>

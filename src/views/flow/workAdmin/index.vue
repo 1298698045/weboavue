@@ -89,8 +89,7 @@
             <div class="wea-left-tree-scroll">
               <a-tree :style="{height: tableHeight+'px'}" :expanded-keys="expandedKeys"
                 :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
-                @select="onSelect"
-                @expand="onExpand">
+                @select="onSelect" @expand="onExpand">
                 <template #switcherIcon="{ switcherCls }">
                   <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
                   </CaretDownOutlined>
@@ -134,38 +133,50 @@
                   <a-button class="ml10">批量取消发布</a-button> -->
               </div>
             </div>
-            <list-form-search ref="searchRef" @search="handleSearch" entityApiName="WFProcessInstance" :SearchFields="SearchFields"
-              @update-height="changeHeight"></list-form-search>
+            <list-form-search ref="searchRef" @search="handleSearch" entityApiName="WFProcessInstance"
+              :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search>
             <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
               <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
-              <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Ntable>
+              <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
+                :isCollapsed="isCollapsed"></Ntable>
             </div>
           </div>
         </a-col>
       </a-row>
     </div>
     <!-- 委派 -->
-    <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
+    <Delegate ref="DelegateRef" :ruleLogId="ruleLogId" @update-status="updateStatus" :paramsData="DelegateData.params"
+      :isShow="isModal" v-if="isModal" />
     <!-- 跳转 -->
-    <Jump v-if="isJump" :isShow="isJump" :paramsData="jumpData.params" @update-status="isJump=false" />
+    <Jump v-if="isJump" :isShow="isJump" :ruleLogId="ruleLogId" :processInstanceId="ProcessInstanceId"
+      :processId="processId" :processInstanceName="processInstanceName" :paramsData="jumpData.params"
+      @update-status="isJump=false" />
     <!-- 加签 -->
-    <Countersign v-if="isCountersign" :isShow="isCountersign" :paramsData="CountersignData.params" @update-status="isCountersign=false" />
+    <Countersign v-if="isCountersign" :isShow="isCountersign" :ruleLogId="ruleLogId"
+      :processInstanceId="ProcessInstanceId" :processId="processId" :processInstanceName="processInstanceName"
+      :paramsData="CountersignData.params" @update-status="isCountersign=false" />
     <!-- 发布 -->
     <ReleaseFlow v-if="isRelease" :isShow="isRelease" :id="ProcessInstanceId" @cancel="cancelRelase"></ReleaseFlow>
     <!-- 分类 -->
     <NewCategory v-if="isCategory" @cancel="cancelCategory" :isShow="isCategory" :id="treeId" ObjectTypeCode="流程" />
     <!-- 删除 -->
-    <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="handleSearch" :sObjectName="'WFProcessInstance'" :recordId="ProcessInstanceId" :objTypeCode="'122'" :external="false" />
+    <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="handleSearch"
+      :sObjectName="'WFProcessInstance'" :recordId="ProcessInstanceId" :objTypeCode="'122'" :external="false" />
     <!-- 撤销、结束、取消督办、取消收藏 -->
-    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="ProcessInstanceId" />
+    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
+      @cancel="isConfirm=false" @ok="handleConfirm" :id="ProcessInstanceId" />
     <!-- 传阅 -->
-    <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation" :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
+    <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation"
+      :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
     <!-- 催办 -->
-    <Urging ref="UrgingRef" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
+    <Urging ref="UrgingRef" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params"
+      :isShow="isUrging" />
     <!-- 督办 -->
-    <Supervised v-if='isSupervised' :isShow="isSupervised" @cancel="isSupervised=false" @update-status="isSupervised=false" :id="ProcessInstanceId" />
+    <Supervised v-if='isSupervised' :isShow="isSupervised" @cancel="isSupervised=false"
+      @update-status="isSupervised=false" :id="ProcessInstanceId" />
     <!-- 收藏 -->
-    <Favor v-if='isFavor' :isShow="isFavor" @cancel="isFavor=false" @update-status="isFavor=false" :id="ProcessInstanceId" />
+    <Favor v-if='isFavor' :isShow="isFavor" @cancel="isFavor=false" @update-status="isFavor=false"
+      :id="ProcessInstanceId" />
   </div>
 </template>
 <script setup>
@@ -175,7 +186,7 @@
     CaretDownOutlined,
     UserOutlined
   } from "@ant-design/icons-vue";
-  import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated,nextTick } from "vue";
+  import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, nextTick } from "vue";
   import Interface from "@/utils/Interface.js";
   import { message } from "ant-design-vue";
   // import Dtable from "@/components/Dtable.vue";
@@ -265,7 +276,7 @@
   const autoExpandParent = ref(true);
   const res = require("@/localData/treedata.json");
   const gData = ref([]);
-  const gDataAll=ref([]);
+  const gDataAll = ref([]);
   proxy.$get('/localData/treedata.json', {}).then((res) => {
     console.log("res-processTree", res);
     let listData = res.data;
@@ -309,7 +320,7 @@
     fieldNames: {
       children: 'children', title: 'name', key: 'id'
     },
-    tabs0:[
+    tabs0: [
       {
         label: "全部",
         count: '',
@@ -341,17 +352,17 @@
         filterquery: '\nStateCode\teq\t0',
       }
     ],
-    tabs:[],
+    tabs: [],
     //tabs: tabList,
     activeKey: 0,
     queryParams: {
-      filterId:'',
-      objectTypeCode:'122',
-      entityName:'WFProcessInstances',
-      filterQuery:'',
+      filterId: '',
+      objectTypeCode: '122',
+      entityName: 'WFProcessInstances',
+      filterQuery: '',
       //displayColumns:'ProcessInstanceNumber,Name,ProcessId,StateCode,ExpiredOn,AttachQty,CreatedBy,CurrentStepName,CreatedOn,BusinessUnitId,ModifiedOn,Priority,ProcessInstanceId,WFRuleLogId,ExecutorIdentityName',
-      sort:'CreatedOn',
-      order:'desc'
+      sort: 'CreatedOn',
+      order: 'desc'
     },
     isModal: false,
     isCirculation: false,
@@ -366,22 +377,28 @@
     isCountersign: false,
     isRelease: false,
     ProcessInstanceId: "",
-    formSearchFilterquery:"",
-    SearchFields:[],
-    isDelete:false,
+    formSearchFilterquery: "",
+    SearchFields: [],
+    isDelete: false,
     deleteDesc: '确定要删除该事务吗？',
-    isConfirm:false,
-    confirmText:'',
-    confirmTitle:'',
-    isMenu:false
+    isConfirm: false,
+    confirmText: '',
+    confirmTitle: '',
+    isMenu: false,
+    ruleLogId: "",
+    processId: "",
+    processInstanceName: "",
+    toActivityID: "",
+    confirmType: "",
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
     changeHeight();
   };
 
-  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isUrging,isSupervised,isFavor,searchVal,isMenu,
-    isCategory, treeId, id, isJump, isCountersign, isRelease, ProcessInstanceId,SearchFields,isDelete,deleteDesc,isConfirm,confirmText,confirmTitle} = toRefs(data);
+  const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isUrging, isSupervised, isFavor, searchVal, isMenu,
+    isCategory, treeId, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields, isDelete, deleteDesc, isConfirm, confirmText, confirmTitle,
+    ruleLogId, processId, processInstanceName, toActivityID, confirmType } = toRefs(data);
   //   console.log("tabs", data.tabs);
   const tabContent = ref(null);
   const contentRef = ref(null);
@@ -389,12 +406,12 @@
   let formSearchHeight = ref(null);
   const gridRef = ref(null);
   const onSearch = (e) => {
-    gData.value = gDataAll.value.filter(item=>{
+    gData.value = gDataAll.value.filter(item => {
       return item.name.indexOf(data.searchVal) != -1;
     })
   }
   const onSelect = (keys) => {
-    data.treeId=keys[0];
+    data.treeId = keys[0];
     handleSearch(data.formSearchFilterquery);
   };
   onMounted(() => {
@@ -419,123 +436,118 @@
   const cancelRelase = (e) => {
     data.isRelease = e;
   }
-  const handleSearch=(filterquery)=>{
-      data.queryParams.filterQuery='';
-      data.formSearchFilterquery=filterquery;
-      if(filterquery){
-        data.queryParams.filterQuery+=filterquery;
-      }
-      if(data.treeId){
-        data.queryParams.filterQuery+='\nProcessId\tin\t'+data.treeId;
-      }
-      gridRef.value.loadGrid(data.queryParams);
+  const handleSearch = (filterquery) => {
+    data.queryParams.filterQuery = '';
+    data.formSearchFilterquery = filterquery;
+    if (filterquery) {
+      data.queryParams.filterQuery += filterquery;
+    }
+    if (data.treeId) {
+      data.queryParams.filterQuery += '\nProcessId\tin\t' + data.treeId;
+    }
+    gridRef.value.loadGrid(data.queryParams);
   }
   //获取显示列
-const getColumns = (id) => {
-  let columnslist=[{
-          field: 'ids',
-          checkbox: true
-        },
-        {
-            field: "Action",
-            title: "操作",
-            formatter: function formatter(value, row, index) {
-              var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.textValue:'';
-              var ProcessIdName=row.ProcessId?row.ProcessId.lookupValue.displayName:'';
-              var ProcessId=row.ProcessId?row.ProcessId.lookupValue.value:'';
-              var WFRuleLogId=row.WFRuleLogId?row.WFRuleLogId.textValue:'';
-              var ExecutorIdentityName=row.ExecutorIdentityName?row.ExecutorIdentityName.textValue:'';
-              var str = `
+  const getColumns = (id) => {
+    let columnslist = [{
+      field: 'ids',
+      checkbox: true
+    },
+    {
+      field: "Action",
+      title: "操作",
+      formatter: function formatter(value, row, index) {
+        var ProcessInstanceId = row.ProcessInstanceId ? row.ProcessInstanceId.value : '';
+        var ProcessIdName = row.Name.textValue;
+        var ProcessId = row.ProcessId ? row.ProcessId.lookupValue.value : '';
+        var ProcessInstanceId = row.id;
+        var WFRuleLogId = "";
+        // var ExecutorIdentityName=row.ExecutorIdentityName?row.ExecutorIdentityName.textValue:'';
+        var ExecutorIdentityName = '';
+        var StateCode = row.StateCode.value;
+        var str = `
                 <div class="iconBox">
             <div class="popup">
             <div class="option-item" onclick="handleTo('${ProcessInstanceId}')">查看</div>
             <div class="option-item" onclick="printForm('${ProcessInstanceId}')">打印</div>  
-            <div class="option-item" onclick="handleJump('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">跳转</div>
-            <div class="option-item" onclick="handleCountersign('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">加签</div>
-            <div class="option-item" onclick="DelegateFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">委派</div>
-            <div class="option-item" onclick="handleCancel('${WFRuleLogId}')">撤销</div>
-            <div class="option-item" onclick="handleFinish('${WFRuleLogId}')">结束</div>
-            <div class="option-item" onclick="handleRelase('${ProcessInstanceId}')">发布</div>
-            <div class="option-item" onclick="handleDelete('${ProcessInstanceId}')">删除</div>
-            <div class="option-item" style="display:none;" onclick="CirculationFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">传阅</div>
-            <div class="option-item" style="display:none;" onclick="UrgingFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">催办</div>
-            <div class="option-item" style="display:none;" onclick="handleSupervised('${ProcessInstanceId}')">督办</div>
-            <div class="option-item" style="display:none;" onclick="cancelSupervised('${ProcessInstanceId}')">取消督办</div>
-            <div class="option-item" style="display:none;" onclick="handleFavor('${ProcessInstanceId}')">收藏</div>
-            <div class="option-item" style="display:none;" onclick="cancelFavor('${ProcessInstanceId}')">取消收藏</div>
+            <div class="option-item" onclick="handleJump('${WFRuleLogId}','${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">跳转</div>
+            <div class="option-item" onclick="handleCountersign('${WFRuleLogId}','${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">加签</div>
+            <div class="option-item" onclick="DelegateFn('${WFRuleLogId}','${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">委派</div>
+             <div class="option-item" onclick="handleCancel('${ProcessInstanceId}')" style="${StateCode != 1 ? 'display:none;' : ''}">撤销</div>
+              <div class="option-item" onclick="handleFinish('${WFRuleLogId}','${ProcessId}','${ProcessInstanceId}')" style="${StateCode != 1 ? 'display:none;' : ''}">结束</div>
             </div>
             <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
         `
-              return str;
-            }
-        },];
-  proxy.$get(Interface.listView.getFilterInfo, {
-    entityType: '122',
-    objectTypeCode: '122',
-    search: "",
-    filterId: id
-  }).then(res => {
-    if(res&&res.actions&&res.actions[0]){}else{return}
-    let fields = res.actions[0].returnValue.fields;
-    fields.forEach(item => {
-      if(item.name!='ProcessInstanceId'&&item.name!='WFRuleLogId'&&item.name!='ExecutorIdentityName'){
-        if(item.name=='Name'){
-          columnslist.push({
-            field: item.name,
-            title: item.label,
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              let result=girdFormatterValue(item.name,row);
-              var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.textValue:'';
-              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/detail?id='+ProcessInstanceId+'&reurl=/lightning/worflow/instance/list" target="_blank">'+result+'</a>';
-            }
-          });
-        }
-        else{
-          columnslist.push({
-            field: item.name,
-            title: item.label,
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue(item.name,row);
-            }
-          });
-        }
-
+        return str;
       }
+    },];
+    proxy.$get(Interface.listView.getFilterInfo, {
+      entityType: '122',
+      objectTypeCode: '122',
+      search: "",
+      filterId: id
+    }).then(res => {
+      if (res && res.actions && res.actions[0]) { } else { return }
+      let fields = res.actions[0].returnValue.fields;
+      fields.forEach(item => {
+        if (item.name != 'ProcessInstanceId' && item.name != 'WFRuleLogId' && item.name != 'ExecutorIdentityName') {
+          if (item.name == 'Name') {
+            columnslist.push({
+              field: item.name,
+              title: item.label,
+              sortable: true,
+              formatter: function formatter(value, row, index) {
+                let result = girdFormatterValue(item.name, row);
+                var ProcessInstanceId = row.ProcessInstanceId ? row.ProcessInstanceId.textValue : '';
+                return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/detail?id=' + ProcessInstanceId + '&reurl=/lightning/worflow/instance/list" target="_blank">' + result + '</a>';
+              }
+            });
+          }
+          else {
+            columnslist.push({
+              field: item.name,
+              title: item.label,
+              sortable: true,
+              formatter: function formatter(value, row, index) {
+                return girdFormatterValue(item.name, row);
+              }
+            });
+          }
+
+        }
+      })
+      columns.value = columnslist;
+      nextTick(() => {
+        gridRef.value.loadGrid(data.queryParams);
+        searchRef.value.getSearchLayout();
+      })
+
     })
-    columns.value=columnslist;
-    nextTick(()=>{
-      gridRef.value.loadGrid(data.queryParams);
-      searchRef.value.getSearchLayout();
-    })
-    
-  })
-}
+  }
 
   // 获取tabs
   const getTabs = () => {
     proxy.$get(Interface.getTabs, {
-      entityName:'WFProcessInstance',
-      layoutName:'instanceManager'
+      entityName: 'WFProcessInstance',
+      layoutName: 'instanceManager'
     }).then(res => {
       //console.log("tabs", res)
-      if(res&&res.tabs&&res.tabs.length){
-        let list=res.tabs;
+      if (res && res.tabs && res.tabs.length) {
+        let list = res.tabs;
         list.forEach(item => {
           item.label = item.title;
           item.filterId = item.filter.filterId;
-          item.filterquery=item.filterquery||'';
+          item.filterquery = item.filterquery || '';
         })
         data.tabs = list;
       }
-      else{
+      else {
         //data.tabs=data.tabs0;
       }
 
-      let filterColumnsList=(data.tabs)[0].filterableColumns;
-      data.SearchFields=filterColumnsList;
-      data.queryParams.filterId=data.tabs[0].filterId||'';
+      let filterColumnsList = (data.tabs)[0].filterableColumns;
+      data.SearchFields = filterColumnsList;
+      data.queryParams.filterId = data.tabs[0].filterId || '';
       getColumns(data.queryParams.filterId);
     })
   }
@@ -555,7 +567,7 @@ const getColumns = (id) => {
   const CountersignData = reactive({
     params: {}
   })
-  const UrgingData= reactive({
+  const UrgingData = reactive({
     params: {}
   })
   const updateStatus = (e) => {
@@ -565,7 +577,7 @@ const getColumns = (id) => {
   }
 
   //查看
-  const handleTo=(WFRuleLogId) => {
+  const handleTo = (WFRuleLogId) => {
     //console.log("WFRuleLogId", WFRuleLogId);
     // router.push({
     //   path: "/detail",
@@ -574,71 +586,143 @@ const getColumns = (id) => {
     //   }
     // });
     let url = router.resolve({
-            name: "FlowDetail",
-            query: {
-                id: WFRuleLogId,
-                reurl:'/lightning/worflow/instance/list'
-            },
-        });
-        window.open(url.href);
+      name: "FlowDetail",
+      query: {
+        id: WFRuleLogId,
+        reurl: '/lightning/worflow/instance/list'
+      },
+    });
+    window.open(url.href);
   }
   //打印
-  const printForm= (id) => {
-        let url = router.resolve({
-            path:'/lightning/workflow/WFFormPrint',
-            name: "WFFormPrint",
-            query: {
-                id: id,
-            },
-        });
-        window.open(url.href);
+  const printForm = (id) => {
+    let url = router.resolve({
+      path: '/lightning/workflow/WFFormPrint',
+      name: "WFFormPrint",
+      query: {
+        id: id,
+      },
+    });
+    window.open(url.href);
   }
   //跳转
-  const handleJump=(ProcessId, ProcessIdName, ProcessInstanceId) => {
+  const handleJump = (ruleLogId, ProcessId, ProcessIdName, ProcessInstanceId) => {
     jumpData.params = {
-      ProcessId, ProcessIdName, ProcessInstanceId
+      ruleLogId, ProcessId, ProcessIdName, ProcessInstanceId
     }
+    data.ruleLogId = ruleLogId;
+    data.ProcessInstanceId = ProcessInstanceId;
+    data.processId = ProcessId;
+    data.processInstanceName = ProcessIdName;
     data.isJump = true;
   }
   //加签
-  const handleCountersign=(ProcessId, ProcessIdName, ProcessInstanceId) => {
+  const handleCountersign = (ruleLogId, ProcessId, ProcessIdName, ProcessInstanceId) => {
     CountersignData.params = {
-      ProcessId, ProcessIdName, ProcessInstanceId
+      ruleLogId, ProcessId, ProcessIdName, ProcessInstanceId
     }
+    data.ruleLogId = ruleLogId;
+    data.ProcessInstanceId = ProcessInstanceId;
+    data.processId = ProcessId;
+    data.processInstanceName = ProcessIdName;
     data.isCountersign = true;
   }
   //委派
-  const DelegateFn=(InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName) => {
+  const DelegateFn = (ruleLogId, InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName) => {
     // console.log("RuleLogId",RuleLogId, DelegateRef);
     DelegateData.params = {
       InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName
     }
+    data.ruleLogId = ruleLogId;
     console.log(DelegateData.params)
     data.isModal = true;
   }
   //撤销
   const handleCancel = (id) => {
-    data.ProcessInstanceId=id;
-    data.isConfirm=true;
-    data.confirmText='确定要撤销该事务吗？撤销后进入发起人的退件箱，发起人可以进行删除'
-    data.confirmTitle='撤销'
+    data.ProcessInstanceId = id;
+    data.confirmType = "revoke";
+    data.isConfirm = true;
+    data.confirmText = '确定要撤销该事务吗？撤销后进入发起人的退件箱，发起人可以进行删除'
+    data.confirmTitle = '撤销'
   }
+  const handleConfirm = () => {
+    if (data.confirmType == "revoke") {
+      revokeFlow();
+    } else if (data.confirmType == "end") {
+      finishFlow();
+    }
+  }
+  const finishFlow = () => {
+    let obj = {
+      actions: [{
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          ruleLogId: data.ruleLogId,
+          processId: data.processId,
+          processInstanceId: data.ProcessInstanceId,
+          description: ""
+        }
+      }]
+    };
+    let d = {
+      message: JSON.stringify(obj)
+    };
+    proxy.$post(Interface.workflow.close, d).then(res => {
+      if (res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+        message.success("结束成功！");
+        data.isConfirm = false;
+        gridRef.value.loadGrid(data.queryParams);
+      } else {
+        message.error("结束失败！");
+      }
+    });
+  }
+  // 撤销
+  const revokeFlow = () => {
+    let obj = {
+      actions: [{
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          id: data.ProcessInstanceId
+        }
+      }]
+    };
+    let d = {
+      message: JSON.stringify(obj)
+    };
+    proxy.$post(Interface.workflow.withdraw, d).then(res => {
+      if (res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+        message.success("撤销成功！");
+        data.isConfirm = false;
+        gridRef.value.loadGrid(data.queryParams);
+      } else {
+        message.error("撤销失败！");
+      }
+    });
+  };
   //结束
-  const handleFinish = (id) => {
-    data.ProcessInstanceId=id;
-    data.isConfirm=true;
-    data.confirmText='确定要结束该事务吗？结束后，流程标记已完成'
-    data.confirmTitle='结束'
- }
+  const handleFinish = (ruleLogId, ProcessInstanceId, ProcessId) => {
+    data.confirmType = "end";
+    data.ProcessInstanceId = ProcessInstanceId;
+    data.ruleLogId = ruleLogId;
+    data.processId = ProcessId;
+    data.isConfirm = true;
+    data.confirmText = '确定要结束该事务吗？结束后，流程标记已完成'
+    data.confirmTitle = '结束'
+  }
   //发布
   const handleRelase = (ProcessInstanceId) => {
     data.ProcessInstanceId = ProcessInstanceId;
     data.isRelease = true;
   }
   //删除
-  const handleDelete= (id) => {
-    data.ProcessInstanceId=id;
-    data.isDelete=true;
+  const handleDelete = (id) => {
+    data.ProcessInstanceId = id;
+    data.isDelete = true;
   }
   //传阅
   function CirculationFn(InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName) {
@@ -648,58 +732,58 @@ const getColumns = (id) => {
     data.isCirculation = true;
   }
   //催办
-  function UrgingFn(InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName){
-      UrgingData.params = {
-          InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName
-      }
-      data.isUrging = true;
+  function UrgingFn(InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName) {
+    UrgingData.params = {
+      InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName
+    }
+    data.isUrging = true;
   }
   //督办
   const handleSupervised = (id) => {
-    data.ProcessInstanceId=id;
-    data.isSupervised=true;
+    data.ProcessInstanceId = id;
+    data.isSupervised = true;
   }
   //取消督办
   const cancelSupervised = (id) => {
-    data.ProcessInstanceId=id;
-    data.isConfirm=true;
-    data.confirmText='确定要取消督办吗？'
-    data.confirmTitle='取消督办'
+    data.ProcessInstanceId = id;
+    data.isConfirm = true;
+    data.confirmText = '确定要取消督办吗？'
+    data.confirmTitle = '取消督办'
   }
   //收藏
   const handleFavor = (id) => {
     //data.ProcessInstanceId=id;
     let list = gridRef.value.getCheckList();
     //console.log("checklist", list);
-    if(list.length){
-      data.isFavor=true;
-    }else {
-        message.error("请至少勾选一项！")
+    if (list.length) {
+      data.isFavor = true;
+    } else {
+      message.error("请至少勾选一项！")
     }
   }
   //取消收藏
   const cancelFavor = (id) => {
-    data.ProcessInstanceId=id;
-    data.isConfirm=true;
-    data.confirmText='确定要取消收藏吗？'
-    data.confirmTitle='取消收藏'
- }
- //批量打印
- const batchPrintForm = () => {
+    data.ProcessInstanceId = id;
+    data.isConfirm = true;
+    data.confirmText = '确定要取消收藏吗？'
+    data.confirmTitle = '取消收藏'
+  }
+  //批量打印
+  const batchPrintForm = () => {
     //data.ProcessInstanceId=id;
     let list = gridRef.value.getCheckList();
     //console.log("checklist", list);
-    if(list.length){
+    if (list.length) {
       let url = router.resolve({
-            path:'/lightning/workflow/WFFormPrint',
-            name: "WFFormPrint",
-            query: {
-                id: '',
-            },
-        });
-        window.open(url.href);
-    }else {
-        message.error("请至少勾选一项！")
+        path: '/lightning/workflow/WFFormPrint',
+        name: "WFFormPrint",
+        query: {
+          id: '',
+        },
+      });
+      window.open(url.href);
+    } else {
+      message.error("请至少勾选一项！")
     }
   }
   //批量传阅
@@ -707,13 +791,13 @@ const getColumns = (id) => {
     //data.ProcessInstanceId=id;
     let list = gridRef.value.getCheckList();
     //console.log("checklist", list);
-    if(list.length){
+    if (list.length) {
       // CirculationData.params = {
       //   InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName
       // }
       data.isCirculation = true;
-    }else {
-        message.error("请至少勾选一项！")
+    } else {
+      message.error("请至少勾选一项！")
     }
   }
   window.data = data;
@@ -738,18 +822,18 @@ const getColumns = (id) => {
   const gridUrl = ref(Interface.list2);
   const columns = ref([]);
   const changeTab = (e) => {
-      data.activeKey = e;
-      data.queryParams.filterQuery='';
-      let filterColumnsList=(data.tabs)[e].filterableColumns;
-      data.SearchFields=filterColumnsList;
-      data.queryParams.filterId=data.tabs[e].filterId||'';
-      if(data.formSearchFilterquery){
-        data.queryParams.filterQuery+=data.formSearchFilterquery;
-      }
-      if(data.treeId){
-        data.queryParams.filterQuery+='\nProcessId\tin\t'+data.treeId;
-      }
-      getColumns(data.queryParams.filterId);
+    data.activeKey = e;
+    data.queryParams.filterQuery = '';
+    let filterColumnsList = (data.tabs)[e].filterableColumns;
+    data.SearchFields = filterColumnsList;
+    data.queryParams.filterId = data.tabs[e].filterId || '';
+    if (data.formSearchFilterquery) {
+      data.queryParams.filterQuery += data.formSearchFilterquery;
+    }
+    if (data.treeId) {
+      data.queryParams.filterQuery += '\nProcessId\tin\t' + data.treeId;
+    }
+    getColumns(data.queryParams.filterId);
   }
   // 添加分类
   const handleAddCategory = (key) => {
@@ -779,28 +863,33 @@ const getColumns = (id) => {
   .wea-left-tree-search {
     padding-left: 14px;
   }
+
   .treeRow {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-right: 10px;
+
     .num {
       color: #aaa;
     }
   }
-:deep .iconBox{
-  text-align: center;
-  .popup{
-    text-align: left;
-    top: 20px;
+
+  :deep .iconBox {
+    text-align: center;
+
+    .popup {
+      text-align: left;
+      top: 20px;
+    }
+
+    .moreaction {
+      padding: 0px 1px;
+      width: 18px;
+      border: 1px solid #dedede;
+      border-radius: 4px;
+      position: relative;
+      top: 1px;
+    }
   }
-  .moreaction{
-    padding: 0px 1px;
-    width: 18px;
-    border: 1px solid #dedede;
-    border-radius: 4px;
-    position: relative;
-    top: 1px;
-  }
-}
 </style>

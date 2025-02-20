@@ -1,6 +1,6 @@
 <template>
     <div class="filed">
-        <span class="required" v-if="print!=1 && field?.required && field?.permission != 2 && field?.permission != 4">*</span>
+        <span class="required" v-if="print!=1 && field?.required">*</span>
         <div v-if="type=='S'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
@@ -151,24 +151,19 @@
                     <a-textarea :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" :rows="4" />
                     <div>
                         <a-popover placement="right">
-                            <a-button type="link">选意见</a-button>
+                            <!-- <a-button type="link">选意见</a-button> -->
                             <template #content>
                                 <div class="suggestionWrap">
                                     <div class="suggestion-list">
                                         <div class="suggestion-item" v-for="(option, optionIdx) in suggestions" :key="optionIdx" @click="selectSuggestion(option, field)">
                                             {{option.name}}
-                                            <span class="del-icon" @click.stop="handleDeleteSuggestion(option)">
-                                                <DeleteOutlined/>
-                                            </span>
-                                            <!-- <a-popconfirm title="确认删除当前意见?" ok-text="确认" cancel-text="取消" @confirm="handleDeleteSuggestion(option)">
-                                            </a-popconfirm> -->
                                         </div>
                                     </div>
                                     <div class="suggestion-footer">
                                         <span class="label">创建意见</span>
                                         <div class="add-form">
-                                            <a-input class="suggestion-inp" placeholder="请输入新的意见" v-model:value="suggestionVal"></a-input>
-                                            <a-button size="small" type="primary" @click="handleSubmit">保存</a-button>
+                                            <a-input class="suggestion-inp" placeholder="请输入新的意见"></a-input>
+                                            <a-button size="small" type="primary">保存</a-button>
                                         </div>
                                         <!-- <a-button size="small" type="primary">创建意见</a-button> -->
                                     </div>
@@ -238,11 +233,11 @@
                             {{ option.Name }}
                         </a-select-option>
                     </a-select>
-                    <div class="searchIcon" v-if="stateCode!=2">
-                        <SearchOutlined
+                    <div class="searchIcon">
+                        <!-- <SearchOutlined
                           class="ant-select-suffix"
                           @click="handleOpenLook"
-                        />
+                        /> -->
                     </div>
                 </template>
             </div>
@@ -320,12 +315,9 @@
         SearchOutlined,
         DownOutlined,
         UserOutlined,
-        DeleteOutlined
     } from "@ant-design/icons-vue";
     // import InputColor from "@/components/workflow/formPreview/InputColor.vue";
     import Interface from "@/utils/Interface.js";
-    import { message } from "ant-design-vue";
-
     const { proxy } = getCurrentInstance();
 
     const props = defineProps({
@@ -336,13 +328,11 @@
         attributes: Array,
         list: Object,
         search: Object,
-        print: [String, Number],
-        suggestions: Array,
-        stateCode: String
+        print: [String, Number]
     });
     
 
-    const emit = defineEmits(['openlook','setValue','lookup','select','suggestion','loadSuggestion','delSuggestion']);
+    const emit = defineEmits(['openlook','setValue','lookup','select','suggestion']);
 
     // const formState = reactive({
 
@@ -369,11 +359,8 @@
     // 控制字段默认值可编辑/不可编辑
     const disabledPermission = computed(()=>{
         const permission = props.field.permission;
-        let isDisabled = permission == 16 ? true : false;
-        if(props.stateCode == 2){
-            isDisabled = true;
-        }
-        return isDisabled;
+        const isDisabled = permission == 16 ? true : false;
+        return true;
     })
     const treeData = ref([
         {
@@ -476,29 +463,25 @@
         inputValue1: 10,
         // search: {},
         suggestions: [
-            // {
-            //     id: 1,
-            //     name: "123"
-            // },
-            // {
-            //     id: 2,
-            //     name: "123123"
-            // },
-            // {
-            //     id: 3,
-            //     name: "123123"
-            // },
-            // {
-            //     id: 4,
-            //     name: "122385673"
-            // }
-        ],
-        suggestionVal: ""
+            {
+                id: 1,
+                name: "123"
+            },
+            {
+                id: 2,
+                name: "123123"
+            },
+            {
+                id: 3,
+                name: "123123"
+            },
+            {
+                id: 4,
+                name: "122385673"
+            }
+        ]
     });
-    const { fileList, options, inputValue1, suggestions, suggestionVal } = toRefs(data);
-    watch(()=>props.suggestions, (newVal, oldVal)=>{
-        data.suggestions = props.suggestions;
-    });
+    const { fileList, options, inputValue1, suggestions } = toRefs(data);
 
     const handleOpenLook = () => {
         if(props.field?.permission == 16){
@@ -573,42 +556,7 @@
     const selectSuggestion = (option, field) => {
         let name = option.name;
         emit("suggestion", name, field)
-    };
-
-    const handleSubmit = () => {
-        let obj = {
-            actions:[{
-                id: "2919;a",
-                descriptor: "",
-                callingDescriptor: "UNKNOWN",
-                params: {
-                  recordInput: {
-                    allowSaveOnDuplicate: false,
-                    apiName: 'WFSuggestionLibrary',
-                    objTypeCode: 130,
-                    fields: {
-                        Name: data.suggestionVal
-                    }
-                  }
-                }
-            }]
-        };
-        let d = {
-            message: JSON.stringify(obj)
-        };
-        proxy.$post(Interface.create, d).then(res=>{
-            if(res && res.actions && res.actions[0].state == 'SUCCESS'){
-                data.suggestionVal = "";
-                message.success("创建成功!");
-                emit("loadSuggestion", true);
-            }
-        })
-    };
-
-    const handleDeleteSuggestion = (option) => {
-        emit("delSuggestion", option.id);
-    };
-
+    }
 </script>
 <style lang="less" scoped>
     .filed{
@@ -652,18 +600,12 @@
             max-height: 400px;
             overflow-y: auto;
             .suggestion-item{
-                min-height: 30px;
-                /* line-height: 30px; */
+                height: 30px;
+                line-height: 30px;
                 padding: 0 10px;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
                 &:hover{
                     background: #f4f4f4;
                     cursor: pointer;
-                }
-                .del-icon{
-                    color: red;
                 }
             }
         }

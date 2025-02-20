@@ -176,13 +176,13 @@
     <!-- 删除 -->
     <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="handleSearch" :sObjectName="'WFProcessInstance'" :recordId="ProcessInstanceId" :objTypeCode="'122'" :external="false" />
     <!-- 撤销、结束、取消督办、取消收藏 -->
-    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="ProcessInstanceId" />
+    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="handleConfirm" :id="ProcessInstanceId" />
     <!-- 传阅 -->
     <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation" :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
     <!-- 催办 -->
-    <Urging ref="UrgingRef" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
+    <Urging ref="UrgingRef" :processInstanceId="ProcessInstanceId" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
     <!-- 督办 -->
-    <Supervised v-if='isSupervised' :isShow="isSupervised" @cancel="isSupervised=false" @update-status="isSupervised=false" :id="ProcessInstanceId" />
+    <Supervised v-if='isSupervised' :isShow="isSupervised" @cancel="isSupervised=false" @update-status="isSupervised=false" :name="processName" :id="ProcessInstanceId" />
     <!-- 收藏 -->
     <Favor v-if='isFavor' :isShow="isFavor" @cancel="isFavor=false" @update-status="isFavor=false" :id="ProcessInstanceId" />
   </div>
@@ -392,7 +392,9 @@
     isConfirm:false,
     confirmText:'',
     confirmTitle:'',
-    isMenu:false
+    isMenu:false,
+    confirmType: "",
+    processName: ""
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
@@ -400,7 +402,7 @@
   };
 
   const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isUrging,isSupervised,isFavor,searchVal,isMenu,
-    isCategory, treeId, id, isJump, isCountersign, isRelease, ProcessInstanceId,SearchFields,isDelete,deleteDesc,isConfirm,confirmText,confirmTitle} = toRefs(data);
+    isCategory, treeId, id, isJump, isCountersign, isRelease, ProcessInstanceId,SearchFields,isDelete,deleteDesc,isConfirm,confirmText,confirmTitle, confirmType, processName} = toRefs(data);
   //   console.log("tabs", data.tabs);
   const tabContent = ref(null);
   const contentRef = ref(null);
@@ -459,7 +461,7 @@ const getColumns = (id) => {
             field: "Action",
             title: "操作",
             formatter: function formatter(value, row, index) {
-              var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.textValue:'';
+              var ProcessInstanceId = row.id;
               var ProcessIdName=row.ProcessId?row.ProcessId.lookupValue.displayName:'';
               var ProcessId=row.ProcessId?row.ProcessId.lookupValue.value:'';
               var WFRuleLogId=row.WFRuleLogId?row.WFRuleLogId.textValue:'';
@@ -470,14 +472,14 @@ const getColumns = (id) => {
             <div class="option-item" style="display:none;" onclick="handleTo('${ProcessInstanceId}')">办理</div>
             <div class="option-item" style="display:none;" onclick="DelegateFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">委派</div>
             <div class="option-item" onclick="printForm('${ProcessInstanceId}')">打印</div>
-            <div class="option-item" onclick="handleCancel('${WFRuleLogId}')">撤销</div>
+            <div class="option-item" onclick="handleCancel('${ProcessInstanceId}')">撤销</div>
             <div class="option-item" onclick="CirculationFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">传阅</div>
             <div class="option-item" onclick="UrgingFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">催办</div>
-            <div class="option-item" onclick="handleSupervised('${ProcessInstanceId}')">督办</div>
+            <div class="option-item" onclick="handleSupervised('${ProcessInstanceId}','${ProcessIdName}')">督办</div>
             <div class="option-item" onclick="cancelSupervised('${ProcessInstanceId}')">取消督办</div>
             <div class="option-item" style="display:none;" onclick="handleFavor('${ProcessInstanceId}')">收藏</div>
             <div class="option-item" onclick="cancelFavor('${ProcessInstanceId}')">取消收藏</div>
-            <div class="option-item" onclick="handleDelete('${ProcessInstanceId}')">删除</div>
+            <div class="option-item" style="display:none;" onclick="handleDelete('${ProcessInstanceId}')">删除</div>
             <div class="option-item" style="display:none;" onclick="Processtoreload('${ProcessInstanceId}')">重办</div>
             <div class="option-item" style="display:none;" onclick="handleJump('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">跳转</div>
             <div class="option-item" style="display:none;" onclick="handleCountersign('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">加签</div>
@@ -506,8 +508,8 @@ const getColumns = (id) => {
             sortable: true,
             formatter: function formatter(value, row, index) {
               let result=girdFormatterValue(item.name,row);
-              var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.textValue:'';
-              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/detail?id='+ProcessInstanceId+'&reurl=/lightning/workflow/mine" target="_blank">'+result+'</a>';
+              var ProcessInstanceId = row.id;
+              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/view?id='+ProcessInstanceId+'&reurl=/lightning/workflow/mine" target="_blank">'+result+'</a>';
             }
           });
         }
@@ -637,11 +639,79 @@ const getColumns = (id) => {
   }
   //撤销
   const handleCancel = (id) => {
-    data.ProcessInstanceId=id;
+    data.confirmType = "revoke";
+    data.ProcessInstanceId = id;
     data.isConfirm=true;
     data.confirmText='确定要撤销该事务吗？撤销后进入发起人的退件箱，发起人可以进行删除'
     data.confirmTitle='撤销'
+  };
+  // 撤销
+  const revokeFlow = () => {
+      let obj = {
+          actions: [{
+              id: "2919;a",
+              descriptor: "",
+              callingDescriptor: "UNKNOWN",
+              params: {
+                  id: data.ProcessInstanceId
+              }
+          }]
+      };
+      let d = {
+          message: JSON.stringify(obj)
+      };
+      proxy.$post(Interface.workflow.withdraw, d).then(res => {
+          if (res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+              message.success("撤销成功！");
+              data.isConfirm = false;
+              gridRef.value.loadGrid(data.queryParams);
+          } else {
+              message.error("撤销失败！");
+          }
+      });
+  };
+
+  const cancelOkSupervised = () => {
+    let obj = {
+      actions: [{
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordId: data.ProcessInstanceId,
+          recordInput: {
+            allowSaveOnDuplicate: false,
+            apiName: 'WFProcessInstance',
+            objTypeCode: 122,
+            fields: {
+              IsSupervised: 0
+            }
+          }
+        }
+      }]
+    };
+    let d = {
+      message: JSON.stringify(obj)
+    }
+    proxy.$post(Interface.edit, d).then(res=>{
+      if(res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
+        message.success("取消督办成功！");
+        data.isConfirm = false;
+        loadQuery();
+      }else {
+        message.success("取消督办成功！")
+      }
+    })
   }
+
+  const handleConfirm = () => {
+    if(data.confirmType == "revoke"){
+      revokeFlow();
+    }else if(data.confirmType == "supervised"){
+      cancelOkSupervised();
+    }
+  }
+
   //结束
   const handleFinish = (id) => {
     data.ProcessInstanceId=id;
@@ -681,12 +751,14 @@ const getColumns = (id) => {
     data.confirmTitle='重办'
   }
   //督办
-  const handleSupervised = (id) => {
+  const handleSupervised = (id, name) => {
     data.ProcessInstanceId=id;
+    data.processName = name;
     data.isSupervised=true;
   }
   //取消督办
   const cancelSupervised = (id) => {
+    data.confirmType = "supervised";
     data.ProcessInstanceId=id;
     data.isConfirm=true;
     data.confirmText='确定要取消督办吗？'
@@ -813,7 +885,7 @@ const getColumns = (id) => {
     data.isCategory = e;
   };
   const handleClickMenu = (e) => {
-    data.isMenu = true;
+    data.isMenu = e;
   }
   const handleMenuClick = () => {
 

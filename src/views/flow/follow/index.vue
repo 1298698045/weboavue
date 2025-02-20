@@ -430,6 +430,17 @@
       }
       gridRef.value.loadGrid(data.queryParams);
   }
+  const handleDetail = (id) => {
+    let url = router.resolve({
+        path:"/lightning/r/Workflow/instance/view",
+        query: {
+          id: id,
+          reurl:'/workflow/follow/list'
+        }
+    })
+    window.open(url.href); 
+  };
+  window.handleDetail = handleDetail;
   //获取显示列
 const getColumns = (id) => {
   let columnslist=[{
@@ -448,22 +459,7 @@ const getColumns = (id) => {
               var str = `
                 <div class="iconBox">
             <div class="popup">
-            <div class="option-item" style="display:none;" onclick="handleTo('${ProcessInstanceId}')">办理</div>
-            <div class="option-item" style="display:none;" onclick="DelegateFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">委派</div>
-            <div class="option-item" onclick="printForm('${ProcessInstanceId}')">打印</div>
-            <div class="option-item" onclick="handleCancel('${WFRuleLogId}')">撤销</div>
-            <div class="option-item" onclick="CirculationFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">传阅</div>
-            <div class="option-item" onclick="UrgingFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">催办</div>
-            <div class="option-item" onclick="handleSupervised('${ProcessInstanceId}')">督办</div>
-            <div class="option-item" onclick="cancelSupervised('${ProcessInstanceId}')">取消督办</div>
-            <div class="option-item" style="display:none;" onclick="handleFavor('${ProcessInstanceId}')">收藏</div>
-            <div class="option-item" onclick="cancelFavor('${ProcessInstanceId}')">取消收藏</div>
-            <div class="option-item" onclick="handleDelete('${ProcessInstanceId}')">删除</div>
-            <div class="option-item" style="display:none;" onclick="Processtoreload('${ProcessInstanceId}')">重办</div>
-            <div class="option-item" style="display:none;" onclick="handleJump('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">跳转</div>
-            <div class="option-item" style="display:none;" onclick="handleCountersign('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">加签</div>
-            <div class="option-item" style="display:none;" onclick="handleFinish('${WFRuleLogId}')">结束</div>
-            <div class="option-item" style="display:none;" onclick="handleRelase('${ProcessInstanceId}')">发布</div>
+              <div class="option-item" onclick="handleDetail('${ProcessInstanceId}')">查看</div>
             </div>
             <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
         `
@@ -480,15 +476,15 @@ const getColumns = (id) => {
     let fields = res.actions[0].returnValue.fields;
     fields.forEach(item => {
       if(item.name!='WFRuleLogId'&&item.name!='ExecutorIdentityName'){
-        if(item.name=='Name'){
+        if(item.name=='ProcessInstanceId'){
           columnslist.push({
             field: item.name,
             title: item.label,
             sortable: true,
             formatter: function formatter(value, row, index) {
-              let result=girdFormatterValue(item.name,row);
+              let result = row.ProcessInstanceId.lookupValue.displayName;
               var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.lookupValue.value:'';
-              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/detail?id='+ProcessInstanceId+'&reurl=/lightning/workflow/mine" target="_blank">'+result+'</a>';
+              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/view?id='+ProcessInstanceId+'&reurl=/lightning/workflow/mine" target="_blank">'+result+'</a>';
             }
           });
         }

@@ -3,7 +3,7 @@
         <div class="dModal-box">
             <div class="d-content">
                 <div class="photoWrap">
-                    <iframe :src="getPdfUrl()" class="pdfIframe"></iframe>
+                    <iframe :src="pdfUrl" class="pdfIframe"></iframe>
                     <div class="photoHeadInfo">
                         <div class="photoName">
                             {{ detail.Name || '暂无' }}
@@ -72,11 +72,6 @@ const props = defineProps({
     isShow: Boolean,
     pdfParams: Object
 });
-const getPdfUrl = () => {
-    let url = 'data:application/pdf;base64,' + data.detail.viewUrl;
-    return url;
-};
-
 const data = reactive({
     items: [
         {
@@ -98,9 +93,22 @@ const data = reactive({
     currentUserName: '',
     currentUserId: '',
     rotate: 0,
-    isShowCommitBtn: false
+    isShowCommitBtn: false,
+    pdfUrl: ""
 })
-const { isShowCommitBtn, rotate, currentUserName, currentUserId, total, detail, currentIndex, imageList, id, items, mySwiper, commentList, comment, replyComment } = toRefs(data);
+const { isShowCommitBtn, rotate, currentUserName, currentUserId, total, detail, currentIndex, imageList, id, items, mySwiper, commentList, comment, replyComment, pdfUrl } = toRefs(data);
+
+const getPdfUrl = () => {
+    proxy.$get(Interface.pdf+props.pdfParams.id, {}).then(res=>{
+        let fileBase64 = res.actions[0].returnValue;
+        sessionStorage.setItem('pdfBase', fileBase64)
+        // data.pdfUrl = '/pdfjs/web/viewer.html';
+        data.pdfUrl = 'data:application/pdf;base64,' + fileBase64
+    })
+    // data.pdfUrl = '/pdfjs/web/viewer.html?id=' + props.pdfParams.id;
+};
+getPdfUrl();
+
 const handleClose = () => {
     emit("cancel", false);
 };

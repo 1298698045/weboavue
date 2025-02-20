@@ -366,9 +366,14 @@ const staticRoutes = [
   },
   {
     path: "/lightning/r/Workflow/instance/view",
-    name: "FlowDetailView",
-    component: () => import("../views/flow/detail/view.vue")
+    name: "ProcessInstanceDetail",
+    component: () => import("../views/flow/processInstanceDetail/index.vue")
   },
+  // {
+  //   path: "/lightning/r/Workflow/instance/view",
+  //   name: "FlowDetailView",
+  //   component: () => import("../views/flow/detail/view.vue")
+  // },
   {
     path: "/o/Report/common/home",
     name: "report",
