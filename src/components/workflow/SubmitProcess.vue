@@ -3,7 +3,7 @@
         <a-modal v-model:open="props.isShow" width="800px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
             <template #title>
                 <div>
-                    审批通过
+                    提交流转
                  </div>
             </template>
             <div class="modalContainer">

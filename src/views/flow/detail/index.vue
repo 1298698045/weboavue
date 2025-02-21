@@ -797,9 +797,10 @@
             // let url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(row.viewUrl);
             data.pdfParams = {
                 id: row.id,
-                item: row,
-                imageList: [],
-                index: 0
+                name: row.name,
+                index: 0,
+                viewUrl: row.viewUrl,
+                downloadUrl: row.downloadUrl
             };
             data.isPdf = true;
         }
@@ -955,7 +956,7 @@
         };
         if (data.id) {
             url = Interface.edit;
-            d.actions[0].params.recordId = data.id;
+            d.actions[0].params.recordId = data.processInstanceId;
         }
         let obj = {
             message: JSON.stringify(d)

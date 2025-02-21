@@ -19,25 +19,25 @@
                 {{ index + 1 }}
               </div>
             </template>
-            <template v-if="column.key === 'FileExtension'">
+            <template v-if="column.key === 'fileExtension'">
               <div class="FileExtensionTdImg">
                 <img :src="require('@/assets/img/filetype/doc.png')"
-                  v-if="record.FileExtension == 'ocx' || record.FileExtension == 'docx' || record.FileExtension == 'doc'" />
+                  v-if="record.fileExtension == 'ocx' || record.fileExtension == 'docx' || record.fileExtension == 'doc'" />
                 <img :src="require('@/assets/img/filetype/rar.png')"
-                  v-else-if="record.FileExtension == 'rar' || record.FileExtension == 'zip'" />
+                  v-else-if="record.fileExtension == 'rar' || record.fileExtension == 'zip'" />
                 <img :src="require('@/assets/img/filetype/Excel.png')"
-                  v-else-if="record.FileExtension == 'xlsx' || record.FileExtension == 'xls'" />
-                <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="record.FileExtension == 'pdf'" />
+                  v-else-if="record.fileExtension == 'xlsx' || record.fileExtension == 'xls'" />
+                <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="record.fileExtension == 'pdf'" />
                 <img :src="require('@/assets/img/filetype/TXT.png')"
-                  v-else-if="record.FileExtension == 'TXT' || record.FileExtension == 'txt'" />
+                  v-else-if="record.fileExtension == 'TXT' || record.fileExtension == 'txt'" />
                 <img :src="require('@/assets/img/filetype/PPT.png')"
-                  v-else-if="record.FileExtension == 'ppt' || record.FileExtension == 'pptx'" />
+                  v-else-if="record.fileExtension == 'ppt' || record.fileExtension == 'pptx'" />
                 <img :src="require('@/assets/img/filetype/video.png')"
-                  v-else-if="record.FileExtension == 'mp4' || record.FileExtension == '.mp4'" />
+                  v-else-if="record.fileExtension == 'mp4' || record.fileExtension == '.mp4'" />
                 <img :src="require('@/assets/img/filetype/defaultImg.png')"
-                  v-else-if="record.FileExtension == 'jpg' || record.FileExtension == 'png' || record.FileExtension == 'gif'" />
+                  v-else-if="record.fileExtension == 'jpg' || record.fileExtension == 'png' || record.fileExtension == 'gif'" />
                 <img :src="require('@/assets/img/filetype/File.png')" v-else />
-                <span>{{ record.FileExtension || '' }}</span>
+                <span>{{ record.fileExtension || '' }}</span>
               </div>
             </template>
             <!-- <template v-if="column.key === 'SharedRights'">
@@ -157,14 +157,14 @@
     },
     {
       title: "类型",
-      dataIndex: "FileExtension",
-      key: "FileExtension",
+      dataIndex: "fileExtension",
+      key: "fileExtension",
       width: 200,
     },
     {
       title: "名称",
-      dataIndex: "Name",
-      key: "Name"
+      dataIndex: "name",
+      key: "name"
     },
     {
       title: "大小",
@@ -174,14 +174,14 @@
     },
     {
       title: "创建时间",
-      dataIndex: "CreatedOn",
-      key: "CreatedOn",
+      dataIndex: "createdOn",
+      key: "createdOn",
       width: 200,
     },
     {
       title: "创建人",
-      dataIndex: "CreatedBy",
-      key: "CreatedBy",
+      dataIndex: "createdByName",
+      key: "createdByName",
       width: 200,
     },
     {
@@ -285,22 +285,13 @@
           if (name) {
             name = name.replaceAll('.' + item.fileExtension, '');
           }
-          list.push({
-            size: size,
-            url: '/' + props.entityName + '/' + item.id + '/' + name,
-            fileLocation: item.fileLocation || '',
-            uid: item.id,
-            id: item.id,
-            FileExtension: item.fileExtension,
-            Name: item.name,
-            CreatedOn: item.createdOn,
-            CreatedBy: item.createdByName || '',
-          })
+          item.size = size;
+          item.url = '/' + props.entityName + '/' + item.id + '/' + name;
         }
       }
-      data.listData = list;
+      data.listData = res.actions[0].returnValue;
       data.ImageList = list.filter(item => {
-        return item.FileExtension == 'jpg' || item.FileExtension == 'jpeg' || item.FileExtension == 'png';
+        return item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png';
       });
     })
   };
@@ -327,7 +318,7 @@
     // };
     // xhr.send();
     let url = '';
-    if (item.FileExtension == 'jpg' || item.FileExtension == 'jpeg' || item.FileExtension == 'png') {
+    if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
       // url = item.viewUrl;
       // window.open(url);
       let index = 0;
@@ -344,20 +335,23 @@
         index: index
       };
       data.isPhoto = true;
-    } else if (item.FileExtension == 'pdf') {
-      url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(item.viewUrl);
+    } else if (item.fileExtension == 'pdf') {
+      // url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(item.viewUrl);
       data.pdfParams = {
         id: item.id,
-        item: item,
-        imageList: [],
-        index: 0
+        name: item.name,
+        index: 0,
+        viewUrl: item.viewUrl,
+        downloadUrl: item.downloadUrl
       };
       data.isPdf = true;
     }
   };
   //下载附件
-  const downloadFile = (item) => {
-    let url = '/api/file/attachment/download' + item.fileLocation;
+  const downloadFile2 = (item) => {
+    // console.log('item', item);
+    let url = item.downloadUrl;
+    let fileName = item.name;
     //window.open(url);
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
@@ -377,6 +371,54 @@
     };
     xhr.send();
   };
+  const downloadFile = (item) => {
+    let url = item.downloadUrl;
+    let text = item.name || '';
+    windowOpen(url, text);
+  }
+  const windowOpen = (url, fileName) => {
+
+    var xhr = new XMLHttpRequest();
+    // var fileName = window.fileName + typeName; // 文件名称
+    xhr.open('POST', url, true);
+    xhr.responseType = 'blob';
+    // xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+    // xhr.setRequestHeader('token', localStorage.getItem('token'));
+    xhr.onload = function (res) {
+      if (this.status === 200) {
+        var type = xhr.getResponseHeader('Content-Type');
+        var blob = new Blob([this.response], { type: type });
+        if (typeof window.navigator.msSaveBlob !== 'undefined') {
+          /*
+           * For IE
+           * >=IE10
+           */
+          window.navigator.msSaveBlob(blob, fileName);
+        } else {
+          /*
+           * For Non-IE (chrome, firefox)
+           */
+          var URL = window.URL || window.webkitURL;
+          var objectUrl = URL.createObjectURL(blob);
+          if (fileName) {
+            var a = document.createElement('a');
+            if (typeof a.download === 'undefined') {
+              window.location = objectUrl;
+            } else {
+              a.href = objectUrl;
+              a.download = fileName;
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+            }
+          } else {
+            window.location = objectUrl;
+          }
+        }
+      }
+    }
+    xhr.send();
+  }
   //删除附件
   const deleteFile = (id) => {
     let d = {

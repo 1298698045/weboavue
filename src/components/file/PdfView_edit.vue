@@ -3,15 +3,15 @@
         <div class="dModal-box">
             <div class="d-content">
                 <div class="photoWrap">
-                    <iframe :src="pdfUrl" class="pdfIframe"></iframe>
+                    <iframe :src="pdfUrl" class="pdfIframe" v-if="isPdf"></iframe>
                     <div class="photoHeadInfo">
                         <div class="photoName">
-                            {{ pdfParams.name || '暂无' }}
+                            {{ detail.Name || '暂无' }}
                         </div>
                         <div class="photoIcons">
                             <span class="icon" title="下载" @click="handleDownload">
                                 <i class="iconfont icon-xiazai"></i>
-                            </span> 
+                            </span>
                             <span class="icon" title="关闭" @click="handleClose">
                                 <i class="iconfont icon-guanbi"></i>
                             </span>
@@ -19,6 +19,9 @@
                     </div>
                 </div>
             </div>
+            <!-- <div class="closeIcon" @click="handleClose" title="关闭">
+                <CloseOutlined />
+            </div> -->
         </div>
     </div>
 </template>
@@ -37,7 +40,30 @@ import {
     toRaw,
     computed,
 } from "vue";
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+dayjs.locale('zh-cn');
+import calendar from 'dayjs/plugin/calendar';
+import weekday from 'dayjs/plugin/weekday';
+import localeData from 'dayjs/plugin/localeData';
+import axios from "axios";
+dayjs.extend(calendar);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
+import {
+    SearchOutlined,
+    DownOutlined,
+    UserOutlined,
+    CloseOutlined,
+    LeftOutlined,
+    RightOutlined,
+    ArrowLeftOutlined,
+    LikeFilled,
+    MessageFilled
+} from "@ant-design/icons-vue";
 const emit = defineEmits(["cancel"]);
+import { formTreeData, girdFormatterValue } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
@@ -47,12 +73,41 @@ const props = defineProps({
     pdfParams: Object
 });
 const data = reactive({
-    pdfUrl: ""
+    items: [
+        {
+            description: 123
+        },
+        {
+            description: 456
+        }
+    ],
+    mySwiper: null,
+    commentList: [],
+    comment: "",
+    replyComment: "",
+    currentIndex: { i: 0 },
+    imageList: [],
+    id: '',
+    detail: {},
+    total: 0,
+    currentUserName: '',
+    currentUserId: '',
+    rotate: 0,
+    isShowCommitBtn: false,
+    pdfUrl: "",
+    isPdf: false
 })
-const { pdfUrl } = toRefs(data);
+const { isShowCommitBtn, rotate, currentUserName, currentUserId, total, detail, currentIndex, imageList, id, items, mySwiper, commentList, comment, replyComment, pdfUrl, isPdf } = toRefs(data);
 
 const getPdfUrl = () => {
-    data.pdfUrl = '/pdfjs/web/viewer.html?file=' + props.pdfParams.viewUrl;
+    proxy.$get(Interface.pdf+props.pdfParams.id, {}).then(res=>{
+        let fileBase64 = res.actions[0].returnValue;
+        localStorage.setItem('pdfBase64', fileBase64)
+        data.isPdf = true;
+        data.pdfUrl = '/pdfjs/web/viewer.html?file=local';
+        // data.pdfUrl = 'data:application/pdf;base64,' + fileBase64;
+    })
+    // data.pdfUrl = '/pdfjs/web/viewer.html?id=' + props.pdfParams.id;
 };
 getPdfUrl();
 
@@ -71,9 +126,24 @@ const handleRotate = () => {
 }
 //下载
 const handleDownload = () => {
-    let url = props.pdfParams.downloadUrl;
-    let text = props.pdfParams.name || '';
+    let url = detail.downloadUrl;
+    //window.open(url);
+    let text = detail.Name || '';
     windowOpen(url, text);
+    // axios({
+    //     url: data.detail.viewUrl,
+    //     method: 'get',
+    //     responseType:'blob',
+    // }).then(res=>{
+    //     let url=window.URL.createObjectURL(res.data);
+    //     const a = document.createElement('a');
+    //     a.href=url;
+    //     a.download=data.detail.Name+'.'+data.detail.FileExtension;
+    //     a.click();
+    // }).catch(err => {
+    //     console.log('error', err);
+    //     message.error("下载失败！");
+    // });
 }
 const windowOpen = (url, fileName) => {
     var xhr = new XMLHttpRequest();
@@ -81,8 +151,8 @@ const windowOpen = (url, fileName) => {
     xhr.open('POST', url, true);
     xhr.responseType = 'blob';
 
-    xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
-    xhr.setRequestHeader('token', window.localStorage.getItem('token'));
+    //xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
+    //xhr.setRequestHeader('token', window.localStorage.getItem('token'));
     xhr.onload = function (res) {
         if (this.status === 200) {
             var type = xhr.getResponseHeader('Content-Type');
@@ -118,6 +188,23 @@ const windowOpen = (url, fileName) => {
     }
     xhr.send();
 }
+onMounted(() => {
+    console.log(props.pdfParams)
+    if (props.pdfParams) {
+        data.currentIndex.i = props.pdfParams.index || 0;
+        data.imageList = props.pdfParams.imageList || [];
+        data.id = props.pdfParams.id || '';
+        data.detail = props.pdfParams.item || {};
+    }
+    //console.log(props.pdfParams)
+    let userInfo = window.localStorage.getItem('userInfo');
+    if (userInfo) {
+        userInfo = JSON.parse(userInfo);
+        data.currentUserId = userInfo.userId;
+        data.currentUserName = userInfo.fullName;
+    }
+    //getCommentList();
+})
 </script>
 <style lang="less" scoped>
 @import "@/style/icon/iconfont.css";
@@ -132,8 +219,11 @@ const windowOpen = (url, fileName) => {
     z-index: 999;
 
     .dModal-box {
+        //background: rgba(64, 52, 51, 0.9);
+        // width: 95%;
+        // height: calc(~"100% - 40px");
         width: 100%;
-        height: calc(100% - -1px);
+        height: calc(~"100% - -1px");
         position: fixed;
         top: 50%;
         left: 50%;
@@ -156,11 +246,13 @@ const windowOpen = (url, fileName) => {
             display: flex;
 
             .photoWrap {
-                width: calc(100% - 0px);
+                width: calc(~"100% - 0px");
                 flex: 1;
                 overflow: hidden;
                 position: relative;
                 background: #24262A;
+
+                //opacity: 1;
                 .photoHeadInfo {
                     width: 100%;
                     display: flex;
@@ -178,6 +270,7 @@ const windowOpen = (url, fileName) => {
                             height: 40px;
                             text-align: center;
                             display: inline-block;
+                            //background: rgba(54, 54, 54, 80%);
                             margin-left: 20px;
                             border-radius: 50%;
                             line-height: 40px;
@@ -228,6 +321,7 @@ const windowOpen = (url, fileName) => {
                         flex: 1;
 
                         .name {
+                            //color: var(--textColor);
                             color: #000;
                             font-size: 15px;
                             font-weight: bolder;
@@ -253,6 +347,7 @@ const windowOpen = (url, fileName) => {
                     padding: 10px;
 
                     .optionItem {
+                        //display: flex;
                         align-items: center;
                         margin: 0 35px;
                         cursor: pointer;
@@ -281,7 +376,8 @@ const windowOpen = (url, fileName) => {
                 }
 
                 .fileCommentBox {
-                    height: calc(100% - 110px);
+                    height: calc(~"100% - 110px");
+                    //background: #f4f4f4;
                     padding: 10px 0;
 
                     .commentTitle {
@@ -295,7 +391,7 @@ const windowOpen = (url, fileName) => {
                     }
 
                     .commentList {
-                        height: calc(100% - 120px);
+                        height: calc(~"100% - 120px");
                         overflow-y: auto;
                     }
 
@@ -305,6 +401,7 @@ const windowOpen = (url, fileName) => {
                         flex: 1;
 
                         .commentName {
+                            //color: var(--textColor);
                             color: #ff8200;
                         }
 
@@ -374,9 +471,11 @@ const windowOpen = (url, fileName) => {
                             background: #f0f1f4;
                             border: 0 !important;
                             border-radius: 6px !important;
+                            //height: 38px;
                         }
 
                         :deep .ant-input:focus {
+                            //border-color: #ff8200 !important;
                             box-shadow: 0 0 0 1px #ff8200;
                         }
                     }
@@ -390,6 +489,8 @@ const windowOpen = (url, fileName) => {
                             background-color: #ff8200;
                             width: 74px;
                             border-radius: 30px !important;
+
+                            //height: 36px;
                             span {
                                 letter-spacing: -1px;
                             }
@@ -424,6 +525,7 @@ const windowOpen = (url, fileName) => {
                             }
 
                             :deep .ant-input:focus {
+                                //border-color: #ff8200 !important;
                                 box-shadow: 0 0 0 1px #ff8200;
                             }
                         }
@@ -491,9 +593,14 @@ const windowOpen = (url, fileName) => {
     border: 5px solid #fff;
     display: block;
     margin: auto;
+    //max-width: 80%;
     margin-top: 20px;
     border: 0;
 }
+
+// :deep(.slick-arrow) {
+//     //display: none !important;
+// }
 :deep(.slick-arrow.custom-slick-arrow) {
     width: 60px;
     height: 60px;
@@ -571,7 +678,7 @@ const windowOpen = (url, fileName) => {
 }
 
 :deep .ant-carousel .slick-list {
-    height: calc(100% - 100px) !important;
+    height: calc(~"100% - 100px") !important;
     margin-bottom: 12px;
 }
 
