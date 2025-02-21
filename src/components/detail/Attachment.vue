@@ -12,7 +12,7 @@
       </div>
       <div class="panel-bd panel-bd1">
         <a-table :columns="columns" :dataSource="listData" :scroll="{ y: tableHeight }" :pagination="false"
-          @change="handleTableChange">
+          @change="handleTableChange" :customRow="rowClick">
           <template #bodyCell="{ column, index, record }">
             <template v-if="column.key === 'index'">
               <div>
@@ -47,12 +47,12 @@
             <template v-if="column.key === 'Action'">
               <div class="iconBox">
                 <div class="popup">
-                  <div class="option-item" v-if="attachPerm.read" @click="handlePreviewFile(record)" :num="index">查看
+                  <div class="option-item" v-if="attachPerm.read" @click.stop="handlePreviewFile(record)" :num="index">查看
                   </div>
                   <!-- <div class="option-item" @click="handleEdit(record)" :num="index">编辑</div>   -->
-                  <div class="option-item" :num="index">重命名</div>
-                  <div class="option-item" v-if="attachPerm.delete" @click="handleDelete(record)" :num="index">删除</div>
-                  <div class="option-item" @click="downloadFile(record)" :num="index">下载</div>
+                  <div class="option-item" :num="index" @click.stop="handleRename(record)">重命名</div>
+                  <div class="option-item" v-if="attachPerm.delete" @click.stop="handleDelete(record)" :num="index">删除</div>
+                  <div class="option-item" @click.stop="downloadFile(record)" :num="index">下载</div>
                 </div>
                 <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation"
                   data-v-69a58868="">
@@ -97,6 +97,17 @@
       @cancel="isConfirm = false" @ok="deleteFile" :id="recordId" />
     <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
     <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+    <Rename
+      :isShow="isRename"
+      v-if="isRename"
+      @cancel="handleRenameCancel"
+      :recordId="recordId"
+      fieldName="Name"
+      :fileName="fileName"
+      entityApiName="RelatedAttachment"
+      objTypeCode="1001"
+      @success="getQuery"
+    />
   </div>
 </template>
 <script setup>
@@ -145,6 +156,8 @@
   import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
   import ImageView from "@/components/file/ImageView.vue";
   import PdfView from "@/components/file/PdfView.vue";
+  import Rename from "@/components/commonModal/Rename.vue";
+
   const { proxy } = getCurrentInstance();
   const TopicsLst = ref();
   const TaskDetailModal = ref(null);
@@ -255,14 +268,17 @@
     isPhoto: false,
     isPdf: false,
     photoParams: {},
-    pdfParams: {}
+    pdfParams: {},
+    isRename: false,
+    fileName: ""
   });
   const columnList = toRaw(columns);
   const { listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination,
     tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, isTaskDetail, isShare, deleteDesc, external,
     isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, isConfirm, confirmText, confirmTitle,
-    uploadData, headers, ImageList, isPhoto, isPdf, photoParams, pdfParams } = toRefs(data);
+    uploadData, headers, ImageList, isPhoto, isPdf, photoParams, pdfParams, isRename, fileName } = toRefs(data);
   const getQuery = () => {
+    debugger
     data.listData = [];
     data.pagination.total = 0;
     let url = Interface.getFiles;
@@ -285,6 +301,7 @@
           if (name) {
             name = name.replaceAll('.' + item.fileExtension, '');
           }
+          item.key = item.id;
           item.size = size;
           item.url = '/' + props.entityName + '/' + item.id + '/' + name;
         }
@@ -295,6 +312,17 @@
       });
     })
   };
+  
+  const rowClick = (record) => {
+    return {
+      onClick: (columns) => {
+        const rec = record;
+        console.log(rec)
+        handlePreviewFile(rec);
+      }
+    }
+  }
+
   //预览附件
   const handlePreviewFile = (item) => {
     console.log("item", item);
@@ -656,6 +684,15 @@
       }
     });
   })
+  const handleRenameCancel = () => {
+    data.isRename = false;
+  }
+  const handleRename = (item) => {
+    console.log(item)
+    data.recordId = item.id;
+    data.fileName = item.name;
+    data.isRename = true;
+  }
 </script>
 <style lang="less">
   .MeetingShareWrap {

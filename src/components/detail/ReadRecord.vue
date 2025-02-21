@@ -22,12 +22,12 @@
             <div class="panel-bd" v-show="activeKey==0">
                 <!-- <Dtable name="recordGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable> -->
                 <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height"
-                    :isCollapsed="isCollapsed"></Ntable>
+                    :isCollapsed="false"></Ntable>
             </div>
             <div class="panel-bd" v-show="activeKey==1">
                 <!-- <Dtable name="browsingHistory" ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>-->
                 <Ntable ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.list2" :tableHeight="height"
-                    :isCollapsed="isCollapsed"></Ntable>
+                    :isCollapsed="false"></Ntable>
             </div>
         </div>
     </div>
@@ -67,19 +67,31 @@
         // },
         {
             title: "传阅人",
-            field: "CreatedBy"
+            field: "CreatedBy",
+            formatter: function formatter(value, row, index) {
+                return girdFormatterValue("CreatedBy", row);
+            }
         },
         {
             title: "传阅时间",
-            field: "CreatedOn"
+            field: "CreatedOn",
+            formatter: function formatter(value, row, index) {
+                return girdFormatterValue("CreatedOn", row);
+            }
         },
         {
             title: "接收人",
-            field: "ReceiverId"
+            field: "ReceiverId",
+            formatter: function formatter(value, row, index) {
+                return girdFormatterValue("ReceiverId", row);
+            }
         },
         {
             title: "是否已读",
-            field: "IsRead"
+            field: "IsRead",
+            formatter: function formatter(value, row, index) {
+                return girdFormatterValue("IsRead", row);
+              }
         }
     ]);
     var columns2 = ref([
@@ -119,9 +131,9 @@
             },
         ],
         queryParams1: {
-            filterId: '',
-            objectTypeCode: '124',
-            entityName: 'WFInstanceNotifyMembers',
+            filterId: '0D6089D0-05C5-4472-A802-AC4285DCF305',
+            objectTypeCode: '123',
+            entityName: 'WFInstanceFoward',
             filterQuery: '\nProcessInstanceId\teq\t' + props.processInstanceId,
             displayColumns: 'CreatedOn,CreatedBy,ReceiverId,IsRead',
             sort: 'CreatedOn',

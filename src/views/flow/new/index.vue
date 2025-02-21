@@ -134,7 +134,20 @@
     const { userId,colors,searchVal, processLists, currentTab, currentTab2, rowRecord, activeKey, typeIndex } = toRefs(data);
     const getProcessType = () =>{
         data.processLists=[];
-        proxy.$post(Interface.workflow.processType,{}).then(res=>{
+        let obj = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    search: data.searchVal
+                }
+            }]
+        }
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.workflow.processType, d).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.rows&&res.actions[0].returnValue.rows.length){
                 for(var i=0;i<res.actions[0].returnValue.rows.length;i++){
                     var item=res.actions[0].returnValue.rows[i];
@@ -163,7 +176,20 @@
         for(var m=0;m<data.processLists.length;m++){
             data.processLists[m].Processes=[];
         }
-        proxy.$post(url,{search:data.searchVal}).then(res=>{
+        let obj = {
+            actions:[{
+                id: "4270;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    search: data.searchVal
+                }
+            }]
+        }
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(url, d).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.rows&&res.actions[0].returnValue.rows.length){
                 for(var i=0;i<res.actions[0].returnValue.rows.length;i++){
                     var item=res.actions[0].returnValue.rows[i];

@@ -29,15 +29,24 @@
                 <a-timeline>
                     <a-timeline-item v-for="(activity, index) in ApproveList" :key="index">
                         <template #dot>
-                            <ClockCircleOutlined style="font-size: 16px;color: #1677ff;"
+                            <!-- <ClockCircleOutlined style="font-size: 16px;color: #1677ff;"
                                 v-if="ApproveList&&(ApproveList.length==index+1)" />
-                            <CheckCircleOutlined style="font-size: 16px;color: green;" v-else />
+                            <CheckCircleOutlined style="font-size: 16px;color: green;" v-else /> -->
+                            <div class="avatar">
+                                {{ activity.CreatedByName.slice(0, 2) }}
+                                <span class="status">
+                                    <ClockCircleOutlined style="font-size: 16px;color: #1677ff;"
+                                        v-if="ApproveList&&(ApproveList.length==index+1)" />
+                                    <CheckCircleOutlined style="font-size: 16px;color: green;" v-else />
+                                </span>
+                            </div>
                         </template>
                         <span class="timelinetime">{{activity.CreatedOn}}</span>
+                        <p>
+                            <span class="timelinetext">{{activity.ToActivityName}}</span>
+                        </p>
                         <span class="timelinetext">{{activity.ExecutorIdentityName}}</span>
-                        <span class="timelinetext">{{activity.ToActivityName}}</span>
-                        <span class="timelinetext">{{activity.StatusCodeName}}</span>
-                        <span class="timelinetext">{{activity.RuleLogStateCodeName}}</span>
+                        <span class="timelinetext">({{activity.StateCode}})</span>
                     </a-timeline-item>
                 </a-timeline>
             </div>
@@ -168,7 +177,7 @@
             rows: 100,
             sort: 'CreatedOn',
             order: 'ASC',
-            displayColumns: 'Name,CreatedOn,ExecutorIdentityName,ToActivityName,StatusCodeName,RuleLogStateCodeName'
+            // displayColumns: 'Name,CreatedOn,ExecutorIdentityName,ToActivityName,StatusCodeName,RuleLogStateCodeName'
         }).then(res => {
             if (res && res.nodes && res.nodes.length) {
                 var list = [];
@@ -185,6 +194,7 @@
                     list.push(item)
                 }
                 data.ApproveList = list;
+                console.log("data.ApproveList", data.ApproveList);
             }
             gridRef.value.loadGrid(data.queryParams);
         })
@@ -286,6 +296,30 @@
 
         .panel-head {
             padding: 0px;
+        }
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 4px;
+        background: #3399ff;
+        color: #fff;
+        font-size: 14px;
+        position: relative;
+        .status{
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            background: #fff;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     }
 </style>

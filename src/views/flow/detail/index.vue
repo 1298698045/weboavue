@@ -84,7 +84,7 @@
                             <FlowFormNew print="0" ref="flowFormRef" v-if="processId!=''&&toActivityID!=''"
                                 :processId="processId" :processInstanceId="processInstanceId"
                                 :toActivityID="toActivityID" @btnPermission="getBtnPermission"
-                                @attachPermission="getAttachPermission" :stateCode="stateCode" />
+                                @attachPermission="getAttachPermission" :stateCode="stateCode" :ruleLogId="ruleLogId" />
                         </div>
                         <!-- <div class="reqWrap">
                             <div class="reqHead">
@@ -359,7 +359,7 @@
                     <read-record :id="id" :processInstanceId="processInstanceId" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==7">
-                    <Comment :title="'讨论留言'" :id="id" :RegardingObjectTypeCode="'122'" />
+                    <Comment :title="'讨论留言'" :id="processInstanceId" :RegardingObjectTypeCode="'122'" />
                 </div>
             </div>
         </div>

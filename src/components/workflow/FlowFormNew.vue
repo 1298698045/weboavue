@@ -118,6 +118,7 @@
     const route = useRoute();
     const emit = defineEmits(["btnPermission", "attachPermission"]);
     const props = defineProps({
+        ruleLogId: String,
         processId: String,
         processInstanceId: String,
         toActivityID: String,
@@ -1471,6 +1472,8 @@
               descriptor: "",
               callingDescriptor: "UNKNOWN",
               params: {
+                processId: props.processId,
+                ruleLogId: props.ruleLogId,
                 master: {
                     recordId: data.processInstanceId,
                     recordInput:{

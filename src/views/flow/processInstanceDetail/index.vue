@@ -292,7 +292,7 @@
                     <read-record :id="id" :processInstanceId="processInstanceId" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==7">
-                    <Comment :title="'讨论留言'" :id="id" :RegardingObjectTypeCode="'122'" />
+                    <Comment :title="'讨论留言'" :id="processInstanceId" :RegardingObjectTypeCode="'122'" />
                 </div>
             </div>
         </div>
