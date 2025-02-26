@@ -1555,6 +1555,7 @@
             /* box-shadow: 0 0 14px 0 hsla(0, 0%, 83.9%, .5); */
         }
         table{
+            width: 794px;
             border-collapse: collapse;
             tr{
                 td{

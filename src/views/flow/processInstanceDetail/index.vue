@@ -55,7 +55,7 @@
                 <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
                     <div class="leftContent" :class="{'active':!isAside}">
                         <div class="tableBox" style="width: 100%;overflow: auto;" :class="{'active':!isAside}">
-                            <FlowFormNew print="0" ref="flowFormRef" v-if="processId!=''"
+                            <FlowFormNew print="1" ref="flowFormRef" v-if="processId!=''"
                                 :processId="processId" :processInstanceId="processInstanceId"
                                 :toActivityID="toActivityID" />
                         </div>

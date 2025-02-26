@@ -1,5 +1,5 @@
 <template>
-    <div class="filed">
+    <div class="filed" :name="field.id">
         <span class="required" v-if="print!=1 && field?.required && field?.permission != 2 && field?.permission != 4">*</span>
         <div v-if="type=='S'">
             <span class="valText" v-if="print==1">
@@ -682,6 +682,11 @@
                     margin-right: 10px;
                 }
             }
+        }
+    }
+    .filed.required{
+        .ant-select, .ant-input, .ant-picker{
+            border: 1px solid red !important;
         }
     }
 </style>

@@ -499,7 +499,7 @@ const getColumns = (id) => {
               let result = girdFormatterValue(item.name, row);
               var ProcessInstanceId = row.ProcessInstanceId ? row.ProcessInstanceId.textValue : '';
               let id = row.id;
-              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/detail?id=' + id + '&reurl=/lightning/o/workflow/done/list" target="_blank">' + result + '</a>';
+              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/detail?id=' + id + '&print=1' + '&reurl=/lightning/o/workflow/done/list" target="_blank">' + result + '</a>';
             }
           });
         }

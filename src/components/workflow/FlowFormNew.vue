@@ -1445,21 +1445,33 @@
             }
         });
         console.log("paramsList:", paramsList);
-
+        console.log("cellData:", data.cellData);
         // return false;
+        const requireds = [];
         let isRequired = false;
         for(let i = 0; i < data.comps.length; i++){
             const item = data.comps[i];
             if(item.required == true && item.id in paramsList && (paramsList[item.id] == '' || paramsList[item.id] == null || paramsList[item.id] == undefined)){
-                message.error(`${item.label}不能为空!`)
+                // message.error(`${item.label}不能为空!`)
+                requireds.push(item.label);
                 isRequired = true;
-                break;
+                let dom = document.getElementsByName(item.id);
+                if(dom && dom.length > 0){
+                    dom[0].classList.add("required");
+                }
+                // break;
+            }else {
+                let dom = document.getElementsByName(item.id);
+                if(dom && dom.length > 0){
+                    dom[0].classList.remove("required");
+                }
             }
         }
+        
         if(isRequired){
+            message.error(`请输入必填项!`)
             return false;
         };
-
         if(data.deleteRelatedData.length){
             deleteRelted();
         }
@@ -1589,6 +1601,7 @@
             /* box-shadow: 0 0 14px 0 hsla(0, 0%, 83.9%, .5); */
         }
         table{
+            width: 794px;
             border-collapse: collapse;
             tr{
                 td{

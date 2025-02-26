@@ -81,7 +81,7 @@
                 <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
                     <div class="leftContent" :class="{'active':!isAside}">
                         <div class="tableBox" style="width: 100%;overflow: auto;" :class="{'active':!isAside}">
-                            <FlowFormNew print="0" ref="flowFormRef" v-if="processId!=''&&toActivityID!=''"
+                            <FlowFormNew :print="print" ref="flowFormRef" v-if="processId!=''&&toActivityID!=''"
                                 :processId="processId" :processInstanceId="processInstanceId"
                                 :toActivityID="toActivityID" @btnPermission="getBtnPermission"
                                 @attachPermission="getAttachPermission" :stateCode="stateCode" :ruleLogId="ruleLogId" />
@@ -564,14 +564,15 @@
         photoParams: {},
         ImageList: [],
         pdfParams: {},
-        isPdf: false
+        isPdf: false,
+        print: route.query.print || 0
     })
     const { isEdit, Title, objectTypeCode, sObjectName, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData,
         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID,
         processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete,
         fromActivityId, isReturn, iframeSrc, fileTotal, btnPerm, attachPerm, stateCode,
-        uploadData, headers, isPhoto, photoParams, ImageList, pdfParams, isPdf } = toRefs(data);
+        uploadData, headers, isPhoto, photoParams, ImageList, pdfParams, isPdf, print } = toRefs(data);
 
     const changeFiles = (e) => {
         // console.log("e", e);
