@@ -187,7 +187,6 @@
   import RelatedAttachment from "@/components/meeting/RelatedAttachment.vue";
   import ProjectEthics from "@/components/Project/ProjectEthics.vue";
   import ProjectResult from "@/components/Project/ProjectResult.vue";
-  import DocShare from "@/components/meeting/MeetingShare2.vue";
   import Comment from "@/components/detail/Comment2.vue";
   import RadioUser from "@/components/commonModal/RadioUser.vue";
   import RelaseInfo from  "@/components/information/RelaseInfo.vue";

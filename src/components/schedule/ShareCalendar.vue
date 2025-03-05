@@ -7,7 +7,7 @@
                     {{ title }}
                 </div>
             </template>
-            <div class="modalContainer">
+            <div class="modalContainer ShareCalendarWrap">
                 <div class="modalCenter" :style="{ height: height + 'px!important' }">
                     <a-form :model="formState" ref="formRef">
                         <div class="section">
@@ -19,20 +19,46 @@
                                                 <template #overlay>
                                                     <a-menu @click="handleMenu">
                                                         <a-menu-item v-for="(item,index) in menus" :key="item.key" :num="index">
-                                                            <UserOutlined v-if="item.name=='用户'" />
+                                                            <!-- <UserOutlined v-if="item.name=='用户'" />
                                                             <UserSwitchOutlined v-if="item.name=='角色'" />
                                                             <TeamOutlined v-if="item.name=='小组'" />
-                                                            <ApartmentOutlined v-if="item.name=='部门'" />
+                                                            <ApartmentOutlined v-if="item.name=='部门'" /> -->
+                                                            <span v-if="item.name=='用户'" class="share-type-img">
+                                                                <img :src="require('@/assets/img/user/user.png')" alt="">
+                                                            </span>
+                                                            <span v-if="item.name=='角色'" class="share-type-img">
+                                                                <img :src="require('@/assets/img/user/role.png')" alt="">
+                                                            </span>
+                                                            <span v-if="item.name=='小组'" class="share-type-img">
+                                                                <img :src="require('@/assets/img/user/group.png')" alt="">
+                                                            </span>
+                                                            <span v-if="item.name=='部门'" class="share-type-img">
+                                                                <img :src="require('@/assets/img/user/businessunit.png')" alt="">
+                                                            </span>
                                                             {{item.name}}
                                                         </a-menu-item>
                                                     </a-menu>
                                                 </template>
                                                 <a-button>
-                                                    <UserOutlined v-if="currentMenu=='用户'" />
+                                                    <!-- <UserOutlined v-if="currentMenu=='用户'" />
                                                     <UserSwitchOutlined v-if="currentMenu=='角色'" />
                                                     <TeamOutlined v-if="currentMenu=='小组'" />
-                                                    <ApartmentOutlined v-if="currentMenu=='部门'" />
-                                                    <DownOutlined />
+                                                    <ApartmentOutlined v-if="currentMenu=='部门'" /> -->
+                                                    <span v-if="currentMenu=='用户'" class="share-type-img share-type-img1">
+                                                        <img :src="require('@/assets/img/user/user.png')" alt="">
+                                                    </span>
+                                                    <span v-if="currentMenu=='角色'" class="share-type-img share-type-img1">
+                                                        <img :src="require('@/assets/img/user/role.png')" alt="">
+                                                    </span>
+                                                    <span v-if="currentMenu=='小组'" class="share-type-img share-type-img1">
+                                                        <img :src="require('@/assets/img/user/group.png')" alt="">
+                                                    </span>
+                                                    <span v-if="currentMenu=='部门'" class="share-type-img share-type-img1">
+                                                        <img :src="require('@/assets/img/user/businessunit.png')" alt="">
+                                                    </span>
+                                                    <span class="share-type-img-down">
+                                                        <DownOutlined />
+                                                    </span>
                                                 </a-button>
                                             </a-dropdown>
                                             <a-select class="aselect" v-model:value="users" show-search
@@ -632,4 +658,26 @@
         text-align: right;
         margin-right: 10px;
     }
+    
+    .share-type-img-down{
+            position: relative;
+            top: -3px;
+        }
+        .share-type-img{
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            background-color: #165dff !important;
+            position: relative;
+            top: 5px;
+            margin-right: 5px;
+        }
+        .share-type-img1{
+            margin-right: 8px;
+            top: 1px;
+        }
+        img{
+            max-width: 100%;
+            height: auto;
+        }
 </style>

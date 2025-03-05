@@ -4,7 +4,7 @@
             @ok="handleSubmit">
             <template #title>
                 <div>
-                    {{ props.title || '' }}权限
+                    {{ props.title || '' }}共享
                 </div>
             </template>
             <div class="modalContainer ShareCalendarWrap">

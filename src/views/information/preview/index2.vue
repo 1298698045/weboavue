@@ -101,7 +101,7 @@
             <ReadRecord ref="ReadRecordLst" :load="refreshData" :id="id" :type="'page'" />
           </div>
           <div class="tabContainer" v-if="activeKey == 4">
-            <DocShare :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" />
+            <DocShare :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" :title="'文档'" />
           </div>
           <div class="tabContainer" v-if="activeKey == 5">
             <DocLog :id="id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" />
@@ -197,7 +197,7 @@
   import ReadRecord from "@/components/information/ReadRecord2.vue";
   import RelatedAttachment from "@/components/meeting/RelatedAttachment.vue";
   import DocLog from "@/components/documentAdmin/DocLog.vue";
-  import DocShare from "@/components/meeting/MeetingShare2.vue";
+  import DocShare from "@/components/share/ShareList.vue";
   import Comment from "@/components/detail/Comment2.vue";
   import RadioUser from "@/components/commonModal/RadioUser.vue";
   import RelaseInfo from  "@/components/information/RelaseInfo.vue";

@@ -200,7 +200,6 @@
   import ReadRecord from "@/components/information/ReadRecord2.vue";
   import RelatedAttachment from "@/components/meeting/RelatedAttachment.vue";
   import DocLog from "@/components/documentAdmin/DocLog.vue";
-  import DocShare from "@/components/meeting/MeetingShare2.vue";
   import Comment from "@/components/detail/Comment2.vue";
   import Editor from "@/components/TEditor.vue";
   import RadioUser from "@/components/commonModal/RadioUser.vue";

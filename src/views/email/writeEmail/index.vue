@@ -374,14 +374,16 @@
                                 if(name){
                                     name=name.replaceAll('.'+item.fileExtension,'');
                                 }
-                                let url='/'+item.parentId+'/'+name;
+                                let url=item.viewUrl;
                                 data.fileList2.push({
                                     uid: item.attachId,
                                     name: item.name,
                                     url: url,
                                     fileExtension: item.fileExtension||'',
                                     size:size,
-                                    createdOn:item.createdOn
+                                    createdOn:item.createdOn,
+                                    downloadUrl:item.downloadUrl,
+                                    viewUrl:item.viewUrl
                                 });
                             }
                             data.fileList2=unique(data.fileList2);
@@ -981,7 +983,6 @@
     }
     //预览附件
     const handlePreviewFile= (item) => {
-        let url='/api/email/preview'+item.url;
         // let d = {}
         // proxy.$post(url,d).then(res=>{
         //     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
@@ -996,11 +997,10 @@
         //         }
         //     }
         // })
-        window.open(url);
+        window.open(item.viewUrl);
     };
     //下载附件
     const downloadFile= (item) => {
-        let url='/api/email/download'+item.url;
         // let d = {}
         // proxy.$post(url,d).then(res=>{
         //     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
@@ -1015,7 +1015,7 @@
         //         }
         //     }
         // })
-        window.open(url);
+        window.open(item.downloadUrl);
     };
     //删除附件
     const deleteFile=(item)=>{
@@ -1073,7 +1073,9 @@
                     }
                     data.fileList2[i].size=size;
                     data.fileList2[i]['uid']=item.attachId;
-                    data.fileList2[i]['url']='/'+item.parentId+'/'+name;
+                    data.fileList2[i]['url']=item.viewUrl;
+                    data.fileList2[i]['downloadUrl']=item.downloadUrl;
+                    data.fileList2[i]['viewUrl']=item.viewUrl;
                 }
             }
         })

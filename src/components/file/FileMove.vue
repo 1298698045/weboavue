@@ -10,13 +10,13 @@
             <div class="modalContainer">
                 <div class="modalCenter" :style="{ height: height + 'px' }">
                     <div class="section">
-                        <div class="sectionTitle">基本信息</div>
+                        <!-- <div class="sectionTitle">基本信息</div> -->
                         <div class="sectionRow">
                             <div class="sectionItem">
-                                移动到
+                                移动到：
                                 <a-tree :tree-data="treeData" block-node @select="handleSelectTree">
                                     <template #title="{ label, key }">
-                                        {{label}}
+                                        <span :key="key">{{ label }}</span>
                                     </template>
                                 </a-tree>
                             </div>
@@ -27,139 +27,153 @@
             <template #footer>
                 <div>
                     <a-button @click="handleCancel">取消</a-button>
-                    <a-button type="primary" @click.prevent="handleSubmit">保存</a-button>
+                    <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
                 </div>
             </template>
         </a-modal>
     </div>
 </template>
 <script setup>
-    import {
-        ref,
-        watch,
-        reactive,
-        toRefs,
-        onMounted,
-        getCurrentInstance,
-        onUpdated,
-        defineProps,
-        defineExpose,
-        defineEmits,
-        toRaw,
-    } from "vue";
-    import {
-        SearchOutlined,
-        DownOutlined,
-        UserOutlined,
-    } from "@ant-design/icons-vue";
-    import { message } from "ant-design-vue";
+import {
+    ref,
+    watch,
+    reactive,
+    toRefs,
+    onMounted,
+    getCurrentInstance,
+    onUpdated,
+    defineProps,
+    defineExpose,
+    defineEmits,
+    toRaw,
+} from "vue";
+import {
+    SearchOutlined,
+    DownOutlined,
+    UserOutlined,
+} from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
 
-    import Interface from "@/utils/Interface.js";
-    const { proxy } = getCurrentInstance();
-    console.log(document.documentElement.clientHeight);
-    const labelCol = ref({ style: { width: "100px" } });
-    const props = defineProps({
-        isShow: Boolean,
-        fileParams: Object
+import Interface from "@/utils/Interface.js";
+import e from "cors";
+const { proxy } = getCurrentInstance();
+console.log(document.documentElement.clientHeight);
+const labelCol = ref({ style: { width: "100px" } });
+const props = defineProps({
+    isShow: Boolean,
+    fileParams: Object,
+    srchType: String
+});
+const emit = defineEmits(["cancel", "refresh"]);
+const handleCancel = () => {
+    emit("cancel", false);
+};
+const data = reactive({
+    title: "移动",
+    height: document.documentElement.clientHeight - 300,
+    treeData: [],
+    ItemId: "",
+    DestinationId: ""
+});
+const {
+    title,
+    height, treeData, ItemId, DestinationId
+} = toRefs(data);
+watch(() => props.fileParams, (newVal, oldVal) => {
+}, { deep: true, immediate: true })
+
+onMounted(() => {
+    window.addEventListener("resize", (e) => {
+        data.height = document.documentElement.clientHeight - 300;
     });
-    const emit = defineEmits(["cancel"]);
-    const handleCancel = () => {
+});
+const getTreeData = () => {
+    proxy.$get(Interface.file.tree, {
+        srchType: "foldertree"
+    }).then(res => {
+        if (props.srchType == 'my') {
+            data.treeData = [res.data[0]];
+        }
+        else if (props.srchType == 'share') {
+            data.treeData = [res.data[1]];
+        }
+        else if (props.srchType == 'org') {
+            data.treeData = [res.data[2]];
+        }
+        else {
+            data.treeData = [res.data[0]];
+        }
+    })
+};
+getTreeData();
+const handleSelectTree = (e, node) => {
+    console.log("e", e, node);
+    data.DestinationId = node.node.value;
+}
+
+const handleSubmit = () => {
+    let obj = {
+        ItemId: props.fileParams.id,
+        DestinationId: data.DestinationId,
+        isFolder: "",
+    };
+    var messages = JSON.stringify(obj);
+    proxy.$get(Interface.file.move, obj).then((res) => {
+        message.warning("移动成功！");
+        emit("refresh", false);
         emit("cancel", false);
-    };
-    const data = reactive({
-        title: "移动",
-        height: document.documentElement.clientHeight - 300,
-        treeData: [],
-        ItemId: "",
-        DestinationId: ""
     });
-    const {
-        title,
-        height, treeData, ItemId, DestinationId
-    } = toRefs(data);
-    watch(() => props.fileParams, (newVal, oldVal) => {
-    }, { deep: true, immediate: true })
-
-    onMounted(() => {
-        window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 300;
-        });
-    });
-    const getTreeData = () => {
-        proxy.$get(Interface.file.tree,{
-            srchType: "foldertree"
-        }).then(res=>{
-            data.treeData = res.data;
-        })
-    };
-    getTreeData();
-    const handleSelectTree = (e,node) => {
-        console.log("e",e,node);
-        data.DestinationId = node.node.value;
-    }
-
-    const handleSubmit = () => {
-        let obj = {
-            ItemId: props.fileParams.id,
-            DestinationId: data.DestinationId,
-            isFolder: "",
-        };
-        var messages = JSON.stringify(obj);
-        proxy.$get(Interface.file.move, obj).then((res) => {
-            message.warning("保存成功！");
-            emit("cancel", false);
-        });
-    };
+};
 </script>
 <style lang="less">
-    @import url("@/style/modal.less");
+@import url("@/style/modal.less");
 
-    .ant-modal-content .modalContainer .modalCenter {
-        /* height: 500px !important; */
+.ant-modal-content .modalContainer .modalCenter {
+    /* height: 500px !important; */
+}
+
+.section {
+    .sectionTitle {
+        height: 30px;
+        background-color: rgb(243, 242, 242);
+        line-height: 30px;
+        border-radius: 4px;
+        padding-left: 15px;
+        margin-bottom: 12px;
+        /* margin: 2rem 2rem 0.5rem 2rem; */
     }
 
-    .section {
-        .sectionTitle {
-            height: 30px;
-            background-color: rgb(243, 242, 242);
-            line-height: 30px;
-            border-radius: 4px;
-            padding-left: 15px;
-            margin-bottom: 12px;
-            /* margin: 2rem 2rem 0.5rem 2rem; */
-        }
+    .sectionRow {
+        padding: 0 10px;
+        box-sizing: border-box;
+        display: flex;
 
-        .sectionRow {
-            padding: 0 10px;
-            box-sizing: border-box;
-            display: flex;
+        .sectionItem {
+            flex: 1;
+            margin-right: 20px;
 
-            .sectionItem {
-                flex: 1;
-                margin-right: 20px;
-
-                .ant-row {
-                    display: block !important;
-                }
-            }
-
-            .sectionItem:last-child {
-                margin-right: 0;
+            .ant-row {
+                display: block !important;
             }
         }
-    }
 
-    :where(.css-dev-only-do-not-override-kqecok).ant-picker {
-        width: 100%;
+        .sectionItem:last-child {
+            margin-right: 0;
+        }
     }
+}
 
-    .ant-form-item {
-        position: relative;
-    }
+:where(.css-dev-only-do-not-override-kqecok).ant-picker {
+    width: 100%;
+}
 
-    .selectIcon {
-        position: absolute;
-        right: 10px;
-        top: 5px;
-    }
+.ant-form-item {
+    position: relative;
+}
+
+.selectIcon {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
 </style>

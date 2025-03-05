@@ -60,13 +60,13 @@
                             </a-tooltip>
                             <span class="name">{{ detail.fromName || '' }}</span>
                             <span class="emailText" :class="{ active: detail.isRead }">{{ detail.ToEmailAddr || ''
-                                }}</span>
+                            }}</span>
                         </div>
                         <div class="rowLabel">
                             <span class="label">收件人：</span>
                             <div class="fullNameList" v-if="receiverNames != ''">
                                 <span class="emailFullName" v-for="(item, index) in receiverNames" :key="index">{{ item
-                                    }}</span>
+                                }}</span>
                             </div>
                         </div>
                         <div class="emailTitleBox" v-if="isEmailTitle">
@@ -518,12 +518,13 @@ const handlePreviewFile = (item) => {
         };
         data.isPhoto = true;
     } else if (item.fileExtension == 'pdf') {
-        url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(item.viewUrl);
+        //url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(item.viewUrl);
         data.pdfParams = {
             id: item.id,
-            item: item,
-            imageList: [],
-            index: 0
+            name: item.name,
+            index: 0,
+            viewUrl: item.viewUrl,
+            downloadUrl: item.downloadUrl
         };
         data.isPdf = true;
     }
@@ -534,9 +535,9 @@ const handlePreviewFile = (item) => {
 //下载附件
 const downloadFile = (item) => {
     let url = item.downloadUrl;
-    //window.open(url);
-    let text = item.Name;
-    windowOpen(url, text);
+    window.open(url);
+    //let text = item.Name;
+    //windowOpen(url, text);
 };
 onMounted(() => {
     let userInfo = window.localStorage.getItem('userInfo');

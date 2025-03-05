@@ -93,7 +93,7 @@ export const routesMapping = {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true
         // },
-        FileManager: () => import("../views/fileAdmin/index.vue"),
+        //FileManager: () => import("../views/fileAdmin/index.vue"),
         videomanager: () => import("../views/knowledge/Video/Home.vue"),
         KnowledgeAddWizard: () => import("../views/knowledge/KnowledgeMap/NewKbArticle.vue"),
         Subject: () => import("../views/knowledge/Specialist/index.vue"),
@@ -229,5 +229,9 @@ export const routesMapping = {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true
         // },
+    },
+    //文件管理
+    File: {
+        FileManager: () => import("../views/fileAdmin/index.vue")
     }
 }

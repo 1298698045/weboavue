@@ -150,7 +150,7 @@
           </div>
         </div>
         <div class="tabContainer" v-if="activeKey == 9">
-            <MeetingShare :id="data.id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="'5000'" />
+            <MeetingShare :id="data.id" :type="'page'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="'5000'" :title="'会议'" />
         </div>
       </div>
     </div>
@@ -246,7 +246,7 @@ import MeetingResolution from "@/components/meeting/MeetingResolution2.vue";
 // 相关讨论
 import Comment from "@/components/detail/Comment2.vue";
 //会议共享
-import MeetingShare from "@/components/meeting/MeetingShare2.vue";
+import MeetingShare from "@/components/share/ShareList.vue";
 import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
 //会议提醒
 import MeetingRemind from "@/components/meeting/MeetingRemind.vue";

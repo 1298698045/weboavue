@@ -414,9 +414,10 @@ const handlePreviewFile = (item) => {
     url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(item.viewUrl);
     data.pdfParams = {
       id: item.id,
-      item: item,
-      imageList: [],
-      index: 0
+      name: item.name,
+      index: 0,
+      viewUrl: item.viewUrl,
+      downloadUrl: item.downloadUrl
     };
     data.isPdf = true;
   }
@@ -431,9 +432,9 @@ const handlePreviewFile = (item) => {
 //下载附件
 const downloadFile = (item) => {
   let url = item.downloadUrl;
-  //window.open(url);
-  let text = item.Name || '';
-  windowOpen(url, text);
+  window.open(url);
+  // let text = item.Name || '';
+  // windowOpen(url, text);
 };
 //删除附件
 const deleteFile = (id) => {

@@ -149,6 +149,8 @@ const Interface = {
     deletePermEmail: baseUrl + "/email/deletePermEmail", //删除箱永久删除
     deleteAttachment: baseUrl + "/email/deleteAttachment", //删除邮件附件
     copyAttachment: baseUrl + "/email/copyAttachment", //复制邮件附件
+    downloadAttachment: baseUrl + "/email/download", //下载邮件附件
+    previewAttachment: baseUrl + "/email/preview", //预览邮件附件
   },
   meeting: {
     userTree: "/localData/meeting/user.subordinatetree.get.json", // 人员组织
@@ -189,6 +191,19 @@ const Interface = {
     sendComment: "/localData/fileAdmin/chatter.comment.post.json",
     like: "/localData/fileAdmin/chatter.like.post.json",
     deleteComment: "/localData/fileAdmin/chatter.comment.delete.json",
+    getLatestFiles: baseUrl + "/cloudfile/getLatestFiles", //获取最近使用文件
+		getOwnDirAndFiles: baseUrl + "/cloudfile/getOwnDirAndFiles", //获取我的文件夹与文件
+		getFavoriteFiles: baseUrl + "/cloudfile/getFavoriteFiles", //获取收藏文件列表
+		getRecycFolders: baseUrl + "/cloudfile/getRecycFolders", //获取回收站文件夹与文件
+		cloudUpload: baseUrl + "/cloudfile/file/upload", //上传文件到选定文件夹
+		fakeDelete: baseUrl + "/cloudfile/fakeDelete", //假删除文件
+		fakeDeleteFolder: baseUrl + "/cloudfile/fakeDeleteFolder", //假删除文件夹
+		restoreFile: baseUrl + "/cloudfile/restoreFile", //还原删除文件
+		restoreFolder: baseUrl + "/cloudfile/restoreFolder", //还原删除文件夹
+		delete: baseUrl + "/cloudfile/delete", //永久删除文件
+		deleteFolder: baseUrl + "/cloudfile/deleteFolder", //永久删除文件夹
+		favoriteFile: baseUrl + "/cloudfile/favoriteFile", //收藏文件
+		cancelFavoriteFile: baseUrl + "/cloudfile/cancelFavoriteFile", //取消收藏文件
   },
   information: {
     contentTree: "/localData/information/content.tree.json",
