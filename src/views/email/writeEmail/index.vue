@@ -791,20 +791,30 @@
     // 发送邮件
     const handleSendEmail = (type) => {
         let url=Interface.email.saveDraft;
-        if(type==1){
-            url=Interface.email.send;
-        }
-        if(activeKey.value*1==2){
-            url=Interface.email.sendbatch;
-        }
         let tos=[];
-        for(var i=0;i<formState.addressee.length;i++){
-            for(var j=0;j<data.selectConcatsList.length;j++){
-                if(formState.addressee[i]==data.selectConcatsList[j].ID){
-                    tos.push({
-                        id:formState.addressee[i],
-                        name:data.selectConcatsList[j].Name||''
-                    })
+        if (type == 1) {
+            url = Interface.email.send;
+            for (var i = 0; i < formState.addressee.length; i++) {
+                for (var j = 0; j < data.selectConcatsList.length; j++) {
+                    if (formState.addressee[i] == data.selectConcatsList[j].ID) {
+                        tos.push({
+                            id: formState.addressee[i],
+                            name: data.selectConcatsList[j].Name || ''
+                        })
+                    }
+                }
+            }
+        }
+        if (activeKey.value * 1 == 2) {
+            url = Interface.email.sendbatch;
+            for (var i = 0; i < formState.group.length; i++) {
+                for (var j = 0; j < data.selectGroupList.length; j++) {
+                    if (formState.group[i] == data.selectGroupList[j].ID) {
+                        tos.push({
+                            id: 'R:'+formState.group[i],
+                            name: data.selectGroupList[j].Name || ''
+                        })
+                    }
                 }
             }
         }

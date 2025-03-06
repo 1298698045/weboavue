@@ -84,7 +84,7 @@ export const routesMapping = {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true
         // },
-        // KbMap: () => import("../views/knowledge/KnowledgeMap/index.vue"),
+        KbMap: () => import("../views/knowledge/KnowledgeMap/index.vue"),
         // ContentChannel: {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true
@@ -189,13 +189,13 @@ export const routesMapping = {
         ProjectReport: () => import("../views/NotFound.vue")
     },
     // 系统报表
-    // report: {
-    //     CommonReportHome: () => import("../views/NotFound.vue"),
-    //     report: () => import("../views/report/home/index.vue"),
-    //     Dashboard: () => import("../views/NotFound.vue"),
-    //     ReportIndicatorData: () => import("../views/NotFound.vue"),
-    //     ReportIndicator: () => import("../views/NotFound.vue")
-    // },
+    report: {
+        CommonReportHome: () => import("../views/NotFound.vue"),
+        report: () => import("../views/report/home/index.vue"),
+        Dashboard: () => import("../views/NotFound.vue"),
+        ReportIndicatorData: () => import("../views/NotFound.vue"),
+        ReportIndicator: () => import("../views/NotFound.vue")
+    },
     // 科研成果
     ResearchResult: {
         // ProjectPaper: {

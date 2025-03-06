@@ -53,6 +53,14 @@ const staticRoutes = [
           name: "DashboardHome"
         },
         component: () => import("../views/home/commonHome.vue"),
+      },
+      {
+        path: "/lightning/page/kb/dashboard",
+        name: "DashboardHome2",
+        meta: {
+          name: "DashboardHome2"
+        },
+        component: () => import("../views/home/commonHome.vue"),
       }
     ]
   },
@@ -164,7 +172,7 @@ const staticRoutes = [
     component: () => import("../views/ContentViewTemplate/editor.vue"),
   },
   {
-    path: "/KnowledgeMapDetailEditor",
+    path: "/lightning/r/KbSubject/view",
     name: "KnowledgeMapDetailEditor",
     component: () => import("../views/knowledge/KnowledgeMap/KnowledgeMapDetailEditor.vue"),
   },
@@ -521,8 +529,9 @@ router.beforeEach((to, from, next)=>{
       next();
     }
   }else {
-    localStorage.clear();
-    next({name: 'Login'});
+    // localStorage.clear();
+    // next({name: 'Login'});
+    next();
   }
 });
 export default router;

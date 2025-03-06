@@ -11,13 +11,13 @@
                         <span>{{item.properties.title}}</span>
                     </div>
                     <div class="stats-card-right">
-                        <img src="@/assets/img/loginLogo.png" alt="">
+                        <img :src="item.properties.img.src" alt="">
                     </div>
                 </template>
                 <template v-else>
                     <div class="stats-card-left">
                         <div style="width: 80px;">
-                            <img src="@/assets/img/loginLogo.png" alt="">
+                            <img :src="item.properties.img.src" alt="">
                         </div>
                     </div>
                     <div class="stats-card-right">
