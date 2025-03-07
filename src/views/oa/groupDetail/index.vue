@@ -235,7 +235,7 @@ import UpdateGroupImage from "@/components/groupDetail/UpdateGroupImage.vue";
 // 删除
 import Delete from "@/components/listView/Delete.vue";
 // 附件列表
-import RelatedAttachment from "@/components/meeting/RelatedAttachment.vue";
+import RelatedAttachment from "@/components/commonTab/RelatedAttachment.vue";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
 import { girdFormatterValue } from "@/utils/common.js";

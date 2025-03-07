@@ -109,6 +109,7 @@
               <a-menu class="fh-menu" @click="handleMenuClick">
                 <a-menu-item key="1"
                   :disabled="!initialData.entityListViewPermissions.canCreateListView">新建</a-menu-item>
+                <!-- <a-menu-item key="1">新建</a-menu-item> -->
                 <a-menu-item key="2">导出</a-menu-item>
                 <a-menu-item key="3">复制</a-menu-item>
                 <a-menu-item key="4">重命名</a-menu-item>
@@ -197,7 +198,7 @@
               <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="(tableHeight)"
                 :isCollapsed="isCollapsed"></Dtable>
               <div class="filterModalWrap" v-if="isFilterModal">
-                <Filter @close="closeFilterModal" :sObjectName="sObjectName" :filterId="currentFilter.id" />
+                <Filter @close="closeFilterModal" :sObjectName="sObjectName" :filterId="currentFilter.id" @success="refreshFilterLoad" />
               </div>
               <div class="chartModalWrap" v-if="isChartModal">
                 <ChartAside @close="isChartModal=false" :filterId="currentFilter.id" :sObjectName="sObjectName" />
@@ -211,10 +212,10 @@
       @load="handleSearch" :id="listId" :objectTypeCode="entityType" :entityApiName="sObjectName"></common-form-modal>
 
     <!-- 弹窗 -->
-    <NewVue :isShow="isNewModal" v-if="isNewModal" @cancel="isNewModal=false" :sObjectName="sObjectName" />
-    <Copy :isShow="isCopyModal" v-if="isCopyModal" @cancel="isCopyModal=false" :sObjectName="sObjectName"
+    <NewVue :isShow="isNewModal" v-if="isNewModal" @cancel="isNewModal=false"  @load="getFilterList" :sObjectName="sObjectName" />
+    <Copy :isShow="isCopyModal" v-if="isCopyModal" @cancel="isCopyModal=false"  @load="getFilterList" :sObjectName="sObjectName"
       :recordId="currentFilter.id" />
-    <Rename :isShow="isRenameModal" v-if="isRenameModal" @cancel="isRenameModal=false" @load="getFilterList"
+    <Rename :isShow="isRenameModal" v-if="isRenameModal" @cancel="isRenameModal=false" @load="loadRenameSuccess"
       :sObjectName="sObjectName" :recordId="currentFilter.id" />
     <export-field :isShow="isExportModal" v-if="isExportModal" @cancel="isExportModal=false" :sObjectName="sObjectName"
       :recordId="currentFilter.id"></export-field>
@@ -222,8 +223,8 @@
       :sObjectName="sObjectName" :recordId="currentFilter.id"></share-setting>
     <show-field :isShow="isShowModal" v-if="isShowModal" @cancel="isShowModal=false" @load="getListConfig"
       :sObjectName="sObjectName" :recordId="currentFilter.id"></show-field>
-    <Delete :isShow="isDeleteModal" v-if="isDeleteModal" @cancel="isDeleteModal=false" @ok="handleDeleteView"
-      :external="true" :sObjectName="sObjectName" />
+    <DeleteVue :isShow="isDeleteModal" v-if="isDeleteModal" :desc="desc" @cancel="isDeleteModal=false" :recordId="deleteId"
+       :sObjectName="sObjectName" @ok="deleteSuccess" />
   </div>
 </template>
 <script setup>
@@ -255,7 +256,7 @@
   // 导出字段
   import ExportField from "@/components/listView/ExportField.vue";
   import ShowField from "@/components/listView/ShowField.vue";
-  import Delete from "@/components/listView/Delete.vue";
+  import DeleteVue from "@/components/listView/Delete.vue";
   // 筛选器弹层
   import Filter from "@/components/listView/Filter.vue";
   // 图表
@@ -324,7 +325,10 @@
     columns: [],
     objectTypeCode: "",
     listBtnActions: [],
-    listId: ""
+    listId: "",
+    desc: "如果您删除此列表视图，该视图将为所有具备访问权限的用户永久删除。是否确定要删除？",
+    deleteType: 0,
+    deleteId: ""
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
@@ -334,21 +338,25 @@
     isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal,
     isDeleteModal, isFilterModal, searchFilterVal, filterListFixed, entityType,
     initialData, actionList, title, sObjectName, isChartModal, columns, objectTypeCode, listBtnActions,
-    listId } = toRefs(data);
+    listId, desc, deleteType, deleteId } = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
   let formSearchHeight = ref(null);
   const gridRef = ref(null);
 
   const handleSwitchFilter = (item) => {
+    data.isFilterModal = false;
     data.currentFilter = {
       id: item.id,
       name: item.name
     };
     data.isFilterPicker = false;
-    data.isLock = false;
+    let row = data.filterList.find(item=>item.id == data.currentFilter.id);
+    if(row){
+      data.isLock = row.isPinned;
+    }
     data.queryParams.filterId = item.id;
-    // columns.value = [];
+    columns.value = [];
     getListConfig();
   };
   const handleLock = () => {
@@ -436,30 +444,44 @@
   //   getListConfig();
   //   getFilterList();
   // });
+  const loadRenameSuccess = (e) => {
+    data.currentFilter.name = e;
+    getFilterList();
+  }
 
-  watch(() => route.params.sObjectName, (newVal, oldVal) => {
-    console.log("route.params.sObjectName", newVal, oldVal);
-    data.sObjectName = route.params.sObjectName;
-    data.entityType = route.params.sObjectName;
-    data.queryParams.entityType = route.params.sObjectName;
-    getMetadataInitialLoad().then(res => {
+  const refreshFilterLoad = () => {
+      getActionsTop();
+      getListRowActions();
+      getListConfig();
+      getFilterList();
+  }
+
+  const initLoad = () => {
+    columns.value = [];
+    getMetadataInitialLoad().then(res=>{
       console.log("resAsync", res);
       data.initialData = res.actions[0].returnValue;
       let entityType = res.actions[0].returnValue.recordThemeInfo.entityType;
       data.objectTypeCode = entityType;
-      data.queryParams.objectTypeCode = entityType;
       data.currentFilter = {
-        id: data.initialData.listViewId,
+        id: data.initialData .listViewId,
         name: data.initialData.listViewLabel
       }
       data.title = data.initialData.breadCrumbList.length ? data.initialData.breadCrumbList[0].label : '';
       data.queryParams.filterId = data.currentFilter.id;
-      //getActions();
       getActionsTop();
       getListRowActions();
-      // getListConfig();
+      getListConfig();
       getFilterList();
     });
+  };
+
+  watch(() => route.params.sObjectName, (newVal, oldVal) => {
+    // console.log("route.params.sObjectName", newVal, oldVal);
+    data.sObjectName = route.params.sObjectName;
+    data.entityType = route.params.sObjectName;
+    data.queryParams.entityType = route.params.sObjectName;
+    initLoad();
   }, { immediate: true })
 
   const getActions = () => {
@@ -653,8 +675,18 @@
       data.filterList = res.actions[0].returnValue;
       data.filterListFixed = JSON.parse(JSON.stringify(res.actions[0].returnValue));
       // data.currentFilter = data.filterList[0];
+      let row = data.filterList.find(item=>item.id == data.currentFilter.id);
+      data.isLock = row.isPinned;
     })
   };
+
+  const deleteSuccess = () => {
+    if(data.deleteType == 0){
+      getFilterList();
+    } else {
+      getListConfig();
+    }
+  }
 
   const handleDeleteView = () => {
     let url = Interface.listView.deleteListView;
@@ -713,6 +745,9 @@
         data.isShowModal = true;
         break;
       case "7":
+        data.desc = "如果您删除此列表视图，该视图将为所有具备访问权限的用户永久删除。是否确定要删除？";
+        data.deleteId = data.currentFilter.id;
+        data.deleteType = 0;
         data.isDeleteModal = true;
         break;
     }
@@ -743,6 +778,16 @@
     data.isCommon = true;
   }
   window.Edit = Edit;
+
+  const Delete = (id) => {
+    console.log("id", id);
+    data.listId = id;
+    data.desc = "确定要删除吗？";
+    data.deleteId = id;
+    data.deleteType = 1;
+    data.isDeleteModal = true;
+  }
+  window.Delete = Delete;
 
   const handleClickBtn = (devNameOrId) => {
     if (typeof (eval(devNameOrId)) == "function") {

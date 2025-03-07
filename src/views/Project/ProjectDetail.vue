@@ -184,7 +184,7 @@
   import InfoRemind from "@/components/information/InfoRemind.vue";
   import InfoAddClass from "@/components/information/InfoAddClass.vue";
   import ProjectBudget from "@/components/Project/ProjectBudget.vue";
-  import RelatedAttachment from "@/components/meeting/RelatedAttachment.vue";
+  import RelatedAttachment from "@/components/commonTab/RelatedAttachment.vue";
   import ProjectEthics from "@/components/Project/ProjectEthics.vue";
   import ProjectResult from "@/components/Project/ProjectResult.vue";
   import Comment from "@/components/detail/Comment2.vue";

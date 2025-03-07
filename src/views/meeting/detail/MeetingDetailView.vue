@@ -253,7 +253,7 @@ import MeetingRemind from "@/components/meeting/MeetingRemind.vue";
 //会议发布
 import MeetingRelease from "@/components/meeting/MeetingRelease.vue";
 //附件
-import RelatedAttachment from "@/components/meeting/RelatedAttachment.vue";
+import RelatedAttachment from "@/components/commonTab/RelatedAttachment.vue";
 const { proxy } = getCurrentInstance();
 
 const route = useRoute();

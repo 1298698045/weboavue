@@ -48,7 +48,7 @@
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                    recordId: props.processInstanceId,
+                    recordId: props.processInstanceId || props.id,
                     entityApiName: props.entityApiName,
                     defaultFieldValues: {
                         entityId: ""

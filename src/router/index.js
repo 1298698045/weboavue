@@ -394,7 +394,7 @@ const staticRoutes = [
       {
         path: "/o/Report/common/home",
         name: "CommonReportHome",
-        // component: () => import("../views/report/home/index.vue"),
+        component: () => import("../views/report/home/index.vue"),
       },
       {
         path: "/lightning/o/Report/home",
@@ -407,6 +407,27 @@ const staticRoutes = [
     path: "/lightning/o/Report/preview",
     name: "ReportPreview",
     component: () => import("../views/report/preview/index.vue"),
+  },
+  {
+    path: "/More",
+    name: "More",
+    component: Layout,
+    redirect: "/More/MoreContent",
+    meta: {
+      name: "更多列表"
+    },
+    children: [
+      {
+        path: "/More/MoreContent",
+        name: "MoreContent",
+        component: () => import("../views/More/MoreContent/index.vue"),
+        icon: "search",
+        meta: {
+          name: "更多信息",
+          icon: "search"
+        }
+      }
+    ]
   }
 ];
 

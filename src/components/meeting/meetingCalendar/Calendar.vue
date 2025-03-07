@@ -68,13 +68,14 @@
                 <!-- <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :currentDate="currentDate" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleSelectCalendar" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
                 <DayCalendar ref="DayCalendarWrap" :id="meetingId" v-if="calendarType==0" :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
                 <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" /> -->
-                <MeetingFullCalendar ref="FullCalendarWrap" :calendarView="calendarView" :id="meetingId" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
+                <MeetingFullCalendar ref="FullCalendarWrap" v-if="isfresh" :calendarView="calendarView" :id="meetingId" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
             </div>
         </div>
         <NewMeeting :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" :calendarType="formState.type" />
         <NewRepeatMeeting :isShow="isRepeatMeeting" @cancel="cancelRepeatMeeting" @selectVal="handleRepeatMeetingVal" />
         <MeetingDetailModal :isShow="isMeetingDetail" v-if="isMeetingDetail" :meetingId="meetingId" @cancel="isMeetingDetail=false" @edit="handleOpenEdit" @handleDelete="handleDelete" />
         <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="meetingId" :objTypeCode="objectTypeCode" :external="external" />
+        <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm = false" @ok="deleteOk" :id="meetingId" />
     </div>
 </template>
 <script setup>
@@ -122,6 +123,7 @@
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     import Delete from "@/components/listView/Delete.vue";
+    import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
     import { Lunar, Solar, HolidayUtil } from "lunar-javascript";
     const MonthCalendarWrap=ref(null);
     const DayCalendarWrap=ref(null);
@@ -185,8 +187,12 @@
         isDelete: false,
         deleteDesc: '确定要删除吗？',
         external:false,
+        isConfirm: false,
+        confirmText: '',
+        confirmTitle: '',
+        isfresh: true
     });
-    const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
+    const { isfresh, isConfirm, confirmText, confirmTitle, activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime,
          meetingId, isMeetingDetail,startTime,endTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,calendarView} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
@@ -334,8 +340,12 @@
     }
     const onSearch = (e) => {
         data.isMeetingDetail = false;
+        data.isfresh = false;
         nextTick(()=>{
-            calendarTypeChange(data.calendarType);
+            data.isfresh = true;
+            setTimeout(function(){
+                calendarTypeChange(data.calendarType);
+            },500)
         })
     }
     const getPeople = () => {
@@ -509,12 +519,39 @@
     //删除
     const handleDelete = (e) => {
         data.meetingId=e.Id;
-        data.isDelete = true;
+        //data.isDelete = true;
+        data.confirmText = '确定要删除吗？'
+        data.confirmTitle = '删除'
+        data.isConfirm = true;
     }
     //删除关闭
     const cancelDelete = (e) => {
         data.isDelete = false;
     };
+    //确定删除
+    const deleteOk = (id) => {
+        let d = {
+            id:id
+        };
+        proxy.$get(Interface.meeting.delete, d).then(res => {
+            if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+                message.success("删除成功！");
+                data.isConfirm = false;
+                onSearch();
+            }
+            else {
+                if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+                    message.error(res.actions[0].errorMessage);
+                }
+                else {
+                    message.error("删除失败！");
+                }
+            }
+        }).catch(err => {
+            console.log('error', err);
+            message.error("删除失败！");
+        });
+    }
 </script>
 <style lang="less" scoped>
     .calendarWrap {

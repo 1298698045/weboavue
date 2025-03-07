@@ -4,7 +4,7 @@
             <div class="header-title">{{item.name}}</div>
         </div> -->
         <div class="statsCard_content">
-            <div class="stats-card-container">
+            <div class="stats-card-container" @click="gotoPage">
                 <template v-if="imgPosition=='right'">
                     <div class="stats-card-left">
                         <h3 style="color: rgb(47, 90, 165); font-weight: 500; font-size: 30px;">{{num}}</h3>
@@ -35,9 +35,11 @@
     import { ref, reactive, toRefs, defineProps, onMounted, nextTick, computed, getCurrentInstance } from "vue";
     import * as echarts from "echarts";
     import Interface from "@/utils/Interface.js";
+    import { useRoute, useRouter } from "vue-router";
     const { proxy } = getCurrentInstance();
     import { useStore } from "vuex";
     const store = useStore();
+    const router= useRouter();
     const props = defineProps({
         item: {
             type: Object,
@@ -79,6 +81,12 @@
         });
     };
     getQuery();
+
+    const gotoPage = () => {
+        let { drillUrl } = props.item.properties;
+        const url = router.resolve(drillUrl);
+        window.open(url.href);
+    }
 
 </script>
 <style lang="less" scoped>

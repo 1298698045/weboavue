@@ -195,7 +195,7 @@
   import InfoRemind from "@/components/information/InfoRemind.vue";
   import InfoAddClass from "@/components/information/InfoAddClass.vue";
   import ReadRecord from "@/components/information/ReadRecord2.vue";
-  import RelatedAttachment from "@/components/meeting/RelatedAttachment.vue";
+  import RelatedAttachment from "@/components/commonTab/RelatedAttachment.vue";
   import DocLog from "@/components/documentAdmin/DocLog.vue";
   import DocShare from "@/components/share/ShareList.vue";
   import Comment from "@/components/detail/Comment2.vue";

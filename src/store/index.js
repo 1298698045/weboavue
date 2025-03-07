@@ -135,7 +135,7 @@ export default createStore({
               subPath = subPath .split('?')[0]
             };
 
-            let obj = routesMapping[developerName][item.name];
+            let obj = routesMapping[developerName] && routesMapping[developerName][item.name];
             let componentPath = obj;
             // if(typeof obj == 'object'){
             //   componentPath = obj.component;

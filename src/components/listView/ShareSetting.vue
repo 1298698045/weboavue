@@ -1,10 +1,11 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="640px" :style="setTop" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+        <a-modal v-model:open="props.isShow" width="640px" :style="setTop" :maskClosable="false" @cancel="handleCancel"
+            @ok="handleSubmit">
             <template #title>
                 <div class="modal_title">
                     共享设置
-                 </div>
+                </div>
             </template>
             <div class="modalContainer" ref="modelContentRef">
                 <div class="modalCenter" style="height: auto;">
@@ -12,45 +13,11 @@
                         <div class="tips">谁可以查看此列表视图？</div>
                         <a-form-item>
                             <a-radio-group v-model:value="formState.resource">
-                              <a-radio value="1">只有我可以查看此列表视图</a-radio>
-                              <a-radio value="2">所有用户均可以查看此列表视图</a-radio>
-                              <a-radio value="3">与用户小组共享列表视图</a-radio>
+                                <a-radio value="1">只有我可以查看此列表视图</a-radio>
+                                <a-radio value="2">所有用户均可以查看此列表视图</a-radio>
+                                <a-radio value="3">与用户小组共享列表视图</a-radio>
                             </a-radio-group>
                         </a-form-item>
-                        <!-- <a-form-item name="role" v-if="formState.resource==3">
-                            <div class="menuRow">
-                                <a-dropdown>
-                                    <template #overlay>
-                                      <a-menu @click="handleMenu">
-                                        <a-menu-item v-for="(item,index) in menus" :key="item.key">
-                                          <UserOutlined />
-                                          {{item.name}}
-                                        </a-menu-item>
-                                      </a-menu>
-                                    </template>
-                                    <a-button>
-                                      <UserOutlined />
-                                      <DownOutlined />
-                                    </a-button>
-                                </a-dropdown>
-                                <a-select
-                                    class="aselect"
-                                    v-model:value="formState.role"
-                                    show-search
-                                    mode="multiple"
-                                    :placeholder="'搜索'+currentMenu"
-                                    :default-active-first-option="false"
-                                    :filter-option="false"
-                                    :not-found-content="null"
-                                    @search="handleSearch"
-                                    @change="handleChange"
-                                    @dropdownVisibleChange="getPeople"
-                                >
-                                    <template #suffixIcon><SearchOutlined class="ant-select-suffix" /></template>
-                                    <a-select-option :value="item.ID" v-for="(item,index) in listData" :key="index">{{item.Name}}</a-select-option>
-                                </a-select>
-                            </div>
-                        </a-form-item> -->
                         <div class="forceEntityShare" v-if="formState.resource==3">
                             <div class="uiInput">
                                 <label for="1403:0" class="uiLabel-left form-element__label uiLabel">
@@ -63,47 +30,68 @@
                                                 <a-dropdown :trigger="['click']" @click.stop>
                                                     <div class="entityMenu">
                                                         <a href="javascript:;" class="entityMenuTrigger">
-                                                            <div class="entityIcon" :style="{'background':currentEntity==2 || currentEntity == 3 ? '#34BECD' : '#779EF2'}">
+                                                            <div class="entityIcon"
+                                                                :style="{'background':currentEntity==2 || currentEntity == 3 ? '#34BECD' : '#779EF2'}">
                                                                 <span class="uiImage">
-                                                                    <img v-if="currentEntity=='1'||currentEntity=='4'" :src="require('@/assets/img/groups_120.png')" alt="">
-                                                                        <img v-if="currentEntity=='2'||currentEntity=='3'" :src="require('@/assets/img/hierarchy_120.png')" alt="">
+                                                                    <img v-if="currentEntity=='1'||currentEntity=='4'"
+                                                                        :src="require('@/assets/img/groups_120.png')"
+                                                                        alt="">
+                                                                    <img v-if="currentEntity=='2'||currentEntity=='3'"
+                                                                        :src="require('@/assets/img/hierarchy_120.png')"
+                                                                        alt="">
                                                                 </span>
                                                             </div>
                                                             <div class="entityDownIcon">
-                                                                <svg focusable="false" data-key="down" aria-hidden="true" viewBox="0 0 520 520" part="icon"><g><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"></path></g></svg>
+                                                                <svg focusable="false" data-key="down"
+                                                                    aria-hidden="true" viewBox="0 0 520 520"
+                                                                    part="icon">
+                                                                    <g>
+                                                                        <path
+                                                                            d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z">
+                                                                        </path>
+                                                                    </g>
+                                                                </svg>
                                                             </div>
                                                         </a>
                                                     </div>
                                                     <template #overlay>
                                                         <a-menu class="fh-menu" @click="handleSelectEntity">
-                                                            <a-menu-item class="fh-menu-item" style="width: 206px;line-height: 35px;" key="1">
+                                                            <a-menu-item class="fh-menu-item"
+                                                                style="width: 206px;line-height: 35px;" key="1">
                                                                 <div class="entityIcon">
                                                                     <span class="uiImage">
-                                                                        <img :src="require('@/assets/img/groups_120.png')" alt="">
+                                                                        <img :src="require('@/assets/img/groups_120.png')"
+                                                                            alt="">
                                                                     </span>
                                                                 </div>
                                                                 <span class="entityLabel">角色</span>
                                                             </a-menu-item>
-                                                            <a-menu-item class="fh-menu-item" style="width: 206px;line-height: 35px;" key="2">
+                                                            <a-menu-item class="fh-menu-item"
+                                                                style="width: 206px;line-height: 35px;" key="2">
                                                                 <div class="entityIcon" style="background: #34BECD;">
                                                                     <span class="uiImage">
-                                                                        <img :src="require('@/assets/img/hierarchy_120.png')" alt="">
+                                                                        <img :src="require('@/assets/img/hierarchy_120.png')"
+                                                                            alt="">
                                                                     </span>
                                                                 </div>
                                                                 <span class="entityLabel">小组</span>
                                                             </a-menu-item>
-                                                            <a-menu-item class="fh-menu-item" style="width: 206px;line-height: 35px;" key="3">
+                                                            <a-menu-item class="fh-menu-item"
+                                                                style="width: 206px;line-height: 35px;" key="3">
                                                                 <div class="entityIcon" style="background: #34BECD;">
                                                                     <span class="uiImage">
-                                                                        <img :src="require('@/assets/img/hierarchy_120.png')" alt="">
+                                                                        <img :src="require('@/assets/img/hierarchy_120.png')"
+                                                                            alt="">
                                                                     </span>
                                                                 </div>
                                                                 <span class="entityLabel">部门</span>
                                                             </a-menu-item>
-                                                            <a-menu-item class="fh-menu-item" style="width: 206px;line-height: 35px;" key="4">
+                                                            <a-menu-item class="fh-menu-item"
+                                                                style="width: 206px;line-height: 35px;" key="4">
                                                                 <div class="entityIcon">
                                                                     <span class="uiImage">
-                                                                        <img :src="require('@/assets/img/groups_120.png')" alt="">
+                                                                        <img :src="require('@/assets/img/groups_120.png')"
+                                                                            alt="">
                                                                     </span>
                                                                 </div>
                                                                 <span class="entityLabel">用户</span>
@@ -113,20 +101,36 @@
                                                 </a-dropdown>
                                                 <a-dropdown :trigger="['click']">
                                                     <div class="autocompleteWrapper">
-                                                        <input type="text" class="input" :placeholder="'搜索 '+placeholder">
+                                                        <input type="text" class="input"
+                                                            :placeholder="'搜索 '+placeholder">
                                                     </div>
                                                     <div class="inputLookupIcon">
-                                                        <svg focusable="false" data-key="search" aria-hidden="true" viewBox="0 0 520 520" part="icon"><g><path d="M496 453L362 320a189 189 0 10-340-92 190 190 0 00298 135l133 133a14 14 0 0021 0l21-21a17 17 0 001-22zM210 338a129 129 0 11130-130 129 129 0 01-130 130z"></path></g></svg>
+                                                        <svg focusable="false" data-key="search" aria-hidden="true"
+                                                            viewBox="0 0 520 520" part="icon">
+                                                            <g>
+                                                                <path
+                                                                    d="M496 453L362 320a189 189 0 10-340-92 190 190 0 00298 135l133 133a14 14 0 0021 0l21-21a17 17 0 001-22zM210 338a129 129 0 11130-130 129 129 0 01-130 130z">
+                                                                </path>
+                                                            </g>
+                                                        </svg>
                                                     </div>
                                                 </a-dropdown>
                                             </div>
                                             <template #overlay>
                                                 <a-menu class="fh-menu">
-                                                    <a-menu-item class="fh-menu-item" style="width:100%;line-height: 35px;" v-for="(item, index) in listData" :key="index" @click="handleSelectItem(item)">
-                                                        <div class="entityIcon" :style="{'background':currentEntity==2 || currentEntity == 3 ? '#34BECD' : '#779EF2'}">
+                                                    <a-menu-item class="fh-menu-item"
+                                                        style="width:100%;line-height: 35px;"
+                                                        v-for="(item, index) in listData" :key="index"
+                                                        @click="handleSelectItem(item)">
+                                                        <div class="entityIcon"
+                                                            :style="{'background':currentEntity==2 || currentEntity == 3 ? '#34BECD' : '#779EF2'}">
                                                             <span class="uiImage">
-                                                                <img v-if="currentEntity=='1'||currentEntity=='4'" :src="require('@/assets/img/groups_120.png')" alt="">
-                                                                <img v-if="currentEntity=='2'||currentEntity=='3'" :src="require('@/assets/img/hierarchy_120.png')" alt="">
+                                                                <img v-if="currentEntity=='1'||currentEntity=='4'"
+                                                                    :src="require('@/assets/img/groups_120.png')"
+                                                                    alt="">
+                                                                <img v-if="currentEntity=='2'||currentEntity=='3'"
+                                                                    :src="require('@/assets/img/hierarchy_120.png')"
+                                                                    alt="">
                                                             </span>
                                                         </div>
                                                         <span class="entityLabel">{{item.Name}}</span>
@@ -137,16 +141,24 @@
                                         <div class="pillContainerWrapper" v-if="selectList.length">
                                             <div class="uiPillContainer">
                                                 <ul class="orderedList">
-                                                    <li class="pillContainerListItem" v-for="(item, index) in selectList" :key="index">
+                                                    <li class="pillContainerListItem"
+                                                        v-for="(item, index) in selectList" :key="index">
                                                         <a href="javascript:void(0);" class="pill">
-                                                            <span  :style="{'background':item.entity==2 || item.entity == 3 ? '#34BECD' : '#779EF2'}" class="pillIcon">
+                                                            <span
+                                                                :style="{'background':item.entity==2 || item.entity == 3 ? '#34BECD' : '#779EF2'}"
+                                                                class="pillIcon">
                                                                 <span class="uiImage">
-                                                                    <img v-if="item.entity=='1'||item.entity=='4'" :src="require('@/assets/img/groups_120.png')" alt="">
-                                                                    <img v-if="item.entity=='2'||item.entity=='3'" :src="require('@/assets/img/hierarchy_120.png')" alt="">
+                                                                    <img v-if="item.entity=='1'||item.entity=='4'"
+                                                                        :src="require('@/assets/img/groups_120.png')"
+                                                                        alt="">
+                                                                    <img v-if="item.entity=='2'||item.entity=='3'"
+                                                                        :src="require('@/assets/img/hierarchy_120.png')"
+                                                                        alt="">
                                                                 </span>
                                                             </span>
                                                             <span class="pillText">{{item.Name}}</span>
-                                                            <a href="javascript:void(0);" class="deleteAction" @click.stop="handleDelUser(item, index)">
+                                                            <a href="javascript:void(0);" class="deleteAction"
+                                                                @click.stop="handleDelUser(item, index)">
                                                                 <span class="deleteIcon"></span>
                                                             </a>
                                                         </a>
@@ -171,8 +183,10 @@
     </div>
 </template>
 <script setup>
-    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps,defineExpose,
-        defineEmits, computed } from "vue";
+    import {
+        ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
+        defineEmits, computed
+    } from "vue";
     import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
@@ -181,124 +195,124 @@
     const labelCol = ref({ style: { width: '100px' } });
     const props = defineProps({
         isShow: Boolean,
-        sObjectName:String,
-        recordId:String
+        sObjectName: String,
+        recordId: String
     })
-    const emit = defineEmits(['cancel','load']);
+    const emit = defineEmits(['cancel', 'load']);
     const modelContentRef = ref(null);
-    const getData = ()=> {
+    const getData = () => {
         proxy.$get(Interface.listView.getListView, {
             id: props.recordId
-            }).then(res=>{
-                if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
-                    let item = res.actions[0].returnValue;
-                    formState.apiname=item.apiName||'';
-                    formState.name=item.label||'';
-                    let visibility=item.visibility||'GLOBAL';
-                    if(visibility=='PRIVATE'){
-                        formState.resource='1';
-                    }else if(visibility=='GLOBAL'){
-                        formState.resource='2';
-                    }else if(visibility=='SHARED'){
-                        formState.resource='3';
-                    }
-
-                    if(item.selectList&&item.selectList.length){
-                        data.selectList=[];
-                        item.selectList.map(item1=>{
-                            let entity='';
-                            if(item1.objectTypeCode=='1036'||item1.entityName=='Role'){
-                                entity=='1';
-                            }else if(item1.objectTypeCode=='9'||item1.entityName=='Group'){
-                                entity=='2';
-                            }else if(item1.objectTypeCode=='10'||item1.entityName=='BusinessUnit'){
-                                entity=='3';
-                            }else if(item1.objectTypeCode=='8'||item1.entityName=='SystemUser'){
-                                entity=='4'
-                            }
-                            data.selectList.push({
-                                entity: entity,
-                                ID: item1.id,
-                                Name: item1.Name||'',
-                                objectTypeCode:item1.objectTypeCode,
-                                entityName:item1.entityName,
-                                id:item1.id
-                            })
-                            
-                        })
-                    }
-                    
+        }).then(res => {
+            if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+                let item = res.actions[0].returnValue;
+                formState.apiname = item.apiName || '';
+                formState.name = item.label || '';
+                let visibility = item.visibility || 'GLOBAL';
+                if (visibility == 'PRIVATE') {
+                    formState.resource = '1';
+                } else if (visibility == 'GLOBAL') {
+                    formState.resource = '2';
+                } else if (visibility == 'SHARED') {
+                    formState.resource = '3';
                 }
-            })
+
+                if (item.selectList && item.selectList.length) {
+                    data.selectList = [];
+                    item.selectList.map(item1 => {
+                        let entity = '';
+                        if (item1.objectTypeCode == '1036' || item1.entityName == 'Role') {
+                            entity == '1';
+                        } else if (item1.objectTypeCode == '9' || item1.entityName == 'Group') {
+                            entity == '2';
+                        } else if (item1.objectTypeCode == '10' || item1.entityName == 'BusinessUnit') {
+                            entity == '3';
+                        } else if (item1.objectTypeCode == '8' || item1.entityName == 'SystemUser') {
+                            entity == '4'
+                        }
+                        data.selectList.push({
+                            entity: entity,
+                            ID: item1.id,
+                            Name: item1.Name || '',
+                            objectTypeCode: item1.objectTypeCode,
+                            entityName: item1.entityName,
+                            id: item1.id
+                        })
+
+                    })
+                }
+
+            }
+        })
     }
-    const handleCancel = ()=> {
+    const handleCancel = () => {
         emit("cancel", false);
     }
-    const handleSubmit = ()=> {
-        let visibility='GLOBAL';
-        if(formState.resource=='1'){
-            visibility='PRIVATE';
-        }else if(formState.resource=='2'){
-            visibility='GLOBAL';
-        }else if(formState.resource=='3'){
-            visibility='SHARED';
+    const handleSubmit = () => {
+        let visibility = 'GLOBAL';
+        if (formState.resource == '1') {
+            visibility = 'PRIVATE';
+        } else if (formState.resource == '2') {
+            visibility = 'GLOBAL';
+        } else if (formState.resource == '3') {
+            visibility = 'SHARED';
         }
-        let shareIds=[];
-        if(data.selectList&&data.selectList.length){
-            data.selectList.map(item=>{
+        let shareIds = [];
+        if (data.selectList && data.selectList.length) {
+            data.selectList.map(item => {
                 shareIds.push({
-                    objectTypeCode:item.objectTypeCode,
-                    entityName:item.entityName,
-                    id:item.id
+                    objectTypeCode: item.objectTypeCode,
+                    entityName: item.entityName,
+                    id: item.id
                 })
             })
         }
         let url = Interface.listView.updateListView;
-            let d = {
-                actions:[{
-                    id: "6198;a",
-                    descriptor: "serviceComponent://ui.force.components.controllers.lists.listViewManager.ListViewManagerController/ACTION$updateListView",
-                    callingDescriptor: "UNKNOWN",
-                    params: {
-                        entityKeyPrefixOrApiName: props.sObjectName,
-                        listViewIdOrName:props.recordId,
-                        label: formState.name||'',
-                        visibility: visibility,
-                        developerName: formState.apiname||'',
-                        displayColumnApiNames: null,
-                        listViewFieldCriteria: null,
-                        listViewScope: null,
-                        shareIds: shareIds,
-                        // shareIds: [
-                        //     {   
-                        //         "objectTypeCode":8,
-                        //         "entityName":"SystemUser",
-                        //         "id":"00G90000002JvmLEAS"
-                        //     }
-                        // ]
-                    }
-                }]
-            };
-            let obj = {
-                message: JSON.stringify(d)
+        let d = {
+            actions: [{
+                id: "6198;a",
+                descriptor: "serviceComponent://ui.force.components.controllers.lists.listViewManager.ListViewManagerController/ACTION$updateListView",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    entityKeyPrefixOrApiName: props.sObjectName,
+                    listViewIdOrName: props.recordId,
+                    label: formState.name || '',
+                    visibility: visibility,
+                    developerName: formState.apiname || '',
+                    displayColumnApiNames: null,
+                    listViewFieldCriteria: null,
+                    listViewScope: null,
+                    shareIds: shareIds,
+                    // shareIds: [
+                    //     {   
+                    //         "objectTypeCode":8,
+                    //         "entityName":"SystemUser",
+                    //         "id":"00G90000002JvmLEAS"
+                    //     }
+                    // ]
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(url, obj).then(res => {
+            if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+                message.success("保存成功");
+                emit("load", false);
             }
-            proxy.$post(url, obj).then(res => {
-                if(res&&res.actions&&res.actions[0]&&res.actions[0].state=='SUCCESS'){
-                    message.success("保存成功");
-                    emit("load", false);
+            else {
+                if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+                    message.success(res.actions[0].errorMessage);
                 }
-                else{
-                    if(res&&res.actions&&res.actions[0]&&res.actions[0].errorMessage){
-                        message.success(res.actions[0].errorMessage);
-                    }
-                    else{
-                        message.success("保存失败");
-                    }
+                else {
+                    message.success("保存失败");
                 }
-                setTimeout(function(){
-                    emit("cancel", false);
-                },1000)
-            })
+            }
+            setTimeout(function () {
+                emit("cancel", false);
+            }, 1000)
+        })
     }
     const data = reactive({
         listData: [],
@@ -332,26 +346,67 @@
         resource: "",
         role: []
     })
-    const handleMenu = (e)=> {
-        console.log("e",e);
-        data.currentMenu = data.menus.find(item=>item.key==e.key).name;
+    const currentApiName = computed(() => {
+        return data.currentEntity == '1' ? 'Role' : data.currentEntity == '2' ?
+            'Group' : data.currentEntity == '3' ? '	BusinessUnit' : data.currentEntity == '4' ? 'SystemUser' : '';
+    });
+    const handleMenu = (e) => {
+        console.log("e", e);
+        data.currentMenu = data.menus.find(item => item.key == e.key).name;
     }
-    const handleSearch = (val) =>{
-        console.log('val',val);
+    const handleSearch = (val) => {
+        console.log('val', val);
         getPeople(val)
     }
-    const handleChange = (e) =>{
+    const handleChange = (e) => {
     }
-    const getPeople = (val="")=>{
-        proxy.$get(Interface.lookup,{
-            Lktp: 30020,
-            lksrch: val
-        }).then(res=>{
-            data.listData = res.listData;
+    const getPeople = (val = "") => {
+        let obj = {
+            actions: [{
+                id: "6129;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    objectApiName: currentApiName.value,
+                    fieldApiName: "Name",
+                    pageParam: 1,
+                    pageSize: 25,
+                    q: "",
+                    searchType: "Recent",
+                    targetApiName: currentApiName.value,
+                    body: {
+                        sourceRecord: {
+                            apiName: currentApiName.value,
+                            fields: {
+                                id: null,
+                                RecordTypeId: ""
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.lookup, d).then(res => {
+            if (res && res.actions.length && res.actions[0].returnValue) {
+                let list = res.actions[0].returnValue.lookupResults.records;
+                let result = [];
+                list.forEach(item => {
+                    result.push({
+                        ID: item.fields.Id.value,
+                        Name: item.fields.Name.value
+                    })
+                });
+                data.listData = result;
+            }else { 
+                data.listData = [];
+            }
         })
     }
     getPeople();
-    onMounted(()=>{
+    onMounted(() => {
         let h = modelContentRef.value.clientHeight;
         data.top = (h + 126) / 2 + 'px';
         getData();
@@ -363,36 +418,37 @@
     const handleSelectEntity = (e) => {
         console.log("e", e);
         data.currentEntity = e.key;
+        getPeople();
     }
-    const placeholder = computed(()=>{
+    const placeholder = computed(() => {
         return data.currentEntity == '1' ? '角色' : data.currentEntity == '2' ?
-        '小组': data.currentEntity == '3' ? '部门' : data.currentEntity == '4' ? '用户' : '';
+            '小组' : data.currentEntity == '3' ? '部门' : data.currentEntity == '4' ? '用户' : '';
     });
     const handleSelectItem = (item) => {
         console.log(item);
         var entity = JSON.parse(JSON.stringify(data.currentEntity));
-var entityName='';
-var objectTypeCode='';
-        if(entity=='1'){
-            entityName='Role';
-            objectTypeCode='1036';
-        }else if(entity=='2'){
-            entityName='Group';
-            objectTypeCode='9';
-        }else if(entity=='3'){
-            entityName='BusinessUnit';
-            objectTypeCode='10';
-        }else if(entity=='4'){
-            entityName='8';
-            objectTypeCode='SystemUser';
+        var entityName = '';
+        var objectTypeCode = '';
+        if (entity == '1') {
+            entityName = 'Role';
+            objectTypeCode = '1036';
+        } else if (entity == '2') {
+            entityName = 'Group';
+            objectTypeCode = '9';
+        } else if (entity == '3') {
+            entityName = 'BusinessUnit';
+            objectTypeCode = '10';
+        } else if (entity == '4') {
+            entityName = '8';
+            objectTypeCode = 'SystemUser';
         }
         data.selectList.push({
             entity: entity,
             ID: item.ID,
             Name: item.Name,
-            objectTypeCode:objectTypeCode,
-            entityName:entityName,
-            id:item.ID,
+            objectTypeCode: objectTypeCode,
+            entityName: entityName,
+            id: item.ID,
         })
         console.log(data.selectList);
     };
@@ -402,67 +458,81 @@ var objectTypeCode='';
 </script>
 <style lang="less" scoped>
     @import url('@/style/modal.less');
-    .ant-radio-wrapper{
+
+    .ant-radio-wrapper {
         display: flex;
         align-items: center;
         margin-top: 10px;
     }
-    .menuRow{
+
+    .menuRow {
         display: flex;
         align-items: center;
-        .ant-btn{
+
+        .ant-btn {
             border-radius: 4px 0 0 4px;
         }
-        :deep .ant-select-selector{
+
+        :deep .ant-select-selector {
             border-radius: 0 4px 4px 0 !important;
             margin-left: -1px !important;
         }
     }
-    .forceEntityShare{
+
+    .forceEntityShare {
         margin-left: 24px;
-        .uiInput{
-            .form-element__label{
+
+        .uiInput {
+            .form-element__label {
                 color: #444444;
                 line-height: 1.5;
                 margin-bottom: 4px;
             }
-            .inputLookup{
-                .contentWrapper{
+
+            .inputLookup {
+                .contentWrapper {
                     padding: 0;
                     border-radius: 4px;
                     border: 1px solid #c9c9c9;
-                    &.active{
+
+                    &.active {
                         border: 1px solid #1b96ff;
                         border-radius: 4px;
-                        box-shadow:  0 0 3px #0176d3;
+                        box-shadow: 0 0 3px #0176d3;
                     }
-                    .inputWrapper{
+
+                    .inputWrapper {
                         padding-right: 8px;
                         display: flex;
                         align-items: center;
+
                         .entityMenu {
                             padding-left: 4px;
                             position: relative;
-                            .entityMenuTrigger{
+
+                            .entityMenuTrigger {
                                 display: flex;
                                 justify-content: center;
                                 margin: 2px 0;
                                 text-align: center;
-                                .entityIcon{
+
+                                .entityIcon {
                                     background: #779EF2;
                                     width: 24px;
                                     height: 24px;
                                     line-height: 1;
                                     fill: #ffffff;
                                     border-radius: 2px;
-                                    img{
+
+                                    img {
                                         max-width: 100%;
                                         height: auto;
                                         vertical-align: middle;
                                         display: inherit;
                                     }
                                 }
-                                .entityDownIcon{
+
+                                .entityDownIcon {
                                     padding-top: 2px;
                                     margin: 4px 0;
                                     display: inline-block;
@@ -473,7 +543,8 @@ var objectTypeCode='';
                                     height: 14px;
                                     fill: currentColor;
                                     margin-left: 4px;
-                                    svg{
+
+                                    svg {
                                         width: 14px;
                                         height: 14px;
                                         line-height: 1;
@@ -482,10 +553,12 @@ var objectTypeCode='';
                                 }
                             }
                         }
-                        .autocompleteWrapper{
+
+                        .autocompleteWrapper {
                             overflow: hidden;
                             flex-grow: 1;
-                            .input{
+
+                            .input {
                                 color: #181818;
                                 border-radius: 4px;
                                 width: 100%;
@@ -494,15 +567,18 @@ var objectTypeCode='';
                                 line-height: 30px;
                                 min-height: 36px;
                             }
-                            .input,.input:focus{
+
+                            .input,
+                            .input:focus {
                                 border: none;
                                 box-shadow: none;
                                 background: transparent;
                                 outline: 0;
                             }
                         }
-                        .inputLookupIcon{
-                            svg{
+
+                        .inputLookupIcon {
+                            svg {
                                 fill: #aeaeae;
                                 overflow: hidden;
                                 width: 14px;
@@ -514,22 +590,27 @@ var objectTypeCode='';
                     }
                 }
             }
-            .pillContainerWrapper{
+
+            .pillContainerWrapper {
                 border-top: 1px solid #e5e5e5;
-                .uiPillContainer{
+
+                .uiPillContainer {
                     margin: 0;
                     line-height: 26px;
                     border-radius: 5px;
                     position: relative;
-                    .orderedList{
+
+                    .orderedList {
                         clear: both;
                         overflow: hidden;
-                        .pillContainerListItem{
+
+                        .pillContainerListItem {
                             margin: 4px;
                             float: left;
                             list-style-type: none;
                             word-break: break-all;
-                            .pill{
+
+                            .pill {
                                 border: 1px solid #747474;
                                 border-radius: 5px;
                                 padding: 4px;
@@ -537,11 +618,13 @@ var objectTypeCode='';
                                 white-space: nowrap;
                                 text-decoration: none;
                                 cursor: default;
-                                &:hover{
+
+                                &:hover {
                                     background: #f3f3f3;
                                 }
                             }
-                            .pillIcon{
+
+                            .pillIcon {
                                 height: 20px;
                                 width: 20px;
                                 line-height: 1;
@@ -549,14 +632,16 @@ var objectTypeCode='';
                                 margin-right: 8px;
                                 display: inline-block;
                                 vertical-align: middle;
-                                img{
-                                        max-width: 100%;
-                                        height: auto;
-                                        vertical-align: middle;
-                                        display: inherit;
-                                    }
+
+                                img {
+                                    max-width: 100%;
+                                    height: auto;
+                                    vertical-align: middle;
+                                    display: inherit;
+                                }
                             }
-                            .pillText{
+
+                            .pillText {
                                 max-width: 215px;
                                 overflow: hidden;
                                 text-overflow: ellipsis;
@@ -565,13 +650,16 @@ var objectTypeCode='';
                                 vertical-align: middle;
                                 color: #181818;
                             }
-                            .deleteAction{
+
+                            .deleteAction {
                                 margin-left: 8px;
-                                .deleteIcon{
+
+                                .deleteIcon {
                                     color: #747474;
                                     cursor: pointer;
                                 }
-                                .deleteIcon::after{
+
+                                .deleteIcon::after {
                                     content: "\2715";
                                 }
                             }
@@ -582,16 +670,18 @@ var objectTypeCode='';
         }
     }
 
-    .fh-menu{
+    .fh-menu {
         padding: 10px 0;
         border: 1px solid #333;
         border-radius: 4px;
         max-height: 300px;
         overflow: auto;
-        .fh-menu-item{
+
+        .fh-menu-item {
             width: 206px;
             line-height: 35px;
-            .entityIcon{
+
+            .entityIcon {
                 background: #779EF2;
                 width: 24px;
                 height: 24px;
@@ -600,7 +690,8 @@ var objectTypeCode='';
                 border-radius: 2px;
                 margin-right: 12px;
                 display: inline-block;
-                img{
+
+                img {
                     max-width: 100%;
                     height: 100%;
                     vertical-align: middle;

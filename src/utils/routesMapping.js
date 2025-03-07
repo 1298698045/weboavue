@@ -189,13 +189,13 @@ export const routesMapping = {
         ProjectReport: () => import("../views/NotFound.vue")
     },
     // 系统报表
-    report: {
-        CommonReportHome: () => import("../views/NotFound.vue"),
-        report: () => import("../views/report/home/index.vue"),
-        Dashboard: () => import("../views/NotFound.vue"),
-        ReportIndicatorData: () => import("../views/NotFound.vue"),
-        ReportIndicator: () => import("../views/NotFound.vue")
-    },
+    // report: {
+    //     CommonReportHome: () => import("../views/report/home/index.vue"),
+    //     report: () => import("../views/report/home/index.vue"),
+    //     Dashboard: () => import("../views/NotFound.vue"),
+    //     ReportIndicatorData: () => import("../views/NotFound.vue"),
+    //     ReportIndicator: () => import("../views/NotFound.vue")
+    // },
     // 科研成果
     ResearchResult: {
         // ProjectPaper: {

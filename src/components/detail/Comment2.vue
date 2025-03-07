@@ -203,7 +203,7 @@
                 params: {
                     pageSize: data.rows,
                     pageNumber: data.page,
-                    filterQuery: filterQuery,
+                    RegardingObjectId: props.id,
                     search: ''
                 }
             }]

@@ -81,7 +81,8 @@ const Interface = {
     createListView: baseUrl + "/aura/listViewManager/createListView", //创建视图
     updateListView: baseUrl + "/aura/listViewManager/updateListView", //重命名视图、共享设置、选择要显示字段、保存筛选器
     deleteListView: baseUrl + "/aura/listViewManager/deleteListView", //删除视图
-    copyListView: baseUrl + "/listview/filter/clone", //复制视图
+    // copyListView: baseUrl + "/listview/filter/clone", //复制视图
+    copyListView: baseUrl+'/aura/listViewManager/cloneListView',//复制视图
     getListView: baseUrl + "/aura/listViewManager/getAdditionalMetadata", //获取单个视图/筛选器
     pinListView: baseUrl + "/aura/listViewManager/pinListView", //固定视图
     chartData: baseUrl + "/aura/ObjectHomeChart/getMetadata", // 图表 - 获取列表图表元数据
@@ -168,6 +169,11 @@ const Interface = {
     remind: baseUrl + "/ui.meeting.components/publish", //会议提醒
     audienceDataExport: baseUrl + "/meeting.audience.data/export", //参会人导出
     checkinRecordExport: baseUrl + "/meeting.checkin.record/export", //打卡记录导出
+    checkin: baseUrl + "/ui.meeting.components/checkin", //会议签到
+		checkout: baseUrl + "/ui.meeting.components/checkout", //会议签退
+		delete: baseUrl + "/ui.meeting.components/remove", //会议删除
+		accept: baseUrl + "/ui.meeting.components/accept", //会议接受
+		reject: baseUrl + "/ui.meeting.components/reject", //会议拒绝
   },
   meetingRoom: {
     //roomList: "/localData/meetingRoom/meetingroom.reservation.getlist2.json",
