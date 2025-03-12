@@ -13,7 +13,7 @@
                         </div>
                         <div class="flex-col no-flex">
                             <div class="flex">
-                                <a-input placeholder="搜索最近报表..." style="width: 240px;" @pressEnter="handleSearch">
+                                <a-input v-model:value="queryParams.search" placeholder="搜索最近报表..." style="width: 240px;" @pressEnter="handleSearch">
                                     <template #prefix>
                                         <svg class="fh-input__icon fh-input__icon_left" focusable="false"
                                             data-key="search" aria-hidden="true" viewBox="0 0 520 520" part="icon">
@@ -26,10 +26,10 @@
                                     </template>
                                 </a-input>
                                 <div class="btnBox">
-                                    <div class="btnGroup ml10">
+                                    <!-- <div class="btnGroup ml10">
                                         <a-button @click="handleNewReport">新建报表</a-button>
                                         <a-button @click="handleNewFlolder">新建文件夹</a-button>
-                                    </div>
+                                    </div> -->
                                     <!-- <a-button class="ml10 btnMore" title="筛选器">
                                         <svg class="btn_icon" focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon" lwc-31cpu082oko="" data-key="settings"><g lwc-31cpu082oko=""><path d="M261 191c-39 0-70 31-70 70s31 70 70 70 70-31 70-70-31-70-70-70zm210 133l-37-31a195 195 0 000-68l37-31c12-10 16-28 8-42l-16-28a34 34 0 00-40-14l-46 17a168 168 0 00-59-34l-8-47c-3-16-17-25-33-25h-32c-16 0-30 9-33 25l-8 46a180 180 0 00-60 34l-46-17-11-2c-12 0-23 6-29 16l-16 28c-8 14-5 32 8 42l37 31a195 195 0 000 68l-37 31a34 34 0 00-8 42l16 28a34 34 0 0040 14l46-17c18 16 38 27 59 34l8 48a33 33 0 0033 27h32c16 0 30-12 33-28l8-48a170 170 0 0062-37l43 17 12 2c12 0 23-6 29-16l15-26c9-11 5-29-7-39zm-210 47c-61 0-110-49-110-110s49-110 110-110 110 49 110 110-49 110-110 110z" lwc-31cpu082oko=""></path></g></svg>
                                         <svg class="btn_icon btn_icon_small" focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon" lwc-6qul4k2dv7m="" data-key="down"><g lwc-6qul4k2dv7m=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" lwc-6qul4k2dv7m=""></path></g></svg>
@@ -68,21 +68,17 @@
             </div>
             <div class="defaultMenu" ref="defaultMenuRef" :style="menuStyle" v-show="isDefauleMneuActions" @click.stop>
                 <div class="menuActions" style="padding: 10px 0;border: 1px solid #333;border-radius: 4px;">
-                    <template v-if="queryScope == 'userFolders' || queryScope == 'userFoldersCreatedByMe' || queryScope == 'userFoldersSharedWithMe'">
+                    <!-- <template v-if="queryScope == 'userFolders' || queryScope == 'userFoldersCreatedByMe' || queryScope == 'userFoldersSharedWithMe'">
                         <div class="menuItem" @click="handleShare">共享</div>
                         <div class="menuItem" @click="handleRename">重命名</div>
                         <div class="menuItem" @click="handleDelete('ReportTypeFolder')">删除</div>
                     </template>
                     <template v-else>
-                        <div class="menuItem" @click="handleRun">运行</div>
-                        <div class="menuItem" @click="handleEdit">编辑</div>
-                        <div class="menuItem">订阅</div>
-                        <div class="menuItem">导出</div>
-                        <div class="menuItem" @click="handleDelete('Report')">删除</div>
-                        <div class="menuItem">添加到仪表板</div>
-                        <div class="menuItem">收藏</div>
-                        <div class="menuItem">移动</div>
-                    </template>
+                    </template> -->
+                    <div class="menuItem" @click="handleRun">运行</div>
+                    <div class="menuItem">订阅</div>
+                    <div class="menuItem">导出</div>
+                    <div class="menuItem">收藏</div>
                 </div>
             </div>
         </div>
@@ -204,7 +200,8 @@
             entityType: "00O",
             objectTypeCode: 9100,
             displayColumns: "Name,Description,FileName,Createdby,Createdon,Modifiedby,Modifiedon",
-            filterCondition: ""
+            filterCondition: "",
+            search: ""
         },
         menuStyle: "",
         isDefauleMneuActions: false,
@@ -236,7 +233,7 @@
     })
 
     const handleSearch = () => {
-
+        loadGrid();
     }
 
     const handleTabNav = (row) => {
@@ -425,20 +422,20 @@
                         return item.ModifiedOn.dateTime
                     }
                 },
-                {
-                    field: "actions",
-                    title: "操作",
-                    formatter: (value, row, index) => {
-                        let id = row.id;
-                        let name = row.Name.textValue;
-                        var str = `
-                <a href="javascript:;" class="btnMenu" id="btnMenu_${index}" onclick="handleClickActions(event,'${index}','${id}','${name}')">
-                    <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon" lwc-6qul4k2dv7m="" data-key="down" class="fh-icon fh-icon_xx-small"><g lwc-6qul4k2dv7m=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" lwc-6qul4k2dv7m=""></path></g></svg>
-                </a>
-                `;
-                        return str;
-                    },
-                },
+                // {
+                //     field: "actions",
+                //     title: "操作",
+                //     formatter: (value, row, index) => {
+                //         let id = row.id;
+                //         let name = row.Name.textValue;
+                //         var str = `
+                // <a href="javascript:;" class="btnMenu" id="btnMenu_${index}" onclick="handleClickActions(event,'${index}','${id}','${name}')">
+                //     <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon" lwc-6qul4k2dv7m="" data-key="down" class="fh-icon fh-icon_xx-small"><g lwc-6qul4k2dv7m=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" lwc-6qul4k2dv7m=""></path></g></svg>
+                // </a>
+                // `;
+                //         return str;
+                //     },
+                // },
             ]
         }
 
@@ -787,13 +784,13 @@
         display: flex;
     }
 </style>
-<style lang="less" scoped>
+<style lang="less">
     .btnMenu {
         display: inline-block;
-        width: 32px;
-        height: 32px;
-        line-height: 32px;
-        border: 1px solid #c9c9c9;
+        width: 28px !important;
+        height: 28px !important;
+        line-height: 28px;
+        border: 1px solid #c9c9c9 !important;
         color: #747474;
         /* vertical-align: middle; */
         border-radius: 4px;

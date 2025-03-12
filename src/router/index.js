@@ -412,13 +412,13 @@ const staticRoutes = [
     path: "/More",
     name: "More",
     component: Layout,
-    redirect: "/More/MoreContent",
+    redirect: "/lightning/page/Kb/readlog/home",
     meta: {
       name: "更多列表"
     },
     children: [
       {
-        path: "/More/MoreContent",
+        path: "/lightning/page/Kb/readlog/home",
         name: "MoreContent",
         component: () => import("../views/More/MoreContent/index.vue"),
         icon: "search",
