@@ -58,7 +58,7 @@
                                         :showUploadList="false"
                                         :before-upload="beforeUpload"
                                         @change="handleChange">
-                                        <a-button type="link">添加附件</a-button>
+                                        <a-button type="link">添加附件<span style="color: red;">（单个附件不能超过40M，不支持exe和js脚本文件上传）</span></a-button>
                                         <template #itemRender>
                                             
                                         </template>
@@ -972,14 +972,12 @@
                 if(props.type){
                     formState.theme=props.type+'：'+detail.subject;
                 }
-                if(props.type=='回复'){
-                    if(detail.fromName&&detail.createdBy){
-                        data.selectConcatsList.push({
-                            ID: detail.createdBy,
-                            Name: detail.fromName
-                        });
-                        formState.addressee.push(detail.createdBy);
-                    }
+                if(detail.fromName&&detail.createdBy){
+                    data.selectConcatsList.push({
+                        ID: detail.createdBy,
+                        Name: detail.fromName
+                    });
+                    formState.addressee.push(detail.createdBy);
                 }
                 if(detail.body){
                     formState.mailBody=detail.body;

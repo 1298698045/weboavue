@@ -658,9 +658,20 @@ import { refresh } from "less";
   let formSearchHeight = ref(null);
   const gridRef = ref(null);
   const onSearch = (e) => {
-    gData.value = gDataAll.value.filter(item=>{
-      return item.name.indexOf(data.searchVal) !== -1;
-    })
+    gData.value = gDataAll.value.filter(item => {
+    if (item.name.indexOf(data.searchVal) != -1) {
+      return item;
+    }
+    else {
+      if (item.children && item.children.length) {
+        for (var i = 0; i < item.children.length; i++) {
+          if (item.children[i].name.indexOf(data.searchVal) != -1) {
+            return item.children[i];
+          }
+        }
+      }
+    }
+  })
   }
   const onSelect = (keys,{node}) => {
     //console.log(node)
@@ -796,8 +807,11 @@ const handleTableChange=(pag, filters, sorter)=>{
                 for (var i = 0; i < res.nodes.length; i++) {
                     var item = res.nodes[i];
                     for(var cell in item){
-                        if(cell!='id'&&cell!='nameField'){
+                        if(cell!='id'&&cell!='nameField'&&cell!='Depth'){
                             item[cell]=girdFormatterValue(cell,item);
+                        }
+                        if(cell=='Depth'){
+                          item[cell]=item[cell]?item[cell].value:'';
                         }
                         if(cell=='CreatedOn'){
                           item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
@@ -833,6 +847,11 @@ const handleTableChange=(pag, filters, sorter)=>{
         message.error("请至少勾选一项！")
     }
  }
+  watch(() => route, (newVal, oldVal) => {
+    if (route.path == '/lightning/o/Contentfolder/permission') {
+      getQuery();
+    }
+  }, { deep: true, immediate: true })
   </script>
   <style lang="less" scoped>
   .ContentWrap {

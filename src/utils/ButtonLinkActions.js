@@ -42,10 +42,32 @@ const EditKnowledgeMapDetail=(id)=>{
     });
     window.open(url.href);
 }
+//新建短信发送
+const NewCampaignSms =()=>{
+    let url = router.resolve({
+        name: "CampaignSmsEditor",
+        query: {
+        id: '',
+        },
+    });
+    window.open(url.href);
+}
+//编辑短信发送
+const EditCampaignSms =(id)=>{
+    let url = router.resolve({
+        name: "CampaignSmsEditor",
+        query: {
+        id: id,
+        },
+    });
+    window.open(url.href);
+}
 export const getActionFunc=()=>{
     window.NewContentViewTemplate = NewContentViewTemplate;
     window.EditContentViewTemplate = EditContentViewTemplate;
     window.AddKnowledgeMap=AddKnowledgeMap;
     window.EditKnowledgeMap=EditKnowledgeMap;
     window.EditKnowledgeMapDetail=EditKnowledgeMapDetail;
+    window.NewCampaignSms=NewCampaignSms;
+    window.EditCampaignSms=EditCampaignSms;
 }

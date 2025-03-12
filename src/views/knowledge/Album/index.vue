@@ -98,7 +98,7 @@
                                 <div class="popup">
                                     <!-- <div class="option-item" @click="handleDetail(item.id)" :num="index">查看</div>  
                                     <div class="option-item" :num="index">重命名</div> -->
-                                    <div class="option-item" @click.stop="handleOpenFolder(item.id)" v-if="Privileges.canRead">打开</div>
+                                    <div class="option-item" @click.stop="handleOpenFolder(item.id,item.Name)" v-if="Privileges.canRead">打开</div>
                                     <div class="option-item" @click.stop="handleEdit(item.id)" v-if="Privileges.canAdd">编辑</div>
                                     <div class="option-item" @click.stop="handleDepth(item)" v-if="Privileges.canAdmin">设置权限</div>
                                     <div class="option-item" @click.stop="handleDelete(item.id,'folder')" v-if="Privileges.canDelete">删除</div>
@@ -524,7 +524,7 @@
                 for (var i = 0; i < file.nodes.length; i++) {
                     let item = file.nodes[i];
                     for(var cell in item){
-                        if(cell!='id'&&cell!='nameField'&&cell!='DeletionStateCode'){
+                        if(cell!='id'&&cell!='nameField'&&cell!='DeletionStateCode'&&cell!='viewUrl'){
                             item[cell]=girdFormatterValue(cell,item);
                         }
                         if(cell=='CreatedOn'){
@@ -567,7 +567,7 @@
                     for (var i = 0; i < res.nodes.length; i++) {
                         let item = res.nodes[i];
                         for(var cell in item){
-                            if(cell!='id'&&cell!='nameField'){
+                            if(cell!='id'&&cell!='nameField'&&cell!='viewUrl'){
                                 item[cell]=girdFormatterValue(cell,item);
                             }
                             if(cell=='CreatedOn'){

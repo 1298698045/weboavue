@@ -132,9 +132,9 @@
                                 <div class="contactsWrap">
                                     <div class="cartItemHead">
                                         <div class="cartAvatar">
-                                            <img v-if="item.PhotoUrl || item.photoUrl || item.Avatar"
-                                                :src="item.PhotoUrl || item.photoUrl || item.Avatar" />
-                                            <i v-else class="iconfont icon-morentouxiang"></i>
+                                            <img v-if="item.AvatarUrl&&item.AvatarUrl.value"
+                                                :src="Interface.pathUrl+item.AvatarUrl.value" />
+                                            <img v-else src="/src/assets/img/avatar.png" />
                                         </div>
                                         <div class="cartInfo">
                                             <div class="name">
@@ -272,7 +272,9 @@
                             <div class="contactsWrap">
                                 <div class="cartItemHead">
                                     <div class="cartAvatar">
-                                        <img class="img" :src="require('@/assets/img/avatar.png')" alt="">
+                                        <img v-if="item.AvatarUrl&&item.AvatarUrl.value"
+                                                :src="Interface.pathUrl+item.AvatarUrl.value" />
+                                            <img v-else src="/src/assets/img/avatar.png" />
                                     </div>
                                     <div class="cartInfo">
                                         <div class="name">{{item.FullName || item.fullName || ''}}</div>
@@ -377,7 +379,7 @@
                 </div>
             </div>
         </div>
-        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
+        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @success="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
         <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
     </div>
 </template>
@@ -682,5 +684,11 @@
     }
     .addressBook :deep .ant-input{
         border-color: #d9d9d9 !important;
+    }
+    .cartAvatar{
+        img{
+            width: 100%;
+            height: 100%;
+        }
     }
 </style>

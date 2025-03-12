@@ -4,6 +4,7 @@
       <div class="panel-head">
         <div class="panel-title">附件</div>
         <div class="panel-btn">
+          <span data-v-c1fcaa11="" style="color: red;">（单个附件不能超过40M，不支持exe和js脚本文件上传）</span>
           <a-upload v-model:file-list="fileList" action :showUploadList="false" multiple name="file"
             :customRequest="changeRequest" :before-upload="beforeUpload" @change="handleChange">
             <a-button class="ml10" type="primary">上传文件</a-button>
@@ -40,16 +41,15 @@
                 <span>{{ record.fileExtension || '' }}</span>
               </div>
             </template>
-            <!-- <template v-if="column.key === 'SharedRights'">
-                <div v-if="record.SharedRights=='2'">允许查看</div>
-                <div v-if="record.SharedRights=='4'">允许查看和新建任务</div>
-              </template> -->
+            <template v-if="column.key === 'Name'">
+                <div @click="handlePreviewFile(record)" class="filename">{{record.Name}}</div>
+              </template>
             <template v-if="column.key === 'Action'">
               <div class="iconBox">
                 <div class="popup">
                   <div class="option-item" @click="handlePreviewFile(record)" :num="index">查看</div>
                   <!-- <div class="option-item" @click="handleEdit(record)" :num="index">编辑</div>   -->
-                  <div class="option-item" :num="index">重命名</div>
+                  <!-- <div class="option-item" :num="index">重命名</div> -->
                   <div class="option-item" @click="handleDelete(record)" :num="index">删除</div>
                   <div class="option-item" @click="downloadFile(record)" :num="index">下载</div>
                 </div>
@@ -423,11 +423,8 @@ const handlePreviewFile = (item) => {
   }
   else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
     let medittype = 0;
-    if (props.type == 'group') {
-      downloadFile(item);
-    }else{
-      openfile(medittype, item.id, item.Name);
-    }
+    downloadFile(item);
+    //openfile(medittype, item.id, item.Name);
   }
   else {
     downloadFile(item);
@@ -700,6 +697,10 @@ onMounted(() => {
 <style lang="less">
 .MeetingShareWrap {
   width: 100%;
+  
+  .filename{
+    cursor: pointer;
+  }
 
   .panel {
     margin-bottom: 0;

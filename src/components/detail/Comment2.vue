@@ -228,8 +228,8 @@
                     if (!item['ImageUrls']) {
                         item['ImageUrls'] = require('@/assets/img/avatar-r.png');
                     }
-                    item['OwningUserId'] = item.createdByName || '';
-                    item['OwningUser'] = item.createdBy || '';
+                    item['OwningUserId'] = item.createdBy || '';
+                    item['OwningUser'] = item.createdByName || '';
                     item['Description'] = item.text == '' ? '<span style="color:rgba(0, 0, 0, 0.25);">暂无内容</span>' : item.text;
                     item['NumOfLike'] = item.numOfLike || 0;
                     item['NumOfComment'] = item.numOfComment || 0;

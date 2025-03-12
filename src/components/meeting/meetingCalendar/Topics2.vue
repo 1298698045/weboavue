@@ -18,9 +18,9 @@
               <tr>
                 <td colspan="1" class="trtitle">会议时间：</td>
                 <td colspan="2" class="righttd">{{ detailData.ScheduledStart && detailData.ScheduledStart.value ?
-                  dayjs(detailData.ScheduledStart.value).format("YYYY-MM-DDHH:mm"):''}}&nbsp;&nbsp;止&nbsp;&nbsp;{{
+                  dayjs(detailData.ScheduledStart.value).format("YYYY-MM-DDHH:mm") : '' }}&nbsp;&nbsp;止&nbsp;&nbsp;{{
                     detailData.ScheduledEnd && detailData.ScheduledEnd.value ?
-                      dayjs(detailData.ScheduledEnd.value).format("YYYY-MM-DDHH:mm"):''}}</td>
+                      dayjs(detailData.ScheduledEnd.value).format("YYYY-MM-DDHH:mm") : '' }}</td>
               </tr>
               <tr>
                 <td colspan="1" class="trtitle">会议地点：</td>
@@ -35,7 +35,7 @@
               </tr>
               <tr>
                 <td colspan="1" class="trtitle">参会人：</td>
-                <td colspan="2" class="righttd">{{ detailData.Attachs ? detailData.Attachs.value : '' }}</td>
+                <td colspan="2" class="righttd">{{ AttachsPeople || '' }}</td>
               </tr>
             </tbody>
           </table>
@@ -108,7 +108,7 @@
     <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal"
       @ok="onSearch"></radio-dept>
     <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId ? '编辑' : '新建'"
-      @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"
+      @success="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"
       :relatedObjectAttributeName="relatedObjectAttributeName"
       :relatedObjectAttributeValue="relatedObjectAttributeValue"></common-form-modal>
     <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch"
@@ -264,13 +264,15 @@ const data = reactive({
   relatedObjectAttributeName: '',
   relatedObjectAttributeValue: { ID: '', Name: '' },
   isAddTopic: false,
+  AttachsPeople: ''
 });
 const columnList = toRaw(columns);
-const { isAddTopic, relatedObjectAttributeName, relatedObjectAttributeValue, listData, detailData, height, searchVal, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept } = toRefs(data);
+const { AttachsPeople, isAddTopic, relatedObjectAttributeName, relatedObjectAttributeValue, listData, detailData, height, searchVal, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept } = toRefs(data);
 const getQuery = () => {
   // proxy.$get(Interface.user.groupUser, {}).then((res) => {
   //   data.listData = res.rows;
   // });
+  getAttachsPeople();
   data.listData = [];
   data.pagination.total = 0;
   let filterQuery = '\nMeetingId\teq\t' + props.id;
@@ -305,20 +307,58 @@ const getQuery = () => {
     data.total = res.pageInfo ? res.pageInfo.total : 0;
     data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
     //console.log(pagination)
-    for (var i = 0; i < res.nodes.length; i++) {
-      var item = res.nodes[i];
-      for (var cell in item) {
-        if (cell != 'id' && cell != 'nameField') {
-          item[cell] = girdFormatterValue(cell, item);
+    if (res && res.nodes) {
+      for (var i = 0; i < res.nodes.length; i++) {
+        var item = res.nodes[i];
+        for (var cell in item) {
+          if (cell != 'id' && cell != 'nameField') {
+            item[cell] = girdFormatterValue(cell, item);
+          }
+          if (cell == 'CreatedOn') {
+            item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
+          }
         }
-        if (cell == 'CreatedOn') {
-          item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
-        }
+        list.push(item)
       }
-      list.push(item)
     }
+
     data.listData = list;
 
+  })
+};
+//获取数据
+const getAttachsPeople = () => {
+  let filterQuery = '\nMeetingId\teq\t' + props.id;
+  proxy.$post(Interface.list2, {
+    filterId: '',
+    objectTypeCode: '5002',
+    entityName: 'MeetingAudience',
+    filterQuery: filterQuery,
+    search: '',
+    page: 1,
+    rows: 100,
+    sort: '',
+    order: '',
+    displayColumns: 'InviteeId'
+  }).then(res => {
+    var list = [];
+    if (res && res.nodes) {
+      for (var i = 0; i < res.nodes.length; i++) {
+        var item = res.nodes[i];
+        for (var cell in item) {
+          if (cell != 'id' && cell != 'nameField') {
+            item[cell] = girdFormatterValue(cell, item);
+          }
+          if (cell == 'CreatedOn') {
+            item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
+          }
+        }
+        list.push(item.InviteeId)
+      }
+    }
+    if (list && list.length) {
+      data.AttachsPeople = list.join(',');
+    }
   })
 };
 const onSearch = (e) => {

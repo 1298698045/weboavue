@@ -161,7 +161,7 @@
           if (data.file) {
             let fd = new FormData();
             fd.append('entityName', 'SystemUser');
-            fd.append('parentId', props.id);
+            fd.append('id', props.id);
             fd.append('file', data.file);
             axios({
                 url: Interface.uploadAvatar,

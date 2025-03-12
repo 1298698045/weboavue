@@ -21,36 +21,20 @@
         <!-- <a-button class="ml10" @click="changeStatus">更改状态</a-button> -->
         <!-- <a-button class="ml10" @click="handlePreview">预览</a-button> -->
         <!-- <a-button class="ml10" @click="handleRemind">提醒</a-button> -->
-        <a-button type="primary" class="ml10" @click="handleSave">保存</a-button>
+        <a-button type="primary" class="ml10" @click="handleSave">保存并发送</a-button>
         <a-button class="ml10" @click="closeEditor">关闭</a-button>
         <!-- <a-button type="primary" class="ml10" @click="handleSubmit">发布</a-button>
           <a-button class="ml10" @click="closeEditor">关闭</a-button> -->
-        <a-dropdown :trigger="['hover']" class="ml10">
+        <!-- <a-dropdown :trigger="['hover']" class="ml10">
           <span class="btn-drop">
             <UnorderedListOutlined style="color: #1d2129" />
           </span>
           <template #overlay>
             <a-menu>
               <a-menu-item key="1" @click="handleNotes"> 备注 </a-menu-item>
-              <!-- <a-menu-item @click="handleCancelRelease">
-                    取消发布
-                </a-menu-item>
-                <a-menu-item @click="handleDetail">
-                    查看详情
-                </a-menu-item> -->
-              <!-- <a-menu-item>
-                    预览
-                </a-menu-item> -->
-              <!-- <a-menu-item key="4" @click="handleNotes"> 备注 </a-menu-item> -->
-              <!-- <a-menu-item key="1"> 内部分享 </a-menu-item> -->
-              <!-- <a-menu-item key="1"> 查看范围 </a-menu-item>
-                <a-menu-item key="2"> 邀请查看者 </a-menu-item>
-                <a-menu-item key="3"> 邀请所有人 </a-menu-item>
-                <a-menu-item key="4" @click="handleNotes"> 备注 </a-menu-item>
-                <a-menu-item key="5" @click="handleAddClass">添加分类</a-menu-item> -->
             </a-menu>
           </template>
-        </a-dropdown>
+</a-dropdown> -->
       </div>
     </div>
     <div class="detail-scroll">
@@ -59,64 +43,156 @@
           <div class="tableBox">
             <a-form :model="formState" ref="formRef">
               <div class="section">
-                <div class="sectionTitle">基本信息</div>
+                <!-- <div class="sectionTitle">基本信息</div> -->
                 <div class="sectionRow">
                   <div class="sectionItem">
-                    <a-form-item name="Name" label="模板名称" :rules="[{ required: true, message: '模板名称不能为空' }]">
+                    <a-form-item name="Name" label="发送名称" :rules="[{ required: true, message: '发送名称不能为空' }]">
                       <a-input v-model:value="formState.Name" class="ContentViewTemplateName"></a-input>
                     </a-form-item>
                   </div>
                 </div>
-              </div>
-              <div class="section">
-                <div class="sectionTitle">模板内容</div>
+                <div class="sectionRow">
+                  <div class="sectionItem">
+                    <a-form-item name="sendtype" label="发送时间">
+                      <a-radio-group v-model:value="formState.sendtype">
+                        <a-radio value="1">立即发送</a-radio>
+                        <a-radio value="2">定时发送</a-radio>
+                      </a-radio-group>
+                    </a-form-item>
+                  </div>
+                </div>
+                <div class="sectionRow" v-if="formState.sendtype && formState.sendtype * 1 == 2">
+                  <div class="sectionItem">
+                    <a-form-item name="sendtime" label="定时发送">
+                      <a-date-picker v-model:value="formState.sendtime" show-time placeholder="定时时间" />
+                    </a-form-item>
+                  </div>
+                </div>
+                <div class="sectionRow">
+                  <div class="sectionItem">
+                    <a-form-item name="rest" label="短信余额">
+                      <a-input v-model:value="formState.rest" class="ContentViewTemplateName" disabled></a-input>
+                    </a-form-item>
+                  </div>
+                  <div class="sectionItem">
+                    <a-form-item name="template" label="短信模板">
+                      <a-select v-model:value="formState.template">
+                        <a-select-option v-for="(option, optionIdx) in templateList" :key="optionIdx"
+                          :value="option.ID">{{
+                            option.Name }}</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                  </div>
+                </div>
                 <div class="sectionRow">
                   <div class="sectionItem sectionItem1">
-                    <a-form-item name="Content" label="" :rules="[{ required: true, message: '模板内容不能为空' }]">
-                      <div class="ContentViewTemplateContent">
+                    <a-form-item name="Content" label="短信内容" :rules="[{ required: true, message: '短信内容不能为空' }]">
+                      <!-- <div class="ContentViewTemplateContent">
                         <Editor v-if="isEditor" :mode="'doc'" placeholder="" ref="editorRef" :height="height"
                           @input="getContent" />
-                        <div class="wea-doc-mould-rich-text-right-list">
-                          <div class="special-field-wrapper " style="width: 180px; box-sizing: border-box;">
-                            <div style="border-left: 1px solid rgb(228, 228, 228);">
-                              <div style="padding: 4px 7px 6px; border-bottom: 1px solid rgb(228, 228, 228);">
-                                <div class="wea-input-focus ">
-                                  <span class="ant-input-wrapper">
-                                    <a-input placeholder="输入变量关键字搜索" @change="onSearch" v-model:value="searchVal"
-                                      allowClear class="ant-input" type="text" value="" />
-                                  </span>
-                                  <button type="button"
-                                    class="ant-btn ant-btn-ghost ant-btn-icon-only  wea-input-focus-btn">
-                                    <SearchOutlined />
-                                  </button>
-                                  <span class="placeHolder-tip" id="weaInputSearch_1"></span>
-                                </div>
-                              </div>
-                              <div class="special-field-wrapper-single ">
-                                <div class="wea-new-scroll " style="height: 497px;">
-                                  <div class="clipper  baron" style="overflow: hidden;">
-                                    <div class="scroller  "
-                                      style="overflow-y: scroll; box-sizing: border-box; margin: 0px; border: 0px;">
-                                      <ul style="padding: 7px 0px;">
-                                        <li class="special-field-item text-overflow" v-for="(item, index) in FieldList"
-                                          :name="item.name" :key="index" :class="{ 'actived': SelectFieldId == item.id }"
-                                          @click="SelectField(item)">{{ item.label || '' }}</li>
-                                      </ul>
-                                    </div>
-                                    <div class="track ">
-                                      <div class="bar" style="height: 143px; top: 0px;"></div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                      </div> -->
+                      <a-textarea v-model:value="formState.Content" rows="8" class="ContentViewTemplateName"></a-textarea>
+                    </a-form-item>
+                  </div>
+                </div>
+                <div class="sectionRow">
+                  <div class="sectionItem">
+                    <a-form-item name="suffix" label="短信内容后缀">
+                      <a-input v-model:value="formState.suffix" class="ContentViewTemplateName"></a-input>
+                    </a-form-item>
+                  </div>
+                  <div class="sectionItem">
+                    <a-form-item name="testPhone" label="测试号码">
+                      <div class="flex">
+                        <a-input v-model:value="formState.testPhone" class="ContentViewTemplateName"></a-input>
+                        <a-button type="link">测试发送</a-button>
                       </div>
                     </a-form-item>
                   </div>
                 </div>
+                <div class="sectionRow">
+                  <div class="sectionItem">
+                    <a-form-item name="suffix" label="单位通讯" :rules="[{ required: true, message: '短信内容不能为空' }]">
+                      <div class="flex">
+                        <a-input v-model:value="formState.searchVal" placeholder="请输入搜索字符"></a-input>
+                        <a-button type="link" @click="handleAddPeople(1)">添加人员</a-button>
+                      </div>
+                      <div class="peopleBox">
+                        <a-table :row-selection="formState.rowSelectionConfig" size="small" :pagination="false"
+                          :scroll="{ y: 200 }" style="height: 100%;" :dataSource="data.listData1" :columns="columns">
+                          <template #bodyCell="{ column, index }">
+                            <template v-if="column.key === 'operation'">
+                              <span class="iconTop" @click="arrowup(1, index)">
+                                <ArrowUpOutlined />
+                              </span>
+                              <span class="iconTop" @click="arrowdown(1, index)">
+                                <ArrowDownOutlined />
+                              </span>
+                            </template>
+                          </template>
+                        </a-table>
+                      </div>
+                    </a-form-item>
+                  </div>
+                </div>
+                <div class="sectionRow">
+                  <div class="sectionItem">
+                    <a-form-item name="suffix" label="个人通讯" :rules="[{ required: true, message: '短信内容不能为空' }]">
+                      <div class="flex">
+                        <a-input v-model:value="formState.searchVal" placeholder="请输入搜索字符"></a-input>
+                        <a-button type="link" @click="handleAddPeople(2)">添加人员</a-button>
+                      </div>
+                      <div class="peopleBox">
+                        <a-table :row-selection="formState.rowSelectionConfig" size="small" :pagination="false"
+                          :scroll="{ y: 200 }" style="height: 100%;" :dataSource="data.listData2" :columns="columns">
+                          <template #bodyCell="{ column, index }">
+                            <template v-if="column.key === 'operation'">
+                              <span class="iconTop" @click="arrowup(2, index)">
+                                <ArrowUpOutlined />
+                              </span>
+                              <span class="iconTop" @click="arrowdown(2, index)">
+                                <ArrowDownOutlined />
+                              </span>
+                            </template>
+                          </template>
+                        </a-table>
+                      </div>
+                    </a-form-item>
+                  </div>
+                </div>
+
+                <div class="sectionRow">
+                  <div class="sectionItem">
+                    <a-form-item name="suffix" label="分组">
+                      <div class="selectBox">
+                        <a-transfer
+                            v-model:target-keys="targetKeys"
+                            v-model:selected-keys="selectedKeys"
+                            :data-source="listData"
+                            :list-style="{
+                                width: '260px',
+                                height: '280px',
+                            }"
+                            :locale="{itemUnit:'',itemsUnit:'',notFoundContent:'列表为空',searchPlaceholder: '请输入搜索内容'}"
+                            show-search
+                            :titles="['可用项目', '所选项目']"
+                            :render="item => item.title"
+                            :disabled="disabled"
+                            @change="handleChange"
+                            @selectChange="handleSelectChange"
+                            @scroll="handleScroll"
+                        />
+                        <div class="sortBox">
+                            <a-button size="small" @click="selectedKeys.length && handleMoveUp()" :type="selectedKeys.length > 0 ? 'primary' : 'default' "><UpOutlined /></a-button>
+                            <a-button size="small" @click="selectedKeys.length && handleMoveDown()" :type="selectedKeys.length > 0 ? 'primary' : 'default' "><DownOutlined /></a-button>
+                        </div>
+                    </div>
+                    </a-form-item>
+                  </div>
+                </div>
+
               </div>
+
             </a-form>
           </div>
         </div>
@@ -135,6 +211,8 @@
       :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
     <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
       @cancel="isConfirm = false" @ok="isConfirm = false" :id="id" />
+    <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser = false"
+      @select="handleSelectUsers" />
   </div>
 </template>
 <script setup>
@@ -161,6 +239,7 @@ dayjs.extend(localeData);
 import {
   UnorderedListOutlined,
   DownOutlined,
+  UpOutlined,
   CaretDownOutlined,
   DeleteFilled,
   DeleteOutlined,
@@ -193,11 +272,35 @@ import Delete from "@/components/listView/Delete.vue";
 import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 import Interface from "@/utils/Interface.js";
 import { message } from "ant-design-vue";
+import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 import { girdFormatterValue } from "@/utils/common.js";
 const { proxy } = getCurrentInstance();
 const editorRef = ref();
 const route = useRoute();
 const router = useRouter();
+const columns = [
+  {
+    title: "姓名",
+    dataIndex: "name",
+    align: "center",
+    width: 100,
+  },
+  {
+    title: "部门",
+    dataIndex: "businessUnitIdName",
+    align: "center",
+    width: 100,
+  },
+  {
+    title: '操作',
+    key: 'operation',
+    fixed: 'right',
+    width: 80,
+    align: "center"
+  },
+]
+const dataSource = ref([]);
+const columnsList = toRaw(columns);
 const data = reactive({
   tabs: [
     {
@@ -235,13 +338,23 @@ const data = reactive({
   isConfirm: false,
   confirmText: '',
   confirmTitle: '',
-  title: '新建显示模板',
+  title: '新建短信发送',
   FieldList: [],
   FieldListAll: [],
   SelectFieldId: '',
-  searchVal: ''
+  searchVal: '',
+  templateList: [],
+  isMultipleUser: false,
+  listData1: [],
+  listData2: [],
+  listData: [],
+  targetKeys: [],
+  selectedKeys: []
 });
 const {
+  listData,
+  targetKeys,
+  selectedKeys,
   tabs,
   activeKey,
   id,
@@ -264,7 +377,7 @@ const {
   height,
   FolderId,
   isRadioUser,
-  IsReply, isConfirm, confirmText, confirmTitle, title, FieldList, FieldListAll, SelectFieldId, searchVal
+  IsReply, isConfirm, confirmText, confirmTitle, title, FieldList, FieldListAll, SelectFieldId, searchVal, templateList, isMultipleUser, listData1, listData2
 } = toRefs(data);
 const ReadRecordLst = ref();
 const DetailInfoEditRef = ref(null);
@@ -282,33 +395,7 @@ const formState = reactive({
   Name: '',
   Content: ''
 });
-const defaultContent = `<p>&nbsp;</p>
-<div align="center">
-<div style="background: rgb(233, 233, 233); margin: 0px auto; padding: 4px; border: 1px solid rgb(194, 194, 194); width: 950px; line-height: 22px;">
-<div align="left" style="background: url(&quot;Six_01.gif&quot;) repeat-x 50% top rgb(255, 255, 255); padding: 20px 40px; border: 1px solid rgb(255, 255, 255);">
-<div style="text-align: left; color: rgb(128, 128, 128); padding-bottom: 10px; font-size: 12px; border-bottom-color: rgb(216, 216, 216); border-bottom-width: 1px; border-bottom-style: dashed;">
-<p><img alt="" class="formImgPlay" data-imgsrc="/weaver/weaver.file.FileDownload?fileid=a64e15eefcc5614665811efb8ebf4a55a5216f1d9228e1aff195f08eb3390703ffe356ff22dfeab858d70e7e4327e75746e8662b6d7f37c27" onclick="ecCom.WeaRichText.playImg(this)" src="/weaver/weaver.file.FileDownload?fileid=a64e15eefcc5614665811efb8ebf4a55a5216f1d9228e1aff195f08eb3390703ffe356ff22dfeab858d70e7e4327e75746e8662b6d7f37c27" style="float:right" /></p>
-
-<p>发布日期：{{CreatedOn}}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img alt="" src="/weaver/weaver.file.FileDownload?fileid=aa2b9e044e6550c02fa4e089030305b7b0d8d57178121db74b41566603469b9f46f54a99481bb0aee8d70e7e4327e75746e8662b6d7f37c27" style="float:right" /></p>
-
-<p>所属目录：{{FolderId}}&nbsp;&nbsp;&nbsp;&nbsp; 文档编号：{{DocNumber}}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<img alt="" class="formImgPlay" data-imgsrc="/weaver/weaver.file.FileDownload?fileid=a64e15eefcc5614665811efb8ebf4a55a5216f1d9228e1aff195f08eb3390703ffe356ff22dfeab850aee9b3134d0510871362141037cfb4e" onclick="ecCom.WeaRichText.playImg(this)" src="/weaver/weaver.file.FileDownload?fileid=a64e15eefcc5614665811efb8ebf4a55a5216f1d9228e1aff195f08eb3390703ffe356ff22dfeab850aee9b3134d0510871362141037cfb4e" style="float:right" />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<img alt="" class="formImgPlay" data-imgsrc="/weaver/weaver.file.FileDownload?fileid=a2ea10cc802e27d0e73ca7bbfe2a4e02b91d9a7e09fc988e4d62cc587ec32bfd8fe266f7416e7d8470aee9b3134d0510871362141037cfb4e" onclick="ecCom.WeaRichText.playImg(this)" src="/weaver/weaver.file.FileDownload?fileid=a2ea10cc802e27d0e73ca7bbfe2a4e02b91d9a7e09fc988e4d62cc587ec32bfd8fe266f7416e7d8470aee9b3134d0510871362141037cfb4e" style="float:right" /><img alt="" class="formImgPlay" data-imgsrc="/weaver/weaver.file.FileDownload?fileid=a64e15eefcc5614665811efb8ebf4a55a5216f1d9228e1aff195f08eb3390703ffe356ff22dfeab850aee9b3134d0510871362141037cfb4e" onclick="ecCom.WeaRichText.playImg(this)" src="/weaver/weaver.file.FileDownload?fileid=a64e15eefcc5614665811efb8ebf4a55a5216f1d9228e1aff195f08eb3390703ffe356ff22dfeab850aee9b3134d0510871362141037cfb4e" style="float:right" /></p>
-</div>
-
-<h2 style="color: rgb(0, 0, 0); line-height: 85px; font-family: &quot;Microsoft YaHei&quot;; font-size: 24px; text-align: center;"><span style="font-family: 仿宋_GB2312,FangSong_GB2312 !important;">{{Title}}</span></h2>
-
-<p style="text-align: center; color: rgb(128, 128, 128); font-family: &quot;宋体&quot; !important; font-size: 12px; font-weight: normal;">创建人：{{CreatedBy}} &nbsp; &nbsp; &nbsp; &nbsp; 创建部门：{{BusinessUnitId}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 状态：{{StatusCodeName}}</p>
-
-<p style="height: 1px; line-height: 1px; text-indent: 2em; font-size: 0px; border-top-color: rgb(191, 191, 191); border-bottom-color: rgb(216, 216, 216); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
-
-<div>
-<p style="line-height: 1.75em; text-indent: 2em;">{{Content}}</p>
-
-<p style="text-align: right;"><span style="font-size: 12px;">该文档最后由 {{CreatedBy}}&nbsp; 更新于 {{ModifiedOn}}。</span></p>
-</div>
-</div>
-</div>
-</div>
-`;
+const defaultContent = ``;
 //插入字段
 const SelectField = (item) => {
   data.SelectFieldId = item.id;
@@ -393,8 +480,8 @@ const getDetail = () => {
   proxy.$post(Interface.detail, obj).then(res => {
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
       let fields = res.actions[0].returnValue.fields;
-      formState.Name = fields.Name.value;
-      formState.Content = fields.Body.value ? htmlDecode(fields.Body.value) : '';
+      formState.Name = fields.Name ? fields.Name.value : '';
+      formState.Content = fields.Body && fields.Body.value ? htmlDecode(fields.Body.value) : '';
     }
     if (editorRef && editorRef.value) {
       if (formState.Content) {
@@ -528,7 +615,7 @@ const handleSelectUser = (params) => {
   })
 }
 
-// 保存
+// 保存并发送
 const handleSave = (type) => {
   if (formState.Name) { } else {
     message.error("模板名称不能为空！");
@@ -581,21 +668,16 @@ const handleSave = (type) => {
   proxy.$post(url, obj).then(res => {
     //formRef.value.resetFields();
     if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
-      message.success("保存成功！");
+      message.success("发送成功！");
       //getDetail();
-      // let url = router.resolve({
-      //   name: "ContentViewTemplateEditor",
-      //   query: {
-      //     id: res.actions[0].returnValue.id || data.id || '',
-      //   },
-      // });
       let url = router.resolve({
-        path: "/lightning/o/ContentViewTemplate",
+        name: "ContentViewTemplateEditor",
         query: {
+          id: res.actions[0].returnValue.id || data.id || '',
         },
       });
       window.location.href = url.href;
-      data.title = '编辑显示模板';
+      data.title = '编辑短信发送';
       data.id = res.actions[0].returnValue.id || data.id || '';
     }
     else {
@@ -603,7 +685,7 @@ const handleSave = (type) => {
         message.success(res.actions[0].errorMessage);
       }
       else {
-        message.success("保存失败！");
+        message.success("发送失败！");
       }
     }
   });
@@ -633,17 +715,17 @@ onMounted(() => {
   getDetail();
   getFieldList();
   if (data.id) {
-    data.title = '编辑显示模板';
+    data.title = '编辑短信发送';
   } else {
-    data.title = '新建显示模板';
+    data.title = '新建短信发送';
   }
   let h = document.documentElement.clientHeight;
-  data.height = h - 260;
+  data.height = 300;
   data.isEditor = true;
   window.addEventListener("resize", () => {
     data.isEditor = false;
     let h = document.documentElement.clientHeight;
-    data.height = h - 260;
+    data.height = 300;
     setTimeout(function () {
       data.isEditor = true;
       setTimeout(function () {
@@ -657,6 +739,61 @@ const handleCancelRelease = () => {
   data.isConfirm = true;
   data.confirmText = '确定要取消发布吗？'
   data.confirmTitle = '取消发布'
+}
+const handleAddPeople = (index) => {
+
+  data.index = index;
+  data.isMultipleUser = true;
+}
+const cancelUserModal = (e) => {
+  data.isMultipleUser = e;
+}
+// 多选用户
+const handleSelectUsers = (params) => {
+  // console.log("多选用户:", params);
+  let addUsers = params.map(item => {
+    item.key = item.id;
+    return item;
+  })
+  if (data.index * 1 == 1) {
+    addUsers.forEach(item => {
+      let isBook = data.listData1.some(row => row.key == item.key);
+      if (!isBook) {
+        data.listData1.push(item);
+      }
+    });
+  }
+  else {
+    addUsers.forEach(item => {
+      let isBook = data.listData2.some(row => row.key == item.key);
+      if (!isBook) {
+        data.listData2.push(item);
+      }
+    });
+  }
+  data.isMultipleUser = false;
+};
+
+
+const arrowup = (item, index) => {
+  if (index != 0) {
+    let list = item.peopleList;
+    let a = list[index];
+    let b = list[index - 1];
+    list[index - 1] = a;
+    list[index] = b;
+    item.peopleList = list;
+  }
+}
+const arrowdown = (item, index) => {
+  if (index != item.peopleList.length - 1) {
+    let list = item.peopleList;
+    let a = list[index];
+    let b = list[index + 1];
+    list[index + 1] = a;
+    list[index] = b;
+    item.peopleList = list;
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -744,10 +881,10 @@ const handleCancelRelease = () => {
     margin-top: 45px;
     overflow: auto;
 
-    .detail-bd {
-      // padding: 24px;
-      height: 100%;
-    }
+    //.detail-bd {
+    // padding: 24px;
+    // height: 100%;
+    //}
 
     .tabContainer {
       min-height: 197px;
@@ -1433,6 +1570,12 @@ const handleCancelRelease = () => {
     padding: 0px;
     justify-items: center;
     margin: 10px 0 20px 0;
+    border: none !important;
+  }
+
+  .ContentViewTemplateContent {
+    border: 1px solid #dedede !important;
+
   }
 
   .detail-scroll .tabContainer .tableBox .sectionItem1 .ant-form-item {
@@ -1442,5 +1585,49 @@ const handleCancelRelease = () => {
   .section .sectionRow .sectionItem .ant-row {
     width: 100%;
   }
+
+  .ant-form-item {
+    margin-bottom: 0 !important;
+  }
+
+  .flex {
+    display: flex;
+    align-items: center;
+  }
+
+  .peopleBox {
+    /* height: 200px; */
+    border: 1px solid #e2e3e5;
+    margin-top: 10px;
+    border-radius: 3px;
+
+    .iconTop {
+      color: #3399ff;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  }
+  .selectBox{
+    /* height: 200px; */
+    // border: 1px solid #e2e3e5;
+    margin-top: 10px;
+    border-radius: 3px;
+    display: flex;
+        justify-content: center;
+        align-items: center;
+    :deep .ant-transfer-list{
+      width: 500px !important;
+    }
+  }
+  .sortBox{
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        gap: 5px;
+    }
+}
+
+.ContentViewTemplateEditorWrap :deep .tox-tinymce {
+  width: 100% !important;
 }
 </style>

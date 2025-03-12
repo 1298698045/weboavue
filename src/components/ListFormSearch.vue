@@ -135,7 +135,11 @@
     // 重置
     const resetForm = () => {
         formRef.value.resetFields();
-        emit("search", "")
+        data.searchFields=[];
+        nextTick(()=>{
+            getSearchLayout();
+            emit("search", "");
+        })
     }
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);

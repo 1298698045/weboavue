@@ -7,13 +7,13 @@
                 </div>
                 <span class="headerTitle">通讯录</span>
             </div>
-            <div class="headerRight" v-if="activeKey=='1'">
+            <div class="headerRight">
                 <!-- <a-button class="ml10">导入</a-button> -->
                 <!-- <a-button class="ml10">导出</a-button>
                 <a-button class="ml10">下载模板</a-button> -->
                 <a-input-search class="ml10" v-model:value="searchVal" placeholder="请输入关键字" style="width: 150px;"
                     @search="onSearch" />
-                <a-dropdown class="ml10">
+                <a-dropdown class="ml10" v-if="activeKey=='1'">
                     <template #overlay>
                         <a-menu @click="handleMenuClick">
                             <a-menu-item key="1" @click="choiceSort('全部','')">
@@ -139,9 +139,7 @@
                                 <div class="contactsWrap">
                                     <div class="cartItemHead">
                                         <div class="cartAvatar">
-                                            <img v-if="item.PhotoUrl || item.photoUrl || item.Avatar"
-                                                :src="item.PhotoUrl || item.photoUrl || item.Avatar" />
-                                            <i v-else class="iconfont icon-morentouxiang"></i>
+                                            <img :src="item.avatarUrl" @error="handleImageError(item)" />
                                         </div>
                                         <div class="cartInfo">
                                             <div class="name">
@@ -272,7 +270,7 @@
                             <div class="contactsWrap">
                                 <div class="cartItemHead">
                                     <div class="cartAvatar">
-                                        <img class="img" :src="require('@/assets/img/avatar.png')" alt="">
+                                        <img :src="item.avatarUrl" @error="handleImageError(item)" />
                                     </div>
                                     <div class="cartInfo">
                                         <div class="name">{{item.FullName || item.fullName || ''}}</div>
@@ -620,6 +618,7 @@
                         item.OrganizationIdName=item.organizationIdName||'';
                         item.pinyin=item.Pinyin||'';
                         item.id=item.UserId||'';
+                        item.avatarUrl=Interface.pathUrl+':9091/api/one/user/avatar/'+item.id;
                         var isPinyin = list2.some(function (v) {
                             if(item.pinyin){
                                 return v.pinyin == (item.pinyin.textValue).slice(0, 1)
@@ -660,6 +659,7 @@
                         item.MobilePhone=item.MobilePhone?item.MobilePhone.textValue:(item.mobilePhone?item.mobilePhone.textValue:'');
                         item.EMailAddress=item.EMailAddress?item.EMailAddress.textValue:(item.InternalEMailAddress?item.InternalEMailAddress.textValue:'');
                         item.pinyin=item.Pinyin?item.Pinyin.textValue:'';
+                        item.avatarUrl=Interface.pathUrl+':9091/api/one/user/avatar/'+item.id;
                         var isPinyin = list.some(function (v) {
                             if(item.pinyin){
                                 return v.pinyin == (item.pinyin.textValue).slice(0, 1)
@@ -719,6 +719,10 @@
         });
         window.open(url.href);
     };
+    const handleImageError=(item)=>{
+        item.avatarUrl='/src/assets/img/avatar.png';
+        return item;
+    };
     onMounted(() => {
         let userInfo=window.localStorage.getItem('userInfo');
         if(userInfo){
@@ -768,5 +772,10 @@
             }
         }
     }
-    
+    .cartAvatar{
+        img{
+            width: 100%;
+            height: 100%;
+        }
+    }
 </style>

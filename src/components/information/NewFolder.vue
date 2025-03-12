@@ -122,7 +122,7 @@
     }
         proxy.$post(url,obj).then(res=>{
           formRef.value.resetFields();
-          if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].state=='SUCCESS'){
             message.success("保存成功！");
             emit("success", false);
           }
@@ -173,7 +173,7 @@ const handleSubmit = ()=> {
     }
         proxy.$post(url,obj).then(res=>{
           formRef.value.resetFields();
-          if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+          if(res&&res.actions&&res.actions[0]&&res.actions[0].state=='SUCCESS'){
             message.success("保存成功！");
             emit("success", false);
           }

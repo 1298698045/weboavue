@@ -8,7 +8,7 @@
                 <span class="headerTitle">视频文件</span>
             </div>
             <div class="headerRight">
-                <a-upload v-model:file-list="fileList" action="#" :showUploadList="false" v-if="data.BreadCrumbList.length">
+                <a-upload accept="video/*" v-model:file-list="fileList" :headers="headers" @change="changeFiles" :data="uploadData" :action="Interface.file.cloudUpload" :showUploadList="false" v-if="data.BreadCrumbList.length">
                    <a-button class="ml10" type="primary" >上传视频</a-button>
                 </a-upload>
                 <a-button class="ml10" type="primary" @click="handleNew">新建文件夹</a-button>
@@ -79,11 +79,31 @@
                             <img :src="require('@/assets/img/filetype/Folder.png')" />
                             <div class="add-addtext">{{item.Name}}</div>
                             <div class="add-addtime">{{item.CreatedOn}}</div>
+                            <div class="iconBox content-item-iconBox">
+                                <div class="popup">
+                                    <div class="option-item" @click.stop="handleDetail(item.id,item.Name)" :num="index">打开</div>  
+                                    <div class="option-item" @click.stop="handleEdit(item.id)" :num="index">编辑</div>  
+                                    <!-- <div class="option-item" :num="index">重命名</div>   -->
+                                    <div class="option-item" @click.stop="handleDelete(item.id)" :num="index">删除</div>
+                                    <!-- <div class="option-item" :num="index">设置权限</div>   -->
+                                </div>
+                                <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
+                            </div>
                         </div>
-                        <div class="content-item" v-for="(item,index) in FileList" :key="index" @click="handlePreview(item.id)">
+                        <div class="content-item" v-for="(item,index) in FileList" :key="index" @click="handlePreview(item)">
                             <img :src="require('@/assets/img/filetype/video.png')" />
                             <div class="add-addtext">{{item.Name}}</div>
                             <div class="add-addtime">{{item.CreatedOn}}</div>
+                            <div class="iconBox content-item-iconBox">
+                                <div class="popup">
+                                    <div class="option-item" @click.stop="handlePreview(item)" :num="index">查看</div>  
+                                    <!-- <div class="option-item" @click.stop="handleEdit(item.id)" :num="index">编辑</div>   -->
+                                    <!-- <div class="option-item" :num="index">重命名</div>   -->
+                                    <div class="option-item" @click.stop="handleDelete2(item.id)" :num="index">删除</div>
+                                    <!-- <div class="option-item" :num="index">设置权限</div>   -->
+                                </div>
+                                <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg>
+                            </div>
                         </div>
                     </div>
                     <div class="empty" v-if="FolderList.length==0&&FileList.length==0">
@@ -114,7 +134,7 @@
                             <div v-if="column.key=='Action'">
                                 <div class="iconBox">
                                     <div class="popup">
-                                        <div class="option-item" @click="handleDetail(record.id)" :num="index">查看</div>  
+                                        <div class="option-item" @click="handleDetail(record.id,record.Name)" :num="index">查看</div>  
                                         <div class="option-item" @click="handleEdit(record.id)" :num="index">编辑</div>  
                                         <div class="option-item" :num="index">重命名</div>  
                                         <div class="option-item" @click="handleDelete(record.id)" :num="index">删除</div>
@@ -134,7 +154,7 @@
         </div>
         <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon=false" :title="data.recordId?'编辑':'新建'" @success="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue" :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
         <!-- <add-group :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" ></add-group> -->
-        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+        <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName2" :recordId="recordId" :objTypeCode="objectTypeCode2" :external="external" />
     </div>
 </template>
 <script setup>
@@ -164,6 +184,8 @@
     const tablelist=ref();
     const { proxy } = getCurrentInstance();
     const router = useRouter();
+    const route = useRoute();
+    const token = localStorage.getItem("token");
     const data = reactive({
         treeData: [
           {
@@ -267,8 +289,18 @@
         relatedObjectAttributeValue:'10010000-0000-0000-0000-000000000012',
         relatedObjectAttributeName:'视频文件',
         loading:false,
+        uploadData: {
+            folderId: ""
+        },
+        headers: {
+            Authorization: token,
+            Token: token,
+        },
+        FolderName:'',
+        objectTypeCode2:'100200',
+        sObjectName2:'ItemTree'
     })
-    const { loading,relatedObjectAttributeValue,relatedObjectAttributeName,fileList,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
+    const { objectTypeCode2, sObjectName2, FolderName, uploadData, headers, loading,relatedObjectAttributeValue,relatedObjectAttributeName,fileList,BreadCrumbList,FileList,type,treeData, pageNumber, pageSize, listData,
          searchVal, total, isLeft, selectedKeys, FolderList, columns, groupList,isCommon,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,pagination,tableHeight } = toRefs(data);
     
     const handleTreeSelect = (keys,{node}) => {
@@ -276,6 +308,13 @@
             data.selectedKeys=keys;
         }
         getQuery();
+    }
+    const changeFiles = (e) => {
+        // console.log("e", e);
+        if (e.file.status == "done") {
+            message.success("上传成功！");
+            onSearch();
+        }
     }
     const handleLeftShow = () => {
         data.isLeft = !data.isLeft;
@@ -338,17 +377,19 @@
     }
     getQuery();
     const onSearch = (e)=> {
-        getQuery();
+        //getQuery();
+        tofolder(data.uploadData.folderId,data.FolderName);
     }
     const onClear = (e)=> {
         data.searchVal='';
-        getQuery();
+        onSearch();
     }
     const handleMenuClick = (e) => {
         data.type=e.key;
         //console.log("e",e);
     }
-    const handleDetail = (id) => {
+    const handleDetail = (id,name) => {
+        tofolder(id,name)
       return
         let GroupId = id;
         let routeData = router.resolve({
@@ -362,7 +403,7 @@
     //改变页码
     const handleTableChange=(pag, filters, sorter)=>{
       data.pagination.current=pag.current;
-      getQuery();
+      onSearch();
     }
     //新建
     const handleNew = (e) => {
@@ -371,18 +412,26 @@
     }
     //编辑
     const handleEdit = (key) => {
-        return
-      console.log(key,2222222)
-      data.recordId=key;
-      data.isCommon = true;
+        data.recordId=key;
+        data.isCommon = true;
+        
     }
     // 通用弹窗关闭
     const handleCommonCancel = (params) => {
         data.isCommon=false;
     };
-    //删除
+    //删除文件夹
     const handleDelete = (key) => {
         data.recordId=key;
+        data.sObjectName2='ItemTree';
+        data.objectTypeCode2='100200';
+        data.isDelete = true;
+    }
+    //删除文件
+    const handleDelete2 = (key) => {
+        data.recordId=key;
+        data.sObjectName2='File';
+        data.objectTypeCode2='100100';
         data.isDelete = true;
     }
     //删除关闭
@@ -399,6 +448,8 @@
       data.FolderList=[];
       data.FileList=[];
       let filterQuery='';
+      data.uploadData.folderId=id;
+      data.FolderName=name;
       if(id){
         filterQuery='\nParentId\teq\t'+id;
       }
@@ -410,7 +461,7 @@
           objectTypeCode:'100200',
           entityName:'ItemTree',
           filterQuery:filterQuery,
-          search:'',
+          search:data.searchVal||'',
           page: 1,
           rows: 100,
           sort:'SortNumber',
@@ -465,7 +516,7 @@ const getArticle=(id)=>{
               for (var i = 0; i < res.nodes.length; i++) {
                   var item = res.nodes[i];
                   for(var cell in item){
-                      if(cell!='id'&&cell!='nameField'&&cell!='ContentId'&&cell!='SubjectId'){
+                      if(cell!='id'&&cell!='nameField'&&cell!='ContentId'&&cell!='viewUrl'){
                           item[cell]=girdFormatterValue(cell,item);
                       }
                       // if(cell=='ContentId'||cell=='SubjectId'){
@@ -486,15 +537,16 @@ const getArticle=(id)=>{
             }
         })
   }
-  function handlePreview(id) {
+  function handlePreview(item) {
+    // console.log(item.viewUrl)
     // let reUrl = router.resolve({
-    //     path:"/lightning/page/KnowledgeMapDetail",
+    //     path:item.viewUrl,
     //     query: {
-    //       id: id,
-    //       SubjectId:data.ParentId
+          
     //     }
     // })
     // window.open(reUrl.href); 
+    window.open(item.viewUrl);
   }
   const CreatedBreadCrumb=(id,name)=>{
     if(id){
@@ -512,6 +564,11 @@ const getArticle=(id)=>{
       data.BreadCrumbList=[];
     }
   }
+  watch(() => route, (newVal, oldVal) => {
+    if (route.path == '/_ui/file/video/ListPage') {
+      getQuery();
+    }
+  }, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
     @import "@/style/addressBook.less";
@@ -713,4 +770,25 @@ const getArticle=(id)=>{
             margin-left: 25px;
         }
     }
+    .AlbumWrap {
+        .content-item {
+            position: relative;
+        }
+        .iconBox .popup{
+            top: 20px;
+        }
+        .content-item-iconBox {
+            position: absolute;
+            right: 12px;
+            top: 10px;
+            display: none;
+            text-align: left;
+        }
+        .content-item:hover{
+            .content-item-iconBox{
+                display: block;
+            }
+        }
+    }
+    
 </style>

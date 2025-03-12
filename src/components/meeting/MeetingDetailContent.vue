@@ -221,7 +221,7 @@ import {
 import { useRouter, useRoute } from "vue-router";
 import Related from "@/components/detail/Related.vue";
 import Info from "@/components/detail/Info.vue";
-import InfoNotes from "@/components/information/InfoNotes.vue";
+import InfoNotes from "@/components/commonTab/RelatedNote.vue";
 import ChangeStatus from "@/components/information/ChangeStatus.vue";
 import InfoAddClass from "@/components/information/InfoAddClass.vue";
 import AffiliatedColumn from "@/components/information/AffiliatedColumn.vue";
@@ -393,7 +393,7 @@ const getDetail = () => {
             let fields=res.actions[0].returnValue.fields;
             data.detailData=fields;
             data.TopicsShow=true;
-            if(fields.Name.value){
+            if(fields.Name&&fields.Name.value){
                 data.detail.Title=fields.Name.value;
                 data.deleteDesc="确定要删除 "+fields.Name.value+" 吗";
               }

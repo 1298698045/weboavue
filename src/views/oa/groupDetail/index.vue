@@ -195,7 +195,7 @@
       </div>
     </div>
     <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
-    <Notes v-if="isNotes" :isShow="isNotes" @cancel="closeNotes" />
+    <Notes v-if="isNotes" :isShow="isNotes" @cancel="closeNotes" :id="recordId" />
     <!-- <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal> -->
     <add-group :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" type="1"></add-group>
     <update-group-image :isShow="isUpdateGroupImage" v-if="isUpdateGroupImage" @cancel="isUpdateGroupImage=false" title="更新照片" @load="submitOk" :id="recordId"></update-group-image>
@@ -227,7 +227,7 @@ import Statistics from "@/components/groupDetail/Statistics.vue";
 // 选人
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 // 备注
-import Notes from "@/components/groupDetail/Notes.vue";
+import Notes from "@/components/commonTab/RelatedNote.vue";
 //import CommonFormModal from "@/components/listView/CommonFormModal.vue";
 // 编辑
 import AddGroup from "@/components/groupDetail/AddGroup.vue";
@@ -324,9 +324,10 @@ const refreshPeople=(e)=>{
 }
 const deleteOk = (e) => {
   data.isDelete = false;
-  message.success("删除成功!");
   if(data.deleteInfo.objectTypeCode=='9'){
-    window.location.href='/lightning/o/CollaborationGroup/list';
+    setTimeout(function(){
+      window.location.href='/#/lightning/o/CollaborationGroup/list';
+    },1000)
   }
   else{
     refreshPeople();

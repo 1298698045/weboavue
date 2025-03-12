@@ -44,7 +44,10 @@
                         <a-tab-pane key="1">
                             <template #tab>未读<span class="unreadcount">{{ unreadcount || 0 }}</span></template>
                         </a-tab-pane>
-                        <a-tab-pane key="2" tab="全部"></a-tab-pane>
+                        <a-tab-pane key="2">
+                            <template #tab>已读</template>
+                        </a-tab-pane>
+                        <a-tab-pane key="3" tab="全部"></a-tab-pane>
                     </a-tabs>
                     <div class="rWrap">
                         <a-button class="ml10">批量导出</a-button>
@@ -156,6 +159,17 @@ import {
     ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
     defineEmits, h
 } from "vue";
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+dayjs.locale('zh-cn');
+import calendar from 'dayjs/plugin/calendar';
+import weekday from 'dayjs/plugin/weekday';
+import localeData from 'dayjs/plugin/localeData';
+
+dayjs.extend(calendar);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
 import { useRouter, useRoute } from "vue-router";
 import { SearchOutlined, MoreOutlined, CopyOutlined, SortAscendingOutlined, LeftOutlined, RightOutlined, PlusOutlined, CaretDownOutlined } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
@@ -327,16 +341,19 @@ const getQuery = () => {
         rows: data.pagination.pageSize,
         sort: 'CreatedOn',
         order: 'desc',
-        displayColumns: 'ObjectId,CreatedOn,FolderId,BusinessUnitId,CreatedBy'
+        displayColumns: 'Name,ObjectId,CreatedOn,FolderId,BusinessUnitId,CreatedBy'
     }
-    if (data.activeKey * 1 == 2) {
-        d.objectTypeCode = '100201';
-        d.entityName = 'Content';
-        d.displayColumns = 'Title,CreatedOn,FolderId,BusinessUnitId,CreatedBy';
-    }
-    else {
+    if (data.activeKey * 1 == 1) {
         data.unreadcount = 0;
         d.filterQuery += '\nReaderId\teq-userid\nIsRead\tneq\ttrue';
+    }
+    else if (data.activeKey * 1 == 2) {
+        d.filterQuery += '\nReaderId\teq-userid\nIsRead\teq\ttrue';
+    }
+    else {
+        // d.objectTypeCode = '100201';
+        // d.entityName = 'Content';
+        // d.displayColumns = 'Name,Title,CreatedOn,FolderId,BusinessUnitId,CreatedBy';
     }
     data.dataSource = [];
     data.pagination.total = 0;
@@ -353,9 +370,12 @@ const getQuery = () => {
                     if (cell != 'id' && cell != 'nameField') {
                         item[cell] = girdFormatterValue(cell, item);
                     }
-                }
-                if (cell == 'ObjectId') {
-                    item.Title = item.ObjectId;
+                    if (cell == 'Title') {
+                        item.Name = item.Title || item.ObjectId;
+                    }
+                    if (cell == 'CreatedOn') {
+                        item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
+                    }
                 }
                 list.push(item);
             }
@@ -542,7 +562,7 @@ const changeRightTab = (e) => {
     data.pagination.current = 1;
     getQuery();
 }
-function changeHeight(){
+function changeHeight() {
     let h = tablelist.value.clientHeight;
     data.tableHeight = h - 40;
     getQuery();
@@ -550,7 +570,7 @@ function changeHeight(){
 onMounted(() => {
     let h = tablelist.value.clientHeight;
     data.tableHeight = h - 40;
-    window.addEventListener('resize',changeHeight)
+    window.addEventListener('resize', changeHeight)
 })
 </script>
 <style lang="less" scoped>

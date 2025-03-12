@@ -15,6 +15,7 @@ import {
   defineEmits,
   toRaw,
 } from "vue";
+import Interface from "@/utils/Interface.js";
 const emit = defineEmits(["input"]);
 const height = ref(null);
 const editorRef = ref();
@@ -123,8 +124,9 @@ const initializeEditor = () => {
     promotion: false,
     height: props.height,
     emoticons_database_url: '/tinymce/plugins/emoticons/js/emojis.js',
-    images_upload_url: 'https://wx.phxinfo.com.cn/rest',
+    images_upload_url: Interface.uploadFiles,
     paste_data_images:true,
+    contextmenu:'copy paste',
     images_upload_handler:function(blobInfo,success,failure){
       // let reader = new FileReader()
       // reader.readAsDataURL(blobInfo.blob())

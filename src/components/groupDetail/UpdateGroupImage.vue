@@ -161,14 +161,17 @@
           if (data.file) {
             let fd = new FormData();
             fd.append('entityName', 'Group');
-            fd.append('parentId', props.id);
+            fd.append('id', props.id);
             fd.append('file', data.file);
+            //let token = window.localStorage.getItem('token');
             axios({
                 url: Interface.uploadAvatar,
                 method: 'POST',
                 data: fd,
                 headers: {
                     'Content-type': 'multipart/form-data',
+                    // 'Authorization': token,
+                    // 'Token': token
                 },
             }).then(res=>{
                 message.success("上传成功！");

@@ -118,6 +118,16 @@
       key: "InviteeId"
   },
   {
+      title: "工号",
+      dataIndex: "EmployeeNo",
+      key: "EmployeeNo"
+  },
+  {
+      title: "岗位",
+      dataIndex: "PostId",
+      key: "PostId"
+  },
+  {
       title: "备注",
       dataIndex: "Description",
       key: "Description"
@@ -166,7 +176,7 @@
           rows: data.pagination.pageSize,
           sort:'ModifiedOn',
           order:'desc',
-          displayColumns:'InviteeId,OwningBusinessUnit,Checkin,name,Checkout,StatusCode,CheckinStatus,Description,ModifiedOn'
+          displayColumns:'InviteeId,OwningBusinessUnit,Checkin,name,Checkout,StatusCode,CheckinStatus,Description,ModifiedOn,EmployeeNo,PostId'
       }).then(res => {
           var list = [];
           data.pagination.total = res.pageInfo?res.pageInfo.total:0;

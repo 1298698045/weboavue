@@ -710,6 +710,11 @@ const getArticle=(id)=>{
       data.BreadCrumbList=[];
     }
   }
+  watch(() => route, (newVal, oldVal) => {
+    if (route.path == '/lightning/page/article/new') {
+      tofolder('','')
+    }
+  }, { deep: true, immediate: true })
   </script>
   <style lang="less" scoped>
   .NewKbArticleWrap {

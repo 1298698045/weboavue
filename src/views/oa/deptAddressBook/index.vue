@@ -452,7 +452,7 @@
                 </div>
             </div>
         </div>
-        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
+        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @success="onSearch" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal>
         <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
     </div>
 </template>
@@ -690,7 +690,8 @@
     getQuery();
     // 复制
     const handleCopy = (item) => {
-        onCopy(item.MobilePhone || item.mobilePhone || '')
+        //onCopy(item.MobilePhone || item.mobilePhone || '')
+        onCopy(item);
     }
     const onCopy = (e) => {
         const input = document.createElement("input");

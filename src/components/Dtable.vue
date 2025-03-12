@@ -105,7 +105,7 @@
                   data0.rows = data;
               }
           }
-          data0.total = data&&data.totalCount ? Number(data.totalCount) : data0.rows.length;
+          data0.total = data&&data.total ? Number(data.total) : data0.rows.length;
           return data0
       },
       method: "get",

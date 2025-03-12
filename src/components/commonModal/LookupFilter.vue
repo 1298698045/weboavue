@@ -69,7 +69,7 @@ import {
 import { message } from "ant-design-vue";
 import Dtable from "@/components/Dtable_nodes.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
-
+import { girdFormatterValue } from "@/utils/common.js";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
 console.log(document.documentElement.clientHeight);
@@ -82,6 +82,7 @@ const props = defineProps({
   entityApiName: String,
   lookEntityApiName: String,
   lookObjectTypeCode: [Number, String],
+  filterQuery:String
 });
 const formRef = ref();
 const emit = defineEmits(["cancel","select"]);
@@ -106,7 +107,7 @@ const data = reactive({
   queryParams: {
     entityType: props.lookEntityApiName,
     search: "",
-    filterQuery: "",
+    filterQuery: props.filterQuery,
     rows: "",
     page: "",
     sort: "",
@@ -128,6 +129,9 @@ const advancedSearch = () => {
 };
 const handleAdvanceSearch = (e) => {
   console.log("高级搜索", e);
+  if(props.filterQuery){
+    e+=props.filterQuery;
+  }
   gridRef.value.loadGrid({search: data.searchVal, filterQuery: e});
 }
 const handleMenu = (e)=> {
@@ -157,15 +161,16 @@ const loadFilter = (res) => {
       let list = [];
       fields.forEach(field=>{
         list = res.nodes.map(row=>{
-          if(row[field] && row[field].__typeName == 'TextField'){
-            row[field] = row[field].textValue;
-          }else if(row[field] && row[field].__typeName == 'DateTimeField'){
-            row[field] = row[field].dateTime;
-          }else if(row[field] && row[field].__typeName == 'UserField'){
-            row[field] = row[field].userValue.DisplayName || '';
-          }else {
-            row[field] = row[field].value || '';
-          }
+          // if(row[field] && row[field].__typeName == 'TextField'){
+          //   row[field] = row[field].textValue;
+          // }else if(row[field] && row[field].__typeName == 'DateTimeField'){
+          //   row[field] = row[field].dateTime;
+          // }else if(row[field] && row[field].__typeName == 'UserField'){
+          //   row[field] = row[field].userValue.DisplayName || '';
+          // }else {
+          //   row[field] = row[field].value || '';
+          // }
+          row[field]=girdFormatterValue(field, row);
           row.LIST_RECORD_ID = row.id;
           return row;
         })

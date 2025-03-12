@@ -92,6 +92,9 @@
                 <a-checkbox v-model:checked="record.checked"></a-checkbox>
               </div>
             </template>
+            <template v-if="column.key === 'IsRead'">
+              <div v-html="record.IsRead"></div>
+            </template>
             <template v-if="column.key === 'Action'">
               <div class="iconBox">
                 <div class="popup">

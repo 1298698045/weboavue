@@ -73,7 +73,7 @@
                 apiName:props.objTypeCode=='100201'?'Content':'Notice',
                 objTypeCode: props.objTypeCode,
                 fields: {
-                    IsTop: formState.IsTop,
+                    IsTop: formState.IsTop?1:0,
                     EndTopDate:formState.RestTime2||'',
                 }
               }              

@@ -200,8 +200,8 @@ const props = defineProps({
 const carouselRef = ref();
 const getImgUrl = (index) => {
     let url = require('@/assets/img/filetype/defaultImg.png');
-    if (data.imageList[index] && data.imageList[index].ThumbnailUrl) {
-        url = data.imageList[index].ThumbnailUrl
+    if (data.imageList[index] && data.imageList[index].viewUrl) {
+        url = data.imageList[index].viewUrl
     }
     return url;
 };
@@ -535,7 +535,7 @@ const handleDeleteComment = (item) => {
 }
 //全屏
 const handleFullScreen = () => {
-    window.open(data.detail.ThumbnailUrl)
+    window.open(data.detail.viewUrl)
 }
 //旋转
 const handleRotate = () => {
@@ -544,20 +544,24 @@ const handleRotate = () => {
 }
 //下载
 const handleDownload = () => {
-    axios({
-        url: data.detail.ThumbnailUrl,
-        method: 'get',
-        responseType: 'blob',
-    }).then(res => {
-        let url = window.URL.createObjectURL(res.data);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = data.detail.Name + '.' + data.detail.FileExtension;
-        a.click();
-    }).catch(err => {
-        console.log('error', err);
-        message.error("下载失败！");
-    });
+    let url = detail.downloadUrl;
+    //window.open(url);
+    let text = detail.Name || '';
+    windowOpen(url, text);
+    // axios({
+    //     url: data.detail.viewUrl,
+    //     method: 'get',
+    //     responseType: 'blob',
+    // }).then(res => {
+    //     let url = window.URL.createObjectURL(res.data);
+    //     const a = document.createElement('a');
+    //     a.href = url;
+    //     a.download = data.detail.Name + '.' + data.detail.FileExtension;
+    //     a.click();
+    // }).catch(err => {
+    //     console.log('error', err);
+    //     message.error("下载失败！");
+    // });
 }
 onMounted(() => {
     if (props.photoParams) {

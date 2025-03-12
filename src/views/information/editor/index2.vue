@@ -173,7 +173,7 @@
       <RadioUser v-if="isRadioUser" :isShow="isRadioUser" @cancel="cancleRadio" @selectVal="handleSelectUser" />
       <RelaseInfo v-if="isRelaseInfo" :isShow="isRelaseInfo" :objectTypeCode="objectTypeCode" :id="id" :FolderId="FolderId" @cancel="cancelRelaseInfo" />
       <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
-      <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="id" />
+      <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="confirmOk" :id="id" />
       <AddDocument v-if="isAddDoc" :isShow="isAddDoc" @select="handleSelectDoc" @cancel="isAddDoc=false" />
       <AddLink v-if="isAddLink" :isShow="isAddLink" @select="handleSelectLink" :entityApiName="sObjectName2" @cancel="isAddLink=false" />
     </div>
@@ -220,7 +220,7 @@
   import { useRouter, useRoute } from "vue-router";
   import Related from "@/components/detail/Related.vue";
   import Info from "@/components/detail/Info.vue";
-  import InfoNotes from "@/components/information/InfoNotes.vue";
+  import InfoNotes from "@/components/commonTab/RelatedNote.vue";
   import ChangeStatus from "@/components/information/ChangeStatus.vue";
   import InfoRemind from "@/components/information/InfoRemind.vue";
   import InfoAddClass from "@/components/information/InfoAddClass.vue";
@@ -517,6 +517,10 @@ if(route.query.objectTypeCode=='100201'){
     }
   // 保存
   const handleSave = (type) => {
+    if(data.detail.Title==''){
+      message.error("标题不能为空！");
+      return false
+    }
         if(DetailInfoEditRef&&DetailInfoEditRef.value&&DetailInfoEditRef.value.handleSubmit!='undefined'&&type!=1){
             DetailInfoEditRef.value.handleSubmit();
         }
@@ -638,6 +642,84 @@ if(route.query.objectTypeCode=='100201'){
     data.isConfirm=true;
     data.confirmText='确定要取消发布吗？'
     data.confirmTitle='取消发布'
+  }
+  const confirmOk = () => {
+    if (data.confirmTitle == '删除') {
+      let obj = {
+        actions: [{
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            recordId: data.id,
+            apiName: 'Content',
+            objTypeCode: 100201,
+          }
+        }]
+      };
+      let d = {
+        message: JSON.stringify(obj)
+      };
+      proxy.$post(Interface.delete, d).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+          message.success("删除成功");
+          setTimeout(function () {
+            let reUrl = router.resolve({
+              path: "/lightning/o/Content/home",
+              query: {
+
+              }
+            })
+            window.open(reUrl.href);
+          },1000)
+        } else {
+          if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+            message.success(res.actions[0].errorMessage);
+          }
+          else {
+            message.error("删除失败");
+          }
+        }
+        
+      })
+    } else if (data.confirmTitle == '取消发布') {
+      let url = Interface.edit;
+      let d = {
+        actions: [{
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            recordInput: {
+              allowSaveOnDuplicate: false,
+              apiName: 'Content',
+              objTypeCode: 100201,
+              fields: {
+                StateCode: "0"
+              }
+            }
+          }
+        }]
+      };
+      if (data.id) {
+        d.actions[0].params.recordId = data.id;
+      }
+      let obj = {
+        message: JSON.stringify(d)
+      }
+      proxy.$post(url, obj).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+          message.success("取消成功");
+          data.isConfirm = false;
+        }
+        else {
+          message.error("取消失败");
+        }
+      });
+    }
+    else {
+      data.isConfirm = false;
+    }
   }
   //添加文档链接
   const addDoc=()=>{

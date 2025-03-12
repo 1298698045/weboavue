@@ -772,7 +772,7 @@
   const New = () => {
     data.isCommon = true;
   }
-
+  window.New = New;
   const Edit = (id) => {
     data.listId = id;
     data.isCommon = true;

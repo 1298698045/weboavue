@@ -110,8 +110,9 @@
                                               <template v-if="column.key === 'Action'">
                                                 <div class="iconBox">
                                                   <div class="popup">
-                                                    <div class="option-item" @click="handlePreview(record.id)" :num="index">预览文章</div>
-                                                    <div class="option-item" @click="handleEditContent(record.ContentId)" :num="index">编辑文章内容</div>
+                                                    <div class="option-item" @click="handlePreview(record.ContentId)" :num="index">预览文章</div>
+                                                    <div class="option-item" @click="handleEditContent(record.ContentId)" :num="index">编辑文章</div>
+                                                    <div class="option-item" @click="handlePreview2(record.id)" :num="index">预览知识地图</div>
                                                     <div class="option-item" @click="handleEditArticle(record.id,record.SubjectIdValue)" :num="index">编辑</div>
                                                     <div class="option-item" @click="handleDelete2(record.id,record.SubjectIdValue)" :num="index">删除</div>
                                                   </div>
@@ -177,7 +178,7 @@
       <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="id" />
       <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon=false" :title="data.recordId2?(data.recordId2==data.recordId?'编辑子主题':'编辑文章'):'新建子主题'" @success="deleteOk" :id="data.recordId2" :objectTypeCode="objectTypeCode2" :entityApiName="sObjectName2" :relatedObjectAttributeValue="relatedObjectAttributeValue" :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
       <Lookup-filter v-if="isLookup" :isShow="isLookup" :entityApiName="sObjectName2" :objectTypeCode="objectTypeCode2"
-        :field="sObjectName2" :lookEntityApiName="sObjectName2"  @cancel="isLookup=false;" @select="selectKbArticle"></Lookup-filter>
+        :field="sObjectName2" :lookEntityApiName="sObjectName2"  @cancel="isLookup=false;" :filterQuery="lookupFilterQuery" @select="selectKbArticle"></Lookup-filter>
     </div>
   </template>
   <script setup>
@@ -221,7 +222,7 @@
   import { useRouter, useRoute } from "vue-router";
   import Related from "@/components/detail/Related.vue";
   import Info from "@/components/detail/Info.vue";
-  import InfoNotes from "@/components/information/InfoNotes.vue";
+  import InfoNotes from "@/components/commonTab/RelatedNote.vue";
   import ChangeStatus from "@/components/information/ChangeStatus.vue";
   import InfoRemind from "@/components/information/InfoRemind.vue";
   import InfoAddClass from "@/components/information/InfoAddClass.vue";
@@ -406,9 +407,11 @@
     total:0,
     tableHeight:0,
     expandedRowKeys:[''],
-    defaultExpandedRowKeys:['']
+    defaultExpandedRowKeys:[''],
+    lookupFilterQuery:'\nStateCode\teq\t1'
   });
   const {
+    lookupFilterQuery,
     pagination,
     total,
     tableHeight,
@@ -803,8 +806,19 @@ const htmlDecode=(input)=>{
         });
       }
     }
-  // 预览
+  // 预览文章
   const handlePreview = (id) => {
+    let reUrl = router.resolve({
+        path:"/lightning/r/Content/view",
+        query: {
+          id: id,
+          objectTypeCode:100201
+        }
+    })
+    window.open(reUrl.href); 
+  };
+  // 预览知识地图
+  const handlePreview2 = (id) => {
     let reUrl = router.resolve({
         path:"/lightning/page/KnowledgeMapDetail",
         query: {

@@ -428,6 +428,81 @@ const staticRoutes = [
         }
       }
     ]
+  },
+  {
+    path: "/CampaignSms/editor",
+    name: "CampaignSmsEditor",
+    component: () => import("../views/CampaignSms/editor.vue"),
+  },
+  {
+    path: "/RuleArticle",
+    name: "RuleArticle",
+    component: Layout,
+    redirect: "/knowledge/RuleArticle/myhome",
+    meta: {
+      name: "制度文件"
+    },
+    children: [
+      {
+        path: "/knowledge/RuleArticle/myhome",
+        name: "RuleArticleMyHome",
+        component: () => import("../views/knowledge/RuleArticle/myhome/index.vue"),
+        icon: "search",
+        meta: {
+          name: "我的制度",
+          icon: "search"
+        }
+      },
+      {
+        path: "/knowledge/RuleArticle/home",
+        name: "RuleArticleHome",
+        component: () => import("../views/knowledge/RuleArticle/home/index.vue"),
+        icon: "search",
+        meta: {
+          name: "制度台账",
+          icon: "search"
+        }
+      },
+      {
+        path: "/knowledge/RuleArticle/history/home",
+        component: () => import("../views/listView/index2.vue"),
+        name: "RuleArticleHistory",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "变更记录",
+          icon: "huiyicanhuiren",
+          entityType:'093',
+          objectTypeCode:'100207',
+          entityName:'InstitutionHistory',
+        },
+      },
+      {
+        path: "/knowledge/RuleArticle/version/home",
+        component: () => import("../views/listView/index2.vue"),
+        name: "RuleArticleVersion",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "修订记录",
+          icon: "huiyicanhuiren",
+          entityType:'K30',
+          objectTypeCode:'3030',
+          entityName:'KbArticleVersion',
+        },
+      },
+      {
+        path: "/knowledge/RuleArticle/abolish/home",
+        name: "RuleArticleAbolish",
+        component: () => import("../views/listView/index2.vue"),
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "废止记录",
+          icon: "huiyicanhuiren",
+          entityType:'K31',
+          objectTypeCode:'3031',
+          entityName:'KbArticleAbolish',
+        },
+      }
+    ]
   }
 ];
 

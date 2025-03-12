@@ -101,8 +101,8 @@ export const routesMapping = {
     },
     // 制度文件
     DocumentRule: {
-        RuleArticle: () => import("../views/knowledge/RuleArticle/myhome/index.vue"), // 我的制度
-        RuleArticle: () => import("../views/knowledge/RuleArticle/home/index.vue"), // 制度台账
+        //RuleArticle: () => import("../views/knowledge/RuleArticle/myhome/index.vue"), // 我的制度
+        //RuleArticle: () => import("../views/knowledge/RuleArticle/home/index.vue"), // 制度台账
         // KbArticleVersion: {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true

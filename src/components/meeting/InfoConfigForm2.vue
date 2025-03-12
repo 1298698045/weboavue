@@ -278,45 +278,25 @@
                                                         <span class="icon">
                                                             <SyncOutlined />
                                                         </span>
-                                                        <span class="text">不重复</span>
+                                                        <span class="text">{{ RecurrenceType }}</span>
                                                         <span class="arrowIcon">
                                                             <DownOutlined />
                                                         </span>
                                                     </div>
                                                     <template #overlay>
                                                         <a-menu>
-                                                            <a-menu-item>
-                                                                <div class="menu-row">
+                                                            <a-menu-item v-for="(item, index) in RecurrenceTypeList"
+                                                                :key="index">
+                                                                <div class="menu-row"
+                                                                    @click="selectOption('RecurrenceType', item.value)"
+                                                                    :class="{ 'selectOptionActive': formState.RecurrenceType == item.value }">
                                                                     <span class="icon">
-                                                                        <CheckOutlined />
+                                                                        <template
+                                                                            v-if="formState.RecurrenceType == item.value">
+                                                                            <CheckOutlined />
+                                                                        </template>
                                                                     </span>
-                                                                    <span class="menuText">不重复</span>
-                                                                </div>
-                                                            </a-menu-item>
-                                                            <a-menu-item>
-                                                                <div class="menu-row">
-                                                                    <span class="icon">
-                                                                        <CheckOutlined />
-                                                                    </span>
-                                                                    <span class="menuText">每天</span>
-                                                                </div>
-                                                            </a-menu-item>
-                                                            <a-menu-item>
-                                                                <div class="menu-row">
-                                                                    <span class="icon"></span>
-                                                                    <span class="menuText">每周</span>
-                                                                </div>
-                                                            </a-menu-item>
-                                                            <a-menu-item>
-                                                                <div class="menu-row">
-                                                                    <span class="icon"></span>
-                                                                    <span class="menuText">每月</span>
-                                                                </div>
-                                                            </a-menu-item>
-                                                            <a-menu-item>
-                                                                <div class="menu-row">
-                                                                    <span class="icon"></span>
-                                                                    <span class="menuText">每年</span>
+                                                                    <span class="menuText">{{ item.label }}</span>
                                                                 </div>
                                                             </a-menu-item>
                                                         </a-menu>
@@ -511,11 +491,34 @@ const data = reactive({
     RoomId: [],
     calendarItem: {},
     isRadioUser: false,
+    RecurrenceType: '不重复',
+    RecurrenceTypeList: [
+        {
+            value: "",
+            label: "不重复"
+        },
+        {
+            value: "day",
+            label: "每天"
+        },
+        {
+            value: "week",
+            label: "每周"
+        },
+        {
+            value: "month",
+            label: "每月"
+        },
+        {
+            value: "year",
+            label: "每年"
+        },
+    ]
 });
 const {
     title,
     height,
-    menuTimes, categoryList, OwningUser, RoomId, isRadioUser
+    menuTimes, categoryList, OwningUser, RoomId, isRadioUser, RecurrenceType, RecurrenceTypeList
 } = toRefs(data);
 const formState = reactive({
     RegardingObjectTypeCode: 20290,
@@ -540,6 +543,7 @@ const formState = reactive({
     Reminder: false,
     startTime: "",
     endTime: "",
+    RecurrenceType: ''
 });
 if (props.paramsTime && props.paramsTime.date && props.paramsTime.time == '') {
     formState.StartDateTime = props.paramsTime.date;
@@ -938,6 +942,18 @@ const getUserData = (params) => {
 };
 const refreshPeople = (e) => {
 
+}
+const selectOption = (name, value) => {
+    if (value != 'undefined' && value != null && value != '') {
+        formState[name] = value;
+        let index = data[name + 'List'].findIndex(item => item.value == value);
+        data[name] = (data[name + 'List'][index]).label;
+    }
+    else if (name == 'RecurrenceType' && value == '') {
+        formState[name] = value;
+        let index = data[name + 'List'].findIndex(item => item.value == value);
+        data[name] = (data[name + 'List'][index]).label;
+    }
 }
 const clearForm = () => {
     formRef.value.resetFields();

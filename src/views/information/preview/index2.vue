@@ -148,7 +148,7 @@
         @selectVal="getUserData"
       />
       <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk" :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
-    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="isConfirm=false" :id="id" :objTypeCode="objectTypeCode" />
+    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="confirmOk" :id="id" :objTypeCode="objectTypeCode" />
     <RelaseInfo v-if="isRelaseInfo" :isShow="isRelaseInfo" :objectTypeCode="objectTypeCode" :id="id" :FolderId="FolderId" @cancel="cancelRelaseInfo" />
     <Favor v-if='isFavor' :isShow="isFavor" @cancel="isFavor=false" @update-status="isFavor=false" :id="id" :objTypeCode="objectTypeCode" :objName="detail.Title" />
     <PinOnTop v-if='isPinOnTop' :isShow="isPinOnTop" @cancel="isPinOnTop=false" @update-status="isPinOnTop=false" :id="id" :objTypeCode="objectTypeCode" />
@@ -190,7 +190,7 @@
   import { useRouter, useRoute } from "vue-router";
   import Related from "@/components/detail/Related.vue";
   import Info from "@/components/detail/Info.vue";
-  import InfoNotes from "@/components/information/InfoNotes.vue";
+  import InfoNotes from "@/components/commonTab/RelatedNote.vue";
   import ChangeStatus from "@/components/information/ChangeStatus.vue";
   import InfoRemind from "@/components/information/InfoRemind.vue";
   import InfoAddClass from "@/components/information/InfoAddClass.vue";
@@ -476,6 +476,84 @@ const htmlDecode=(input)=>{
     console.log("params", params);
     cancelUser(false);
   };
+  const confirmOk = () => {
+    if (data.confirmTitle == '删除') {
+      let obj = {
+        actions: [{
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            recordId: data.id,
+            apiName: 'Content',
+            objTypeCode: 100201,
+          }
+        }]
+      };
+      let d = {
+        message: JSON.stringify(obj)
+      };
+      proxy.$post(Interface.delete, d).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+          message.success("删除成功");
+          setTimeout(function () {
+            let reUrl = router.resolve({
+              path: "/lightning/o/Content/home",
+              query: {
+
+              }
+            })
+            window.open(reUrl.href);
+          },1000)
+        } else {
+          if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+            message.success(res.actions[0].errorMessage);
+          }
+          else {
+            message.error("删除失败");
+          }
+        }
+        
+      })
+    } else if (data.confirmTitle == '失效') {
+      let url = Interface.edit;
+      let d = {
+        actions: [{
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            recordInput: {
+              allowSaveOnDuplicate: false,
+              apiName: 'Content',
+              objTypeCode: 100201,
+              fields: {
+                StateCode: "0"
+              }
+            }
+          }
+        }]
+      };
+      if (data.id) {
+        d.actions[0].params.recordId = data.id;
+      }
+      let obj = {
+        message: JSON.stringify(d)
+      }
+      proxy.$post(url, obj).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+          message.success("取消成功");
+          data.isConfirm = false;
+        }
+        else {
+          message.error("取消失败");
+        }
+      });
+    }
+    else {
+      data.isConfirm = false;
+    }
+  }
   //删除2
   const handleDelete2 = () => {
     data.isConfirm=true;

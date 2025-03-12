@@ -35,9 +35,9 @@
                     <!-- <ConfigForm ref="configRef" :paramsTime="paramsTime" v-if="currentTab==1" /> -->
                     <DetailInfo class="DetailInfo" v-if="currentTab==1" :id="props.meetingId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
                     <Participants v-if="currentTab==2" ref="PersonnelLst" :load="refreshPeople" :id="props.meetingId" />
-                    <Topics v-if="currentTab==3" />
+                    <Topics v-if="currentTab==3" :id="props.meetingId" />
                     <!-- <AttendUserList v-if="currentTab==4" /> -->
-                    <Service v-if="currentTab==5" />
+                    <Service v-if="currentTab==5" :id="props.meetingId" />
                     <MeetingResolution v-if="currentTab==6" />
                     <Comment v-if="currentTab==7" :isTitle="false" :id="props.meetingId" />
                     <!-- <MeetingFile v-if="currentTab==8" /> -->

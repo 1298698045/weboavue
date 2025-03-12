@@ -22,9 +22,9 @@
                         :id="props.meetingId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"
                         @selectVal="handleNewMeetingVal" :calendarType="props.calendarType" />
                     <AttendUser v-if="currentTab == 2" ref="PersonnelLst" :load="refreshPeople" :id="props.meetingId" />
-                    <Topics v-if="currentTab == 3" />
+                    <Topics v-if="currentTab == 3" :id="props.meetingId" />
                     <!-- <AttendUserList v-if="currentTab==4" /> -->
-                    <Service v-if="currentTab == 5" />
+                    <Service v-if="currentTab == 5" :id="props.meetingId" />
                     <MeetingNotice :isShow="isNotice" @selectVal="handleRead" @cancel="isNotice = false" />
                 </div>
             </div>
