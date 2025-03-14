@@ -1043,16 +1043,13 @@ const getPrivileges = () => {
   }
 }
 watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined') {
+  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
     if (route.path == '/lightning/o/Content/home') {
       getTreeData();
     }
     setTimeout(function () {
       handleSearch();
     }, 800)
-  }
-  else if (typeof getQuery != 'undefined') {
-    getQuery();
   }
 }, { deep: true, immediate: true })
 onMounted(() => {

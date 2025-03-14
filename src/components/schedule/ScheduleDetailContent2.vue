@@ -107,7 +107,9 @@
         <div class="head-operate">
             <div class="head-operate-item btn"  @click="addfile">
                 <a-tooltip title="添加附件" effect="dark"  placement="bottom">
-                    <div  class="addsubtask"><LinkOutlined class="btnicon" />添加附件</div>
+                    <a-upload v-model:file-list="fileList" :headers="headers" @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
+                        <div class="addsubtask"><LinkOutlined class="btnicon" />添加附件</div>
+                    </a-upload>
                 </a-tooltip>
             </div>
             <div class="head-operate-item btn"  @click="newrelated">
@@ -139,8 +141,8 @@
                     <TEditor ref="editorRef" mode="middle" :placeholder="'添加描述或附件文档'"  :height=250
                             @input="getEditorContent" />
                     <div class="edit-foot">
-                        <a-button @click="savedetail('Description')" type="primary" size="mini">保存</a-button>
-                        <a-button @click="editdescribe.show=false" size="mini">取消</a-button>
+                        <a-button @click="savedetail('Description')" type="primary" :size="'mini'">保存</a-button>
+                        <a-button @click="editdescribe.show=false" :size="'mini'">取消</a-button>
                     </div>
                 </div>
             </div>
@@ -148,11 +150,55 @@
         <div class="detail-section detail-describe">
             <div class="section-title">附件</div>
             <div class="section-body">
-                <fileupload :autoupload="false" :itemid="itemid" ref="fileupload" />
+                <!-- <fileupload :autoupload="false" :itemid="itemid" ref="fileupload" /> -->
+                <a-upload-dragger v-model:file-list="fileList" :headers="headers" @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
+                    <div class="uploadRow">
+                        <p class="ant-upload-drag-icon">
+                            <InboxOutlined />
+                        </p>
+                        <p class="ant-upload-text">将文件拖到此处，或点击上传</p>
+                    </div>
+                </a-upload-dragger>
+                <div class="inboxFileList">
+                    <div class="inboxFileItem" v-for="(item,index) in attachments" :key="index">
+                        <div class="leftImg">
+                            <img src="/src/assets/img/filetype/doc.png" v-if="item.fileExtension=='ocx'||item.fileExtension=='docx'||item.fileExtension=='doc'||
+                                    item.fileExtension=='.ocx'||item.fileExtension=='.docx'||item.fileExtension=='.doc'||item.fileExtension=='.wps'||item.fileExtension=='wps'" />
+                            <img src="/src/assets/img/filetype/rar.png" v-else-if="item.fileExtension=='rar'||item.fileExtension=='zip'||
+                                    item.fileExtension=='.rar'||item.fileExtension=='.zip'" />
+                            <img src="/src/assets/img/filetype/Excel.png" v-else-if="item.fileExtension=='xlsx'||item.fileExtension=='xls'||
+                                    item.fileExtension=='.xlsx'||item.fileExtension=='.xls'" />
+                            <img src="/src/assets/img/filetype/Pdf.png" v-else-if="item.fileExtension=='pdf'||item.fileExtension=='.pdf'" />
+                            <img src="/src/assets/img/filetype/TXT.png" v-else-if="item.fileExtension=='txt'||item.fileExtension=='.txt'" />
+                            <img src="/src/assets/img/filetype/PPT.png" v-else-if="item.fileExtension=='ppt'||item.fileExtension=='.ppt'||item.fileExtension=='pptx'||item.fileExtension=='.pptx'" />
+                            <img src="/src/assets/img/filetype/defaultImg.png" v-else-if="item.fileExtension=='jpg'||item.fileExtension=='png'||item.fileExtension=='.jpg'||item.fileExtension=='.png'" />
+                            <img src="/src/assets/img/filetype/Folder.png" v-else />
+                        </div>
+                        <div class="rightFileInfo">
+                            <div class="fileName rowEllipsis">
+                                {{item.name}}
+                            </div>
+                            <div class="fileSize">{{item.size}}</div>
+                            <div class="fileOptionShow" :title="(item.name||'')">
+                                <div class="btns">
+                                    <a-tooltip title="查看" placement="top">
+                                        <a-button type="text" :icon="h(EyeOutlined)" @click="handlePreviewFile(item)"></a-button>
+                                    </a-tooltip>
+                                    <a-tooltip title="下载" placement="top">
+                                        <a-button type="text" :icon="h(VerticalAlignBottomOutlined)" @click="downloadFile(item)"></a-button>
+                                    </a-tooltip>
+                                    <a-tooltip title="删除" placement="top">
+                                        <a-button type="text" :icon="h(CloseOutlined)" @click="deleteFile0(item)"></a-button>
+                                    </a-tooltip>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="detail-section detail-related" v-if="informationdata.record.subtask">
-            <Subtask :priorities="informationdata.record.PriorityCode.priorities" :statuss="informationdata.record.StateCode.statuss" ref="Subtask" :itemid="itemid" @reload="reloadinformation()" @handleDelete="handleDelete1" />
+        <div class="detail-section detail-related">
+            <Subtask ref="SubtaskRef" :priorities="informationdata.record.PriorityCode.priorities" :statuss="informationdata.record.StateCode.statuss" :itemid="itemid" @reload="reloadinformation()" @handleDelete="handleDelete1" />
         </div>
         <information v-if="twoarrange" :informationdata='informationdata'></information>
         <div class="detail-section detail-active">
@@ -179,15 +225,22 @@
             <EditWorkflow v-if="isShowEditWorkflow" />
         </div>
     </div>
+    <Delete :isShow="isDelete" v-if="isDelete" :desc="'确定要删除吗？'" @cancel="cancelDelete" @ok="getFiles"
+      :sObjectName="'RelatedAttachment'" :recordId="recordId" :objTypeCode="'1001'" :external="false" />
+    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="'确定要删除吗？'" :title="'删除'"
+      @cancel="isConfirm = false" @ok="deleteFile" :id="recordId" />
+    <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
+    <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
 </div>
 </template>
 <script setup>
 import {
       ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
-      defineEmits, provide,nextTick
+      defineEmits, provide, h,
+      nextTick,
   } from "vue";
   import { message } from 'ant-design-vue';
-import { EditOutlined, LinkOutlined } from "@ant-design/icons-vue";
+import { EditOutlined, LinkOutlined, InboxOutlined, EyeOutlined, VerticalAlignBottomOutlined, CloseOutlined } from "@ant-design/icons-vue";
 import commonapi from '@/utils/commonapi.js';
 import { IssueDataGet } from "@/utils/projectapi.js";
 // import copylink from "@/components/schedule/detail/copylink.vue";
@@ -208,10 +261,18 @@ import TEditor from "@/components/TEditor.vue";
  import ManageWorkflow from "@/components/schedule/detail/ManageWorkflow.vue";
  import movetask from "@/components/schedule/detail/movetask.vue";
  import Worklog from '@/components/schedule/detail/Worklog.vue';
+
+import Delete from "@/components/listView/Delete.vue";
+import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+import ImageView from "@/components/file/ImageView.vue";
+import PdfView from "@/components/file/PdfView.vue";
+
 import { getprojectboardtask } from "@/utils/projectapi.js";
 import Interface from "@/utils/Interface.js";
 import dayjs from 'dayjs';
 const { proxy } = getCurrentInstance();
+const SubtaskRef = ref(null);
+const token = localStorage.getItem("token");
 const data = reactive({
     
             id:'',
@@ -242,12 +303,41 @@ const data = reactive({
             isShowCopytask:false,
         imgUrl1:'',
         imgUrl2:'',
-        imgUrl3:''
+        imgUrl3:'',
+        attachments:[],
+        ImageList:[],
+        uploadData: {
+            parentId: '',
+            entityName: ''
+        },
+        headers: {
+            Authorization: token,
+            Token: token,
+        },
+        isDelete: false,
+        isConfirm: false,
+        isPhoto: false,
+        photoParams: {},
+        isPdf: false,
+        pdfParams: {},
+        recordId:''
   })
-  const {id,
-    imgUrl1,
-    imgUrl2,
-    imgUrl3,
+  const {
+            id,
+            isDelete,
+            isConfirm,
+            isPhoto,
+            photoParams,
+            isPdf,
+            pdfParams,
+            recordId,
+            attachments,
+            ImageList,
+            uploadData,
+            headers,
+            imgUrl1,
+            imgUrl2,
+            imgUrl3,
             projectname,
             projectid,
             title,
@@ -268,12 +358,12 @@ const data = reactive({
             isShowEditWorkflow,
             isShowMovetask,
             isShowCopytask,
-            } = toRefs(data);
-            const emit = defineEmits(['reload','handleDelete']);
-            const props = defineProps({
-                twoarrange: String,
-                detailheight: String,itemid: String,popup: String,title: String,RegardingObjectIdName: String,
-            });
+        } = toRefs(data);
+        const emit = defineEmits(['reload','handleDelete']);
+        const props = defineProps({
+            twoarrange: String,
+            detailheight: String,itemid: String,popup: String,title: String,RegardingObjectIdName: String,
+        });
         const editorRef=ref(null)
         function handleDelete(e){
             emit('handleDelete', {Id:props.itemid})
@@ -376,6 +466,9 @@ const data = reactive({
         }
         function newrelated(){
             //refs.Subtask.newrelated()
+            if(SubtaskRef.value&&SubtaskRef.value.newrelated){
+                SubtaskRef.value.newrelated();
+            }
         }
         function savedetail(column){
             const fields = {}
@@ -488,7 +581,7 @@ const data = reactive({
                 }
             })
         }
-        function dragControllerDiv(){
+function dragControllerDiv(){
     const resize = document.getElementsByClassName('resize');
     const left = document.getElementsByClassName('detail-left');
     const mid = document.getElementsByClassName('detail-right');
@@ -546,14 +639,171 @@ function editsubject(){
             }
             return path;
         }
-
-watch(props.itemid,(newVal,oldVal)=>{
-    getdata();
-    },{deep: true, immediate: true})
-    onMounted(() => {
-        dragControllerDiv();
-        getdata();
+const getFiles = () => {
+  data.attachments = [];
+  data.ImageList = [];  
+  let url = Interface.getFiles;
+  let d = {
+    parentId: props.itemid,
+    page: 1,
+    rows: 100
+  }
+  proxy.$post(url, d).then(res => {
+    var list = [];
+    var list2 = [];
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue) {
+      for (var i = 0; i < res.actions[0].returnValue.length; i++) {
+        var item = res.actions[0].returnValue[i];
+        let size = item.fileSize;
+        size = size ? (size * 1 / 1024).toFixed(2) : 0;
+        size = size + 'kb';
+        let name = item.name || '';
+        if (name) {
+          name = name.replaceAll('.' + item.fileExtension, '');
+        }
+        let ite = {
+          size: size,
+          url: '/' + data.uploadData.entityName + '/' + item.id + '/' + name,
+          fileLocation: item.fileLocation || '',
+          uid: item.id,
+          id: item.id,
+          downloadUrl: item.downloadUrl || '',
+          viewUrl: item.viewUrl || '',
+          fileExtension: item.fileExtension,
+          FileExtension: item.fileExtension,
+          fileSize: item.fileSize,
+          name: item.name,
+          Name: item.name,
+          CreatedOn: item.createdOn?dayjs(item.createdOn).format("YYYY-MM-DD hh:mm"):'',
+          CreatedBy: item.createdByName || '',
+        };
+        list.push(ite);
+        if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
+          list2.push(ite);
+        }
+      }
+    }
+    data.attachments = list;
+    data.ImageList = list2;
+  })
+};
+const beforeUpload = (e) => {
+    data.uploadData.entityName='ActivityPointer';
+    data.uploadData.parentId=props.itemid;
+    console.log("beforeUpload", e);
+}
+const changeFiles = (e) => {
+  // console.log("e", e);
+  if (e.file.status == "done") {
+      message.success("上传成功！");
+      getFiles();
+  }
+}
+//预览附件
+const handlePreviewFile = (item) => {
+  let url = '';
+  if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
+    let index = 0;
+    for (var i = 0; i < data.ImageList.length; i++) {
+      let ite = data.ImageList[i];
+      if (ite.id == item.id) {
+        index = i;
+      }
+    }
+    data.photoParams = {
+      id: item.id,
+      item: item,
+      imageList: data.ImageList,
+      index: index
+    };
+    data.isPhoto = true;
+  } else if (item.fileExtension == 'pdf') {
+    url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(item.viewUrl);
+    data.pdfParams = {
+      id: item.id,
+      name: item.name,
+      index: 0,
+      viewUrl: item.viewUrl,
+      downloadUrl: item.downloadUrl
+    };
+    data.isPdf = true;
+  }
+  else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
+    //let medittype = 0;
+    downloadFile(item);
+    //openfile(medittype, item.id, item.Name);
+  }
+  else {
+    downloadFile(item);
+  }
+};
+//下载附件
+const downloadFile = (item) => {
+  let url = item.downloadUrl;
+  window.open(url);
+  // let text = item.Name || '';
+  // windowOpen(url, text);
+};
+//删除
+const deleteFile0 = (item) => {
+  data.recordId = item.id;
+  data.confirmText = '确定要删除吗？'
+  data.confirmTitle = '删除'
+  //data.isConfirm = true;
+  data.isDelete = true;
+}
+//删除关闭
+const cancelDelete = (e) => {
+  data.isDelete = false;
+  data.isConfirm = false;
+};
+//删除附件
+const deleteFile = (id) => {
+  let d = {
+    actions: [{
+      id: "4105;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        parentId: data.uploadData.parentId,
+        entityName: data.uploadData.entityName,
+        fileId: id
+      }
+    }]
+  };
+  let obj = {
+    message: JSON.stringify(d)
+  }
+  proxy.$post(Interface.deleteFiles, obj).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+      message.success("删除成功！");
+      data.isConfirm = false;
+      getFiles();
+    }
+    else {
+      if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+        message.error(res.actions[0].errorMessage);
+      }
+      else {
+        message.error("删除失败！");
+      }
+    }
+  }).catch(err => {
+    console.log('error', err);
+    message.error("删除失败！");
   });
+}
+watch(props.itemid, (newVal, oldVal) => {
+    getdata();
+    getFiles();
+    data.uploadData.parentId=props.itemid;
+}, { deep: true, immediate: true })
+onMounted(() => {
+    dragControllerDiv();
+    getdata();
+    getFiles();
+    data.uploadData.parentId=props.itemid;
+});
 </script>
 <style lang="less">
 .head-operate{
@@ -584,6 +834,7 @@ display: flex;
     width: 60%;
     padding-right: 20px;
     box-sizing: border-box;
+    overflow-x: hidden !important;
 }
 .detail-left .head-operate{
     padding: 0 5px;
@@ -618,9 +869,78 @@ display: flex;
     font-weight: 700;
     padding: 0 5px;
 }
-.section-body{
+.section-body {
     margin: 5px 0;
     padding: 0 5px;
+
+    .inboxFileList {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        .ant-btn.ant-btn-text, .ant-btn.ant-btn-text:hover{
+            color: #000 !important;
+        }
+        .inboxFileItem {
+            width: 266px;
+            border-radius: 2px;
+            background: #f2f3f5;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-right: 16px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+
+            .leftImg {
+                width: 32px;
+                height: 32px;
+                position: relative;
+                top: 5px;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
+            .rightFileInfo {
+                flex: 1;
+                margin-left: 14px;
+                overflow: hidden;
+                color: #1d2129;
+
+                .fileSize {
+                    color: #4e5969;
+                    padding-top: 4px;
+                }
+
+                .fileOptionShow {
+                    position: absolute;
+                    width: calc(~"100% - 36px");
+                    height: 100%;
+                    left: 42px;
+                    top: 0;
+                    background: rgba(242, 243, 245, .8);
+                    display: none;
+
+                    .btns {
+                        display: flex;
+                        align-items: center;
+                        height: 100%;
+                        justify-content: flex-end;
+                        padding-right: 20px;
+                        box-sizing: border-box;
+                    }
+                }
+            }
+
+            &:hover .fileOptionShow {
+                display: block;
+            }
+        }
+    }
 }
 .detail-describe .section-body{
     padding: 0;
@@ -729,7 +1049,7 @@ display: flex;
     color: rgb(66, 82, 110) !important;
     margin-right: 0px;
     position: relative;
-    top: -2px;
+    top: -4px;
     left: -4px;
     float: left;
     margin-right: 6px;
@@ -880,4 +1200,25 @@ a{
 :deep .dropbtn .a-dropdown-link img{
     top: 0;
 }
+.uploadRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+
+    p {
+        margin: 0 !important;
+    }
+
+    p.ant-upload-text {
+        font-size: 14px !important;
+    }
+}
+input[aria-hidden="true"] {
+    display: none !important;
+}
+.el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) .el-radio__inner {
+    box-shadow: none !important;
+}
+
 </style>

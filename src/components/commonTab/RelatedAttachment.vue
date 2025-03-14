@@ -5,8 +5,7 @@
         <div class="panel-title">附件</div>
         <div class="panel-btn">
           <span data-v-c1fcaa11="" style="color: red;">（单个附件不能超过40M，不支持exe和js脚本文件上传）</span>
-          <a-upload v-model:file-list="fileList" action :showUploadList="false" multiple name="file"
-            :customRequest="changeRequest" :before-upload="beforeUpload" @change="handleChange">
+          <a-upload v-model:file-list="fileList" :headers="headers" @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
             <a-button class="ml10" type="primary">上传文件</a-button>
           </a-upload>
         </div>
@@ -22,22 +21,22 @@
             </template>
             <template v-if="column.key === 'fileExtension'">
               <div class="fileExtensionTdImg">
-                <img :src="require('@/assets/img/filetype/doc.png')"
+                <img src="/src/assets/img/filetype/doc.png"
                   v-if="record.fileExtension == 'ocx' || record.fileExtension == 'docx' || record.fileExtension == 'doc'" />
-                <img :src="require('@/assets/img/filetype/rar.png')"
+                <img src="/src/assets/img/filetype/rar.png"
                   v-else-if="record.fileExtension == 'rar' || record.fileExtension == 'zip'" />
-                <img :src="require('@/assets/img/filetype/Excel.png')"
+                <img src="/src/assets/img/filetype/Excel.png"
                   v-else-if="record.fileExtension == 'xlsx' || record.fileExtension == 'xls'" />
-                <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="record.fileExtension == 'pdf'" />
-                <img :src="require('@/assets/img/filetype/TXT.png')"
+                <img src="/src/assets/img/filetype/pdf.png" v-else-if="record.fileExtension == 'pdf'" />
+                <img src="/src/assets/img/filetype/TXT.png"
                   v-else-if="record.fileExtension == 'TXT' || record.fileExtension == 'txt'" />
-                <img :src="require('@/assets/img/filetype/PPT.png')"
+                <img src="/src/assets/img/filetype/PPT.png"
                   v-else-if="record.fileExtension == 'ppt' || record.fileExtension == 'pptx'" />
-                <img :src="require('@/assets/img/filetype/video.png')"
+                <img src="/src/assets/img/filetype/video.png"
                   v-else-if="record.fileExtension == 'mp4' || record.fileExtension == '.mp4'" />
-                <img :src="require('@/assets/img/filetype/defaultImg.png')"
+                <img src="/src/assets/img/filetype/defaultImg.png"
                   v-else-if="record.fileExtension == 'jpg' || record.fileExtension == 'png' || record.fileExtension == 'gif'" />
-                <img :src="require('@/assets/img/filetype/File.png')" v-else />
+                <img src="/src/assets/img/filetype/File.png" v-else />
                 <span>{{ record.fileExtension || '' }}</span>
               </div>
             </template>
@@ -199,7 +198,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["load"]);
-
+const token = localStorage.getItem("token");
 const data = reactive({
   list: [],
   fileList: [],
@@ -251,53 +250,28 @@ const data = reactive({
   isPdf: false,
   pdfParams: {},
   currentUserId: '',
-  currentUserName: ''
+  currentUserName: '',
+  uploadData: {
+    parentId: '',
+    entityName: ''
+  },
+  headers: {
+    Authorization: token,
+    Token: token,
+  },
 });
 const columnList = toRaw(columns);
-const { currentUserId, currentUserName, pdfParams, isPdf, photoParams, ImageList, isPhoto, listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, isTaskDetail, isShare, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, isConfirm, confirmText, confirmTitle } = toRefs(data);
+const { uploadData, headers, currentUserId, currentUserName, pdfParams, isPdf, photoParams, ImageList, isPhoto, listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, isTaskDetail, isShare, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, isConfirm, confirmText, confirmTitle } = toRefs(data);
 const getQuery = () => {
-  // proxy.$get(Interface.user.groupUser, {}).then((res) => {
-  //   data.listData = res.rows;
-  // });
   data.listData = [];
   data.ImageList = [];
   data.pagination.total = 0;
-  // let filterQuery='\nParentId\teq\t'+props.id;
-  // if(data.StatusCode){
-  //     filterQuery+='\nStatusCode\teq\t'+data.StatusCode;
-  // }
-  // if(data.CheckinStatus){
-  //     filterQuery+='\nCheckinStatus\teq\t'+data.CheckinStatus;
-  // }
-  // if(data.OwningBusinessUnitName){
-  //   filterQuery+='\nOwningBusinessUnitName\tcontains\t'+data.OwningBusinessUnitName;
-  // }
-  // if(data.Checkin1){
-  //   filterQuery+='\nCheckin\tge\t'+data.Checkin1;
-  // }
-  // if(data.Checkin2){
-  //   filterQuery+='\nCheckin\tle\t'+data.Checkin2;
-  // }
-  // let url=Interface.list2;
-  // let d={
-  //   filterId:'',
-  //   objectTypeCode:data.objectTypeCode,
-  //   entityName:data.sObjectName,
-  //   filterQuery:filterQuery,
-  //   search:data.searchVal||'',
-  //   page: data.pagination.current,
-  //   rows: data.pagination.pageSize,
-  //   sort:'Position',
-  //   order:'asc',
-  //   displayColumns:'fileExtension,Name,CreatedOn,CreatedBy,FileLocation,AccessRight'
-  // }
+  
   let url = Interface.getFiles;
   let d = {
     parentId: props.id,
     page: data.pagination.current,
-    rows: data.pagination.pageSize,
-    // sort:'Position',
-    // order:'asc'
+    rows: data.pagination.pageSize
   }
   proxy.$post(url, d).then(res => {
     var list = [];
@@ -327,7 +301,7 @@ const getQuery = () => {
           fileSize: item.fileSize,
           name: item.name,
           Name: item.name,
-          CreatedOn: item.createdOn,
+          CreatedOn: item.createdOn?dayjs(item.createdOn).format("YYYY-MM-DD hh:mm"):'',
           CreatedBy: item.createdByName || '',
         };
         list.push(ite);
@@ -342,12 +316,8 @@ const getQuery = () => {
 };
 const windowOpen = (url, fileName) => {
   var xhr = new XMLHttpRequest();
-  // var fileName = window.fileName + typeName; // 文件名称
   xhr.open('POST', url, true);
   xhr.responseType = 'blob';
-
-  //xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
-  //xhr.setRequestHeader('token', window.localStorage.getItem('token'));
   xhr.onload = function (res) {
     if (this.status === 200) {
       var type = xhr.getResponseHeader('Content-Type');
@@ -394,8 +364,6 @@ const openfile = (medittype, RecordID, Name) => {
 const handlePreviewFile = (item) => {
   let url = '';
   if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
-    // url = item.viewUrl;
-    // window.open(url);
     let index = 0;
     for (var i = 0; i < data.ImageList.length; i++) {
       let ite = data.ImageList[i];
@@ -422,7 +390,7 @@ const handlePreviewFile = (item) => {
     data.isPdf = true;
   }
   else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
-    let medittype = 0;
+    //let medittype = 0;
     downloadFile(item);
     //openfile(medittype, item.id, item.Name);
   }
@@ -486,7 +454,6 @@ const onClear = (e) => {
   getQuery();
 };
 const changeRangeDate = (e) => {
-  //console.log("e",e,item);
   if (e && e.length) {
     data.Checkin = e.join(',');
     data.Checkin1 = e[0];
@@ -507,56 +474,11 @@ const sizeChange = (current, size) => {
   handleTableChange(current, size)
 }
 getQuery();
-// 添加成员
-const AddNew = () => {
-  data.isRadioUser = true;
-  data.RoleCode = 0;
-}
-// 添加管理员
-const AddAdmin = () => {
-  data.RoleCode = 2;
-  data.isRadioUser = true;
-};
 const closeUser = (e) => {
   data.isRadioUser = false;
 };
-// 添加成员/管理员
 const getUserData = (params) => {
   console.log("params:", params);
-  let url = Interface.create;
-  let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordInput: {
-          allowSaveOnDuplicate: false,
-          apiName: data.sObjectName,
-          objTypeCode: data.objectTypeCode,
-          fields: {
-            MeetingId: props.id,
-            InviteeId: params.id,
-            Name: params.name,
-            StatusCode: 1
-          }
-        }
-      }
-    }]
-  };
-
-  let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
-    data.isRadioUser = false;
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-      message.success("添加成功！");
-      onSearch();
-    }
-
-  });
-
 };
 const cancelDeptModal = (params) => {
   data.isRadioDept = params;
@@ -564,7 +486,6 @@ const cancelDeptModal = (params) => {
 const handleDeptParams = (params) => {
   console.log("deptData", params);
 };
-
 defineExpose({ getQuery, TopicsLst });
 //删除
 const handleDelete = (item) => {
@@ -577,6 +498,7 @@ const handleDelete = (item) => {
 //删除关闭
 const cancelDelete = (e) => {
   data.isDelete = false;
+  data.isConfirm = false;
 };
 //新建
 const handleNew = (e) => {
@@ -605,63 +527,18 @@ const unique = (list) => {
   return list;
 }
 const beforeUpload = (e) => {
-  //执行顺序1
   console.log("beforeUpload", e);
 }
-const handleChange = (file) => {
-  //执行顺序2
-  if (file && file.file) {
-    let size = file.file.size;
-    size = size ? (size * 1 / 1024).toFixed(2) : 0;
-    data.fileList1.push({
-      uid: file.file.uid,
-      name: file.file.name,
-      url: file.file.url,
-      fileExtension: file.file.name ? (file.file.name).split('.')[1] : '',
-      raw: file.file.originFileObj,
-      Privilege: '',
-      size: size + 'kb',
-      isNew: true
-    });
+const changeFiles = (e) => {
+  // console.log("e", e);
+  if (e.file.status == "done") {
+      message.success("上传成功！");
+      onSearch();
   }
-  data.fileList1 = unique(data.fileList1);
-}
-const changeRequest = (file) => {
-  //执行顺序3
-  nextTick(() => {
-    if (data.fileList1 && data.fileList1.length && props.id) {
-      let isHasNew = false;
-      var fd = new FormData();
-      fd.append('parentId', props.id);
-      fd.append('entityName', props.entityName);
-      for (var i = 0; i < data.fileList1.length; i++) {
-        var item = data.fileList1[i];
-        if (item.raw && item.isNew) {
-          fd.append('files', item.raw);
-          data.fileList1[i].isNew = false;
-          isHasNew = true;
-        }
-      }
-      if (isHasNew) {
-        axios({
-          url: Interface.uploadFiles,
-          method: 'POST',
-          data: fd,
-          headers: {
-            'Content-type': 'multipart/form-data',
-          },
-        }).then(res => {
-          message.success("上传成功！");
-          getQuery();
-        }).catch(err => {
-          console.log('error', err);
-          message.error("上传失败！");
-        });
-      }
-    }
-  })
 }
 onMounted(() => {
+  data.uploadData.entityName=props.entityName;
+  data.uploadData.parentId=props.id;
   let h = document.documentElement.clientHeight;
   data.tableHeight = h - 325;
   data.height = h - 137;

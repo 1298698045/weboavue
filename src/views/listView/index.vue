@@ -477,11 +477,13 @@
   };
 
   watch(() => route.params.sObjectName, (newVal, oldVal) => {
-    // console.log("route.params.sObjectName", newVal, oldVal);
-    data.sObjectName = route.params.sObjectName;
-    data.entityType = route.params.sObjectName;
-    data.queryParams.entityType = route.params.sObjectName;
-    initLoad();
+    //console.log("route.params.sObjectName", newVal, oldVal);
+    if (route.params.sObjectName) {
+      data.sObjectName = route.params.sObjectName;
+      data.entityType = route.params.sObjectName;
+      data.queryParams.entityType = route.params.sObjectName;
+      initLoad();
+    }
   }, { immediate: true })
 
   const getActions = () => {
@@ -676,7 +678,9 @@
       data.filterListFixed = JSON.parse(JSON.stringify(res.actions[0].returnValue));
       // data.currentFilter = data.filterList[0];
       let row = data.filterList.find(item=>item.id == data.currentFilter.id);
-      data.isLock = row.isPinned;
+      if (row) {
+        data.isLock = row.isPinned;
+      }
     })
   };
 

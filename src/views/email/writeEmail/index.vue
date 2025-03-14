@@ -86,7 +86,7 @@
                                                 <div class="fileOptionShow" :title="(item.name||'')">
                                                     <div class="btns">
                                                         <a-tooltip title="查看" placement="top">
-                                                            <a-button type="text" :icon="previewIcon" @click="handlePreviewFile(item)"></a-button>
+                                                            <a-button type="text" :icon="h(EyeOutlined)" @click="handlePreviewFile(item)"></a-button>
                                                         </a-tooltip>
                                                         <a-tooltip title="下载" placement="top">
                                                             <a-button type="text" :icon="h(VerticalAlignBottomOutlined)" @click="downloadFile(item)"></a-button>
@@ -167,7 +167,7 @@
         toRaw
     } from "vue";
     import {
-        EllipsisOutlined, CloseOutlined, UserOutlined, PlusOutlined, VerticalAlignBottomOutlined
+        EllipsisOutlined, CloseOutlined, UserOutlined, PlusOutlined, VerticalAlignBottomOutlined, EyeOutlined
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";

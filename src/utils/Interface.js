@@ -466,6 +466,7 @@ const Interface = {
       runReportNew: baseUrl + "/aura/analytics/reporting/runpage/runReport", // 报表运行
     },
   },
-  pdf: baseUrl + "/file/previewpdf/"
+  pdf: baseUrl + "/file/previewpdf/",
+  getEventsStati: baseUrl + "/ui.calendar.components/getEventsStati", // 日程原点
 };
 export default Interface;

@@ -1,7 +1,7 @@
 <template>
     <grid-layout :layout.sync="layout" :col-num="12" :row-width="85" :row-height="36" :is-draggable="true" :is-resizable="true"
         :is-mirrored="false" :vertical-compact="true" :margin="[10, 10]" :use-css-transforms="true">
-        <grid-item v-for="(item, index) in layout" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key="item.i"
+        <grid-item v-for="(item, index) in layout" :num="index" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key="item.i"
             :minH="2" drag-allow-from=".card-header" :isDraggable="false" drag-ignore-from=".no-drag" :isResizable="false">
             <div class="gridItemWrapper" v-if="item.componentType == 'list'">
                 <ListCom :item="item" :themeType="themeType" />
@@ -298,26 +298,28 @@
         }
         proxy.$post(Interface.portal.layoutList, d).then(res=>{
             let layoutList = [];
-            let { attributes, dashboardMetadata, picklistColors, components } = res.actions[0].returnValue;
-            let list = components;
-            const maxY = Math.max(...data.layout.map(item => item.y + item.h));
-            list.forEach(item=>{
-                if(item){
-                    let obj = {
-                        // x:  (data.layout.length * 2) % (data.colNum || 12),
-                        // y: maxY,
-                        x: item.layout.x,
-                        y: item.layout.y,
-                        w: item.layout.w,
-                        h: item.layout.h,
-                        i: item?.id,
-                        name: item?.header,
-                        type: item.type,
-                        componentType: item?.type
-                    };
-                    layoutList.push({...obj, ...item});
-                }
-            });
+            if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+                let { attributes, dashboardMetadata, picklistColors, components } = res.actions[0].returnValue;
+                let list = components;
+                const maxY = Math.max(...data.layout.map(item => item.y + item.h));
+                list.forEach(item => {
+                    if (item) {
+                        let obj = {
+                            // x:  (data.layout.length * 2) % (data.colNum || 12),
+                            // y: maxY,
+                            x: item.layout.x,
+                            y: item.layout.y,
+                            w: item.layout.w,
+                            h: item.layout.h,
+                            i: item?.id,
+                            name: item?.header,
+                            type: item.type,
+                            componentType: item?.type
+                        };
+                        layoutList.push({ ...obj, ...item });
+                    }
+                });
+            }
             data.layout = layoutList;
         })
     };

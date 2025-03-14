@@ -83,7 +83,10 @@ const getCheckList = () => {
   //console.log("list",list);
   return list;
 }
-defineExpose({ loadGrid, getCheckList })
+const clearCheckList = () => {
+  $('#' + props.name).datagrid("clearChecked");
+}
+defineExpose({ loadGrid, getCheckList, clearCheckList })
 </script>
 <style lang="less">
 .iconBox {

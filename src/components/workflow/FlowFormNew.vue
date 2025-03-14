@@ -16,7 +16,7 @@
                                 </template>
                                 <template v-else-if="col.field">
                                     <div>
-                                        <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" :suggestions="suggestions" @loadSuggestion="getSuggestionQuery" @delSuggestion="deleteSuggestion" :stateCode="stateCode" />
+                                        <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" :suggestions="suggestions" @loadSuggestion="getSuggestionQuery" @delSuggestion="deleteSuggestion" :stateCode="stateCode" :suggestionObj="suggestionObj" />
                                     </div>
                                 </template>
                             </td>
@@ -171,13 +171,15 @@
         suggestions: [],
         isDelete: false,
         deleteDesc: "确定删除当前意见吗？",
-        suggestionId: ""
+        suggestionId: "",
+        suggestionObj: {}
     });
     const { entityId, layoutData, rowCount, columnCount, cellData, mergeData, rows, mergeRowColData, 
         isRadioUser, isRadioDept, isLookup, fieldData, entityApiName, lookEntityApiName, lookObjectTypeCode, objectTypeCode, columns, comps, ruleId,
         processId, entityLayoutId, select, isLoad, entityObjectId, attributes, list, search, processInstanceId, objTypeCode, isSub,
         subRecordFieldData, relatedObjData, relatedEntityInfoList, toActivityID, deleteRelatedData,
-        masterEntityPermission, relatedListEntityPermissions, maxRowNum, suggestions, isDelete, deleteDesc, suggestionId
+        masterEntityPermission, relatedListEntityPermissions, maxRowNum, suggestions, isDelete, deleteDesc,
+        suggestionId, suggestionObj
      } = toRefs(data);
 
      const handleSetValue = (field, value) => {
@@ -269,7 +271,18 @@
                 } 
                 try{
                     if(type=='UC' || type=='UCS'){
-                        data.list[key] = fields[key][0]?.Comment;
+                        // console.log('props.ruleLogId', props.ruleLogId);
+                        // console.log('fields[key]', fields[key]);
+                        let currentUserRow = fields[key].find(v=>v.RecId == props.ruleLogId);
+                        if(currentUserRow){
+                            data.list[key] = currentUserRow.Comment;
+                        }else {
+                            data.list[key] = "";
+                        }
+                        let otherSuggestions = fields[key].filter(v=>v.RecId != props.ruleLogId);
+                        console.log("otherSuggestions", otherSuggestions);
+                        data.suggestionObj[key] = otherSuggestions;
+                        console.log("suggestionObj", suggestionObj);
                     }else{
                         data.list[key] = fields[key]?.value;
                     }

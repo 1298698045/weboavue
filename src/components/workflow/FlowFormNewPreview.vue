@@ -16,7 +16,7 @@
                                 </template>
                                 <template v-else-if="col.field">
                                     <div>
-                                        <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" />
+                                        <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" :suggestionObj="suggestionObj" />
                                     </div>
                                 </template>
                             </td>
@@ -161,13 +161,14 @@
         deleteRelatedData: [], // 删除子表的数据
         masterEntityPermission: {}, // 主表权限
         relatedListEntityPermissions: [], // 子表权限
-        maxRowNum: 0
+        maxRowNum: 0,
+        suggestionObj: {}
     });
     const { entityId, layoutData, rowCount, columnCount, cellData, mergeData, rows, mergeRowColData, 
         isRadioUser, isRadioDept, isLookup, fieldData, entityApiName, lookEntityApiName, lookObjectTypeCode, objectTypeCode, columns, comps, ruleId,
         processId, entityLayoutId, select, isLoad, entityObjectId, attributes, list, search, processInstanceId, objTypeCode, isSub,
         subRecordFieldData, relatedObjData, relatedEntityInfoList, toActivityID, deleteRelatedData,
-        masterEntityPermission, relatedListEntityPermissions, maxRowNum
+        masterEntityPermission, relatedListEntityPermissions, maxRowNum, suggestionObj
      } = toRefs(data);
 
      const handleSetValue = (field, value) => {
@@ -258,7 +259,20 @@
                     }]
                 }
                 try{
-                    data.list[key] = fields[key]?.value;
+                    if(type=='UC' || type=='UCS'){
+                        // console.log('props.ruleLogId', props.ruleLogId);
+                        // console.log('fields[key]', fields[key]);
+                        let currentUserRow = fields[key].find(v=>v.RecId == props.ruleLogId);
+                        if(currentUserRow){
+                            data.list[key] = currentUserRow.Comment;
+                        }else {
+                            data.list[key] = "";
+                        }
+                        data.suggestionObj[key] = fields[key];
+                        console.log("data.suggestionObj", data.suggestionObj);
+                    }else{
+                        data.list[key] = fields[key]?.value;
+                    }
                 }catch(err){
 
                 }

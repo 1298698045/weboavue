@@ -178,6 +178,11 @@
                         <div class="signImg">
                             <img src="@/assets/img/sign.png" alt="">
                         </div>
+                        <div class="suggestion">
+                            <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
+                                {{ sug.UserName }} <span>{{ sug.Comment }}</span>
+                            </div>
+                        </div>
                     </div>
                 </template>
             </span>
@@ -338,7 +343,8 @@
         search: Object,
         print: [String, Number],
         suggestions: Array,
-        stateCode: String
+        stateCode: String,
+        suggestionObj: Object
     });
     
 

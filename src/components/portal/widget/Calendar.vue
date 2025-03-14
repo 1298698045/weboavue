@@ -32,8 +32,11 @@
                 </h2>
                 <div class="table-container" style="height: calc(100% - 90px);">
                     <div class="calendar-wrapper">
-                        <a-calendar :locale="locale" v-model:value="date" :fullscreen="false" @panelChange="onPanelChange" />
-        
+                        <a-calendar :locale="locale" v-model:value="date" :fullscreen="false" @panelChange="onPanelChange" @change="changeCalendar">
+                            <template #dateCellRender="{ current }">
+                                <span class="tagRadius" v-if="getIsRecord(current)"></span>
+                            </template>
+                        </a-calendar>
                         <div class="planDataEvent">
                             <div class="dataEvent" v-for="item in listData" @click="handlePreview(item)">
                                 <div class="dataEvent1"></div>
@@ -58,7 +61,11 @@
         <template v-else>
             <div class="card-body">
                 <div class="calendar-wrapper">
-                    <a-calendar :locale="locale" v-model:value="date" :fullscreen="false" @panelChange="onPanelChange" />
+                    <a-calendar :locale="locale" v-model:value="date" :fullscreen="false" @panelChange="onPanelChange" @change="changeCalendar">
+                        <template #dateCellRender="{ current }">
+                            <span class="tagRadius" v-if="getIsRecord(current)"></span>
+                        </template>
+                    </a-calendar>
                     <div class="planDataEvent">
                         <div class="dataEvent" v-for="item in listData" @click="handlePreview(item)">
                             <div class="dataEvent1"></div>
@@ -148,16 +155,98 @@
         sObjectName: "ActivityPointer",
         calendarType: '2',
         isScheduleDetail: false,
-        scheduleId: ""
+        scheduleId: "",
+        eventList: [],
+        year: "",
+        month: "",
+        startDateTime: "",
+        endDateTime: ""
     });
     const { date, tabs, current, listData, isAddSchedule, paramsTime, objectTypeCode, 
-        sObjectName, calendarType, isScheduleDetail, scheduleId  } = toRefs(data);
+        sObjectName, calendarType, isScheduleDetail, scheduleId, eventList, year, month, startDateTime, endDateTime  } = toRefs(data);
+    const newDate = new Date();
+    data.year = newDate.getFullYear();
+    data.month = newDate.getMonth() + 1;
 
-    const onPanelChange = () => {
-
+    const onPanelChange = (e) => {
+        
     };
+    const changeCalendar = (e) => {
+        let date = dayjs(e).format('YYYY-MM-DD');
+        data.year = dayjs(e).format('YYYY');
+        data.month = dayjs(e).format('MM');
+        data.startDateTime = date;
+        data.endDateTime = date;
+        getEventsStati();
+        getScheduleList();
+    }
     const handleItemTab = (item, index) => {
         data.current = index;
+    };
+
+    const getIsRecord = (current) => {
+        let isBook = false;
+        let currentDate = dayjs(current).format("YYYY-MM-DD");
+        let row = data.eventList.find(item=>item.date == currentDate);
+        if(row && row.quantity > 0){
+            isBook = true;
+        }
+        return isBook;
+    };
+
+    const getEventsStati = () => {
+        
+        let obj = {
+            actions:[{
+                id: "",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    year: data.year,
+                    month: data.month
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.getEventsStati, d).then(res=>{
+            data.eventList = res.actions[0].returnValue;
+        })
+    }
+    getEventsStati();
+
+    const getScheduleList = () => {
+        let obj = {
+            actions:[{
+                id: "",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    startDateTime: data.startDateTime,
+                    endDateTime: data.endDateTime,
+                    calendarType: "day",
+                    queryEvents: true,
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.schedule.list, d).then(res=>{
+            let calendarItems = res.actions[0].returnValue[0].calendarItems;
+            let temp = [];
+            calendarItems.forEach(item=>{
+                let obj = {
+                    scheduleId: item.Id,
+                    ScheduledStart: item.StartDateTime,
+                    ScheduledEnd: item.EndDateTime,
+                    Subject: item.Subject
+                };
+                temp.push(obj);
+            });
+            data.listData = temp;
+        })
     };
 
     const getQuery = async () => {
@@ -349,5 +438,12 @@
         text-align: center;
         cursor: pointer;
         color: #0d96f6;
+    }
+    .tagRadius{
+        width: 6px;
+        height: 6px;
+        background: #3399ff;
+        border-radius: 50%;
+        display: inline-block;
     }
 </style>

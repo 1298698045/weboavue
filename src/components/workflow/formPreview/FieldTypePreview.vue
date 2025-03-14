@@ -141,6 +141,11 @@
         <div v-else-if="type=='z' || type=='UC' || type=='UCS'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
+                <div class="suggestion">
+                    <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
+                        {{ sug.UserName }} <span>{{ sug.Comment }}</span>
+                    </div>
+                </div>
             </span>
             <span v-else>
                 <span class="valText" v-if="field?.permission == 4">
@@ -328,7 +333,8 @@
         attributes: Array,
         list: Object,
         search: Object,
-        print: [String, Number]
+        print: [String, Number],
+        suggestionObj: Object
     });
     
 

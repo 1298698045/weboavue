@@ -545,7 +545,7 @@ onMounted(() => {
     left: 0;
     top: 0;
     background: rgba(234, 234, 234, 0.3);
-    z-index: 999;
+    z-index: 9999;
 
     .dModal-box {
         //background: rgba(64, 52, 51, 0.9);
@@ -1062,5 +1062,9 @@ onMounted(() => {
             color: #333;
         }
     }
+}
+.slick-thumb li img{
+    width: 100%;
+    height: 100%;
 }
 </style>

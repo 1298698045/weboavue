@@ -28,7 +28,7 @@
                     <div class="detail-related-item" v-for="(item,index) in relatedlistmove" :key="item.id">
                         <div class="relateditem-left">
                             <div class="relateditem-icon">
-                                <img :src="require('@/assets/img/taskdetail'+item.fields.issuetype.iconUrl)" alt="">
+                                <img :src="'/src/assets/img/taskdetail'+item.fields.issuetype.iconUrl" alt="">
                             </div>
                             <div class="relateditem-name">
                                 <span class="keytext" @click="opendetail(item.id,index)">{{item.key||'key_'+(item.DisplayOrder||index)}}</span>
@@ -53,7 +53,7 @@
                         <div class="relateditem-right">
                             <div class="relateditem-priorityCode" @click="item['editPriorityCode']=true">
                                 <div v-if="!item.editPriorityCode" class="relateditem-icon">
-                                    <img :src="require('@/assets/img/taskdetail'+item.fields.priority.iconUrl)" alt="">
+                                    <img :src="'/src/assets/img/taskdetail'+item.fields.priority.iconUrl" alt="">
                                 </div>
                                 <div v-else>
                                     <researchelselect 
@@ -498,8 +498,9 @@ export default {
                 let userId='';
                 if(userInfo){
                     userInfo=JSON.parse(userInfo);
+                    userId=userInfo.userId;
                     if(userInfo.userId=='jackliu'){
-                        data.userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+                        userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
                     }
                 }
                 let url = Interface.create;
@@ -545,6 +546,9 @@ export default {
 }
 </script>
 <style scoped>
+.edit{
+    cursor: pointer;
+}
 .edit-foot{
     margin-top: 10px;
 }
@@ -691,9 +695,7 @@ export default {
     background-color: rgba(9,30,66,0.04) !important;
     color: #A5ADBA !important;
 }
-.newtaskfooter>button>>>span{
-    /* background-color: rgba(9,30,66,0.04) !important; */
-}
+
 .newtaskfooter>button.active{
     background-color: #0052CC !important;
     color: #fff !important;
@@ -775,7 +777,7 @@ export default {
     height: 22px !important;
 }
 .detail-related .el-input__inner {
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
     background-color: #fff;
     background-image: none;
     border-radius: 4px;
@@ -810,11 +812,21 @@ export default {
 :deep .el-tag{
     padding: 0 7px !important;
 }
-.el-select-dropdown__item:hover,.el-select-dropdown__item.selected,.el-select-dropdown__item.hover{
-        color:#606266;
-        font-weight: normal !important;
-        background-color: #ecf5ff !important;
-        border-left: 2px solid #0052cc !important;
-        padding-left: 18px !important;
-    }
+.el-select-dropdown__item:hover,
+.el-select-dropdown__item.selected,
+.el-select-dropdown__item.hover {
+    color: #606266;
+    font-weight: normal !important;
+    background-color: #ecf5ff !important;
+    border-left: 2px solid #0052cc !important;
+    padding-left: 18px !important;
+}
+
+input[aria-hidden="true"] {
+    display: none !important;
+}
+
+.el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) .el-radio__inner {
+    box-shadow: none !important;
+}
 </style>
