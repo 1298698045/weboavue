@@ -16,7 +16,7 @@
                     </li>
                     <li style="width: 34px;">
                         <a href="javascript:void(0);">
-                            <img class="imgMore" :src="require('@/assets/img/more_wev8.png')" border="0" alt="" title="更多">
+                            <img class="imgMore" :src="require('@/assets/img/more_wev8.png')" border="0" alt="" title="更多"  @click="gotoMore">
                         </a>
                     </li>
                 </ul>
@@ -56,6 +56,8 @@
 </template>
 <script setup>
     import { ref, reactive, toRefs, defineProps } from "vue";
+    import { useRoute, useRouter } from "vue-router";
+    const router = useRouter();
     const props = defineProps({
         item: {
             type: Object,
@@ -82,7 +84,12 @@
             }
         ]
     });
-    const { listData } = toRefs(data); 
+    const { listData } = toRefs(data);
+    const gotoMore = () => {
+        let { moreUrl } = props.item.properties;
+        const url = router.resolve({path: moreUrl});
+        window.open(url.href);
+    }
 </script>
 <style lang="less" scoped>
     @import url(@/style/protal/widget.less);

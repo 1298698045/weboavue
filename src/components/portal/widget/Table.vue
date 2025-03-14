@@ -36,7 +36,7 @@
                     </tr>
                 </thead>
                 <tbody v-if="themeType=='modern'">
-                    <tr v-for="(item, index) in tableData" :key="index">
+                    <tr v-for="(item, index) in tableData" :key="index" @click="handleDetail(item)">
                         <!-- <td>
                             <span>
                                 <div class="ebcoms-column">
@@ -56,7 +56,7 @@
                     </tr>
                 </tbody>
                 <tbody v-if="themeType=='default'">
-                    <tr v-for="(item, index) in tableData" :key="index">
+                    <tr v-for="(item, index) in tableData" :key="index" @click="handleDetail(item)">
                         <td v-for="(column, idx) in computedColumns" :key="idx">
                             <span class="td-span">
                                 <!-- <div class="ebcoms-column">
@@ -72,7 +72,7 @@
                     </tr>
                 </tbody>
                 <tbody v-if="themeType=='light'">
-                    <tr v-for="(item, index) in tableData" :key="index">
+                    <tr v-for="(item, index) in tableData" :key="index" @click="handleDetail(item)">
                         <td v-for="(column, idx) in computedColumns" :key="idx">
                             <span>
                                 <span v-html="item[column.column]"></span>
@@ -91,7 +91,8 @@
     import { ref, reactive, toRefs, defineProps, computed, nextTick, onMounted } from "vue";
 
     const refContent = ref(null);
-
+    import { useRoute, useRouter } from "vue-router";
+    const router = useRouter();
     const props = defineProps({
         config: Object,
         columns: {
@@ -164,7 +165,19 @@
                 }
             }, 1000)
         })
-    })
+    });
+
+    const handleDetail = (item) => {
+        console.log("config", props.config);
+        console.log(item);
+        const url = router.resolve({
+            path: props.config.detailUrl,
+            query: {
+                id: item.LIST_RECORD_ID
+            }
+        });
+        window.open(url.href);
+    }
 
 </script>
 <style lang="less" scoped>

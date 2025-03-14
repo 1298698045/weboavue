@@ -270,9 +270,7 @@ const getQuery = () => {
                         item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
                     }
                 }
-                if (!item.AvatarUrl) {
-                    item.AvatarUrl = '/api/avatar/Group/' + (item.id || item.groupId);
-                }
+                item.AvatarUrl = '/api/avatar/Group/' + (item.id || item.groupId);
                 list.push(item)
             }
         }
@@ -280,9 +278,7 @@ const getQuery = () => {
             data.pagination.total = res.actions[0].returnValue.length || 0;
             for (var i = 0; i < res.actions[0].returnValue.length; i++) {
                 var item = res.actions[0].returnValue[i];
-                if (!item.AvatarUrl) {
-                    item.AvatarUrl = '/api/avatar/Group/' + (item.id || item.groupId);
-                }
+                item.AvatarUrl = '/api/avatar/Group/' + (item.id || item.groupId);
                 item.id = item.groupId;
                 item.Name = item.name;
                 item.Quantity = item.quantity;
@@ -382,6 +378,8 @@ onMounted(() => {
         position: relative;
         top: 4px;
         border-radius: 50%;
+        width: 40px;
+        height: 40px;
     }
 
     .iconBox .moreaction {

@@ -266,9 +266,13 @@
                         ID: fields[key]?.value,
                         Name: fields[key]?.displayValue
                     }]
-                }
+                } 
                 try{
-                    data.list[key] = fields[key]?.value;
+                    if(type=='UC' || type=='UCS'){
+                        data.list[key] = fields[key][0]?.Comment;
+                    }else{
+                        data.list[key] = fields[key]?.value;
+                    }
                 }catch(err){
 
                 }

@@ -70,4 +70,6 @@ export const getActionFunc=()=>{
     window.EditKnowledgeMapDetail=EditKnowledgeMapDetail;
     window.NewCampaignSms=NewCampaignSms;
     window.EditCampaignSms=EditCampaignSms;
+    window.newSuggestion=window.New;
+    window.editSuggestion=window.Edit;
 }

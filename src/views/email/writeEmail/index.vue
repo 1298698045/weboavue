@@ -53,8 +53,8 @@
                             </a-form>
                             <div class="filesWrap">
                                 <div class="selectFile">
-                                    <a-upload multiple v-model:file-list="fileList" name="file" action
-                                        :customRequest="changeRequest"
+                                    <a-upload multiple v-model:file-list="fileList" name="files" 
+                                    :headers="headers" :data="uploadData" :action="Interface.email.upload"
                                         :showUploadList="false"
                                         :before-upload="beforeUpload"
                                         @change="handleChange">
@@ -67,13 +67,14 @@
                                         <div class="inboxFileItem" v-for="(item,index) in fileList2" :key="index">
                                             <div class="leftImg">
                                                 <img src="/src/assets/img/filetype/doc.png" v-if="item.fileExtension=='ocx'||item.fileExtension=='docx'||item.fileExtension=='doc'||
-                                                     item.fileExtension=='.ocx'||item.fileExtension=='.docx'||item.fileExtension=='.doc'" />
+                                                     item.fileExtension=='.ocx'||item.fileExtension=='.docx'||item.fileExtension=='.doc'||item.fileExtension=='.wps'||item.fileExtension=='wps'" />
                                                 <img src="/src/assets/img/filetype/rar.png" v-else-if="item.fileExtension=='rar'||item.fileExtension=='zip'||
                                                      item.fileExtension=='.rar'||item.fileExtension=='.zip'" />
                                                 <img src="/src/assets/img/filetype/Excel.png" v-else-if="item.fileExtension=='xlsx'||item.fileExtension=='xls'||
                                                      item.fileExtension=='.xlsx'||item.fileExtension=='.xls'" />
                                                 <img src="/src/assets/img/filetype/Pdf.png" v-else-if="item.fileExtension=='pdf'||item.fileExtension=='.pdf'" />
-                                                <img src="/src/assets/img/filetype/PPT.png" v-else-if="item.fileExtension=='ppt'||item.fileExtension=='.ppt'" />
+                                                <img src="/src/assets/img/filetype/TXT.png" v-else-if="item.fileExtension=='txt'||item.fileExtension=='.txt'" />
+                                                <img src="/src/assets/img/filetype/PPT.png" v-else-if="item.fileExtension=='ppt'||item.fileExtension=='.ppt'||item.fileExtension=='pptx'||item.fileExtension=='.pptx'" />
                                                 <img src="/src/assets/img/filetype/defaultImg.png" v-else-if="item.fileExtension=='jpg'||item.fileExtension=='png'||item.fileExtension=='.jpg'||item.fileExtension=='.png'" />
                                                 <img src="/src/assets/img/filetype/Folder.png" v-else />
                                             </div>
@@ -199,11 +200,11 @@
     const previewIcon = h("i",{
         class: "iconfont icon-yulanwenjian"
     })
+    const token = localStorage.getItem("token");
     const data = reactive({
         fileList: [],
         fileList1:[],
         fileList2: [],
-        headers: {},
         searchVal: "",
         departListTree:[
             {
@@ -254,9 +255,16 @@
         currentUserId:'',
         currentUserName:'',
         keyword:'',
-        id:''
+        id:'',
+        uploadData: {
+            parentId: ""
+        },
+        headers: {
+            Authorization: token,
+            Token: token
+        }
     })
-    const { keyword,currentUserId,currentUserName,fileList,fileList2, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
+    const { uploadData,keyword,currentUserId,currentUserName,fileList,fileList2, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
         deptSelectedKeys, deptTreeData, departListTree, selectConcatsList, selectGroupList, departListTree2, groupTreeData2, latelyTreeData,
         latelyexpandedKeys, latelySelectedKeys, height,isRadioUser,defaultExpandAll,id
     } = toRefs(data);
@@ -314,6 +322,7 @@
             proxy.$post(url,obj).then(res=>{
                 if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                     data.id=res.actions[0].returnValue.id;
+                    data.uploadData.parentId=res.actions[0].returnValue.id;
                     if(props.id&&props.id!=data.id){
                         copyAttachment();
                     }
@@ -322,11 +331,13 @@
         }
     }
     const handleChange = (file) => {
-        //执行顺序2
+        if (file.file.status == "done") {
+            message.success("上传成功！");
+        }
         if(file&&file.file){
             let size=file.file.size;
             size=size?(size*1/1024).toFixed(2):0;
-            data.fileList1.push({
+            data.fileList2.push({
                 uid: file.file.uid,
                 name: file.file.name,
                 url: file.file.url,
@@ -334,69 +345,11 @@
                 raw: file.file.originFileObj,
                 Privilege: '',
                 size:size+'kb',
-                isNew:true
+                downloadUrl:file.file.url,
+                viewUrl:file.file.url
             });
         }
-        data.fileList1=unique(data.fileList1);
-    }
-    const changeRequest=(file) => {
-        //执行顺序3
-        nextTick(()=>{
-            if (data.fileList1&&data.fileList1.length&&data.id) {
-                let isHasNew=false;
-                var fd = new FormData();
-                fd.append('parentId', data.id);
-                for (var i = 0; i < data.fileList1.length; i++) {
-                    var item = data.fileList1[i];
-                    if (item.raw&&item.isNew) {
-                        fd.append('files', item.raw);
-                        data.fileList1[i].isNew=false;
-                        isHasNew=true;
-                    }
-                }
-                if(isHasNew){
-                    axios({
-                        url: Interface.email.upload,
-                        method: 'POST',
-                        data: fd,
-                        headers: {
-                            'Content-type': 'multipart/form-data',
-                        },
-                    }).then(res=>{
-                        //console.log(res);
-                        if(res&&res.data&&res.data.actions&&res.data.actions[0]&&res.data.actions[0].returnValue&&res.data.actions[0].returnValue.length){
-                            for (var i = 0; i < res.data.actions[0].returnValue.length; i++) {
-                                var item = res.data.actions[0].returnValue[i];
-                                let size=item.fileSize;
-                                size=size?(size*1/1024).toFixed(2):0;
-                                size=size+'kb';
-                                let name=item.name||'';
-                                if(name){
-                                    name=name.replaceAll('.'+item.fileExtension,'');
-                                }
-                                let url=item.viewUrl;
-                                data.fileList2.push({
-                                    uid: item.attachId,
-                                    name: item.name,
-                                    url: url,
-                                    fileExtension: item.fileExtension||'',
-                                    size:size,
-                                    createdOn:item.createdOn,
-                                    downloadUrl:item.downloadUrl,
-                                    viewUrl:item.viewUrl
-                                });
-                            }
-                            data.fileList2=unique(data.fileList2);
-                            //console.log(data.fileList2,'fileList2');
-                        }
-                        message.success("上传成功！");
-                    }).catch(err => {
-                        console.log('error', err);
-                        message.error("上传失败！");
-                    });
-                }
-            }
-        })
+        data.fileList2=unique(data.fileList2);
     }
     const onSearch = (e) => {
         data.latelyexpandedKeys=[1];
@@ -862,6 +815,7 @@
                 //console.log("res",res);
                 if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                     data.id=res.actions[0].returnValue.id;
+                    data.uploadData.parentId=res.actions[0].returnValue.id;
                     message.success(type==1?"发送成功":"保存成功");
                     // if (data.fileList2&&data.fileList2.length) {
                     //     var fd = new FormData();
@@ -889,6 +843,7 @@
                     if(type==1){
                         emit("cancel", props.ltags);
                         data.id='';
+                        data.uploadData.parentId='';
                     }
                     emit("refresh", '');
                 }
@@ -1066,7 +1021,7 @@
     //获取附件列表
     const getAttachments = () => {
         proxy.$get(Interface.email.getAttachments,{
-            id: data.id,
+            id: props.id,
         }).then(res=>{
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue){
                 data.fileList2=res.actions[0].returnValue||[];
@@ -1135,6 +1090,7 @@
             }
             else{
                 data.id=props.id;
+                data.uploadData.parentId=props.id;
             }
         }
         else{

@@ -81,7 +81,7 @@
                         </li>
                         <li style="width: 34px;">
                             <a href="javascript:void(0);">
-                                <img class="imgMore" :src="require('@/assets/img/more_wev8.png')" border="0" alt="" title="更多">
+                                <img class="imgMore" :src="require('@/assets/img/more_wev8.png')" border="0" alt="" title="更多" @click="gotoMore">
                             </a>
                         </li>
                     </ul>
@@ -128,6 +128,8 @@
     const { proxy } = getCurrentInstance();
     import { useStore } from "vuex";
     const store = useStore();
+    import { useRoute, useRouter } from "vue-router";
+    const router = useRouter();
     const props = defineProps({
         item: {
             type: Object,
@@ -195,6 +197,11 @@
         });
     };
     getQuery();
+    const gotoMore = () => {
+        let { moreUrl } = props.item.properties;
+        const url = router.resolve({path: "/lightning/o/workflow/doing"});
+        window.open(url.href);
+    }
 </script>
 <style lang="less" scoped>
     @import url(@/style/protal/widget.less);

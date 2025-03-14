@@ -17,7 +17,7 @@
                         </li>
                         <li style="width: 34px;">
                             <a href="javascript:void(0);">
-                                <img class="imgMore" :src="require('@/assets/img/more_wev8.png')" border="0" alt="" title="更多">
+                                <img class="imgMore" :src="require('@/assets/img/more_wev8.png')" border="0" alt="" title="更多" @click="gotoMore">
                             </a>
                         </li>
                     </ul>
@@ -102,6 +102,8 @@
     const { proxy } = getCurrentInstance();
     import { useStore } from "vuex";
     const store = useStore();
+    import { useRoute, useRouter } from "vue-router";
+    const router = useRouter();
     const props = defineProps({
         item: {
             type: Object,
@@ -196,6 +198,12 @@
         // console.log("item", item);
         data.scheduleId = item.ActivityId;
         data.isScheduleDetail = true;
+    }
+
+    const gotoMore = () => {
+        let { moreUrl } = props.item.properties;
+        const url = router.resolve({path: "/lightning/o/Event/home"});
+        window.open(url.href);
     }
 
 </script>

@@ -84,7 +84,7 @@
 
     const gotoPage = () => {
         let { drillUrl } = props.item.properties;
-        const url = router.resolve(drillUrl);
+        const url = router.resolve({path: drillUrl});
         window.open(url.href);
     }
 

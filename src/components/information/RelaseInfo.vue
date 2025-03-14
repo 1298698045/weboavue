@@ -191,7 +191,35 @@
               <div class="sectionTitle">添加可查看人员</div>
               <div class="sectionRow">
                 <div class="sectionItem memberlist">
-                  <FilterQuery :FilterExpresssionList="FilterExpresssionList" @params="getFilterQuery"></FilterQuery>
+                  <FilterQuery :FilterExpresssionList="FilterExpresssionList" @params="getFilterQuery" :entityApiName="'SystemUser'"></FilterQuery>
+                </div>
+              </div>
+              <div class="sectionRow">
+                <div class="sectionItem memberlist">
+                  <div class="sectionItemTitle">查询结果</div>
+                  <a-button type="primary" class="sectionItemBtn">搜索</a-button>
+                  <a-table :columns="columns" :dataSource="peopleList" :scroll="{ y:tableHeight }" :pagination="data.pagination" @change="handleTableChange">
+                      <template #bodyCell="{ column, index, record }">
+                        <template v-if="column.key === 'Action'">
+                          <a-button type="text" size="small" @click="handleDelete(record.id)">删除</a-button>
+                        </template>
+                        <template v-if="column.key === 'index'">
+                          <div>
+                            {{ index + 1 }}
+                          </div>
+                        </template>
+                        <div v-if="column.key=='AvatarImg'">
+                            <img :src="record.AvatarImg||Interface.pathUrl+':9091/api/one/user/avatar/'+record.id" @error="handleImageError(record)" alt="" class="AddGroup_list_avatar"/>
+                        </div>
+                      </template>
+                    </a-table>
+                    <div class="empty" v-if="peopleList.length==0">
+                      <img
+                        :src="require('@/assets/img/empty.png')"
+                        alt=""
+                      />
+                      <p class="emptyDesc">当前暂无数据</p>
+                    </div>
                 </div>
               </div>
             </div>
@@ -242,7 +270,7 @@ import dayjs from 'dayjs';
 import RadioDept from "@/components/commonModal/RadioDept.vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 import Delete from "@/components/listView/Delete.vue";
-import FilterQuery from "@/components/PeopleFilterQuery.vue";
+import FilterQuery from "@/components/FilterQuery.vue";
 import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
 const router = useRouter();
@@ -451,6 +479,10 @@ const AddPeople = () => {
 
   });
 }
+const handleImageError=(record)=>{
+    record.AvatarImg='/src/assets/img/avatar.png';
+    return record;
+};
 const refreshPeople = (e) => {
   if (data.step == 2) {
     getQuery();
@@ -902,11 +934,11 @@ var columns = [
     dataIndex: "RoleCode",
   },
 
-  {
-    title: "操作",
-    key: "Action",
-    width: 150,
-  },
+  // {
+  //   title: "操作",
+  //   key: "Action",
+  //   width: 150,
+  // },
 ];
 //改变页码
 const handleTableChange = (pag, filters, sorter) => {
@@ -968,19 +1000,44 @@ const getFilterExpresssionList = () => {
     padding: 0 10px;
     box-sizing: border-box;
     display: flex;
-
+    .sectionItemTitle {
+      font-size: 14px;
+      margin: 20px 0 5px 0;
+    }
     .sectionItem {
       flex: 1;
       margin-right: 20px;
-
+      position: relative;
       .ant-row {
         display: block !important;
+      }
+      .sectionItemBtn{
+        position: absolute;
+        right: 0;
+        top: 1px;
       }
     }
 
     .sectionItem:last-child {
       margin-right: 0;
     }
+        .empty {
+          height: 40%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          text-align: center;
+          color: #666;
+    
+          img {
+            width: 50px;
+          }
+    
+          .emptyDesc {
+            font-size: 14px;
+          }
+        }
   }
 }
 

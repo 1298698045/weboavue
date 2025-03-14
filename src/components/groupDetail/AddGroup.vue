@@ -132,10 +132,11 @@
                                 name="file"
                                 list-type=""
                                 class="avatar-uploader"
+                                :customRequest="changeRequest"
                                 :show-upload-list="false"
-                                :data="{ 'id': recordId }"
                                 :multiple="false"
-                                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                accept="image/*"
+                                action
                                 :before-upload="beforeUpload"
                                 @change="handleChange"
                             >
@@ -223,7 +224,9 @@
     defineExpose,
     defineEmits,
     toRaw,
+    nextTick
   } from "vue";
+  import axios from "axios";
   import {
     SearchOutlined,
     DownOutlined,
@@ -285,7 +288,7 @@
     step:0,
     fileList: [],
     file: "",
-    imageUrl:require('@/assets/img/defaultGroup.png'),
+    imageUrl:require('@/assets/img/avatar-r.png'),
     recordId:'',
     isRadioDept:false,
     isRadioUser:false,
@@ -357,21 +360,40 @@
   const beforeUpload = (e) => {
     console.log("beforeUpload",e);
   }
-  const handleChange = (info) => {
-    //console.log("handleChange",info);
-    data.file = info.file;
-    if (info.file.status === 'uploading') {
-      return;
-    }
-    if (info.file.status === 'done'||info.file.status === 'error') {
-      getBase64(info.file.originFileObj).then(imageUrl => {
-        message.success('图片上传成功！');
-        data.imageUrl=imageUrl;
-        //console.log('文件的URL:', imageUrl);
-      });
+  const handleChange = (file) => {
+    if(file&&file.file){
+        data.file=file.file.originFileObj;
+        getBase64(data.file).then(imageUrl => {
+          data.imageUrl=imageUrl;
+        });
     }
   }
-  
+  const changeRequest=(file) => {
+      nextTick(()=>{
+          if (data.file) {
+            let fd = new FormData();
+            fd.append('entityName', 'Group');
+            fd.append('id', data.recordId);
+            fd.append('file', data.file);
+            //let token = window.localStorage.getItem('token');
+            axios({
+                url: Interface.uploadAvatar,
+                method: 'POST',
+                data: fd,
+                headers: {
+                    'Content-type': 'multipart/form-data',
+                    // 'Authorization': token,
+                    // 'Token': token
+                },
+            }).then(res=>{
+                message.success("上传成功！");
+            }).catch(err => {
+                console.log('error', err);
+                message.error("上传失败！");
+            });
+          }
+      })
+  }
   onMounted(() => {
     window.addEventListener("resize", (e) => {
       data.height = document.documentElement.clientHeight - 350;
@@ -485,6 +507,10 @@
                 });
             }
             searchlookup('', 'SystemUser','OwningUser');
+            let url=record.AvatarUrl&&record.AvatarUrl.value?record.AvatarUrl.value:'';
+            if(url){
+              data.imageUrl='/'+Interface.viewAvatar+'/Group/'+props.id;
+            }
         }
     })
     
@@ -492,6 +518,7 @@
   if(props.id){
       getDetail();
       data.title='编辑小组';
+      data.recordId=props.id;
   }
   const handleSubmit = () => {
     formRef.value
@@ -517,7 +544,8 @@
                         Description: item.Description,
                         Notice:item.Notice,
                         ImportSequenceNumber:item.ImportSequenceNumber||item.ImportSequenceNumber==0?item.ImportSequenceNumber*1:'',
-                        IsPublic:item.IsPublic
+                        IsPublic:item.IsPublic,
+                        AvatarUrl:'\\Group\\'+props.id
                     }
                   }              
                 }
@@ -534,6 +562,7 @@
                   //formRef.value.resetFields();
                   if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].state=='SUCCESS'){
                     data.recordId=res.actions[0].returnValue.id;
+                    props.id=res.actions[0].returnValue.id;
                     message.success("保存成功！");
                     emit("load", false);
                     setTimeout(function(){
@@ -811,6 +840,7 @@ const getInputContent = (e) => {
     }
     .uploadcurrent{
       margin: 25px 0;
+      border-radius: 50%;
     }
   }
 }
