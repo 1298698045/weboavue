@@ -59,16 +59,16 @@
                     </div>
                     <template #overlay>
                       <a-menu>
-                        <a-menu-item @click="addworklog">记录工作</a-menu-item>
+                        <!-- <a-menu-item @click="addworklog">记录工作</a-menu-item>
                         <a-menu-item>Connect Slack channel</a-menu-item>
                         <a-menu-item divided>转换为子任务</a-menu-item>
                         <a-menu-item command="move">移动</a-menu-item>
-                        <a-menu-item command="copy">克隆</a-menu-item>
+                        <a-menu-item command="copy">克隆</a-menu-item> -->
                         <a-menu-item @click="handleDelete">删除</a-menu-item>
-                        <a-menu-item divided>查找字段</a-menu-item>
+                        <!-- <a-menu-item divided>查找字段</a-menu-item>
                         <a-menu-item >打印</a-menu-item>
                         <a-menu-item >导出 XML</a-menu-item>
-                        <a-menu-item >导出 Word</a-menu-item>
+                        <a-menu-item >导出 Word</a-menu-item> -->
                     </a-menu>
                     </template>
                     
@@ -1220,5 +1220,9 @@ input[aria-hidden="true"] {
 .el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) .el-radio__inner {
     box-shadow: none !important;
 }
-
+.section-body{
+    .ant-upload-drag{
+        background: #fff !important;
+    }
+}
 </style>

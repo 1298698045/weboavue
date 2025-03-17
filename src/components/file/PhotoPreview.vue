@@ -583,6 +583,8 @@ onMounted(() => {
 })
 </script>
 <style lang="less" scoped>
+@import "@/style/common.less";
+@import "@/style/icon/iconfont.css";
 .d-modal {
     position: fixed;
     width: 100%;

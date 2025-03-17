@@ -51,8 +51,8 @@
                                                 <a-menu-item @click="onlyShow(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.canShowOnlyCalendar">仅显示此日历</a-menu-item>
                                                 <a-menu-item @click="openShare(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.isCalendarShareable">共享日历</a-menu-item>
                                                 <a-menu-item @click="handleAddSchedule(item.calendar)" v-if="item.calendar.CalendarActionsConfig.canAddEvent">添加事件</a-menu-item>
-                                                <a-menu-item @click="CreateCalendar(item.calendar.Id,'8')" v-if="item.calendar.CalendarActionsConfig.isCalendarEditable">编辑日历</a-menu-item>
-                                                <a-menu-item @click="handleDeleteCalendar(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.isCalendarDeletable">移除日历</a-menu-item>
+                                                <!-- <a-menu-item @click="CreateCalendar(item.calendar.Id,'8')" v-if="item.calendar.CalendarActionsConfig.isCalendarEditable">编辑日历</a-menu-item> -->
+                                                <!-- <a-menu-item @click="handleDeleteCalendar(item.calendar.Id)" v-if="item.calendar.CalendarActionsConfig.isCalendarDeletable">移除日历</a-menu-item> -->
                                                 <a-menu-divider />
                                                 <a-menu-item v-if="item.calendar.CalendarActionsConfig.canModifyColor">
                                                     <ul class="scrollable">
@@ -238,7 +238,7 @@
                 <div class="form">
                     <div class="formItem">
                         <span class="label">日程类型：</span>
-                        <a-select v-model:value="formState.type" style="width: 200px;">
+                        <a-select v-model:value="formState.type" style="width: 200px;" @change="calendarTypeChange(calendarType);">
                             <a-select-option value="0">工作安排</a-select-option>
                             <a-select-option value="1">个人</a-select-option>
                         </a-select>

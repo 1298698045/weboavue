@@ -477,11 +477,13 @@
   };
 
   watch(() => route.meta.entityName, (newVal, oldVal) => {
-    // console.log("route.meta.entityName", newVal, oldVal);
-    data.sObjectName = route.meta.entityName;
-    data.entityType = route.meta.entityName;
-    data.queryParams.entityType = route.meta.entityName;
-    initLoad();
+    //console.log("route.meta.entityName", newVal, oldVal);
+    if (route.meta.entityName) {
+      data.sObjectName = route.meta.entityName;
+      data.entityType = route.meta.entityName;
+      data.queryParams.entityType = route.meta.entityName;
+      initLoad();
+    }
   }, { immediate: true })
 
   const getActions = () => {
@@ -676,7 +678,9 @@
       data.filterListFixed = JSON.parse(JSON.stringify(res.actions[0].returnValue));
       // data.currentFilter = data.filterList[0];
       let row = data.filterList.find(item=>item.id == data.currentFilter.id);
-      data.isLock = row.isPinned;
+      if (row) {
+        data.isLock = row.isPinned;
+      }
     })
   };
 

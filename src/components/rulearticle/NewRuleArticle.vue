@@ -644,7 +644,7 @@ const deleteFile = (id) => {
               formState.ArticleNumber=fields.ArticleNumber.value||'';
               formState.PublicationScope=fields.PublicationScope.value||'';
               formState.Name=fields.Name.value||'';
-              formState.FolderId=fields.FolderId.value||'';
+              formState.FolderId=fields.FolderId&&fields.FolderId.value?(fields.FolderId.value).toLowerCase():'';
               formState.ActiveOn=fields.ActiveOn&&fields.ActiveOn.value?dayjs(new Date(fields.ActiveOn.value)).format("YYYY-MM-DD"):'';
               formState.ExpiresOn=fields.ExpiresOn&&fields.ExpiresOn.value?dayjs(new Date(fields.ExpiresOn.value)).format("YYYY-MM-DD"):'';
               formState.Description=fields.Description?fields.Description.value:'';

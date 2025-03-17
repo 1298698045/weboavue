@@ -46,7 +46,17 @@ export const routesMapping = {
         ResourceOrg: () => import("../views/meeting/mettingRoomMaintenance/index.vue")
     },
     // 公文管理
-    OfficialDocument: {},
+    OfficialDocument: {
+        OfficialDocumentHome: () => import("../views/documentAdmin/home/index.vue"),
+        DocOutMonitor: () => import("../views/documentAdmin/myDispatch/index.vue"),
+        DocInMonitor: () => import("../views/documentAdmin/myReceiving/index.vue"),
+        // docOversee: () => import("../views/listView/index.vue"),
+        DocOutSearch: () => import("../views/documentAdmin/outgoingAdmin/index.vue"),
+        DocInSearch: () => import("../views/documentAdmin/receivingAdmin/index.vue"),
+        OfficialRequestReport: () => import("../views/documentAdmin/report/index.vue"),
+        // TemplateFile: () => import("../views/documentAdmin/textTemplate/index.vue"),
+        OfficialDocumentInReadlog: () => import("../views/documentAdmin/readingLog/index.vue")
+    },
     // 通讯录
     addresslist: {
         OrganizationAddresslist: () => import("../views/oa/addressBook/index.vue"),

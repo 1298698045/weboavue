@@ -503,6 +503,43 @@ const staticRoutes = [
         },
       }
     ]
+  },
+  {
+    path: "/OfficialDocument",
+    name: "OfficialDocument",
+    component: Layout,
+    redirect: "/lightning/o/official/doc/Oversee",
+    meta: {
+      name: "公文管理"
+    },
+    children: [
+      {
+        path: "/lightning/o/official/doc/Oversee",
+        component: () => import("../views/listView/index2.vue"),
+        name: "docOversee",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "公文督办",
+          icon: "huiyicanhuiren",
+          entityType:'A10',
+          objectTypeCode:'100110',
+          entityName:'OfficialNoticeIn',
+        },
+      },
+      {
+        path: "/o/ContentDocument/template/home",
+        name: "TemplateFile",
+        component: () => import("../views/listView/index2.vue"),
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "正文模板",
+          icon: "huiyicanhuiren",
+          entityType:'063',
+          objectTypeCode:'100105',
+          entityName:'TemplateFile',
+        },
+      }
+    ]
   }
 ];
 

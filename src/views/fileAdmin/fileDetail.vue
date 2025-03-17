@@ -188,6 +188,7 @@ const getFileDetail = () => {
                         data.photoParams.imageList.push({
                             id: item.id,
                             Name: item.name,
+                            viewUrl:item.viewUrl,
                             ThumbnailUrl: item.viewUrl ? Interface.pathUrl + ':9091' + item.viewUrl : '',
                             CreatedBy: item.createdByName,
                             CreatedOn: item.createdOn
@@ -260,13 +261,20 @@ const handleOpenFile = (item) => {
         };
         data.isPdf = true;
     } else {
-        openControlViewFile(
-            item.link,
-            item.fileExtension,
-            item.viewLink,
-            item.name + "." + item.fileExtension
-        );
+        // openControlViewFile(
+        //     item.link,
+        //     item.fileExtension,
+        //     item.viewLink,
+        //     item.name + "." + item.fileExtension
+        // );
+        handleDownLoadFile(item);
     }
+};
+const handleDownLoadFile = (item) => {
+  if (item.downloadUrl) {
+    let url = item.downloadUrl;
+    window.open(url);
+  }
 };
 //文件预览
 let KGBrowser1 = "";

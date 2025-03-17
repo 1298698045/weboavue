@@ -8,7 +8,7 @@
                 <span class="headerTitle">日历</span>
             </div>
             <div class="headerRight">
-                <dRadioGroup :current="current" @change="changeRadioGroup">
+                <dRadioGroup :current="current" @change="changeRadioGroup" v-if="showComponent">
                     <a-radio-button :value="0">
                         <i class="iconfont icon-liebiaoshitu"></i>
                     </a-radio-button>
@@ -40,7 +40,7 @@
                     </div>
                 </div>
             </div> -->
-            <div class="calendarRight">
+            <div class="calendarRight" v-if="showComponent">
                 <ListView v-if="current==0" :layoutName="layoutName" />
                 <CalendarVue v-if="current==1" @getCalendarActionsConfig="getCalendarActionsConfig" />
             </div>
@@ -65,7 +65,8 @@
         defineProps,
         defineExpose,
         defineEmits,
-        h
+        h,
+        nextTick
     } from "vue";
     import "@/style/schedule/icon/iconfont.css";
     import ListView from "@/components/schedule/list/index.vue";
@@ -79,6 +80,9 @@
     import dRadioGroup from "@/components/antDefault/Dradio-group.vue"
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
+    import { useRouter, useRoute } from "vue-router";
+    const route = useRoute();
+    const router = useRouter();
     const { proxy } = getCurrentInstance();
     const data = reactive({
         current: 1,
@@ -106,9 +110,10 @@
             isCalendarShareable: false,
             isCalendarToggleable: false,
             isCalendarUnsubscribable: false,
-        }
+        },
+        showComponent:false
     });
-    const { CalendarActionsConfig,current, isSchedule, isAddSchedule, isShare, isImport, fileParams, size,id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
+    const { showComponent, CalendarActionsConfig,current, isSchedule, isAddSchedule, isShare, isImport, fileParams, size,id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
     const changeRadioGroup = (e) => {
         data.current = e;
     }
@@ -146,6 +151,11 @@
             data.CalendarActionsConfig=e;
         }
     }
+    watch(() => route, (newVal, oldVal) => {
+        data.current=1;
+        data.showComponent = false;
+        nextTick(() => (data.showComponent = true));
+    }, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
     .wrappper{

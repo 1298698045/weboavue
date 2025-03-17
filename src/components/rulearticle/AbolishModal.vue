@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+    <a-modal v-model:open="props.isShow" width="850px" :style="setTop" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
       <template #title>
         <div>
           {{ title }}
@@ -50,6 +50,7 @@ import {
   toRaw,
   h,
   nextTick,
+  computed
 } from "vue";
 import {
   SearchOutlined,
@@ -84,14 +85,11 @@ const formState = reactive({
 const token = localStorage.getItem("token");
 const data = reactive({
   title: "废止制度文件",
-  height: document.documentElement.clientHeight - 350,
+  height: 180,
+  top:""
 });
-const { title, height } = toRefs(data);
-
+const { title, height, top } = toRefs(data);
 onMounted(() => {
-  window.addEventListener("resize", (e) => {
-    data.height = document.documentElement.clientHeight - 350;
-  });
   let userInfo = window.localStorage.getItem('userInfo');
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
@@ -101,7 +99,15 @@ onMounted(() => {
       userId = '2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
     }
   }
+  window.addEventListener("resize", (e) => {
+    let h = document.documentElement.clientHeight;
+    data.top = 328/2 + 'px';
+  });
+  
 });
+const setTop = computed(() => ({
+  top: `calc(50% - 164px)`
+}));
 const handleSubmit = () => {
   emit("cancel", false);
   return

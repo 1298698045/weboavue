@@ -28,7 +28,7 @@
                   <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
                   </CaretDownOutlined>
                 </template>
-                <template v-slot:title="{ name, quantity }">
+                <template v-slot:title="{ name }">
                   <!-- <span v-if="name.indexOf(searchValue) > -1">
                     {{ name.substr(0, name.indexOf(searchValue)) }}
                     {{
@@ -39,7 +39,7 @@
                     <span class="tree-num">{{ quantity }}</span>
                   </span>
                   <span v-else>{{ name }}</span> -->
-                  <span>{{ name }}<span class="tree-num">{{ quantity }}</span></span>
+                  <span>{{ name }}</span>
                 </template>
               </a-tree>
             </div>
@@ -333,13 +333,33 @@ let formSearchHeight = ref(null);
 const gridRef = ref(null);
 const onSearch = (e) => {
   gData.value = gDataAll.value.filter(item => {
-    return item.name.indexOf(data.searchVal) != -1;
+    if (item.name.indexOf(data.searchVal) != -1) {
+      return item;
+    }
+    else {
+      if (item.children && item.children.length) {
+        for (var i = 0; i < item.children.length; i++) {
+          if (item.children[i].name.indexOf(data.searchVal) != -1) {
+            return item.children[i];
+          }
+        }
+      }
+    }
   })
 }
 const onSelect = (keys) => {
   data.treeId = keys[0];
   handleSearch(data.formSearchFilterquery);
 };
+watch(() => route, (newVal, oldVal) => {
+  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
+    if (route.path == '/knowledge/RuleArticle/myhome') {
+      setTimeout(function () {
+        getTabs();
+      }, 500)
+    }
+  }
+}, { deep: true, immediate: true })
 onMounted(() => {
   window.addEventListener('resize', changeHeight)
   // this.$nextTick(()=>{

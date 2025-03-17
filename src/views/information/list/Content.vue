@@ -1049,7 +1049,7 @@ watch(() => route, (newVal, oldVal) => {
     }
     setTimeout(function () {
       handleSearch();
-    }, 800)
+    }, 500)
   }
 }, { deep: true, immediate: true })
 onMounted(() => {

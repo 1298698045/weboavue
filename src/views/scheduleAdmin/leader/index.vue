@@ -8,7 +8,7 @@
                 <span class="headerTitle">领导日程</span>
             </div>
             <div class="headerRight">
-                <dRadioGroup :current="current" @change="changeRadioGroup">
+                <dRadioGroup :current="current" @change="changeRadioGroup" v-if="showComponent">
                     <a-radio-button :value="0">
                         <i class="iconfont icon-liebiaoshitu"></i>
                     </a-radio-button>
@@ -60,6 +60,7 @@
         defineProps,
         defineExpose,
         defineEmits,
+        nextTick
     } from "vue";
     import "@/style/schedule/icon/iconfont.css";
     import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
@@ -73,6 +74,9 @@
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
+    import { useRouter, useRoute } from "vue-router";
+    const route = useRoute();
+    const router = useRouter();
     const data = reactive({
         current: 1,
         isSchedule: false,
@@ -84,9 +88,10 @@
         },
         objectTypeCode:'4200',
         sObjectName:'ActivityPointer',
-        layoutName:'LeaderActivityPointer'
+        layoutName:'LeaderActivityPointer',
+        showComponent:true
     });
-    const { current, isSchedule, isAddSchedule, id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
+    const { showComponent, current, isSchedule, isAddSchedule, id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
     const handleAddSchedule = () => {
         // data.isSchedule =  true;
         data.isAddSchedule = true;
@@ -109,6 +114,11 @@
     const handleNewScheduleVal = (e) => {
         data.isAddSchedule = false;
     }
+  watch(() => route, (newVal, oldVal) => {
+    data.current=1;
+    data.showComponent = false;
+    nextTick(() => (data.showComponent = true));
+  }, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
     .wrappper{

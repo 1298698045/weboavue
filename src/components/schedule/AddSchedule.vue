@@ -250,7 +250,7 @@
                                                         :valueFormat="hourFormat" format="HH:mm" />
                                                 </div>
                                                 <div class="switch">
-                                                    <a-switch v-model:checked="formState.IsAllDayEvent" />
+                                                    <a-switch v-model:checked="formState.IsAllDayEvent" @change="IsAllDayEventChange" />
                                                     <span class="text">全天</span>
                                                 </div>
                                             </div>
@@ -608,6 +608,12 @@
     }
     const getEditorContent = (e) => {
         formState.Description = e;
+    }
+    const IsAllDayEventChange=(e)=>{
+        if(formState.IsAllDayEvent){
+            formState.StartDateTime_time='00:00',
+            formState.EndDateTime_time='23:59'
+        }
     }
     watch(()=>formState.StartDateTime,(newVal,oldVal)=>{
         formState.startTime = newVal + ' ' + formState.StartDateTime_time;

@@ -44,7 +44,7 @@
               Privilege &&
               (Privilege.canAdmin || Privilege.canEdit || Privilege.canEdit)
             " name="files" :headers="headers" @change="changeFiles" :data="uploadData"
-              :action="Interface.file.cloudUpload" :showUploadList="false">
+              :action="Interface.file.cloudUpload" :showUploadList="false" :multiple="true">
               <!-- <template #itemRender="{ file, actions }"> </template> -->
               <a-button type="primary" class="ml10">
                 <upload-outlined></upload-outlined>
@@ -76,7 +76,7 @@
               Privilege &&
               (Privilege.canAdmin || Privilege.canEdit || Privilege.canEdit)
             ">文件排序</a-button>
-            <a-button class="ml10" v-if="srchType == 'recycle'">批量删除</a-button>
+            <a-button class="ml10" v-if="srchType == 'recycle'" @click="batchDelete">批量删除</a-button>
           </div>
         </div>
         <div class="layoutBodyCenter">
@@ -108,6 +108,11 @@
                   <template v-if="column.key == 'number'">
                     <div>
                       {{ index + 1 }}
+                    </div>
+                  </template>
+                  <template v-if="column.key === 'checked'">
+                    <div>
+                      <a-checkbox v-model:checked="record.checked" @change="changeCheckbox(record)"></a-checkbox>
                     </div>
                   </template>
                   <template v-if="column.key == 'sort'">
@@ -319,6 +324,8 @@ const { proxy } = getCurrentInstance();
 const formRef = ref();
 const handleReset = () => {
   formRef.value.resetFields();
+  data.checkList = [];
+  data.pagination.current = 1;
   getQuery();
 };
 const router = useRouter();
@@ -334,6 +341,12 @@ const columns = toRaw([
     title: "序号",
     dataIndex: "number",
     key: "number",
+    width: 70,
+  },
+  {
+    title: "选择",
+    dataIndex: "checked",
+    key: "checked",
     width: 70,
   },
   {
@@ -503,9 +516,11 @@ const data = reactive({
   isConfirm: false,
   confirmDesc: '',
   confirmTitle: '',
-  confirmId: ''
+  confirmId: '',
+  checkList: []
 });
 const {
+  checkList,
   isLeft,
   menus,
   leftCurrent,
@@ -688,6 +703,7 @@ const getQuery = () => {
           data.photoParams.imageList.push({
             id: item.id,
             Name: item.name,
+            viewUrl: item.viewUrl,
             ThumbnailUrl: item.viewUrl ? Interface.pathUrl + ':9091' + item.viewUrl : '',
             CreatedBy: item.createdByName,
             CreatedOn: item.createdOn
@@ -788,6 +804,8 @@ const handleMenuClick = (item, index) => {
     srchType: data.menus[index].srchType,
   };
   formRef.value.resetFields();
+  data.checkList = [];
+  data.pagination.current = 1;
   getQuery();
 };
 // 面包屑切换
@@ -799,6 +817,8 @@ const handleBreadcrumbItem = (item, idx) => {
   data.Privilege = item.privilege;
   data.breadcrumbList = data.breadcrumbList.slice(0, idx + 1);
   formRef.value.resetFields();
+  data.checkList = [];
+  data.pagination.current = 1;
   getQuery();
 };
 //文件预览
@@ -869,23 +889,26 @@ const handleOpenFile = (item) => {
       };
       data.isPdf = true;
     } else {
-      openControlViewFile(
-        item.link,
-        item.fileExtension,
-        item.viewLink,
-        item.name + "." + item.fileExtension
-      );
+      // openControlViewFile(
+      //   item.link,
+      //   item.fileExtension,
+      //   item.viewLink,
+      //   item.name + "." + item.fileExtension
+      // );
+      handleDownLoadFile(item);
     }
   }
 };
 const handleDownLoadFile = (item) => {
   if (item.downloadUrl) {
-    let url = Interface.pathUrl + ':9091' + item.downloadUrl;
+    let url = item.downloadUrl;
     window.open(url);
   }
 };
 const handleChild = () => {
   formRef.value.resetFields();
+  data.checkList = [];
+  data.pagination.current = 1;
   getQuery();
   // proxy.$get(Interface.file.child, {}).then((res) => {
   //   console.log("res", res);
@@ -1020,6 +1043,10 @@ const confirmFuc = (e) => {
     d = {
       fileId: data.confirmId
     };
+  }
+  else if (data.confirmDesc == '确定要批量永久删除吗？') {
+    BatchHandleDelete();
+    return
   }
   if (url) {
     proxy.$post(url, d).then((res) => {
@@ -1157,6 +1184,77 @@ const changeFiles = (e) => {
     message.success("上传成功！");
     getQuery();
   }
+}
+const batchDelete = () => {
+  if (data.checkList && data.checkList.length) {
+    if (data.srchType == 'recycle') {
+      data.confirmDesc = '确定要批量永久删除吗？'
+      data.confirmTitle = '批量永久删除';
+    } else {
+      data.confirmDesc = '确定要批量删除吗？'
+      data.confirmTitle = '批量删除';
+    }
+    data.isConfirm = true;
+  } else {
+    message.error("至少需要勾选一个");
+  }
+}
+const BatchHandleDelete = () => {
+  if (data.checkList && data.checkList.length) {
+    for (var i = 0; i < data.checkList.length; i++) {
+      let item = data.checkList[i];
+      if (item.id) {
+        handleRowDelete(item.id);
+      }
+    }
+    setTimeout(function () {
+      data.checkList = [];
+    }, 2000)
+  }
+}
+const changeCheckbox = (record) => {
+  //record.checked=!record.checked;
+  data.checkList = [];
+  for (var i = 0; i < data.listData.length; i++) {
+    if (data.listData[i].checked) {
+      data.checkList.push(data.listData[i])
+    }
+  }
+}
+const handleRowDelete = (id) => {
+  let d = {
+    actions: [{
+      id: "2919;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        recordId: id,
+        apiName: 'File',
+        objTypeCode: '100100',
+      }
+    }]
+  };
+  let obj = {
+    message: JSON.stringify(d)
+  };
+  proxy.$post(Interface.delete, obj).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+      message.success("删除成功！");
+      data.isConfirm = false;
+      getQuery();
+    }
+    else {
+      if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+        message.error(res.actions[0].errorMessage);
+      }
+      else {
+        message.error("删除失败！");
+      }
+    }
+  }).catch(err => {
+    console.log('error', err);
+    message.error("删除失败！");
+  });
 }
 </script>
 <style lang="less" scoped>

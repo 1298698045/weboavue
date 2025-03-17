@@ -129,57 +129,43 @@
             <div class="sectionRow">
               <div class="sectionItem sectionItem1">
                 <div class="uploadPanel">
-                  <a-upload-dragger v-model:fileList="fileList" name="file" :multiple="true"
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76">
-                    <div class="uploadRow">
-                      <p class="ant-upload-drag-icon">
-                        <PlusOutlined />
-                      </p>
-                      <p class="ant-upload-text">将文件拖到此处，或点击上传</p>
-                    </div>
-                    <template #itemRender="{ file }">
-                      <div class="uploadList">
-                        <div class="uploadItem">
-                          <div>
-                            <img :src="require('@/assets/img/filetype/doc.png')"
-                              v-if="file.FileExtension == 'ocx' || file.FileExtension == 'docx' || file.FileExtension == 'doc'" />
-                            <img :src="require('@/assets/img/filetype/rar.png')"
-                              v-else-if="file.FileExtension == 'rar' || file.FileExtension == 'zip'" />
-                            <img :src="require('@/assets/img/filetype/Excel.png')"
-                              v-else-if="file.FileExtension == 'xlsx' || file.FileExtension == 'xls'" />
-                            <img :src="require('@/assets/img/filetype/pdf.png')"
-                              v-else-if="file.FileExtension == 'pdf'" />
-                            <img :src="require('@/assets/img/filetype/TXT.png')"
-                              v-else-if="file.FileExtension == 'TXT' || file.FileExtension == 'txt'" />
-                            <img :src="require('@/assets/img/filetype/PPT.png')"
-                              v-else-if="file.FileExtension == 'ppt' || file.FileExtension == 'pptx'" />
-                            <img :src="require('@/assets/img/filetype/video.png')"
-                              v-else-if="file.FileExtension == 'mp4' || file.FileExtension == '.mp4'" />
-                            <img :src="require('@/assets/img/filetype/defaultImg.png')"
-                              v-else-if="file.FileExtension == 'jpg' || file.FileExtension == 'png' || record.FileExtension == 'gif'" />
-                            <img :src="require('@/assets/img/filetype/File.png')" v-else />
-                            <div class="filemsg">
-
-                            </div>
-                            <div class="uploadAction">
-                              <div class="icons">
-                                <span class="icon">
-                                  <ZoomInOutlined />
-                                </span>
-                                <span class="icon">
-                                  <DownloadOutlined />
-                                </span>
-                                <span class="icon">
-                                  <DeleteOutlined />
-                                </span>
-                              </div>
-                            </div>
+                  <div class="inboxFileList">
+                    <div class="inboxFileItem" v-for="(item, index) in fileList" :key="index">
+                      <div class="FileInfo">
+                        <img :src="item.viewUrl" class="img" />
+                        <!-- <div class="fileName rowEllipsis">
+                            {{item.name}}
                           </div>
-
+                          <div class="fileSize">{{item.size}}</div> -->
+                        <div class="fileOptionShow" :title="(item.name || '')">
+                          <div class="btns">
+                            <a-tooltip title="查看" placement="top">
+                              <a-button type="text" :icon="h(EyeOutlined)" @click="handlePreviewFile(item)"></a-button>
+                            </a-tooltip>
+                            <a-tooltip title="下载" placement="top">
+                              <a-button type="text" :icon="h(VerticalAlignBottomOutlined)"
+                                @click="downloadFile(item)"></a-button>
+                            </a-tooltip>
+                            <a-tooltip title="删除" placement="top">
+                              <a-button type="text" :icon="h(CloseOutlined)" @click="deleteFile0(item)"></a-button>
+                            </a-tooltip>
+                          </div>
                         </div>
                       </div>
-                    </template>
-                  </a-upload-dragger>
+                    </div>
+                    <div class="inboxFileItem">
+                      <a-upload-dragger accept="image/*" v-model:fileList="fileList" :headers="headers"
+                        @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false"
+                        multiple name="files" :before-upload="beforeUpload">
+                        <div class="uploadRow">
+                          <p class="ant-upload-drag-icon">
+                            <PlusOutlined />
+                          </p>
+                          <p class="ant-upload-text">点击上传图片</p>
+                        </div>
+                      </a-upload-dragger>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -191,35 +177,35 @@
               <div class="sectionTitle">添加可查看人员</div>
               <div class="sectionRow">
                 <div class="sectionItem memberlist">
-                  <FilterQuery :FilterExpresssionList="FilterExpresssionList" @params="getFilterQuery" :entityApiName="'SystemUser'"></FilterQuery>
+                  <FilterQuery :FilterExpresssionList="FilterExpresssionList" @params="getFilterQuery"
+                    :entityApiName="'SystemUser'"></FilterQuery>
                 </div>
               </div>
               <div class="sectionRow">
                 <div class="sectionItem memberlist">
                   <div class="sectionItemTitle">查询结果</div>
                   <a-button type="primary" class="sectionItemBtn">搜索</a-button>
-                  <a-table :columns="columns" :dataSource="peopleList" :scroll="{ y:tableHeight }" :pagination="data.pagination" @change="handleTableChange">
-                      <template #bodyCell="{ column, index, record }">
-                        <template v-if="column.key === 'Action'">
-                          <a-button type="text" size="small" @click="handleDelete(record.id)">删除</a-button>
-                        </template>
-                        <template v-if="column.key === 'index'">
-                          <div>
-                            {{ index + 1 }}
-                          </div>
-                        </template>
-                        <div v-if="column.key=='AvatarImg'">
-                            <img :src="record.AvatarImg||Interface.pathUrl+':9091/api/one/user/avatar/'+record.id" @error="handleImageError(record)" alt="" class="AddGroup_list_avatar"/>
+                  <a-table :columns="columns" :dataSource="peopleList" :scroll="{ y: tableHeight }"
+                    :pagination="data.pagination" @change="handleTableChange">
+                    <template #bodyCell="{ column, index, record }">
+                      <template v-if="column.key === 'Action'">
+                        <a-button type="text" size="small" @click="handleDelete(record.id)">删除</a-button>
+                      </template>
+                      <template v-if="column.key === 'index'">
+                        <div>
+                          {{ index + 1 }}
                         </div>
                       </template>
-                    </a-table>
-                    <div class="empty" v-if="peopleList.length==0">
-                      <img
-                        :src="require('@/assets/img/empty.png')"
-                        alt=""
-                      />
-                      <p class="emptyDesc">当前暂无数据</p>
-                    </div>
+                      <div v-if="column.key == 'AvatarImg'">
+                        <img :src="record.AvatarImg || Interface.pathUrl + ':9091/api/one/user/avatar/' + record.id"
+                          @error="handleImageError(record)" alt="" class="AddGroup_list_avatar" />
+                      </div>
+                    </template>
+                  </a-table>
+                  <div class="empty" v-if="peopleList.length == 0">
+                    <img :src="require('@/assets/img/empty.png')" alt="" />
+                    <p class="emptyDesc">当前暂无数据</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -241,6 +227,10 @@
     <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
     <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople" :sObjectName="sObjectName"
       :recordId="memberId" :objTypeCode="objectTypeCode" :external="external" />
+    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="'确定要删除吗？'" :title="'删除'" @cancel="isConfirm = false"
+      @ok="deleteFile" :id="recordId" />
+    <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
+    <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
   </div>
 </template>
 <script setup>
@@ -256,13 +246,20 @@ import {
   defineExpose,
   defineEmits,
   toRaw,
+  h
 } from "vue";
 import {
+  PlusOutlined,
   SearchOutlined,
   DownOutlined,
+  DownloadOutlined,
+  ZoomInOutlined,
   UserOutlined,
   InboxOutlined,
-  PlusOutlined
+  DeleteOutlined,
+  VerticalAlignBottomOutlined,
+  CloseOutlined,
+  EyeOutlined
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import Interface from "@/utils/Interface.js";
@@ -271,6 +268,9 @@ import RadioDept from "@/components/commonModal/RadioDept.vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 import Delete from "@/components/listView/Delete.vue";
 import FilterQuery from "@/components/FilterQuery.vue";
+import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+import ImageView from "@/components/file/ImageView.vue";
+import PdfView from "@/components/file/PdfView.vue";
 import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
 const router = useRouter();
@@ -315,6 +315,7 @@ const formState = reactive({
   CoverDisplay: '',
   FolderId: ''
 });
+const token = localStorage.getItem("token");
 const data = reactive({
   title: "发布信息",
   height: document.documentElement.clientHeight - 350,
@@ -415,10 +416,24 @@ const data = reactive({
   },
   tableHeight: 0,
   FilterExpresssionList: [],
-  filterExpression: ""
+  filterExpression: "",
+  ImageList: [],
+  uploadData: {
+    parentId: '',
+    entityName: 'Content'
+  },
+  headers: {
+    Authorization: token,
+    Token: token,
+  },
+  isConfirm: false,
+  isPhoto: false,
+  photoParams: {},
+  isPdf: false,
+  pdfParams: {}
 });
 const {
-  title, step, search, FilterExpresssionList, filterExpression,
+  title, step, search, FilterExpresssionList, filterExpression, ImageList, uploadData, headers, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
   height, AttachRightCodeList, keywords, treeData, CoverDisplayList,
   fileList, BusinessUnitId, ApprovedBy, listData, StateCodeList,
   recordId, isRadioDept, isRadioUser, objectTypeCode, sObjectName, isDelete, deleteDesc, external, RoleCode, RoleCodeList, memberId, peopleList, pagination, tableHeight
@@ -479,9 +494,9 @@ const AddPeople = () => {
 
   });
 }
-const handleImageError=(record)=>{
-    record.AvatarImg='/src/assets/img/avatar.png';
-    return record;
+const handleImageError = (record) => {
+  record.AvatarImg = '/src/assets/img/avatar.png';
+  return record;
 };
 const refreshPeople = (e) => {
   if (data.step == 2) {
@@ -498,23 +513,6 @@ const getBase64 = (file) => {
     reader.onload = () => resolve(reader.result);
     reader.onerror = error => reject(error);
   });
-}
-const beforeUpload = (e) => {
-  console.log("beforeUpload", e);
-}
-const handleChange = (info) => {
-  //console.log("handleChange",info);
-  data.file = info.file;
-  if (info.file.status === 'uploading') {
-    return;
-  }
-  if (info.file.status === 'done' || info.file.status === 'error') {
-    getBase64(info.file.originFileObj).then(imageUrl => {
-      message.success('图片上传成功！');
-      data.imageUrl = imageUrl;
-      //console.log('文件的URL:', imageUrl);
-    });
-  }
 }
 // const searchlookup = (searchVal, Lktp, field) => {
 //   let obj = {
@@ -747,7 +745,11 @@ onMounted(() => {
   window.addEventListener("resize", (e) => {
     data.height = document.documentElement.clientHeight - 350;
   });
-  getDetail();
+  if (props.id) {
+    getDetail();
+    getFiles();
+    data.uploadData.parentId = props.id;
+  }
 });
 const getDetail = () => {
   let d = {
@@ -886,6 +888,7 @@ const handleSubmit = () => {
         //formRef.value.resetFields();
         if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
           props.id = res.actions[0].returnValue.id;
+          data.uploadData.parentId = props.id;
           message.success("保存成功！");
           data.step = 1;
         }
@@ -909,6 +912,7 @@ const handleDelete = (key) => {
 //删除关闭
 const cancelDelete = (e) => {
   data.isDelete = false;
+  data.isConfirm = false;
 };
 var columns = [
   {
@@ -980,7 +984,169 @@ const getFilterExpresssionList = () => {
     data.FilterExpresssionList = res.FilterExpresssion;
   })
 }
-//getFilterExpresssionList();
+
+const getFiles = () => {
+  data.fileList = [];
+  data.ImageList = [];
+  let url = Interface.getFiles;
+  let d = {
+    parentId: props.id,
+    page: 1,
+    rows: 100
+  }
+  proxy.$post(url, d).then(res => {
+    var list = [];
+    var list2 = [];
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue) {
+      for (var i = 0; i < res.actions[0].returnValue.length; i++) {
+        var item = res.actions[0].returnValue[i];
+        let size = item.fileSize;
+        size = size ? (size * 1 / 1024).toFixed(2) : 0;
+        size = size + 'kb';
+        let name = item.name || '';
+        if (name) {
+          name = name.replaceAll('.' + item.fileExtension, '');
+        }
+        let ite = {
+          size: size,
+          url: '/' + data.uploadData.entityName + '/' + item.id + '/' + name,
+          fileLocation: item.fileLocation || '',
+          uid: item.id,
+          id: item.id,
+          downloadUrl: item.downloadUrl || '',
+          viewUrl: item.viewUrl || '',
+          fileExtension: item.fileExtension,
+          FileExtension: item.fileExtension,
+          fileSize: item.fileSize,
+          name: item.name,
+          Name: item.name,
+          CreatedOn: item.createdOn ? dayjs(item.createdOn).format("YYYY-MM-DD hh:mm") : '',
+          CreatedBy: item.createdByName || '',
+        };
+        list.push(ite);
+        if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
+          list2.push(ite);
+        }
+      }
+    }
+    data.fileList = list;
+    data.ImageList = list2;
+  })
+};
+const beforeUpload = (e) => {
+  data.uploadData.entityName = 'Institution';
+  data.uploadData.parentId = props.id;
+  console.log("beforeUpload", e);
+}
+const changeFiles = (e) => {
+  // console.log("e", e);
+  if (e.file.status == "done") {
+    message.success("上传成功！");
+    getFiles();
+  }
+}
+//预览附件
+const handlePreviewFile = (item) => {
+  let url = '';
+  if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
+    let index = 0;
+    for (var i = 0; i < data.ImageList.length; i++) {
+      let ite = data.ImageList[i];
+      if (ite.id == item.id) {
+        index = i;
+      }
+    }
+    data.photoParams = {
+      id: item.id,
+      item: item,
+      imageList: data.ImageList,
+      index: index
+    };
+    data.isPhoto = true;
+  } else if (item.fileExtension == 'pdf') {
+    url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(item.viewUrl);
+    data.pdfParams = {
+      id: item.id,
+      name: item.name,
+      index: 0,
+      viewUrl: item.viewUrl,
+      downloadUrl: item.downloadUrl
+    };
+    data.isPdf = true;
+  }
+  else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
+    //let medittype = 0;
+    downloadFile(item);
+    //openfile(medittype, item.id, item.Name);
+  }
+  else {
+    downloadFile(item);
+  }
+};
+//下载附件
+const downloadFile = (item) => {
+  let url = item.downloadUrl;
+  window.open(url);
+  // let text = item.Name || '';
+  // windowOpen(url, text);
+};
+//删除
+const deleteFile0 = (item) => {
+  data.recordId = item.id;
+  data.confirmText = '确定要删除吗？'
+  data.confirmTitle = '删除'
+  data.isConfirm = true;
+  //data.isDelete = true;
+}
+//删除附件
+const deleteFile = (id) => {
+  // let d = {
+  //   actions: [{
+  //     id: "4105;a",
+  //     descriptor: "",
+  //     callingDescriptor: "UNKNOWN",
+  //     params: {
+  //       parentId: data.uploadData.parentId,
+  //       entityName: data.uploadData.entityName,
+  //       fileId: id
+  //     }
+  //   }]
+  // };
+  let d = {
+    actions: [{
+      id: "2919;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        recordId: id,
+        apiName: 'RelatedAttachment',
+        objTypeCode: '1001',
+      }
+    }]
+  };
+  let obj = {
+    message: JSON.stringify(d)
+  };
+  // proxy.$post(Interface.deleteFiles, obj).then(res => {
+  proxy.$post(Interface.delete, obj).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+      message.success("删除成功！");
+      data.isConfirm = false;
+      getFiles();
+    }
+    else {
+      if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+        message.error(res.actions[0].errorMessage);
+      }
+      else {
+        message.error("删除失败！");
+      }
+    }
+  }).catch(err => {
+    console.log('error', err);
+    message.error("删除失败！");
+  });
+}
 </script>
 <style lang="less">
 @import url("@/style/modal.less");
@@ -1000,18 +1166,22 @@ const getFilterExpresssionList = () => {
     padding: 0 10px;
     box-sizing: border-box;
     display: flex;
+
     .sectionItemTitle {
       font-size: 14px;
       margin: 20px 0 5px 0;
     }
+
     .sectionItem {
       flex: 1;
       margin-right: 20px;
       position: relative;
+
       .ant-row {
         display: block !important;
       }
-      .sectionItemBtn{
+
+      .sectionItemBtn {
         position: absolute;
         right: 0;
         top: 1px;
@@ -1021,23 +1191,24 @@ const getFilterExpresssionList = () => {
     .sectionItem:last-child {
       margin-right: 0;
     }
-        .empty {
-          height: 40%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-          text-align: center;
-          color: #666;
-    
-          img {
-            width: 50px;
-          }
-    
-          .emptyDesc {
-            font-size: 14px;
-          }
-        }
+
+    .empty {
+      height: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      color: #666;
+
+      img {
+        width: 50px;
+      }
+
+      .emptyDesc {
+        font-size: 14px;
+      }
+    }
   }
 }
 
@@ -1096,7 +1267,8 @@ const getFilterExpresssionList = () => {
   cursor: pointer;
 
   img {
-    width: 125px;
+    //width: 125px;
+    width: 100%;
   }
 
   &:hover .uploadAction {
@@ -1146,15 +1318,15 @@ const getFilterExpresssionList = () => {
   width: 150px;
   padding: 10px;
   justify-items: center;
-  margin-top: 60px;
+  margin-top: 0px;
 }
 
 .uploadRow {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 150px;
-  width: 150px;
+  height: 155px;
+  width: 155px;
   flex-direction: column;
 }
 
@@ -1191,5 +1363,110 @@ const getFilterExpresssionList = () => {
 .sectionItem3 .ant-form-item {
   flex: 1;
   margin-right: 20px;
+}
+
+input[aria-hidden="true"] {
+  display: none !important;
+}
+
+.el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) .el-radio__inner {
+  box-shadow: none !important;
+}
+
+.uploadPanel {
+  .ant-upload-drag {
+    background: transparent !important;
+    width: 155px;
+    border: none !important;
+  }
+
+  .ant-upload-wrapper {
+    width: 155px !important;
+    display: inline-block;
+  }
+}
+
+.uploadPanel {
+  .inboxFileList {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+
+    .ant-btn.ant-btn-text,
+    .ant-btn.ant-btn-text:hover {
+      color: #000 !important;
+    }
+
+    .inboxFileItem {
+      width: 175px;
+      height: 175px;
+      border-radius: 4px;
+      background: #f2f3f5;
+      padding: 10px;
+      box-sizing: border-box;
+      margin-right: 16px;
+      margin-bottom: 16px;
+      cursor: pointer;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+
+      .leftImg {
+        width: 170px;
+        height: 170px;
+        position: relative;
+        top: 5px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .FileInfo {
+        flex: 1;
+        margin-left: 0px;
+        overflow: hidden;
+        color: #1d2129;
+        width: 155px;
+        height: 155px;
+        position: relative;
+        top: 0px;
+
+        img {
+          width: 155px;
+          height: 155px;
+        }
+
+        .fileSize {
+          color: #4e5969;
+          padding-top: 4px;
+        }
+
+        .fileOptionShow {
+          position: absolute;
+          width: calc(~"100% - 0px");
+          height: 155px;
+          left: 0;
+          top: 0;
+          background: rgba(242, 243, 245, .8);
+          display: none;
+
+          .btns {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            justify-content: center;
+            padding-right: 0px;
+            box-sizing: border-box;
+          }
+        }
+      }
+
+      &:hover .fileOptionShow {
+        display: block;
+      }
+    }
+  }
 }
 </style>

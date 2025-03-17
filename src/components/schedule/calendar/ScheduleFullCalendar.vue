@@ -467,15 +467,15 @@
             e.Id=e.id;
         }
         if(!e.extendedProps.CalendarActionsConfig.isCalendarEditable){
-            message.info("该日程无编辑权限！");
-            return false
+            // message.info("该日程无编辑权限！");
+            // return false
         }
         emit("openEdit", e);
     }
     const openEdit2 = (e) => {
         if(!e.extendedProps.CalendarActionsConfig.isCalendarEditable){
-            message.info("该日程无编辑权限！");
-            return false
+            // message.info("该日程无编辑权限！");
+            // return false
         }
         let url = Interface.edit;
         let d = {
@@ -492,7 +492,7 @@
                         fields: {
                             ScheduledStart: e.paramsTime.date+' '+e.paramsTime.time,
                             ScheduledEnd: e.paramsTime.endDate+' '+e.paramsTime.end,
-                            CalendarType: props.CalendarType||''
+                            CalendarType: props.calendarType||''
                         }
                     }
                 }
