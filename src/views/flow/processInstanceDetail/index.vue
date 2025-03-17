@@ -59,7 +59,7 @@
                                 :processId="processId" :processInstanceId="processInstanceId"
                                 :toActivityID="toActivityID" />
                         </div>
-                        <div class="reqWrap">
+                        <!-- <div class="reqWrap">
                             <div class="reqHead">
                                 <a-tabs v-model:activeKey="reqIndex" @change="changeTab">
                                     <a-tab-pane :key="1" tab="流转意见"></a-tab-pane>
@@ -105,7 +105,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="rightAside">
                         <div class="arrowIcon rightIcon" v-if="isAside" @click="isAside=false"></div>

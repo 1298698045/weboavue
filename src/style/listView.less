@@ -286,6 +286,20 @@
     display: inline-block;
     width: 20px;
   }
+  .listRightModal{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 321px;
+    height: 100%;
+    background: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+    border: 1px solid #dddddd;
+    border-left: none;
+    &.searchModalWrap{
+      width: 500px;
+    }
+  }
   .filterModalWrap {
     position: absolute;
     top: 0;
@@ -308,7 +322,6 @@
     border: 1px solid #dddddd;
     border-left: none;
   }
-
   /deep/ .moreaction{
     padding: 0px 1px;
     width: 18px;

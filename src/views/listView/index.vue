@@ -177,7 +177,7 @@
               </svg>
             </a-button>
           </div>
-          <a-button class="ant-btn-icon ml10">
+          <a-button class="ant-btn-icon ml10" @click="handleShowSearch">
             <svg class="btn_icon" focusable="false" data-key="search" aria-hidden="true" viewBox="0 0 520 520"
               part="icon">
               <g>
@@ -202,6 +202,9 @@
               </div>
               <div class="chartModalWrap" v-if="isChartModal">
                 <ChartAside @close="isChartModal=false" :filterId="currentFilter.id" :sObjectName="sObjectName" />
+              </div>
+              <div class="listRightModal searchModalWrap" v-if="isSearchModal">
+                <SearchQuery :sObjectName="sObjectName" :filterId="currentFilter.id" @cancel="isSearchModal = false" @load="loadSearchQuery"></SearchQuery>
               </div>
             </div>
           </div>
@@ -261,6 +264,8 @@
   import Filter from "@/components/listView/Filter.vue";
   // 图表
   import ChartAside from "@/components/listView/ChartAside.vue";
+  import SearchQuery from "@/components/listView/SearchQuery.vue";
+
   import { message } from "ant-design-vue";
   import moment from "moment";
   import { formTreeData } from "@/utils/common.js";
@@ -328,7 +333,8 @@
     listId: "",
     desc: "如果您删除此列表视图，该视图将为所有具备访问权限的用户永久删除。是否确定要删除？",
     deleteType: 0,
-    deleteId: ""
+    deleteId: "",
+    isSearchModal: false
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
@@ -338,7 +344,7 @@
     isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal,
     isDeleteModal, isFilterModal, searchFilterVal, filterListFixed, entityType,
     initialData, actionList, title, sObjectName, isChartModal, columns, objectTypeCode, listBtnActions,
-    listId, desc, deleteType, deleteId } = toRefs(data);
+    listId, desc, deleteType, deleteId, isSearchModal } = toRefs(data);
   const tabContent = ref(null);
   const contentRef = ref(null);
   let formSearchHeight = ref(null);
@@ -455,7 +461,15 @@
       getListConfig();
       getFilterList();
   }
-
+  const handleShowSearch = () => {
+      data.isSearchModal = true;
+  }
+  const loadSearchQuery = (e) => {
+    console.log("loadSearchQuery", e);
+    data.isSearchModal = false;
+    data.queryParams.filterCondition = JSON.stringify(e);
+    refreshFilterLoad();
+  }
   const initLoad = () => {
     columns.value = [];
     getMetadataInitialLoad().then(res=>{

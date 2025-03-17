@@ -40,6 +40,8 @@ const Interface = {
     return: baseUrl + "/aura/workflow/ProcessInstance/task/return", // 退回
     insert: baseUrl + "/aura/workflow/ProcessInstance/task/insert", // 加签
     close: baseUrl + "/aura/workflow/ProcessInstance/task/close", // 结束
+    categoryTree: baseUrl + "/objectmanager/category/tree", // 获取对象分类树
+    getWorkflowTemplates: baseUrl + "/objectmanager/template/auth/getWorkflowTemplates", // 获取某个对象对应的所有简当权限
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",
@@ -90,6 +92,8 @@ const Interface = {
     chartItems: baseUrl + "/aura/ObjectHomeChart/getChartItems", // 获取图表数据
     getFilter: "", //
     saveFilter: baseUrl + "/aura/listViewManager/updateListView", // 保存筛选器
+    getListShareData: baseUrl + "/aura/ListViewEntityShareDataProvider/getListShareData", // 列表视图 - 获取共享设置
+        getSearchFilter: baseUrl + "/aura/listViewManager/getSearchFilter", // 获查搜索筛选器字段
   },
   uilook: "/localData/ui.entity.lookup.json",
   entityFilter: "/localData/entity.filter.get.json",
