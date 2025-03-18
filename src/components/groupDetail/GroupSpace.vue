@@ -464,7 +464,7 @@ const getSpace = () => {
                     params: {
                         pageSize: 10,
                         pageNumber: data.keyIndex,
-                        filterQuery: filterQuery,
+                        RegardingObjectId: props.id,
                         search: data.searchVal||''
                     }
                 }]

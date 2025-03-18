@@ -214,6 +214,7 @@ const Interface = {
 		deleteFolder: baseUrl + "/cloudfile/deleteFolder", //永久删除文件夹
 		favoriteFile: baseUrl + "/cloudfile/favoriteFile", //收藏文件
 		cancelFavoriteFile: baseUrl + "/cloudfile/cancelFavoriteFile", //取消收藏文件
+    getMyFolderTree: baseUrl + "/cloudfile/getMyFolderTree", //获取我的目录树
   },
   information: {
     contentTree: "/localData/information/content.tree.json",
@@ -233,6 +234,8 @@ const Interface = {
     commentList: "/localData/information/chatter.comment.search.json", // 图片评论列表
     sendComment: "/localData/information/chatter.comment.post.json",
     like: "/localData/information/chatter.like.post.json",
+    uploadMedia: baseUrl+'/content/media/upload',//上传媒体文件
+    getMedia: baseUrl+'/content/media/querylists',//获取媒体文件
   },
   schedule: {
     //list:"/localData/schedule/calendar.getlist.json",

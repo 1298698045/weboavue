@@ -8,8 +8,11 @@
           <div class="title">
             <div>
               <span class="doc-title">{{ detail.Title }}&nbsp;</span>
-              <span class="doc-like" title="点赞">
-                <LikeOutlined />(<span>{{ detail.NumOfLike||0 }}</span>)
+              <span class="doc-like" title="点赞" @click="setLike" v-if="!data.isLike">
+                <LikeOutlined />(<span>{{ detail.LikeCount||0 }}</span>)
+              </span>
+              <span class="doc-like active" title="取消点赞" @click="setLike" v-if="data.isLike">
+                <LikeFilled />(<span>{{ detail.LikeCount||0 }}</span>)
               </span>
               <span class="doc-label">
                 <TagOutlined />
@@ -186,6 +189,7 @@
     PlusOutlined,
     LikeOutlined,
     TagOutlined,
+    LikeFilled
   } from "@ant-design/icons-vue";
   import { useRouter, useRoute } from "vue-router";
   import Related from "@/components/detail/Related.vue";
@@ -209,6 +213,7 @@
   import AddTask from "@/components/meeting/AddTask.vue";
   import Interface from "@/utils/Interface.js";
   import RelateInstance from "@/components/workflow/RelateInstance.vue";
+  import { message } from "ant-design-vue";
   const { proxy } = getCurrentInstance();
   
   const route = useRoute();
@@ -264,9 +269,15 @@
     isPinOnTop:false,
     isAddTask:false,
     isRelateInstance:false,
-    TemplateContent:null
+    TemplateContent:null,
+    isLike:false,
+    likeId:'',
+    currentUserId:''
   });
   const {
+    currentUserId,
+    isLike,
+    likeId,
     TemplateContent,
     tabs,
     activeKey,
@@ -340,12 +351,119 @@
               data.detail.ApprovedByName=fields.ApprovedBy.displayValue;
               data.detail.StateCodeName=fields.StateCode.displayValue;
               data.detail.ReadCount=fields.ReadCount.value;
+              data.detail.LikeCount=fields.LikeCount.value||0;
               data.detail.ModifiedBy=fields.ModifiedBy.displayValue;
               data.detail.ModifiedOn=fields.ModifiedOn.value?dayjs(fields.ModifiedOn.value).format("YYYY-MM-DD HH:mm"):'';
               }
+              getLike();
           })
   };
-  getDetail();
+  const getLike = () => {
+    data.likeQty = 0;
+    data.isLike = false;
+    let filterQuery = '\ContentId\teq\t' + data.id + '\nRegardingObjectTypeCode\teq\t100201';
+    proxy.$post(Interface.list2, {
+        filterId: '',
+        objectTypeCode: '100206',
+        entityName: 'ContentLikes',
+        filterQuery: filterQuery,
+        search: '',
+        page: 1,
+        rows: 100,
+        sort: '',
+        order: 'desc',
+        displayColumns: 'CreatedBy'
+    }).then(res => {
+        if (res && res.nodes && res.nodes.length) {
+            data.likeQty = res.pageInfo ? res.pageInfo.total : 0;
+            for (var i = 0; i < res.nodes.length; i++) {
+                var item = res.nodes[i];
+                if (item.CreatedBy.userValue.Value == data.currentUserId) {
+                    data.isLike = true;
+                    data.likeId = item.id;
+                    data.detail.LikeCount=data.detail.LikeCount*1+1;
+                }
+            }
+        }
+    })
+}
+const setLike = () => {
+    if (data.isLike) {
+        let obj = {
+            actions: [{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    recordId: data.likeId,
+                    apiName: 'ContentLikes',
+                    objTypeCode: 100206,
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.delete, d).then(res => {
+            if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+                message.success("取消点赞成功");
+                data.isLike = false;
+                data.likeId = '';
+                data.detail.LikeCount=data.detail.LikeCount*1-1>0?data.detail.LikeCount-1:0;
+                getLike();
+            } else {
+                if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+                    message.success(res.actions[0].errorMessage);
+                }
+                else {
+                    message.error("取消点赞失败");
+                }
+            }
+        })
+    }
+    else {
+        let url = Interface.create;
+        let d = {
+            actions: [{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    recordInput: {
+                        allowSaveOnDuplicate: false,
+                        apiName: 'ContentLikes',
+                        objTypeCode: '100206',
+                        fields: {
+                            ContentId: data.id,
+                            CreatedBy: data.currentUserId,
+                            LikeType: 1,
+                            RegardingObjectTypeCode: '100201'
+                        }
+                    }
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(url, obj).then(res => {
+            if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+                message.success("点赞成功！");
+                data.isLike = true;
+                data.likeId = res.actions[0].returnValue.id;
+                getLike();
+            }
+            else {
+                if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+                    message.error(res.actions[0].errorMessage);
+                }
+                else {
+                    message.error("点赞失败！");
+                }
+            }
+        });
+    }
+}
   //html反转义
 const htmlDecode=(input)=>{
   var e = document.createElement('div');
@@ -593,6 +711,14 @@ const htmlDecode=(input)=>{
   const handleSelectLook=()=>{
       data.isRelateInstance=false;
   }
+  onMounted(() => {
+    let userInfo = window.localStorage.getItem('userInfo');
+    if (userInfo) {
+        userInfo = JSON.parse(userInfo);
+        data.currentUserId = userInfo.userId;
+    }
+    getDetail();
+})
   </script>
   <style lang="less" scoped>
   .previewWrap2{

@@ -690,7 +690,7 @@
     }
     //详情页
     const handleDetailView=(id)=>{
-        window.open('/#/Meeting/detail?id='+(id||''));
+        window.open('/#/lightning/r/meeting/view?id='+(id||''));
     }
 </script>
 <style lang="less" scoped>

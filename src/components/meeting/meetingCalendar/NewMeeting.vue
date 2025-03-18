@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="1230px" :maskClosable="false" @cancel="handleCancel"
+        <a-modal v-model:open="props.isShow" width="1230px" style="top:10px;" :maskClosable="false" @cancel="handleCancel"
             @ok="handleSubmit">
             <template #title>
                 <div>
@@ -79,7 +79,7 @@ const changeTab = (e) => {
 }
 const data = reactive({
     currentTab: '1',
-    height: document.documentElement.clientHeight - 350,
+    height: document.documentElement.clientHeight - 200,
     isNotice: false,
     title: "新建会议",
     objectTypeCode: '5000',
@@ -105,7 +105,7 @@ const refreshPeople = (e) => {
 }
 onMounted(() => {
     window.addEventListener("resize", (e) => {
-        data.height = document.documentElement.clientHeight - 350;
+        data.height = document.documentElement.clientHeight - 200;
     });
 });
 // 会议须知-已读
@@ -135,5 +135,8 @@ const handleRead = () => {
 
 :where(.css-dev-only-do-not-override-kqecok).ant-modal .ant-modal-footer {
     margin-top: 0 !important;
+}
+.ant-modal-wrap{
+    overflow: hidden !important;
 }
 </style>

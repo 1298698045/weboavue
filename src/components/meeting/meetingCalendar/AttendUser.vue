@@ -17,7 +17,7 @@
             </div>
           </div>
           <a-table :columns="columns" :dataSource="listData" :scroll="{ y:tableHeight }" :pagination="data.pagination" @change="handleTableChange">
-            <template #bodyCell="{ column, index,record }">
+            <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'Action'">
                 <a-button type="text" size="small" @click="handleDelete(record.id)">删除</a-button>
               </template>
@@ -27,6 +27,8 @@
       </div>
       <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
       <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+      <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser = false"
+      @select="handleSelectUsers" />
     </div>
   </template>
   <script setup>
@@ -54,6 +56,7 @@
   import { girdFormatterValue } from "@/utils/common.js";
   import { message } from "ant-design-vue";
   import RadioUser from "@/components/commonModal/MultipleUser.vue";
+  import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
   import Delete from "@/components/listView/Delete.vue";
   const { proxy } = getCurrentInstance();
   const PersonnelLst = ref();
@@ -140,10 +143,11 @@
     deleteDesc: '确定要删除吗？',
     external:false,
     CheckinStatus:null,
-    StatusCode:null
+    StatusCode:null,
+    isMultipleUser:false
   });
   const columnList = toRaw(columns);
-  const { listData, searchVal,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,userList } = toRefs(data);
+  const { isMultipleUser,listData, searchVal,pagination,tableHeight,recordId,objectTypeCode,sObjectName,isDelete,deleteDesc,external,isRadioUser,CheckinStatus,StatusCode,userList } = toRefs(data);
   const getQuery = () => {
     // proxy.$get(Interface.user.groupUser, {}).then((res) => {
     //   data.listData = res.rows;
@@ -203,13 +207,15 @@
   getQuery();
   // 添加成员
   const AddPeople = () => {
-    data.isRadioUser = true;
+    //data.isRadioUser = true;
     data.RoleCode = 0;
+    data.isMultipleUser=true;
   }
   // 添加管理员
   const AddAdmin = () => {
     data.RoleCode = 2;
-    data.isRadioUser = true;
+    //data.isRadioUser = true;
+    data.isMultipleUser=true;
   };
   const refreshPeople=(e)=>{
     getQuery();
@@ -261,6 +267,18 @@
       });
   
   };
+  //多选
+const handleSelectUsers = (params) => {
+  // console.log("多选用户:", params);
+  let addUsers = params.map(item => {
+    item.key = item.id;
+    return item;
+  })
+  addUsers.forEach(item => {
+    getUserData(item);
+  });
+  data.isMultipleUser = false;
+};
   defineExpose({ getQuery,PersonnelLst });
   //删除
   const handleDelete = (key) => {

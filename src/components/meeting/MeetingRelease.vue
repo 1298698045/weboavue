@@ -3,6 +3,7 @@
       <a-modal
         v-model:open="props.isShow"
         width="900px"
+        style="top:30px;"
         :maskClosable="false"
         @cancel="handleCancel"
         @ok="handleSubmit"
@@ -56,7 +57,7 @@
                         },
                       ]">
                         <div class="rVal rVal2">
-                            <TEditor ref="editorRef" mode="middle" :placeholder="'输入通知内容'" :height="props.type=='modal'?(height-295):(height-255)" @input="getEditorContent" />
+                            <TEditor ref="editorRef" mode="middle" :placeholder="'输入通知内容'" :height="props.type=='modal'?(height-330):(height-330)" @input="getEditorContent" />
                         </div>
                     </a-form-item>
                   </div>
@@ -124,11 +125,11 @@
     email:false,
   });
   
-  data.height = document.documentElement.clientHeight - 330;
+  data.height = document.documentElement.clientHeight - 185;
   onMounted(() => {
     formState.Name="[会议通知]："+props.RegardingObjectIdName;
     window.addEventListener("resize", (e) => {
-      data.height = document.documentElement.clientHeight - 330;
+      data.height = document.documentElement.clientHeight - 185;
     });
   });
   const getEditorContent = (e) => {

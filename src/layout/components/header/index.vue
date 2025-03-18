@@ -112,7 +112,7 @@
           <div class="avatar" @click.stop="handleOpenInfo">
             <img
               class="img"
-              :src="avatarUrl?avatarUrl:require('@/assets/img/user/MyResume/showEmpAvatar.png')"
+              :src="avatarUrl?'/api'+ avatarUrl:'/src/assets/img/user/MyResume/showEmpAvatar.png'"
               alt=""
             />
           </div>
@@ -136,7 +136,7 @@
                   <div class="header-account-item-avatar">
                     <img
                     class="img"
-                    :src="item.avatarUrl?item.avatarUrl:require('@/assets/img/user/MyResume/showEmpAvatar.png')"
+                    :src="item.avatarUrl?'/api'+item.avatarUrl:'/src/assets/img/user/MyResume/showEmpAvatar.png'"
                     alt=""
                   />
                   </div>
@@ -260,7 +260,7 @@ const ChangeAccount= (item) => {
   data.currentAccountName=item.FullName;
   data.BusinessUnitId=item.BusinessUnitId;
   data.userId=item.UserId;
-  data.avatarUrl=item.avatarUrl;
+  data.avatarUrl=item.avatarUrl||'';
   switchUser(item);
 }
 // proxy.$get(Interface.applist,{
@@ -371,7 +371,7 @@ const getBusinessUnits = () => {
         OrganizationId: userInfo.organizationId,
         UserId: userInfo.userId,
         UserName: userInfo.userName,
-        avatarUrl: userInfo.avatarUrl||'',
+        avatarUrl: '/one/user/avatar/'+userInfo.userId,
         businessUnitIdName: userInfo.businessUnitIdName||'暂无',
         jobTitle: userInfo.JobTitle,
         organizationIdName: userInfo.organizationIdName||'暂无',
@@ -387,6 +387,7 @@ const getBusinessUnits = () => {
         if(data.BusinessUnitId==data.accountList[i].BusinessUnitId){
           data.currentAccountName=data.accountList[i].FullName;
           data.userId=data.accountList[i].UserId;
+          data.avatarUrl=data.accountList[i].avatarUrl;
         }
       }
     }

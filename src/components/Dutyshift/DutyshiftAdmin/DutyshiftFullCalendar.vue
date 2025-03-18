@@ -494,7 +494,7 @@
     }
     //详情页
     const handleDetailView=(id)=>{
-        window.open('/#/Meeting/detail?id='+(id||''));
+        window.open('/#/lightning/r/meeting/view?id='+(id||''));
     }
     // 日-切换日期
     // const changeTime = (e) => {

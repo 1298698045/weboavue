@@ -617,12 +617,12 @@ onMounted(() => {
         position: relative;
         text-align: center;
         width: 100%;
-        height: auto;
+        height: 100%;
         margin-bottom: 20px;
         min-height:210px;
         img{
             width: 190px;
-            height: auto;
+            height: 190px;
             position: relative;
             z-index: 2;
             border-radius: 0;

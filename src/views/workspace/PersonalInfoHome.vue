@@ -192,12 +192,13 @@
               if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
                 let fields=res.actions[0].returnValue.fields;
                 let url=fields.AvatarUrl&&fields.AvatarUrl.value?fields.AvatarUrl.value:'';
-                if(url){
-                  data.avatarUrl='/'+Interface.viewAvatar+'/SystemUser/'+props.id;
-                }
-                else{
-                  data.avatarUrl=require('@/assets/img/user/MyResume/showEmpAvatar.png');
-                }
+                // if(url){
+                //   data.avatarUrl='/'+Interface.viewAvatar+'/SystemUser/'+props.id;
+                // }
+                // else{
+                //   data.avatarUrl=require('@/assets/img/user/MyResume/showEmpAvatar.png');
+                // }
+                data.avatarUrl='/api/one/user/avatar/'+data.userId;
               }
               
           })

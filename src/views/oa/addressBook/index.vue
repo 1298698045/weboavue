@@ -19,7 +19,7 @@
                             <a-menu-item key="1" @click="choiceSort('全部','')">
                                 全部
                             </a-menu-item>
-                            <a-menu-item key="2" @click="choiceSort('按名称(A-Z)','Pinyin')">
+                            <a-menu-item key="2" @click="choiceSort('按名称(A-Z)','FullName')">
                                 按名称(A-Z)
                             </a-menu-item>
                             <a-menu-item key="3" @click="choiceSort('按工号','EmployeeId')">
@@ -84,7 +84,7 @@
                     </span> -->
                 </div>
                 <div class="rightTab">
-                    <a-tabs v-model:activeKey="activeKey" @change="changeRightTab">
+                    <a-tabs v-model:activeKey="activeKey" @change="changeRightTab" v-if="showComponent">
                         <a-tab-pane key="1" tab="全部人员"></a-tab-pane>
                         <a-tab-pane key="2" tab="同部门" v-if="typeCurrent==0"></a-tab-pane>
                         <a-tab-pane key="3" tab="我的下属" v-if="typeCurrent==0"></a-tab-pane>
@@ -373,7 +373,8 @@
 <script setup>
     import {
         ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, defineProps, defineExpose,
-        defineEmits, h
+        defineEmits, h,
+        nextTick
     } from "vue";
     import "@/style/common.less";
     import { SearchOutlined, MoreOutlined, CopyOutlined, SortAscendingOutlined, LeftOutlined, RightOutlined, PlusOutlined } from "@ant-design/icons-vue";
@@ -405,9 +406,10 @@
         treeId:'',
         searchTreeVal:'',
         BusinessUnitId:'',
-        currentUserId:''
+        currentUserId:'',
+        showComponent:true
     })
-    const { currentUserId,BusinessUnitId,activeKey, deptTreeData, pageNumber, pageSize, listData,
+    const { showComponent,currentUserId,BusinessUnitId,activeKey, deptTreeData, pageNumber, pageSize, listData,
         searchVal, total, leftTabCurrent, typeCurrent, groupList, isLeft, sortField,treeId,searchTreeVal,deptTreeDataAll,groupListAll} = toRefs(data);
     const choiceSort = (name, id) => {
         data.sortField = {
@@ -494,7 +496,10 @@
         })
     }
     const onSearch = (e) => {
+        //data.showComponent=false;
         data.pageNumber=1;
+        data.activeKey='1';
+        //nextTick(() => (data.showComponent = true));
         getQuery();
     }
     const onSearchTree = (e) => {
@@ -740,6 +745,37 @@
     .addressBook .todoListWrap .leftTree .leftTreeWrap{
         height: calc(~"100% - 100px") !important;
     }
+    .addressBook .todoListWrap{
+        width: 100% !important;
+    }
+    .addressBook .todoListWrap .leftTree{
+        width: 252px !important;
+    }
+    .addressBook .todoListWrap .rightContainer{
+        width: calc(~"100% - 252px") !important;
+    }
+    .addressBook{
+        .todoListWrap{
+            .leftTree{
+                .leftTreeWrap{
+                    width: unset !important;
+                }
+                .switchWrap{
+                    width: unset !important;
+                    .spaceWrap{
+                        width: unset !important;
+                        .spaceItem{
+                            width: unset !important;
+                        }
+                        .spaceItem.active{
+                            width: unset !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     .wea-left-tree-search-addressBook{
         margin-top: 5px !important;
     }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="1200px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+    <a-modal v-model:open="props.isShow" width="1200px" style="top:30px;" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
       <template #title>
         <div>
           {{ title }}
@@ -120,14 +120,14 @@ const handleCancel = () => {
 const gridRef = ref();
 const data = reactive({
   title: "添加议题",
-  height: document.documentElement.clientHeight - 350,
+  height: document.documentElement.clientHeight - 185,
   columns: [
-    {
-      title: "序号",
-      dataIndex: "index",
-      key: "index",
-      width: 80,
-    },
+    // {
+    //   title: "序号",
+    //   dataIndex: "index",
+    //   key: "index",
+    //   width: 80,
+    // },
     {
       title: "选择",
       dataIndex: "checked",
@@ -166,7 +166,7 @@ const data = reactive({
     },
   ],
   isCollapsed: false,
-  tableHeight: document.documentElement.clientHeight - 370,
+  tableHeight: document.documentElement.clientHeight - 340,
   id: "",
   searchVal: "",
   isAdvance: false,
@@ -226,7 +226,7 @@ const getQuery = () => {
   // });
   data.listData = [];
   data.pagination.total = 0;
-  let filterQuery = data.queryParams.filterQuery;
+  let filterQuery = '\nStatusCode\tneq\t0'+data.queryParams.filterQuery;
   proxy.$post(Interface.list2, {
     filterId: '',
     objectTypeCode: 5001,
@@ -277,8 +277,8 @@ const sizeChange = (current, size) => {
 
 onMounted(() => {
   window.addEventListener("resize", (e) => {
-    data.height = document.documentElement.clientHeight - 350;
-    data.tableHeight = document.documentElement.clientHeight - 370
+    data.height = document.documentElement.clientHeight - 185;
+    data.tableHeight = document.documentElement.clientHeight - 340
   });
   // if(props.entityApiName=='WFProcessInstance'){
   //   data.title='选择流程'
@@ -377,20 +377,12 @@ const changeTab = (e) => {
     }
   }
 
-  .ant-btn {
-    /* margin-left: -1px; */
-    /* border-left: none; */
-  }
-
   :where(.css-dev-only-do-not-override-kqecok).ant-input-search-large .ant-input-search-button {
     width: 32px !important;
     height: 32px !important;
   }
 
   &.active {
-    .ant-input-search {
-      //   margin-right: 86px;
-    }
 
     .ant-btn.searchBtn {
       border-bottom: none;

@@ -24,7 +24,7 @@
                             <a-menu-item key="2" @click="choiceSort('按姓名(A-Z)','FullName')">
                                 按名称(A-Z)
                             </a-menu-item>
-                            <a-menu-item key="3" @click="choiceSort('按编号','ContactId')">
+                            <a-menu-item key="3" @click="choiceSort('按编号','EmployeeId')">
                                 按编号
                             </a-menu-item>
                         </a-menu>

@@ -169,7 +169,7 @@
     data.fixedData = data.listData;
     const getImagePath = (imagePath) => {
         try {
-            return require(`@/assets${imagePath}`);
+            return `/src/assets${imagePath}`;
         } catch (error) {
             console.error(`Error loading image: ${error.message}`);
             return '';

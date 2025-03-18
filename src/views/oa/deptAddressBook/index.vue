@@ -21,7 +21,7 @@
                             <a-menu-item key="1" @click="choiceSort('全部','DisplayOrder')">
                                 全部
                             </a-menu-item>
-                            <a-menu-item key="2" @click="choiceSort('按名称(A-Z)','Pinyin')">
+                            <a-menu-item key="2" @click="choiceSort('按名称(A-Z)','Name')">
                                 按名称(A-Z)
                             </a-menu-item>
                             <a-menu-item key="3" @click="choiceSort('按编号','BusinessUnitId')">

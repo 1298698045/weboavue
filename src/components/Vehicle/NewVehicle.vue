@@ -79,8 +79,8 @@
         height: document.documentElement.clientHeight - 350,
         isNotice: false,
         title: "新建用车申请",
-        objectTypeCode:'5000',
-        sObjectName:'MeetingRec'
+        objectTypeCode:'20503',
+        sObjectName:'VehicleUse'
     })
     const { currentTab, height, isNotice, title, objectTypeCode, sObjectName} = toRefs(data);
     if(props.meetingId){

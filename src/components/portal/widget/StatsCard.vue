@@ -8,7 +8,7 @@
                 <template v-if="imgPosition=='right'">
                     <div class="stats-card-left">
                         <h3 style="color: rgb(47, 90, 165); font-weight: 500; font-size: 30px;">{{num}}</h3>
-                        <span>{{item.properties.title}}</span>
+                        <span class="text">{{item.properties.title}}</span>
                     </div>
                     <div class="stats-card-right">
                         <img :src="item.properties.img.src" alt="">
@@ -23,7 +23,7 @@
                     <div class="stats-card-right">
                         <div>
                             <h3 style="color: rgb(47, 90, 165); font-weight: 500; font-size: 30px;">{{num}}</h3>
-                            <span>{{item.properties.title}}</span>
+                            <span class="text">{{item.properties.title}}</span>
                         </div>
                     </div>
                 </template>
@@ -126,6 +126,9 @@
             img{
                 width: 100%;
                 /* height: 100%; */
+            }
+            .text{
+                white-space: nowrap;
             }
         }
     }

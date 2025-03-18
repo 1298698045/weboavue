@@ -13,7 +13,8 @@
                       :label-col="labelCol"
                       :model="formState">
                       <a-form-item label="文档置顶" name="IsTop">
-                          <a-input type="checkbox" v-model:checked="formState.IsTop" class="CalendarCheckbox"></a-input>
+                          <!-- <a-input type="checkbox" v-model:checked="formState.IsTop" class="CalendarCheckbox"></a-input> -->
+                          <a-switch v-model:checked="formState.IsTop" class="CalendarCheckbox" />
                       </a-form-item>
                       <a-form-item label="有效期：" name="RestTime" class="RestTime">
                         <a-range-picker class="radiusNone" valueFormat="YYYY-MM-DD" @change="(e)=>{changeRangeDate(e)}" />
@@ -187,6 +188,13 @@
           textarea:where(.css-dev-only-do-not-override-kqecok).ant-input{
               width: 510px !important;
               display: inline-block;
+          }
+          .CalendarCheckbox {
+              position: relative;
+              top: -4px;
+          }
+          .ant-form-item-control{
+              justify-content: flex-start !important;
           }
       }
   }

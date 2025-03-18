@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="1200px" :maskClosable="false" @cancel="handleCancel"
+        <a-modal v-model:open="props.isShow" width="1200px" style="top:10px;" :maskClosable="false" @cancel="handleCancel"
             @ok="handleSubmit">
             <template #title>
                 <div>
@@ -301,7 +301,7 @@
                                                 <Icon name="Location" fill="rgb(97, 97, 97)" width="22" hight="22" />
                                             </div>
                                             <div class="rVal">
-                                                <input type="text" v-model="formState.Location" placeholder="搜索位置">
+                                                <input type="text" v-model="formState.Location" placeholder="输入位置">
                                             </div>
                                         </div>
                                     </a-form-item>
@@ -313,7 +313,7 @@
                                             </div>
                                             <div class="rVal rVal2">
                                                 <TEditor ref="editorRef" mode="middle" :placeholder="'添加描述或附件文档'" 
-                                                :height=250
+                                                :height=height2
                                                     @input="getEditorContent" />
                                             </div>
                                         </div>
@@ -413,7 +413,7 @@
     const editorRef = ref();
     const data = reactive({
         title: "新建日程",
-        height: document.documentElement.clientHeight - 300,
+        height: document.documentElement.clientHeight - 145,
         ReplyList: [
             {
                 value: "0",
@@ -523,9 +523,11 @@
         DisplayStatus:'忙碌',
         ReminderTime:'15 分钟 前',
         CalendarType: '工作安排',
-        RecurrenceType:'不重复'
+        RecurrenceType:'不重复',
+        height2: document.documentElement.clientHeight - 380,
     });
     const {
+        height2,
         title,
         height,
         menuTimes, categoryList, OwningUser,isRadioUser,Reply,ReplyList,DisplayStatus,DisplayStatusList,ReminderTime,ReminderTimeList,CalendarType,CalendarTypeList,RecurrenceType,RecurrenceTypeList
@@ -756,11 +758,24 @@
             data[name]=(data[name+'List'][index]).label;
         }
     }
-    onMounted(() => {
-        window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 500;
-        });
+onMounted(() => {
+    data.height = document.documentElement.clientHeight - 145;
+    if (document.documentElement.clientHeight - 380 > 100) {
+        data.height2 = document.documentElement.clientHeight - 380;
+    }
+    else {
+        data.height2 = 100;
+    }
+    window.addEventListener("resize", (e) => {
+        data.height = document.documentElement.clientHeight - 145;
+        if (document.documentElement.clientHeight - 380 > 100) {
+            data.height2 = document.documentElement.clientHeight - 380;
+        }
+        else {
+            data.height2 = 100;
+        }
     });
+});
 
     const getDetail = () => {
     let d = {
@@ -995,6 +1010,7 @@
 
     .ant-form-item {
         position: relative;
+        margin-bottom: 0 !important;
     }
 
     .selectIcon {
@@ -1159,9 +1175,9 @@
 
                 .formRow {
                     display: flex;
-                    min-height: 48px;
+                    min-height: 42px;
                     align-items: center;
-
+                    margin-bottom: 5px;
                     .lIcon {
                         width: 32px;
                         height: 32px;
@@ -1189,7 +1205,7 @@
                         .rowTime {
                             display: flex;
                             align-items: center;
-                            margin-bottom: 10px;
+                            margin-bottom: 0px;
 
                             .date {
                                 width: 142px;
@@ -1223,13 +1239,16 @@
             border-radius: 4px;
         }
     }
-    :deep .ant-select-show-search:where(.css-dev-only-do-not-override-kqecok).ant-select:not(.ant-select-customize-input) .ant-select-selector{
-        border: none !important;
-        outline: 0 !important;
-    }
     .AddScheduleModalContainer{
+        :deep .ant-select-selector{
+            border: none !important;
+            outline: 0 !important;
+        }
         .ant-select-selection-item-content .ant-avatar{
             display: none !important;
+        }
+        .selectIcon{
+            top:10px !important;
         }
     }
     .ant-select-item-option-content .ant-avatar{
@@ -1340,5 +1359,42 @@
                 font-size: 8px !important;
                 position: relative;
                 top: -1px;
+            }
+            .AddScheduleModalContainer {
+                .ant-select-selection-item-content .ant-avatar {
+                    display: none !important;
+                }
+
+                .ant-select-selection-item .ant-avatar {
+                    display: none !important;
+                }
+
+                .barContainer {
+                    display: none;
+                }
+
+                .formContent {
+                    margin-top: 0;
+                    height: 100%;
+                }
+
+                .formContent .leftForm .formWrap .formRow {
+                    min-height: 30px !important;
+                }
+
+                .selectIcon {
+                    top: 5px !important;
+                }
+
+                .formContent .leftForm .formWrap .formRow .timeBox .rowTime {
+                    margin-bottom: 0px !important;
+                }
+
+                .formContent .leftForm .formWrap {
+                    padding: 0px 16px 0 8px !important;
+                }
+            }
+            .ant-modal-wrap{
+                overflow: hidden !important;
             }
 </style>

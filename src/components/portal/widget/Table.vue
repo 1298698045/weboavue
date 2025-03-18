@@ -365,3 +365,14 @@
         }
     }
 </style>
+<style lang="less">
+    .td-span a{
+        color: #333333 !important;
+        max-width: 100% !important;
+        display: inline-block;
+        white-space: nowrap;
+        &:hover{
+            color: #4d7ad8 !important;
+        }
+    }
+</style>

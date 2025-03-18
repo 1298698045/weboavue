@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="1200px" :maskClosable="false" @cancel="handleCancel"
+        <a-modal v-model:open="props.isShow" width="1200px" style="top:10px;" :maskClosable="false" @cancel="handleCancel"
             @ok="handleSubmit">
             <template #title>
                 <div>
@@ -308,7 +308,7 @@
                                             </div>
                                             <div class="rVal rVal2">
                                                 <TEditor ref="editorRef" mode="middle" :placeholder="'添加描述或附件文档'" 
-                                                :height=210
+                                                :height=height2
                                                     @input="getEditorContent" />
                                             </div>
                                         </div>
@@ -455,7 +455,7 @@
     const editorRef = ref();
     const data = reactive({
         title: "新建任务",
-        height: document.documentElement.clientHeight - 300,
+        height: document.documentElement.clientHeight - 150,
         ReplyList: [
             {
                 value: "0",
@@ -571,9 +571,11 @@
         DisplayStatus:'忙碌',
         ReminderTime:'15 分钟 前',
         CalendarType: '工作安排',
-        RecurrenceType:'不重复'
+        RecurrenceType:'不重复',
+        height2: document.documentElement.clientHeight - 440,
     });
     const {
+        height2,
         title,
         height,RegardingObjectId,RegardingObjectTypeCode,
         menuTimes, categoryList, OwningUser,isRadioUser,Reply,ReplyList,DisplayStatus,DisplayStatusList,ReminderTime,ReminderTimeList,CalendarType,CalendarTypeList,RecurrenceType,RecurrenceTypeList
@@ -804,11 +806,24 @@
             data[name]=(data[name+'List'][index]).label;
         }
     }
-    onMounted(() => {
-        window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 500;
-        });
+onMounted(() => {
+    data.height = document.documentElement.clientHeight - 150;
+    if (document.documentElement.clientHeight - 440 > 100) {
+        data.height2 = document.documentElement.clientHeight - 440;
+    }
+    else {
+        data.height2 = 100;
+    }
+    window.addEventListener("resize", (e) => {
+        data.height = document.documentElement.clientHeight - 150;
+        if (document.documentElement.clientHeight - 440 > 100) {
+            data.height2 = document.documentElement.clientHeight - 440;
+        }
+        else {
+            data.height2 = 100;
+        }
     });
+});
 
     const getDetail = () => {
     let d = {
@@ -1087,6 +1102,7 @@
 
     .ant-form-item {
         position: relative;
+        margin-bottom: 5px !important;
     }
 
     .selectIcon {
@@ -1466,5 +1482,46 @@
             }
             .AddTaskModalContainer .formContent .leftForm  .formWrap{
                 padding: 0 16px 0px 8px;
+            }
+            .AddTaskModalContainer {
+                :deep .ant-select-selector{
+                    border: none !important;
+                    outline: 0 !important;
+                }
+                .ant-select-selection-item-content .ant-avatar {
+                    display: none !important;
+                }
+
+                .ant-select-selection-item .ant-avatar {
+                    display: none !important;
+                }
+
+                .barContainer {
+                    display: none;
+                }
+
+                .formContent {
+                    margin-top: 0;
+                    height: 100%;
+                }
+
+                .formContent .leftForm .formWrap .formRow {
+                    min-height: 30px !important;
+                }
+
+                .selectIcon {
+                    top: 5px !important;
+                }
+
+                .formContent .leftForm .formWrap .formRow .timeBox .rowTime {
+                    margin-bottom: 0px !important;
+                }
+
+                .formContent .leftForm .formWrap {
+                    padding: 0px 16px 0 8px !important;
+                }
+            }
+            .ant-modal-wrap{
+                overflow: hidden !important;
             }
 </style>

@@ -50,6 +50,13 @@
                             </template>
                             </a-tree>
                         </a-form-item>
+                        <a-form-item name="TemplateId" label="模板" :rules="[{ required: true, message: '请选择模板' }]">
+                            <a-select v-model:value="formState.TemplateId" placeholder="请选择模板" filterable>
+                            <a-select-option v-for="(item, index) in TemplateList" :value="item.value" :key="index">{{
+                                item.label
+                            }}</a-select-option>
+                            </a-select>
+                        </a-form-item>
                     </a-form>
                 </div>
             </div>
@@ -69,6 +76,7 @@
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     import { useRouter, useRoute } from "vue-router";
+    import { girdFormatterValue } from "@/utils/common.js";
     const router = useRouter();
     const formRef = ref();
     const labelCol = ref({ style: { width: '60px' } });
@@ -117,11 +125,14 @@
             children:'children', title:'name', key:'id'
         },
         selectedKeys:[],
+        TemplateList:[],
+        businessUnitId:''
     })
-    const { fieldName,selectedKeys,listData, menus, currentMenu,ModalTitle,sObjectName,userId,userName } = toRefs(data);
+    const { businessUnitId,TemplateList,fieldName,selectedKeys,listData, menus, currentMenu,ModalTitle,sObjectName,userId,userName } = toRefs(data);
     const formState = reactive({
         name: "",
-        column: ""
+        column: "",
+        TemplateId:""
     })
     const handleMenu = (e)=> {
         console.log("e",e);
@@ -129,7 +140,6 @@
     }
     const handleSearch = (val) =>{
         console.log('val',val);
-        getPeople(val)
     }
     const handleChange = (e) =>{
     }
@@ -145,14 +155,35 @@
             formState.column=node.id
         }
     };
-    const getPeople = (val="")=>{
-        proxy.$get(Interface.uilook,{
-            Lktp: 30020,
-            lksrch: val
-        }).then(res=>{
-            data.listData = res.listData;
+    const getTemplateList = ()=>{
+        let d = {
+            filterId: "",
+            objectTypeCode:5081,
+            entityName:'ContentViewTemplate',
+            filterQuery: '',
+            page: 1,
+            rows: 100,
+            displayColumns:'Name'
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            var list = [];
+            if(res&&res.nodes){
+                for (var i = 0; i < res.nodes.length; i++) {
+                    var item = res.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'){
+                            item[cell]=girdFormatterValue(cell,item);
+                        }
+                    }
+                    item.label=item.Name||'';
+                    item.value = item.id;
+                    list.push(item)
+                }
+            }
+            data.TemplateList = list;
         })
     }
+    getTemplateList();
     const handleSubmit = ()=> {
         formRef.value.validate().then(() => {
             console.log('values', formState, toRaw(formState));
@@ -171,7 +202,10 @@
                     ContentTypeCode: 1,
                     Title: formState.name,
                     FolderId: formState.column,
-                    CreatedBy:data.userId
+                    CreatedBy:data.userId,
+                    OwningUser:data.userId,
+                    TemplateId:formState.TemplateId,
+                    BusinessUnitId:data.businessUnitId
                 }
               }              
             }
@@ -270,6 +304,7 @@ if(userInfo){
     userInfo=JSON.parse(userInfo);
     data.userId=userInfo.userId;
     data.userName=userInfo.fullName;
+    data.businessUnitId=userInfo.businessUnitId;
     if(data.userId=='jackliu'){
         data.userId='2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
     }

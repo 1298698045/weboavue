@@ -103,7 +103,8 @@
     import StatsCard from "@/components/portal/widget/StatsCard.vue";
     import ProcessTasklist from "@/components/portal/widget/ProcessTasklist.vue";
     import StatsChart from "@/components/portal/widget/StatsChart.vue";
-
+    import { useStore } from "vuex";
+    let store = useStore();
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const props = defineProps({
@@ -299,7 +300,8 @@
         proxy.$post(Interface.portal.layoutList, d).then(res=>{
             let layoutList = [];
             if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-                let { attributes, dashboardMetadata, picklistColors, components } = res.actions[0].returnValue;
+                let { attributes, dashboardMetadata, picklistColors, components, theme } = res.actions[0].returnValue;
+                store.commit("setTheme", theme);
                 let list = components;
                 const maxY = Math.max(...data.layout.map(item => item.y + item.h));
                 list.forEach(item => {

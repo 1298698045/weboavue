@@ -1376,4 +1376,23 @@ onMounted(() => {
 :deep .ant-tree-treenode:hover .tree-btn {
   display: block !important;
 }
+.ContentWrap .todo-content {
+  width: unset !important;
+
+  .ant-row {
+    width: unset !important;
+
+    .wea-left-right-layout-left {
+      .wea-left-tree {
+        width: unset !important;
+
+        .wea-left-tree-search {
+          width: unset !important;
+        }
+      }
+
+    }
+  }
+}
+
 </style>

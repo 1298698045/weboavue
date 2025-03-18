@@ -8,7 +8,7 @@
                 <span class="headerTitle">领导日程</span>
             </div>
             <div class="headerRight">
-                <dRadioGroup :current="current" @change="changeRadioGroup" v-if="showComponent">
+                <!-- <dRadioGroup :current="current" @change="changeRadioGroup" v-if="showComponent">
                     <a-radio-button :value="0">
                         <i class="iconfont icon-liebiaoshitu"></i>
                     </a-radio-button>
@@ -16,7 +16,7 @@
                         <i class="iconfont icon-rilishitu"></i>
                     </a-radio-button>
                 </dRadioGroup>
-                <a-button type="primary" class="ml10" @click="handleAddSchedule">新建日程</a-button>
+                <a-button type="primary" class="ml10" @click="handleAddSchedule">新建日程</a-button> -->
             </div>
         </div>
         <div class="calendarBody">

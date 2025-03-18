@@ -3,6 +3,7 @@
       <a-modal
         v-model:open="props.isShow"
         width="900px"
+        style="top:10px;"
         :maskClosable="false"
         @cancel="handleCancel"
         @ok="handleSubmit"
@@ -65,7 +66,7 @@
                         },
                       ]">
                         <div class="rVal rVal2">
-                            <TEditor ref="editorRef" mode="middle" :placeholder="'输入通知内容'" :height="props.type=='modal'?(height-295):(height-255)" @input="getEditorContent" />
+                            <TEditor ref="editorRef" mode="middle" :placeholder="'输入通知内容'" :height="props.type=='modal'?(height-300):(height-300)" @input="getEditorContent" />
                         </div>
                     </a-form-item>
                   </div>
@@ -137,11 +138,11 @@
     dingding:false
   });
   
-  data.height = document.documentElement.clientHeight - 330;
+  data.height = document.documentElement.clientHeight - 150;
   onMounted(() => {
     formState.Name="[提醒]："+props.RegardingObjectIdName;
     window.addEventListener("resize", (e) => {
-      data.height = document.documentElement.clientHeight - 330;
+      data.height = document.documentElement.clientHeight - 150;
     });
   });
   const getEditorContent = (e) => {
@@ -267,6 +268,7 @@
       display: flex;
       margin-top: 0px;
       margin-bottom: 0px;
+      padding: 0;
       .ant-form-item-control-input-content{
         display: flex;
       }

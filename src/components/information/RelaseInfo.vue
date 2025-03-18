@@ -1,14 +1,14 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+    <a-modal v-model:open="props.isShow" width="850px" style="top:10px;" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
       <template #title>
         <div>
           {{ title }}
         </div>
       </template>
-      <div class="modalContainer">
+      <div class="modalContainer RelaseInfoWrap">
         <RadioDept :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
-        <div class="modalCenter" :style="{ height: height + 'px!important' }" v-show="step * 1 == 0">
+        <div class="modalCenter modalCenter1" :style="{ height: height + 'px!important' }" v-show="step * 1 == 0">
           <a-form :model="formState" ref="formRef">
             <div class="section">
               <div class="sectionTitle">基本信息</div>
@@ -127,7 +127,7 @@
           </div>
           <div class="section">
             <div class="sectionRow">
-              <div class="sectionItem sectionItem1">
+              <div class="sectionItem RelaseInfoUpload">
                 <div class="uploadPanel">
                   <div class="inboxFileList">
                     <div class="inboxFileItem" v-for="(item, index) in fileList" :key="index">
@@ -155,7 +155,7 @@
                     </div>
                     <div class="inboxFileItem">
                       <a-upload-dragger accept="image/*" v-model:fileList="fileList" :headers="headers"
-                        @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false"
+                        @change="changeFiles" :data="uploadData" :action="Interface.information.uploadMedia" :showUploadList="false"
                         multiple name="files" :before-upload="beforeUpload">
                         <div class="uploadRow">
                           <p class="ant-upload-drag-icon">
@@ -318,7 +318,7 @@ const formState = reactive({
 const token = localStorage.getItem("token");
 const data = reactive({
   title: "发布信息",
-  height: document.documentElement.clientHeight - 350,
+  height: document.documentElement.clientHeight - 150,
   AttachRightCodeList: [
     {
       label: '所有',
@@ -419,8 +419,9 @@ const data = reactive({
   filterExpression: "",
   ImageList: [],
   uploadData: {
-    parentId: '',
-    entityName: 'Content'
+    // parentId: '',
+    // entityName: 'Media'
+    id:''
   },
   headers: {
     Authorization: token,
@@ -661,21 +662,38 @@ const handleFocus = (e) => {
   data.isRadioDept = true;
 }
 const getTreeData = () => {
-  proxy.$get(Interface.information.contentTree, {
-    objectTypeCode: props.objectTypeCode
-  }).then((response) => {
-    let formTree = (list) => {
-      list.forEach(item => {
-        if (item.children) {
-          formTree(item.children);
-        }
-        item.key = item.id;
-        item.value = item.id;
-      })
+  // proxy.$get(Interface.information.contentTree, {
+  //   objectTypeCode: props.objectTypeCode
+  // }).then((response) => {
+  //   let formTree = (list) => {
+  //     list.forEach(item => {
+  //       if (item.children) {
+  //         formTree(item.children);
+  //       }
+  //       item.key = item.id;
+  //       item.value = item.id;
+  //     })
+  //   }
+  //   formTree(response);
+  //   data.treeData = response;
+  // })
+  let url = Interface.content.folder.get;
+  proxy.$post(url, {}).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+      let formTree = (list) => {
+        list.forEach(item => {
+          if (item.children) {
+            formTree(item.children);
+          }
+          item.key = item.id;
+          item.value = item.id;
+        })
+      }
+      let response = res.actions[0].returnValue;
+      formTree(response);
+      data.treeData = response;
     }
-    formTree(response);
-    data.treeData = response;
-  })
+  });
 }
 getTreeData();
 
@@ -743,12 +761,12 @@ const searchlookup2 = () => {
 }
 onMounted(() => {
   window.addEventListener("resize", (e) => {
-    data.height = document.documentElement.clientHeight - 350;
+    data.height = document.documentElement.clientHeight - 150;
   });
   if (props.id) {
     getDetail();
     getFiles();
-    data.uploadData.parentId = props.id;
+    data.uploadData.id = props.id;
   }
 });
 const getDetail = () => {
@@ -809,7 +827,7 @@ const getDetail = () => {
 }
 
 const handleSubmit = () => {
-  data.step = 1;
+  //data.step = 1;
   formRef.value
     .validate()
     .then(() => {
@@ -888,7 +906,7 @@ const handleSubmit = () => {
         //formRef.value.resetFields();
         if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
           props.id = res.actions[0].returnValue.id;
-          data.uploadData.parentId = props.id;
+          data.uploadData.id = props.id;
           message.success("保存成功！");
           data.step = 1;
         }
@@ -988,13 +1006,23 @@ const getFilterExpresssionList = () => {
 const getFiles = () => {
   data.fileList = [];
   data.ImageList = [];
-  let url = Interface.getFiles;
+  let url = Interface.information.getMedia;
   let d = {
-    parentId: props.id,
-    page: 1,
-    rows: 100
-  }
-  proxy.$post(url, d).then(res => {
+    actions: [{
+      id: "2919;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        pageNumber: 1,
+        pageSize: 100,
+        contentId:props.id
+      }
+    }]
+  };
+  let obj = {
+    message: JSON.stringify(d)
+  };
+  proxy.$post(url, obj).then(res => {
     var list = [];
     var list2 = [];
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue) {
@@ -1009,7 +1037,7 @@ const getFiles = () => {
         }
         let ite = {
           size: size,
-          url: '/' + data.uploadData.entityName + '/' + item.id + '/' + name,
+          url: '/Media/' + item.id + '/' + name,
           fileLocation: item.fileLocation || '',
           uid: item.id,
           id: item.id,
@@ -1034,8 +1062,8 @@ const getFiles = () => {
   })
 };
 const beforeUpload = (e) => {
-  data.uploadData.entityName = 'Institution';
-  data.uploadData.parentId = props.id;
+  //data.uploadData.entityName = 'Media';
+  data.uploadData.id = props.id;
   console.log("beforeUpload", e);
 }
 const changeFiles = (e) => {
@@ -1100,18 +1128,6 @@ const deleteFile0 = (item) => {
 }
 //删除附件
 const deleteFile = (id) => {
-  // let d = {
-  //   actions: [{
-  //     id: "4105;a",
-  //     descriptor: "",
-  //     callingDescriptor: "UNKNOWN",
-  //     params: {
-  //       parentId: data.uploadData.parentId,
-  //       entityName: data.uploadData.entityName,
-  //       fileId: id
-  //     }
-  //   }]
-  // };
   let d = {
     actions: [{
       id: "2919;a",
@@ -1119,8 +1135,8 @@ const deleteFile = (id) => {
       callingDescriptor: "UNKNOWN",
       params: {
         recordId: id,
-        apiName: 'RelatedAttachment',
-        objTypeCode: '1001',
+        apiName: 'Media',
+        objTypeCode: '20011',
       }
     }]
   };
@@ -1313,7 +1329,7 @@ const deleteFile = (id) => {
   border-radius: 4px !important;
 }
 
-.sectionItem1 {
+.RelaseInfoUpload {
   height: 150px;
   width: 150px;
   padding: 10px;
@@ -1468,5 +1484,23 @@ input[aria-hidden="true"] {
       }
     }
   }
+}
+.RelaseInfoWrap {
+  .modalCenter1 {
+    .section .sectionRow .sectionItem .ant-row {
+      width: 100%;
+      display: flex !important;
+
+      .ant-form-item-label {
+        min-width: 80px !important;
+        text-align: right !important;
+      }
+    }
+
+    .ant-form-item {
+      margin: 10px 0 !important;
+    }
+  }
+
 }
 </style>

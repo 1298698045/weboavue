@@ -717,7 +717,7 @@ const getColumns = (id) => {
   }
   //打开详情页
   const handleDetailView=(id)=>{
-      window.open('/#/Meeting/detail?id='+(id||''));
+      window.open('/#/lightning/r/meeting/view?id='+(id||''));
   }
   window.handleDetailView=handleDetailView;
 </script>

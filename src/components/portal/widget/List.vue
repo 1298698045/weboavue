@@ -99,6 +99,9 @@
     }
 
     const getQuery = async ()  => {
+        if(props.item.id == null){
+            return false;
+        }
         let obj = {
             actions:[{
                 id: "",

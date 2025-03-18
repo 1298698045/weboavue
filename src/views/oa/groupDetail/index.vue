@@ -195,6 +195,8 @@
       </div>
     </div>
     <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
+    <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser = false"
+      @select="handleSelectUsers" />
     <Notes v-if="isNotes" :isShow="isNotes" @cancel="closeNotes" :id="recordId" />
     <!-- <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal> -->
     <add-group :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" type="1"></add-group>
@@ -223,7 +225,7 @@ import GroupSpace from "@/components/groupDetail/GroupSpace.vue";
 import DetailInfo from "@/components/detail/DetailInfo.vue";
 import Personnel from "@/components/groupDetail/Personnel.vue";
 import Statistics from "@/components/groupDetail/Statistics.vue";
-
+import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 // 选人
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 // 备注
@@ -269,9 +271,11 @@ const data = reactive({
   },
   fileList:[],
   height:100,
-  defaultImg:require('@/assets/img/avatar-r.png')
+  defaultImg:require('@/assets/img/avatar-r.png'),
+  isMultipleUser:false
 });
 const {
+  isMultipleUser,
   activeKey,
   adminList,
   peopleList,
@@ -292,13 +296,15 @@ const closeNotes = (e) => {
 };
 // 添加成员
 const handleAddPeople = (e) => {
-  data.isRadioUser = true;
+  //data.isRadioUser = true;
   data.RoleCode = 0;
+  data.isMultipleUser=true;
 };
 // 添加管理员
 const handleAddAdmin = (e) => {
   data.RoleCode = 2;
-  data.isRadioUser = true;
+  data.isMultipleUser=true;
+  //data.isRadioUser = true;
 };
 // 删除小组
 const handleDeleteGroup = () => {
@@ -388,6 +394,18 @@ const getUserData = (params) => {
     });
 
   }
+};
+//多选
+const handleSelectUsers = (params) => {
+  // console.log("多选用户:", params);
+  let addUsers = params.map(item => {
+    item.key = item.id;
+    return item;
+  })
+  addUsers.forEach(item => {
+    getUserData(item);
+  });
+  data.isMultipleUser = false;
 };
 const getAdminData = () => {
   // proxy.$get(Interface.group.list, {

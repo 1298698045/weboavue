@@ -30,7 +30,7 @@
                 </h2>
                 <div class="table-container" style="height: calc(100% - 90px);overflow-y: auto">
                     <div class="quick-wrapper">
-                        <div class="quick-item" v-for="item in listData">
+                        <div class="quick-item" v-for="(item, index) in listData" :key="index" @click="handleDetail(item)">
                             <div class="quick-item-content">
                                 <div class="quick-item-icon">
                                     <img src="@/assets/img/preview.png" alt="">
@@ -53,7 +53,7 @@
         <template v-else>
             <div class="card-body">
                 <div class="quick-wrapper">
-                    <div class="quick-item" v-for="(item, index) in listData" :key="index">
+                    <div class="quick-item" v-for="(item, index) in listData" :key="index" @click="handleDetail(item)">
                         <div class="quick-item-content">
                             <div class="quick-item-icon">
                                 <img src="@/assets/img/preview.png" alt="">
@@ -117,6 +117,11 @@
     const gotoMore = () => {
         let { moreUrl } = props.item.properties;
         const url = router.resolve({path: moreUrl});
+        window.open(url.href);
+    }
+
+    const handleDetail = (item) => {
+        const url = router.resolve({path: item.url});
         window.open(url.href);
     }
 

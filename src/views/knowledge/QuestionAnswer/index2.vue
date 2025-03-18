@@ -410,7 +410,9 @@
                     params: {
                         pageSize: 10,
                         pageNumber: data.keyIndex,
-                        filterQuery: filterQuery,
+                        //filterQuery: filterQuery,
+                        //RegardingObjectId:'',
+                        ChatterTypeCode:data.activeKey,
                         search: data.searchVal||''
                     }
                 }]

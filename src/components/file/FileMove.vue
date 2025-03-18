@@ -14,9 +14,10 @@
                         <div class="sectionRow">
                             <div class="sectionItem">
                                 移动到：
-                                <a-tree :tree-data="treeData" block-node @select="handleSelectTree">
-                                    <template #title="{ label, key }">
-                                        <span :key="key">{{ label }}</span>
+                                <a-tree :tree-data="treeData" block-node @select="handleSelectTree" :fieldNames="fieldNames"
+                                    :expanded-keys="expandedKeys" :selectedKeys="selectedKeys" @expand="onExpand" :auto-expand-parent="autoExpandParent">
+                                    <template #title="{ name, key }">
+                                        <span :key="key">{{ name }}</span>
                                     </template>
                                 </a-tree>
                             </div>
@@ -56,6 +57,7 @@ import { message } from "ant-design-vue";
 
 import Interface from "@/utils/Interface.js";
 import e from "cors";
+import { formTreeData } from "@/utils/common.js";
 const { proxy } = getCurrentInstance();
 console.log(document.documentElement.clientHeight);
 const labelCol = ref({ style: { width: "100px" } });
@@ -73,64 +75,136 @@ const data = reactive({
     height: document.documentElement.clientHeight - 300,
     treeData: [],
     ItemId: "",
-    DestinationId: ""
+    DestinationId: "",
+    selectedKeys: [],
+    fieldNames:{
+        children:'children', title:'name', key:'id'
+    }
 });
 const {
-    title,
+    title,selectedKeys,fieldNames,
     height, treeData, ItemId, DestinationId
 } = toRefs(data);
 watch(() => props.fileParams, (newVal, oldVal) => {
 }, { deep: true, immediate: true })
-
+const expandedKeys = ref([]);
+const autoExpandParent = ref(true);
+const onExpand = (keys) => {
+    expandedKeys.value = keys;
+    autoExpandParent.value = false;
+};
 onMounted(() => {
+    if (props.fileParams.FolderId) {
+        data.DestinationId = props.fileParams.FolderId;
+        expandedKeys.value = [props.fileParams.FolderId];
+        data.selectedKeys = [props.fileParams.FolderId];
+    }
     window.addEventListener("resize", (e) => {
         data.height = document.documentElement.clientHeight - 300;
     });
 });
 const getTreeData = () => {
-    proxy.$get(Interface.file.tree, {
-        srchType: "foldertree"
+    proxy.$get(Interface.file.getMyFolderTree, {
     }).then(res => {
-        if (props.srchType == 'my') {
-            data.treeData = [res.data[0]];
-        }
-        else if (props.srchType == 'share') {
-            data.treeData = [res.data[1]];
-        }
-        else if (props.srchType == 'org') {
-            data.treeData = [res.data[2]];
-        }
-        else {
-            data.treeData = [res.data[0]];
+        // if (props.srchType == 'my') {
+        //     data.treeData = [res.data[0]];
+        // }
+        // else if (props.srchType == 'share') {
+        //     data.treeData = [res.data[1]];
+        // }
+        // else if (props.srchType == 'org') {
+        //     data.treeData = [res.data[2]];
+        // }
+        // else {
+        //     data.treeData = [res.data[0]];
+        // }
+
+        if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
+            let response = res.actions[0].returnValue;
+            data.treeData = response;
         }
     })
 };
 getTreeData();
 const handleSelectTree = (e, node) => {
-    console.log("e", e, node);
-    data.DestinationId = node.node.value;
+    //console.log("e", e, node);
+    data.DestinationId = e[0];
+    data.selectedKeys=e;
 }
 
 const handleSubmit = () => {
-    let obj = {
-        ItemId: props.fileParams.id,
-        DestinationId: data.DestinationId,
-        isFolder: "",
+    // let obj = {
+    //     ItemId: props.fileParams.id,
+    //     DestinationId: data.DestinationId,
+    //     isFolder: "",
+    // };
+    // var messages = JSON.stringify(obj);
+    // proxy.$get(Interface.file.move, obj).then((res) => {
+    //     message.warning("移动成功！");
+    //     emit("refresh", false);
+    //     emit("cancel", false);
+    // });
+    if (data.DestinationId) { } else {
+        message.error("请选择移动到的目录");
+        return false;
+    }
+    let url = Interface.edit;
+    let d = {
+        actions: [{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+                recordInput: {
+                    allowSaveOnDuplicate: false,
+                    apiName: 'FileFolder',
+                    objTypeCode: 100103,
+                    fields: {
+                        ParentId: data.DestinationId
+                    }
+                }
+            }
+        }]
     };
-    var messages = JSON.stringify(obj);
-    proxy.$get(Interface.file.move, obj).then((res) => {
-        message.warning("移动成功！");
-        emit("refresh", false);
-        emit("cancel", false);
+    if (props.fileParams.type == 'file') {
+        d = {
+            actions: [{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    recordInput: {
+                        allowSaveOnDuplicate: false,
+                        apiName: 'File',
+                        objTypeCode: 100100,
+                        fields: {
+                            FolderId: data.DestinationId
+                        }
+                    }
+                }
+            }]
+        };
+    }
+    if (props.fileParams.id) {
+        d.actions[0].params.recordId = props.fileParams.id;
+    }
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(url, obj).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+            message.success("移动成功！");
+            emit("refresh", false);
+            emit("cancel", false);
+        }
+        else {
+            message.error("移动失败！");
+        }
     });
 };
 </script>
 <style lang="less">
 @import url("@/style/modal.less");
-
-.ant-modal-content .modalContainer .modalCenter {
-    /* height: 500px !important; */
-}
 
 .section {
     .sectionTitle {

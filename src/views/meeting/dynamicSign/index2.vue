@@ -58,7 +58,7 @@
             <div class="statistics-left">
               <div class="statistics-name">签退</div>
               <div class="statistics-count" name="ContractNumber" style="color: rgb(179, 123, 248);">{{ SignoffQty || 0
-                }}
+              }}
               </div>
             </div>
             <div class="statistics-right">
@@ -82,20 +82,20 @@
     </div>
     <div class="panel" :style="{ height: height + 'px' }">
       <div class="panel-head">
-        <div class="panel-title">参会人员</div>
+        <div class="panel-title">{{ title }}记录</div>
         <div class="panel-btn">
-          <a-button class="ml10" type="primary" @click="AddPeople">邀请参与人</a-button>
+          <!-- <a-button class="ml10" type="primary" @click="AddPeople">邀请参与人</a-button> -->
         </div>
       </div>
-      <div class="tabWrap panel-bd-tabWrap">
+      <!-- <div class="tabWrap panel-bd-tabWrap">
         <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
           <a-tab-pane v-for="(item, index) in tabs" :key="index">
             <template #tab>
               <span>{{ item.label }}</span>
             </template>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
+</a-tab-pane>
+</a-tabs>
+</div> -->
       <div class="panel-bd panel-bd2">
         <div class="peopleHeader">
           <div class="left">
@@ -184,7 +184,7 @@
       @ok="refreshPeople"></radio-dept>
     <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople" :sObjectName="sObjectName"
       :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
-      <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser = false"
+    <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser = false"
       @select="handleSelectUsers" />
   </div>
 </template>
@@ -381,7 +381,7 @@ const data = reactive({
   SignoffQty: 0,
   RejectQty: 0,
   DayoffQty: 0,
-  activeKey: 0,
+  activeKey: 1,
   tabs: [
     {
       label: "参会人员",
@@ -393,10 +393,13 @@ const data = reactive({
   columns: columns0,
   ClockType: null,
   CreatedOn: null,
-  isMultipleUser:false
+  isMultipleUser: false,
+  id: route.query.id,
+  exitQcode: route.query.exitQcode,
+  title: ''
 });
 //const columnList = toRaw(columns);
-const { isMultipleUser,MeetingName, ClockType, CreatedOn, columns, tabs, activeKey, listData, PeopleQty, AcceptQty, JoinQty, SignoffQty, RejectQty, DayoffQty, height, searchVal, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, IsLate } = toRefs(data);
+const { title, exitQcode, id, isMultipleUser, MeetingName, ClockType, CreatedOn, columns, tabs, activeKey, listData, PeopleQty, AcceptQty, JoinQty, SignoffQty, RejectQty, DayoffQty, height, searchVal, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, IsLate } = toRefs(data);
 const changeTabs = (e) => {
   data.activeKey = e;
   data.pagination.current = 1;
@@ -405,13 +408,13 @@ const changeTabs = (e) => {
 const getQuery = () => {
   data.listData = [];
   data.pagination.total = 0;
-  let filterQuery = '\nMeetingId\teq\t' + props.id;
+  let filterQuery = '\nMeetingId\teq\t' + data.id;
   let displayColumns = 'OwningBusinessUnit,InviteeId,Checkin,Location,LateMinutes,Checkout,StatusCode,Description';
   data.columns = columns0;
   data.objectTypeCode = '5002';
   data.sObjectName = 'MeetingAudience';
   if (data.activeKey * 1 == 1) {
-    filterQuery = '\nRegardingObjectId\teq\t' + props.id;
+    filterQuery = '\nRegardingObjectId\teq\t' + data.id;
     displayColumns = 'CreatedBy,ClockType,CreatedOn,Location,BuildingName,Latitude,Longitude';
     data.columns = columns1;
     data.objectTypeCode = '5010';
@@ -526,10 +529,10 @@ const windowOpen = (url, fileName) => {
 }
 
 const onExport = () => {
-  let url = Interface.meeting.audienceDataExport + '?meetingId=' + props.id;
+  let url = Interface.meeting.audienceDataExport + '?meetingId=' + data.id;
   let text = data.MeetingName + '_参会人员.xls';
   if (data.activeKey * 1 == 1) {
-    url = Interface.meeting.checkinRecordExport + '?meetingId=' + props.id;
+    url = Interface.meeting.checkinRecordExport + '?meetingId=' + data.id;
     text = data.MeetingName + '_打卡记录.xls';
   }
   windowOpen(url, text);
@@ -557,18 +560,17 @@ const handleTableChange = (page, pageSize) => {
 const sizeChange = (current, size) => {
   handleTableChange(current, size)
 }
-getQuery();
 // 添加成员
 const AddPeople = () => {
   //data.isRadioUser = true;
   data.RoleCode = 0;
-  data.isMultipleUser=true;
+  data.isMultipleUser = true;
 }
 // 添加管理员
 const AddAdmin = () => {
   data.RoleCode = 2;
   //data.isRadioUser = true;
-  data.isMultipleUser=true;
+  data.isMultipleUser = true;
 };
 const refreshPeople = (e) => {
   getQuery();
@@ -592,7 +594,7 @@ const getUserData = (params) => {
           apiName: 'MeetingAudience',
           objTypeCode: '5002',
           fields: {
-            MeetingId: props.id,
+            MeetingId: data.id,
             InviteeId: params.id,
             Name: params.name,
             StatusCode: 0
@@ -650,7 +652,7 @@ const getDetail = () => {
       descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
       callingDescriptor: "UNKNOWN",
       params: {
-        recordId: props.id,
+        recordId: data.id,
         apiName: 'MeetingRec',
         objTypeCode: 5000
       }
@@ -675,28 +677,38 @@ const getDetail = () => {
 }
 onMounted(() => {
   let h = document.documentElement.clientHeight;
-  data.tableHeight = h - 490;
-  data.height = h - 215;
-  if (props.type == 'modal') {
-    data.tableHeight = h - 660;
-    data.height = h - 385;
-  }
+  data.tableHeight = h - 405;
+  data.height = h - 130;
   window.addEventListener("resize", (e) => {
     let h = document.documentElement.clientHeight;
-    data.tableHeight = h - 490;
-    data.height = h - 215;
-    if (props.type == 'modal') {
-      data.tableHeight = h - 660;
-      data.height = h - 385;
-    }
+    data.tableHeight = h - 405;
+    data.height = h - 130;
   });
+  if (data.exitQcode * 1 == 1) {
+    data.columns = columns1;
+    data.title = '签退';
+    data.ClockType = '3';
+  }
+  else {
+    data.columns = columns0;
+    data.title = '签到';
+    data.ClockType = '1';
+  }
+  getQuery();
   getDetail();
+  setInterval(function () {
+    data.pagination.current = 1;
+    getQuery();
+    getDetail();
+  }, 60000)
 })
 </script>
 <style lang="less">
 .ParticipantsWrap {
   width: 100%;
-
+  height: 100%;
+  padding: 15px;
+  background: #f0f2f6 !important;
   .panel {
     margin-bottom: 0;
     padding-bottom: 0;

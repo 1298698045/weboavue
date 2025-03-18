@@ -2,9 +2,9 @@ export const routesMapping = {
     // 门户
     Portal: {
         workspace: () => import("../views/home/home.vue"),
-        OrgPortal: () => import("../views/NotFound.vue"),
-        OrgBranchPortal: () => import("../views/NotFound.vue"),
-        PortalAdmin: () => import("../views/NotFound.vue")
+        // OrgPortal: () => import("../views/NotFound.vue"),
+        // OrgBranchPortal: () => import("../views/NotFound.vue"),
+        // PortalAdmin: () => import("../views/NotFound.vue")
     },
     // 流程管理
     FlowManage: {

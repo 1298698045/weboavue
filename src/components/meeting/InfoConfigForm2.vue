@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modalContainer InfoConfigForm2Container">
+        <div class="modalContainer InfoConfigForm2Container" style="top:10px;">
             <div class="modalCenter" :style="{ height: height + 'px!important' }">
                 <div class="tabPanel">
                     <div class="barContainer">
@@ -224,7 +224,7 @@
                                                 :default-active-first-option="false" :filter-option="false" showSearch
                                                 @search="(e) => { searchlookup(e, '8', 'OwningUser'); }"
                                                 @dropdownVisibleChange="(e) => { searchlookup('', '8', 'OwningUser'); }"
-                                                :placeholder="'选择会议预约人'">
+                                                :placeholder="'选择预约人'">
                                                 <template #suffixIcon></template>
                                                 <a-select-option v-for="(option, optionIdx) in OwningUser"
                                                     :key="optionIdx" :value="option.ID">
@@ -309,20 +309,22 @@
                                 <a-form-item name="RoomId">
                                     <div class="formRow">
                                         <div class="lIcon">
-                                            <HomeOutlined />
+                                            <HomeOutlined v-if="props.objectTypeCode == '5000'" />
+                                            <CarOutlined v-if="props.objectTypeCode == '20503'" />
                                         </div>
                                         <div class="rVal">
                                             <a-select mode="single" allowClear v-model:value="formState.RoomId.Id"
                                                 :default-active-first-option="false" :filter-option="false" showSearch
                                                 @search="(e) => { searchlookup(e, '20034', 'RoomId'); }"
                                                 @dropdownVisibleChange="(e) => { searchlookup('', '20034', 'RoomId'); }"
-                                                :placeholder="'请选择会议室'">
+                                                :placeholder="props.objectTypeCode=='5000'?'请选择会议室':'请选择车辆'">
                                                 <template #suffixIcon></template>
                                                 <a-select-option v-for="(option, optionIdx) in RoomId" :key="optionIdx"
                                                     :value="option.ID">
                                                     <a-avatar :size="37">
                                                         <template #icon>
-                                                            <HomeOutlined />
+                                                            <HomeOutlined v-if="props.objectTypeCode=='5000'" />
+                                                            <CarOutlined v-if="props.objectTypeCode=='20503'" />
                                                         </template>
                                                         <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
                                                     </a-avatar>
@@ -342,7 +344,7 @@
                                             <EnvironmentOutlined />
                                         </div>
                                         <div class="rVal">
-                                            <input type="text" v-model="formState.Location" placeholder="搜索位置">
+                                            <input type="text" v-model="formState.Location" placeholder="输入位置">
                                         </div>
                                     </div>
                                 </a-form-item>
@@ -363,7 +365,7 @@
                                             <FormOutlined />
                                         </div>
                                         <div class="rVal rVal2">
-                                            <TEditor ref="editorRef2" mode="middle" :placeholder="'备注'" :height=180
+                                            <TEditor ref="editorRef2" mode="middle" :placeholder="'备注'" :height=height2
                                                 @input="getEditorContent2" />
                                         </div>
                                     </div>
@@ -428,12 +430,14 @@ import {
     HomeOutlined,
     SwapOutlined,
     CheckOutlined,
-    EllipsisOutlined
+    EllipsisOutlined,
+    CarOutlined
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import TEditor from "@/components/TEditor.vue";
 import DayCalendar from "@/components/meeting/AddMeetingDayModal.vue";
 import Interface from "@/utils/Interface.js";
+import { girdFormatterValue } from "@/utils/common.js";
 const { proxy } = getCurrentInstance();
 const DayCalendarWrap = ref(null);
 const labelCol = ref({ style: { width: "100px" } });
@@ -455,8 +459,9 @@ const handleCancel = () => {
 const editorRef = ref();
 const editorRef2 = ref();
 const data = reactive({
-    title: "新建会议",
-    height: document.documentElement.clientHeight - 380,
+    title: "新建",
+    height: document.documentElement.clientHeight - 220,
+    height2: document.documentElement.clientHeight - 505,
     menuTimes: [
         '不要提醒我', '在事件发生时', '5 分钟 钱', '30分钟 前', '1小时 前',
         '2小时 前', '12小时 前', '1天 前', '1周 前', '添加电子邮件提醒'
@@ -518,6 +523,7 @@ const data = reactive({
 const {
     title,
     height,
+    height2,
     menuTimes, categoryList, OwningUser, RoomId, isRadioUser, RecurrenceType, RecurrenceTypeList
 } = toRefs(data);
 const formState = reactive({
@@ -629,69 +635,98 @@ const uniqu = (array, name) => {
     return arr
 }
 const searchlookup = (search, Lktp, fieldApiName) => {
-    let obj = {
-        actions: [{
-            id: "6129;a",
-            descriptor: "",
-            callingDescriptor: "UNKNOWN",
-            params: {
-                objectApiName: 'MeetingRec',
-                fieldApiName: fieldApiName,
-                pageParam: 1,
-                pageSize: 25,
-                q: search,
-                searchType: "Recent",
-                targetApiName: 'SystemUser',
-                body: {
-                    sourceRecord: {
-                        apiName: 'MeetingRec',
-                        fields: {
-                            Id: null,
-                            RecordTypeId: ""
+    // let obj = {
+    //     actions: [{
+    //         id: "6129;a",
+    //         descriptor: "",
+    //         callingDescriptor: "UNKNOWN",
+    //         params: {
+    //             objectApiName: 'MeetingRec',
+    //             fieldApiName: fieldApiName,
+    //             pageParam: 1,
+    //             pageSize: 25,
+    //             q: search,
+    //             searchType: "Recent",
+    //             targetApiName: 'SystemUser',
+    //             body: {
+    //                 sourceRecord: {
+    //                     apiName: 'MeetingRec',
+    //                     fields: {
+    //                         Id: null,
+    //                         RecordTypeId: ""
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }]
+    // }
+    // if (Lktp == '8') {
+    //     obj.actions[0].params.targetApiName = 'SystemUser';
+    // }
+    // if (Lktp == '20034') {
+    //     obj.actions[0].params.targetApiName = 'ResourceOrg';
+    // }
+    // let d = {
+    //     message: JSON.stringify(obj)
+    // }
+    // proxy.$post(Interface.lookup, d).then(res => {
+    //     let list = res.actions[0].returnValue.lookupResults.records;
+    //     let arr = [];
+    //     list.forEach(item => {
+    //         arr.push({
+    //             ID: item.fields.Id.value,
+    //             Name: item.fields.Name.value
+    //         })
+    //     });
+    //     data[fieldApiName] = data[fieldApiName].concat(arr);
+    //     data[fieldApiName] = uniqu(data[fieldApiName], 'ID');
+    // })
+
+    let filterQuery='';
+        if(search){
+            if(Lktp == '8'){
+                filterQuery="\nFullName\tcontains\t"+search;
+            }
+            else if(Lktp == '20034'){
+                filterQuery="\nName\tcontains\t"+search;
+            }
+        }
+        if(props.objectTypeCode=='20503'){
+            filterQuery+="\nResourceTypeCode\teq\t1";
+        }
+        let entityName='SystemUser';
+        let displayColumns='FullName,OrganizationId,BusinessUnitId,EmployeeId';
+        if (Lktp == '20034') {
+            entityName='ResourceOrg';
+            displayColumns='Name';
+        }
+        let d = {
+            filterId: "",
+            objectTypeCode:Lktp,
+            entityName:entityName,
+            filterQuery: filterQuery,
+            page: 1,
+            rows: 10,
+            displayColumns:displayColumns
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            var list = [];
+            if(res&&res.nodes){
+                for (var i = 0; i < res.nodes.length; i++) {
+                    var item = res.nodes[i];
+                    for(var cell in item){
+                        if(cell!='id'&&cell!='nameField'){
+                            item[cell]=girdFormatterValue(cell,item);
                         }
                     }
+                    item.Name=item.FullName?item.FullName:item.Name;
+                    item.ID = item.id;
+                    list.push(item)
                 }
             }
-        }]
-    }
-    if (Lktp == '8') {
-        obj.actions[0].params.targetApiName = 'SystemUser';
-    }
-    if (Lktp == '20034') {
-        obj.actions[0].params.targetApiName = 'ResourceOrg';
-    }
-    let d = {
-        message: JSON.stringify(obj)
-    }
-    proxy.$post(Interface.lookup, d).then(res => {
-        let list = res.actions[0].returnValue.lookupResults.records;
-        let arr = [];
-        list.forEach(item => {
-            arr.push({
-                ID: item.fields.Id.value,
-                Name: item.fields.Name.value
-            })
-        });
-        data[fieldApiName] = data[fieldApiName].concat(arr);
-        data[fieldApiName] = uniqu(data[fieldApiName], 'ID');
-        //console.log(data[fieldApiName])
-    })
-
-    // proxy.$get(Interface.uilook, {
-    //         Lktp: Lktp,
-    //         Lksrch: search,
-    //     })
-    //     .then((res) => {
-    //         let listData = res.listData;
-    //         if(Lktp=='30020'){
-    //             data.OwningUser = listData;
-    //         }
-    //         else{
-    //             data.RoomId = listData;
-    //         }
-
-    //     });
-
+            data[fieldApiName] = data[fieldApiName].concat(list);
+            data[fieldApiName] = uniqu(data[fieldApiName], 'ID');
+        })
 };
 // const getPickerList = () => {
 //     proxy.$get(Interface.schedule.pickList, {
@@ -745,9 +780,21 @@ const calendarDayChange = (e) => {
     }
 }
 onMounted(() => {
-    data.height = document.documentElement.clientHeight - 370;
+    data.height = document.documentElement.clientHeight - 220;
+    if (document.documentElement.clientHeight - 505 > 100) {
+        data.height2 = document.documentElement.clientHeight - 505;
+    }
+    else {
+        data.height2 = 100;
+    }
     window.addEventListener("resize", (e) => {
-        data.height = document.documentElement.clientHeight - 370;
+        data.height = document.documentElement.clientHeight - 220;
+        if (document.documentElement.clientHeight - 505 > 100) {
+            data.height2 = document.documentElement.clientHeight - 505;
+        }
+        else {
+            data.height2 = 100;
+        }
     });
 });
 
@@ -820,7 +867,7 @@ const getDetail = () => {
 
 }
 if (props.id) {
-    data.title = '编辑会议';
+    data.title = '编辑';
     getDetail();
 }
 else {
@@ -963,10 +1010,6 @@ defineExpose({ clearForm, handleSubmit })
 <style lang="less" scoped>
 @import url("@/style/modal.less");
 
-.ant-modal-content .modalContainer .modalCenter {
-    /* height: 500px !important; */
-}
-
 .section {
     .sectionTitle {
         height: 30px;
@@ -1004,6 +1047,7 @@ defineExpose({ clearForm, handleSubmit })
 
 .ant-form-item {
     position: relative;
+    margin-bottom: 5px !important;
 }
 
 .selectIcon {
@@ -1161,8 +1205,6 @@ defineExpose({ clearForm, handleSubmit })
                 color: #424242;
             }
 
-            input::placeholder {}
-
             .formRow {
                 display: flex;
                 min-height: 48px;
@@ -1234,7 +1276,10 @@ defineExpose({ clearForm, handleSubmit })
     .ant-select-selection-item-content .ant-avatar {
         display: none !important;
     }
-
+    :deep .ant-select-selector{
+        border: none !important;
+        outline: 0 !important;
+    }
     .ant-select-selection-item .ant-avatar {
         display: none !important;
     }
@@ -1247,9 +1292,24 @@ defineExpose({ clearForm, handleSubmit })
         margin-top: 0;
         height: 100%;
     }
+    .formContent .leftForm .formWrap .formRow{
+        min-height: 30px !important;
+    }
+    .selectIcon{
+        top:5px !important;
+    }
+    .formContent .leftForm .formWrap .formRow .timeBox .rowTime{
+        margin-bottom: 0px !important;
+    }
+    .formContent .leftForm .formWrap{
+        padding: 10px 16px 0 8px !important;
+    }
 }
 
 .ant-select-item-option-content .ant-avatar {
     margin-right: 8px !important;
+}
+.ant-modal-wrap{
+    overflow: hidden !important;
 }
 </style>

@@ -67,6 +67,8 @@
       @ok="refreshPeople"></radio-user>
     <Delete v-if="isDelete" :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople"
       :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+      <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser = false"
+      @select="handleSelectUsers" />
   </div>
 </template>
 <script setup>
@@ -93,6 +95,7 @@ import {
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
 import { message } from "ant-design-vue";
+import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 import RadioUser from "@/components/commonModal/MultipleUser.vue";
 import Delete from "@/components/listView/Delete.vue";
 const { proxy } = getCurrentInstance();
@@ -185,13 +188,14 @@ const data = reactive({
     },
   ],
   height: 100,
+  isMultipleUser:false
 });
 const changeTabs = (e) => {
   data.activeKey = e;
   getQuery();
 };
 const columnList = toRaw(columns);
-const { height, activeKey, tabs, listData, searchVal, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, deleteDesc, external, isRadioUser } = toRefs(data);
+const { isMultipleUser,height, activeKey, tabs, listData, searchVal, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, deleteDesc, external, isRadioUser } = toRefs(data);
 const getQuery = () => {
   // proxy.$get(Interface.user.groupUser, {}).then((res) => {
   //   data.listData = res.rows;
@@ -257,13 +261,15 @@ const sizeChange = (current, size) => {
 getQuery();
 // 添加成员
 const AddPeople = () => {
-  data.isRadioUser = true;
+  //data.isRadioUser = true;
   data.RoleCode = 0;
+  data.isMultipleUser=true;
 }
 // 添加管理员
 const AddAdmin = () => {
   data.RoleCode = 2;
-  data.isRadioUser = true;
+  //data.isRadioUser = true;
+  data.isMultipleUser=true;
 };
 const refreshPeople = (e) => {
   getQuery();
@@ -310,6 +316,18 @@ const getUserData = (params) => {
 
   });
 
+};
+//多选
+const handleSelectUsers = (params) => {
+  // console.log("多选用户:", params);
+  let addUsers = params.map(item => {
+    item.key = item.id;
+    return item;
+  })
+  addUsers.forEach(item => {
+    getUserData(item);
+  });
+  data.isMultipleUser = false;
 };
 defineExpose({ getQuery, PersonnelLst });
 //删除

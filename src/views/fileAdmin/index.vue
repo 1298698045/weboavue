@@ -294,7 +294,6 @@ import {
   nextTick
 } from "vue";
 import { KGBrowser, isSupportOfficePlug } from "@/jgfiles/js/WebOffice.js";
-import { useRouter, useRoute } from "vue-router";
 import {
   SearchOutlined,
   MoreOutlined,
@@ -320,6 +319,9 @@ import PdfView from "@/components/file/PdfView.vue";
 import Confirm from "@/components/commonModal/Confirm.vue";
 import { formTreeData } from "@/utils/common.js";
 import { message } from "ant-design-vue";
+import { useRouter, useRoute } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 const { proxy } = getCurrentInstance();
 const formRef = ref();
 const handleReset = () => {
@@ -328,7 +330,6 @@ const handleReset = () => {
   data.pagination.current = 1;
   getQuery();
 };
-const router = useRouter();
 const formState = reactive({
   Name: "",
   startDate: "",
@@ -337,12 +338,12 @@ const formState = reactive({
 });
 const time = ref();
 const columns = toRaw([
-  {
-    title: "序号",
-    dataIndex: "number",
-    key: "number",
-    width: 70,
-  },
+  // {
+  //   title: "序号",
+  //   dataIndex: "number",
+  //   key: "number",
+  //   width: 70,
+  // },
   {
     title: "选择",
     dataIndex: "checked",
@@ -953,6 +954,8 @@ const handleMoveFile = (item) => {
   data.fileParams = {
     id: item.id,
     name: item.name,
+    type: item.type,
+    FolderId: item.FolderId||item.ParentId
   };
   data.isFileMove = true;
 };
@@ -1256,6 +1259,11 @@ const handleRowDelete = (id) => {
     message.error("删除失败！");
   });
 }
+watch(() => route, (newVal, oldVal) => {
+    if (route.path == '/lightning/o/ContentDocument/home') {
+      getQuery();
+    }
+}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
 .wrapper {

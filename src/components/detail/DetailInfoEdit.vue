@@ -853,5 +853,14 @@ defineExpose({handleSubmit,getData})
                 }
             }
         }
+        .section .sectionRow .sectionItem :deep .ant-row {
+          width: 100%;
+          display: flex !important;
+
+          .ant-form-item-label {
+            min-width: 95px !important;
+            text-align: right !important;
+          }
+        }
     }
 </style>

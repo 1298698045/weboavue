@@ -47,7 +47,7 @@ const staticRoutes = [
         },
       },
       {
-        path: "/lightning/page/dashboard",
+        path: "/lightning/page/dashboard/:sObjectName",
         name: "DashboardHome",
         meta: {
           name: "DashboardHome"
@@ -88,7 +88,7 @@ const staticRoutes = [
   {
     path: "/Meeting/signin/screen",
     name: "SigninScreen",
-    component: () => import("../views/meeting/dynamicSign/index.vue"),
+    component: () => import("../views/meeting/dynamicSign/index2.vue"),
     meta: {
       name: "签到屏"
     },
@@ -96,7 +96,7 @@ const staticRoutes = [
   {
     path: "/Meeting/signoff/screen",
     name: "SignoffScreen",
-    component: () => import("../views/meeting/dynamicSign/index.vue"),
+    component: () => import("../views/meeting/dynamicSign/index2.vue"),
     meta: {
       name: "签退屏"
     },
@@ -133,7 +133,7 @@ const staticRoutes = [
     ]
   },
   {
-    path: "/Meeting/detail",
+    path: "/lightning/r/meeting/view",
     name: "MeetingDetailView",
     component: () => import("../views/meeting/detail/MeetingDetailView.vue"),
     meta: {
@@ -253,16 +253,16 @@ const staticRoutes = [
       name: "个人中心"
     },
     children: [
-      // {
-      //   path: "/workspace/personal/home",
-      //   name: "PersonalHome",
-      //   component: () => import("../views/workspace/personalCenter/index.vue"),
-      //   icon: "xinjian",
-      //   meta: {
-      //     icon: "xinjian",
-      //     name: "个人中心",
-      //   },
-      // },
+      {
+        path: "/workspace/personal/home",
+        name: "PersonalHome",
+        component: () => import("../views/workspace/personalCenter/index.vue"),
+        icon: "xinjian",
+        meta: {
+          icon: "xinjian",
+          name: "个人中心",
+        },
+      },
       {
         path: "/workspace/ChangePassWord",
         name: "ChangePassWord",
