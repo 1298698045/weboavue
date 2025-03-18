@@ -63,7 +63,9 @@
                 <div class="calendar-wrapper">
                     <a-calendar :locale="locale" v-model:value="date" :fullscreen="false" @panelChange="onPanelChange" @change="changeCalendar">
                         <template #dateCellRender="{ current }">
-                            <span class="tagRadius" v-if="getIsRecord(current)"></span>
+                            <span style="display: inline-block;width: 6px;height: 8px;">
+                                <span class="tagRadius" v-if="getIsRecord(current)"></span>
+                            </span>
                         </template>
                     </a-calendar>
                     <div class="planDataEvent">

@@ -91,17 +91,24 @@
 </script>
 <style lang="less" scoped>
     @import url(@/style/protal/widget.less);
+    .widgetItem{
+        &:hover{
+            /* background: rgba(0,0,0,0.08); */
+            box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .5);
+        }
+    }
     .statsCard_content{
         padding: 5px 10px;
         flex: 1 1 auto;
         height: 100%;
         overflow: auto;
+        cursor: pointer;
         .stats-card-container{
             height: 100%;
             width: 100%;
             display: flex;
             align-items: center;
-            background-color: #fff;
+            /* background-color: #fff; */
             color: #666666;
             .stats-card-left{
                 flex: 3 1;
@@ -114,6 +121,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                font-size: 12px;
             }
             img{
                 width: 100%;

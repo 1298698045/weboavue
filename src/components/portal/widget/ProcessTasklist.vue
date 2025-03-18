@@ -156,11 +156,13 @@
             },
             {
                 column: "CreatedByName",
-                label: "创建人"
+                label: "创建人",
+                width: "180px"
             },
             {
                 column: "CreatedOn",
-                label: "创建日期"
+                label: "创建日期",
+                width: "180px"
             }
         ],
         current: 0,

@@ -53,7 +53,7 @@
         <template v-else>
             <div class="card-body">
                 <div class="quick-wrapper">
-                    <div class="quick-item" v-for="item in listData">
+                    <div class="quick-item" v-for="(item, index) in listData" :key="index">
                         <div class="quick-item-content">
                             <div class="quick-item-icon">
                                 <img src="@/assets/img/preview.png" alt="">
@@ -137,17 +137,24 @@
             transition: all .3s;
             border: 1px solid transparent;
             text-align: center;
+            display: flex;
+            justify-content: center;
             .quick-item-content{
-                width: 100%;
+                /* width: 100%; */
                 display: flex;
                 align-items: center;
                 padding: 0;
-                height: 100%;
+                /* height: 100%; */
                 border: none;
                 border-radius: 0;
                 position: absolute;
                 flex-direction: column;
                 justify-content: center;
+                padding: 10px 20px;
+                &:hover{
+                    cursor: pointer;
+                    background: rgba(0,0,0,0.08);
+                }
                 .quick-item-icon{
                     img{
                         width: 46px;
@@ -161,6 +168,7 @@
                     font-size: 12px;
                 }
             }
+            
         }
     }
 </style>

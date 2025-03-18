@@ -81,7 +81,15 @@
     const { columns, tableData } = toRefs(data);
     if(props.item && props.item.properties){
         let { tableColumns } = props.item.properties;
-        data.columns = tableColumns;
+        console.log("tableColumns", tableColumns);
+        data.columns = tableColumns.map(item=>{
+            if(['D','F','DT_M','TP','Year','Month','Y_M'].includes(item.type)){
+                item.width = '180px';
+            }else if(['U','O','Y'].includes(item.type)){
+                item.width = '110px';
+            }
+            return item;
+        });
     }
 
     const gotoMore = () => {

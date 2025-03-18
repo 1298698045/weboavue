@@ -5,7 +5,7 @@
                 <table :class="themeType+'_table'">
                     <thead>
                         <tr>
-                            <th v-for="(item, index) in computedColumns" :key="index">
+                            <th v-for="(item, index) in computedColumns" :key="index" :style="{width:item.width ? item.width : 'auto'}">
                                 <div>
                                     {{item.label}}
                                 </div>
@@ -28,7 +28,7 @@
                         <!-- <th v-if="themeType=='modern'">
                             <a-checkbox></a-checkbox>
                         </th> -->
-                        <th v-for="(item, index) in computedColumns" :key="index">
+                        <th v-for="(item, index) in computedColumns" :key="index" :style="{width:item.width ? item.width : 'auto'}">
                             <div>
                                 {{item.label}}
                             </div>
@@ -292,12 +292,12 @@
                         width: 100%;
                         display: block;
                         a{
-                            color: #333333;
+                            color: #333333 !important;
                             max-width: 100% !important;
                             display: inline-block;
                             white-space: nowrap;
                             &:hover{
-                                color: #4d7ad8;
+                                color: #4d7ad8 !important;
                             }
                         }
                     }
