@@ -584,9 +584,9 @@
           position: relative;
           text-align: center;
           width: 100%;
-          height: 100%;
+          height: 200px !important;
           margin-bottom: 20px;
-          min-height:210px;
+          min-height:200px;
           img{
               width: 190px;
               height: 190px;

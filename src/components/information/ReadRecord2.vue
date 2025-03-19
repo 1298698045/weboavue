@@ -213,8 +213,8 @@ var columns = [
   },
   {
     title: "阅读时间",
-    dataIndex: "ReadedOn",
-    key: "ReadedOn"
+    dataIndex: "ReadOn",
+    key: "ReadOn"
   },
   {
     title: "IP地址",
@@ -307,10 +307,10 @@ const getQuery = () => {
     filterQuery += '\nBusinessUnitName\tcontains\t' + data.BusinessUnitName;
   }
   if (data.Checkin1) {
-    filterQuery += '\nReadedOn\tge\t' + data.Checkin1;
+    filterQuery += '\nReadOn\tge\t' + data.Checkin1;
   }
   if (data.Checkin2) {
-    filterQuery += '\nReadedOn\tle\t' + data.Checkin2;
+    filterQuery += '\nReadOn\tle\t' + data.Checkin2;
   }
   proxy.$post(Interface.list2, {
     filterId: '',
@@ -346,8 +346,8 @@ const getQuery = () => {
           if (cell != 'id' && cell != 'nameField') {
             item[cell] = girdFormatterValue(cell, item);
           }
-          if (cell == 'ReadedOn') {
-            item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
+          if (cell == 'ReadOn') {
+            item[cell] = item[cell] ? dayjs(item[cell].split('.')[0]).format("YYYY-MM-DD HH:mm") : '';
           }
         }
         list.push(item)

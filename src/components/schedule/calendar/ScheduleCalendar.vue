@@ -442,7 +442,7 @@
         BgColor:'',
         CalendarsData:[],
         OtherCalendarList:[],
-        height2:0,
+        height2:document.documentElement.clientHeight - 275,
         CalendarActionsConfig:{
             canAddEvent: false,
             canDragAndDropItems: false,
@@ -938,19 +938,9 @@
     }
 
     onMounted(()=>{
-        if(calendarWrap&&calendarWrap.value){
-            let h = calendarWrap.value.clientHeight-105;
-            let h1 = calendarList1.value.clientHeight;
-            let h2=h-h1;
-            data.height2=h2;
-        }
+        data.height2=document.documentElement.clientHeight - 275;
         window.addEventListener("resize", (e) => {
-            if(calendarWrap&&calendarWrap.value){
-                let h = calendarWrap.value.clientHeight-105;
-                let h1 = calendarList1.value.clientHeight;
-                let h2=h-h1;
-                data.height2=h2+45;
-            }
+            data.height2=document.documentElement.clientHeight - 275;
         });
         let userInfo=window.localStorage.getItem('userInfo');
         if(userInfo){
@@ -961,16 +951,17 @@
         }
         nextTick(()=>{
             // calendarTypeChange(data.calendarType);
-            getOtherCalendarList();
+            // getOtherCalendarList();
         })
     })
 watch(() => route, (newVal, oldVal) => {
     data.showComponent = false;
+    data.height2=document.documentElement.clientHeight - 275;
     nextTick(() => {
         data.showComponent = true;
         setTimeout(function(){
-            calendarTypeChange(data.calendarType);
             getOtherCalendarList();
+            calendarTypeChange(data.calendarType);
         },500)
     })
 }, { deep: true, immediate: true })

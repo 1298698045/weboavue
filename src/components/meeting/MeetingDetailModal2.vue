@@ -93,11 +93,11 @@
     }
     const openFullSign= (num) => {
         //window.open('http://192.168.1.200:82/apps/meetings/dynamicSign.aspx?id=8f9c33e1-52a4-4dcd-9ade-9e95484a6f1a');
-        let link='/Meeting/signin/screen';
-        let name='SigninScreen';
+        let link='/Meeting/checkin/screen';
+        let name='CheckinScreen';
         if(num*1==1){
-          link='/Meeting/signoff/screen';
-          name='SignoffScreen';
+          link='/Meeting/checkout/screen';
+          name='CheckoutScreen';
         }
         let url = router.resolve({
             path:link,

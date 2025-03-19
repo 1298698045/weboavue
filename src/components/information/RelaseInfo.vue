@@ -35,38 +35,11 @@
                   </a-form-item>
                 </div>
               </div>
-              <div class="sectionRow">
-                <div class="sectionItem">
-                  <a-form-item name="IsImportant" label="重要信息">
-                    <a-checkbox v-model:checked="formState.IsImportant"></a-checkbox>
-                  </a-form-item>
-                </div>
-                <div class="sectionItem">
-                  <a-form-item name="IsTop" label="置顶信息">
-                    <a-checkbox v-model:checked="formState.IsTop"></a-checkbox>
-                  </a-form-item>
-                </div>
-              </div>
-              <div class="sectionRow">
-                <div class="sectionItem">
-                  <a-form-item name="AttachRightCode" label="附件权限">
-                    <a-select v-model:value="formState.AttachRightCode" placeholder="请选择附件权限">
-                      <a-select-option v-for="(item, index) in AttachRightCodeList" :value="item.value" :key="index">{{
-                        item.label }}</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </div>
-                <div class="sectionItem">
-                  <a-form-item name="EndTopDate" label="置顶截止">
-                    <a-date-picker v-model:value="formState.EndTopDate" show-time placeholder="置顶截止" />
-                  </a-form-item>
-                </div>
-              </div>
+              
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="ApprovedOn" label="发布时间" :rules="[{ required: true, message: '请输入发布时间' }]">
-                    <a-date-picker v-model:value="formState.ApprovedOn" valueFormat="YYYY-MM-DD HH:mm:ss" show-time
-                      placeholder="发布时间" />
+                    <a-date-picker v-model:value="formState.ApprovedOn" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="发布时间" />
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
@@ -91,6 +64,38 @@
                     </a-tree-select>
                   </a-form-item>
                 </div>
+                <div class="sectionItem">
+                  <a-form-item name="AttachRightCode" label="附件权限">
+                    <a-select v-model:value="formState.AttachRightCode" placeholder="请选择附件权限">
+                      <a-select-option v-for="(item, index) in AttachRightCodeList" :value="item.value" :key="index">{{
+                        item.label }}</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </div>
+              </div>
+              <div class="sectionRow">
+                <div class="sectionItem">
+                  <a-form-item name="IsImportant" label="重要信息">
+                    <a-checkbox v-model:checked="formState.IsImportant"></a-checkbox>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="IsTop" label="置顶信息">
+                    <a-checkbox v-model:checked="formState.IsTop"></a-checkbox>
+                  </a-form-item>
+                </div>
+              </div>
+              <div class="sectionRow">
+                <div class="sectionItem">
+                  <a-form-item name="IsPublic" label="查看范围">
+                    <a-checkbox v-model:checked="formState.IsPublic">所有人可以查看</a-checkbox>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem" v-if="formState.IsTop">
+                  <a-form-item name="EndTopDate" label="置顶截止">
+                    <a-date-picker v-model:value="formState.EndTopDate" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="置顶截止" />
+                  </a-form-item>
+                </div>
               </div>
               <div class="sectionRow">
                 <div class="sectionItem">
@@ -100,12 +105,8 @@
                     </a-checkbox-group>
                   </a-form-item>
                 </div>
-                <div class="sectionItem">
-                  <a-form-item name="IsPublic" label="查看范围">
-                    <a-checkbox v-model:checked="formState.IsPublic">所有人可以查看</a-checkbox>
-                  </a-form-item>
-                </div>
               </div>
+              
             </div>
 
           </a-form>
@@ -800,7 +801,7 @@ const getDetail = () => {
       formState.IsImportant = fields.IsImportant.value ? true : false;
       formState.IsTop = fields.IsTop.value * 1 == 1 ? true : false;
       formState.AttachRightCode = fields.AttachRightCode.value * 1;
-      formState.StateCode = fields.StateCode.value * 1;
+      //formState.StateCode = fields.StateCode.value * 1;
       formState.EndTopDate = fields.EndTopDate && fields.EndTopDate.value ? dayjs(fields.EndTopDate.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '';
       formState.ApprovedOn = fields.ApprovedOn && fields.ApprovedOn.value ? dayjs(fields.ApprovedOn.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '';
       formState.KeyWords = fields.KeyWords.value ? (fields.KeyWords.value).split(',') : [];

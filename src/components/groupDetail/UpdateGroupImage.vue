@@ -223,7 +223,7 @@
             data.imageUrl='/'+Interface.viewAvatar+'/Group/'+props.id;
           }
           else{
-            data.imageUrl=require('@/assets/img/avatar-r.png');
+            data.imageUrl='/src/assets/img/avatar-r.png';
           }
         }
     })
@@ -346,6 +346,8 @@
     }
     .uploadcurrent{
       margin: 25px 0;
+      width: 190px;
+      height: 190px;
     }
   }
   .uploadtext1{

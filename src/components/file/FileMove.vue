@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel"
+        <a-modal v-model:open="props.isShow" width="480px" :style="{top:top+'px'}" :maskClosable="false" @cancel="handleCancel"
             @ok="handleSubmit">
             <template #title>
                 <div>
@@ -72,17 +72,18 @@ const handleCancel = () => {
 };
 const data = reactive({
     title: "移动",
-    height: document.documentElement.clientHeight - 300,
+    height: 350,
     treeData: [],
     ItemId: "",
     DestinationId: "",
     selectedKeys: [],
     fieldNames:{
         children:'children', title:'name', key:'id'
-    }
+    },
+    top:(document.documentElement.clientHeight - 480)/2
 });
 const {
-    title,selectedKeys,fieldNames,
+    title,selectedKeys,fieldNames,top,
     height, treeData, ItemId, DestinationId
 } = toRefs(data);
 watch(() => props.fileParams, (newVal, oldVal) => {
@@ -100,7 +101,8 @@ onMounted(() => {
         data.selectedKeys = [props.fileParams.FolderId];
     }
     window.addEventListener("resize", (e) => {
-        data.height = document.documentElement.clientHeight - 300;
+        data.height =350;
+        data.top = (document.documentElement.clientHeight - 480)/2
     });
 });
 const getTreeData = () => {

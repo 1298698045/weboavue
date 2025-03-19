@@ -86,16 +86,16 @@ const staticRoutes = [
     component: () => import("../views/email/writeEmail/index.vue"),
   },
   {
-    path: "/Meeting/signin/screen",
-    name: "SigninScreen",
+    path: "/Meeting/checkin/screen",
+    name: "CheckinScreen",
     component: () => import("../views/meeting/dynamicSign/index2.vue"),
     meta: {
       name: "签到屏"
     },
   },
   {
-    path: "/Meeting/signoff/screen",
-    name: "SignoffScreen",
+    path: "/Meeting/checkout/screen",
+    name: "CheckoutScreen",
     component: () => import("../views/meeting/dynamicSign/index2.vue"),
     meta: {
       name: "签退屏"
@@ -538,6 +538,39 @@ const staticRoutes = [
           objectTypeCode:'100105',
           entityName:'TemplateFile',
         },
+      }
+    ]
+  },
+  {
+    path: "/lightning/page/KbMap/home",
+    name: "KbMapHomePage",
+    component: () => import("../views/knowledge/KnowledgeMap/page.vue"),
+    meta: {
+      name: "地图主页全屏"
+    }
+  },
+  {
+    path: "/ContentFolderTree",
+    name: "ContentFolderTree",
+    component: Layout,
+    redirect: "/lightning/page/ContentFolderTree",
+    meta: {
+      name: "目录管理"
+    },
+    children: [
+      {
+        path: "/lightning/page/ContentFolderTree",
+        //component: () => import("../views/listView/index2.vue"),
+        component: () => import("../views/NotFound.vue"),
+        name: "docOversee",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "目录管理",
+          icon: "huiyicanhuiren",
+          entityType:'5080',
+          objectTypeCode:'5080',
+          entityName:'ContentFolder',
+        }
       }
     ]
   }

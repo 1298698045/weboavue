@@ -83,7 +83,7 @@ export const routesMapping = {
         KnowledgeHome: () => import("../views/knowledge/Home/index.vue"),
         Video: () => import("../views/knowledge/Video/List.vue"),
         album: () => import("../views/knowledge/Album/index.vue"),
-        ContentFolder: () => import("../views/knowledge/Contentfolder/permission.vue"),
+        ContentFolderPermission: () => import("../views/knowledge/Contentfolder/permission.vue"),
         QuestionAnswer: () => import("../views/knowledge/QuestionAnswer/index.vue"),
         DocumentReadLog: ()=>import("../views/knowledge/ReadLog/index.vue"),
         // ContentViewTemplate: {

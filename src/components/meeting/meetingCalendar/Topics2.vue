@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="panel-bd panel-bd1">
-        <a-table :columns="columns" :dataSource="listData" :scroll="{ y: tableHeight - 310 }" :pagination="false"
+        <a-table :columns="columns" :dataSource="listData" :pagination="false"
           @change="handleTableChange">
           <template #bodyCell="{ column, index, record }">
             <template v-if="column.key === 'index'">
@@ -96,11 +96,11 @@
               </template> -->
           </template>
         </a-table>
-        <div class="pageWrap">
+        <!-- <div class="pageWrap">
           <a-pagination show-size-changer show-quick-jumper :pageSizeOptions="['10', '20', '50', '80', '100']"
             :pageSize="pagination.pageSize" @showSizeChange="sizeChange" @change="handleTableChange"
             v-model:current="pagination.current" :total="pagination.total" :show-total="total => `共 ${total} 条`" />
-        </div>
+        </div> -->
       </div>
     </div>
     <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser"
@@ -573,10 +573,11 @@ onMounted(() => {
 <style lang="less">
 .TopicsWrap {
   width: 100%;
-
+  height: 100%;
   .panel {
     margin-bottom: 0;
     padding-bottom: 0;
+    height: auto !important;
   }
 }
 

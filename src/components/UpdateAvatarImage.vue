@@ -215,12 +215,12 @@
     proxy.$post(Interface.detail,obj).then(res=>{
         if(res&&res.actions&&res.actions[0]){
           let fields = res.actions[0].returnValue.fields;
-          let url=fields.AvatarUrl&&fields.AvatarUrl.value?fields.AvatarUrl.value:'';
+          let url=fields.AvatarImg&&fields.AvatarImg.value?fields.AvatarImg.value:'';
           if(url){
-            data.imageUrl='/'+Interface.viewAvatar+'/SystemUser/'+props.id;
+            data.imageUrl='/api/one/user/avatar/'+props.id;
           }
           else{
-            data.imageUrl=require('@/assets/img/user/MyResume/showEmpAvatar.png');
+            data.imageUrl='/src/assets/img/user/MyResume/showEmpAvatar.png';
           }
         }
     })
@@ -244,7 +244,7 @@
                     apiName: 'SystemUser',
                     objTypeCode: 8,
                     fields: {
-                      AvatarUrl:'\\SystemUser\\'+props.id
+                      AvatarImg:'\\SystemUser\\'+props.id
                     }
                   }              
                 }
@@ -343,6 +343,8 @@
     }
     .uploadcurrent{
       margin: 25px 0;
+      width: 190px;
+      height: 190px;
     }
   }
   .uploadtext1{

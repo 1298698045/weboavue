@@ -1,5 +1,5 @@
 <template>
-  <div class="KnowledgeMapFirst">
+  <div class="KnowledgeMapFirstPage">
     <div class="panel" :style="{ height: height + 'px' }">
       <div class="panel-bd">
         <section id="directory" data-bi-name="directory-hero" class="hero hero-sm hero-image gradient-border-right gradient-border-body-accent background-color-body-accent">
@@ -20,8 +20,7 @@
 													<div class="column is-narrow">
 														<button class="button button-primary button-filled button-lg margin-left-xxs" type="button" id="directory-search-submit" @click="onSearch">
 															<span class="icon" aria-hidden="true">
-																<!-- <i class="iconfont icon-sousuo"></i> -->
-                                <SearchOutlined />
+																<SearchOutlined />
 															</span>
 															<span>
 																搜索
@@ -72,7 +71,7 @@ import {
   SwapRightOutlined,
   ArrowUpOutlined,
   ArrowDownOutlined,
-  SearchOutlined
+  SearchOutlined,
 } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
@@ -151,19 +150,19 @@ const onClear = (e) => {
 
 onMounted(() => {
   let h = document.documentElement.clientHeight;
-      data.height=h-75;
+      data.height=h-0;
       window.addEventListener("resize", (e) => {
         let h = document.documentElement.clientHeight;
-        data.height=h-75;
+        data.height=h-0;
       });
       getQuery();
 })
 </script>
 <style lang="less">
-.KnowledgeMapFirst {
+.KnowledgeMapFirstPage {
   width: 100%;
   .panel{
-    padding: 12px 8px;
+    padding: 0;
     margin-bottom: 0;
     background: #e8edf4;
     overflow-x: hidden;

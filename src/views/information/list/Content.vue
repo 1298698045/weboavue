@@ -934,19 +934,19 @@ const handleDeleteLeft = (e) => {
   data.recordId = e;
   data.isDelete = true;
 }
-const confirmOk=()=>{
-  if(data.confirmTitle == '批量发布'){
+const confirmOk = () => {
+  if (data.confirmTitle == '批量发布') {
     let list = gridRef.value.getCheckList();
-    for(var i=0;i<list.length;i++){
-      changeRelease(1,list[i].id);
+    for (var i = 0; i < list.length; i++) {
+      changeRelease(1, list[i].id);
     }
-  }else if(data.confirmTitle == '批量取消发布'){
+  } else if (data.confirmTitle == '批量取消发布') {
     let list = gridRef.value.getCheckList();
-    for(var i=0;i<list.length;i++){
-      changeRelease(0,list[i].id);
+    for (var i = 0; i < list.length; i++) {
+      changeRelease(0, list[i].id);
     }
   }
-  else{
+  else {
     data.isConfirm = false;
   }
 }
@@ -1046,10 +1046,10 @@ watch(() => route, (newVal, oldVal) => {
   if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
     if (route.path == '/lightning/o/Content/home') {
       getTreeData();
+      setTimeout(function () {
+        handleSearch();
+      }, 500)
     }
-    setTimeout(function () {
-      handleSearch();
-    }, 500)
   }
 }, { deep: true, immediate: true })
 onMounted(() => {
@@ -1376,6 +1376,7 @@ onMounted(() => {
 :deep .ant-tree-treenode:hover .tree-btn {
   display: block !important;
 }
+
 .ContentWrap .todo-content {
   width: unset !important;
 
@@ -1394,5 +1395,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>

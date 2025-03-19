@@ -59,6 +59,9 @@ export const girdFormatterValue = (key, row, nameField) => {
         if (row[key] && row[key].img) {
             // let imglink = '/src/assets' + row[key].img
             let imglink = row[key].img;
+            if(imglink&&imglink.indexOf('/src/assets')<0){
+                imglink='/src/assets' + row[key].img;
+            }
             val = '<img style="height:18px;width:24px;margin-left:7px;" src="' + imglink + '">';
         }
         else {

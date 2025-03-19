@@ -31,9 +31,9 @@
                     </div>
                 </div>
             </div> -->
-            <div class="calendarRight">
+            <div class="calendarRight" v-if="showComponent">
                 <ListView v-if="current==0" />
-                <CalendarVue v-if="current==1" />
+                <CalendarVue v-if="current==1&&showComponent" />
             </div>
         </div>
         <NewMeeting :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" />
@@ -53,6 +53,7 @@
         defineProps,
         defineExpose,
         defineEmits,
+        nextTick
     } from "vue";
     import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
     import ListView from "@/components/meeting/meetingCalendar/List.vue";
@@ -64,13 +65,17 @@
     // 重复会议
     import NewRepeatMeeting from "@/components/meeting/meetingCalendar/NewRepeatMeeting.vue";
     import Interface from "@/utils/Interface.js";
+    import { useRouter, useRoute } from "vue-router";
+    const route = useRoute();
+    const router = useRouter();
     const { proxy } = getCurrentInstance();
     const data = reactive({
         current: 1,
         isNewMeeting: false,
-        isRepeatMeeting: false
+        isRepeatMeeting: false,
+        showComponent:true
     });
-    const { current, isNewMeeting, isRepeatMeeting } = toRefs(data);
+    const { current, isNewMeeting, isRepeatMeeting,showComponent } = toRefs(data);
     // 关闭新建
     const cancelNewMeeting = (e) => {
         data.isNewMeeting = e;
@@ -93,6 +98,14 @@
     const handleRepeatMeetingVal = (e) => {
         data.isRepeatMeeting = false;
     }
+    watch(() => route, (newVal, oldVal) => {
+    data.showComponent = false;
+    nextTick(() => {
+        setTimeout(function(){
+            data.showComponent = true;
+        },500)
+    })
+}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
     .wrappper{

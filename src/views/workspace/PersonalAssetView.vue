@@ -12,100 +12,7 @@
                       </div> -->
                       <div id="detailview" v-cloak>
                           <div class="profile-message">
-                              <div class="profile-message-leftmessage">
-                                  <div class="profile-photo">
-                                      <img :src="props.avatarUrl" :on-error="defaultImg" alt="" class="bigimg" v-if="isBig" @click="isBig=false" />
-                                      <img :src="props.avatarUrl" :on-error="defaultImg" alt="" v-if="!isBig" @click="isBig=true" />
-                                  </div>
-                                  <div class="hrm-my-card-basicInfo-left-imgwrap-op">
-                                      <div class="ant-col-6">
-                                          <div class="hrm-my-card-basicInfo-icon-circle" title="发送短信">
-                                              <MessageFilled />
-                                          </div>
-                                      </div>
-                                      <div class="ant-col-6">
-                                          <div class="hrm-my-card-basicInfo-icon-circle" title="发送邮件">
-                                              <MailFilled />
-                                          </div>
-                                      </div>
-                                      <div class="ant-col-6">
-                                          <div class="hrm-my-card-basicInfo-icon-circle" title="新建日程">
-                                              <ScheduleFilled />
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="profile-name"><label>账号类型：</label>{{'主账号'}}</div>
-                                  <div class="profile-name"><label>次账号：</label>{{1}}</div>
-                                  <div class="profile-name"><label>下属：</label>{{6}}</div>
-                                  <div class="profile-name"><label>状态：</label>{{'正式'}}</div>
-                                  <div class="profile-name"><label>最后登录日期：</label>{{'2024-11-21'}}</div>
-                              </div>
                               <div class="profile-message-rightmessage">
-                                  <div class="hrm-my-card-basicInfo-right-counts">
-                                      <div class="hrm-my-card-basicInfo-right-counts-cell">
-                                          <img :src="require('@/assets/img/hrm/workflow.png')" alt="">
-                                          <div class="hrm-my-card-basicInfo-right-counts-cell-info">
-                                              <div>流程</div>
-                                              <div title="2799" class="text-overflow">
-                                                  <span style="color: rgb(26, 183, 244); font-size: 18px;">2799</span>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="hrm-my-card-basicInfo-right-counts-cell">
-                                          <img :src="require('@/assets/img/hrm/doc.png')" alt="">
-                                          <div class="hrm-my-card-basicInfo-right-counts-cell-info">
-                                              <div>文档</div>
-                                              <div title="2827" class="text-overflow">
-                                                  <span style="color: rgb(104, 193, 44); font-size: 18px;">2827</span>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="hrm-my-card-basicInfo-right-counts-cell">
-                                          <img :src="require('@/assets/img/hrm/custom.png')" alt="">
-                                          <div class="hrm-my-card-basicInfo-right-counts-cell-info">
-                                              <div>客户</div>
-                                              <div title="15" class="text-overflow">
-                                                  <span style="color: rgb(85, 141, 228); font-size: 18px;">15</span>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="hrm-my-card-basicInfo-right-counts-cell">
-                                          <img :src="require('@/assets/img/hrm/project.png')" alt="">
-                                          <div class="hrm-my-card-basicInfo-right-counts-cell-info">
-                                              <div>项目</div>
-                                              <div title="17" class="text-overflow">
-                                                  <span style="color: rgb(41, 207, 135); font-size: 18px;">17</span>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="hrm-my-card-basicInfo-right-counts-cell">
-                                          <img :src="require('@/assets/img/hrm/cpt.png')" alt="">
-                                          <div class="hrm-my-card-basicInfo-right-counts-cell-info">
-                                              <div>资产</div>
-                                              <div title="0" class="text-overflow">
-                                                  <span style="color: rgb(246, 174, 64); font-size: 18px;">0</span>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="hrm-my-card-basicInfo-right-counts-cell">
-                                          <img :src="require('@/assets/img/hrm/cowork.png')" alt="">
-                                          <div class="hrm-my-card-basicInfo-right-counts-cell-info">
-                                              <div>协作</div>
-                                              <div title="8" class="text-overflow">
-                                                  <span style="color: rgb(130, 110, 253); font-size: 18px;">8</span>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="hrm-my-card-basicInfo-right-counts-cell">
-                                          <img :src="require('@/assets/img/hrm/weibo.png')" alt="">
-                                          <div class="hrm-my-card-basicInfo-right-counts-cell-info">
-                                              <div>微博</div>
-                                              <div title="5" class="text-overflow">
-                                                  <span style="color: rgb(251, 111, 71); font-size: 18px;">5</span>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
                                   <div class="detailInfo">
                                       <div class="fh-section" v-for="(item, index) in layoutList" :key="index">
                                           <div class="fh-section-label" v-if="item.title!='内容'&&item.title!='回执'">{{item.title}}</div>
@@ -181,7 +88,7 @@
     listData: [],
     listDataDetail: {},
     height:100,
-    id: route.query.id,
+    id: '',
     ParentSubjectName:'',
     Description:'',
   
@@ -205,34 +112,24 @@
   const { defaultImg,layoutList,isBig,record,list,detailviewloading,activesections,relatedLists,listItems,recordIds,records,id,height,listData,loading,listDataDetail,ParentSubjectName,Description} = toRefs(data);
   const getQuery = () => {
     data.listData=[];
-    let filterQuery='\nParentSubject\teq\t'+data.id;
+    let filterQuery='\nUsedBy\teq\t'+props.id;
     proxy.$post(Interface.list2, {
         filterId:'',
-        objectTypeCode:'100310',
-        entityName:'KbSubject',
+        objectTypeCode:'20013',
+        entityName:'Asset',
         filterQuery:filterQuery,
         search:'',
         page: 1,
-        rows: 100,
-        sort:'DisplayOrder',
-        order:'ASC',
-        displayColumns:'Name,ParentSubject,Description'
+        rows: 10,
+        // sort:'DisplayOrder',
+        // order:'ASC',
+        displayColumns:'Name'
     }).then(res => {
         var list = [];
         if(res&&res.nodes&&res.nodes.length){
-          for (var i = 0; i < res.nodes.length; i++) {
-              var item = res.nodes[i];
-              for(var cell in item){
-                  if(cell!='id'&&cell!='nameField'){
-                      item[cell]=girdFormatterValue(cell,item);
-                  }
-              }
-              list.push(item);
-              getArticle(item.id);
-          }
+          data.id=res.nodes[0].id;
         }
-        data.listData = list;
-        
+        getData();
     })
   };
   const getArticle=(id)=>{
@@ -311,8 +208,8 @@
                   descriptor: "",
                   callingDescriptor: "UNKNOWN",
                   params: {
-                      recordId: props.id,
-                      entityApiName: 'SystemUser',
+                      recordId: data.id||props.id,
+                      entityApiName: 'Asset',
                       defaultFieldValues: {
                           entityId: ""
                       },
@@ -351,9 +248,8 @@
           let h = document.documentElement.clientHeight;
           data.height=h;
         });
-        //getQuery();
+        getQuery();
         //getDetail();
-        getData();
   })
   </script>
   <style lang="less">
@@ -584,9 +480,9 @@
           position: relative;
           text-align: center;
           width: 100%;
-          height: 100%;
+          height: 200px !important;
           margin-bottom: 20px;
-          min-height:210px;
+          min-height:200px;
           img{
               width: 190px;
               height: 190px;
