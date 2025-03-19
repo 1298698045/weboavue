@@ -5,8 +5,7 @@
                 <a-input-search v-model:value="searchVal" placeholder="请输入名称" @change="onSearch" />
             </div>
             <div class="categoryTree-scroll">
-                <a-tree style="height: 100%;"
-                    :tree-data="categoryTree" block-node :checkStrictly="true"
+                <a-tree style="height: 100%;" :tree-data="categoryTree" block-node :checkStrictly="true"
                     :fieldNames="fieldNames" :load-data="onLoadData" @select="selectCategoryTree">
                     <!-- @expand="expandTree" @dblclick="onDoubleClick" -->
                 </a-tree>
@@ -49,8 +48,8 @@
                                         </div>
                                         <ul class="fh-dropdown__list">
                                             <li class="fh-dropdown__header fh-text-heading--label">最近列表视图</li>
-                                            <li class="fh-dropdown__item" v-for="(item, index) in filterList" :key="index"
-                                                @click.stop="handleSwitchFilter(item)">
+                                            <li class="fh-dropdown__item" v-for="(item, index) in filterList"
+                                                :key="index" @click.stop="handleSwitchFilter(item)">
                                                 <a href="javascript:void(0);">
                                                     <span class="fh-icon-utility-check">
                                                         <svg class="fh-svg" v-if="currentFilter.id == item.id"
@@ -72,7 +71,8 @@
                                     </div>
                                 </div>
                                 <div class="lockBtn" title="固定此列表视图" @click="handleLock">
-                                    <img v-if="isLock" :src="require('@/assets/pinned14.png')" class="img active" alt="" />
+                                    <img v-if="isLock" :src="require('@/assets/pinned14.png')" class="img active"
+                                        alt="" />
                                     <img v-else :src="require('@/assets/pin_italic14.png')" class="img active" alt="" />
                                 </div>
                             </div>
@@ -92,123 +92,196 @@
                 </div>
                 <div class="searchWrap">
                     <div class="searchVal">
-                        <a-input placeholder="搜索此列表..." style="width: 240px;">
-                            <template #prefix>
-                                <svg class="fh-input__icon fh-input__icon_left" focusable="false" data-key="search"
-                                    aria-hidden="true" viewBox="0 0 520 520" part="icon">
+                        <a-tooltip placement="bottomLeft" title="客户所有人别名不可搜索。使用筛选器，或改为对此字段进行排序。">
+                            <a-input placeholder="搜索此列表..." style="width: 240px;" v-model:value="queryParams.search"
+                                @pressEnter="handleSearch">
+                                <template #prefix>
+                                    <svg class="fh-input__icon fh-input__icon_left" focusable="false" data-key="search"
+                                        aria-hidden="true" viewBox="0 0 520 520" part="icon">
+                                        <g>
+                                            <path
+                                                d="M496 453L362 320a189 189 0 10-340-92 190 190 0 00298 135l133 133a14 14 0 0021 0l21-21a17 17 0 001-22zM210 338a129 129 0 11130-130 129 129 0 01-130 130z">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </template>
+                            </a-input>
+                        </a-tooltip>
+                    </div>
+                    <div class="search-btns">
+                        <a-dropdown :trigger="['click']">
+                            <a-tooltip placement="topLeft" title="列表视图控制">
+                                <a-button class="ant-btn-icon ml4">
+                                    <svg class="btn_icon" focusable="false" data-key="settings" aria-hidden="true"
+                                        viewBox="0 0 520 520" part="icon">
+                                        <g>
+                                            <path
+                                                d="M261 191c-39 0-70 31-70 70s31 70 70 70 70-31 70-70-31-70-70-70zm210 133l-37-31a195 195 0 000-68l37-31c12-10 16-28 8-42l-16-28a34 34 0 00-40-14l-46 17a168 168 0 00-59-34l-8-47c-3-16-17-25-33-25h-32c-16 0-30 9-33 25l-8 46a180 180 0 00-60 34l-46-17-11-2c-12 0-23 6-29 16l-16 28c-8 14-5 32 8 42l37 31a195 195 0 000 68l-37 31a34 34 0 00-8 42l16 28a34 34 0 0040 14l46-17c18 16 38 27 59 34l8 48a33 33 0 0033 27h32c16 0 30-12 33-28l8-48a170 170 0 0062-37l43 17 12 2c12 0 23-6 29-16l15-26c9-11 5-29-7-39zm-210 47c-61 0-110-49-110-110s49-110 110-110 110 49 110 110-49 110-110 110z">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                    <svg class="btn_icon btn_icon_small" focusable="false" data-key="down"
+                                        aria-hidden="true" viewBox="0 0 520 520" part="icon">
+                                        <g>
+                                            <path
+                                                d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </a-button>
+                            </a-tooltip>
+                            <template #overlay>
+                                <a-menu class="fh-menu listViewMenu" @click="handleMenuClick">
+                                    <span class="fh-menu-desc">列表视图控制</span>
+                                    <a-menu-item class="listView-menuItem" key="1"
+                                        :disabled="!initialData?.entityListViewPermissions?.canCreateListView">新建</a-menu-item>
+                                    <a-menu-item class="listView-menuItem" key="2">导出</a-menu-item>
+                                    <a-menu-item class="listView-menuItem" key="3">复制</a-menu-item>
+                                    <a-menu-item class="listView-menuItem" key="4">重命名</a-menu-item>
+                                    <a-menu-item class="listView-menuItem" key="5">共享设置</a-menu-item>
+                                    <a-menu-item class="listView-menuItem" key="6">选择要显示的字段</a-menu-item>
+                                    <a-menu-item class="listView-menuItem" key="7">删除</a-menu-item>
+                                    <a-menu-item class="listView-menuItem" key="8" disabled>Kanban设置</a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
+                        <a-dropdown class="ml4" :trigger="['click']">
+                            <a-tooltip placement="topLeft" title="选择列表显示">
+                                <a-button class="ant-btn-icon">
+                                    <svg class="btn_icon" focusable="false" data-key="table" aria-hidden="true"
+                                        viewBox="0 0 520 520" part="icon">
+                                        <g>
+                                            <path
+                                                d="M465 20H55c-8 0-15 7-15 15v50c0 8 7 15 15 15h410c8 0 15-7 15-15V35c0-8-7-15-15-15zM145 140H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zM145 240H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zM145 340H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zM145 440H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15z">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                    <svg class="btn_icon btn_icon_small" focusable="false" data-key="down"
+                                        aria-hidden="true" viewBox="0 0 520 520" part="icon">
+                                        <g>
+                                            <path
+                                                d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </a-button>
+                            </a-tooltip>
+                            <template #overlay>
+                                <a-menu class="fh-menu listViewMenu" style="width: 136px;">
+                                    <span class="fh-menu-desc" style="font-weight: bold;">选择列表显示</span>
+                                    <a-menu-item class="listView-menuItem" key="1">
+                                        <span class="successIcon">
+                                            <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon"
+                                                lwc-1e39mgvor8u="" data-key="check" class="iconSvg">
+                                                <g lwc-1e39mgvor8u="">
+                                                    <path
+                                                        d="M191 425L26 259c-6-6-6-16 0-22l22-22c6-6 16-6 22 0l124 125a10 10 0 0015 0L452 95c6-6 16-6 22 0l22 22c6 6 6 16 0 22L213 425c-6 7-16 7-22 0z"
+                                                        lwc-1e39mgvor8u=""></path>
+                                                </g>
+                                            </svg>
+                                        </span>
+                                        <span class="text">
+                                            列表
+                                        </span>
+                                        <span class="listView-img">
+                                            <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon"
+                                                lwc-798fdvkdslc="" data-key="table" class="iconSvg">
+                                                <g lwc-798fdvkdslc="">
+                                                    <path
+                                                        d="M465 20H55c-8 0-15 7-15 15v50c0 8 7 15 15 15h410c8 0 15-7 15-15V35c0-8-7-15-15-15zM145 140H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zM145 240H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zM145 340H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zM145 440H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15z"
+                                                        lwc-798fdvkdslc=""></path>
+                                                </g>
+                                            </svg>
+                                        </span>
+                                    </a-menu-item>
+                                    <a-menu-item class="listView-menuItem" key="2">
+                                        <span class="successIcon"></span>
+                                        <span class="text">
+                                            卡片
+                                        </span>
+                                        <span class="listView-img">
+                                            <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon"
+                                                lwc-7ieqdqdoapk="" data-key="kanban" class="iconSvg">
+                                                <g lwc-7ieqdqdoapk="">
+                                                    <path
+                                                        d="M320 175c0-8-7-15-15-15h-90c-8 0-15 7-15 15v270c0 8 7 15 15 15h90c8 0 15-7 15-15zm-180 0c0-8-7-15-15-15H35c-8 0-15 7-15 15v310c0 8 7 15 15 15h90c8 0 15-7 15-15zm360 0c0-8-7-15-15-15h-90c-8 0-15 7-15 15v230c0 8 7 15 15 15h90c8 0 15-7 15-15zm0-140c0-8-7-15-15-15H35c-8 0-15 7-15 15v50c0 8 7 15 15 15h450c8 0 15-7 15-15z"
+                                                        lwc-7ieqdqdoapk=""></path>
+                                                </g>
+                                            </svg>
+                                        </span>
+                                    </a-menu-item>
+                                    <a-menu-item class="listView-menuItem" key="3">
+                                        <span class="successIcon"></span>
+                                        <span class="text">
+                                            分屏视图
+                                        </span>
+                                        <span class="listView-img">
+                                            <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon"
+                                                lwc-4md4vihfsb1="" data-key="side_list" class="iconSvg">
+                                                <g lwc-4md4vihfsb1="">
+                                                    <path
+                                                        d="M485 40H215c-8 0-15 7-15 15v410c0 8 7 15 15 15h270c8 0 15-7 15-15V55c0-8-7-15-15-15zm-340 0H35c-8 0-15 7-15 15v50c0 8 7 15 15 15h110c8 0 15-7 15-15V55c0-8-7-15-15-15zm0 120H35c-8 0-15 7-15 15v50c0 8 7 15 15 15h110c8 0 15-7 15-15v-50c0-8-7-15-15-15zm0 120H35c-8 0-15 7-15 15v50c0 8 7 15 15 15h110c8 0 15-7 15-15v-50c0-8-7-15-15-15zm0 120H35c-8 0-15 7-15 15v50c0 8 7 15 15 15h110c8 0 15-7 15-15v-50c0-8-7-15-15-15z"
+                                                        lwc-4md4vihfsb1=""></path>
+                                                </g>
+                                            </svg>
+                                        </span>
+                                    </a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
+                        <a-tooltip placement="topLeft" title="刷新">
+                            <a-button title="刷新" class="ant-btn-icon ml4" @click="handleRefresh">
+                                <svg class="btn_icon" focusable="false" data-key="refresh" aria-hidden="true"
+                                    viewBox="0 0 520 520" part="icon">
+                                    <g>
+                                        <path
+                                            d="M465 40h-30c-8 0-15 7-15 15v70c0 9-5 13-12 7l-10-10a210 210 0 10-12 309c7-6 7-16 1-22l-21-21c-5-5-14-6-20-1a152 152 0 01-172 14 152 152 0 0177-281 150 150 0 01118 58c3 8-4 12-13 12h-70c-8 0-15 7-15 15v31c0 8 6 14 14 14h183c7 0 13-6 13-13V55c-1-8-8-15-16-15z">
+                                        </path>
+                                    </g>
+                                </svg>
+                            </a-button>
+                        </a-tooltip>
+                        <div class="btnGroup ml4">
+                            <a-tooltip placement="topLeft" title="图表">
+                                <a-button class="ant-btn-icon" :class="{'active':isChartModal}" title="图表"
+                                    @click="isChartModal=!isChartModal">
+                                    <svg class="btn_icon" focusable="false" data-key="chart" aria-hidden="true"
+                                        viewBox="0 0 520 520" part="icon">
+                                        <g>
+                                            <path
+                                                d="M455 234L250 347a20 20 0 01-30-18V84c0-10-10-18-19-15a220 220 0 10276 175c-2-10-13-15-22-10zm-178 46l197-105c12-6 16-22 8-33A302 302 0 00287 22c-14-3-27 8-27 22v226c0 9 9 14 17 10z">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </a-button>
+                            </a-tooltip>
+                            <a-tooltip placement="topLeft" title="筛选器">
+                                <a-button class="ant-btn-icon" :class="{'active':isFilterModal}" title="筛选器"
+                                    @click="handleShowFilter">
+                                    <svg class="btn_icon" focusable="false" data-key="filterList" aria-hidden="true"
+                                        viewBox="0 0 520 520" part="icon">
+                                        <g>
+                                            <path
+                                                d="M483 40H39c-15 0-22 17-13 28l194 227c6 7 9 17 9 26v144c0 8 8 15 16 15h30c8 0 14-7 14-15V321c0-10 4-19 11-26L496 68c9-11 2-28-13-28z">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </a-button>
+                            </a-tooltip>
+                        </div>
+                        <a-tooltip placement="topLeft" title="高级搜索">
+                            <a-button class="ant-btn-icon ml4" :class="{'active':isSearchModal}"
+                                @click="handleShowSearch">
+                                <svg class="btn_icon" focusable="false" data-key="search" aria-hidden="true"
+                                    viewBox="0 0 520 520" part="icon">
                                     <g>
                                         <path
                                             d="M496 453L362 320a189 189 0 10-340-92 190 190 0 00298 135l133 133a14 14 0 0021 0l21-21a17 17 0 001-22zM210 338a129 129 0 11130-130 129 129 0 01-130 130z">
                                         </path>
                                     </g>
                                 </svg>
-                            </template>
-                        </a-input>
-                    </div>
-                    <div class="search-btns">
-                        <a-dropdown :trigger="['click']">
-                            <a-button class="ant-btn-icon ml10">
-                                <svg class="btn_icon" focusable="false" data-key="settings" aria-hidden="true"
-                                    viewBox="0 0 520 520" part="icon">
-                                    <g>
-                                        <path
-                                            d="M261 191c-39 0-70 31-70 70s31 70 70 70 70-31 70-70-31-70-70-70zm210 133l-37-31a195 195 0 000-68l37-31c12-10 16-28 8-42l-16-28a34 34 0 00-40-14l-46 17a168 168 0 00-59-34l-8-47c-3-16-17-25-33-25h-32c-16 0-30 9-33 25l-8 46a180 180 0 00-60 34l-46-17-11-2c-12 0-23 6-29 16l-16 28c-8 14-5 32 8 42l37 31a195 195 0 000 68l-37 31a34 34 0 00-8 42l16 28a34 34 0 0040 14l46-17c18 16 38 27 59 34l8 48a33 33 0 0033 27h32c16 0 30-12 33-28l8-48a170 170 0 0062-37l43 17 12 2c12 0 23-6 29-16l15-26c9-11 5-29-7-39zm-210 47c-61 0-110-49-110-110s49-110 110-110 110 49 110 110-49 110-110 110z">
-                                        </path>
-                                    </g>
-                                </svg>
-                                <svg class="btn_icon btn_icon_small" focusable="false" data-key="down" aria-hidden="true"
-                                    viewBox="0 0 520 520" part="icon">
-                                    <g>
-                                        <path
-                                            d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z">
-                                        </path>
-                                    </g>
-                                </svg>
                             </a-button>
-                            <template #overlay>
-                                <a-menu class="fh-menu" @click="handleMenuClick">
-                                    <a-menu-item key="1"
-                                        :disabled="!initialData.entityListViewPermissions.canCreateListView">新建</a-menu-item>
-                                    <!-- <a-menu-item key="1">新建</a-menu-item> -->
-                                    <a-menu-item key="2">导出</a-menu-item>
-                                    <a-menu-item key="3">复制</a-menu-item>
-                                    <a-menu-item key="4">重命名</a-menu-item>
-                                    <a-menu-item key="5">共享设置</a-menu-item>
-                                    <a-menu-item key="6">选择要显示的字段</a-menu-item>
-                                    <a-menu-item key="7">删除</a-menu-item>
-                                    <a-menu-item key="8" disabled>Kanban设置</a-menu-item>
-                                </a-menu>
-                            </template>
-                        </a-dropdown>
-                        <a-dropdown class="ml10" :trigger="['click']">
-                            <a-button class="ant-btn-icon">
-                                <svg class="btn_icon" focusable="false" data-key="table" aria-hidden="true"
-                                    viewBox="0 0 520 520" part="icon">
-                                    <g>
-                                        <path
-                                            d="M465 20H55c-8 0-15 7-15 15v50c0 8 7 15 15 15h410c8 0 15-7 15-15V35c0-8-7-15-15-15zM145 140H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zM145 240H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zM145 340H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zM145 440H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15zm160 0h-90c-8 0-15 7-15 15v30c0 8 7 15 15 15h90c8 0 15-7 15-15v-30c0-8-7-15-15-15z">
-                                        </path>
-                                    </g>
-                                </svg>
-                                <svg class="btn_icon btn_icon_small" focusable="false" data-key="down" aria-hidden="true"
-                                    viewBox="0 0 520 520" part="icon">
-                                    <g>
-                                        <path
-                                            d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z">
-                                        </path>
-                                    </g>
-                                </svg>
-                            </a-button>
-                            <template #overlay>
-                                <a-menu class="fh-menu" style="width: 136px;" @click="handleMenuClick">
-                                    <a-menu-item key="1">列表</a-menu-item>
-                                    <a-menu-item key="2">卡片</a-menu-item>
-                                    <a-menu-item key="3">分屏视图</a-menu-item>
-                                </a-menu>
-                            </template>
-                        </a-dropdown>
-                        <a-button title="刷新" class="ant-btn-icon ml10">
-                            <svg class="btn_icon" focusable="false" data-key="refresh" aria-hidden="true"
-                                viewBox="0 0 520 520" part="icon">
-                                <g>
-                                    <path
-                                        d="M465 40h-30c-8 0-15 7-15 15v70c0 9-5 13-12 7l-10-10a210 210 0 10-12 309c7-6 7-16 1-22l-21-21c-5-5-14-6-20-1a152 152 0 01-172 14 152 152 0 0177-281 150 150 0 01118 58c3 8-4 12-13 12h-70c-8 0-15 7-15 15v31c0 8 6 14 14 14h183c7 0 13-6 13-13V55c-1-8-8-15-16-15z">
-                                    </path>
-                                </g>
-                            </svg>
-                        </a-button>
-                        <div class="btnGroup ml10">
-                            <a-button class="ant-btn-icon" title="图表" @click="isChartModal=true">
-                                <svg class="btn_icon" focusable="false" data-key="chart" aria-hidden="true"
-                                    viewBox="0 0 520 520" part="icon">
-                                    <g>
-                                        <path
-                                            d="M455 234L250 347a20 20 0 01-30-18V84c0-10-10-18-19-15a220 220 0 10276 175c-2-10-13-15-22-10zm-178 46l197-105c12-6 16-22 8-33A302 302 0 00287 22c-14-3-27 8-27 22v226c0 9 9 14 17 10z">
-                                        </path>
-                                    </g>
-                                </svg>
-                            </a-button>
-                            <a-button class="ant-btn-icon" title="筛选器" @click="handleShowFilter">
-                                <svg class="btn_icon" focusable="false" data-key="filterList" aria-hidden="true"
-                                    viewBox="0 0 520 520" part="icon">
-                                    <g>
-                                        <path
-                                            d="M483 40H39c-15 0-22 17-13 28l194 227c6 7 9 17 9 26v144c0 8 8 15 16 15h30c8 0 14-7 14-15V321c0-10 4-19 11-26L496 68c9-11 2-28-13-28z">
-                                        </path>
-                                    </g>
-                                </svg>
-                            </a-button>
-                        </div>
-                        <a-button class="ant-btn-icon ml10" @click="handleShowSearch">
-                            <svg class="btn_icon" focusable="false" data-key="search" aria-hidden="true"
-                                viewBox="0 0 520 520" part="icon">
-                                <g>
-                                    <path
-                                        d="M496 453L362 320a189 189 0 10-340-92 190 190 0 00298 135l133 133a14 14 0 0021 0l21-21a17 17 0 001-22zM210 338a129 129 0 11130-130 129 129 0 01-130 130z">
-                                    </path>
-                                </g>
-                            </svg>
-                        </a-button>
+                        </a-tooltip>
                     </div>
                 </div>
             </div>
@@ -244,7 +317,7 @@
             <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="listId?'编辑':'新建'"
                 @load="handleSearch" :id="listId" :objectTypeCode="entityType"
                 :entityApiName="sObjectName"></common-form-modal>
-    
+
             <!-- 弹窗 -->
             <NewVue :isShow="isNewModal" v-if="isNewModal" @cancel="isNewModal=false" @load="getFilterList"
                 :sObjectName="sObjectName" />
@@ -391,7 +464,7 @@
         isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal,
         isDeleteModal, isFilterModal, searchFilterVal, filterListFixed, entityType,
         initialData, actionList, title, sObjectName, isChartModal, columns, objectTypeCode, listBtnActions,
-        listId, desc, deleteType, deleteId, isSearchModal, searchVal, categoryTree, fieldNames } = toRefs(data);
+        listId, desc, deleteType, deleteId, isSearchModal, searchVal, categoryTree, fieldNames, queryParams } = toRefs(data);
     const tabContent = ref(null);
     const contentRef = ref(null);
     let formSearchHeight = ref(null);
@@ -450,8 +523,8 @@
     };
 
     const getCategoryTree = () => {
-        proxy.$post(Interface.workflow.categoryTree, {}).then(res=>{
-            data.categoryTree = res.rows.map(item=>{
+        proxy.$post(Interface.workflow.categoryTree, {}).then(res => {
+            data.categoryTree = res.rows.map(item => {
                 item.isLeaf = false;
                 item.level = 1;
                 return item;
@@ -484,7 +557,7 @@
 
     const getCategoryChildData = async (key, level) => {
         let obj = {
-            actions:[{
+            actions: [{
                 params: {
                     id: key
                 }
@@ -494,7 +567,7 @@
             message: JSON.stringify(obj)
         }
         let res = await proxy.$post(Interface.workflow.getWorkflowTemplates, d);
-        let children = res.rows.map(item=>{
+        let children = res.rows.map(item => {
             item.name = item.DisplayName;
             item.id = item.EntityId;
             item.level = level;
@@ -513,14 +586,14 @@
         });
     }
 
-    const selectCategoryTree  = (selectedKeys, {node}) => {
+    const selectCategoryTree = (selectedKeys, { node }) => {
         console.log("selectedKeys", selectedKeys);
         console.log('node', node);
-        if(node.level == 2 || node.level == 3){
+        if (node.level == 2 || node.level == 3) {
             data.sObjectName = node.Name;
             data.entityType = node.Name;
             data.objectTypeCode = node.ObjectTypeCode;
-            nextTick(()=>{
+            nextTick(() => {
                 changeHeight();
                 initLoad();
             })
@@ -564,7 +637,9 @@
     const handleCommonCancel = (params) => {
         data.isCommon = params;
     };
-
+    const handleSearch = () => {
+        gridRef.value.loadGrid(data.queryParams);
+    }
     // 获取元数据
     const getMetadataInitialLoad = async () => {
         let response;
@@ -589,6 +664,9 @@
         getListRowActions();
         getListConfig();
         getFilterList();
+    }
+    const handleRefresh = () => {
+        refreshFilterLoad();
     }
     const handleShowSearch = () => {
         data.isSearchModal = true;
@@ -973,22 +1051,27 @@
     .ant-btn:active {
         z-index: 1 !important;
     }
-    .wrapper{
+
+    .wrapper {
         height: 100%;
         display: flex;
     }
-    .categoryTree{
+
+    .categoryTree {
         background: #fff;
         border-radius: 0;
-        .categoryTree-search{
+
+        .categoryTree-search {
             padding: 8px 10px;
         }
-        .categoryTree-scroll{
+
+        .categoryTree-scroll {
             height: calc(100% - 48px);
         }
-        
+
     }
-    .empty{
+
+    .empty {
         width: 100%;
         height: 100%;
         display: flex;

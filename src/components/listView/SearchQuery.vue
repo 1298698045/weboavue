@@ -2,9 +2,11 @@
     <div class="searchQuery">
         <div class="panelFilter">
             <div class="panelHeader">
-                <h2 class="panelTitle">高级搜索</h2>
-                <div class="right-options">
+                <div class="flex" style="align-items: center;">
+                    <h2 class="panelTitle">高级搜索</h2>
                     <a-button type="link" @click="handleSetField">字段设置</a-button>
+                </div>
+                <div class="right-options">
                     <a-button class="ml10" @click="handleSave">搜索</a-button>
                     <a-button type="link" @click="handleCloseModal">
                         <CloseOutlined style="color:rgb(116, 116, 116)" />
@@ -13,7 +15,7 @@
             </div>
             <div class="panelBody">
                 <div class="search-form">
-                    <a-form :model="list" ref="formRef" :label-col="labelCol">
+                    <a-form :model="list" ref="formRef" :label-col="labelCol" labelAlign="left">
                         <div class="form-item" v-for="(item, index) in filterableColumns" :key="index">
                             <a-form-item class="formItem" name="item.column" :label="item.label"
                                 v-if="item.dataType=='S'">
@@ -80,12 +82,10 @@
     import { CloseOutlined, SearchOutlined } from "@ant-design/icons-vue";
     import SetSearchField from "./SetSearchField.vue";
     import LookupFilter from "@/components/commonModal/LookupFilter.vue";
-    import { message } from "ant-design-vue";
-
-    // import Toast from "@/utils/toast.js";
+    
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-    const labelCol = ref({ style: { width: '60px' } });
+    const labelCol = ref({ style: { width: '100px' } });
     const props = defineProps({
         sObjectName: String,
         filterId: String
@@ -273,32 +273,37 @@
                 value = value.join(',')
             }
             let operands = [value];
+            if(value == ''){
+                operands = [];
+            }
             if (item.dataType == 'D' && value == '自定义') {
-                console.log("timeValue", item.timeValue)
-                let startDate = item.timeValue[0];
-                let endDate = item.timeValue[1];
-                let startObj = {
-                    attribute: item.column,
-                    column: item.column,
-                    label: item.label,
-                    operator: "ge",
-                    logical: "AND",
-                    picklistValues: [],
-                    isEditable: false,
-                    operands: [startDate]
+                console.log("timeValue", item.timeValue);
+                if(item.timeValue.length){
+                    let startDate = item.timeValue[0];
+                    let endDate = item.timeValue[1] + ' 23:59:59';
+                    let startObj = {
+                        attribute: item.column,
+                        column: item.column,
+                        label: item.label,
+                        operator: "ge",
+                        logical: "AND",
+                        picklistValues: [],
+                        isEditable: false,
+                        operands: [startDate]
+                    }
+                    let endObj = {
+                        attribute: item.column,
+                        column: item.column,
+                        label: item.label,
+                        operator: "le",
+                        logical: "AND",
+                        picklistValues: [],
+                        isEditable: false,
+                        operands: [endDate]
+                    }
+                    filterCondition.push(startObj);
+                    filterCondition.push(endObj);
                 }
-                let endObj = {
-                    attribute: item.column,
-                    column: item.column,
-                    label: item.label,
-                    operator: "le",
-                    logical: "AND",
-                    picklistValues: [],
-                    isEditable: false,
-                    operands: [endDate]
-                }
-                filterCondition.push(startObj);
-                filterCondition.push(endObj);
 
             }else {
                 let obj = {
@@ -311,7 +316,9 @@
                     isEditable: false,
                     operands: operands
                 }
-                filterCondition.push(obj);
+                if(operands.length > 0){
+                    filterCondition.push(obj);
+                }
             }
         });
         data.filterCondition = filterCondition;

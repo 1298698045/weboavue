@@ -231,9 +231,17 @@
     padding: 10px 0 !important;
     border: 1px solid #333;
     border-radius: 4px;
-    max-height: 300px;
+    max-height: 350px;
     overflow: auto;
     border-radius: 4px !important;
+    font-size: 13px;
+    .fh-menu-desc{
+        font-size: 13px;
+        padding: 8px 12px;
+        color: #444444;
+        line-height: 1.25;
+        display: inline-block;
+    }
     .fh-menu-item{
         width: 206px;
         line-height: 35px;
@@ -252,6 +260,40 @@
                 height: 100%;
                 vertical-align: middle;
                 display: inherit;
+            }
+        }
+    }
+    &.listViewMenu{
+        padding: 10px 2px !important;
+        .listView-menuItem{
+            width: 100%;
+            border: 2px solid transparent;
+            border-radius: 0;
+            font-size: 13px !important;
+            &:hover{
+                border-color: #015ba7;
+            }
+            .ant-dropdown-menu-title-content{
+                display: flex;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .text{
+                display: inline-block;
+                flex: 1;
+                text-align: left;
+            }
+            .successIcon{
+                display: inline-block;
+                width: 18px;
+                vertical-align: middle;
+                color: #747474;
+            }
+            .listView-img{
+                display: inline-block;
+                vertical-align: middle;
+                margin-left: 0 auto;
             }
         }
     }
@@ -284,4 +326,11 @@
         width: 14px;
         height: 14px;
     }
+}
+
+
+.ant-tooltip-inner{
+    background:#032d60 !important;
+    font-size: 12px;
+    line-height: 1.1;
 }

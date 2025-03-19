@@ -727,6 +727,19 @@
                 top: calc(~"50%  - 21px");
                 right: -12px;
             }
+            .filterForm{
+                .ant-form-item{
+                    .ant-row{
+                        display: block !important;
+                        .ant-col{
+                            width: 100% !important;
+                        }
+                        .ant-form-item-label{
+                            text-align: left;
+                        }
+                    }
+                }
+            }
         }
     }
     :where(.css-dev-only-do-not-override-kqecok).ant-input{

@@ -64,6 +64,9 @@ a {
 .mr5 {
     margin-right: 5px;
 }
+.ml4 {
+    margin-left: 4px;
+}
 .ml10 {
     margin-left: 10px;
 }
@@ -444,4 +447,9 @@ a {
 }
 .ant-dropdown .ant-dropdown-menu{
     padding: 0 !important;
+}
+.iconSvg{
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
 }
