@@ -36,7 +36,7 @@
                 <div class="progressWrap">
                     <a-progress :percent="(percentage?(percentage*1>100?100:percentage):0)" :size="8" :show-info="true" :title="'容量已使用'+(percentage?(percentage*1>100?100:percentage):0)+'%'"></a-progress>
                     <p class="progressText">
-                        邮箱空间使用量：67.86M/200.00M
+                        邮箱空间使用量：{{UserInfo&&UserInfo.userSettings&&UserInfo.userSettings.mailboxUsedSpace?UserInfo.userSettings.mailboxUsedSpace:'0'}}M/{{UserInfo&&UserInfo.userSettings&&UserInfo.userSettings.mailboxSpace?UserInfo.userSettings.mailboxSpace:'0'}}M
                     </p>
                 </div>
             </div>
@@ -566,7 +566,7 @@ let store = useStore();
         deleteDesc: '确定要删除吗？',
         external:false,
         dropMenuItemName:'收件箱',
-        percentage:34,
+        percentage:0,
         loading:false,
         isConfirm:false,
         confirmText:'',
@@ -574,9 +574,10 @@ let store = useStore();
         sort:'CreatedOn',
         order:'DESC',
         filterName:'全部',
-        writeEmailType:''
+        writeEmailType:'',
+        UserInfo:{}
     });
-    const { writeEmailType,filterName,sort,order,loading,percentage,dropMenuItemName,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external,currentUserId,currentUserName,folderName,navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
+    const { UserInfo,writeEmailType,filterName,sort,order,loading,percentage,dropMenuItemName,isDelete,recordId,objectTypeCode,sObjectName,deleteDesc,external,currentUserId,currentUserName,folderName,navList, ltags, emailId, folderId, inboxList, emailTotal, emailListAll,
          folderList, folderText, renameFolderId, isEdit, checkList, checkAll, isIndeterminate, isFold,isConfirm,confirmText,confirmTitle,
          isDetail, emailIndex, pageNumber, pageSize,searchText,isFocus,isWriteEmail,ltagsRecord,ltagsData,appList, appCode, currentAppName } = toRefs(data);
          data.appList = store.state.modules;
@@ -1328,6 +1329,26 @@ const BatchHandleDeleteEmail2=()=>{
         },2000)
     }
 }
+const getUserInfo = (id) => {
+    let d = {
+        actions: [{
+            "state": "",
+            "id": "",
+            "params": {
+                "id": id
+            }
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(Interface.user.getUserInfo, obj).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+            data.UserInfo = res.actions[0].returnValue;
+            data.percentage=UserInfo&&UserInfo.userSettings&&UserInfo.userSettings.mailboxSpace?(((UserInfo&&UserInfo.userSettings&&UserInfo.userSettings.mailboxUsedSpace?UserInfo.userSettings.mailboxUsedSpace*1:0)/(UserInfo.userSettings.mailboxSpace*1))*100).toFixed(1):0;
+        }
+    })
+}
 onMounted(() => {
         getInboxList();
         getMyFolder();
@@ -1336,6 +1357,7 @@ onMounted(() => {
             userInfo=JSON.parse(userInfo);
             data.currentUserId=userInfo.userId;
             data.currentUserName=userInfo.fullName;
+            getUserInfo(userInfo.userId);
         }
         if(route.query.Id){
             openWriteEmail();

@@ -165,6 +165,7 @@
             @cancel="isNewContent = false" :objectTypeCode="'20021'" :FolderId="''" />
         <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
         <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+        <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
     </div>
 </template>
 <script setup>
@@ -192,6 +193,7 @@ import ChangeLabel from "@/components/email/ChangeLabel.vue";
 import NewContent from "@/components/information/NewInfo.vue";
 import ImageView from "@/components/file/ImageView.vue";
 import PdfView from "@/components/file/PdfView.vue";
+import TxtView from "@/components/file/TxtView.vue";
 const { proxy } = getCurrentInstance();
 const props = defineProps({
     emailId: String
@@ -233,8 +235,10 @@ const data = reactive({
     isPdf: false,
     pdfParams: {},
     ImageList: [],
+    isTxt: false,
+    txtParams: {}
 })
-const { pdfParams, isPdf, photoParams, ImageList, isPhoto, fileName, isNewContent, isLabel, currentUserId, currentUserName, isDetail, isEmailTitle, detail, receiverNames, isDelete, attachments } = toRefs(data);
+const { isTxt, txtParams, pdfParams, isPdf, photoParams, ImageList, isPhoto, fileName, isNewContent, isLabel, currentUserId, currentUserName, isDetail, isEmailTitle, detail, receiverNames, isDelete, attachments } = toRefs(data);
 
 const handleClickText = () => {
     data.isDetail = !data.isDetail;
@@ -527,6 +531,14 @@ const handlePreviewFile = (item) => {
             downloadUrl: item.downloadUrl
         };
         data.isPdf = true;
+    }
+    else if (item.fileExtension == 'txt') {
+        data.txtParams = {
+            name: item.name,
+            viewUrl: item.viewUrl,
+            downloadUrl: item.downloadUrl
+        };
+        data.isTxt = true;
     }
     else {
         downloadFile(item);

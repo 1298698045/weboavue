@@ -42,7 +42,9 @@
     </div>
     <div class="panel" :style="{ height: height + 'px' }">
       <div class="panel-head">
-        <div class="panel-title">阅读记录</div>
+        <div class="panel-title" v-if="data.IsRead == ''">全部记录</div>
+        <div class="panel-title" v-if="data.IsRead == '1'">已读记录</div>
+        <div class="panel-title" v-if="data.IsRead == '0'">未读记录</div>
         <div class="panel-btn">
           <!-- <a-button class="ml10" type="primary" @click="AddPeople">邀请参与人</a-button> -->
         </div>
@@ -684,8 +686,9 @@ body .ant-table-tbody tr:nth-child(even) {
 
 .ReadRecordWrap2 .panel-top .ant-card.active,
 .ReadRecordWrap2 .panel-top .ant-card:hover {
-  //border: 1px solid #1677ff !important;
-  // background: #1677ff !important;
+  //box-shadow: -4px -4px 12px 0 rgba(0, 0, 0, 0.16);
+  //border: 1px solid #bbb !important;
+  //background: #1677ff !important;
   // *{
   //   color: #fff !important;
   // }

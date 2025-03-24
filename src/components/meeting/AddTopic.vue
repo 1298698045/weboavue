@@ -1,6 +1,7 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="1200px" style="top:30px;" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+    <a-modal v-model:open="props.isShow" width="1200px" style="top:30px;" :maskClosable="false" @cancel="handleCancel"
+      @ok="handleSubmit">
       <template #title>
         <div>
           {{ title }}
@@ -33,8 +34,9 @@
           </div>
 
           <!-- <Dtable ref="gridRef" :singleSelect="true" name="datagridFilter" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
-          <a-table :columns="columns" :dataSource="listData" :scroll="{ y: tableHeight }" :pagination="false"
-            @change="handleTableChange" class="tableWrap">
+          <a-table :row-key="record => record.id" :row-selection="rowSelection" :columns="columns"
+            :dataSource="listData" :scroll="{ y: tableHeight }" :pagination="false" @change="handleTableChange"
+            class="tableWrap">
             <template #bodyCell="{ column, index, record }">
               <template v-if="column.key === 'index'">
                 <div>
@@ -78,6 +80,7 @@ import {
   defineExpose,
   defineEmits,
   toRaw,
+  computed,
   inject
 } from "vue";
 import {
@@ -123,17 +126,17 @@ const data = reactive({
   height: document.documentElement.clientHeight - 185,
   columns: [
     // {
+    //   title: "选择",
+    //   dataIndex: "checked",
+    //   key: "checked",
+    //   width: 60,
+    // },
+    // {
     //   title: "序号",
     //   dataIndex: "index",
     //   key: "index",
-    //   width: 80,
+    //   width: 60,
     // },
-    {
-      title: "选择",
-      dataIndex: "checked",
-      key: "checked",
-      width: 80,
-    },
     {
       title: "名称",
       dataIndex: "Name",
@@ -195,10 +198,12 @@ const data = reactive({
     })
   },
   total: 0,
-  listData: []
+  listData: [],
+  selectedRowKeys: []
 });
 const gridUrl = ref(Interface.listView.list);
 const {
+  selectedRowKeys,
   title,
   height, columns, isCollapsed, tableHeight, searchVal, isAdvance, queryParams, activeKey, pagination, total, listData
 } = toRefs(data);
@@ -226,7 +231,7 @@ const getQuery = () => {
   // });
   data.listData = [];
   data.pagination.total = 0;
-  let filterQuery = '\nStatusCode\tneq\t0'+data.queryParams.filterQuery;
+  let filterQuery = '\nStatusCode\tneq\t0' + data.queryParams.filterQuery;
   proxy.$post(Interface.list2, {
     filterId: '',
     objectTypeCode: 5001,
@@ -274,8 +279,17 @@ const handleTableChange = (page, pageSize) => {
 const sizeChange = (current, size) => {
   handleTableChange(current, size)
 }
-
+const rowSelection = computed(() => {
+  return {
+    onChange: (selectedRowKeys, selectedRows) => {
+      data.selectedRowKeys = selectedRowKeys;
+    },
+    selectedRowKeys: data.selectedRowKeys,
+    preserveSelectedRowKeys: true
+  }
+});
 onMounted(() => {
+  data.selectedRowKeys=[];
   window.addEventListener("resize", (e) => {
     data.height = document.documentElement.clientHeight - 185;
     data.tableHeight = document.documentElement.clientHeight - 340
@@ -323,11 +337,12 @@ const getConfig = () => {
 const handleSubmit = () => {
   //let list = gridRef.value.getCheckList();
   let list = [];
-  data.listData.forEach(item => {
-    if (item.checked) {
-      list.push(item.id)
-    }
-  })
+  // data.listData.forEach(item => {
+  //   if (item.checked) {
+  //     list.push(item.id)
+  //   }
+  // })
+  list = data.selectedRowKeys;
   //console.log("checklist", list);
   if (list.length) {
     // let Name=list[0].Name||list[0].FullName;
@@ -463,8 +478,9 @@ const changeTab = (e) => {
   .pageWrap {
     text-align: right;
   }
-  .searchForm{
-    .ant-input-search-button{
+
+  .searchForm {
+    .ant-input-search-button {
       height: 32px !important;
     }
   }

@@ -231,6 +231,7 @@
       @cancel="isConfirm = false" @ok="deleteFile" :id="recordId" />
     <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
     <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+    <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
 </div>
 </template>
 <script setup>
@@ -266,7 +267,7 @@ import Delete from "@/components/listView/Delete.vue";
 import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 import ImageView from "@/components/file/ImageView.vue";
 import PdfView from "@/components/file/PdfView.vue";
-
+import TxtView from "@/components/file/TxtView.vue";
 import { getprojectboardtask } from "@/utils/projectapi.js";
 import Interface from "@/utils/Interface.js";
 import dayjs from 'dayjs';
@@ -320,7 +321,9 @@ const data = reactive({
         photoParams: {},
         isPdf: false,
         pdfParams: {},
-        recordId:''
+        recordId:'',
+        isTxt: false,
+        txtParams: {}
   })
   const {
             id,
@@ -330,6 +333,8 @@ const data = reactive({
             photoParams,
             isPdf,
             pdfParams,
+            isTxt, 
+            txtParams, 
             recordId,
             attachments,
             ImageList,
@@ -727,6 +732,14 @@ const handlePreviewFile = (item) => {
       downloadUrl: item.downloadUrl
     };
     data.isPdf = true;
+  }
+  else if (item.fileExtension == 'txt') {
+    data.txtParams = {
+        name: item.name,
+        viewUrl: item.viewUrl,
+        downloadUrl: item.downloadUrl
+    };
+    data.isTxt = true;
   }
   else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
     //let medittype = 0;

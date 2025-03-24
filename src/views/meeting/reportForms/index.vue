@@ -43,15 +43,15 @@
                                 </div>
                                 <div class="statistics-right">
                                     <div class="statistics-count" name="ContractNumber" style="color: #000;">
-                                        {{ countObj.ResTotalNum || 0 }}</div>
+                                        {{ countObj.reservTotal || 0 }}</div>
                                     <div class="statistics-name">总预约次数</div>
                                 </div>
                                 <!-- <div>
                                         <div class="countItemTitle">
                                         会议室预约次数
                                         </div>
-                                        <p>总预约次数：{{countObj.ResTotalNum}}</p>
-                                        <p>我的预约次数：{{countObj.MyResNum}}</p>
+                                        <p>总预约次数：{{countObj.reservTotal}}</p>
+                                        <p>我的预约次数：{{countObj.reservMy}}</p>
                                     </div> -->
                             </li>
                             <li class="countItem">
@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="statistics-right">
                                     <div class="statistics-count" name="ContractNumber" style="color: #000;">
-                                        {{ countObj.MyResNum || 0 }}</div>
+                                        {{ countObj.reservMy || 0 }}</div>
                                     <div class="statistics-name">我的预约次数</div>
                                 </div>
                             </li>
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="statistics-right">
                                     <div class="statistics-count" name="ContractNumber" style="color: #000;">
-                                        {{ countObj.OrgNum || 0 }}
+                                        {{ countObj.resourceTotal || 0 }}
                                     </div>
                                     <div class="statistics-name">会议室数量</div>
                                 </div>
@@ -78,7 +78,7 @@
                                         <div class="countItemTitle">
                                             会议室数量
                                         </div>
-                                        <p>会议室数量：{{countObj.OrgNum}}</p>
+                                        <p>会议室数量：{{countObj.resourceTotal}}</p>
                                     </div> -->
                             </li>
                         </ul>
@@ -368,64 +368,91 @@ var columns2 = [
 ];
 const changeTabs = (e, type) => {
     data.activeKey = e;
+    data.dataList = [];
     if (type != 'pagechange') {
         data.pagination.current = 1;
     }
-    if (e == 0) {
-        data.columns = columns1;
-        getChartData();
-    }
-    else if (e == 1) {
-        data.columns = columns2;
-        getPeopleList();
-    }
+    getStati(type);
 };
-const clearRoomSelect = () => {
-    data.selectRoom = [];
-    data.rooms.forEach(item => {
-        item.checkbox = false;
-    })
-    getChartData();
-}
-// 选择会议室
-const handleSelectRoom = (item) => {
-    console.log('data.selectRoom', data.selectRoom);
-    let index = data.selectRoom.findIndex(row => row == item.Id);
-    if (index == -1) {
-        if (item.checkbox == false) {
-            item.checkbox = true;
-        }
-        else {
-            item.checkbox = false;
-        }
-        data.selectRoom.push(item.Id);
-    } else {
-        item.checkbox = false;
-        data.selectRoom.splice(index, 1);
-    }
-    getChartData();
-}
 const changeYear = (e) => {
     data.year = dayjs(e, yearFormat);
-    // getQuery();
-    getChartData();
-    changeTabs(data.activeKey);
+    changeTabs(data.activeKey, 'yearchange');
+}
+const getAbstract=()=>{
+    data.countObj = {};
+    let d = {
+        "actions": [{
+            "id": "2919;a",
+            "descriptor": "",
+            "callingDescriptor": "UNKNOWN",
+            "params": {
+                year: data.year.format("YYYY"),
+            }
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(Interface.meetingRpt.abstract, obj).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+            data.countObj = res.actions[0].returnValue;
+        }
+        else {
+            message.error("获取摘要失败！");
+        }
+    })
+}
+const getStati = (type) => {
+    let d = {
+        "actions": [{
+            "id": "4270;a",
+            "descriptor": "",
+            "callingDescriptor": "UNKNOWN",
+            "params": {
+                year: data.year.format("YYYY"),
+            }
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(Interface.meetingRpt.stati, obj).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+            if (data.activeKey * 1 == 0) {
+                data.columns = columns1;
+                getChartData();
+            }
+            else if (data.activeKey * 1 == 1) {
+                data.columns = columns2;
+                if (type == 'yearchange') {
+                    getChartData();
+                }
+                getQuery();
+            }
+            getAbstract();
+        }
+        else {
+            message.error("统计失败！");
+        }
+    })
 }
 const getQuery = () => {
-    let filterQuery = '\nResourceTypeCode\teq\t2\nStatusCode\teq\t1';
+    let filterQuery = '\nYearMonth\teq\t' + data.year.format("YYYY");
     proxy.$post(Interface.list2, {
         filterId: '',
-        objectTypeCode: '20034',
-        entityName: 'ResourceOrg',
+        objectTypeCode: '20617',
+        entityName: 'MeetingPeopleReport',
         filterQuery: filterQuery,
-        search: '',
-        page: 1,
-        rows: 100,
-        sort: 'SortNumber',
-        order: 'asc',
-        displayColumns: 'Name'
+        search: data.searchVal || '',
+        page: data.pagination.current,
+        rows: data.pagination.pageSize,
+        // sort: '',
+        // order: 'asc',
+        displayColumns: 'PeopleId,JoinQty,AbsentQty,LateQty,QuitQty,LeaveQty'
     }).then(res => {
         var list = [];
+        data.total = res.pageInfo ? res.pageInfo.total : 0;
+        data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
         if (res && res.nodes && res.nodes.length) {
             for (var i = 0; i < res.nodes.length; i++) {
                 var item = res.nodes[i];
@@ -437,44 +464,35 @@ const getQuery = () => {
                         item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
                     }
                 }
-                item['Id'] = item.id;
-                item['checkbox'] = true;
                 list.push(item)
             }
         }
-        data.rooms = list;
+        data.dataList = list;
     })
 }
 const getChartData = () => {
-    data.countObj = {};
-    data.xData = [];
+    data.xData = ["一月",
+        "二月",
+        "三月",
+        "四月",
+        "五月",
+        "六月",
+        "七月",
+        "八月",
+        "九月",
+        "十月",
+        "十一月",
+        "十二月",];
     data.lineData = [];
     data.seriesData = [];
-    data.dataList = [];
     proxy.$get(Interface.meetingRpt.roomstat, {
-        year: data.year.format("YYYY"),
-        ids: data.selectRoom.join(',')
+        year: data.year.format("YYYY")
     }).then(res => {
-        if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+        if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
             let statdata = res.actions[0].returnValue;
-            statdata.xdata = ["一月",
-                "二月",
-                "三月",
-                "四月",
-                "五月",
-                "六月",
-                "七月",
-                "八月",
-                "九月",
-                "十月",
-                "十一月",
-                "十二月",];
-            statdata.lineData = statdata.map(item => {
+            data.lineData = statdata.map(item => {
                 return item.name;
             })
-            data.countObj = statdata;
-            data.xData = statdata.xdata;
-            data.lineData = statdata.lineData;
             data.seriesData = statdata.map(item => {
                 item.type = 'line';
                 item.label = {
@@ -485,14 +503,9 @@ const getChartData = () => {
                 item.data = [item.january, item.february, item.march, item.april, item.may, item.june, item.july, item.august, item.september, item.october, item.november, item.december];
                 return item;
             })
-            nextTick(() => {
-                data.dataList = statdata.map(item => {
-                    if (item.name) {
-                        return item;
-                    }
-                })
+            data.dataList = statdata.map(item => {
+                return item;
             })
-            //console.log(data.dataList,111)
         }
         loadChart();
     })
@@ -519,21 +532,6 @@ const getChartData = () => {
     // })
 }
 const loadChart = () => {
-    var chartData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    var chartName = [
-        "一月",
-        "二月",
-        "三月",
-        "四月",
-        "五月",
-        "六月",
-        "七月",
-        "八月",
-        "九月",
-        "十月",
-        "十一月",
-        "十二月",
-    ];
     var myChart;
     if (myChart != null && myChart != "" && myChart != undefined) {
         myChart.dispose(); //销毁
@@ -571,42 +569,7 @@ const loadChart = () => {
         },
         series: data.seriesData
     };
-    option && myChart.setOption(option);
-}
-const getPeopleList = () => {
-    data.dataList = [];
-    let filterQuery = '\nYearMonth\teq\t' + data.year.format("YYYY");
-    proxy.$post(Interface.list2, {
-        filterId: '',
-        objectTypeCode: '20617',
-        entityName: 'MeetingPeopleReport',
-        filterQuery: filterQuery,
-        search: data.searchVal || '',
-        page: data.pagination.current,
-        rows: data.pagination.pageSize,
-        // sort: '',
-        // order: 'asc',
-        displayColumns: 'PeopleId,JoinQty,AbsentQty,LateQty,QuitQty,LeaveQty'
-    }).then(res => {
-        var list = [];
-        data.total = res.pageInfo ? res.pageInfo.total : 0;
-        data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
-        if (res && res.nodes && res.nodes.length) {
-            for (var i = 0; i < res.nodes.length; i++) {
-                var item = res.nodes[i];
-                for (var cell in item) {
-                    if (cell != 'id' && cell != 'nameField') {
-                        item[cell] = girdFormatterValue(cell, item);
-                    }
-                    if (cell == 'CreatedOn') {
-                        item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
-                    }
-                }
-                list.push(item)
-            }
-        }
-        data.dataList = list;
-    })
+    option && myChart.setOption(option, true);
 }
 const onSearch = (e) => {
     changeTabs(data.activeKey);
@@ -631,7 +594,7 @@ watch(() => route, (newVal, oldVal) => {
     }
 }, { deep: true, immediate: true })
 onMounted(() => {
-    changeTabs(0);
+    //changeTabs(0);
 });
 </script>
 <style lang="less" scoped>
@@ -935,6 +898,16 @@ onMounted(() => {
         }
 
         :deep .atable {
+            .ant-table-row{
+                .ant-table-cell:first-child{
+                    text-align: left !important;
+                }
+            }
+            .ant-table-thead{
+                .ant-table-cell:first-child{
+                    text-align: left !important;
+                }
+            }
             .ant-table-tbody td {
                 padding: 6.5px 16px !important;
                 white-space: nowrap;

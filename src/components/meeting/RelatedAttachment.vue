@@ -96,6 +96,7 @@
       @cancel="isConfirm = false" @ok="deleteFile" :id="recordId" />
     <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
     <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+    <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
   </div>
 </template>
 <script setup>
@@ -144,6 +145,7 @@ import AddMeetingShare from "@/components/meeting/AddMeetingShare.vue";
 import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 import ImageView from "@/components/file/ImageView.vue";
 import PdfView from "@/components/file/PdfView.vue";
+import TxtView from "@/components/file/TxtView.vue";
 const { proxy } = getCurrentInstance();
 const TopicsLst = ref();
 const TaskDetailModal = ref(null);
@@ -251,10 +253,12 @@ const data = reactive({
   isPdf: false,
   pdfParams: {},
   currentUserId: '',
-  currentUserName: ''
+  currentUserName: '',
+  isTxt: false,
+  txtParams: {}
 });
 const columnList = toRaw(columns);
-const { currentUserId, currentUserName, pdfParams, isPdf, photoParams, ImageList, isPhoto, listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, isTaskDetail, isShare, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, isConfirm, confirmText, confirmTitle } = toRefs(data);
+const { isTxt, txtParams, currentUserId, currentUserName, pdfParams, isPdf, photoParams, ImageList, isPhoto, listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, isTaskDetail, isShare, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, isConfirm, confirmText, confirmTitle } = toRefs(data);
 const getQuery = () => {
   // proxy.$get(Interface.user.groupUser, {}).then((res) => {
   //   data.listData = res.rows;
@@ -420,6 +424,14 @@ const handlePreviewFile = (item) => {
       downloadUrl: item.downloadUrl
     };
     data.isPdf = true;
+  }
+  else if (item.fileExtension == 'txt') {
+      data.txtParams = {
+          name: item.name,
+          viewUrl: item.viewUrl,
+          downloadUrl: item.downloadUrl
+      };
+      data.isTxt = true;
   }
   else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
     let medittype = 0;

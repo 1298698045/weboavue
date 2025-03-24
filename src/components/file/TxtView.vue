@@ -3,10 +3,10 @@
         <div class="dModal-box">
             <div class="d-content">
                 <div class="photoWrap">
-                    <iframe :src="pdfUrl" class="pdfIframe"></iframe>
+                    <pre v-html="txtContent" class="txtContent"></pre>
                     <div class="photoHeadInfo">
                         <div class="photoName">
-                            {{ pdfParams.name || '暂无' }}
+                            {{ txtParams.name || '暂无' }}
                         </div>
                         <div class="photoIcons">
                             <span class="icon" title="下载" @click="handleDownload">
@@ -44,17 +44,24 @@ const { proxy } = getCurrentInstance();
 const labelCol = ref({ style: { width: "100px" } });
 const props = defineProps({
     isShow: Boolean,
-    pdfParams: Object
+    txtParams: Object
 });
 const data = reactive({
-    pdfUrl: ""
+    txtContent: ""
 })
-const { pdfUrl } = toRefs(data);
+const { txtContent } = toRefs(data);
 
-const getPdfUrl = () => {
-    data.pdfUrl = '/pdfjs/web/viewer.html?file=' + props.pdfParams.viewUrl;
+const getTxtContent = () => {
+    data.txtContent = '';
+    let url = props.txtParams.viewUrl;
+    proxy.$get(url, {}).then(res => {
+        //console.log(res)
+        if(res){
+            data.txtContent = res;
+        }
+    })
 };
-getPdfUrl();
+getTxtContent();
 
 const handleClose = () => {
     emit("cancel", false);
@@ -71,10 +78,10 @@ const handleRotate = () => {
 }
 //下载
 const handleDownload = () => {
-    let url = props.pdfParams.downloadUrl;
-    let text = props.pdfParams.name || '';
-    //windowOpen(url, text);
+    let url = props.txtParams.downloadUrl;
+    let text = props.txtParams.name || '';
     window.open(url);
+    //windowOpen(url, text);
 }
 const windowOpen = (url, fileName) => {
     var xhr = new XMLHttpRequest();
@@ -632,11 +639,12 @@ const windowOpen = (url, fileName) => {
     }
 }
 
-.pdfIframe {
+.txtContent {
     width: calc(100% - 30px);
     height: calc(100% - 65px);
     margin: 50px 15px 10px 14px;
     border-radius: 4px;
     background: #fff;
+    padding: 20px;
 }
 </style>

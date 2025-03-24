@@ -206,7 +206,7 @@ const props = defineProps({
 });
 const carouselRef = ref();
 const getImgUrl = (index) => {
-    let url = '@/assets/img/filetype/defaultImg.png';
+    let url = '/src/assets/img/filetype/defaultImg.png';
     if (data.imageList[index] && data.imageList[index].viewUrl) {
         url = data.imageList[index].viewUrl
     }
@@ -455,9 +455,9 @@ const handleRotate = () => {
 //下载
 const handleDownload = () => {
     let url = detail.downloadUrl;
-    //window.open(url);
+    window.open(url);
     let text = detail.Name || '';
-    windowOpen(url, text);
+    //windowOpen(url, text);
     // axios({
     //     url: data.detail.viewUrl,
     //     method: 'get',

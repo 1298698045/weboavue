@@ -6,46 +6,21 @@
           {{ title }}
         </div>
       </template>
-      <div class="modalContainer RelaseInfoWrap">
-        <RadioDept :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
+      <div class="modalContainer NewMeetingRoomWrap">
         <div class="modalCenter modalCenter1" :style="{ height: height + 'px!important' }" v-show="step * 1 == 0">
           <a-form :model="formState" ref="formRef">
             <div class="section">
               <div class="sectionTitle">基本信息</div>
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="name" label="发布人">
-                    <a-input v-model:value="formState.ApprovedBy" disabled class="ApprovedByName"></a-input>
+                  <a-form-item name="Name" label="名称" :rules="[{ required: true, message: '请输入名称' }]">
+                    <a-input v-model:value="formState.Name" class="NewMeetingRoomInputClass"></a-input>
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
-                  <a-form-item name="BusinessUnitId" label="发布部门">
-                    <!-- <div v-if="!formState.BusinessUnitId">
-                      <a-select placeholder="请选择" v-model:value="data.BusinessUnitId"
-                        :default-active-first-option="false" :filter-option="false" showSearch @search="searchlookup2"
-                        @change="handleDeptParams2" @dropdownVisibleChange="searchlookup2">
-                        <template #suffixIcon></template>
-                        <a-select-option v-for="v in listData" :key="v.ID" :value="v.ID">{{ v.Name
-                        }}</a-select-option>
-                      </a-select>
-                      <i class="iconfont icon-sousuo pointer selectIcon" @click="handleFocus"></i>
-                    </div> -->
-                    <a-input v-model:value="formState.BusinessUnitId" disabled
-                      class="ApprovedByName"></a-input>
-                  </a-form-item>
-                </div>
-              </div>
-              
-              <div class="sectionRow">
-                <div class="sectionItem">
-                  <a-form-item name="ApprovedOn" label="发布时间" :rules="[{ required: true, message: '请输入发布时间' }]">
-                    <a-date-picker v-model:value="formState.ApprovedOn" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="发布时间" />
-                  </a-form-item>
-                </div>
-                <div class="sectionItem">
-                  <a-form-item name="StateCode" label="发布状态" :rules="[{ required: true, message: '请选择发布状态' }]">
-                    <a-select v-model:value="formState.StateCode" placeholder="请选择发布状态">
-                      <a-select-option v-for="(item, index) in StateCodeList" :value="item.value" :key="index">{{
+                  <a-form-item name="StatusCode" label="状态" :rules="[{ required: true, message: '请选择状态' }]">
+                    <a-select v-model:value="formState.StatusCode" placeholder="请选择状态">
+                      <a-select-option v-for="(item, index) in StatusCodeList" :value="item.value" :key="index">{{
                         item.label
                       }}</a-select-option>
                     </a-select>
@@ -54,20 +29,26 @@
               </div>
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="FolderId" label="栏目" :rules="[{ required: true, message: '请选择栏目' }]">
-                    <a-tree-select v-model:value="formState.FolderId" show-search style="width: 100%"
-                      :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" placeholder="请选择栏目" allow-clear
-                      tree-default-expand-all :tree-data="treeData" tree-node-filter-prop="name">
-                      <template #title="{ name }">
-                        <span>{{ name }}</span>
-                      </template>
-                    </a-tree-select>
+                  <a-form-item name="Capacity" label="容纳人数" :rules="[{ required: true, message: '请输入容纳人数' }]">
+                    <a-input v-model:value="formState.Capacity" class="NewMeetingRoomInputClass"></a-input>
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
-                  <a-form-item name="AttachRightCode" label="附件权限">
-                    <a-select v-model:value="formState.AttachRightCode" placeholder="请选择附件权限">
-                      <a-select-option v-for="(item, index) in AttachRightCodeList" :value="item.value" :key="index">{{
+                  <a-form-item name="SortNumber" label="序号" :rules="[{ required: true, message: '请输入序号' }]">
+                    <a-input v-model:value="formState.SortNumber" class="NewMeetingRoomInputClass" type="number"></a-input>
+                  </a-form-item>
+                </div>
+              </div>
+              <div class="sectionRow">
+                <div class="sectionItem">
+                  <a-form-item name="ResourceNumber" label="资源编号">
+                    <a-input v-model:value="formState.ResourceNumber" class="NewMeetingRoomInputClass"></a-input>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="ResourceTypeCode" label="类型">
+                    <a-select v-model:value="formState.ResourceTypeCode" placeholder="请选择类型">
+                      <a-select-option v-for="(item, index) in ResourceTypeCodeList" :value="item.value" :key="index">{{
                         item.label }}</a-select-option>
                     </a-select>
                   </a-form-item>
@@ -75,36 +56,131 @@
               </div>
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="IsImportant" label="重要信息">
-                    <a-checkbox v-model:checked="formState.IsImportant"></a-checkbox>
+                  <a-form-item name="ApproveByIds" label="负责人" :rules="[{ required: true, message: '请选择负责人' }]">
+                      <a-select v-model:value="formState.ApproveByIds.Id"
+                      :default-active-first-option="false" :filter-option="false" showSearch @search="(e) => {searchlookup(e,'SystemUser', 'ApproveByIds');}" @dropdownVisibleChange="(e) => {searchlookup('','SystemUser', 'ApproveByIds');}">
+                          <template #suffixIcon></template>
+                          <a-select-option v-for="(option, optionIdx) in search.ApproveByIds" :key="optionIdx" :value="option.ID">{{ option.Name }}</a-select-option>
+                      </a-select>
+                      <div class="selectIcon">
+                          <SearchOutlined class="ant-select-suffix" @click="handleOpenLook('8')" />
+                      </div>
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
-                  <a-form-item name="IsTop" label="置顶信息">
-                    <a-checkbox v-model:checked="formState.IsTop"></a-checkbox>
+                  <a-form-item name="MobilePhone" label="电话" :rules="[{ required: true, message: '请输入电话' }]">
+                    <a-input v-model:value="formState.MobilePhone" class="NewMeetingRoomInputClass"></a-input>
                   </a-form-item>
                 </div>
               </div>
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="IsPublic" label="查看范围">
-                    <a-checkbox v-model:checked="formState.IsPublic">所有人可以查看</a-checkbox>
+                  <a-form-item name="Longitude" label="经度">
+                    <a-input v-model:value="formState.Longitude" class="NewMeetingRoomInputClass"></a-input>
                   </a-form-item>
                 </div>
-                <div class="sectionItem" v-if="formState.IsTop">
-                  <a-form-item name="EndTopDate" label="置顶截止">
-                    <a-date-picker v-model:value="formState.EndTopDate" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="置顶截止" />
+                <div class="sectionItem">
+                  <a-form-item name="Latitude" label="纬度">
+                    <a-input v-model:value="formState.Latitude" class="NewMeetingRoomInputClass"></a-input>
                   </a-form-item>
                 </div>
               </div>
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="KeyWords" label="移动标签">
-                    <a-checkbox-group v-model:value="formState.KeyWords" style="width: 100%">
-                      <a-checkbox :value="item" v-for="(item, index) in keywords" :key="index">{{ item }}</a-checkbox>
-                    </a-checkbox-group>
+                  <a-form-item name="Location" label="地址">
+                    <a-input v-model:value="formState.Location" class="NewMeetingRoomInputClass"></a-input>
                   </a-form-item>
                 </div>
+                <div class="sectionItem">
+                  <a-form-item name="AttachInfo" label="配备物品">
+                    <a-input v-model:value="formState.AttachInfo" class="NewMeetingRoomInputClass"></a-input>
+                  </a-form-item>
+                </div>
+              </div>
+              
+              <div class="sectionRow">
+                <div class="sectionItem">
+                  <a-form-item name="AvailableStartTime" label="可使用开始时间" :rules="[{ required: true, message: '请输入可使用开始时间' }]">
+                    <a-time-picker v-model:value="formState.AvailableStartTime" valueFormat="hh:mm" format="hh:mm" placeholder="可使用开始时间" />
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="AvailableEndTime" label="可使用结束时间" :rules="[{ required: true, message: '请输入可使用结束时间' }]">
+                    <a-time-picker v-model:value="formState.AvailableEndTime" valueFormat="hh:mm" format="hh:mm" placeholder="可使用结束时间" />
+                  </a-form-item>
+                </div>
+              </div>
+
+              <div class="sectionRow">
+                <div class="sectionItem">
+                  <a-form-item name="ApplyStartTime" label="预约开始时间" :rules="[{ required: true, message: '请输入预约开始时间' }]">
+                    <a-time-picker v-model:value="formState.ApplyStartTime" valueFormat="hh:mm" format="hh:mm" placeholder="预约开始时间" />
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="ApplyEndTime" label="预约截至时间" :rules="[{ required: true, message: '请输入预约截至时间' }]">
+                    <a-time-picker v-model:value="formState.ApplyEndTime" valueFormat="hh:mm" format="hh:mm" placeholder="预约截至时间" />
+                  </a-form-item>
+                </div>
+              </div>
+              
+              <div class="sectionRow">
+                <div class="sectionItem">
+                  <a-form-item name="Visibility" label="所有人可用">
+                    <a-checkbox v-model:checked="formState.Visibility"></a-checkbox>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="MondayAllow" label="星期一">
+                    <a-checkbox v-model:checked="formState.MondayAllow"></a-checkbox>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="TuesdayAllow" label="星期二">
+                    <a-checkbox v-model:checked="formState.TuesdayAllow"></a-checkbox>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="WednesdayAllow" label="星期三">
+                    <a-checkbox v-model:checked="formState.WednesdayAllow"></a-checkbox>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="ThursdayAllow" label="星期四">
+                    <a-checkbox v-model:checked="formState.ThursdayAllow"></a-checkbox>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="FridayAllow" label="星期五">
+                    <a-checkbox v-model:checked="formState.FridayAllow"></a-checkbox>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="SaturdayAllow" label="星期六">
+                    <a-checkbox v-model:checked="formState.SaturdayAllow"></a-checkbox>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
+                  <a-form-item name="SundayAllow" label="星期日">
+                    <a-checkbox v-model:checked="formState.SundayAllow"></a-checkbox>
+                  </a-form-item>
+                </div>
+              </div>
+              
+              <div class="sectionRow">
+                
+                <div class="sectionItem">
+                  
+                </div>
+              </div>
+
+              <div class="sectionRow">
+                <div class="sectionItem">
+                  <a-form-item name="Description" label="备注">
+                    <a-textarea :rows="4" v-model:value="formState.Description" />
+                  </a-form-item>
+                </div>
+                
               </div>
               
             </div>
@@ -112,20 +188,6 @@
           </a-form>
         </div>
         <div class="modalCenter" :style="{ height: height + 'px!important' }" v-show="step * 1 == 1">
-          <!-- <div class="section">
-            <div class="sectionTitle">图片/轮播信息</div>
-            <div class="sectionRow">
-              <div class="sectionItem">
-                <a-form-item name="CoverDisplay" label="图片（手机/首页）">
-                  <a-select v-model:value="formState.CoverDisplay" placeholder="请选择图片（手机/首页）">
-                    <a-select-option v-for="(item, index) in CoverDisplayList" :value="item.value" :key="index">{{
-                      item.label
-                    }}</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </div>
-            </div>
-          </div> -->
           <div class="section">
             <div class="sectionTitle">图片信息</div>
             <div class="sectionRow">
@@ -173,62 +235,20 @@
             </div>
           </div>
         </div>
-        <div class="modalCenter" :style="{ height: height + 'px!important' }" v-show="step * 1 == 2">
-          <a-form :model="formState3" ref="formRef3" class="formRef3">
-            <div class="section">
-              <div class="sectionTitle">添加可查看人员</div>
-              <div class="sectionRow">
-                <div class="sectionItem memberlist">
-                  <FilterQuery :FilterExpresssionList="FilterExpresssionList" @params="getFilterQuery"
-                    :entityApiName="'SystemUser'"></FilterQuery>
-                </div>
-              </div>
-              <div class="sectionRow">
-                <div class="sectionItem memberlist">
-                  <div class="sectionItemTitle">查询结果</div>
-                  <a-button type="primary" class="sectionItemBtn">搜索</a-button>
-                  <a-table :columns="columns" :dataSource="peopleList" :scroll="{ y: tableHeight }"
-                    :pagination="data.pagination" @change="handleTableChange">
-                    <template #bodyCell="{ column, index, record }">
-                      <template v-if="column.key === 'Action'">
-                        <a-button type="text" size="small" @click="handleDelete(record.id)">删除</a-button>
-                      </template>
-                      <template v-if="column.key === 'index'">
-                        <div>
-                          {{ index + 1 }}
-                        </div>
-                      </template>
-                      <div v-if="column.key == 'AvatarImg'">
-                        <img :src="record.AvatarImg || Interface.pathUrl + ':9091/api/one/user/avatar/' + record.id"
-                          @error="handleImageError(record)" alt="" class="AddGroup_list_avatar" />
-                      </div>
-                    </template>
-                  </a-table>
-                  <div class="empty" v-if="peopleList.length == 0">
-                    <img :src="require('@/assets/img/empty.png')" alt="" />
-                    <p class="emptyDesc">当前暂无数据</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a-form>
-        </div>
       </div>
       <template #footer>
         <div>
           <a-button @click="handleCancel" v-if="step == 0">取消</a-button>
           <a-button type="primary" @click.prevent="handleSubmit" v-if="step == 0">下一步</a-button>
           <a-button @click="data.step = 0" v-if="step == 1">上一步</a-button>
-          <a-button type="primary" @click="step = 2" v-if="step == 1">下一步</a-button>
-          <a-button @click="data.step = 1" v-if="step == 2">上一步</a-button>
-          <a-button type="primary" @click="handleSubmit2" v-if="step == 2">完成</a-button>
+          <a-button type="primary" @click="handleSubmit2" v-if="step == 1">完成</a-button>
         </div>
       </template>
     </a-modal>
     <RadioDept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
     <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
     <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople" :sObjectName="sObjectName"
-      :recordId="memberId" :objTypeCode="objectTypeCode" :external="external" />
+      :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
     <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="'确定要删除吗？'" :title="'删除'" @cancel="isConfirm = false"
       @ok="deleteFile" :id="recordId" />
     <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
@@ -279,102 +299,84 @@ import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
-//console.log(document.documentElement.clientHeight);
 const labelCol = ref({ style: { width: "100px" } });
 const props = defineProps({
   isShow: Boolean,
-  folderName: String,
-  folderPicker: String,
-  objectTypeCode: [String, Number],
-  id: [String, Number],
-  FolderId: String
+  objectTypeCode: String,
+  entityApiName: String,
+  id: String,
+  title: String
 });
 const formRef = ref();
 const formRef3 = ref();
-const emit = defineEmits(["cancel"]);
+const emit = defineEmits(["cancel","load"]);
 const handleCancel = () => {
   emit("cancel", false);
 };
 const handleSubmit2 = () => {
   emit("cancel", false);
-  let reUrl = router.resolve({
-    path: "/lightning/o/Content/home",
-    query: {
-
-    }
-  })
-  window.open(reUrl.href);
+  emit("load", false);
 };
 const formState = reactive({
-  ApprovedBy: '',
-  BusinessUnitId: '',
-  IsImportant: false,
-  IsTop: false,
-  AttachRightCode: '',
-  EndTopDate: '',
-  ApprovedOn: '',
-  StateCode: 1,
-  KeyWords: [],
-  IsPublic: false,
-  CoverDisplay: '',
-  FolderId: ''
+  Name:'',
+  StatusCode: 1,
+  Capacity:'',
+  SortNumber:'',
+  ResourceNumber:'',
+  Visibility:false,
+  ApproveByIds: {
+    Id: '',
+    Name: ''
+  },
+  MobilePhone:'',
+  ResourceTypeCode:2,
+  Longitude:'',
+  Latitude:'',
+  Location:'',
+  AttachInfo:'',
+  AvailableStartTime:'',
+  AvailableEndTime:'',
+  ApplyStartTime:'',
+  ApplyEndTime:'',
+  MondayAllow:false,
+  TuesdayAllow:false,
+  WednesdayAllow:false,
+  ThursdayAllow:false,
+  FridayAllow:false,
+  SaturdayAllow:false,
+  SundayAllow:false,
+  Description: ''
 });
 const token = localStorage.getItem("token");
 const data = reactive({
-  title: "发布信息",
+  title: "新建企业资源",
   height: document.documentElement.clientHeight - 150,
-  AttachRightCodeList: [
+  ResourceTypeCodeList: [
     {
-      label: '所有',
+      label: '设备',
       value: 0
     },
     {
-      label: '只读',
-      value: 4
-    },
-    {
-      label: '可下载',
-      value: 8
-    }
-  ],
-  StateCodeList: [
-    {
-      label: '草稿',
-      value: 0
-    },
-    {
-      label: '已发布',
+      label: '车辆',
       value: 1
     },
     {
-      label: '审批不通过',
+      label: '会议室',
       value: 2
+    }
+  ],
+  StatusCodeList: [
+    {
+      label: '已停用',
+      value: 0
+    },
+    {
+      label: '已启用',
+      value: 1
     }
   ],
   keywords: [],
   treeData: [],
-  CoverDisplayList: [
-    {
-      label: '标题左边',
-      value: 'LeftTitle'
-    },
-    {
-      label: '标题右边',
-      value: 'RightTitle'
-    },
-    {
-      label: '标题下面大图',
-      value: 'BelowTitleBigImg'
-    },
-    {
-      label: '标题下列表',
-      value: 'BelowGrid'
-    },
-    {
-      label: '标题下轮播',
-      value: 'Carousel'
-    }
-  ],
   fileList: [],
   isRadioDept: false,
   BusinessUnitId: '',
@@ -382,30 +384,17 @@ const data = reactive({
   listData: [],
   step: 0,
   search: {
-    OwningUser: [],
-    member: [],
+    ApproveByIds: [],
     BusinessUnitId: []
   },
   recordId: '',
   isRadioDept: false,
   isRadioUser: false,
-  objectTypeCode: '90',
-  sObjectName: 'GroupMembership',
+  objectTypeCode: '20034',
+  sObjectName: '',
   isDelete: false,
   deleteDesc: '确定要删除吗？',
   external: false,
-  RoleCode: 0,
-  RoleCodeList: [
-    {
-      value: 0,
-      label: '成员'
-    },
-    {
-      value: 2,
-      label: '管理员'
-    },
-  ],
-  memberId: '',
   peopleList: [],
   pagination: {
     hideOnSinglePage: true,
@@ -442,127 +431,32 @@ const data = reactive({
 const {
   isTxt, txtParams,
   title, step, search, FilterExpresssionList, filterExpression, ImageList, uploadData, headers, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
-  height, AttachRightCodeList, keywords, treeData, CoverDisplayList,
-  fileList, BusinessUnitId, ApprovedBy, listData, StateCodeList,
-  recordId, isRadioDept, isRadioUser, objectTypeCode, sObjectName, isDelete, deleteDesc, external, RoleCode, RoleCodeList, memberId, peopleList, pagination, tableHeight
+  height, ResourceTypeCodeList, keywords, treeData,
+  fileList, BusinessUnitId, ApprovedBy, listData, StatusCodeList,
+  recordId, isRadioDept, isRadioUser, objectTypeCode, sObjectName, isDelete, deleteDesc, external, peopleList, pagination, tableHeight
 } = toRefs(data);
-const AddGroup = ref();
-const formState2 = reactive({
-  OwningUser: {
-    Id: '',
-    Name: ''
-  },
-
-});
-const formState3 = reactive({
-  member: {
-    Id: '',
-    Name: ''
-  },
-
-});
-// 添加成员
-const AddPeople = () => {
-  if (formState3.member.Id) { } else {
-    message.error("请选择要添加的成员");
-    return
-  }
-  let url = Interface.create;
-  let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordInput: {
-          allowSaveOnDuplicate: false,
-          apiName: 'GroupMembership',
-          objTypeCode: '90',
-          fields: {
-            GroupId: props.id,
-            RegardingObjectIdName: formState3.member.Name,
-            RegardingObjectId: formState3.member.Id,
-            RoleCode: data.RoleCode,
-            RegardingObjectTypeCode: 8
-          }
+const unique = (list, field) => {
+    for (let i = 0; i < list.length; i++) {
+        for (let j = i + 1; j < list.length; j++) {
+            if (list[i][field] == list[j][field]) {
+                list.splice(j, 1);
+                j--;
+            }
         }
-      }
-    }]
-  };
-
-  let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
-    data.isRadioUser = false;
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-      message.success("添加成功！");
-      refreshPeople();
     }
-
-  });
+    return list;
 }
 const handleImageError = (record) => {
   record.AvatarImg = '/src/assets/img/avatar.png';
   return record;
 };
 const refreshPeople = (e) => {
-  if (data.step == 2) {
-    getQuery();
-  }
+  
 }
 const closeUser = (e) => {
   data.isRadioUser = false;
 };
-const getBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-}
-// const searchlookup = (searchVal, Lktp, field) => {
-//   let obj = {
-//           actions:[{
-//               id: "6129;a",
-//               descriptor: "",
-//               callingDescriptor: "UNKNOWN",
-//               params: {
-//                   objectApiName: 'Group',
-//                   fieldApiName: field,
-//                   pageParam: 1,
-//                   pageSize: 25,
-//                   q: searchVal||'',
-//                   searchType: "Recent",
-//                   targetApiName: Lktp,
-//                   body: {
-//                       sourceRecord: {
-//                           apiName: 'Group',
-//                           fields: {
-//                               Id: null,
-//                                   RecordTypeId: ""
-//                               }
-//                           }
-//                       }
-//                   }
-//               }]
-//       }
-//       let d = {
-//           message: JSON.stringify(obj)
-//       }
-//       proxy.$post(Interface.lookup, d).then((res) => {
-//           let list = res.actions[0].returnValue.lookupResults.records;
-//           let arr = [];
-//           list.forEach(item=>{
-//               arr.push({
-//                   ID: item.fields.Id.value,
-//                   Name: item.fields.Name.value
-//               })
-//           });
-//           data.search[field] = arr;
-//       });
-// }
+
 const handleOpenLook = (type, name) => {
   if (type == '10') {
     data.isRadioDept = true;
@@ -571,64 +465,21 @@ const handleOpenLook = (type, name) => {
     data.isRadioUser = true;
   }
 }
-// const cancelDeptModal = (e) => {
-//   data.isRadioDept = false;
-// }
-// const handleDeptParams = (e) => {
-//   //console.log("e",e);
-//   if(e.ID){
-//     formState.BusinessUnitId.Id = e.ID;
-//     data.isRadioDept = false;
-//     let result =data.search.BusinessUnitId.filter((item) => {
-//       return item.ID == e.ID;
-//     });
-//     if(result&&result.length){}else{
-//       data.search.BusinessUnitId.push({
-//         ID:e.ID,
-//         Name:e.Name
-//       })
-//     }
-//   }
-// }
-const changeUserData = (e) => {
-  if (e) {
-    formState3.member.Id = e;
-    let result = data.search.member.filter((item) => {
-      return item.ID == e;
-    });
-    if (result && result.length) {
-      formState3.member.Name = result[0].Name;
-    }
-  }
-}
+
 const getUserData = (e) => {
   data.isRadioUser = false;
   if (e.id) {
     if (data.step == 0) {
-      formState.OwningUser.Id = e.id;
+      formState.ApproveByIds.Id = e.id;
       data.isRadioDept = false;
-      let result = data.search.OwningUser.filter((item) => {
+      let result = data.search.ApproveByIds.filter((item) => {
         return item.ID == e.id;
       });
       if (result && result.length) { } else {
-        data.search.OwningUser.push({
+        data.search.ApproveByIds=[{
           ID: e.id,
           Name: e.name
-        })
-      }
-    }
-    else {
-      formState3.member.Id = e.id;
-      formState3.member.Name = e.name;
-      data.isRadioDept = false;
-      let result = data.search.member.filter((item) => {
-        return item.ID == e.id;
-      });
-      if (result && result.length) { } else {
-        data.search.member.push({
-          ID: e.id,
-          Name: e.name
-        })
+        }]
       }
     }
   }
@@ -653,79 +504,8 @@ const handleDeptParams = (e) => {
     }
   }
 }
-const handleDeptParams2 = (e) => {
-  //console.log("eeee",e);
-  if (e) {
-    data.BusinessUnitId = e;
-    let result = data.listData.filter((item) => {
-      return item.ID == e;
-    });
-    if (result && result.length) {
-      formState.BusinessUnitId = result[0].Name;
-    }
-  }
-}
-const handleFocus = (e) => {
-  data.isRadioDept = true;
-}
-const getTreeData = () => {
-  // proxy.$get(Interface.information.contentTree, {
-  //   objectTypeCode: props.objectTypeCode
-  // }).then((response) => {
-  //   let formTree = (list) => {
-  //     list.forEach(item => {
-  //       if (item.children) {
-  //         formTree(item.children);
-  //       }
-  //       item.key = item.id;
-  //       item.value = item.id;
-  //     })
-  //   }
-  //   formTree(response);
-  //   data.treeData = response;
-  // })
-  let url = Interface.content.folder.get;
-  proxy.$post(url, {}).then(res => {
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-      let formTree = (list) => {
-        list.forEach(item => {
-          if (item.children) {
-            formTree(item.children);
-          }
-          item.key = item.id;
-          item.value = item.id;
-        })
-      }
-      let response = res.actions[0].returnValue;
-      formTree(response);
-      data.treeData = response;
-    }
-  });
-}
-getTreeData();
 
-
-
-const getTags = () => {
-  proxy.$get(Interface.information.tags, {}).then(res => {
-    data.keywords = res.data;
-  })
-}
-getTags();
-
-const searchlookup = (search, attribute) => {
-  console.log(search, attribute);
-  proxy
-    .$get(Interface.uilook, {
-      Lktp: attribute.attributes.sObjectType,
-      Lksrch: search,
-    })
-    .then((res) => {
-      let listData = res.listData;
-      data.search[attribute.targetValue] = listData;
-    });
-};
-const searchlookup2 = () => {
+const searchlookup = (e,fieldApiName,fieldName) => {
   let obj = {
     actions: [{
       id: "6129;a",
@@ -733,12 +513,12 @@ const searchlookup2 = () => {
       callingDescriptor: "UNKNOWN",
       params: {
         objectApiName: props.entityApiName,
-        fieldApiName: 'BusinessUnitId',
+        fieldApiName: fieldApiName,
         pageParam: 1,
         pageSize: 25,
-        q: "",
+        q: e,
         searchType: "Recent",
-        targetApiName: 'BusinessUnit',
+        targetApiName: fieldApiName,
         body: {
           sourceRecord: {
             apiName: props.entityApiName,
@@ -763,14 +543,33 @@ const searchlookup2 = () => {
         Name: item.fields.Name.value
       })
     });
-    data.listData = arr;
+    data.search[fieldName] = (data.search[fieldName]).concat(arr);
+    data.search[fieldName] = unique(data.search[fieldName],'ID');
   });
 }
 onMounted(() => {
+  let userInfo = window.localStorage.getItem('userInfo');
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+    var userId = userInfo.userId;
+    var userName = userInfo.fullName;
+    var businessUnitId = userInfo.businessUnitId;
+    if (userId == 'jackliu') {
+      userId = '2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+    }
+    formState.ApproveByIds.Id = userName;
+    formState.ApproveByIds.Name = userId;
+    data.search.ApproveByIds=[{
+      ID:userId,
+      Name:userName
+    }];
+    data.BusinessUnitId = businessUnitId;
+  }
   window.addEventListener("resize", (e) => {
     data.height = document.documentElement.clientHeight - 150;
   });
   if (props.id) {
+    data.title='编辑企业资源';
     getDetail();
     getFiles();
     data.uploadData.id = props.id;
@@ -784,8 +583,8 @@ const getDetail = () => {
       callingDescriptor: "UNKNOWN",
       params: {
         recordId: props.id,
-        apiName: props.objectTypeCode == '100201' ? 'Content' : 'Notice',
-        objTypeCode: props.objectTypeCode
+        apiName: props.entityApiName,
+        objTypeCode: data.objectTypeCode
       }
     }]
   };
@@ -795,42 +594,42 @@ const getDetail = () => {
   proxy.$post(Interface.detail, obj).then(res => {
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
       let fields = res.actions[0].returnValue.fields;
-      formState.ApprovedBy = fields.ApprovedBy?fields.ApprovedBy.displayValue:'';
-      data.ApprovedBy = fields.ApprovedBy?fields.ApprovedBy.value:'';
-      formState.BusinessUnitId = fields.BusinessUnitId?fields.BusinessUnitId.displayValue:'';
-      data.BusinessUnitId = fields.BusinessUnitId?fields.BusinessUnitId.value:'';
-      if (fields.BusinessUnitId&&fields.BusinessUnitId.value) {
-        data.listData = [];
-        data.listData.push({
-          ID: fields.BusinessUnitId.value,
-          Name: fields.BusinessUnitId.displayValue
-        })
+      formState.Name = fields.Name?fields.Name.value:'';
+      formState.StatusCode = fields.StatusCode?fields.StatusCode.value*1:'';
+      formState.Capacity = fields.Capacity?fields.Capacity.value:'';
+      formState.SortNumber = fields.SortNumber?fields.SortNumber.value:'';
+      formState.ResourceNumber = fields.ResourceNumber?fields.ResourceNumber.value:'';
+      formState.Visibility = fields.Visibility && fields.Visibility.value ? true : false;
+      if (fields.ApproveByIds&&fields.ApproveByIds.value) {
+        formState.ApproveByIds.Id=fields.ApproveByIds.value;
+        formState.ApproveByIds.Name=fields.ApproveByIds.displayValue;
+        data.search.ApproveByIds=[{
+          ID: fields.ApproveByIds.value,
+          Name: fields.ApproveByIds.displayValue
+        }];
       }
-      formState.IsImportant = fields.IsImportant&&fields.IsImportant.value ? true : false;
-      formState.IsTop = fields.IsTop&&fields.IsTop.value * 1 == 1 ? true : false;
-      formState.AttachRightCode = fields.AttachRightCode?fields.AttachRightCode.value * 1:0;
-      //formState.StateCode = fields.StateCode.value * 1;
-      formState.EndTopDate = fields.EndTopDate && fields.EndTopDate.value ? dayjs(fields.EndTopDate.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '';
-      formState.ApprovedOn = fields.ApprovedOn && fields.ApprovedOn.value ? dayjs(fields.ApprovedOn.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '';
-      formState.KeyWords = fields.KeyWords&&fields.KeyWords.value ? (fields.KeyWords.value).split(',') : [];
-      formState.IsPublic = fields.IsPublic&&fields.IsPublic.value * 1 == 1 ? true : false;
-      formState.CoverDisplay = fields.CoverDisplay?fields.CoverDisplay.value:'';
-      formState.FolderId = fields.FolderId?fields.FolderId.value:'';
-      let userInfo = window.localStorage.getItem('userInfo');
-      if (userInfo && !formState.ApprovedBy) {
-        userInfo = JSON.parse(userInfo);
-        var userId = userInfo.userId;
-        var userName = userInfo.fullName;
-        var businessUnitId = userInfo.businessUnitId;
-        var businessUnitName = window.localStorage.getItem('businessUnitName') || '';
-        if (userId == 'jackliu') {
-          userId = '2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
-        }
-        formState.ApprovedBy = userName;
-        data.ApprovedBy = userId;
-        data.BusinessUnitId = businessUnitId;
-        formState.BusinessUnitId = businessUnitName;
-      }
+      formState.MobilePhone = fields.MobilePhone?fields.MobilePhone.value:'';
+      formState.ResourceTypeCode = fields.ResourceTypeCode?fields.ResourceTypeCode.value*1:'';
+      formState.Longitude = fields.Longitude?fields.Longitude.value:'';
+      formState.Latitude = fields.Latitude?fields.Latitude.value:'';
+      formState.Location = fields.Location?fields.Location.value:'';
+      formState.AttachInfo = fields.AttachInfo?fields.AttachInfo.value:'';
+
+      formState.AvailableStartTime = fields.AvailableStartTime && fields.AvailableStartTime.value ? fields.AvailableStartTime.value : '';
+      formState.AvailableEndTime = fields.AvailableEndTime && fields.AvailableEndTime.value ? fields.AvailableEndTime.value : '';
+      formState.ApplyStartTime = fields.ApplyStartTime && fields.ApplyStartTime.value ? fields.ApplyStartTime.value : '';
+      formState.ApplyEndTime = fields.ApplyEndTime && fields.ApplyEndTime.value ? fields.ApplyEndTime.value : '';
+
+      formState.MondayAllow = fields.MondayAllow && fields.MondayAllow.value ? true : false;
+      formState.TuesdayAllow = fields.TuesdayAllow && fields.TuesdayAllow.value ? true : false;
+      formState.WednesdayAllow = fields.WednesdayAllow && fields.WednesdayAllow.value ? true : false;
+      formState.ThursdayAllow = fields.ThursdayAllow && fields.ThursdayAllow.value ? true : false;
+      formState.FridayAllow = fields.FridayAllow && fields.FridayAllow.value ? true : false;
+      formState.SaturdayAllow = fields.SaturdayAllow && fields.SaturdayAllow.value ? true : false;
+      formState.SundayAllow = fields.SundayAllow && fields.SundayAllow.value ? true : false;
+
+      formState.Description = fields.Description?fields.Description.value:'';
+      
     }
   })
 }
@@ -840,41 +639,7 @@ const handleSubmit = () => {
   formRef.value
     .validate()
     .then(() => {
-      console.log("values", formState, toRaw(formState));
-      // let obj = {
-      //   params: {
-      //     objTypeCode: props.objectTypeCode,
-      //     fields: {
-      //         ApprovedBy: {
-      //             Id: ""
-      //         },
-      //         BusinessUnitId: {
-      //             Id: data.BusinessUnitId
-      //         },
-      //         IsImportant: formState.IsImportant?1:0,
-      //         IsTop: formState.IsTop ? 1 : 0,
-      //         AttachRightCode: formState.AttachRightCode,
-      //         EndTopDate: dayjs(formState.EndTopDate).format("YYYY-MM-DD hh:mm:ss"),
-      //         ApprovedOn: dayjs(formState.ApprovedOn).format("YYYY-MM-DD hh:mm:ss"),
-      //         StateCode: 1,
-      //         KeyWords: formState.KeyWords.join(',') || '',
-      //         IsPublic: formState.IsPublic ? 1 : 0,
-      //         CoverDisplay: formState.CoverDisplay,
-      //         Title: "",
-      //         FolderId: {
-      //             Id: props.FolderId
-      //         }
-      //     },
-      //     id: props.id,
-      //     ContentTypeCode: 1,
-      //   },
-      // };
-      // var messages = JSON.stringify(obj);
-      // proxy.$get(Interface.saveRecord, { message: messages }).then((res) => {
-      //   formRef.value.resetFields();
-      //   message.warning("保存成功！");
-      //   emit("cancel", false);
-      // });
+      //console.log("values", formState, toRaw(formState));
       let url = Interface.edit;
       let d = {
         actions: [{
@@ -884,22 +649,34 @@ const handleSubmit = () => {
           params: {
             recordInput: {
               allowSaveOnDuplicate: false,
-              apiName: 'Content',
-              objTypeCode: props.objectTypeCode,
+              apiName: props.entityApiName,
+              objTypeCode: data.objectTypeCode,
               fields: {
-                ApprovedBy: data.ApprovedBy,
-                BusinessUnitId: data.BusinessUnitId,
-                IsImportant: formState.IsImportant,
-                IsTop: formState.IsTop ? 1 : 0,
-                AttachRightCode: formState.AttachRightCode,
-                EndTopDate: formState.EndTopDate ? dayjs(formState.EndTopDate).format("YYYY-MM-DD hh:mm:ss") : '',
-                ApprovedOn: formState.ApprovedOn ? dayjs(formState.ApprovedOn).format("YYYY-MM-DD hh:mm:ss") : '',
-                StateCode: formState.StateCode,
-                KeyWords: formState.KeyWords.join(',') || '',
-                IsPublic: formState.IsPublic ? 1 : 0,
-                CoverDisplay: formState.CoverDisplay,
-                //Title: "",
-                FolderId: formState.FolderId
+                Name:formState.Name,
+                StatusCode: formState.StatusCode,
+                Capacity:formState.Capacity,
+                SortNumber:formState.SortNumber,
+                ResourceNumber:formState.ResourceNumber,
+                Visibility:formState.Visibility,
+                ApproveByIds:formState.ApproveByIds.Id,
+                MobilePhone:formState.MobilePhone,
+                ResourceTypeCode:formState.ResourceTypeCode,
+                Longitude:formState.Longitude,
+                Latitude:formState.Latitude,
+                Location:formState.Location,
+                AttachInfo:formState.AttachInfo,
+                AvailableStartTime:formState.AvailableStartTime ? formState.AvailableStartTime : '',
+                AvailableEndTime:formState.AvailableEndTime ? formState.AvailableEndTime : '',
+                ApplyStartTime:formState.ApplyStartTime ? formState.ApplyStartTime : '',
+                ApplyEndTime:formState.ApplyEndTime ? formState.ApplyEndTime : '',
+                MondayAllow:formState.MondayAllow,
+                TuesdayAllow:formState.TuesdayAllow,
+                WednesdayAllow:formState.WednesdayAllow,
+                ThursdayAllow:formState.ThursdayAllow,
+                FridayAllow:formState.FridayAllow,
+                SaturdayAllow:formState.SaturdayAllow,
+                SundayAllow:formState.SundayAllow,
+                Description: formState.Description
               }
             }
           }
@@ -923,7 +700,6 @@ const handleSubmit = () => {
           message.error("保存失败！");
         }
         //emit("cancel", false);
-
       });
 
     })
@@ -933,7 +709,6 @@ const handleSubmit = () => {
 };
 //删除
 const handleDelete = (key) => {
-  data.memberId = key;
   data.isDelete = true;
 }
 //删除关闭
@@ -941,76 +716,6 @@ const cancelDelete = (e) => {
   data.isDelete = false;
   data.isConfirm = false;
 };
-var columns = [
-  {
-    title: "序号",
-    dataIndex: "index",
-    key: "index",
-  },
-  {
-    title: "头像",
-    dataIndex: "AvatarImg",
-    key: 'AvatarImg'
-  },
-  {
-    title: "姓名",
-    dataIndex: "FullName",
-  },
-  {
-    title: "部门",
-    dataIndex: "BusinessUnitId",
-  },
-  {
-    title: "角色",
-    dataIndex: "RoleCode",
-  },
-
-  // {
-  //   title: "操作",
-  //   key: "Action",
-  //   width: 150,
-  // },
-];
-//改变页码
-const handleTableChange = (pag, filters, sorter) => {
-  data.pagination.current = pag.current;
-  getQuery();
-}
-const getFilterQuery = (e) => {
-  console.log("e", e);
-  data.filterExpression = e;
-}
-//获取人员筛选器数据
-const getFilterExpresssionList = () => {
-  proxy.$get(Interface.flow.handleDetail, {
-    ProcessId: data.processId,
-    StepId: props.stepId,
-    StepCode: props.stepCode
-  }).then(res => {
-    let Variables = res.Variables;
-    Variables.forEach(item => {
-      for (let key in formState.Variables) {
-        if (item.Id == formState.Variables[key].value) {
-          formState.Variables[key].checkbox = true;
-        }
-      }
-    });
-    let StepVariables = res.StepVariables;
-    StepVariables.Variables.forEach(item => {
-      for (let key in formState.StepVariables) {
-        if (item.Id == formState.StepVariables[key].value) {
-          formState.StepVariables[key].checkbox = true;
-        }
-      }
-    })
-    let Groups = res.Groups;
-    Groups.forEach(item => {
-      data.targetKeys.push(item.ObjectTypeCode + ':' + item.Id);
-    })
-    formState.scope = res.FilterScope.Scope;
-    data.FilterExpresssionList = res.FilterExpresssion;
-  })
-}
 
 const getFiles = () => {
   data.fileList = [];
@@ -1341,8 +1046,9 @@ const deleteFile = (id) => {
   }
 }
 
-.sectionItem .ApprovedByName {
+.sectionItem .NewMeetingRoomInputClass {
   border-radius: 4px !important;
+  border-color: #d9d9d9 !important;
 }
 
 .RelaseInfoUpload {
@@ -1501,7 +1207,7 @@ input[aria-hidden="true"] {
     }
   }
 }
-.RelaseInfoWrap {
+.NewMeetingRoomWrap {
   .modalCenter1 {
     .section .sectionRow .sectionItem .ant-row {
       width: 100%;

@@ -238,10 +238,10 @@ const data = reactive({
     showSizeChanger: true,
     showQuickJumper: true,
     total: 0,//数据总数
-    pageSize: 10,
+    pageSize: 1000,
     current: 1,
-    pageSizeOptions: ['10', '20', '50', '100'],
-    defaultPageSize: 10,
+    pageSizeOptions: ['10', '20', '50', '100','1000'],
+    defaultPageSize: 1000,
     showTotal: ((total) => {
       return `共${total}条`
     })

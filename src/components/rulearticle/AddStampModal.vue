@@ -110,41 +110,34 @@ const setTop = computed(() => ({
   top: `calc(50% - 150px)`
 }));
 const handleSubmit = () => {
-  emit("cancel", false);
-  return
   formRef.value
     .validate()
     .then(() => {
-      let url = Interface.create;
+      let url = Interface.rulearticle.batchAddStamp;
       let d = {
         actions: [{
-          id: "2919;a",
+          id: "4105;a",
           descriptor: "",
           callingDescriptor: "UNKNOWN",
           params: {
-            recordInput: {
-              allowSaveOnDuplicate: false,
-              apiName: 'Institution',
-              objTypeCode: '100204',
-              fields: {
-
-              }
-            }
+            ids: props.id,
+            stampText: formState.stamp
           }
         }]
       };
-      if (props.id) {
-        d.actions[0].params.recordId = props.id;
-        url = Interface.edit;
-      }
       let obj = {
         message: JSON.stringify(d)
       }
       proxy.$post(url, obj).then(res => {
-        formRef.value.resetFields();
-        message.success("保存成功！");
-        emit("cancel", false);
-        emit("ok", '');
+        if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+          formRef.value.resetFields();
+          message.success("添加成功！");
+          emit("cancel", false);
+          emit("ok", '');
+        }
+        else{
+          message.error("添加失败！");
+        }
       });
 
     })

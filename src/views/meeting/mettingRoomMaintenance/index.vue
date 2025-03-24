@@ -6,7 +6,7 @@
             <img class="img" :src="require('@/assets/task_120.png')" alt="" />
           </div>
           <div class="menu-box">
-            <div class="label">会议室维护</div>
+            <div class="label">会议室维护1</div>
             <div class="row">
               <a-dropdown :trigger="['click']">
                 <a class="ant-dropdown-link" @click.prevent>

@@ -164,6 +164,7 @@
             @ok="deleteFile" :id="recordId" />
         <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
         <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+        <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
     </div>
 </template>
 <script setup>
@@ -205,6 +206,7 @@ import RelateInstance from "@/components/workflow/RelateInstance.vue";
 import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 import ImageView from "@/components/file/ImageView.vue";
 import PdfView from "@/components/file/PdfView.vue";
+import TxtView from "@/components/file/TxtView.vue";
 import { useRouter, useRoute } from "vue-router";
 import { message } from "ant-design-vue";
 const route = useRoute();
@@ -251,9 +253,11 @@ const data = reactive({
     isPhoto: false,
     photoParams: {},
     isPdf: false,
-    pdfParams: {}
+    pdfParams: {},
+    isTxt: false,
+    txtParams: {}
 })
-const { tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData, FormData, ImageList, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
+const { isTxt, txtParams, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData, FormData, ImageList, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
     isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
     pageCurrent } = toRefs(data);
 const changeTabs = (e) => {
@@ -460,6 +464,13 @@ const handlePreviewFile = (item) => {
             downloadUrl: item.downloadUrl
         };
         data.isPdf = true;
+    } else if (item.fileExtension == 'txt') {
+        data.txtParams = {
+            name: item.name,
+            viewUrl: item.viewUrl,
+            downloadUrl: item.downloadUrl
+        };
+        data.isTxt = true;
     }
     else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
         //let medittype = 0;

@@ -97,6 +97,7 @@
       @cancel="isConfirm = false" @ok="deleteFile" :id="recordId" />
     <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
     <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+    <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
     <Rename
       :isShow="isRename"
       v-if="isRename"
@@ -156,6 +157,7 @@
   import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
   import ImageView from "@/components/file/ImageView.vue";
   import PdfView from "@/components/file/PdfView.vue";
+  import TxtView from "@/components/file/TxtView.vue";
   import Rename from "@/components/commonModal/Rename.vue";
 
   const { proxy } = getCurrentInstance();
@@ -270,10 +272,12 @@
     photoParams: {},
     pdfParams: {},
     isRename: false,
-    fileName: ""
+    fileName: "",
+    isTxt: false,
+    txtParams: {}
   });
   const columnList = toRaw(columns);
-  const { listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination,
+  const { isTxt, txtParams, listData, fileList, height, searchVal, fileList1, OwningBusinessUnitName, pagination,
     tableHeight, recordId, objectTypeCode, sObjectName, isDelete, isCommon, isTaskDetail, isShare, deleteDesc, external,
     isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, isConfirm, confirmText, confirmTitle,
     uploadData, headers, ImageList, isPhoto, isPdf, photoParams, pdfParams, isRename, fileName } = toRefs(data);
@@ -373,6 +377,14 @@
         downloadUrl: item.downloadUrl
       };
       data.isPdf = true;
+    }
+    else if (item.fileExtension == 'txt') {
+        data.txtParams = {
+            name: item.name,
+            viewUrl: item.viewUrl,
+            downloadUrl: item.downloadUrl
+        };
+        data.isTxt = true;
     }
   };
   //下载附件

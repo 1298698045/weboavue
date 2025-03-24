@@ -1,10 +1,10 @@
 <template>
-    <div class="MeetingShareWrap" ref="TopicsLst">
+    <div class="CommonRelatedWrap" ref="TopicsLst">
         <div class="panel" :style="{ height: height + 'px' }">
             <div class="panel-head">
                 <div class="panel-title">{{ title }}</div>
                 <div class="panel-btn">
-                    <a-button class="ml10" type="primary">导出</a-button>
+                    <!-- <a-button class="ml10" type="primary">导出</a-button> -->
                 </div>
             </div>
             <div class="panel-bd panel-bd1">
@@ -341,7 +341,7 @@ onMounted(() => {
 })
 </script>
 <style lang="less">
-.MeetingShareWrap {
+.CommonRelatedWrap {
     width: 100%;
 
     .panel {
@@ -388,7 +388,7 @@ onMounted(() => {
     width: 340px !important;
 }
 
-.MeetingShareWrap {
+.CommonRelatedWrap {
     .panel {
         padding-top: 15px !important;
         margin-bottom: 0px !important;
@@ -498,35 +498,35 @@ body .ant-table-tbody tr:nth-child(even) {
     /* 偶数行背景色 */
 }
 
-.MeetingShareWrap .panelt {
+.CommonRelatedWrap .panelt {
     background: #f0f2f6 !important;
     margin-bottom: 5px !important;
     padding: 0 !important;
 }
 
-.MeetingShareWrap .panel-top {
+.CommonRelatedWrap .panel-top {
     background: #f0f2f6 !important;
     padding-bottom: 12px;
 }
 
-.MeetingShareWrap .panel-top .ant-card {
+.CommonRelatedWrap .panel-top .ant-card {
     border-radius: 4px !important;
 }
 
-.MeetingShareWrap .ant-card:first-child {
+.CommonRelatedWrap .ant-card:first-child {
     margin-left: 0 !important;
 }
 
-.MeetingShareWrap .ant-card:last-child {
+.CommonRelatedWrap .ant-card:last-child {
     margin-right: 0 !important;
 }
 
-.MeetingShareWrap .pageWrap {
+.CommonRelatedWrap .pageWrap {
     text-align: right;
     padding: 15px;
 }
 
-.MeetingShareWrap .iconBox .moreaction {
+.CommonRelatedWrap .iconBox .moreaction {
     padding: 0px 1px;
     width: 18px;
     border: 1px solid #dedede;
@@ -535,14 +535,14 @@ body .ant-table-tbody tr:nth-child(even) {
     top: 1px;
 }
 
-.MeetingShareWrap .iconBox .popup {
+.CommonRelatedWrap .iconBox .popup {
     top: 25px;
     right: 0;
     width: max-content;
     min-width: 88px;
 }
 
-.MeetingShareWrap {
+.CommonRelatedWrap {
 
     .ant-table-wrapper,
     .ant-spin-nested-loading,
@@ -553,11 +553,11 @@ body .ant-table-tbody tr:nth-child(even) {
     }
 }
 
-.MeetingShareWrap .panel-bd1 {
+.CommonRelatedWrap .panel-bd1 {
     height: calc(~'100% - 115px') !important;
 }
 
-.MeetingShareWrap .ant-table-body {
+.CommonRelatedWrap .ant-table-body {
     height: 100% !important;
 }
 

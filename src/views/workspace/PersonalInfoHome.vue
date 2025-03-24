@@ -67,7 +67,8 @@
           </div>
         </div>
         <div class="tabContainer containerForm" v-if="data.activeKey == 2">
-          <PersonalAssetView :id="userId" :avatarUrl="avatarUrl" />
+          <!-- <PersonalAssetView :id="userId" :avatarUrl="avatarUrl" /> -->
+          <Related :id="userId" :type="'modal'" :entityApiName="'Asset'" :RegardingObjectIdName="'OwningUser'" :ObjectTypeCode="'20013'" :columns="columns2" :title="'资产信息'" />
         </div>
         <div class="tabContainer containerForm" v-if="data.activeKey == 3">
           <div class="empty">
@@ -133,6 +134,7 @@ import PersonalInfoView from "@/views/workspace/PersonalInfoView.vue";
 import PersonalSalaryView from "@/views/workspace/PersonalSalaryView.vue";
 import PersonalAssetView from "@/views/workspace/PersonalAssetView.vue";
 import UpdateAvatarImage from "@/components/UpdateAvatarImage.vue";
+import Related from "@/components/detail/Related2.vue";
 const { proxy } = getCurrentInstance();
 const editorRef = ref();
 const route = useRoute();
@@ -178,6 +180,57 @@ const {
   defaultImg
 } = toRefs(data);
 const PersonalInfoEditRef = ref(null);
+const columns2 = [
+  {
+      title: "序号",
+      key: "index",
+      width: 80
+  },
+  {
+      title: "资产名称",
+      key: "Name"
+  },
+  {
+      title: "序列号",
+      key: "SerialNumber"
+  },
+  {
+      title: "设备型号",
+      key: "VersionNumber"
+  },
+    {
+      title: "资产分类",
+      key: "CategoryCode"
+    },
+    {
+      title: "使用科室",
+      key: "DeptId"
+    },
+    {
+      title: "购买金额",
+      key: "TotalPrice"
+    },
+    {
+      title: "生产厂家",
+      key: "ProduceVender"
+    },
+    {
+      title: "保养负责人",
+      key: "MaintainBy"
+    },
+    {
+      title: "状态",
+      key: "StatusCode"
+    },
+    {
+      title: "计量单位",
+      key: "Unit"
+    },
+    {
+      title: "规格型号",
+      key: "Specification"
+    }
+  ];
 const changeTabs = (e) => {
   data.activeKey = e;
 };

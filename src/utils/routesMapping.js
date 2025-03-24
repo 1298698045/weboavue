@@ -43,7 +43,7 @@ export const routesMapping = {
         MeetingReport: () => import("../views/meeting/reportForms/index.vue"),
         MeetingItem: () => import("../views/meeting/topics/index.vue"),
         Campaign: () => import("../views/meeting/activity/index.vue"),
-        ResourceOrg: () => import("../views/meeting/mettingRoomMaintenance/index.vue")
+        //ResourceOrg: () => import("../views/meeting/mettingRoomMaintenance/index.vue")
     },
     // 公文管理
     OfficialDocument: {
@@ -111,8 +111,8 @@ export const routesMapping = {
     },
     // 制度文件
     DocumentRule: {
-        //RuleArticle: () => import("../views/knowledge/RuleArticle/myhome/index.vue"), // 我的制度
-        //RuleArticle: () => import("../views/knowledge/RuleArticle/home/index.vue"), // 制度台账
+        // RuleArticleMine: () => import("../views/knowledge/RuleArticle/myhome/index.vue"), // 我的制度
+        // RuleArticleAdmin: () => import("../views/knowledge/RuleArticle/home/index.vue"), // 制度台账
         // KbArticleVersion: {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true

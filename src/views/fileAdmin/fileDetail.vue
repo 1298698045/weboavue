@@ -56,6 +56,7 @@
         <PhotoPreview v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
         <!-- PDF预览 -->
         <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+        <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
     </div>
 </template>
 <script setup>
@@ -75,6 +76,7 @@ import DownloadFile from "@/components/file/DownloadFile.vue";
 import DetailInfo from "@/components/detail/DetailInfo.vue";
 import PhotoPreview from "@/components/file/PhotoPreview.vue";
 import PdfView from "@/components/file/PdfView.vue";
+import TxtView from "@/components/file/TxtView.vue";
 import { useRouter, useRoute } from "vue-router";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
@@ -115,9 +117,11 @@ const data = reactive({
     },
     isPdf: false,
     pdfParams: {},
-    detail: {}
+    detail: {},
+    isTxt: false,
+    txtParams: {}
 })
-const { isPhoto, isPdf, photoParams, pdfParams, detail, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData, isCirculation, isModal, isUrging, Name, id, objectTypeCode, sObjectName } = toRefs(data);
+const { isTxt, txtParams, isPhoto, isPdf, photoParams, pdfParams, detail, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData, isCirculation, isModal, isUrging, Name, id, objectTypeCode, sObjectName } = toRefs(data);
 const changeTabs = (e) => {
     console.log("e", e);
     data.activeKey = e;
@@ -204,7 +208,7 @@ const getFileDetail = () => {
                     } else if (item.fileExtension == 'mp3') {
                         item.icon = '/img/filetype/voice.png';
                     } else if (item.fileExtension == 'folder') {
-                        item.icon = '/img/filetype/Folder1.png';
+                        item.icon = '/img/filetype/Folder.png';
                     } else {
                         item.icon = '/img/filetype/File.png';
                     }
@@ -260,6 +264,13 @@ const handleOpenFile = (item) => {
             downloadUrl: item.downloadUrl
         };
         data.isPdf = true;
+    } else if (item.fileExtension == 'txt') {
+        data.txtParams = {
+            name: item.name,
+            viewUrl: item.viewUrl,
+            downloadUrl: item.downloadUrl
+        };
+        data.isTxt = true;
     } else {
         // openControlViewFile(
         //     item.link,

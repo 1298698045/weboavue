@@ -319,10 +319,39 @@
             resources:[],
             resourceAreaWidth:'10%',
             resourceAreaColumns: [
-            {
-                field: 'title',
-                headerContent: '会议室名称'
-            }
+                {
+                    field: 'title',
+                    headerContent: '会议室名称',
+                    cellContent: function (info) {
+                        console.log(info)
+                        let top=NaN;
+                        let left=350;
+                        let Name=info.fieldValue||'暂无';
+                        let Icon=info.resource._resource.extendedProps.Icon;
+                        let ManageIdName=info.resource._resource.extendedProps.ManageIdName||'暂无';
+                        let MobilePhone=info.resource._resource.extendedProps.MobilePhone||'暂无';
+                        let innerText = `<div class="meetingRoomItem">
+                            <div class="meetingRoomItemHover" style="top:`+top+`px;left:`+left+`px;">
+                                <div class="meetingRoomItemImg">
+                                    <img class="img" src="`+Icon+`" alt="" />
+                                </div>
+                                <div class="meetingRoomItemInfo">
+                                    <div class="meetingRoomItemInfoText">
+                                        会议室名称：`+(Name||'')+`
+                                    </div>
+                                    <div class="meetingRoomItemInfoText">
+                                        负责人姓名：`+(ManageIdName||'')+`
+                                    </div>
+                                    <div class="meetingRoomItemInfoText">
+                                        负责人电话：`+(MobilePhone||'')+`
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="meetingRoomItemTitle">`+ Name + `</div>
+                        </div>`
+                        return { html: innerText }
+                    }
+                }
             ],
             refetchResourcesOnNavigate: true,
             resourceOrder:'dispalyorder',
@@ -357,7 +386,7 @@
                 calendarDayChange2(info,'拖动会议触发');
             },
             // 切换视图时触发
-            datesSet: view => {},
+            datesSet: view => {}
         }
     });
     watch(()=>props.startDateTime,(newVal,oldVal)=>{
@@ -528,7 +557,7 @@
                 //emit("select-val", '');
             }
             else{
-                message.success("保存失败！");
+                message.error("保存失败！");
             }
         });
     }
@@ -640,28 +669,20 @@
         }
         data.meetingList =[];
         data.resources=[];
+        if(document.getElementsByClassName('fc-scrollgrid-sync-inner')&&document.getElementsByClassName('fc-scrollgrid-sync-inner').length){
+            for(var i=0;i<document.getElementsByClassName('fc-scrollgrid-sync-inner').length;i++){
+                document.getElementsByClassName('fc-scrollgrid-sync-inner')[i].innerHTML='';
+            }
+        }
         proxy.$post(Interface.meetingRoom.roomList,obj).then(res=>{
             fullCalendarRef.value.getApi().view.calendar.changeView(data.calendarOptions.initialView);
-            setTimeout(function(){
-                fullCalendarRef.value.getApi().gotoDate(new Date(data.currentDate));
-                if(data.calendarOptions.initialView=='resourceTimeGridDay'&&document.getElementsByClassName('fc-timegrid-axis')&&document.getElementsByClassName('fc-timegrid-axis').length){
-                    //document.getElementsByClassName('fc-scrollgrid-sync-inner')[0].innerHTML='';
-                    document.getElementsByClassName('fc-timegrid-axis')[0].innerHTML='时间';
-                    //let weektext=weeks[(new Date(data.currentDate)).getDay()];
-                    //document.getElementsByClassName('fc-scrollgrid-sync-inner')[0].innerHTML=dayjs(data.currentDate).format("YYYY-MM-DD")+' '+weektext;
-                }
-                //if(data.calendarOptions.initialView=='timeGridWeek'&&document.getElementsByClassName('fc-timegrid-axis')&&document.getElementsByClassName('fc-timegrid-axis').length){
-                    //document.getElementsByClassName('fc-timegrid-axis')[0].innerHTML='时间';
-                //}
-            },200)
             if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
                         let roomList = res.actions[0].returnValue;
                         let obj = {};
                         roomList.forEach((item,index)=>{
-                            let roomitem={
-                                id:item.meetingRoom?item.meetingRoom.Id:'',
-                                title:item.meetingRoom?item.meetingRoom.Name:''
-                            }
+                            let roomitem=item.meetingRoom;
+                            roomitem.id=item.meetingRoom?item.meetingRoom.Id:'';
+                            roomitem.title=item.meetingRoom?item.meetingRoom.Name:'';
                             data.resources.push(roomitem);
                             fullCalendarRef.value.getApi().view.calendar.addResource(roomitem);
                             item.meetingItems.forEach((item1,index1)=>{
@@ -701,6 +722,47 @@
                         data.meetingList = obj;
                         //console.log(data.calendarOptions.resources,data.calendarOptions.events)
             }
+            setTimeout(function(){
+                fullCalendarRef.value.getApi().gotoDate(new Date(data.currentDate));
+                if(data.calendarOptions.initialView=='resourceTimeGridDay'&&document.getElementsByClassName('fc-timegrid-axis')&&document.getElementsByClassName('fc-timegrid-axis').length){
+                    //document.getElementsByClassName('fc-scrollgrid-sync-inner')[0].innerHTML='';
+                    document.getElementsByClassName('fc-timegrid-axis')[0].innerHTML='时间';
+                    //let weektext=weeks[(new Date(data.currentDate)).getDay()];
+                    //document.getElementsByClassName('fc-scrollgrid-sync-inner')[0].innerHTML=dayjs(data.currentDate).format("YYYY-MM-DD")+' '+weektext;
+                    for(var i=0;i<document.getElementsByClassName('fc-scrollgrid-sync-inner').length;i++){
+                            let Name=data.resources[i].title||'暂无';
+                            let Icon=data.resources[i].Icon;
+                            let ManageIdName=data.resources[i].ManageIdName||'暂无';
+                            let MobilePhone=data.resources[i].MobilePhone||'暂无';
+                            let top=213;
+                            let left=NaN;
+                            //left=235+document.getElementsByClassName('fc-scrollgrid-sync-inner')[i].offsetWidth*i;
+                            document.getElementsByClassName('fc-scrollgrid-sync-inner')[i].innerHTML=`<div class="meetingRoomItem">
+                            <div class="meetingRoomItemTitle">`+ Name + `</div>
+                            <div class="meetingRoomItemHover" style="top:`+top+`px;left:`+left+`px;">
+                                <div class="meetingRoomItemImg">
+                                    <img class="img" src="`+Icon+`" alt="" />
+                                </div>
+                                <div class="meetingRoomItemInfo">
+                                    <div class="meetingRoomItemInfoText">
+                                        会议室名称：`+(Name||'')+`
+                                    </div>
+                                    <div class="meetingRoomItemInfoText">
+                                        负责人姓名：`+(ManageIdName||'')+`
+                                    </div>
+                                    <div class="meetingRoomItemInfoText">
+                                        负责人电话：`+(MobilePhone||'')+`
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    }
+                    
+                }
+                //if(data.calendarOptions.initialView=='timeGridWeek'&&document.getElementsByClassName('fc-timegrid-axis')&&document.getElementsByClassName('fc-timegrid-axis').length){
+                    //document.getElementsByClassName('fc-timegrid-axis')[0].innerHTML='时间';
+                //}
+            },200)
         })
         
     }
@@ -939,9 +1001,6 @@
         :deep .fc .fc-scrollgrid{
             border: 0 !important;
         }
-        :deep .fc .fc-scrollgrid-section-sticky > *{
-            // position: relative;
-        }
         :deep .fc .fc-button:disabled {
             opacity: 0.3 !important;
         }
@@ -1083,5 +1142,55 @@
             display: flex;
         }
     }
+        .MeetingRoomFullCalendarWrap {
+            :deep .fc-datagrid-cell-main,:deep .fc-scrollgrid-sync-inner {
+                .meetingRoomItem {
+                    position: relative;
+                    //cursor: pointer;
     
+                    .meetingRoomItemHover {
+                        display: none;
+                        position: fixed;
+                        width: 220px;
+                        height: 220px;
+                        z-index: 1000;
+                        padding: 10px;
+                        background: #444;
+                        border-radius: 6px;
+                        box-shadow: -4px -4px 12px 0 rgba(0, 0, 0, 0.16);
+    
+                        .meetingRoomItemImg {
+                            width: 200px;
+                            height: 140px;
+    
+                            .img {
+                                height: 100%;
+                                width: 100%;
+                            }
+                        }
+    
+                        .meetingRoomItemInfo {
+                            .meetingRoomItemInfoText {
+                                height: 19px;
+                                line-height: 24px;
+                                font-size: 12px;
+                                text-align: left;
+                                padding-left: 0px;
+                                color: #fff;
+                                font-weight: normal;
+                            }
+                        }
+                    }
+                    .meetingRoomItemTitle1{
+                        margin-bottom: 8px;
+                    }
+                }
+    
+                .meetingRoomItem:hover {
+                    .meetingRoomItemHover {
+                        display: block;
+                    }
+                }
+            }
+        }
 </style>

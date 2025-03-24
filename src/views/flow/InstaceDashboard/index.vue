@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="statistics-right">
                                     <div class="statistics-count" name="ContractNumber" style="color: #000;">
-                                        {{ countObj.ResTotalNum || 0 }}</div>
+                                        {{ countObj.startCount || 0 }}</div>
                                     <div class="statistics-name">发起总数</div>
                                 </div>
                             </li>
@@ -53,7 +53,7 @@
                                 </div>
                                 <div class="statistics-right">
                                     <div class="statistics-count" name="ContractNumber" style="color: #000;">
-                                        {{ countObj.MyResNum || 0 }}</div>
+                                        {{ countObj.expireCount || 0 }}</div>
                                     <div class="statistics-name">逾期总数</div>
                                 </div>
                             </li>
@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="statistics-right">
                                     <div class="statistics-count" name="ContractNumber" style="color: #000;">
-                                        {{ countObj.OrgNum || 0 }}
+                                        {{ countObj.waitingCount || 0 }}
                                     </div>
                                     <div class="statistics-name">待办总数</div>
                                 </div>
@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="statistics-right">
                                     <div class="statistics-count" name="ContractNumber" style="color: #000;">
-                                        {{ countObj.OrgNum || 0 }}
+                                        {{ countObj.finishCount || 0 }}
                                     </div>
                                     <div class="statistics-name">已完结</div>
                                 </div>
@@ -167,8 +167,8 @@
                             </tbody>
                         </table> -->
                         <div class="roomTable">
-                            <a-table :columns="columns" :dataSource="dataList" :scroll="{ y: 500 }"
-                                :pagination="false" @change="handleTableChange">
+                            <a-table :columns="columns" class="atable" :dataSource="dataList" :scroll="{ y: 500 }" :pagination="false"
+                                @change="handleTableChange">
                                 <template #bodyCell="{ column, index, record }">
                                     <template v-if="column.key === 'index'">
                                         <div>
@@ -286,17 +286,17 @@ var columns1 = [
         key: "StartCount"
     },
     {
-        title: "待办流程数量",
+        title: "待办数量",
         dataIndex: "WaitingCount",
         key: "WaitingCount"
     },
     {
-        title: "超时流程数量",
+        title: "逾期数量",
         dataIndex: "ExpireCount",
         key: "ExpireCount"
     },
     {
-        title: "已办理数量",
+        title: "已办数量",
         dataIndex: "FinishCount",
         key: "FinishCount"
     },
@@ -307,7 +307,7 @@ var columns1 = [
     }
 ];
 var columns2 = [
-{
+    {
         title: "序号",
         dataIndex: "index",
         key: "index",
@@ -324,17 +324,17 @@ var columns2 = [
         key: "StartCount"
     },
     {
-        title: "待办流程数量",
+        title: "待办数量",
         dataIndex: "WaitingCount",
         key: "WaitingCount"
     },
     {
-        title: "超时流程数量",
+        title: "逾期数量",
         dataIndex: "ExpireCount",
         key: "ExpireCount"
     },
     {
-        title: "已办理数量",
+        title: "已办数量",
         dataIndex: "FinishCount",
         key: "FinishCount"
     },
@@ -345,7 +345,7 @@ var columns2 = [
     }
 ];
 var columns3 = [
-{
+    {
         title: "序号",
         dataIndex: "index",
         key: "index",
@@ -362,17 +362,17 @@ var columns3 = [
         key: "StartCount"
     },
     {
-        title: "待办流程数量",
+        title: "待办数量",
         dataIndex: "WaitingCount",
         key: "WaitingCount"
     },
     {
-        title: "超时流程数量",
+        title: "逾期数量",
         dataIndex: "ExpireCount",
         key: "ExpireCount"
     },
     {
-        title: "已办理数量",
+        title: "已办数量",
         dataIndex: "FinishCount",
         key: "FinishCount"
     },
@@ -382,59 +382,82 @@ var columns3 = [
         key: "ExpireHours"
     }
 ];
-const changeTabs = (e,type) => {
+const changeTabs = (e, type) => {
     data.activeKey = e;
+    data.dataList = [];
     if (type != 'pagechange') {
         data.pagination.current = 1;
     }
-    getChartData();
-    if (e == 0) {
-        data.columns = columns1;
-    }
-    else if (e == 1) {
-        data.columns = columns2;
-    }
-    else if (e == 2) {
-        data.columns = columns3;
-    }
-    getQuery();
+    getStati(type);
 };
-const clearRoomSelect = () => {
-    data.selectRoom = [];
-    data.rooms.forEach(item => {
-        item.checkbox = false;
-    })
-    getChartData();
-}
-// 选择会议室
-const handleSelectRoom = (item) => {
-    console.log('data.selectRoom', data.selectRoom);
-    let index = data.selectRoom.findIndex(row => row == item.Id);
-    if (index == -1) {
-        if (item.checkbox == false) {
-            item.checkbox = true;
-        }
-        else {
-            item.checkbox = false;
-        }
-        data.selectRoom.push(item.Id);
-    } else {
-        item.checkbox = false;
-        data.selectRoom.splice(index, 1);
-    }
-    getChartData();
-}
 const changeYear = (e) => {
     data.year = dayjs(e, yearFormat);
-    changeTabs(data.activeKey);
+    changeTabs(data.activeKey, 'yearchange');
+}
+const getAbstract=()=>{
+    data.countObj = {};
+    let d = {
+        "actions": [{
+            "id": "2919;a",
+            "descriptor": "",
+            "callingDescriptor": "UNKNOWN",
+            "params": {
+                year: data.year.format("YYYY"),
+            }
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(Interface.workflow.abstract, obj).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+            data.countObj = res.actions[0].returnValue;
+        }
+        else {
+            message.error("获取摘要失败！");
+        }
+    })
+}
+const getStati = () => {
+    let d = {
+        "actions": [{
+            "id": "4270;a",
+            "descriptor": "",
+            "callingDescriptor": "UNKNOWN",
+            "params": {
+                year: data.year.format("YYYY"),
+            }
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(Interface.workflow.stati, obj).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+            if (data.activeKey * 1 == 0) {
+                data.columns = columns1;
+            }
+            else if (data.activeKey * 1 == 1) {
+                data.columns = columns2;
+            }
+            else if (data.activeKey * 1 == 2) {
+                data.columns = columns3;
+            }
+            getAbstract();
+            getQuery();
+        }
+        else {
+            message.error("统计失败！");
+        }
+    })
 }
 const getQuery = () => {
-    let filterQuery = '\nObjectTypeCode\teq\t10\nYearMonth\teq\t' + data.year.format("YYYY");
-    if(data.activeKey*1==1){
-        filterQuery = '\nObjectTypeCode\teq\t8\nYearMonth\teq\t' + data.year.format("YYYY");
+    let filterQuery = '\nObjectTypeCode\teq\t10\nYearNumber\teq\t' + data.year.format("YYYY");
+    if (data.activeKey * 1 == 1) {
+        filterQuery = '\nObjectTypeCode\teq\t8\nYearNumber\teq\t' + data.year.format("YYYY");
     }
-    if(data.activeKey*1==2){
-        filterQuery = '\nObjectTypeCode\teq\t121\nYearMonth\teq\t' + data.year.format("YYYY");
+    if (data.activeKey * 1 == 2) {
+        filterQuery = '\nObjectTypeCode\teq\t121\nYearNumber\teq\t' + data.year.format("YYYY");
     }
     proxy.$post(Interface.list2, {
         filterId: '',
@@ -449,104 +472,113 @@ const getQuery = () => {
         displayColumns: 'Name,StartCount,WaitingCount,ExpireCount,FinishCount,ExpireHours'
     }).then(res => {
         var list = [];
-        data.total = res.pageInfo ? res.pageInfo.total : 0;
-        data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
-        for (var i = 0; i < res.nodes.length; i++) {
-            var item = res.nodes[i];
-            for (var cell in item) {
-                if (cell != 'id' && cell != 'nameField') {
-                    item[cell] = girdFormatterValue(cell, item);
+        data.total = res && res.pageInfo ? res.pageInfo.total : 0;
+        data.pagination.total = res && res.pageInfo ? res.pageInfo.total : 0;
+        if (res && res.nodes && res.nodes.length) {
+            for (var i = 0; i < res.nodes.length; i++) {
+                var item = res.nodes[i];
+                for (var cell in item) {
+                    if (cell != 'id' && cell != 'nameField') {
+                        item[cell] = girdFormatterValue(cell, item);
+                    }
+                    if (cell == 'CreatedOn') {
+                        item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
+                    }
                 }
-                if (cell == 'CreatedOn') {
-                    item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
-                }
+                list.push(item)
             }
-            list.push(item)
         }
         data.dataList = list;
+        getChartData();
     })
 }
 const getChartData = () => {
-    data.countObj = {};
     data.xData = [];
-    data.lineData = [];
-    data.seriesData = [];
-    proxy.$get(Interface.meetingRpt.roomstat, {
-        year: data.year.format("YYYY"),
-        ids: data.selectRoom.join(',')
-    }).then(res => {
-        if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-            let statdata = res.actions[0].returnValue;
-            statdata.xdata = ['信息中心', '消化内科', '儿科', '五区', '六区', '耳鼻咽喉', '呼吸内科', '呼吸与重症医学科', '四区', '骨科'];
-            statdata.lineData = ["待办", "逾期"];
-            data.countObj = statdata;
-            data.xData = statdata.xData || statdata.xdata;
-            data.lineData = statdata.lineData;
-            // data.seriesData = statdata.seriesData.map(item=>{
-            //     item.type = 'bar';
-            //     return item;
-            // })
-            data.seriesData = [
-                {
-                    type: 'bar',
-                    name: '待办',
-                    label: {
-                        show: true,
-                        //rotate: 60,
-                        position: "top",
-                    },
-                    data: [2, 3, 2, 4, 6, 8, 3, 5, 1, 5]
-                },
-                {
-                    type: 'bar',
-                    name: '逾期',
-                    label: {
-                        show: true,
-                        //rotate: 60,
-                        position: "top",
-                    },
-                    data: [1, 2, 1, 1, 2, 3, 1, 1, 2, 4]
-                }
-            ]
+    data.lineData = ['发起', '逾期', '待办', '已办', '超时小时数'];
+    data.seriesData = [
+        {
+            type: 'bar',
+            name: '发起',
+            barWidth: 30,
+            color:'rgb(16, 141, 239)',
+            label: {
+                show: true,
+                //rotate: 60,
+                position: "top",
+            },
+            data: []
+        },
+        {
+            type: 'bar',
+            name: '逾期',
+            barWidth: 30,
+            color:'red',
+            label: {
+                show: true,
+                //rotate: 60,
+                position: "top",
+            },
+            data: []
+        },
+        {
+            type: 'bar',
+            name: '待办',
+            barWidth: 30,
+            color:'rgb(58, 200, 210)',
+            label: {
+                show: true,
+                //rotate: 60,
+                position: "top",
+            },
+            data: []
+        },
+        {
+            type: 'bar',
+            name: '已办',
+            barWidth: 30,
+            color:'rgb(141, 193, 57)',
+            label: {
+                show: true,
+                //rotate: 60,
+                position: "top",
+            },
+            data: []
+        },
+        {
+            type: 'bar',
+            name: '超时小时数',
+            barWidth: 30,
+            label: {
+                show: true,
+                //rotate: 60,
+                position: "top",
+            },
+            data: []
         }
-        loadChart();
-    })
-    data.xData2 = [];
-    data.lineData2 = [];
-    data.seriesData2 = [];
-    proxy.$get(Interface.meetingRpt.peoplestat, {
-        year: data.year.format("YYYY"),
-        //ids: data.selectRoom.join(',')
-    }).then(res => {
-        if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-            let statdata = res.actions[0].returnValue;
-            //data.countObj = statdata;
-            data.xData2 = statdata.xData || statdata.xdata;
-            data.lineData2 = statdata.lineData;
-            // data.seriesData2 = statdata.seriesData.map(item => {
-            //     item.type = 'line';
-            //     return item;
-            // })
-        }
-        //loadChart();
-    })
+    ]
+    if (data.dataList && data.dataList.length) {
+        data.xData = data.dataList.map(item => {
+            return item.Name||'';
+        })
+        data.seriesData[0].data = data.dataList.map(item => {
+            return item.StartCount||0;
+        })
+        data.seriesData[1].data = data.dataList.map(item => {
+            return item.ExpireCount||0;
+        })
+        data.seriesData[2].data = data.dataList.map(item => {
+            return item.WaitingCount||0;
+        })
+        data.seriesData[3].data = data.dataList.map(item => {
+            return item.FinishCount||0;
+        })
+        data.seriesData[4].data = data.dataList.map(item => {
+            return item.ExpireHours||0;
+        })
+    }
+    loadChart();
 }
 const loadChart = () => {
-    var chartData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    var chartName = [
-        "一月",
-        "二月",
-        "三月",
-        "四月",
-        "五月",
-        "六月",
-        "七月",
-        "八月",
-        "九月",
-        "十月",
-        "十一月",
-        "十二月",
-    ];
     var myChart;
     if (myChart != null && myChart != "" && myChart != undefined) {
         myChart.dispose(); //销毁
@@ -577,20 +609,21 @@ const loadChart = () => {
         xAxis: {
             type: 'category',
             //boundaryGap: false,
-            data: data.xData
+            data: data.xData,
+            barCategoryGap: '20%'
         },
         yAxis: {
             type: 'value'
         },
         series: data.seriesData
     };
-    option && myChart.setOption(option);
+    option && myChart.setOption(option, true);
 }
 const onSearch = (e) => {
     changeTabs(data.activeKey);
 };
 const onClear = (e) => {
-    data.searchVal='';
+    data.searchVal = '';
     changeTabs(data.activeKey);
 };
 //改变页码
@@ -598,7 +631,7 @@ const handleTableChange = (page, pageSize) => {
     //data.pagination.current=page.current;
     data.pagination.current = page;
     data.pagination.pageSize = pageSize;
-    changeTabs(data.activeKey,'pagechange');
+    changeTabs(data.activeKey, 'pagechange');
 }
 const sizeChange = (current, size) => {
     handleTableChange(current, size)
@@ -609,7 +642,7 @@ watch(() => route, (newVal, oldVal) => {
     }
 }, { deep: true, immediate: true })
 onMounted(() => {
-    changeTabs(0);
+    //changeTabs(0);
 });
 </script>
 <style lang="less" scoped>
@@ -924,14 +957,26 @@ onMounted(() => {
         }
 
         :deep .atable {
+            .ant-table-row{
+                .ant-table-cell:first-child{
+                    text-align: left !important;
+                }
+            }
+            .ant-table-thead{
+                .ant-table-cell:first-child{
+                    text-align: left !important;
+                }
+            }
             .ant-table-tbody td {
                 padding: 6.5px 16px !important;
                 white-space: nowrap;
                 text-align: center;
             }
-            .ant-table-tbody .ant-table-measure-row td{
+
+            .ant-table-tbody .ant-table-measure-row td {
                 padding: 0 !important;
             }
+
             .ant-table-thead>tr>th {
                 background-color: #f7fbfe !important;
                 padding: 8.5px 16px !important;

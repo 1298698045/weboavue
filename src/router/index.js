@@ -438,13 +438,13 @@ const staticRoutes = [
     path: "/RuleArticle",
     name: "RuleArticle",
     component: Layout,
-    redirect: "/knowledge/RuleArticle/myhome",
+    redirect: "/lightning/page/knowledge/RuleArticleMine/home",
     meta: {
       name: "制度文件"
     },
     children: [
       {
-        path: "/knowledge/RuleArticle/myhome",
+        path: "/lightning/page/knowledge/RuleArticleMine/home",
         name: "RuleArticleMyHome",
         component: () => import("../views/knowledge/RuleArticle/myhome/index.vue"),
         icon: "search",
@@ -454,7 +454,7 @@ const staticRoutes = [
         }
       },
       {
-        path: "/knowledge/RuleArticle/home",
+        path: "/lightning/page/knowledge/RuleArticle/home",
         name: "RuleArticleHome",
         component: () => import("../views/knowledge/RuleArticle/home/index.vue"),
         icon: "search",
@@ -561,15 +561,12 @@ const staticRoutes = [
       {
         path: "/lightning/page/ContentFolderTree",
         //component: () => import("../views/listView/index2.vue"),
-        component: () => import("../views/NotFound.vue"),
-        name: "docOversee",
+        component: () => import("../views/ContentFolderTree/index.vue"),
+        name: "ContentFolderManage",
         icon: "huiyicanhuiren",
         meta: {
           name: "目录管理",
           icon: "huiyicanhuiren",
-          entityType:'5080',
-          objectTypeCode:'5080',
-          entityName:'ContentFolder',
         }
       }
     ]

@@ -186,40 +186,47 @@ const autoExpandParent = ref(true);
 const res = require("@/localData/treedata.json");
 const gData = ref([]);
 const gDataAll = ref([]);
-proxy.$get('/localData/treedata.json', {}).then((res) => {
-  console.log("res-processTree", res);
-  let listData = res.data;
-  let formTree = (list) => {
-    list.forEach(item => {
-      if (item.children) {
-        formTree(item.children);
+//全部目录
+const getTreeData = () => {
+  gData.value = [];
+  gDataAll.value = [];
+  let url = Interface.content.folder.get;
+  proxy.$post(url, {}).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+      let formTree = (list) => {
+        list.forEach(item => {
+          if (item.children) {
+            formTree(item.children);
+          }
+          item.key = item.id;
+          item.value = item.id;
+          item.isFavor = item.isFavor || false;
+        })
       }
-      item.key = item.id;
-      item.value = item.id;
-    })
-  }
-  formTree(listData);
-  listData = [
-    {
-      "id": "10010000-0000-0000-0000-000000007002,ec230bb1-b9a5-42eb-83fc-4b6410038f57,61f0d939-2474-4c29-b47e-fb700d6ef4c3,c141ce85-126f-4771-9f7a-8023dec67493",
-      "key": "10010000-0000-0000-0000-000000007002,ec230bb1-b9a5-42eb-83fc-4b6410038f57,61f0d939-2474-4c29-b47e-fb700d6ef4c3,c141ce85-126f-4771-9f7a-8023dec67493",
-      "value": "10010000-0000-0000-0000-000000007002,ec230bb1-b9a5-42eb-83fc-4b6410038f57,61f0d939-2474-4c29-b47e-fb700d6ef4c3,c141ce85-126f-4771-9f7a-8023dec67493",
-      "name": "制度文件",
-      "text": "制度文件",
-      "quantity": 0,
-      "parent": null,
-      "children": [
-        { "id": "ec230bb1-b9a5-42eb-83fc-4b6410038f57", "key": "ec230bb1-b9a5-42eb-83fc-4b6410038f57", "value": "ec230bb1-b9a5-42eb-83fc-4b6410038f57", "name": "讨论稿", "text": "讨论稿", "quantity": 0, "parent": "10010000-0000-0000-0000-000000007002", "children": [] },
-        { "id": "61f0d939-2474-4c29-b47e-fb700d6ef4c3", "key": "61f0d939-2474-4c29-b47e-fb700d6ef4c3", "value": "61f0d939-2474-4c29-b47e-fb700d6ef4c3", "name": "暂行稿", "text": "暂行稿", "quantity": 0, "parent": "10010000-0000-0000-0000-000000007002", "children": [] },
-        { "id": "c141ce85-126f-4771-9f7a-8023dec67493", "key": "c141ce85-126f-4771-9f7a-8023dec67493", "value": "c141ce85-126f-4771-9f7a-8023dec67493", "name": "实施稿", "text": "实施稿", "quantity": 0, "parent": "10010000-0000-0000-0000-000000007002", "children": [] }]
+      let response = res.actions[0].returnValue;
+      formTree(response);
+      console.log("formTree", response);
+      gData.value = response;
+      gDataAll.value = response;
     }
-  ]
-  console.log("formTree", listData)
-  onExpand(['10010000-0000-0000-0000-000000007002,ec230bb1-b9a5-42eb-83fc-4b6410038f57,61f0d939-2474-4c29-b47e-fb700d6ef4c3,c141ce85-126f-4771-9f7a-8023dec67493']);
-  gData.value = listData;
-  gDataAll.value = listData;
-})
-// console.log("genData",genData,treeList)
+  });
+  // proxy.$get(Interface.information.contentTree,{}).then((response)=>{
+  //     let formTree = (list) => {
+  //       list.forEach(item=>{
+  //         if(item.children){
+  //           formTree(item.children);
+  //         }
+  //         item.key = item.id;
+  //         item.value = item.id;
+  //         item.isFavor=item.isFavor||false;
+  //       })
+  //     }
+  //     formTree(response);
+  //     console.log("formTree",response)
+  //     gData.value = response;
+  //     gDataAll.value = response;
+  // })
+}
 
 const onExpand = (keys) => {
   expandedKeys.value = keys;
@@ -350,22 +357,6 @@ const onSelect = (keys) => {
   data.treeId = keys[0];
   handleSearch(data.formSearchFilterquery);
 };
-watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/knowledge/RuleArticle/home') {
-      setTimeout(function () {
-        getTabs();
-      }, 500)
-    }
-  }
-}, { deep: true, immediate: true })
-onMounted(() => {
-  window.addEventListener('resize', changeHeight)
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
-  getTabs();
-})
 function changeHeight(h) {
   if (typeof h == 'number') {
     formSearchHeight.value = h;
@@ -586,6 +577,21 @@ window.handleVersion = handleVersion;
 const clearCheckList = () => {
   gridRef.value.clearCheckList();
 }
+watch(() => route, (newVal, oldVal) => {
+  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
+    if (route.path == '/lightning/page/knowledge/RuleArticle/home') {
+      getTreeData();
+      setTimeout(function () {
+        getTabs();
+      }, 200)
+    }
+  }
+}, { deep: true, immediate: true })
+onMounted(() => {
+  window.addEventListener('resize', changeHeight)
+  getTreeData()
+  getTabs();
+})
 </script>
 <style lang="less">
 @import "@/style/flow/treeList.less";
@@ -628,6 +634,9 @@ const clearCheckList = () => {
   .wea-left-right-layout-right {
     flex: 1;
     max-width: 100%;
+  }
+  :deep .ant-input{
+    border: 1px solid #d9d9d9 !important;
   }
 }
 </style>

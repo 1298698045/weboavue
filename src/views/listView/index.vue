@@ -286,9 +286,9 @@
         </a-col>
       </a-row>
     </div>
-    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="listId?'编辑':'新建'"
+    <!-- <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="listId?'编辑':'新建'"
       @load="handleSearch" :id="listId" :objectTypeCode="objectTypeCode"
-      :entityApiName="sObjectName"></common-form-modal>
+      :entityApiName="sObjectName"></common-form-modal> -->
 
     <!-- 弹窗 -->
     <NewVue :isShow="isNewModal" v-if="isNewModal" @cancel="isNewModal=false" @load="getFilterList"
@@ -305,6 +305,10 @@
       :sObjectName="sObjectName" :recordId="currentFilter.id"></show-field>
     <DeleteVue :isShow="isDeleteModal" v-if="isDeleteModal" :desc="desc" @cancel="isDeleteModal=false"
       :recordId="deleteId" :sObjectName="sObjectName" @ok="deleteSuccess" />
+
+    <!-- 动态组件弹窗 -->
+    <component :is="component" :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="listId?'编辑':'新建'"
+      @load="handleSearch" :id="listId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
   </div>
 </template>
 <script setup>
@@ -346,7 +350,7 @@
   import { message } from "ant-design-vue";
   import moment from "moment";
   import { formTreeData } from "@/utils/common.js";
-  import { getActionFunc } from "@/utils/ButtonLinkActions.js";
+  import { getComponent, getActionFunc } from "@/utils/ButtonLinkActions.js";
   const { proxy } = getCurrentInstance();
   const headFilterRef = ref(null);
 
@@ -411,12 +415,13 @@
     desc: "如果您删除此列表视图，该视图将为所有具备访问权限的用户永久删除。是否确定要删除？",
     deleteType: 0,
     deleteId: "",
-    isSearchModal: false
+    isSearchModal: false,
+    component: null
   });
   const handleCollapsed = () => {
     data.isCollapsed = !data.isCollapsed;
   };
-  const { isCollapsed, tableHeight, isFilterPicker,
+  const { component, isCollapsed, tableHeight, isFilterPicker,
     isModal, isCirculation, isCommon, isLock, filterList, currentFilter,
     isNewModal, isExportModal, isCopyModal, isRenameModal, isShareModal, isShowModal,
     isDeleteModal, isFilterModal, searchFilterVal, filterListFixed, entityType,
@@ -867,10 +872,7 @@
       return item.name.indexOf(data.searchFilterVal) !== -1;
     })
   }
-  // 新建用户
-  const handleNew = () => {
-    data.isCommon = true;
-  }
+  
   const New = () => {
     data.isCommon = true;
   }
@@ -898,6 +900,11 @@
 
     }
   }
+  watch(() => route, (newVal, oldVal) => {
+    if (route.path) {
+      data.component = getComponent(route.path);
+    }
+  }, { deep: true, immediate: true })
   onMounted(() => {
     getActionFunc();
   });

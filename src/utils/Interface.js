@@ -42,6 +42,8 @@ const Interface = {
     close: baseUrl + "/aura/workflow/ProcessInstance/task/close", // 结束
     categoryTree: baseUrl + "/objectmanager/category/tree", // 获取对象分类树
     getWorkflowTemplates: baseUrl + "/objectmanager/template/auth/getWorkflowTemplates", // 获取某个对象对应的所有简当权限
+    stati: baseUrl + "/aura/workflow/report/stati",//流程效率统计
+    abstract: baseUrl + "/aura/workflow/report/abstract/get",//流程统计摘要
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",
@@ -119,6 +121,7 @@ const Interface = {
     getRoleUsers: baseUrl + "/one/group/getRoleUsers", // 获取角色用户列表
     allUser: baseUrl + "/one/organization/querUsers", //查询所有用户
     changePwd: baseUrl + "/one/user/changepwd", //修改登录密码
+    getUserInfo: baseUrl + "/one/user/getUserInfo", // 获取个人信息详细
   },
   saveRecord: "/localData/entity.saverecord.json",
   // 通讯录
@@ -215,6 +218,7 @@ const Interface = {
 		favoriteFile: baseUrl + "/cloudfile/favoriteFile", //收藏文件
 		cancelFavoriteFile: baseUrl + "/cloudfile/cancelFavoriteFile", //取消收藏文件
     getMyFolderTree: baseUrl + "/cloudfile/getMyFolderTree", //获取我的目录树
+    getOrgDirAndFiles: baseUrl + "/cloudfile/getOrgDirAndFiles", //获取团队文件夹与文件
   },
   information: {
     contentTree: "/localData/information/content.tree.json",
@@ -263,8 +267,10 @@ const Interface = {
   meetingRpt: {
     list: "/localData/meetingRpt/resource.type.list.json",
     stat: "/localData/meetingRpt/resource.room.stat.json",
-    roomstat: baseUrl + "/meeting/report/room/getSummary",
-    peoplestat: baseUrl + "/meeting/report/people/getSummary",
+    roomstat: baseUrl + "/meeting/report/room/getSummary",//会议室数据
+    peoplestat: baseUrl + "/meeting/report/people/getSummary",//人员数据
+    stati: baseUrl + "/meeting/report/people/statistic",//会议报表统计
+    abstract: baseUrl + "/meeting/report/abstract/get",//会议报表摘要
   },
   // 门户设计
   design: {
@@ -475,5 +481,11 @@ const Interface = {
   },
   pdf: baseUrl + "/file/previewpdf/",
   getEventsStati: baseUrl + "/ui.calendar.components/getEventsStati", // 日程原点
+  rulearticle:{
+    create: baseUrl + "/institution/create", // 创建制度&变更制度
+    revision: baseUrl + "/institution/revision", // 修订制度
+    abolish: baseUrl + "/institution/abolish", // 废除制度
+    batchAddStamp: baseUrl + "/institution/filestamp/batch" // 批量添加文件水印
+  }
 };
 export default Interface;

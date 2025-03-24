@@ -43,6 +43,14 @@
               </div>
               <div class="sectionRow">
                 <div class="sectionItem">
+                  <a-form-item name="InstitutionType" label="类型" :rules="[{ required: true, message: '请选择制度文件类型' }]">
+                    <a-select v-model:value="formState.InstitutionType" placeholder="制度文件类型">
+                      <a-select-option v-for="(item, index) in InstitutionTypeList" :value="item.value" :key="index">{{
+                        item.label }}</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </div>
+                <div class="sectionItem">
                   <a-form-item name="stamp" label="水印文字" :rules="[{ required: true, message: '请输入水印文字' }]">
                     <a-input v-model:value="formState.stamp" class="ApprovedByName"></a-input>
                   </a-form-item>
@@ -129,31 +137,81 @@ const formState = reactive({
   FolderId: '',
   ActiveOn: null,
   ExpiresOn: null,
-  stamp: ''
+  stamp: '',
+  InstitutionType:''
 });
 const token = localStorage.getItem("token");
 const data = reactive({
   title: "批量变更目录",
   height: 320,
   treeData: [],
-});
-const { title, height, treeData } = toRefs(data);
-const getTreeData = () => {
-  data.treeData = [
+  InstitutionTypeList: [
     {
-      "id": "10010000-0000-0000-0000-000000007002",
-      "key": "10010000-0000-0000-0000-000000007002",
-      "value": "10010000-0000-0000-0000-000000007002",
-      "name": "制度文件",
-      "text": "制度文件",
-      "quantity": 0,
-      "parent": null,
-      "children": [
-        { "id": "ec230bb1-b9a5-42eb-83fc-4b6410038f57", "key": "ec230bb1-b9a5-42eb-83fc-4b6410038f57", "value": "ec230bb1-b9a5-42eb-83fc-4b6410038f57", "name": "讨论稿", "text": "讨论稿", "quantity": 0, "parent": "10010000-0000-0000-0000-000000007002", "children": [] },
-        { "id": "61f0d939-2474-4c29-b47e-fb700d6ef4c3", "key": "61f0d939-2474-4c29-b47e-fb700d6ef4c3", "value": "61f0d939-2474-4c29-b47e-fb700d6ef4c3", "name": "暂行稿", "text": "暂行稿", "quantity": 0, "parent": "10010000-0000-0000-0000-000000007002", "children": [] },
-        { "id": "c141ce85-126f-4771-9f7a-8023dec67493", "key": "c141ce85-126f-4771-9f7a-8023dec67493", "value": "c141ce85-126f-4771-9f7a-8023dec67493", "name": "实施稿", "text": "实施稿", "quantity": 0, "parent": "10010000-0000-0000-0000-000000007002", "children": [] }]
-    }
+      label: '讨论稿',
+      value: '讨论稿'
+    },
+    {
+      label: '暂行稿',
+      value: '暂行稿'
+    },
+    {
+      label: '实施稿',
+      value: '实施稿'
+    },
   ]
+});
+const { title, height, treeData, InstitutionTypeList } = toRefs(data);
+// const getTreeData = () => {
+//   data.treeData = [
+//     {
+//       "id": "10010000-0000-0000-0000-000000007002",
+//       "key": "10010000-0000-0000-0000-000000007002",
+//       "value": "10010000-0000-0000-0000-000000007002",
+//       "name": "制度文件",
+//       "text": "制度文件",
+//       "quantity": 0,
+//       "parent": null,
+//       "children": [
+//         { "id": "ec230bb1-b9a5-42eb-83fc-4b6410038f57", "key": "ec230bb1-b9a5-42eb-83fc-4b6410038f57", "value": "ec230bb1-b9a5-42eb-83fc-4b6410038f57", "name": "讨论稿", "text": "讨论稿", "quantity": 0, "parent": "10010000-0000-0000-0000-000000007002", "children": [] },
+//         { "id": "61f0d939-2474-4c29-b47e-fb700d6ef4c3", "key": "61f0d939-2474-4c29-b47e-fb700d6ef4c3", "value": "61f0d939-2474-4c29-b47e-fb700d6ef4c3", "name": "暂行稿", "text": "暂行稿", "quantity": 0, "parent": "10010000-0000-0000-0000-000000007002", "children": [] },
+//         { "id": "c141ce85-126f-4771-9f7a-8023dec67493", "key": "c141ce85-126f-4771-9f7a-8023dec67493", "value": "c141ce85-126f-4771-9f7a-8023dec67493", "name": "实施稿", "text": "实施稿", "quantity": 0, "parent": "10010000-0000-0000-0000-000000007002", "children": [] }]
+//     }
+//   ]
+// }
+// getTreeData();
+const getTreeData = () => {
+  // proxy.$get(Interface.information.contentTree, {
+  //   objectTypeCode: props.objectTypeCode
+  // }).then((response) => {
+  //   let formTree = (list) => {
+  //     list.forEach(item => {
+  //       if (item.children) {
+  //         formTree(item.children);
+  //       }
+  //       item.key = item.id;
+  //       item.value = item.id;
+  //     })
+  //   }
+  //   formTree(response);
+  //   data.treeData = response;
+  // })
+  let url = Interface.content.folder.get;
+  proxy.$post(url, {}).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+      let formTree = (list) => {
+        list.forEach(item => {
+          if (item.children) {
+            formTree(item.children);
+          }
+          item.key = item.id;
+          item.value = item.id;
+        })
+      }
+      let response = res.actions[0].returnValue;
+      formTree(response);
+      data.treeData = response;
+    }
+  });
 }
 getTreeData();
 
@@ -183,12 +241,17 @@ const setTop = computed(() => ({
   top: `calc(50% - 240px)`
 }));
 const handleSubmit = () => {
-  emit("cancel", false);
-  return
   formRef.value
     .validate()
     .then(() => {
-      let url = Interface.create;
+      handleAddStamp();
+    })
+    .catch((err) => {
+      console.log("error", err);
+    });
+};
+const handleSave=(id)=>{
+  let url = Interface.create;
       let d = {
         actions: [{
           id: "2919;a",
@@ -202,24 +265,67 @@ const handleSubmit = () => {
               fields: {
                 ActiveOn: dayjs(formState.ActiveOn).format("YYYY-MM-DD"),
                 ExpiresOn: dayjs(formState.ExpiresOn).format("YYYY-MM-DD"),
-                FolderId: formState.FolderId
+                FolderId: formState.FolderId,
+                InstitutionType:formState.InstitutionType
               }
             }
           }
         }]
       };
-      if (props.id) {
-        d.actions[0].params.recordId = props.id;
+      if (id) {
+        d.actions[0].params.recordId = id;
         url = Interface.edit;
       }
       let obj = {
         message: JSON.stringify(d)
       }
       proxy.$post(url, obj).then(res => {
-        formRef.value.resetFields();
-        message.success("保存成功！");
-        emit("cancel", false);
-        emit("ok", '');
+        if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+          message.success("保存成功！");
+          setTimeout(function(){
+            formRef.value.resetFields();
+            emit("cancel", false);
+            emit("ok", '');
+          },1500)
+        } else {
+          message.error("保存失败！");
+        }
+      });
+}
+const handleAddStamp = () => {
+  formRef.value
+    .validate()
+    .then(() => {
+      let url = Interface.rulearticle.batchAddStamp;
+      let ids=[];
+      if(props.ids&&props.ids.length){
+        for(var i=0;i<props.ids.length;i++){
+          ids.push(props.ids[i].id);
+          handleSave(props.ids[i].id);
+        }
+      }
+      ids=ids.join(',');
+      let d = {
+        actions: [{
+          id: "4105;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            ids: ids,
+            stampText: formState.stamp
+          }
+        }]
+      };
+      let obj = {
+        message: JSON.stringify(d)
+      }
+      proxy.$post(url, obj).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+          
+        }
+        else{
+          message.error("添加水印失败！");
+        }
       });
 
     })

@@ -1,43 +1,40 @@
 <template>
-  <div class="ContentWrap">
+  <div class="ContentWrap ContentFolderTreeWrap">
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
           <img :src="require('@/assets/img/rightMenu/youcemoren.png')" alt="">
         </div>
-        <span class="headerTitle">文档中心</span>
+        <span class="headerTitle">目录管理</span>
       </div>
       <div class="headerRight">
-        <a-button type="primary" class="ml10" @click="handleAddLeft('')"
-          :disabled="!folderActionsConfig.canAdd">新建目录</a-button>
-        <a-button type="primary" class="ml10" @click="handleNew" :disabled="!folderActionsConfig.canAdd">新建文章</a-button>
-        <a-button type="primary" class="ml10" @click="handleRelease">批量发布</a-button>
-        <a-button class="ml10" @click="cancelRelease">批量取消发布</a-button>
+        <a-button type="primary" class="ml10" @click="handleAddLeft('')">新建目录</a-button>
       </div>
     </div>
     <div class="todo-content">
       <a-row>
-        <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">
-          <div class="wea-left-tree">
-            <div class="wea-left-tree-select">
-              <div class="wea-left-tree-select-icon">
-                <ApartmentOutlined />
-              </div>
+        <a-col span="24" class="wea-left-right-layout-left">
+          <div class="top-content">
+            <div class="wea-left-tree-search">
+              <span class="wea-left-tree-search-label alltype">类型：</span>
               <a-select v-model:value="data.leftTreeTop" @change="leftTreeTopChange">
                 <a-select-option key="0" value="我的收藏">我的收藏</a-select-option>
                 <a-select-option key="1" value="全部目录">全部目录</a-select-option>
               </a-select>
             </div>
             <div class="wea-left-tree-search">
-              <span class="wea-left-tree-search-label alltype">全部类型</span>
-              <a-input v-model:value="searchVal" placeholder="" @change="onSearch" allowClear />
-              <div class="wea-left-tree-search-icon">
+              <span class="wea-left-tree-search-label alltype">名称：</span>
+              <a-input v-model:value="searchVal" placeholder="输入名称查询" @change="onSearch" allowClear />
+              <!-- <div class="wea-left-tree-search-icon">
                 <SearchOutlined />
-              </div>
+              </div> -->
             </div>
+          </div>
+          <div class="wea-left-tree">
             <div class="wea-left-tree-scroll information-tree">
               <a-tree :style="{ height: tableHeight + 'px' }" :expanded-keys="expandedKeys"
-                :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
+                :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames" :defaultExpandAll="true"
+                default-expand-all
                 :selectedKeys="selectedKeys" @select="onSelect" @expand="onExpand">
                 <template #switcherIcon="{ switcherCls }">
                   <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
@@ -47,15 +44,15 @@
                   <span>
                     {{ name }}
                     <span class="tree-num">
-                      <!-- <span class="tree-btn tree-add" @click.stop="handleAddLeft(id,name)">
+                      <span class="tree-btn tree-add" @click.stop="handleAddLeft(id,name)" v-if="data.leftTreeTop == '全部目录'">
                                 <PlusOutlined title="添加子目录" />
                               </span>
-                              <span class="tree-btn tree-edit" @click.stop="handleEditLeft(id)">
+                              <span class="tree-btn tree-edit" @click.stop="handleEditLeft(id)" v-if="data.leftTreeTop == '全部目录'">
                                 <EditOutlined title="编辑目录" />
                               </span>
-                              <span class="tree-btn tree-delete" @click.stop="handleDeleteLeft(id)">
+                              <span class="tree-btn tree-delete" @click.stop="handleDeleteLeft(id)" v-if="data.leftTreeTop == '全部目录'">
                                 <DeleteOutlined title="删除" />
-                              </span> -->
+                              </span>
                       <span class="tree-btn tree-favor" :class="{ 'tree-favor-active': isFavor }"
                         @click.stop="setFavor(id, name, isFavor)">
                         <StarOutlined title="收藏" v-if="!isFavor" />
@@ -97,39 +94,7 @@
             </div>
           </div>
         </a-col>
-        <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
-          <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
-            :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
-          <div style="height: 100%" ref="contentRef">
-            <div class="wea-tab">
-              <a-tabs v-model:activeKey="activeKey" @change="changeTab">
-                <a-tab-pane v-for="(item, index) in tabs" :key="index">
-                  <template #tab>
-                    <span>
-                      {{ item.lable }} <span v-if="item.count">({{ item.count }})</span>
-                    </span>
-                  </template>
-                </a-tab-pane>
-                <!-- <a-tab-pane key="2" tab="待处理" force-render></a-tab-pane>
-                  <a-tab-pane key="3" tab="待阅"></a-tab-pane> -->
-              </a-tabs>
-              <div class="tabsBtn">
-                <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-                  <a-button type="primary" class="ml10">批量发布</a-button>
-                  <a-button class="ml10">批量取消发布</a-button> -->
-              </div>
-            </div>
-            <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch"
-              entityApiName="Content" :SearchFields="SearchFields"></list-form-search>
-            <div class="wea-tabContent" :style="{ height: tableHeight + 'px' }" ref="tabContent">
-              <!-- <a-table :dataSource="dataSource" :columns="columns"></a-table> -->
-              <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
-                :isCollapsed="isCollapsed">
-              </Ntable>
-            </div>
-          </div>
-        </a-col>
-      </a-row>
+        </a-row>
     </div>
     <NewInfo v-if="isNew" :isShow="isNew" :treeData="gData" @cancel="cancelNew"
       :objectTypeCode="data.queryParams.objectTypeCode" :FolderId="data.SelectKey" />
@@ -163,7 +128,6 @@ import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated,
 import Interface from "@/utils/Interface.js";
 import { message } from "ant-design-vue";
 import Ntable from "@/components/Ntable.vue";
-import ListFormSearch from "@/components/ListFormSearch.vue";
 import { useRouter, useRoute } from "vue-router";
 import { girdFormatterValue } from "@/utils/common.js";
 const route = useRoute();
@@ -238,6 +202,16 @@ const res = require("@/localData/treedata.json");
 const gData = ref([]);
 const gDataAll = ref([]);
 
+const generateExpandedKeys = (treeData) => {
+  let keys = [];
+  treeData.forEach(item => {
+    keys.push(item.key);
+    if (item.children) {
+      keys = keys.concat(generateExpandedKeys(item.children));
+    }
+  });
+  return keys;
+};
 //全部目录
 const getTreeData = () => {
   gData.value = [];
@@ -260,24 +234,10 @@ const getTreeData = () => {
       console.log("formTree", response);
       gData.value = response;
       gDataAll.value = response;
+      expandedKeys.value=generateExpandedKeys(response);
     }
   });
-  // proxy.$get(Interface.information.contentTree,{}).then((response)=>{
-  //     let formTree = (list) => {
-  //       list.forEach(item=>{
-  //         if(item.children){
-  //           formTree(item.children);
-  //         }
-  //         item.key = item.id;
-  //         item.value = item.id;
-  //         item.isFavor=item.isFavor||false;
-  //       })
-  //     }
-  //     formTree(response);
-  //     console.log("formTree",response)
-  //     gData.value = response;
-  //     gDataAll.value = response;
-  // })
+  
 }
 
 //收藏目录
@@ -310,7 +270,7 @@ const getFavorite = () => {
           children: [],
           id: item.id,
           key: item.id,
-          name: item.Name,
+          name: item.Name||'暂无',
           parent: null,
           quantity: 0,
           text: null,
@@ -430,19 +390,6 @@ const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
 };
-// watch(searchValue, (value) => {
-//   const expanded = dataList
-//     .map((item) => {
-//       if (item.title.indexOf(value) > -1) {
-//         return getParentKey(item.key, gData.value);
-//       }
-//       return null;
-//     })
-//     .filter((item, i, self) => item && self.indexOf(item) === i);
-//   expandedKeys.value = expanded;
-//   searchValue.value = value;
-//   autoExpandParent.value = true;
-// });
 
 let data = reactive({
   leftTreeTop: '全部目录',
@@ -452,35 +399,9 @@ let data = reactive({
     children: 'children', title: 'name', key: 'id'
   },
   tabs: [
-    {
-      lable: "我创建",
-      count: ''
-    },
-    {
-      lable: "部门的",
-      count: ''
-    },
-    {
-      lable: "全部",
-      count: ''
-    },
-    // {
-    //   lable: "我管理的",
-    //   count: 16
-    // },
-    // {
-    //   lable: "待审批",
-    //   count: 0
-    // }
+    
   ],
   activeKey: 0,
-  queryParams: {
-    filterId: '',
-    objectTypeCode: '100201',
-    entityName: 'Content',
-    filterQuery: '\nCreatedBy\teq-userid',
-    displayColumns: 'Title,FolderId,StateCode,BusinessUnitId,ReadCount,ApprovedBy,ApprovedOn,CreatedBy,CreatedOn,ModifiedBy,ModifiedOn'
-  },
   isModal: false,
   isCirculation: false,
   isNew: false,
@@ -491,56 +412,6 @@ let data = reactive({
   recordId: '',
   external: false,
   userId: '',
-  SearchFields: [
-    {
-      "column": "Title",
-      "label": "标题",
-      "dataType": "S",
-      "ReferencedEntityObjectTypeCode": 0,
-      "sObjectName": "",
-      "targetApiName": "",
-    },
-    {
-      "column": "BusinessUnitId",
-      "label": "部门",
-      "dataType": "O",
-      "ReferencedEntityObjectTypeCode": 10,
-      "picklistValues": [],
-      "sObjectName": "BusinessUnit",
-      "targetApiName": "BusinessUnit",
-    },
-    {
-      "column": "StatusCode",
-      "label": "状态",
-      "dataType": "L",
-      "ReferencedEntityObjectTypeCode": 100201,
-      "picklistValues": [
-        {
-          "label": "草稿",
-          "value": "0"
-        },
-        {
-          "label": "已发布",
-          "value": "1"
-        },
-        {
-          "label": "审批未通过",
-          "value": "2"
-        }
-      ],
-      "sObjectName": "",
-      "targetApiName": "",
-    },
-    {
-      "column": "CreatedOn",
-      "label": "创建时间",
-      "dataType": "F",
-      "ReferencedEntityObjectTypeCode": 0,
-      "picklistValues": [],
-      "sObjectName": "",
-      "targetApiName": "",
-    }
-  ],
   isCommon: false,
   objectTypeCode: '100201',
   sObjectName: 'Content',
@@ -564,7 +435,7 @@ let data = reactive({
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
 };
-const { folderActionsConfig, CheckList, isConfirm, confirmText, confirmTitle, isNewFolder, selectedKeys, SelectName, SelectKey, relatedObjectAttributeValue, relatedObjectAttributeName, recordId, objectTypeCode, sObjectName, isCommon, isCollapsed, userId, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value, searchVal, SearchFields, leftTreeTop } = toRefs(data);
+const { folderActionsConfig, CheckList, isConfirm, confirmText, confirmTitle, isNewFolder, selectedKeys, SelectName, SelectKey, relatedObjectAttributeValue, relatedObjectAttributeName, recordId, objectTypeCode, sObjectName, isCommon, isCollapsed, userId, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value, searchVal, leftTreeTop } = toRefs(data);
 const tabContent = ref(null);
 const contentRef = ref(null);
 let formSearchHeight = ref(null);
@@ -612,7 +483,6 @@ const onSelect = (keys, { node }) => {
     }
     //getPrivileges()
   }
-  changeTab(data.activeKey);
 };
 
 function changeHeight(h) {
@@ -625,259 +495,15 @@ function changeHeight(h) {
   data.tableHeight = height;
   console.log('data', data.tableHeight);
 
-  gridRef.value.loadGrid(data.queryParams);
 }
-const handleSearch = (filterQuery) => {
-  if (data.activeKey == 0) {
-    data.queryParams.filterQuery = '\nCreatedBy\teq-userid';
-  } else if (data.activeKey == 1) {
-    data.queryParams.filterQuery = '\nBusinessUnitId\teq-businessunitid';
-  } else if (data.activeKey == 2) {
-    data.queryParams.filterQuery = '';
-  } else if (data.activeKey == 3) {
 
-  }
-  if (filterQuery) {
-    data.queryParams.filterQuery += filterQuery;
-  }
-  if (data.SelectKey) {
-    data.queryParams.filterQuery += '\nFolderId\teq\t' + data.SelectKey;
-  }
-  gridRef.value.loadGrid(data.queryParams);
-}
-// 获取tabs
-const getTabs = () => {
-  proxy.$get(Interface.ContentWrap.tabs, {
-    a: 1
-  }).then(res => {
-    console.log("tabs", res)
-    data.tabs = res.list;
-  })
-}
-// getTabs();
-
-const handleMenuClick = () => {
-
-}
-const DelegateRef = ref();
-
-function handleDetail(id) {
-  // router.push({
-  //   path:"/informationDetail",
-  //   query: {
-  //     id: id
-  //   }
-  // });
-  let reUrl = router.resolve({
-    path: "/informationDetail",
-    query: {
-      id: id,
-      objectTypeCode: '100201'
-    }
-  })
-  window.open(reUrl.href);
-}
-function handlePreview(id) {
-  // router.push({
-  //     path:"/lightning/r/Content/view",
-  //     query: {
-  //       id: id,
-  //       objectTypeCode:'100201'
-  //     }
-  // });
-  let reUrl = router.resolve({
-    path: "/lightning/r/Content/view",
-    query: {
-      id: id,
-      objectTypeCode: '100201'
-    }
-  })
-  window.open(reUrl.href);
-}
-function handleEdit(id, FolderId) {
-  // router.push({
-  //     path:"/content/visualEditor",
-  //     query: {
-  //       id: id
-  //     }
-  // });
-
-  let reUrl = router.resolve({
-    name: "visualEditor",
-    query: {
-      id: id,
-      objectTypeCode: 100201,
-      //FolderId: res.actions[0].returnValue&&res.actions[0].returnValue.fields&&res.actions[0].returnValue.fields.FolderId?res.actions[0].returnValue.fields.FolderId:''
-      FolderId: FolderId
-    }
-  })
-  window.open(reUrl.href);
-}
-function handleDelete(id) {
-  data.relatedObjectAttributeValue = {};
-  data.relatedObjectAttributeName = '';
-  data.objectTypeCode = '100201';
-  data.sObjectName = 'Content';
-  data.recordId = id;
-  data.isDelete = true;
-}
 const deleteOk = (e) => {
-  if (data.objectTypeCode == '100201') {
-    gridRef.value.loadGrid(data.queryParams);
-  }
-  else {
-    getTreeData();
-  }
+  getTreeData();
 };
 const cancelDelete = (e) => {
   data.isDelete = false;
 };
-const updateStatus = (e) => {
-  data.isModal = e;
-  data.isCirculation = e;
-}
-const formatStatus = (val, row, index) => {
-  let value = girdFormatterValue("StateCode", row);
-  if (value == "1" || value == "审批通过" || value == "已发布") {
-    return "<span style='color:#333;'>已发布</span>";
-  }
-  if (value == "2" || value == "审批未通过" || value == "审批不通过") {
-    return "<span style='color:#333;'>审批未通过</span>";
-  }
-  if (value == "0" || value == "草稿") {
-    return "<span style='color:#333;'>草稿</span>";
-  }
-  if (value == "已退回" || value == "退回") {
-    return "<span style='color:#333;'>" + value + "</span>";
-  }
-}
 
-window.handleDetail = handleDetail;
-window.handlePreview = handlePreview;
-window.handleEdit = handleEdit;
-window.handleDelete = handleDelete;
-window.data = data;
-
-const imgUrl = require("@/assets/flow/checkbox_checked.gif");
-const gridUrl = ref(Interface.list2);
-const columns = ref(
-  [
-    {
-      field: 'ids',
-      checkbox: true
-    },
-    {
-      field: "Action",
-      title: "操作",
-      formatter: function formatter(value, row, index) {
-        var str = `
-                <div class="iconBox">
-                  <div class="popup">
-                    <div class="option-item" onclick="handlePreview('${row.id}')">查看详情</div>  
-                    <div class="option-item" onclick="handleEdit('${row.id}','${row.FolderId.lookupValue.value}')">编辑</div>  
-                    <div class="option-item" onclick="handleDelete('${row.id}')">删除</div>
-                  </div>
-                  <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
-              `
-        return str;
-      }
-    },
-    {
-      field: 'Title', title: '标题', sortable: true,
-      formatter: function formatter(value, row, index) {
-        let val = girdFormatterValue('Title', row);
-        return '<a style="text-decoration: none;color:#1677ff;" href="/#/lightning/r/Content/view?id=' + row.id + '&objectTypeCode=100201" target="_blank">' + val + '</a>';
-      }
-    },
-    {
-      field: 'FolderId',
-      title: '栏目',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('FolderId', row);
-      }
-    },
-    {
-      field: 'StateCode',
-      title: '发布状态',
-      sortable: true,
-      formatter: formatStatus
-    }, {
-      field: 'BusinessUnitId',
-      title: '发布部门',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('BusinessUnitId', row);
-      }
-    }, {
-      field: 'ReadCount',
-      title: '阅读数',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('ReadCount', row);
-      }
-    }, {
-      field: 'ApprovedBy',
-      title: '审批发布人',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('ApprovedBy', row);
-      }
-    }, {
-      field: 'ApprovedOn',
-      title: '发布时间',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('ApprovedOn', row);
-      }
-    }, {
-      field: 'CreatedBy',
-      title: '创建人',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('CreatedBy', row);
-      }
-    }, {
-      field: 'CreatedOn',
-      title: '创建时间',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('CreatedOn', row);
-      }
-    }, {
-      field: 'ModifiedBy',
-      title: '上次修改人',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('ModifiedBy', row);
-      }
-    }, {
-      field: 'ModifiedOn',
-      title: '上次修改时间',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('ModifiedOn', row);
-      }
-    }
-  ]
-)
-
-const changeTab = (e) => {
-  data.activeKey = e;
-  if (e == 0) {
-    data.queryParams.filterQuery = '\nCreatedBy\teq-userid';
-  } else if (e == 1) {
-    data.queryParams.filterQuery = '\nBusinessUnitId\teq-businessunitid';
-  } else if (e == 2) {
-    data.queryParams.filterQuery = '';
-  } else if (e) {
-
-  }
-  if (data.SelectKey) {
-    data.queryParams.filterQuery += '\nFolderId\teq\t' + data.SelectKey;
-  }
-  gridRef.value.loadGrid(data.queryParams);
-}
 const handleNew = (e) => {
   if (data.SelectKey) {
     data.relatedObjectAttributeValue = {};
@@ -888,7 +514,7 @@ const handleNew = (e) => {
     data.isNew = true;
   }
   else {
-    message.error("必须先选中左侧目录");
+    message.error("必须先选中父目录");
   }
 }
 const cancelNew = (e) => {
@@ -913,7 +539,7 @@ const handleAddLeft = (id, name) => {
     data.isNewFolder = true;
   }
   else {
-    message.error("必须先选中左侧目录");
+    message.error("必须先选中父目录");
   }
 }
 const handleEditLeft = (e) => {
@@ -934,83 +560,15 @@ const handleDeleteLeft = (e) => {
   data.isDelete = true;
 }
 const confirmOk = () => {
-  if (data.confirmTitle == '批量发布') {
-    let list = gridRef.value.getCheckList();
-    for (var i = 0; i < list.length; i++) {
-      changeRelease(1, list[i].id);
-    }
-  } else if (data.confirmTitle == '批量取消发布') {
-    let list = gridRef.value.getCheckList();
-    for (var i = 0; i < list.length; i++) {
-      changeRelease(0, list[i].id);
-    }
-  }
+  if (data.confirmTitle == '') {
+    
+  } 
   else {
-    data.isConfirm = false;
+    
   }
+  data.isConfirm = false;
 }
-//批量发布
-const handleRelease = () => {
-  let list = gridRef.value.getCheckList();
-  if (list.length) {
-    data.CheckList = list;
-    data.isConfirm = true;
-    data.confirmText = '确定要批量发布吗？';
-    data.confirmTitle = '批量发布';
-  } else {
-    message.error("请至少勾选一项！")
-  }
-}
-//批量取消发布
-const cancelRelease = () => {
-  let list = gridRef.value.getCheckList();
-  if (list.length) {
-    data.CheckList = list;
-    data.isConfirm = true;
-    data.confirmText = '确定要批量取消发布吗？';
-    data.confirmTitle = '批量取消发布';
-  } else {
-    message.error("请至少勾选一项！")
-  }
-}
-//改变发布状态
-const changeRelease = (type, id) => {
-  let url = Interface.edit;
-  let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordInput: {
-          allowSaveOnDuplicate: false,
-          apiName: 'Content',
-          objTypeCode: 100201,
-          fields: {
-            StateCode: type * 1 == 1 ? "1" : "0",
-          }
-        }
-      }
-    }]
-  };
-  if (id) {
-    d.actions[0].params.recordId = id;
-  }
-  let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
-    //formRef.value.resetFields();
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-      message.success(type * 1 == 1 ? "发布成功" : "取消成功");
-      data.isConfirm = false;
-      handleSearch();
-    }
-    else {
-      message.error(type * 1 == 1 ? "发布失败" : "取消失败");
-    }
-  });
-}
+
 //获取单个目录权限
 const getPrivileges = () => {
   data.folderActionsConfig = {
@@ -1042,13 +600,8 @@ const getPrivileges = () => {
   }
 }
 watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/lightning/o/Content/home') {
-      getTreeData();
-      setTimeout(function () {
-        handleSearch();
-      }, 500)
-    }
+  if (route.path == '/lightning/page/ContentFolderTree') {
+    getTreeData();
   }
 }, { deep: true, immediate: true })
 onMounted(() => {
@@ -1058,11 +611,11 @@ onMounted(() => {
     data.userId = userInfo.userId;
   }
   window.addEventListener('resize', changeHeight)
-  getTreeData();
+  getTreeData()
 })
 </script>
 <style lang="less" scoped>
-.ContentWrap {
+.ContentFolderTreeWrap {
   width: 100%;
   height: 100%;
   background: #fff;
@@ -1292,7 +845,7 @@ onMounted(() => {
   }
 }
 
-.ContentWrap {
+.ContentFolderTreeWrap {
   .headerBar .headerLeft .icon-circle-base {
     background: rgb(223, 88, 58);
   }
@@ -1377,22 +930,60 @@ onMounted(() => {
   display: block !important;
 }
 
-.ContentWrap .todo-content {
-  width: unset !important;
-
-  .ant-row {
+.ContentWrap.ContentFolderTreeWrap {
+  :deep .anticon-close-circle {
+    right: 0px !important;
+    position: relative !important;
+  }
+  .todo-content {
     width: unset !important;
 
-    .wea-left-right-layout-left {
-      .wea-left-tree {
-        width: unset !important;
+    :deep .top-content {
+      display: flex !important;
+      justify-content: flex-end;
+      padding-right: 20px;
+    }
+    :deep .ant-row {
+      width: unset !important;
+      .ant-col{
+        height: 100%;
+      }
+      .ant-col.wea-left-right-layout-left {
 
-        .wea-left-tree-search {
-          width: unset !important;
+        .wea-left-tree {
+          width: 40% !important;
+          margin: 0 auto;
+
+          .wea-left-tree-search {
+            width: unset !important;
+          }
+          .wea-left-tree-scroll{
+            padding-top: 15px;
+            width: 100%;
+            padding-left: 10px;
+            margin-top: 20px;
+            height: calc(100% - 100px) !important;
+            overflow: auto;
+            border: 1px solid #dedede;
+            border-radius: 8px;
+          }
         }
       }
-
     }
+  }
+  .wea-left-tree-search{
+    margin-top: 10px;
+    position: relative;
+    width: 240px;
+    display: flex;
+    align-items: center;
+    .ant-select-single{
+      width: 100%;
+    }
+  }
+  .alltype{
+    padding-left: 20px !important;
+    min-width: 63px !important;
   }
 }
 </style>

@@ -388,6 +388,7 @@ const getBusinessUnits = () => {
           data.currentAccountName=data.accountList[i].FullName;
           data.userId=data.accountList[i].UserId;
           data.avatarUrl=data.accountList[i].avatarUrl;
+          window.localStorage.setItem('businessUnitName', data.accountList[i].businessUnitIdName);
         }
       }
     }

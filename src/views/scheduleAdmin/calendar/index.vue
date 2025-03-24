@@ -18,7 +18,7 @@
                 </dRadioGroup>
                 <a-button type="primary" class="ml10" @click="handleAddSchedule" v-if="CalendarActionsConfig.canAddEvent">新建日程</a-button>
                 <a-button class="ml10" @click="openShare" v-if="CalendarActionsConfig.isCalendarShareable">共享日历</a-button>
-                <a-button class="ml10" @click="openImport" v-if="CalendarActionsConfig.canAddEvent">导入日程</a-button>
+                <!-- <a-button class="ml10" @click="openImport" v-if="CalendarActionsConfig.canAddEvent">导入日程</a-button> -->
             </div>
         </div>
         <div class="calendarBody">

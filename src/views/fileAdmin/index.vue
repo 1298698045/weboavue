@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper fileAdminWrap">
     <div class="containerBox" ref="contentRef">
       <div class="leftMenu" v-if="isLeft">
         <div class="leftMenuItem" :class="{ active: leftCurrent == index }" @click="handleMenuClick(item, index)"
@@ -58,7 +58,7 @@
               srchType == 'org' ||
               srchType == 'archive'
             " type="primary" @click="handleAddFolder">新建</a-button>
-            <a-button class="ml10" v-if="
+            <!-- <a-button class="ml10" v-if="
               folderId != '' &&
               (srchType == 'my' ||
                 srchType == 'share' ||
@@ -75,7 +75,7 @@
                 srchType == 'archive') &&
               Privilege &&
               (Privilege.canAdmin || Privilege.canEdit || Privilege.canEdit)
-            ">文件排序</a-button>
+            ">文件排序</a-button> -->
             <a-button class="ml10" v-if="srchType == 'recycle'" @click="batchDelete">批量删除</a-button>
           </div>
         </div>
@@ -87,12 +87,12 @@
                   <a-input v-model:value="formState.Name" placeholder="请输入文件名称"></a-input>
                 </a-form-item>
                 <a-form-item name="time" class="timeForm">
-                  <a-range-picker v-model:value="formState.time" />
+                  <a-range-picker v-model:value="formState.time" valueFormat="YYYY-MM-DD" />
                 </a-form-item>
                 <a-form-item name="FileExtension">
                   <a-select v-model:value="formState.FileExtension" placeholder="请选择文件类型">
                     <a-select-option v-for="(item, index) in fileTypes" :key="index" :value="item.value">{{ item.label
-                      }}</a-select-option>
+                    }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-form>
@@ -102,8 +102,26 @@
               </div>
             </div>
             <div class="tableWrapper">
-              <a-table :scroll="{ y: tableHeight }" :dataSource="listData" :columns="columns" :pagination="false"
-                @change="handleTableChange">
+              <a-table :row-key="record => record.id" :row-selection="rowSelection" :scroll="{ y: tableHeight }"
+                :dataSource="listData" :columns="columns" :pagination="false" @change="handleTableChange">
+                <template #headerCell="{ column, sortOrder }">
+                  <div class="ant-table-column-sorters" @click="handleSort(column.dataIndex, sortOrder)" v-if="column.dataIndex!='number'&&column.dataIndex!='action'&&column.dataIndex!='sort'">
+                    <span class="ant-table-column-title">
+                      <span data-v-1d25bf1a="">{{ column.title }}</span>
+                    </span>
+                    <span class="ant-table-column-sorter ant-table-column-sorter-full">
+                      <span class="ant-table-column-sorter-inner">
+                        <span role="presentation" aria-label="caret-up" class="anticon anticon-caret-up ant-table-column-sorter-up">
+                          <svg focusable="false" data-icon="caret-up" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="0 0 1024 1024"><path d="M858.9 689L530.5 308.2c-9.4-10.9-27.5-10.9-37 0L165.1 689c-12.2 14.2-1.2 35 18.5 35h656.8c19.7 0 30.7-20.8 18.5-35z"></path></svg>
+                        </span>
+                        <span role="presentation" aria-label="caret-down" class="anticon anticon-caret-down ant-table-column-sorter-down">
+                          <svg focusable="false" data-icon="caret-down" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="0 0 1024 1024"><path d="M840.4 300H183.6c-19.7 0-30.7 20.8-18.5 35l328.4 380.8c9.4 10.9 27.5 10.9 37 0L858.9 335c12.2-14.2 1.2-35-18.5-35z"></path></svg>
+                        </span>
+                      </span>
+                    </span>
+                  </div>
+                  <div v-else>{{ column.title }}</div>
+                </template>
                 <template #bodyCell="{ column, record, index }">
                   <template v-if="column.key == 'number'">
                     <div>
@@ -124,45 +142,11 @@
                   <template v-if="column.key == 'fileExtension'">
                     <div class="fileItem" @click="handleOpenFile(record)">
                       <img :src="Interface.pathUrl + ':9091' + record.icon" />
-                      <!-- <img :src="require('@/assets/img/filetype/doc.png')" v-if="
-                        record.fileExtension == 'ocx' ||
-                        record.fileExtension == 'docx' ||
-                        record.fileExtension == 'doc'
-                      " />
-                      <img :src="require('@/assets/img/filetype/rar.png')" v-else-if="
-                        record.fileExtension == 'rar' ||
-                        record.fileExtension == 'zip'
-                      " />
-                      <img :src="require('@/assets/img/filetype/Excel.png')" v-else-if="
-                        record.fileExtension == 'xlsx' ||
-                        record.fileExtension == 'xls'
-                      " />
-                      <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="record.fileExtension == 'pdf'" />
-                      <img :src="require('@/assets/img/filetype/TXT.png')" v-else-if="
-                        record.fileExtension == 'TXT' ||
-                        record.fileExtension == 'txt'
-                      " />
-                      <img :src="require('@/assets/img/filetype/PPT.png')" v-else-if="
-                        record.fileExtension == 'ppt' ||
-                        record.fileExtension == 'pptx'
-                      " />
-                      <img :src="require('@/assets/img/filetype/video.png')" v-else-if="
-                        record.fileExtension == 'mp4' ||
-                        record.fileExtension == '.mp4'
-                      " />
-                      <img :src="require('@/assets/img/filetype/defaultImg.png')" v-else-if="
-                        record.fileExtension == 'jpg' ||
-                        record.fileExtension == 'png' ||
-                        record.fileExtension == 'gif'
-                      " />
-                      <img :src="require('@/assets/img/filetype/Folder.png')" v-else-if="record.type == 'folder'" />
-                      <img :src="require('@/assets/img/filetype/File.png')" v-else /> -->
-                      <span class="fileName">{{ record.name }}</span>
                     </div>
                   </template>
-                  <template v-if="column.key === 'fileSize'">
-                    <div>
-                      {{ record.fileSize }}
+                  <template v-if="column.key === 'name'">
+                    <div class="fileItem" @click="handleOpenFile(record)">
+                      <span class="fileName">{{ record.name }}</span>
                     </div>
                   </template>
                   <template v-if="column.key === 'action'">
@@ -241,7 +225,11 @@
                             " @click="handleSetPrem(record)">设置权限</a-menu-item>
                           </a-menu>
                         </template>
-                        <a-button :icon="h(EllipsisOutlined)"></a-button>
+                        <a-button class="fileAdminMoreBtn"><svg class="moreaction" width="15" height="20"
+                            viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868="">
+                            <path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
+                              fill="#747474" data-v-69a58868=""></path>
+                          </svg></a-button>
                       </a-dropdown>
                     </div>
                   </template>
@@ -272,6 +260,7 @@
     <PhotoPreview v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="cancelPhotoModal" />
     <!-- PDF预览 -->
     <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+    <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
     <Confirm v-if="isConfirm" :isShow="isConfirm" :title="confirmTitle" :desc="confirmDesc" @cancel="isConfirm = false"
       @ok="confirmFuc"></Confirm>
   </div>
@@ -316,6 +305,7 @@ import Delete from "@/components/listView/Delete.vue";
 import SetPermissions from "@/components/file/SetPermissions.vue";
 import PhotoPreview from "@/components/file/PhotoPreview.vue";
 import PdfView from "@/components/file/PdfView.vue";
+import TxtView from "@/components/file/TxtView.vue";
 import Confirm from "@/components/commonModal/Confirm.vue";
 import { formTreeData } from "@/utils/common.js";
 import { message } from "ant-design-vue";
@@ -327,6 +317,7 @@ const formRef = ref();
 const handleReset = () => {
   formRef.value.resetFields();
   data.checkList = [];
+  data.selectedRowKeys = [];
   data.pagination.current = 1;
   getQuery();
 };
@@ -339,27 +330,33 @@ const formState = reactive({
 const time = ref();
 const columns = toRaw([
   // {
-  //   title: "序号",
-  //   dataIndex: "number",
-  //   key: "number",
-  //   width: 70,
+  //   title: "选择",
+  //   dataIndex: "checked",
+  //   key: "checked",
+  //   width: 60,
   // },
   {
-    title: "选择",
-    dataIndex: "checked",
-    key: "checked",
-    width: 70,
+    title: "序号",
+    dataIndex: "number",
+    key: "number",
+    width: 60,
   },
+  // {
+  //   title: "排序",
+  //   dataIndex: "sort",
+  //   key: "sort",
+  //   width: 100,
+  // },
   {
-    title: "排序",
-    dataIndex: "sort",
-    key: "sort",
-    width: 100,
+    title: "类型",
+    dataIndex: "fileExtension",
+    key: "fileExtension",
+    width: 80
   },
   {
     title: "文件名称",
-    dataIndex: "fileExtension",
-    key: "fileExtension",
+    dataIndex: "name",
+    key: "name",
   },
   {
     title: "大小",
@@ -446,10 +443,13 @@ const data = reactive({
     { label: "图片(jpeg)", value: "jpeg" },
     { label: "图片(png)", value: "png" },
     { label: "文本(txt)", value: "txt" },
+    { label: "Word(doc)", value: "doc" },
     { label: "Word(docx)", value: "docx" },
     { label: "Excel(xls)", value: "xls" },
+    { label: "Excel(xlsx)", value: "xlsx" },
+    { label: "PPT(ppt)", value: "ppt" },
     { label: "PPT(pptx)", value: "pptx" },
-    { label: "ZIP(zip)", value: "zip" },
+    { label: "压缩包(zip)", value: "zip" },
     { label: "PDF(pdf)", value: "pdf" },
     { label: "视频(mp4)", value: "mp4" },
     { label: "音乐(mp3)", value: "mp3" },
@@ -518,9 +518,19 @@ const data = reactive({
   confirmDesc: '',
   confirmTitle: '',
   confirmId: '',
-  checkList: []
+  checkList: [],
+  selectedRowKeys: [],
+  sort: 'displayOrder',
+  order: 'asc',
+  isTxt: false,
+  txtParams: {}
 });
 const {
+  isTxt,
+  txtParams, 
+  sort,
+  order,
+  selectedRowKeys,
   checkList,
   isLeft,
   menus,
@@ -612,15 +622,17 @@ const getQuery = () => {
   data.listData = [];
   data.pagination.total = 0;
   data.photoParams.imageList = [];
-  let url = Interface.file.getLatestFiles;
+  let url = '';
   if (data.srchType == 'latestuse') {
     url = Interface.file.getLatestFiles;
-  } else if (data.srchType == 'my' || data.srchType == 'org') {
+  } else if (data.srchType == 'my') {
     url = Interface.file.getOwnDirAndFiles;
   } else if (data.srchType == 'favorite') {
     url = Interface.file.getFavoriteFiles;
   } else if (data.srchType == 'recycle') {
     url = Interface.file.getRecycFolders;
+  } else if(data.srchType == 'org'){
+    url = Interface.file.getOrgDirAndFiles;
   }
   let d = {
     "actions": [{
@@ -632,11 +644,15 @@ const getQuery = () => {
         "pageSize": data.pagination.pageSize,
         "folderId": data.folderId,
         "search": formState.Name,
-        "fileExtension": formState.FileExtension,
-        "time": formState.time
+        "fileExtension": formState.FileExtension||'',
+        "sort": data.sort,
+        "order": data.order
       }
     }]
   };
+  if(formState.time){
+    d.actions[0].params.time=formState.time;
+  }
   let obj = {
     message: JSON.stringify(d)
   }
@@ -661,36 +677,44 @@ const getQuery = () => {
         if (data.srchType == 'my' || data.srchType == 'org') {
           if (formState.Name || formState.FileExtension || formState.time) {
             result = filelist;
-            data.total = res.actions[0].returnValue.files.length;
+            data.total = res.actions[0].returnValue.totalFiles;
+            data.pagination.total = res.actions[0].returnValue.totalFiles;
           }
           else {
             if (data.folderId) {
               result = filelist.concat(folderlist);
-              data.total = res.actions[0].returnValue.files.length + res.actions[0]
-                .returnValue
-                .folders
-                .length;
+              data.total = res.actions[0].returnValue.totalFiles + res.actions[0].returnValue.totalFolders;
+              data.pagination.total = res.actions[0].returnValue.totalFiles + res.actions[0].returnValue.totalFolders;
             } else {
               result = folderlist;
-              data.total = res.actions[0].returnValue.folders.length;
+              data.total = res.actions[0].returnValue.totalFolders;
+              data.pagination.total = res.actions[0].returnValue.totalFolders;
             }
           }
 
         } else {
-          result = filelist.concat(folderlist);
-          data.total = res.actions[0].returnValue.files.length + res.actions[0].returnValue
-            .folders
-            .length;
+          if (data.srchType != 'recycle') {
+            result = filelist.concat(folderlist);
+            data.total = res.actions[0].returnValue.totalFiles + res.actions[0].returnValue.totalFolders;
+            data.pagination.total = res.actions[0].returnValue.totalFiles + res.actions[0].returnValue.totalFolders;
+          }
+          else {
+            result = filelist;
+            data.total = res.actions[0].returnValue.totalFiles;
+            data.pagination.total = res.actions[0].returnValue.totalFiles;
+          }
         }
       } else {
         result = filelist;
-        data.total = res.actions[0].returnValue.files.length;
+        data.total = res.actions[0].returnValue.totalFiles;
+        data.pagination.total = res.actions[0].returnValue.totalFiles;
       }
       result.forEach(item => {
         //item.Title = item.name || '';
         //item.createdByName = item.createdByName || '';
         item.createdOn = item.createdOn ? formatTime(item.createdOn) : '';
         item.modifiedOn = item.modifiedOn ? formatTime(item.modifiedOn) : '';
+        item.fileSizeNum = item.fileSize * 1;
         item.fileSize = item.fileSize ? (item.fileSize * 1 / 1024).toFixed(2) + 'kb' : '';
         if (item.fileExtension == 'ppt' || item.fileExtension == 'pptx') {
           item.icon = '/img/filetype/PPT.png';
@@ -720,7 +744,7 @@ const getQuery = () => {
         } else if (item.fileExtension == 'mp3') {
           item.icon = '/img/filetype/voice.png';
         } else if (item.fileExtension == 'folder') {
-          item.icon = '/img/filetype/Folder1.png';
+          item.icon = '/img/filetype/Folder.png';
         } else {
           item.icon = '/img/filetype/File.png';
         }
@@ -800,12 +824,13 @@ const handleMenuClick = (item, index) => {
     canShare: false,
     canMove: false
   };
-  data.breadcrumbList[0] = {
+  data.breadcrumbList = [{
     name: data.menus[index].name,
     srchType: data.menus[index].srchType,
-  };
+  }];
   formRef.value.resetFields();
   data.checkList = [];
+  data.selectedRowKeys = [];
   data.pagination.current = 1;
   getQuery();
 };
@@ -819,6 +844,7 @@ const handleBreadcrumbItem = (item, idx) => {
   data.breadcrumbList = data.breadcrumbList.slice(0, idx + 1);
   formRef.value.resetFields();
   data.checkList = [];
+  data.selectedRowKeys = [];
   data.pagination.current = 1;
   getQuery();
 };
@@ -889,6 +915,13 @@ const handleOpenFile = (item) => {
         downloadUrl: item.downloadUrl
       };
       data.isPdf = true;
+    } else if (item.fileExtension == 'txt') {
+        data.txtParams = {
+            name: item.name,
+            viewUrl: item.viewUrl,
+            downloadUrl: item.downloadUrl
+        };
+        data.isTxt = true;
     } else {
       // openControlViewFile(
       //   item.link,
@@ -909,6 +942,7 @@ const handleDownLoadFile = (item) => {
 const handleChild = () => {
   formRef.value.resetFields();
   data.checkList = [];
+  data.selectedRowKeys = [];
   data.pagination.current = 1;
   getQuery();
   // proxy.$get(Interface.file.child, {}).then((res) => {
@@ -955,7 +989,7 @@ const handleMoveFile = (item) => {
     id: item.id,
     name: item.name,
     type: item.type,
-    FolderId: item.FolderId||item.ParentId
+    FolderId: item.FolderId || item.ParentId
   };
   data.isFileMove = true;
 };
@@ -1189,7 +1223,7 @@ const changeFiles = (e) => {
   }
 }
 const batchDelete = () => {
-  if (data.checkList && data.checkList.length) {
+  if (data.selectedRowKeys && data.selectedRowKeys.length) {
     if (data.srchType == 'recycle') {
       data.confirmDesc = '确定要批量永久删除吗？'
       data.confirmTitle = '批量永久删除';
@@ -1203,15 +1237,16 @@ const batchDelete = () => {
   }
 }
 const BatchHandleDelete = () => {
-  if (data.checkList && data.checkList.length) {
-    for (var i = 0; i < data.checkList.length; i++) {
-      let item = data.checkList[i];
-      if (item.id) {
-        handleRowDelete(item.id);
+  if (data.selectedRowKeys && data.selectedRowKeys.length) {
+    for (var i = 0; i < data.selectedRowKeys.length; i++) {
+      let id = data.selectedRowKeys[i];
+      if (id) {
+        handleRowDelete(id);
       }
     }
     setTimeout(function () {
       data.checkList = [];
+      data.selectedRowKeys = [];
     }, 2000)
   }
 }
@@ -1259,10 +1294,28 @@ const handleRowDelete = (id) => {
     message.error("删除失败！");
   });
 }
+const rowSelection = computed(() => {
+  return {
+    onChange: (selectedRowKeys, selectedRows) => {
+      data.selectedRowKeys = selectedRowKeys;
+      //console.log(data.selectedRowKeys)
+    },
+    selectedRowKeys: data.selectedRowKeys,
+    preserveSelectedRowKeys: true
+  }
+});
+const handleSort = (dataIndex, sortOrder) => {
+  data.sort = dataIndex;
+  //console.log(sortOrder);
+  data.order = data.order == 'asc' ? 'desc' : 'asc';
+  data.pagination.current=1;
+  // data.pagination.pageSize=10;
+  getQuery();
+}
 watch(() => route, (newVal, oldVal) => {
-    if (route.path == '/lightning/o/ContentDocument/home') {
-      getQuery();
-    }
+  if (route.path == '/lightning/o/ContentDocument/home') {
+    getQuery();
+  }
 }, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
@@ -1501,6 +1554,76 @@ body .ant-table-tbody tr:nth-child(even) {
 
     a {
       color: #fff;
+    }
+  }
+}
+
+.fileAdminWrap {
+  :deep .ant-table-thead {
+    .ant-table-column-sorters {
+      cursor: pointer;
+      display: block !important;
+
+      .ant-table-column-title {
+        float: left !important;
+      }
+
+      .ant-table-column-sorter {
+        float: left !important;
+      }
+    }
+  }
+
+  :deep .ant-table-cell .ant-btn-default {
+    border: none !important;
+    padding: 0 !important;
+    background: transparent;
+  }
+
+  :deep .ant-table-tbody {
+    td {
+      padding: 10px 16px !important;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .ant-table-measure-row td {
+      padding: 0 !important;
+    }
+
+
+
+    tr:hover,
+    tr:hover td {
+      background-color: #e9f7ff !important;
+      color: #108def !important;
+    }
+
+    tr:nth-child(odd) {
+      background-color: rgb(250, 250, 250) !important;
+      /* 奇数行背景色 */
+    }
+
+    tr:nth-child(even) {
+      background-color: #fff !important;
+      /* 偶数行背景色 */
+    }
+  }
+
+  :deep .ant-table-thead>tr>th {
+    background-color: #f7fbfe !important;
+    padding: 8.5px 16px !important;
+    text-align: center;
+  }
+
+  .fileAdminMoreBtn {
+    .moreaction {
+      padding: 0px 1px;
+      width: 18px;
+      border: 1px solid #dedede;
+      border-radius: 4px;
+      position: relative;
+      top: 1px;
     }
   }
 }

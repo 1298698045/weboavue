@@ -14,8 +14,7 @@
                         <div class="profile-message">
                             <div class="profile-message-leftmessage">
                                 <div class="profile-photo">
-                                    <img :src="props.avatarUrl" :on-error="defaultImg" alt="" class="bigimg" v-if="isBig" @click="isBig=false" />
-                                    <img :src="props.avatarUrl" :on-error="defaultImg" alt="" v-if="!isBig" @click="isBig=true" />
+                                    <img :src="props.avatarUrl" :on-error="defaultImg" alt="" @click="isBig=true" />
                                 </div>
                                 <div class="hrm-my-card-basicInfo-left-imgwrap-op">
                                     <div class="ant-col-6">
@@ -135,6 +134,7 @@
         </div>
       </div>
     </div>
+    <ImageView v-if="isBig" :isShow="isBig" :photoParams="photoParams" @cancel="isBig = false" />
   </div>
 </template>
 <script setup>
@@ -166,6 +166,7 @@ import { girdFormatterValue } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import RadioUser from "@/components/commonModal/MultipleUser.vue";
 import Delete from "@/components/listView/Delete.vue";
+import ImageView from "@/components/file/ImageView.vue";
 const { proxy } = getCurrentInstance();
 const PersonnelLst = ref();
 import { useRouter, useRoute } from "vue-router";
@@ -201,8 +202,9 @@ const data = reactive({
   layoutList: [],
   list: {},
   defaultImg:require('@/assets/img/user/MyResume/showEmpAvatar.png'),
+  photoParams:{}
 });
-const { defaultImg,layoutList,isBig,record,list,detailviewloading,activesections,relatedLists,listItems,recordIds,records,id,height,listData,loading,listDataDetail,ParentSubjectName,Description} = toRefs(data);
+const { photoParams,defaultImg,layoutList,isBig,record,list,detailviewloading,activesections,relatedLists,listItems,recordIds,records,id,height,listData,loading,listDataDetail,ParentSubjectName,Description} = toRefs(data);
 const getQuery = () => {
   data.listData=[];
   let filterQuery='\nParentSubject\teq\t'+data.id;
@@ -378,6 +380,17 @@ const handleOpenSchedule= () => {
     //window.location.href=url.href;
 }
 onMounted(() => {
+    let item={
+        id:props.id,
+        downloadUrl: '/api/one/user/avatar/' + props.id,
+        viewUrl: '/api/one/user/avatar/' + props.id
+    }
+    data.photoParams = {
+            id: props.id,
+            item: item,
+            imageList: [item],
+            index: 0
+        };
   let h = document.documentElement.clientHeight;
       data.height=h;
       window.addEventListener("resize", (e) => {
@@ -633,7 +646,7 @@ onMounted(() => {
         }
         .bigimg{
             width: 300px;
-            height: auto;
+            height: 300px;
             left: 0;
             position: absolute !important;
         }
