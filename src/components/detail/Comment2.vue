@@ -78,8 +78,13 @@
                                 <div class="commentBtn">
                                     <!-- <span class="deleteComment" @click="handleDelete(item.id)">删除</span> -->
                                     <!-- <span class="commentBtn-item" title="删除" v-if="item.OwningUserId&&data.OwningUser&&data.OwningUser==item.OwningUserId" @click="handleDelete(item.id)" ><DeleteOutlined /></span> -->
-                                    <span class="commentBtn-item" title="点赞">
-                                        <LikeOutlined />赞(<span>{{ item.NumOfLike || 0 }}</span>)
+                                    <span class="commentBtn-item" title="点赞" v-if="!item.IsLike"
+                                        @click="handleLike(item)">
+                                        <LikeOutlined /><span>{{ item.NumOfLike || 0 }}</span>
+                                    </span>
+                                    <span class="commentBtn-item" title="取消点赞" v-if="item.IsLike"
+                                        @click="handleLike(item)" style="color: red;">
+                                        <LikeFilled /><span>{{ item.NumOfLike || 0 }}</span>
                                     </span>
                                 </div>
                             </div>
@@ -99,112 +104,186 @@
     </div>
 </template>
 <script setup>
-    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw, defineProps } from "vue";
-    import dayjs from 'dayjs';
-    import 'dayjs/locale/zh-cn';
-    import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
-    dayjs.locale('zh-cn');
-    import calendar from 'dayjs/plugin/calendar';
-    import weekday from 'dayjs/plugin/weekday';
-    import localeData from 'dayjs/plugin/localeData';
+import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw, defineProps } from "vue";
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+dayjs.locale('zh-cn');
+import calendar from 'dayjs/plugin/calendar';
+import weekday from 'dayjs/plugin/weekday';
+import localeData from 'dayjs/plugin/localeData';
 
-    dayjs.extend(calendar);
-    dayjs.extend(weekday);
-    dayjs.extend(localeData);
-    import { UserOutlined, LikeOutlined, DeleteOutlined } from "@ant-design/icons-vue";
-    import { notification } from 'ant-design-vue';
-    import Interface from "@/utils/Interface.js";
-    import { girdFormatterValue } from "@/utils/common.js";
-    import { message } from "ant-design-vue";
-    import Delete from "@/components/listView/Delete.vue";
-    const { proxy } = getCurrentInstance();
-    const props = defineProps({
-        title: String,
-        id: String,
-        RegardingObjectTypeCode: String
-    })
-    const data = reactive({
-        listData: [],
-        page: 1,
-        rows: 10,
-        total: 0,
-        comment: "",
-        searchVal: "",
-        isDelete: false,
-        recordId: '',
+dayjs.extend(calendar);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
+import { UserOutlined, LikeOutlined, DeleteOutlined, LikeFilled } from "@ant-design/icons-vue";
+import { notification } from 'ant-design-vue';
+import Interface from "@/utils/Interface.js";
+import { girdFormatterValue } from "@/utils/common.js";
+import { message } from "ant-design-vue";
+import Delete from "@/components/listView/Delete.vue";
+const { proxy } = getCurrentInstance();
+const props = defineProps({
+    title: String,
+    id: String,
+    RegardingObjectTypeCode: String
+})
+const data = reactive({
+    listData: [],
+    page: 1,
+    rows: 10,
+    total: 0,
+    comment: "",
+    searchVal: "",
+    isDelete: false,
+    recordId: '',
+    objectTypeCode: '6000',
+    sObjectName: 'Chatter',
+    deleteDesc: '确定要删除吗？',
+    external: false,
+    OwningUser: ''
+})
+const { listData, page, rows, total, comment, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
+const getCommentList_old = () => {
+    // proxy.$get(Interface.commentList,{
+    //     meetingid:"4c51a922-8762-40ae-9e10-5e1fa3f51a60",
+    //     page: page,
+    //     rows: rows
+    // }).then(res=>{
+    //     data.listData = res.rows;
+    //     data.total = res.total;
+    // })
+    data.listData = [];
+    data.total = 0;
+    let filterQuery = '\nRegardingObjectId\teq\t' + props.id;
+    proxy.$post(Interface.list2, {
+        filterId: '',
         objectTypeCode: '6000',
-        sObjectName: 'Chatter',
-        deleteDesc: '确定要删除吗？',
-        external: false,
-        OwningUser: ''
-    })
-    const { listData, page, rows, total, comment, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
-    const getCommentList_old = () => {
-        // proxy.$get(Interface.commentList,{
-        //     meetingid:"4c51a922-8762-40ae-9e10-5e1fa3f51a60",
-        //     page: page,
-        //     rows: rows
-        // }).then(res=>{
-        //     data.listData = res.rows;
-        //     data.total = res.total;
-        // })
-        data.listData = [];
-        data.total = 0;
-        let filterQuery = '\nRegardingObjectId\teq\t' + props.id;
-        proxy.$post(Interface.list2, {
-            filterId: '',
-            objectTypeCode: '6000',
-            entityName: 'Chatter',
-            filterQuery: filterQuery,
-            search: data.searchVal,
-            page: data.page,
-            rows: data.rows,
-            sort: 'CreatedOn',
-            order: 'desc',
-            displayColumns: 'OwningUser,CreatedOn,Description,NumOfComment,NumOfLike,ImageUrls'
-        }).then(res => {
-            var list = [];
-            data.total = res.pageInfo ? res.pageInfo.total : 0;
-            for (var i = 0; i < res.nodes.length; i++) {
-                var item = res.nodes[i];
-                for (var cell in item) {
-                    if (cell != 'id' && cell != 'nameField' && cell != 'ImageUrls') {
-                        if (cell == 'OwningUser') {
-                            item['OwningUserId'] = item[cell].userValue.Value;
-                            if (item['OwningUserId']) {
-                                item['OwningUserId'] = (item['OwningUserId']).toUpperCase();
-                            }
+        entityName: 'Chatter',
+        filterQuery: filterQuery,
+        search: data.searchVal,
+        page: data.page,
+        rows: data.rows,
+        sort: 'CreatedOn',
+        order: 'desc',
+        displayColumns: 'OwningUser,CreatedOn,Description,NumOfComment,NumOfLike,ImageUrls'
+    }).then(res => {
+        var list = [];
+        data.total = res.pageInfo ? res.pageInfo.total : 0;
+        for (var i = 0; i < res.nodes.length; i++) {
+            var item = res.nodes[i];
+            for (var cell in item) {
+                if (cell != 'id' && cell != 'nameField' && cell != 'ImageUrls') {
+                    if (cell == 'OwningUser') {
+                        item['OwningUserId'] = item[cell].userValue.Value;
+                        if (item['OwningUserId']) {
+                            item['OwningUserId'] = (item['OwningUserId']).toUpperCase();
                         }
-                        item[cell] = girdFormatterValue(cell, item);
                     }
+                    item[cell] = girdFormatterValue(cell, item);
+                }
+                if (cell == 'ImageUrls') {
+                    item[cell] = girdFormatterValue(cell, item) || require('@/assets/img/avatar-r.png');
+                }
+                if (cell == 'CreatedOn') {
+                    item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
+                }
+            }
+            list.push(item)
+        }
+        data.listData = list;
+
+    })
+}
+const getCommentList = () => {
+    data.listData = [];
+    data.total = 0;
+    let filterQuery = '\nRegardingObjectId\teq\t' + props.id;
+    let url = Interface.status.query;
+    let d = {
+        actions: [{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+                pageSize: data.rows,
+                pageNumber: data.page,
+                RegardingObjectId: props.id,
+                search: ''
+            }
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(url, obj).then(res => {
+        var list = [];
+        if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.rows) {
+            data.total = res.actions[0].returnValue.total.length || 0;
+            for (var i = 0; i < res.actions[0].returnValue.rows.length; i++) {
+                var item = res.actions[0].returnValue.rows[i];
+                for (var cell in item) {
                     if (cell == 'ImageUrls') {
-                        item[cell] = girdFormatterValue(cell, item) || require('@/assets/img/avatar-r.png');
+                        item[cell] = require('@/assets/img/avatar-r.png');
                     }
-                    if (cell == 'CreatedOn') {
-                        item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
+                    if (cell == 'CreatedOn' || cell == 'createdOn') {
+                        item['CreatedOn'] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
                     }
                 }
+                if (!item['ImageUrls']) {
+                    item['ImageUrls'] = require('@/assets/img/avatar-r.png');
+                }
+                item['OwningUserId'] = item.createdBy || '';
+                item['OwningUser'] = item.createdByName || '';
+                item['Description'] = item.text == '' ? '<span style="color:rgba(0, 0, 0, 0.25);">暂无内容</span>' : item.text;
+                item['NumOfLike'] = item.numOfLike || 0;
+                item['NumOfComment'] = item.numOfComment || 0;
+                item['Islike'] = item.isLike || false;
                 list.push(item)
             }
+        }
+        if (list && list.length) {
             data.listData = list;
-
-        })
-    }
-    const getCommentList = () => {
-        data.listData = [];
-        data.total = 0;
-        let filterQuery = '\nRegardingObjectId\teq\t' + props.id;
-        let url = Interface.status.query;
+        }
+    })
+}
+//改变页码
+const ChangePage = (page, pageSize) => {
+    data.page = page;
+    data.rows = pageSize;
+    getCommentList();
+}
+const sizeChange = (current, size) => {
+    ChangePage(current, size)
+}
+const key = 'updatable';
+const handleSendComment = () => {
+    if (data.comment == "") {
+        notification.open({
+            key,
+            message: "评论内容不能为空！"
+        });
+    } else {
+        let url = Interface.status.submit;
         let d = {
             actions: [{
                 id: "2919;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                    pageSize: data.rows,
-                    pageNumber: data.page,
+                    text: data.comment,
+                    chatterTypeCode: 0,
+                    RegardingObjectTypeCode: props.RegardingObjectTypeCode,
                     RegardingObjectId: props.id,
-                    search: ''
+                    location: {
+                        location: "",
+                        buidingName: "",
+                        longitude: "",
+                        latitude: ""
+                    },
+                    visible: {
+                        visibleType: 0
+                    }
                 }
             }]
         };
@@ -212,391 +291,346 @@
             message: JSON.stringify(d)
         }
         proxy.$post(url, obj).then(res => {
-            var list = [];
-            if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.rows) {
-                data.total = res.actions[0].returnValue.total.length || 0;
-                for (var i = 0; i < res.actions[0].returnValue.rows.length; i++) {
-                    var item = res.actions[0].returnValue.rows[i];
-                    for (var cell in item) {
-                        if (cell == 'ImageUrls') {
-                            item[cell] = require('@/assets/img/avatar-r.png');
-                        }
-                        if (cell == 'CreatedOn' || cell == 'createdOn') {
-                            item['CreatedOn'] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
+            if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+                message.success("发布成功！");
+                data.page = 1;
+                getCommentList();
+                data.comment = "";
+            }
+
+        });
+    }
+}
+// 删除
+const handleDelete = (e) => {
+    data.recordId = e;
+    data.isDelete = true;
+};
+const closeDelete = (e) => {
+    data.recordId = '';
+    data.isDelete = false;
+};
+const deleteOk = (e) => {
+    getCommentList();
+};
+//点赞&取消点赞
+const handleLike = (item) => {
+    if (!item.IsLike) {
+        let url = Interface.create;
+        let d = {
+            actions: [{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    recordInput: {
+                        allowSaveOnDuplicate: false,
+                        apiName: 'ChatterLike',
+                        objTypeCode: '6004',
+                        fields: {
+                            CommentId: item.id,
+                            CreatedBy: data.OwningUser,
+                            LikeType: 1,
                         }
                     }
-                    if (!item['ImageUrls']) {
-                        item['ImageUrls'] = require('@/assets/img/avatar-r.png');
-                    }
-                    item['OwningUserId'] = item.createdBy || '';
-                    item['OwningUser'] = item.createdByName || '';
-                    item['Description'] = item.text == '' ? '<span style="color:rgba(0, 0, 0, 0.25);">暂无内容</span>' : item.text;
-                    item['NumOfLike'] = item.numOfLike || 0;
-                    item['NumOfComment'] = item.numOfComment || 0;
-                    list.push(item)
+                }
+            }]
+        };
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(url, obj).then(res => {
+            if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+                message.success("点赞成功！");
+                item.NumOfLike = item.NumOfLike * 1 > 0 ? item.NumOfLike * 1 + 1 : 1;
+                item.IsLike = !item.IsLike;
+            }
+            else {
+                if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+                    message.error(res.actions[0].errorMessage);
+                }
+                else {
+                    message.error("点赞失败！");
                 }
             }
-            if (list && list.length) {
-                data.listData = list;
+        });
+    } else {
+        let obj = {
+            actions: [{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    recordId: item.LikeId || '',
+                    apiName: 'ContentLikes',
+                    objTypeCode: 100206,
+                }
+            }]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.delete, d).then(res => {
+            if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+                message.success("取消点赞成功");
+                item.NumOfLike = item.NumOfLike * 1 - 1 > 0 ? item.NumOfLike * 1 - 1 : 0;
+                item.IsLike = !item.IsLike;
+            } else {
+                if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+                    message.success(res.actions[0].errorMessage);
+                }
+                else {
+                    message.error("取消点赞失败");
+                }
             }
         })
     }
-    //改变页码
-    const ChangePage = (page, pageSize) => {
-        data.page = page;
-        data.rows = pageSize;
-        getCommentList();
-    }
-    const sizeChange = (current, size) => {
-        ChangePage(current, size)
-    }
-    const key = 'updatable';
-    const handleSendComment = () => {
-        if (data.comment == "") {
-            notification.open({
-                key,
-                message: "评论内容不能为空！"
-            });
-        } else {
-            // proxy.$get(Interface.sendComment,{
-            //     title: data.comment,
-            //     ObjectId: "4c51a922-8762-40ae-9e10-5e1fa3f51a60"
-            // }).then(res=>{
-            //     if(res.status==1){
-            //         notification.open({
-            //             key,
-            //             message: res.msg
-            //         });
-            //         data.comment = "";
-            //     }
-            // })
-            // let url=Interface.create;
-            //     let d = {
-            //     actions:[{
-            //         id: "2919;a",
-            //         descriptor: "",
-            //         callingDescriptor: "UNKNOWN",
-            //         params: {
-            //         recordInput: {
-            //             allowSaveOnDuplicate: false,
-            //             apiName: 'Chatter',
-            //             objTypeCode: '6000',
-            //             fields: {
-            //                 RegardingObjectId: props.id,
-            //                 OwningUser:data.OwningUser,
-            //                 Description:data.comment,
-            //                 RegardingObjectTypeCode:props.RegardingObjectTypeCode
-            //             }
-            //         }              
-            //         }
-            //     }]
-            // };
-
-            // let obj = {
-            //     message: JSON.stringify(d)
-            // }
-            // proxy.$post(url,obj).then(res=>{
-            // if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
-            //     message.success("发布成功！");
-            //     getCommentList();
-            //     data.comment = "";
-            // }
-
-            // });
-            let url = Interface.status.submit;
-            let d = {
-                actions: [{
-                    id: "2919;a",
-                    descriptor: "",
-                    callingDescriptor: "UNKNOWN",
-                    params: {
-                        text: data.comment,
-                        chatterTypeCode: 0,
-                        RegardingObjectTypeCode: props.RegardingObjectTypeCode,
-                        RegardingObjectId: props.id,
-                        location: {
-                            location: "",
-                            buidingName: "",
-                            longitude: "",
-                            latitude: ""
-                        },
-                        visible: {
-                            visibleType: 0
-                        }
-                    }
-                }]
-            };
-            let obj = {
-                message: JSON.stringify(d)
-            }
-            proxy.$post(url, obj).then(res => {
-                if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-                    message.success("发布成功！");
-                    data.page = 1;
-                    getCommentList();
-                    data.comment = "";
-                }
-
-            });
+}
+onMounted(() => {
+    let userInfo = window.localStorage.getItem('userInfo');
+    if (userInfo) {
+        userInfo = JSON.parse(userInfo);
+        data.OwningUser = userInfo.userId;
+        if (data.OwningUser == 'jackliu') {
+            data.OwningUser = '2ec00cf2-a484-4136-8fef-e2a2719c5ed6';
         }
+        data.OwningUser = (data.OwningUser).toUpperCase();
     }
-    // 删除
-    const handleDelete = (e) => {
-        data.recordId = e;
-        data.isDelete = true;
-    };
-    const closeDelete = (e) => {
-        data.recordId = '';
-        data.isDelete = false;
-    };
-    const deleteOk = (e) => {
-        getCommentList();
-    };
-    onMounted(() => {
-        let userInfo = window.localStorage.getItem('userInfo');
-        if (userInfo) {
-            userInfo = JSON.parse(userInfo);
-            data.OwningUser = userInfo.userId;
-            if (data.OwningUser == 'jackliu') {
-                data.OwningUser = '2ec00cf2-a484-4136-8fef-e2a2719c5ed6';
-            }
-            data.OwningUser = (data.OwningUser).toUpperCase();
-        }
-        getCommentList();
-    });
+    getCommentList();
+});
 </script>
 <style lang="less">
-    .commentWrap2 {
-        width: 100%;
+.commentWrap2 {
+    width: 100%;
 
-        .panelcommentWrap2 {
-            padding: 0 80px;
+    .panelcommentWrap2 {
+        padding: 0 80px;
 
-            .commentBox {
+        .commentBox {
+            display: flex;
+
+            .leftAvatar {
+                margin-right: 12px;
+            }
+
+            .rightTextare {
+                flex: 1;
+                border-radius: 2px;
+
+                .textarea {
+                    width: 100%;
+                    height: 100px;
+                    min-height: 22px;
+                    border-radius: 2px;
+                    background: #f2f3f5;
+                    padding-top: 6px;
+                    padding-left: 12px;
+                    font-size: 14px;
+                    border: none;
+                    outline: 0;
+                    resize: vertical;
+                }
+            }
+        }
+
+        .optionalWrap {
+            text-align: right;
+            padding-top: 10px;
+        }
+
+        .commentList {
+            .commentItemBox {
                 display: flex;
+                margin-top: 20px;
 
                 .leftAvatar {
+                    font-size: 36px;
+                    color: #C9CDD4;
                     margin-right: 12px;
                 }
 
-                .rightTextare {
+                .rightComment {
                     flex: 1;
-                    border-radius: 2px;
+                    overflow: hidden;
 
-                    .textarea {
-                        width: 100%;
-                        height: 100px;
-                        min-height: 22px;
-                        border-radius: 2px;
-                        background: #f2f3f5;
-                        padding-top: 6px;
-                        padding-left: 12px;
+                    .commentName {
                         font-size: 14px;
-                        border: none;
-                        outline: 0;
-                        resize: vertical;
+                        color: #ff7d00;
+                    }
+
+                    .commentContent {
+                        margin: 6px 0;
+                    }
+
+                    .commentTime {
+                        font-size: 12px;
+                        color: #86909c;
+                    }
+
+                    .commentBtn {
+                        font-size: 12px;
+                        color: #86909c;
                     }
                 }
             }
-
-            .optionalWrap {
-                text-align: right;
-                padding-top: 10px;
-            }
-
-            .commentList {
-                .commentItemBox {
-                    display: flex;
-                    margin-top: 20px;
-
-                    .leftAvatar {
-                        font-size: 36px;
-                        color: #C9CDD4;
-                        margin-right: 12px;
-                    }
-
-                    .rightComment {
-                        flex: 1;
-                        overflow: hidden;
-
-                        .commentName {
-                            font-size: 14px;
-                            color: #ff7d00;
-                        }
-
-                        .commentContent {
-                            margin: 6px 0;
-                        }
-
-                        .commentTime {
-                            font-size: 12px;
-                            color: #86909c;
-                        }
-
-                        .commentBtn {
-                            font-size: 12px;
-                            color: #86909c;
-                        }
-                    }
-                }
-            }
-
-            .pagination {
-                margin-top: 20px;
-                text-align: right;
-                max-height: 74px;
-            }
         }
 
-        .commentAvatar {
-            width: 40px;
-            height: 40px;
-            position: relative;
-            top: 0px;
-        }
-
-        :where(.css-dev-only-do-not-override-kqecok).ant-avatar {
-            // background: transparent !important;
-            width: 40px !important;
-            height: 40px !important;
-            line-height: 40px !important;
-        }
-
-        :where(.css-dev-only-do-not-override-kqecok).ant-avatar .ant-avatar-string {
-            left: 0 !important;
-            transform: unset !important;
-        }
-
-        .deleteComment {
-            cursor: pointer;
-            margin-left: 8px;
-        }
-
-        height: 100%;
-
-        .panel {
-            height: 100%;
-            padding: 15px;
-        }
-
-        .panel1 {
-            height: 210px;
-            margin-bottom: 18px;
-        }
-
-        .panel2 {
-            height: calc(~'100% - 230px');
-        }
-
-        .panelcommentWrap2 {
-            padding: 0 15px;
-            padding-right: 15px;
-            height: 100%;
-            padding-left: 0px;
-        }
-
-        .panelcommentWrap2 .commentBox {
-            padding-left: 20px;
-        }
-
-        .panel-bd {
-            height: calc(~'100% - 40px') !important;
-        }
-
-        .commentList {
-            height: calc(~'100% - 225px') !important;
-            overflow: auto;
-            margin-top: 18px;
-        }
-
-        .commentTime {
-            text-align: left;
-        }
-
-        .commentBtn {
+        .pagination {
+            margin-top: 20px;
             text-align: right;
-        }
-
-        .panelcommentWrap2 .commentList .commentItemBox {
-            margin: 0;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
-            padding-right: 20px;
-            padding-top: 20px;
-            padding-left: 20px;
-        }
-
-        .panelcommentWrap2 .commentList .commentItemBox:hover {
-            background: #e9f7ff !important;
-        }
-
-        .ant-avatar {
-            line-height: 36px !important;
-            position: relative;
-            top: -8px;
-        }
-
-        .commentBtn-item {
-            font-size: 14px;
-            margin-left: 10px;
-            cursor: pointer;
-            color: #666;
-
-            .anticon {
-                font-size: 15px;
-                margin-right: 10px;
-            }
+            max-height: 74px;
         }
     }
 
-    .ant-pagination {
-        .ant-pagination-item {
-            border: 1px solid #d9d9d9;
-        }
-
-        .ant-pagination-item:hover {
-            border: 1px solid #1677ff;
-            background: #fff !important;
-        }
-
-        .ant-pagination-item-active,
-        .ant-pagination-item-active:hover {
-            border: 1px solid #1677ff;
-            background: #1677ff !important;
-
-            a {
-                color: #fff;
-            }
-        }
+    .commentAvatar {
+        width: 40px;
+        height: 40px;
+        position: relative;
+        top: 0px;
     }
 
-    .commentWrap2 {
-        .commentList {
-            height: calc(~'100% - 15px') !important;
-            margin-top: 0 !important;
-        }
+    :where(.css-dev-only-do-not-override-kqecok).ant-avatar {
+        // background: transparent !important;
+        width: 40px !important;
+        height: 40px !important;
+        line-height: 40px !important;
+    }
 
-        .panel1 .panel-head {
-            margin-bottom: 15px !important;
-        }
+    :where(.css-dev-only-do-not-override-kqecok).ant-avatar .ant-avatar-string {
+        left: 0 !important;
+        transform: unset !important;
+    }
 
-        .panel1 .ant-avatar {
-            top: 0px !important;
-        }
+    .deleteComment {
+        cursor: pointer;
+        margin-left: 8px;
+    }
 
-        .empty {
-            background: #fff;
-            padding: 8px 0 22px;
+    height: 100%;
 
-            svg,
-            img {
-                width: 120px !important;
-            }
+    .panel {
+        height: 100%;
+        padding: 15px;
+    }
 
-            .emptyDesc {
-                color: #ccc;
-                margin-top: 10px;
-            }
+    .panel1 {
+        height: 210px;
+        margin-bottom: 18px;
+    }
+
+    .panel2 {
+        height: calc(~'100% - 230px');
+    }
+
+    .panelcommentWrap2 {
+        padding: 0 15px;
+        padding-right: 15px;
+        height: 100%;
+        padding-left: 0px;
+    }
+
+    .panelcommentWrap2 .commentBox {
+        padding-left: 20px;
+    }
+
+    .panel-bd {
+        height: calc(~'100% - 40px') !important;
+    }
+
+    .commentList {
+        height: calc(~'100% - 225px') !important;
+        overflow: auto;
+        margin-top: 18px;
+    }
+
+    .commentTime {
+        text-align: left;
+    }
+
+    .commentBtn {
+        text-align: right;
+    }
+
+    .panelcommentWrap2 .commentList .commentItemBox {
+        margin: 0;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+        padding-right: 20px;
+        padding-top: 20px;
+        padding-left: 20px;
+    }
+
+    .panelcommentWrap2 .commentList .commentItemBox:hover {
+        background: #e9f7ff !important;
+    }
+
+    .ant-avatar {
+        line-height: 36px !important;
+        position: relative;
+        top: -8px;
+    }
+
+    .commentBtn-item {
+        font-size: 14px;
+        margin-left: 10px;
+        cursor: pointer;
+        color: #666;
+
+        .anticon {
+            font-size: 15px;
+            margin-right: 5px;
         }
     }
+}
+
+.ant-pagination {
+    .ant-pagination-item {
+        border: 1px solid #d9d9d9;
+    }
+
+    .ant-pagination-item:hover {
+        border: 1px solid #1677ff;
+        background: #fff !important;
+    }
+
+    .ant-pagination-item-active,
+    .ant-pagination-item-active:hover {
+        border: 1px solid #1677ff;
+        background: #1677ff !important;
+
+        a {
+            color: #fff;
+        }
+    }
+}
+
+.commentWrap2 {
+    .commentList {
+        height: calc(~'100% - 15px') !important;
+        margin-top: 0 !important;
+    }
+
+    .panel1 .panel-head {
+        margin-bottom: 15px !important;
+    }
+
+    .panel1 .ant-avatar {
+        top: 0px !important;
+    }
+
+    .empty {
+        background: #fff;
+        padding: 8px 0 22px;
+
+        svg,
+        img {
+            width: 120px !important;
+        }
+
+        .emptyDesc {
+            color: #ccc;
+            margin-top: 10px;
+        }
+    }
+}
 </style>

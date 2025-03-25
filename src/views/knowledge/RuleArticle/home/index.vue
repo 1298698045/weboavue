@@ -191,7 +191,20 @@ const getTreeData = () => {
   gData.value = [];
   gDataAll.value = [];
   let url = Interface.content.folder.get;
-  proxy.$post(url, {}).then(res => {
+  let d = {
+    actions: [{
+      id: "2919;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        id:'00000000-0000-0000-0000-000000002000'
+      }
+    }]
+  };
+  let obj = {
+    message: JSON.stringify(d)
+  }
+  proxy.$post(url, obj).then(res => {
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
       let formTree = (list) => {
         list.forEach(item => {

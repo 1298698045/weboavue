@@ -674,10 +674,11 @@ body .ant-table-tbody tr:nth-child(even) {
 .ReadRecordWrap2 .panel-top .ant-card {
   border-radius: 4px !important;
   cursor: pointer;
+  margin-top: 4px;
 }
 
 .ReadRecordWrap2 .ant-card:first-child {
-  margin-left: 0 !important;
+  margin-left: 4px !important;
 }
 
 .ReadRecordWrap2 .ant-card:last-child {
@@ -686,7 +687,7 @@ body .ant-table-tbody tr:nth-child(even) {
 
 .ReadRecordWrap2 .panel-top .ant-card.active,
 .ReadRecordWrap2 .panel-top .ant-card:hover {
-  //box-shadow: -4px -4px 12px 0 rgba(0, 0, 0, 0.16);
+  box-shadow: 1px 2px 6px 0 rgb(0 0 0 / 40%) !important;
   //border: 1px solid #bbb !important;
   //background: #1677ff !important;
   // *{

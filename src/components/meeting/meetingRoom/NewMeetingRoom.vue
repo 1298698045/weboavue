@@ -1,6 +1,7 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="850px" style="top:10px;" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+    <a-modal v-model:open="props.isShow" width="850px" style="top:10px;" :maskClosable="false" @cancel="handleCancel"
+      @ok="handleSubmit">
       <template #title>
         <div>
           {{ title }}
@@ -35,7 +36,8 @@
                 </div>
                 <div class="sectionItem">
                   <a-form-item name="SortNumber" label="序号" :rules="[{ required: true, message: '请输入序号' }]">
-                    <a-input v-model:value="formState.SortNumber" class="NewMeetingRoomInputClass" type="number"></a-input>
+                    <a-input v-model:value="formState.SortNumber" class="NewMeetingRoomInputClass"
+                      type="number"></a-input>
                   </a-form-item>
                 </div>
               </div>
@@ -56,15 +58,19 @@
               </div>
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="ApproveByIds" label="负责人" :rules="[{ required: true, message: '请选择负责人' }]">
-                      <a-select v-model:value="formState.ApproveByIds.Id"
-                      :default-active-first-option="false" :filter-option="false" showSearch @search="(e) => {searchlookup(e,'SystemUser', 'ApproveByIds');}" @dropdownVisibleChange="(e) => {searchlookup('','SystemUser', 'ApproveByIds');}">
-                          <template #suffixIcon></template>
-                          <a-select-option v-for="(option, optionIdx) in search.ApproveByIds" :key="optionIdx" :value="option.ID">{{ option.Name }}</a-select-option>
-                      </a-select>
-                      <div class="selectIcon">
-                          <SearchOutlined class="ant-select-suffix" @click="handleOpenLook('8')" />
-                      </div>
+                  <a-form-item name="ManageId" label="负责人" :rules="[{ required: true, message: '请选择负责人' }]">
+                    <a-select v-model:value="formState.ManageId.Id" :default-active-first-option="false"
+                      :filter-option="false" showSearch @search="(e) => { searchlookup(e, 'SystemUser', 'ManageId'); }"
+                      @dropdownVisibleChange="(e) => { searchlookup('', 'SystemUser', 'ManageId'); }"
+                      @change="(e) => { handleChange(e, 'SystemUser', 'ManageId') }">
+                      <template #suffixIcon></template>
+                      <a-select-option v-for="(option, optionIdx) in search.ManageId" :key="optionIdx"
+                        :value="option.ID">{{
+                        option.Name }}</a-select-option>
+                    </a-select>
+                    <div class="selectIcon">
+                      <SearchOutlined class="ant-select-suffix" @click="handleOpenLook('8')" />
+                    </div>
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
@@ -93,20 +99,32 @@
                 </div>
                 <div class="sectionItem">
                   <a-form-item name="AttachInfo" label="配备物品">
-                    <a-input v-model:value="formState.AttachInfo" class="NewMeetingRoomInputClass"></a-input>
+                    <!-- <a-input v-model:value="formState.AttachInfo" class="NewMeetingRoomInputClass"></a-input> -->
+                    <a-select :default-active-first-option="false"
+                      allowClear :filter-option="true" showSearch
+                      v-model:value="formState.AttachInfo" mode="multiple"
+                          placeholder="请选择配备物品">
+                          <a-select-option v-for="(item, index) in AttachInfoList" :key="index" :value="item.value">
+                              {{item.label}}
+                          </a-select-option>
+                      </a-select>
                   </a-form-item>
                 </div>
               </div>
-              
+
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="AvailableStartTime" label="可使用开始时间" :rules="[{ required: true, message: '请输入可使用开始时间' }]">
-                    <a-time-picker v-model:value="formState.AvailableStartTime" valueFormat="hh:mm" format="hh:mm" placeholder="可使用开始时间" />
+                  <a-form-item name="AvailableStartTime" label="可使用开始时间"
+                    :rules="[{ required: true, message: '请输入可使用开始时间' }]">
+                    <a-time-picker v-model:value="formState.AvailableStartTime" valueFormat="HH:mm" format="HH:mm"
+                      placeholder="可使用开始时间" />
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
-                  <a-form-item name="AvailableEndTime" label="可使用结束时间" :rules="[{ required: true, message: '请输入可使用结束时间' }]">
-                    <a-time-picker v-model:value="formState.AvailableEndTime" valueFormat="hh:mm" format="hh:mm" placeholder="可使用结束时间" />
+                  <a-form-item name="AvailableEndTime" label="可使用结束时间"
+                    :rules="[{ required: true, message: '请输入可使用结束时间' }]">
+                    <a-time-picker v-model:value="formState.AvailableEndTime" valueFormat="HH:mm" format="HH:mm"
+                      placeholder="可使用结束时间" />
                   </a-form-item>
                 </div>
               </div>
@@ -114,22 +132,25 @@
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="ApplyStartTime" label="预约开始时间" :rules="[{ required: true, message: '请输入预约开始时间' }]">
-                    <a-time-picker v-model:value="formState.ApplyStartTime" valueFormat="hh:mm" format="hh:mm" placeholder="预约开始时间" />
+                    <a-time-picker v-model:value="formState.ApplyStartTime" valueFormat="HH:mm" format="HH:mm"
+                      placeholder="预约开始时间" />
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
                   <a-form-item name="ApplyEndTime" label="预约截至时间" :rules="[{ required: true, message: '请输入预约截至时间' }]">
-                    <a-time-picker v-model:value="formState.ApplyEndTime" valueFormat="hh:mm" format="hh:mm" placeholder="预约截至时间" />
+                    <a-time-picker v-model:value="formState.ApplyEndTime" valueFormat="HH:mm" format="HH:mm"
+                      placeholder="预约截至时间" />
                   </a-form-item>
                 </div>
               </div>
-              
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="Visibility" label="所有人可用">
                     <a-checkbox v-model:checked="formState.Visibility"></a-checkbox>
                   </a-form-item>
                 </div>
+              </div>
+              <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="MondayAllow" label="星期一">
                     <a-checkbox v-model:checked="formState.MondayAllow"></a-checkbox>
@@ -143,7 +164,7 @@
                 <div class="sectionItem">
                   <a-form-item name="WednesdayAllow" label="星期三">
                     <a-checkbox v-model:checked="formState.WednesdayAllow"></a-checkbox>
-                  </a-form-item>
+                  </a-form-item> 
                 </div>
                 <div class="sectionItem">
                   <a-form-item name="ThursdayAllow" label="星期四">
@@ -166,25 +187,19 @@
                   </a-form-item>
                 </div>
               </div>
-              
-              <div class="sectionRow">
-                
-                <div class="sectionItem">
-                  
-                </div>
-              </div>
 
+            </div>
+            <div class="section">
+              <div class="sectionTitle">备注信息</div>
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="Description" label="备注">
                     <a-textarea :rows="4" v-model:value="formState.Description" />
                   </a-form-item>
                 </div>
-                
-              </div>
-              
-            </div>
 
+              </div>
+            </div>
           </a-form>
         </div>
         <div class="modalCenter" :style="{ height: height + 'px!important' }" v-show="step * 1 == 1">
@@ -219,8 +234,8 @@
                     </div>
                     <div class="inboxFileItem">
                       <a-upload-dragger accept="image/*" v-model:fileList="fileList" :headers="headers"
-                        @change="changeFiles" :data="uploadData" :action="Interface.information.uploadMedia" :showUploadList="false"
-                        multiple name="files" :before-upload="beforeUpload">
+                        @change="changeFiles" :data="uploadData" :action="Interface.information.uploadMedia"
+                        :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
                         <div class="uploadRow">
                           <p class="ant-upload-drag-icon">
                             <PlusOutlined />
@@ -246,7 +261,8 @@
       </template>
     </a-modal>
     <RadioDept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
-    <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
+    <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser"
+      @ok="refreshPeople"></radio-user>
     <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople" :sObjectName="sObjectName"
       :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
     <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="'确定要删除吗？'" :title="'删除'" @cancel="isConfirm = false"
@@ -309,7 +325,7 @@ const props = defineProps({
 });
 const formRef = ref();
 const formRef3 = ref();
-const emit = defineEmits(["cancel","load"]);
+const emit = defineEmits(["cancel", "load"]);
 const handleCancel = () => {
   emit("cancel", false);
 };
@@ -318,33 +334,33 @@ const handleSubmit2 = () => {
   emit("load", false);
 };
 const formState = reactive({
-  Name:'',
+  Name: '',
   StatusCode: 1,
-  Capacity:'',
-  SortNumber:'',
-  ResourceNumber:'',
-  Visibility:false,
-  ApproveByIds: {
+  Capacity: '',
+  SortNumber: '',
+  ResourceNumber: '',
+  Visibility: false,
+  ManageId: {
     Id: '',
     Name: ''
   },
-  MobilePhone:'',
-  ResourceTypeCode:2,
-  Longitude:'',
-  Latitude:'',
-  Location:'',
-  AttachInfo:'',
-  AvailableStartTime:'',
-  AvailableEndTime:'',
-  ApplyStartTime:'',
-  ApplyEndTime:'',
-  MondayAllow:false,
-  TuesdayAllow:false,
-  WednesdayAllow:false,
-  ThursdayAllow:false,
-  FridayAllow:false,
-  SaturdayAllow:false,
-  SundayAllow:false,
+  MobilePhone: '',
+  ResourceTypeCode: 2,
+  Longitude: '',
+  Latitude: '',
+  Location: '',
+  AttachInfo: '',
+  AvailableStartTime: '',
+  AvailableEndTime: '',
+  ApplyStartTime: '',
+  ApplyEndTime: '',
+  MondayAllow: false,
+  TuesdayAllow: false,
+  WednesdayAllow: false,
+  ThursdayAllow: false,
+  FridayAllow: false,
+  SaturdayAllow: false,
+  SundayAllow: false,
   Description: ''
 });
 const token = localStorage.getItem("token");
@@ -363,6 +379,24 @@ const data = reactive({
     {
       label: '会议室',
       value: 2
+    }
+  ],
+  AttachInfoList:[
+    {
+      label: '电脑',
+      value: '电脑'
+    },
+    {
+      label: '投影',
+      value: '投影'
+    },
+    {
+      label: '多媒体',
+      value: '多媒体'
+    },
+    {
+      label: '视频同步',
+      value: '视频同步'
     }
   ],
   StatusCodeList: [
@@ -384,7 +418,7 @@ const data = reactive({
   listData: [],
   step: 0,
   search: {
-    ApproveByIds: [],
+    ManageId: [],
     BusinessUnitId: []
   },
   recordId: '',
@@ -414,7 +448,7 @@ const data = reactive({
   uploadData: {
     // parentId: '',
     // entityName: 'Media'
-    id:''
+    id: ''
   },
   headers: {
     Authorization: token,
@@ -429,29 +463,29 @@ const data = reactive({
   txtParams: {}
 });
 const {
-  isTxt, txtParams,
+  isTxt, txtParams, AttachInfoList,
   title, step, search, FilterExpresssionList, filterExpression, ImageList, uploadData, headers, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
   height, ResourceTypeCodeList, keywords, treeData,
   fileList, BusinessUnitId, ApprovedBy, listData, StatusCodeList,
   recordId, isRadioDept, isRadioUser, objectTypeCode, sObjectName, isDelete, deleteDesc, external, peopleList, pagination, tableHeight
 } = toRefs(data);
 const unique = (list, field) => {
-    for (let i = 0; i < list.length; i++) {
-        for (let j = i + 1; j < list.length; j++) {
-            if (list[i][field] == list[j][field]) {
-                list.splice(j, 1);
-                j--;
-            }
-        }
+  for (let i = 0; i < list.length; i++) {
+    for (let j = i + 1; j < list.length; j++) {
+      if (list[i][field] == list[j][field]) {
+        list.splice(j, 1);
+        j--;
+      }
     }
-    return list;
+  }
+  return list;
 }
 const handleImageError = (record) => {
   record.AvatarImg = '/src/assets/img/avatar.png';
   return record;
 };
 const refreshPeople = (e) => {
-  
+
 }
 const closeUser = (e) => {
   data.isRadioUser = false;
@@ -465,18 +499,35 @@ const handleOpenLook = (type, name) => {
     data.isRadioUser = true;
   }
 }
-
+const handleChange = (e, fieldApiName, fieldName) => {
+  if (e) {
+    formState.ManageId.Id = e;
+    let result = data.search[fieldName].filter((item) => {
+      return item.ID == e;
+    });
+    if (result && result.length) {
+      formState.ManageId.Name = result.Name;
+    } else {
+      formState.ManageId.Name = '';
+    }
+  }
+  else {
+    formState.ManageId.Id = '';
+    formState.ManageId.Name = '';
+  }
+}
 const getUserData = (e) => {
   data.isRadioUser = false;
   if (e.id) {
     if (data.step == 0) {
-      formState.ApproveByIds.Id = e.id;
+      formState.ManageId.Id = e.id;
+      formState.ManageId.Name = e.name;
       data.isRadioDept = false;
-      let result = data.search.ApproveByIds.filter((item) => {
+      let result = data.search.ManageId.filter((item) => {
         return item.ID == e.id;
       });
       if (result && result.length) { } else {
-        data.search.ApproveByIds=[{
+        data.search.ManageId = [{
           ID: e.id,
           Name: e.name
         }]
@@ -505,7 +556,7 @@ const handleDeptParams = (e) => {
   }
 }
 
-const searchlookup = (e,fieldApiName,fieldName) => {
+const searchlookup = (e, fieldApiName, fieldName) => {
   let obj = {
     actions: [{
       id: "6129;a",
@@ -544,7 +595,7 @@ const searchlookup = (e,fieldApiName,fieldName) => {
       })
     });
     data.search[fieldName] = (data.search[fieldName]).concat(arr);
-    data.search[fieldName] = unique(data.search[fieldName],'ID');
+    data.search[fieldName] = unique(data.search[fieldName], 'ID');
   });
 }
 onMounted(() => {
@@ -557,11 +608,11 @@ onMounted(() => {
     if (userId == 'jackliu') {
       userId = '2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
     }
-    formState.ApproveByIds.Id = userName;
-    formState.ApproveByIds.Name = userId;
-    data.search.ApproveByIds=[{
-      ID:userId,
-      Name:userName
+    formState.ManageId.Id = userId;
+    formState.ManageId.Name = userName;
+    data.search.ManageId = [{
+      ID: userId,
+      Name: userName
     }];
     data.BusinessUnitId = businessUnitId;
   }
@@ -569,7 +620,7 @@ onMounted(() => {
     data.height = document.documentElement.clientHeight - 150;
   });
   if (props.id) {
-    data.title='编辑企业资源';
+    data.title = '编辑企业资源';
     getDetail();
     getFiles();
     data.uploadData.id = props.id;
@@ -594,26 +645,26 @@ const getDetail = () => {
   proxy.$post(Interface.detail, obj).then(res => {
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
       let fields = res.actions[0].returnValue.fields;
-      formState.Name = fields.Name?fields.Name.value:'';
-      formState.StatusCode = fields.StatusCode?fields.StatusCode.value*1:'';
-      formState.Capacity = fields.Capacity?fields.Capacity.value:'';
-      formState.SortNumber = fields.SortNumber?fields.SortNumber.value:'';
-      formState.ResourceNumber = fields.ResourceNumber?fields.ResourceNumber.value:'';
+      formState.Name = fields.Name ? fields.Name.value : '';
+      formState.StatusCode = fields.StatusCode ? fields.StatusCode.value * 1 : '';
+      formState.Capacity = fields.Capacity ? fields.Capacity.value : '';
+      formState.SortNumber = fields.SortNumber ? fields.SortNumber.value : '';
+      formState.ResourceNumber = fields.ResourceNumber ? fields.ResourceNumber.value : '';
       formState.Visibility = fields.Visibility && fields.Visibility.value ? true : false;
-      if (fields.ApproveByIds&&fields.ApproveByIds.value) {
-        formState.ApproveByIds.Id=fields.ApproveByIds.value;
-        formState.ApproveByIds.Name=fields.ApproveByIds.displayValue;
-        data.search.ApproveByIds=[{
-          ID: fields.ApproveByIds.value,
-          Name: fields.ApproveByIds.displayValue
+      if (fields.ManageId && fields.ManageId.value) {
+        formState.ManageId.Id = fields.ManageId.value;
+        formState.ManageId.Name = fields.ManageId.displayValue;
+        data.search.ManageId = [{
+          ID: fields.ManageId.value,
+          Name: fields.ManageId.displayValue
         }];
       }
-      formState.MobilePhone = fields.MobilePhone?fields.MobilePhone.value:'';
-      formState.ResourceTypeCode = fields.ResourceTypeCode?fields.ResourceTypeCode.value*1:'';
-      formState.Longitude = fields.Longitude?fields.Longitude.value:'';
-      formState.Latitude = fields.Latitude?fields.Latitude.value:'';
-      formState.Location = fields.Location?fields.Location.value:'';
-      formState.AttachInfo = fields.AttachInfo?fields.AttachInfo.value:'';
+      formState.MobilePhone = fields.MobilePhone ? fields.MobilePhone.value : '';
+      formState.ResourceTypeCode = fields.ResourceTypeCode ? fields.ResourceTypeCode.value * 1 : '';
+      formState.Longitude = fields.Longitude ? fields.Longitude.value : '';
+      formState.Latitude = fields.Latitude ? fields.Latitude.value : '';
+      formState.Location = fields.Location ? fields.Location.value : '';
+      formState.AttachInfo = fields.AttachInfo&&fields.AttachInfo.value ? fields.AttachInfo.value.split(',') : [];
 
       formState.AvailableStartTime = fields.AvailableStartTime && fields.AvailableStartTime.value ? fields.AvailableStartTime.value : '';
       formState.AvailableEndTime = fields.AvailableEndTime && fields.AvailableEndTime.value ? fields.AvailableEndTime.value : '';
@@ -628,8 +679,8 @@ const getDetail = () => {
       formState.SaturdayAllow = fields.SaturdayAllow && fields.SaturdayAllow.value ? true : false;
       formState.SundayAllow = fields.SundayAllow && fields.SundayAllow.value ? true : false;
 
-      formState.Description = fields.Description?fields.Description.value:'';
-      
+      formState.Description = fields.Description ? fields.Description.value : '';
+
     }
   })
 }
@@ -652,30 +703,31 @@ const handleSubmit = () => {
               apiName: props.entityApiName,
               objTypeCode: data.objectTypeCode,
               fields: {
-                Name:formState.Name,
+                Name: formState.Name,
                 StatusCode: formState.StatusCode,
-                Capacity:formState.Capacity,
-                SortNumber:formState.SortNumber,
-                ResourceNumber:formState.ResourceNumber,
-                Visibility:formState.Visibility,
-                ApproveByIds:formState.ApproveByIds.Id,
-                MobilePhone:formState.MobilePhone,
-                ResourceTypeCode:formState.ResourceTypeCode,
-                Longitude:formState.Longitude,
-                Latitude:formState.Latitude,
-                Location:formState.Location,
-                AttachInfo:formState.AttachInfo,
-                AvailableStartTime:formState.AvailableStartTime ? formState.AvailableStartTime : '',
-                AvailableEndTime:formState.AvailableEndTime ? formState.AvailableEndTime : '',
-                ApplyStartTime:formState.ApplyStartTime ? formState.ApplyStartTime : '',
-                ApplyEndTime:formState.ApplyEndTime ? formState.ApplyEndTime : '',
-                MondayAllow:formState.MondayAllow,
-                TuesdayAllow:formState.TuesdayAllow,
-                WednesdayAllow:formState.WednesdayAllow,
-                ThursdayAllow:formState.ThursdayAllow,
-                FridayAllow:formState.FridayAllow,
-                SaturdayAllow:formState.SaturdayAllow,
-                SundayAllow:formState.SundayAllow,
+                Capacity: formState.Capacity,
+                SortNumber: formState.SortNumber,
+                ResourceNumber: formState.ResourceNumber,
+                Visibility: formState.Visibility,
+                ManageId: formState.ManageId.Id,
+                ManageIdName: formState.ManageId.Name,
+                MobilePhone: formState.MobilePhone,
+                ResourceTypeCode: formState.ResourceTypeCode,
+                Longitude: formState.Longitude,
+                Latitude: formState.Latitude,
+                Location: formState.Location,
+                AttachInfo: formState.AttachInfo&&formState.AttachInfo.length?formState.AttachInfo.join(','):'',
+                AvailableStartTime: formState.AvailableStartTime ? formState.AvailableStartTime : '',
+                AvailableEndTime: formState.AvailableEndTime ? formState.AvailableEndTime : '',
+                ApplyStartTime: formState.ApplyStartTime ? formState.ApplyStartTime : '',
+                ApplyEndTime: formState.ApplyEndTime ? formState.ApplyEndTime : '',
+                MondayAllow: formState.MondayAllow,
+                TuesdayAllow: formState.TuesdayAllow,
+                WednesdayAllow: formState.WednesdayAllow,
+                ThursdayAllow: formState.ThursdayAllow,
+                FridayAllow: formState.FridayAllow,
+                SaturdayAllow: formState.SaturdayAllow,
+                SundayAllow: formState.SundayAllow,
                 Description: formState.Description
               }
             }
@@ -729,7 +781,7 @@ const getFiles = () => {
       params: {
         pageNumber: 1,
         pageSize: 1000,
-        contentId:props.id
+        contentId: props.id
       }
     }]
   };
@@ -761,7 +813,7 @@ const getFiles = () => {
           fileSize: item.fileSize,
           name: item.name,
           Name: item.name,
-          CreatedOn: item.createdOn ? dayjs(item.createdOn).format("YYYY-MM-DD hh:mm") : '',
+          CreatedOn: item.createdOn ? dayjs(item.createdOn).format("YYYY-MM-DD HH:mm") : '',
           CreatedBy: item.createdByName || '',
         };
         list.push(ite);
@@ -816,12 +868,12 @@ const handlePreviewFile = (item) => {
     data.isPdf = true;
   }
   else if (item.fileExtension == 'txt') {
-      data.txtParams = {
-          name: item.name,
-          viewUrl: item.viewUrl,
-          downloadUrl: item.downloadUrl
-      };
-      data.isTxt = true;
+    data.txtParams = {
+      name: item.name,
+      viewUrl: item.viewUrl,
+      downloadUrl: item.downloadUrl
+    };
+    data.isTxt = true;
   }
   else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
     //let medittype = 0;
@@ -1207,6 +1259,7 @@ input[aria-hidden="true"] {
     }
   }
 }
+
 .NewMeetingRoomWrap {
   .modalCenter1 {
     .section .sectionRow .sectionItem .ant-row {

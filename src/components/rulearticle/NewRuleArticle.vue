@@ -76,7 +76,7 @@
                   </a-form-item>
                 </div>
               </div>
-              
+
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="FolderId" label="目录" :rules="[{ required: true, message: '请选择目录' }]">
@@ -95,7 +95,7 @@
                   </a-form-item>
                 </div>
               </div>
-              
+
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="StateCode" label="状态">
@@ -118,7 +118,8 @@
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="ApprovedOn" label="发布时间">
-                    <a-date-picker v-model:value="formState.ApprovedOn" placeholder="发布时间" valueFormat="YYYY-MM-DD HH:mm:ss" show-time />
+                    <a-date-picker v-model:value="formState.ApprovedOn" placeholder="发布时间"
+                      valueFormat="YYYY-MM-DD HH:mm:ss" show-time />
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
@@ -157,7 +158,8 @@
               <div class="sectionRow">
                 <div class="sectionItem" v-if="formState.IsTop">
                   <a-form-item name="EndTopDate" label="置顶截止">
-                    <a-date-picker v-model:value="formState.EndTopDate" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="置顶截止" />
+                    <a-date-picker v-model:value="formState.EndTopDate" valueFormat="YYYY-MM-DD HH:mm:ss" show-time
+                      placeholder="置顶截止" />
                   </a-form-item>
                 </div>
               </div>
@@ -329,13 +331,14 @@ const formState = reactive({
   IssueDocNumber: '',
   VersionNumber: '',
   ValidTerm: '',
-  CoverDisplay: ''
+  CoverDisplay: '',
+  Title:''
 });
 const token = localStorage.getItem("token");
 const data = reactive({
   title: "",
   height: document.documentElement.clientHeight - 350,
-  StateCodeList:[
+  StateCodeList: [
     {
       label: '草稿',
       value: 0
@@ -447,10 +450,16 @@ const data = reactive({
   recordId: '',
   isTxt: false,
   txtParams: {},
-  step: 0
+  step: 0,
+  oldData: {},
+  id:'',
+  currentUserId:'',
+  currentUserName:'',
+  currentBusinessUnitId:'',
+  currentBusinessUnitName:''
 });
 const {
-  isTxt, txtParams, step,StateCodeList,
+  isTxt, txtParams, step, StateCodeList, oldData, id, currentUserId, currentUserName, currentBusinessUnitId, currentBusinessUnitName,
   title, attachments, ImageList, uploadData, headers, recordId,
   isDelete, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
   height, AttachRightCodeList, keywords, treeData, CoverDisplayList,
@@ -527,7 +536,20 @@ const getTreeData = () => {
   //   data.treeData = response;
   // })
   let url = Interface.content.folder.get;
-  proxy.$post(url, {}).then(res => {
+  let d = {
+    actions: [{
+      id: "2919;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        id:'00000000-0000-0000-0000-000000002000'
+      }
+    }]
+  };
+  let obj = {
+    message: JSON.stringify(d)
+  }
+  proxy.$post(url, obj).then(res => {
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
       let formTree = (list) => {
         list.forEach(item => {
@@ -612,7 +634,7 @@ const getFiles = () => {
   data.ImageList = [];
   let url = Interface.getFiles;
   let d = {
-    parentId: props.id,
+    parentId: data.id,
     page: 1,
     rows: 100
   }
@@ -657,7 +679,6 @@ const getFiles = () => {
 };
 const beforeUpload = (e) => {
   data.uploadData.entityName = 'Institution';
-  data.uploadData.parentId = props.id;
   console.log("beforeUpload", e);
 }
 const changeFiles = (e) => {
@@ -769,33 +790,41 @@ const deleteFile = (id) => {
   });
 }
 onMounted(() => {
+  var userId = '';
+  var userName = '';
+  var businessUnitId = '';
+  var businessUnitName = '';
+  let userInfo = window.localStorage.getItem('userInfo');
+  if (userInfo) {
+      userInfo = JSON.parse(userInfo);
+      userId = userInfo.userId;
+      userName = userInfo.fullName;
+      businessUnitId = userInfo.businessUnitId;
+      businessUnitName = window.localStorage.getItem('businessUnitName') || '';
+      if (userId == 'jackliu') {
+        userId = '2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+      }
+      data.currentUserId=userId;
+      data.currentUserName=userName;
+      data.currentBusinessUnitId=businessUnitId;
+      data.currentBusinessUnitName=businessUnitName;
+  }
   window.addEventListener("resize", (e) => {
     data.height = document.documentElement.clientHeight - 350;
   });
   if (props.type == 'new') {
     data.title = '新建制度文件';
-    let userInfo = window.localStorage.getItem('userInfo');
-    if (userInfo) {
-      userInfo = JSON.parse(userInfo);
-      var userId = userInfo.userId;
-      var userName = userInfo.fullName;
-      var businessUnitId = userInfo.businessUnitId;
-      var businessUnitName = window.localStorage.getItem('businessUnitName') || '';
-      if (userId == 'jackliu') {
-        userId = '2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
-      }
-      formState.ApprovedBy = userName;
-      data.ApprovedBy = userId;
-      data.BusinessUnitId = businessUnitId;
-      formState.BusinessUnitId = businessUnitName;
-    }
-
+    data.ApprovedBy = userId;
+    formState.ApprovedBy = userName;
+    data.BusinessUnitId = businessUnitId;
+    formState.BusinessUnitId = businessUnitName;
   } else if (props.type == 'history') {
     data.title = '变更制度文件';
   } else if (props.type == 'version') {
     data.title = '修订制度文件';
   }
   if (props.id) {
+    data.id=props.id;
     getDetail();
     getFiles();
     data.uploadData.parentId = props.id;
@@ -823,35 +852,44 @@ const getDetail = () => {
   proxy.$post(Interface.detail, obj).then(res => {
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
       let fields = res.actions[0].returnValue.fields;
-      formState.ApprovedBy = fields.ApprovedBy.displayValue;
-      data.ApprovedBy = fields.ApprovedBy.value;
-      formState.BusinessUnitId = fields.BusinessUnitId.displayValue;
-      data.BusinessUnitId = fields.BusinessUnitId.value;
-      data.listData = [];
-      data.listData.push({
-        ID: fields.BusinessUnitId.value,
-        Name: fields.BusinessUnitId.displayValue
-      })
-      formState.ArticleNumber = fields.ArticleNumber.value || '';
-      formState.InstitutionType = fields.InstitutionType.value || '';
-      formState.PublicationScope = fields.PublicationScope.value || '';
-      formState.Name = fields.Name.value || '';
-      formState.FolderId = fields.FolderId && fields.FolderId.value ? (fields.FolderId.value).toLowerCase() : '';
-      formState.ActiveOn = fields.ActiveOn && fields.ActiveOn.value ? dayjs(new Date(fields.ActiveOn.value)).format("YYYY-MM-DD") : '';
-      formState.ExpiresOn = fields.ExpiresOn && fields.ExpiresOn.value ? dayjs(new Date(fields.ExpiresOn.value)).format("YYYY-MM-DD") : '';
-      formState.Description = fields.Description ? fields.Description.value : '';
-
-      formState.IsImportant = fields.IsImportant && fields.IsImportant.value ? true : false;
-      formState.IsTop = fields.IsTop && fields.IsTop.value * 1 == 1 ? true : false;
-      formState.AttachRightCode = fields.AttachRightCode ? fields.AttachRightCode.value*1 : '';
-      formState.StateCode = fields.StateCode ? fields.StateCode.value*1 : '';
-      formState.EndTopDate = fields.EndTopDate && fields.EndTopDate.value ? dayjs(fields.EndTopDate.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '';
-      formState.ApprovedOn = fields.ApprovedOn && fields.ApprovedOn.value ? dayjs(fields.ApprovedOn.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '';
-      formState.IsPublic = fields.IsPublic && fields.IsPublic.value ? true : false;
-      formState.IssueDocNumber = fields.IssueDocNumber ? fields.IssueDocNumber.value : '';
-      formState.VersionNumber = fields.VersionNumber ? fields.VersionNumber.value : '';
-      formState.ValidTerm = fields.ValidTerm ? fields.ValidTerm.value : '';
-      formState.CoverDisplay = fields.CoverDisplay ? fields.CoverDisplay.value : '';
+      data.ApprovedBy = fields.ApprovedBy&&fields.ApprovedBy.value ? fields.ApprovedBy.value : data.currentUserId;
+      data.BusinessUnitId = fields.BusinessUnitId&&fields.BusinessUnitId.value ? fields.BusinessUnitId.value : data.currentBusinessUnitId;
+      // data.listData = [];
+      // data.listData.push({
+      //   ID: fields.BusinessUnitId.value,
+      //   Name: fields.BusinessUnitId.displayValue
+      // })
+      let data0 = {
+        ApprovedBy: fields.ApprovedBy&&fields.ApprovedBy.displayValue ? fields.ApprovedBy.displayValue : data.currentUserName,
+        BusinessUnitId: fields.BusinessUnitId&&fields.BusinessUnitId.displayValue ? fields.BusinessUnitId.displayValue : data.currentBusinessUnitName,
+        ArticleNumber: fields.ArticleNumber ? fields.ArticleNumber.value : '',
+        InstitutionType: fields.InstitutionType ? fields.InstitutionType.value : '',
+        PublicationScope: fields.PublicationScope ? fields.PublicationScope.value : '',
+        ActiveOn: fields.ActiveOn && fields.ActiveOn.value ? dayjs(new Date(fields.ActiveOn.value)).format("YYYY-MM-DD") : '',
+        ExpiresOn: fields.ExpiresOn && fields.ExpiresOn.value ? dayjs(new Date(fields.ExpiresOn.value)).format("YYYY-MM-DD") : '',
+        Name: fields.Name ? fields.Name.value : '',
+        Description: fields.Description ? fields.Description.value : '',
+        FolderId: fields.FolderId && fields.FolderId.value ? (fields.FolderId.value).toLowerCase() : '',
+        StateCode: fields.StateCode ? fields.StateCode.value * 1 : '',
+        IsImportant: fields.IsImportant && fields.IsImportant.value ? true : false,
+        IsTop: fields.IsTop && fields.IsTop.value * 1 == 1 ? true : false,
+        AttachRightCode: fields.AttachRightCode ? fields.AttachRightCode.value * 1 : '',
+        EndTopDate: fields.EndTopDate && fields.EndTopDate.value ? dayjs(fields.EndTopDate.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '',
+        ApprovedOn: fields.ApprovedOn && fields.ApprovedOn.value ? dayjs(fields.ApprovedOn.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '',
+        IsPublic: fields.IsPublic && fields.IsPublic.value ? true : false,
+        IssueDocNumber: fields.IssueDocNumber ? fields.IssueDocNumber.value : '',
+        VersionNumber: fields.VersionNumber ? fields.VersionNumber.value : '',
+        ValidTerm: fields.ValidTerm ? fields.ValidTerm.value : '',
+        CoverDisplay: fields.CoverDisplay ? fields.CoverDisplay.value : '',
+        Title: fields.Name ? fields.Name.value : ''
+      }
+      for(var item in data0){
+        formState[item]=data0[item];
+      }
+      data.oldData = data0;
+      data.oldData.ApprovedBy = fields.ApprovedBy&&fields.ApprovedBy.value ? fields.ApprovedBy.value : data.currentUserId;
+      data.oldData.BusinessUnitId = fields.BusinessUnitId&&fields.BusinessUnitId.value ? fields.BusinessUnitId.value : data.currentBusinessUnitId;
+      data.oldData.IsTop = fields.IsTop ? fields.IsTop.value : '';
     }
   })
 }
@@ -897,12 +935,12 @@ const handleNew = () => {
         ArticleNumber: formState.ArticleNumber,
         InstitutionType: formState.InstitutionType,
         PublicationScope: formState.PublicationScope,
-        ActiveOn: dayjs(formState.ActiveOn).format("YYYY-MM-DD"),
-        ExpiresOn: dayjs(formState.ExpiresOn).format("YYYY-MM-DD"),
+        ActiveOn: formState.ActiveOn,
+        ExpiresOn: formState.ExpiresOn,
         Name: formState.Name,
         Description: formState.Description,
         FolderId: formState.FolderId,
-        StateCode: 1,
+        StateCode: formState.StateCode,
         IsImportant: formState.IsImportant,
         IsTop: formState.IsTop ? 1 : 0,
         AttachRightCode: formState.AttachRightCode,
@@ -917,7 +955,7 @@ const handleNew = () => {
       }
     }]
   };
-  if (props.id) {
+  if (data.id) {
     handleSave();
   }
   let obj = {
@@ -925,8 +963,8 @@ const handleNew = () => {
   }
   proxy.$post(url, obj).then(res => {
     if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
-      props.id = res.actions[0].id;
-      data.uploadData.id = props.id;
+      data.id = res.actions[0].returnValue.valueId;
+      data.uploadData.parentId = res.actions[0].returnValue.valueId;
       data.step = 1;
     } else {
       message.error("创建失败！");
@@ -936,6 +974,7 @@ const handleNew = () => {
 //制度保存
 const handleSave = () => {
   let url = Interface.create;
+  
   let d = {
     actions: [{
       id: "2919;a",
@@ -952,8 +991,8 @@ const handleSave = () => {
             ArticleNumber: formState.ArticleNumber,
             InstitutionType: formState.InstitutionType,
             PublicationScope: formState.PublicationScope,
-            ActiveOn: dayjs(formState.ActiveOn).format("YYYY-MM-DD"),
-            ExpiresOn: dayjs(formState.ExpiresOn).format("YYYY-MM-DD"),
+            ActiveOn: formState.ActiveOn,
+            ExpiresOn: formState.ExpiresOn,
             Name: formState.Name,
             Description: formState.Description,
             FolderId: formState.FolderId,
@@ -966,15 +1005,16 @@ const handleSave = () => {
             IsPublic: formState.IsPublic,
             IssueDocNumber: formState.IssueDocNumber,
             VersionNumber: formState.VersionNumber,
-            ValidTerm: formState.ValidTerm
+            ValidTerm: formState.ValidTerm,
+            CoverDisplay: formState.CoverDisplay
           }
         }
       }
     }]
   };
-  if (props.id) {
+  if (data.id) {
     url = Interface.edit;
-    d.actions[0].params.recordId = props.id;
+    d.actions[0].params.recordId = data.id;
   }
   let obj = {
     message: JSON.stringify(d)
@@ -995,15 +1035,15 @@ const handleSave = () => {
 //修订
 const handleVersion = () => {
   let url = Interface.rulearticle.revision;
+  let oldData0=data.oldData;
+  oldData0.id=data.id;
+  oldData0.description=formState.Description;
   let d = {
     actions: [{
       id: "4105;a",
       descriptor: "",
       callingDescriptor: "UNKNOWN",
-      params: {
-        id: props.id,
-        description: formState.Description
-      }
+      params: oldData0
     }]
   };
   let obj = {
@@ -1023,6 +1063,8 @@ const handleVersion = () => {
 //变更历史
 const handleHistory = () => {
   let url = Interface.create;
+  let oldData0=data.oldData;
+  oldData0.ContentId=data.id;
   let d = {
     actions: [{
       id: "2919;a",
@@ -1033,27 +1075,14 @@ const handleHistory = () => {
           allowSaveOnDuplicate: false,
           apiName: 'InstitutionHistory',
           objTypeCode: '100207',
-          fields: {
-            ApprovedBy: data.ApprovedBy,
-            BusinessUnitId: data.BusinessUnitId,
-            ArticleNumber: formState.ArticleNumber,
-            InstitutionType: formState.InstitutionType,
-            PublicationScope: formState.PublicationScope,
-            ActiveOn: dayjs(formState.ActiveOn).format("YYYY-MM-DD"),
-            ExpiresOn: dayjs(formState.ExpiresOn).format("YYYY-MM-DD"),
-            Name: formState.Name,
-            Description: formState.Description,
-            FolderId: formState.FolderId,
-            StateCode: formState.StateCode,
-            ContentId: props.id
-          }
+          fields: oldData0
         }
       }
     }]
   };
-  // if (props.id) {
+  // if (data.id) {
   //   url = Interface.edit;
-  //   d.actions[0].params.recordId = props.id;
+  //   d.actions[0].params.recordId = data.id;
   // }
   let obj = {
     message: JSON.stringify(d)
@@ -1302,9 +1331,11 @@ const handleHistory = () => {
       width: 100%;
       display: flex !important;
     }
-    .ant-form{
+
+    .ant-form {
       flex: 1;
     }
+
     .ant-form-item {
       margin-bottom: 20px !important;
 

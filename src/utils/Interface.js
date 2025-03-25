@@ -438,6 +438,10 @@ const Interface = {
     submit: baseUrl + "/weibo/status/submit", //发布状态
     query: baseUrl + "/weibo/status/search", //拉取个人可以查看的状态、投票、问题
     mine: baseUrl + "/weibo/status/mine/query", //拉取我发布的
+    comment:baseUrl + "/weibo/status/comment/query", //获取评论
+    sendComment:baseUrl+"/weibo/status/comment/post", //发布评论
+    setStatusLike:baseUrl+"/weibo/status/like", //状态点赞
+    setCommentLike:baseUrl+"/weibo/comment/like", //评论点赞
   },
   question: {
     submit: baseUrl + "/weibo/question/submit", //发布问题

@@ -19,15 +19,15 @@
                 </div>
             </div>
             <div class="rightBox">
-                <a-button class="ml10" @click="printForm">导出PDF</a-button>
+                <!-- <a-button class="ml10" @click="printForm">导出PDF</a-button> -->
                 <a-dropdown :trigger="['hover']" class="ml10">
                     <span class="btn-drop">
                         <UnorderedListOutlined style="color: #1D2129;" />
                     </span>
                     <template #overlay>
                         <a-menu>
-                            <a-menu-item key="1" @click="printForm">
-                                导出Excel
+                            <a-menu-item key="1" @click="handleNotes">
+                                备注
                             </a-menu-item>
                         </a-menu>
                     </template>
@@ -165,6 +165,13 @@
         <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
         <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
         <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
+        <InfoNotes
+        v-if="isNotes"
+        :isShow="isNotes"
+        :id="id"
+        :objectTypeCode="objectTypeCode"
+        @cancel="isNotes=false;"
+        />
     </div>
 </template>
 <script setup>
@@ -203,6 +210,7 @@ import CirculationModal from "@/components/workflow/CirculationModal.vue";
 import Delegate from "@/components/workflow/Delegate.vue";
 import Urging from "@/components/workflow/Urging.vue";
 import RelateInstance from "@/components/workflow/RelateInstance.vue";
+import InfoNotes from "@/components/commonTab/RelatedNote.vue";
 import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 import ImageView from "@/components/file/ImageView.vue";
 import PdfView from "@/components/file/PdfView.vue";
@@ -255,9 +263,11 @@ const data = reactive({
     isPdf: false,
     pdfParams: {},
     isTxt: false,
-    txtParams: {}
+    txtParams: {},
+    objectTypeCode:100204,
+    isNotes:false
 })
-const { isTxt, txtParams, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData, FormData, ImageList, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
+const { isNotes, objectTypeCode, isTxt, txtParams, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData, FormData, ImageList, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
     isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
     pageCurrent } = toRefs(data);
 const changeTabs = (e) => {
@@ -723,6 +733,10 @@ const columns1 = [
       width: 120,
     }
   ];
+  // 备注
+const handleNotes = () => {
+  data.isNotes = true;
+};
 onMounted(() => {
     if (data.id) {
         getDetail();

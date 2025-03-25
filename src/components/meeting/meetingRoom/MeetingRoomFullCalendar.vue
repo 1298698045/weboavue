@@ -346,6 +346,7 @@
                                         负责人电话：`+(MobilePhone||'')+`
                                     </div>
                                 </div>
+                                <div class="card-hover-point card-hover-point1"></div>
                             </div>
                             <div class="meetingRoomItemTitle">`+ Name + `</div>
                         </div>`
@@ -754,6 +755,7 @@
                                         负责人电话：`+(MobilePhone||'')+`
                                     </div>
                                 </div>
+                                <div class="card-hover-point card-hover-point2"></div>
                             </div>
                         </div>`;
                     }
@@ -1179,6 +1181,21 @@
                                 color: #fff;
                                 font-weight: normal;
                             }
+                        }
+                        .card-hover-point{
+                            position: absolute;
+                            height: 12px;
+                            width: 12px;
+                            background-color: #444;
+                            transform: rotate(45deg);
+                        }
+                        .card-hover-point1{
+                            top: 8px;
+                            left: -6px;
+                        }
+                        .card-hover-point2{
+                            top: -5px !important;
+                            left: 100px !important;
                         }
                     }
                     .meetingRoomItemTitle1{
