@@ -33,7 +33,7 @@
                         <div class="quick-item" v-for="(item, index) in listData" :key="index" @click="handleDetail(item)">
                             <div class="quick-item-content">
                                 <div class="quick-item-icon">
-                                    <img src="@/assets/img/preview.png" alt="">
+                                    <img :src="item.icon" alt="">
                                 </div>
                                 <div class="quick-item-name rowEllipsis">
                                     <!-- 供应商考核 -->
@@ -56,7 +56,7 @@
                     <div class="quick-item" v-for="(item, index) in listData" :key="index" @click="handleDetail(item)">
                         <div class="quick-item-content">
                             <div class="quick-item-icon">
-                                <img src="@/assets/img/preview.png" alt="">
+                                <img :src="item.icon" alt="">
                             </div>
                             <div class="quick-item-name rowEllipsis">
                                 <div v-html="item.label"></div>
