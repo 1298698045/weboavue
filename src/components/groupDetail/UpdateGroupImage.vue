@@ -69,7 +69,6 @@
   } from "@ant-design/icons-vue";
   import { message } from "ant-design-vue";
   import { formTreeData } from "@/utils/common.js";
-  import FilterQuery from "@/components/FilterQuery.vue";
   import Interface from "@/utils/Interface.js";
   const { proxy } = getCurrentInstance();
   console.log(document.documentElement.clientHeight);

@@ -449,6 +449,7 @@ const Interface = {
   },
   poll: {
     submit: baseUrl + "/weibo/poll/submit", //发布投票
+    response: baseUrl + "/weibo/poll/response", //投票提交
   },
   uploadAvatar: baseUrl + "/avatar/upload", //通用头像上传
   viewAvatar: baseUrl + "/avatar", //头像查看

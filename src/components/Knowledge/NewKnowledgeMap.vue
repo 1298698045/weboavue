@@ -103,7 +103,6 @@
   } from "@ant-design/icons-vue";
   import { message } from "ant-design-vue";
   import { formTreeData,girdFormatterValue } from "@/utils/common.js";
-  import FilterQuery from "@/components/FilterQuery.vue";
   import Interface from "@/utils/Interface.js";
   import RadioDept from "@/components/commonModal/RadioDept.vue";
   import RadioUser from "@/components/commonModal/RadioUser.vue";

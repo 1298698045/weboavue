@@ -33,15 +33,6 @@
                     <div class="panel-bd">
                         <div class="panelCommunityCommentWrap">
                             <div class="commentBox commentBox0">
-                                <!-- <div class="leftAvatar">
-                                    <a-avatar :size="37">
-                                        <template #icon><UserOutlined /></template>
-</a-avatar>
-</div>
-<div class="rightTextare">
-    <textarea class="textarea" v-model="comment" placeholder-class="placeholder" placeholder="您想知道什么？" name="" id=""
-        cols="30" rows="10"></textarea>
-</div> -->
                                 <div class="tabContainer">
                                     <a-tabs v-model:activeKey="activeKey" @change="changeTab">
                                         <!-- <a-tab-pane key="6000" tab="状态"></a-tab-pane> -->
@@ -57,7 +48,7 @@
                                 </div>
                                 <div class="VoteWrap" v-if="activeKey == '30400'">
                                     <div class="VoteLabel">问题</div>
-                                    <a-textarea class="Votetextarea" v-model:value="data.comment" placeholder="您想提问什么？"
+                                    <a-textarea class="Votetextarea" v-model:value="data.text" placeholder="您想提问什么？"
                                         :rows="3"></a-textarea>
                                     <template v-for="(item, index) in VoteOptions" :key="index">
                                         <div class="VoteLabel">选项{{ index + 1 }}</div>
@@ -66,10 +57,11 @@
                                 </div>
                                 <div class="TEditorWrap QuestionWrap" v-if="activeKey == '30401' || activeKey == '1'">
                                     <div class="QuestionLabel">问题</div>
-                                    <a-textarea class="Votetextarea" v-model:value="data.comment" placeholder="您想知道什么？"
+                                    <a-textarea class="Votetextarea" v-model:value="data.text" placeholder="您想知道什么？"
                                         :rows="3"></a-textarea>
                                     <div class="QuestionLabel">详细信息</div>
-                                    <TEditor :placeholder="'如果您还需要补充，请在此处添加一些细节...'" :height="230" />
+                                    <TEditor ref="editorRef2" :placeholder="'如果您还需要补充，请在此处添加一些细节...'" :height="230"
+                                        @input="getInputContent2" />
                                 </div>
                             </div>
                             <div class="optionalWrap">
@@ -77,8 +69,8 @@
                                     v-if="activeKey == '30400'">
                                     <PlusOutlined />添加新选项
                                 </a-button>
-                                <a-button type="primary" class="optionalWrapRight" @click="handleSendComment"
-                                    :disabled="!data.comment">发布</a-button>
+                                <a-button type="primary" class="optionalWrapRight" @click="handleSendStatus"
+                                    :disabled="!data.text">发布</a-button>
                             </div>
                         </div>
                     </div>
@@ -131,15 +123,46 @@
                                                 </template>
                                             </a-dropdown>
                                         </div>
-                                        <div class="commentContent" v-html="item.Description || '暂无'"></div>
+                                        <div class="commentContent" v-if="activeKey == '0'">
+                                            <div v-html="item.Content || '暂无'" class="commentContentItem"></div>
+                                        </div>
+                                        <div class="commentContent" v-if="activeKey == '1'">
+                                            <div v-html="item.Content || '暂无'" class="commentContentItem"></div>
+                                            <div v-html="item.Description" class="commentContentItem"></div>
+                                        </div>
+                                        <div class="commentContent" v-if="activeKey == '30400'">
+                                            <div class="VoteItem">
+                                                <div v-html="item.Content || '暂无'" class="commentContentItem"></div>
+                                                <a-radio-group v-model:value="item.value" class="commentContentRadio"
+                                                    :class="{ 'isSubmit': item.isSubmit }" :disabled="item.isSubmit"
+                                                    @change="(e) => { ContentRadioChange(e, item) }">
+                                                    <a-radio v-for="(ite, idx) in item.Options" :key="idx"
+                                                        :style="radioStyle" :value="ite.pollOptionId">
+                                                        {{ idx + 1 }}.{{ ite.name }}
+                                                        <div v-if="item.isSubmit" class="option-percentage">
+                                                            <a-progress class="option-progress"
+                                                                :percent="ite.percentage" :size="8" :show-info="true"
+                                                                :title="'占比' + ite.percentage + '%'"></a-progress>
+                                                            <span class="option-count">{{ ite.checkedQty || 0
+                                                            }}票&nbsp;&nbsp;&nbsp;&nbsp;{{
+                                                                    ite.percentage || 0
+                                                                }}%</span>
+                                                        </div>
+                                                    </a-radio>
+                                                </a-radio-group>
+                                                <div class="vote-shur-btn">
+                                                    <div v-if="item.isSubmit" class="disabled">你已投票</div>
+                                                    <div v-if="!item.isSubmit" :class="{ 'disabled': !item.value }"
+                                                        @click="handlePoll(item)">提交</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="commentBtn">
-                                            <!-- <span class="deleteComment" @click="handleDelete(item.id)">删除</span> -->
-                                            <!-- <span class="commentBtn-item" title="删除" v-if="item.OwningUserId&&data.OwningUser&&data.OwningUser==item.OwningUserId" @click="handleDelete(item.id)" ><DeleteOutlined /></span> -->
                                             <span class="commentBtn-item" title="分享">
                                                 <ExportOutlined /><span>{{ item.NumOfForward || 0 }}</span>
                                             </span>
                                             <span class="commentBtn-item" title="评论" v-if="!item.IsShowReply"
-                                                @click="item.IsShowReply = true; getCommentList1(item.id, item)">
+                                                @click="item.IsShowReply = true; getCommentList(item.id, item)">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
                                             </span>
                                             <span class="commentBtn-item" title="评论" v-if="item.IsShowReply"
@@ -172,7 +195,7 @@
                                             </div>
                                             <div class="optionalWrap">
                                                 <a-button type="primary"
-                                                    @click="handleSendComment1(item, item)">发布</a-button>
+                                                    @click="handleSendComment(item, item)">发布</a-button>
                                             </div>
                                             <div class="commentList">
                                                 <div class="commentItemBox"
@@ -191,7 +214,7 @@
                                                         <div class="commentTime">
                                                             {{ item1.CreatedOn }}
                                                         </div>
-                                                        <div class="commentContent">{{ item1.Description || '暂无' }}
+                                                        <div class="commentContent">{{ item1.Content || '暂无' }}
                                                         </div>
                                                         <div class="commentBtn">
                                                             <span class="commentBtn-item" title="删除"
@@ -237,10 +260,17 @@
                                                             </div>
                                                             <div class="optionalWrap">
                                                                 <a-button type="primary"
-                                                                    @click="handleSendComment1(item, item1)">回复</a-button>
+                                                                    @click="handleSendComment(item, item1)">回复</a-button>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div class="pagination">
+                                                    <a-pagination show-size-changer show-quick-jumper
+                                                        :pageSizeOptions="['10', '20', '50', '80', '100']"
+                                                        :pageSize="rows" @showSizeChange="sizeChange"
+                                                        v-model:current="page" :total="total" @change="ChangePage"
+                                                        :show-total="total => `共 ${total} 条`" />
                                                 </div>
                                             </div>
                                         </div>
@@ -341,13 +371,20 @@ const props = defineProps({
     RegardingObjectTypeCode: String
 })
 const editorRef = ref();
+const editorRef2 = ref();
+const radioStyle = reactive({
+    display: 'flex',
+    height: '30px',
+    lineHeight: '30px',
+});
 const data = reactive({
     listData: [],
     listData1: {},
     page: 1,
     rows: 10,
     total: 0,
-    comment: "",
+    text: "",
+    description: "",
     activeKey: '0',
     searchVal: "",
     isDelete: false,
@@ -359,6 +396,7 @@ const data = reactive({
     OwningUser: '',
     OwningUserName: '',
     id: '',
+    item: {},
     keyIndex: 1,
     selectmenu: 1,
     type: 1,
@@ -379,43 +417,25 @@ const data = reactive({
         },
     ]
 })
-const { VoteOptions, activeKey, loading, typeitem, type, OwningUserName, listData1, selectmenu, keyIndex, listData, page, rows, total, comment, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
+const { id, item, VoteOptions, activeKey, loading, typeitem, type, OwningUserName, listData1, selectmenu, keyIndex, listData, page, rows, total, text, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
 const changeMenu = (e) => {
     data.selectmenu = e;
     data.keyIndex = 1;
-    getCommentList();
+    getStatusList();
 }
-const getCommentList = () => {
+const getValue = (list) => {
+    var row = list.find(function (v) { return v.isChecked == true; });
+    return row && row.pollOptionId || '';
+}
+const getStatusList = () => {
     data.loading = true;
-    // proxy.$get(Interface.commentList,{
-    //     meetingid:"4c51a922-8762-40ae-9e10-5e1fa3f51a60",
-    //     page: page,
-    //     rows: rows
-    // }).then(res=>{
-    //     data.listData = res.rows;
-    //     data.total = res.total;
-    // })
-    //data.listData = [];
     if (data.keyIndex) { } else { return false }
     if (data.keyIndex == 1) {
         data.listData = [];
     }
-    data.total = 0;
-    let filterQuery = '\nRegardingObjectTypeCode\teq\t6000';
-    if (data.searchVal) {
-        filterQuery += '\nDescription\tcontains\t' + data.searchVal;
-    }
-    if (data.selectmenu == 2) {
-        filterQuery += '\nOwningUser\teq\t' + data.OwningUser;
-    }
-
-    filterQuery = '\nChatterTypeCode\teq\t' + data.activeKey;
     let url = Interface.status.query;
     if (data.selectmenu == 2) {
-        //filterQuery+='\nCreatedBy\teq\t'+data.OwningUser;
-        //filterQuery+='\nCreatedBy\teq-userid';
         url = Interface.status.mine;
-        filterQuery = '';
     }
     let d = {
         actions: [{
@@ -425,8 +445,6 @@ const getCommentList = () => {
             params: {
                 pageSize: 10,
                 pageNumber: data.keyIndex,
-                //filterQuery: filterQuery,
-                //RegardingObjectId:'',
                 ChatterTypeCode: data.activeKey,
                 search: data.searchVal || ''
             }
@@ -438,7 +456,6 @@ const getCommentList = () => {
     proxy.$post(url, obj).then(res => {
         var list = [];
         if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.rows) {
-            data.total = res.actions[0].returnValue.total.length || 0;
             for (var i = 0; i < res.actions[0].returnValue.rows.length; i++) {
                 var item = res.actions[0].returnValue.rows[i];
                 for (var cell in item) {
@@ -448,12 +465,18 @@ const getCommentList = () => {
                 }
                 item['OwningUser'] = item.createdByName || '';
                 item['OwningUserId'] = item.createdBy || '';
-                item['Description'] = item.text == '' ? '<span style="color:rgba(0, 0, 0, 0.25);">暂无内容</span>' : item.text;
+                item['Content'] = item.text == '' ? '<span style="color:rgba(0, 0, 0, 0.25);">暂无内容</span>' : item.text;
+                item['Description'] = item.description == '' ? '' : item.description;
                 item['NumOfLike'] = item.numOfLike || 0;
                 item['NumOfComment'] = item.numOfComment || 0;
                 item['IsLike'] = item.isLike * 1 == 1 ? true : false;
+                item['Options'] = item.options || [];
+                item['value'] = item.options && item.options.length ? getValue(item.options) : '';
+                for (var j = 0; j < item.Options.length; j++) {
+                    let ite = item.Options[j];
+                    ite.percentage = ite.checkedQty && ite.checkedQty * 1 ? ((ite.checkedQty * 1 / ite.checkedQty * 1) * 100).toFixed(1) : 0;
+                }
                 list.push(item);
-                console.log(item,1)
             }
         }
         if (list && list.length) {
@@ -468,66 +491,19 @@ const getCommentList = () => {
 const ChangePage = (page, pageSize) => {
     data.page = page;
     data.rows = pageSize;
-    getCommentList();
+    getCommentList('', '');
 }
 const sizeChange = (current, size) => {
     ChangePage(current, size)
 }
 const key = 'updatable';
-const handleSendComment = () => {
-    if (data.comment == "") {
+const handleSendStatus = () => {
+    if (data.text == "") {
         notification.open({
             key,
             message: "内容不能为空！"
         });
     } else {
-        // proxy.$get(Interface.sendComment,{
-        //     title: data.comment,
-        //     ObjectId: "4c51a922-8762-40ae-9e10-5e1fa3f51a60"
-        // }).then(res=>{
-        //     if(res.status==1){
-        //         notification.open({
-        //             key,
-        //             message: res.msg
-        //         });
-        //         data.comment = "";
-        //     }
-        // })
-        // let url=Interface.create;
-        //     let d = {
-        //     actions:[{
-        //         id: "2919;a",
-        //         descriptor: "",
-        //         callingDescriptor: "UNKNOWN",
-        //         params: {
-        //             recordInput: {
-        //                 allowSaveOnDuplicate: false,
-        //                 apiName: 'Chatter',
-        //                 objTypeCode: '6000',
-        //                 fields: {
-        //                     RegardingObjectId: data.OwningUser,
-        //                     OwningUser:data.OwningUser,
-        //                     Description:data.comment,
-        //                     RegardingObjectTypeCode:'6000',
-        //                     ChatterTypeCode:data.activeKey
-        //                 }
-        //             }              
-        //         }
-        //     }]
-        // };
-
-        // let obj = {
-        //     message: JSON.stringify(d)
-        // }
-        // proxy.$post(url,obj).then(res=>{
-        // if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
-        //     message.success("发布成功！");
-        //     data.keyIndex=1;
-        //     getCommentList();
-        //     data.comment = "";
-        // }
-
-        // });
         let url = Interface.status.submit;
         let d = {
             actions: [{
@@ -535,7 +511,7 @@ const handleSendComment = () => {
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                    text: data.comment,
+                    text: data.text,
                     chatterTypeCode: data.activeKey,
                     location: {
                         location: "",
@@ -551,10 +527,11 @@ const handleSendComment = () => {
         };
         if (data.activeKey == '1') {
             url = Interface.question.submit;
+            d.actions[0].params.description = data.description;
         }
         if (data.activeKey == '30400') {
             url = Interface.poll.submit;
-            d.actions[0].options = data.VoteOptions;
+            d.actions[0].params.options = data.VoteOptions;
         }
         let obj = {
             message: JSON.stringify(d)
@@ -563,60 +540,32 @@ const handleSendComment = () => {
             if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
                 message.success("发布成功！");
                 data.keyIndex = 1;
-                getCommentList();
-                data.comment = "";
-                editorRef.value.content = "";
+                getStatusList();
+                data.text = "";
+                data.description = "";
+                if (data.activeKey == '0') {
+                    editorRef.value.content = "";
+                }
+                if (data.activeKey == '1') {
+                    editorRef2.value.content = "";
+                }
             }
-
         });
     }
 }
-const handleSendComment1 = (item, item1) => {
+const handleSendComment = (item, item1) => {
     if (item1.comment == "") {
         notification.open({
             key,
             message: "评论内容不能为空！"
         });
     } else {
-        let Name = '';
+        let text = item1.comment;
 
         if (item.id && item1.id && item.id != item1.id) {
-            Name = data.OwningUserName + ' 回复 ' + item1.OwningUser;
+            text = data.OwningUserName + ' 回复 ' + item1.OwningUser + '：' + item1.comment;
         }
-        // let url = Interface.create;
-        // let d = {
-        //     actions: [{
-        //         id: "2919;a",
-        //         descriptor: "",
-        //         callingDescriptor: "UNKNOWN",
-        //         params: {
-        //             recordInput: {
-        //                 allowSaveOnDuplicate: false,
-        //                 apiName: 'Chatter',
-        //                 objTypeCode: '6000',
-        //                 fields: {
-        //                     RegardingObjectId: item.id,
-        //                     OwningUser: data.OwningUser,
-        //                     Description: item1.comment,
-        //                     RegardingObjectTypeCode: '8',
-        //                     Title: Name
-        //                 }
-        //             }
-        //         }
-        //     }]
-        // };
 
-        // let obj = {
-        //     message: JSON.stringify(d)
-        // }
-        // proxy.$post(url, obj).then(res => {
-        //     if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-        //         message.success("回复成功！");
-        //         getCommentList1(item.id, item);
-        //         item1.comment = "";
-        //     }
-
-        // });
         let url = Interface.status.sendComment;
         let d = {
             actions: [{
@@ -625,7 +574,7 @@ const handleSendComment1 = (item, item1) => {
                 callingDescriptor: "UNKNOWN",
                 params: {
                     statusId: item.id,
-                    text: item1.comment
+                    text: text
                 }
             }]
         };
@@ -636,7 +585,7 @@ const handleSendComment1 = (item, item1) => {
         proxy.$post(url, obj).then(res => {
             if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
                 message.success("评论成功！");
-                getCommentList1(item.id, item);
+                getCommentList(item.id, item);
                 item1.comment = "";
             }
 
@@ -644,51 +593,15 @@ const handleSendComment1 = (item, item1) => {
 
     }
 }
-const getCommentList1 = (id, item) => {
-    //data.listData1[id] = [];
-    // let item0 = item;
-    // let filterQuery = '\nRegardingObjectTypeCode\teq\t8';
-    // if (id) {
-    //     filterQuery += '\nRegardingObjectId\teq\t' + id;
-    // }
-    // proxy.$post(Interface.list2, {
-    //     filterId: '',
-    //     objectTypeCode: '6000',
-    //     entityName: 'Chatter',
-    //     filterQuery: filterQuery,
-    //     search: '',
-    //     page: 1,
-    //     rows: 100,
-    //     sort: 'CreatedOn',
-    //     order: 'asc',
-    //     displayColumns: 'Title,OwningUser,CreatedOn,Description,NumOfComment,NumOfLike'
-    // }).then(res => {
-    //     var list = [];
-    //     for (var i = 0; i < res.nodes.length; i++) {
-    //         var item = res.nodes[i];
-    //         for (var cell in item) {
-    //             if (cell != 'id' && cell != 'nameField') {
-    //                 if (cell == 'OwningUser') {
-    //                     item['OwningUserId'] = item[cell].userValue.Value;
-    //                     if (item['OwningUserId']) {
-    //                         item['OwningUserId'] = (item['OwningUserId']).toUpperCase();
-    //                     }
-    //                 }
-    //                 item[cell] = girdFormatterValue(cell, item);
-    //             }
-    //             if (cell == 'CreatedOn') {
-    //                 item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
-    //             }
-    //         }
-    //         getLike(item);
-    //         list.push(item);
-    //     }
-    //     data.listData1[id] = list;
-    //     if (item0) {
-    //         item0.NumOfComment = list.length;
-    //     }
-    // })
-    let item0 = item;
+const getCommentList = (id, ite) => {
+    data.listData1[data.id] = [];
+    data.total = 0;
+    if (id) {
+        data.id = id;
+        data.item = ite;
+        data.page = 1;
+    }
+    let item0 = data.item;
     let url = Interface.status.comment;
     let d = {
         actions: [{
@@ -696,7 +609,9 @@ const getCommentList1 = (id, item) => {
             descriptor: "",
             callingDescriptor: "UNKNOWN",
             params: {
-                id: id
+                id: data.id,
+                pageSize: data.rows,
+                pageNumber: data.page,
             }
         }]
     };
@@ -706,9 +621,10 @@ const getCommentList1 = (id, item) => {
     }
     proxy.$post(url, obj).then(res => {
         var list = [];
-        if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
-            for (var i = 0; i < res.actions[0].returnValue.length; i++) {
-                var item = res.actions[0].returnValue[i];
+        if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.rows) {
+            data.total = res.actions[0].returnValue.pageInfo.total || res.actions[0].returnValue.rows.length || 0;
+            for (var i = 0; i < res.actions[0].returnValue.rows.length; i++) {
+                var item = res.actions[0].returnValue.rows[i];
                 for (var cell in item) {
                     if (cell == 'CreatedOn' || cell == 'createdOn') {
                         item['CreatedOn'] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
@@ -716,15 +632,15 @@ const getCommentList1 = (id, item) => {
                 }
                 item['OwningUser'] = item.createdByName || '';
                 item['OwningUserId'] = item.createdBy || '';
-                item['Description'] = item.text == '' ? '<span style="color:rgba(0, 0, 0, 0.25);">暂无内容</span>' : item.text;
+                item['Content'] = item.text == '' ? '<span style="color:rgba(0, 0, 0, 0.25);">暂无内容</span>' : item.text;
                 item['NumOfLike'] = item.numOfLike || 0;
                 item['NumOfComment'] = item.numOfComment || 0;
                 item['IsLike'] = item.isLike * 1 == 1 ? true : false;
-                item.id = item.commentId || '';
+                item['id'] = item.commentId;
                 list.push(item);
             }
         }
-        data.listData1[id] = list;
+        data.listData1[data.id] = list;
         if (item0) {
             item0.NumOfComment = list.length;
         }
@@ -735,6 +651,13 @@ const handleDelete = (e, type, typeitem) => {
     data.type = type;
     data.typeitem = typeitem;
     data.recordId = e;
+    if (type * 1 == 1) {
+        data.objectTypeCode = '6000';
+        data.sObjectName = 'Chatter';
+    } else {
+        data.objectTypeCode = '6005';
+        data.sObjectName = 'ChatterComment';
+    }
     data.isDelete = true;
 };
 const closeDelete = (e) => {
@@ -742,25 +665,28 @@ const closeDelete = (e) => {
     data.isDelete = false;
 };
 const deleteOk = (e) => {
-    if (data.type == 1) {
+    if (data.type * 1 == 1) {
         data.keyIndex = 1;
-        getCommentList();
+        getStatusList();
     }
     else {
-        getCommentList1(data.typeitem.id, data.typeitem)
+        getCommentList(data.typeitem.id, data.typeitem)
     }
 };
 const loadQuestionData = (e) => {
     data.searchVal = e;
     data.keyIndex = 1;
-    getCommentList();
+    getStatusList();
 };
 const onSearch = () => {
     data.keyIndex = 1;
-    getCommentList();
+    getStatusList();
 }
 const getInputContent = (e) => {
-    data.comment = e;
+    data.text = e;
+};
+const getInputContent2 = (e) => {
+    data.description = e;
 };
 const addQuestionOption = () => {
     data.VoteOptions.push({ name: '', displayOrder: data.VoteOptions.length + 1 });
@@ -768,7 +694,7 @@ const addQuestionOption = () => {
 const changeTab = (e) => {
     data.activeKey = e;
     data.keyIndex = 1;
-    getCommentList();
+    getStatusList();
 }
 //获取评论点赞
 const getLike = (item) => {
@@ -928,6 +854,52 @@ const handleLike2 = (item) => {
         });
     }
 }
+const ContentRadioChange = (e, item) => {
+    //console.log(e,111)
+    item.value = e.target.value;
+}
+//投票
+const handlePoll = (item) => {
+    if (item.value) { } else {
+        return
+    }
+    let url = Interface.poll.response;
+    let d = {
+        actions: [{
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+                pollId: item.id,
+                optionIds: [item.value]
+            }
+        }]
+    };
+    let obj = {
+        message: JSON.stringify(d)
+    }
+    proxy.$post(url, obj).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+            message.success("投票成功！");
+            item.isSubmit = true;
+            for (var j = 0; j < item.Options.length; j++) {
+                if (item.Options[j].pollOptionId == item.value) {
+                    item.Options[j].isChecked = true;
+                    item.Options[j].checkedQty = item.Options[j].checkedQty * 1 > 0 ? item.Options[j].checkedQty * 1 + 1 : 1;
+                }
+
+            }
+        }
+        else {
+            if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+                message.error(res.actions[0].errorMessage);
+            }
+            else {
+                message.error("投票失败！");
+            }
+        }
+    });
+}
 onMounted(() => {
     let userInfo = window.localStorage.getItem('userInfo');
     if (userInfo) {
@@ -939,7 +911,7 @@ onMounted(() => {
         }
         data.OwningUser = (data.OwningUser).toUpperCase();
     }
-    getCommentList();
+    getStatusList();
     window.addEventListener(
         "scroll",
         function () {
@@ -959,7 +931,7 @@ onMounted(() => {
                 (clientHeight + scrollTop >= scrollHeight)
             ) {
                 data.keyIndex = data.keyIndex + 1;
-                getCommentList();
+                getStatusList();
             }
         },
         true
@@ -1576,6 +1548,96 @@ onMounted(() => {
     .VoteLabel,
     .QuestionLabel {
         margin-bottom: 6px;
+    }
+
+
+    .option-percentage {
+        width: 100%;
+        display: flex;
+        position: relative;
+        top: -10px;
+
+        .option-progress {
+            margin: 0 !important;
+
+            .ant-progress-inner {
+                background-color: #e5e5e5;
+            }
+
+            .ant-progress-outer {
+                padding-right: 15px !important;
+                padding-top: 3px !important;
+            }
+
+            .anticon-check-circle,
+            .ant-progress-text {
+                display: none !important;
+            }
+        }
+
+        .option-count {
+            font-size: 14px;
+            color: #666;
+            margin-left: 0px;
+            width: 420px;
+        }
+    }
+
+    .ant-radio-group {
+        display: block;
+        margin: 5px 0;
+
+        .ant-radio-wrapper {
+            height: auto !important;
+
+        }
+    }
+
+    .VoteItem {
+        padding: 13px 0px 0px 0px;
+        background-color: #f8f8f8;
+
+        .commentContentItem {
+            padding-left: 13px;
+        }
+
+        .ant-radio-group {
+            padding-left: 13px;
+        }
+
+        .vote-shur-btn {
+            font-size: 15px;
+            text-align: center;
+            height: 38px;
+            line-height: 36px;
+            border-top: 1px solid #ebedec;
+            cursor: pointer;
+            background-color: #f8f8f8;
+            color: #1677ff;
+            font-weight: bold;
+
+            .disabled {
+                cursor: not-allowed;
+                color: #999;
+                font-weight: normal;
+                height: 38px;
+            }
+        }
+
+        .vote-shur-btn:hover {
+            background-color: #eee;
+
+            .disabled {
+                background-color: #f8f8f8;
+            }
+        }
+    }
+
+    .commentContentRadio.isSubmit {
+        .ant-radio {
+            position: relative;
+            top: -13px;
+        }
     }
 }
 </style>

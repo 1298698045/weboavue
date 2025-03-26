@@ -1,6 +1,7 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="850px" style="top:10px;" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+    <a-modal v-model:open="props.isShow" width="850px" style="top:10px;" :maskClosable="false" @cancel="handleCancel"
+      @ok="handleSubmit">
       <template #title>
         <div>
           {{ title }}
@@ -30,16 +31,16 @@
                       </a-select>
                       <i class="iconfont icon-sousuo pointer selectIcon" @click="handleFocus"></i>
                     </div> -->
-                    <a-input v-model:value="formState.BusinessUnitId" disabled
-                      class="ApprovedByName"></a-input>
+                    <a-input v-model:value="formState.BusinessUnitId" disabled class="ApprovedByName"></a-input>
                   </a-form-item>
                 </div>
               </div>
-              
+
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="ApprovedOn" label="发布时间" :rules="[{ required: true, message: '请输入发布时间' }]">
-                    <a-date-picker v-model:value="formState.ApprovedOn" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="发布时间" />
+                    <a-date-picker v-model:value="formState.ApprovedOn" valueFormat="YYYY-MM-DD HH:mm:ss" show-time
+                      placeholder="发布时间" />
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
@@ -93,7 +94,8 @@
                 </div>
                 <div class="sectionItem" v-if="formState.IsTop">
                   <a-form-item name="EndTopDate" label="置顶截止">
-                    <a-date-picker v-model:value="formState.EndTopDate" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="置顶截止" />
+                    <a-date-picker v-model:value="formState.EndTopDate" valueFormat="YYYY-MM-DD HH:mm:ss" show-time
+                      placeholder="置顶截止" />
                   </a-form-item>
                 </div>
               </div>
@@ -106,7 +108,7 @@
                   </a-form-item>
                 </div>
               </div>
-              
+
             </div>
 
           </a-form>
@@ -157,8 +159,8 @@
                     </div>
                     <div class="inboxFileItem">
                       <a-upload-dragger accept="image/*" v-model:fileList="fileList" :headers="headers"
-                        @change="changeFiles" :data="uploadData" :action="Interface.information.uploadMedia" :showUploadList="false"
-                        multiple name="files" :before-upload="beforeUpload">
+                        @change="changeFiles" :data="uploadData" :action="Interface.information.uploadMedia"
+                        :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
                         <div class="uploadRow">
                           <p class="ant-upload-drag-icon">
                             <PlusOutlined />
@@ -183,31 +185,28 @@
                     :entityApiName="'SystemUser'"></FilterQuery>
                 </div>
               </div>
-              <div class="sectionRow">
-                <div class="sectionItem memberlist">
+              <div class="sectionRow peopleRow">
+                <div class="sectionItem peopleItem">
                   <div class="sectionItemTitle">查询结果</div>
-                  <a-button type="primary" class="sectionItemBtn">搜索</a-button>
+                  <a-button type="primary" class="sectionItemBtn" @click="handleSearch">搜索</a-button>
                   <a-table :columns="columns" :dataSource="peopleList" :scroll="{ y: tableHeight }"
                     :pagination="data.pagination" @change="handleTableChange">
                     <template #bodyCell="{ column, index, record }">
-                      <template v-if="column.key === 'Action'">
-                        <a-button type="text" size="small" @click="handleDelete(record.id)">删除</a-button>
-                      </template>
                       <template v-if="column.key === 'index'">
                         <div>
-                          {{ index + 1 }}
+                          {{ data.pagination.pageSize * (data.pagination.current - 1) + index + 1 }}
                         </div>
                       </template>
-                      <div v-if="column.key == 'AvatarImg'">
-                        <img :src="record.AvatarImg || Interface.pathUrl + ':9091/api/one/user/avatar/' + record.id"
-                          @error="handleImageError(record)" alt="" class="AddGroup_list_avatar" />
-                      </div>
+                      <template v-if="column.key == 'AvatarImg'">
+                        <img :src="record.AvatarImg" @error="handleImageError(record)" alt=""
+                          class="AddGroup_list_avatar" />
+                      </template>
                     </template>
                   </a-table>
-                  <div class="empty" v-if="peopleList.length == 0">
+                  <!-- <div class="empty" v-if="peopleList.length == 0">
                     <img :src="require('@/assets/img/empty.png')" alt="" />
                     <p class="emptyDesc">当前暂无数据</p>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -219,16 +218,17 @@
           <a-button @click="handleCancel" v-if="step == 0">取消</a-button>
           <a-button type="primary" @click.prevent="handleSubmit" v-if="step == 0">下一步</a-button>
           <a-button @click="data.step = 0" v-if="step == 1">上一步</a-button>
-          <a-button type="primary" @click="step = 2" v-if="step == 1">下一步</a-button>
+          <a-button type="primary" @click="getFilterExpresssionList" v-if="step == 1">下一步</a-button>
           <a-button @click="data.step = 1" v-if="step == 2">上一步</a-button>
-          <a-button type="primary" @click="handleSubmit2" v-if="step == 2">完成</a-button>
+          <a-button type="primary" @click="saveFilterExpresssionList" v-if="step == 2">完成</a-button>
         </div>
       </template>
     </a-modal>
     <RadioDept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
-    <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
-    <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople" :sObjectName="sObjectName"
-      :recordId="memberId" :objTypeCode="objectTypeCode" :external="external" />
+    <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser"
+      @ok="refreshPeople"></radio-user>
+    <Delete v-if='isDelete' :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople"
+      :sObjectName="sObjectName" :recordId="memberId" :objTypeCode="objectTypeCode" :external="external" />
     <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="'确定要删除吗？'" :title="'删除'" @cancel="isConfirm = false"
       @ok="deleteFile" :id="recordId" />
     <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
@@ -264,6 +264,7 @@ import {
   CloseOutlined,
   EyeOutlined
 } from "@ant-design/icons-vue";
+import { girdFormatterValue } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import Interface from "@/utils/Interface.js";
 import dayjs from 'dayjs';
@@ -294,16 +295,6 @@ const formRef3 = ref();
 const emit = defineEmits(["cancel"]);
 const handleCancel = () => {
   emit("cancel", false);
-};
-const handleSubmit2 = () => {
-  emit("cancel", false);
-  let reUrl = router.resolve({
-    path: "/lightning/o/Content/home",
-    query: {
-
-    }
-  })
-  window.open(reUrl.href);
 };
 const formState = reactive({
   ApprovedBy: '',
@@ -418,14 +409,14 @@ const data = reactive({
       return `共${total}条`
     })
   },
-  tableHeight: 0,
+  tableHeight: document.documentElement.clientHeight - 470,
   FilterExpresssionList: [],
   filterExpression: "",
   ImageList: [],
   uploadData: {
     // parentId: '',
     // entityName: 'Media'
-    id:''
+    id: ''
   },
   headers: {
     Authorization: token,
@@ -782,6 +773,7 @@ const searchlookup2 = () => {
 onMounted(() => {
   window.addEventListener("resize", (e) => {
     data.height = document.documentElement.clientHeight - 150;
+    data.tableHeight = document.documentElement.clientHeight - 470;
   });
   if (props.id) {
     getDetail();
@@ -808,27 +800,27 @@ const getDetail = () => {
   proxy.$post(Interface.detail, obj).then(res => {
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
       let fields = res.actions[0].returnValue.fields;
-      formState.ApprovedBy = fields.ApprovedBy?fields.ApprovedBy.displayValue:'';
-      data.ApprovedBy = fields.ApprovedBy?fields.ApprovedBy.value:'';
-      formState.BusinessUnitId = fields.BusinessUnitId?fields.BusinessUnitId.displayValue:'';
-      data.BusinessUnitId = fields.BusinessUnitId?fields.BusinessUnitId.value:'';
-      if (fields.BusinessUnitId&&fields.BusinessUnitId.value) {
+      formState.ApprovedBy = fields.ApprovedBy ? fields.ApprovedBy.displayValue : '';
+      data.ApprovedBy = fields.ApprovedBy ? fields.ApprovedBy.value : '';
+      formState.BusinessUnitId = fields.BusinessUnitId ? fields.BusinessUnitId.displayValue : '';
+      data.BusinessUnitId = fields.BusinessUnitId ? fields.BusinessUnitId.value : '';
+      if (fields.BusinessUnitId && fields.BusinessUnitId.value) {
         data.listData = [];
         data.listData.push({
           ID: fields.BusinessUnitId.value,
           Name: fields.BusinessUnitId.displayValue
         })
       }
-      formState.IsImportant = fields.IsImportant&&fields.IsImportant.value ? true : false;
-      formState.IsTop = fields.IsTop&&fields.IsTop.value * 1 == 1 ? true : false;
-      formState.AttachRightCode = fields.AttachRightCode?fields.AttachRightCode.value * 1:0;
+      formState.IsImportant = fields.IsImportant && fields.IsImportant.value ? true : false;
+      formState.IsTop = fields.IsTop && fields.IsTop.value * 1 == 1 ? true : false;
+      formState.AttachRightCode = fields.AttachRightCode ? fields.AttachRightCode.value * 1 : 0;
       //formState.StateCode = fields.StateCode.value * 1;
       formState.EndTopDate = fields.EndTopDate && fields.EndTopDate.value ? dayjs(fields.EndTopDate.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '';
       formState.ApprovedOn = fields.ApprovedOn && fields.ApprovedOn.value ? dayjs(fields.ApprovedOn.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '';
-      formState.KeyWords = fields.KeyWords&&fields.KeyWords.value ? (fields.KeyWords.value).split(',') : [];
-      formState.IsPublic = fields.IsPublic&&fields.IsPublic.value * 1 == 1 ? true : false;
-      formState.CoverDisplay = fields.CoverDisplay?fields.CoverDisplay.value:'';
-      formState.FolderId = fields.FolderId?fields.FolderId.value:'';
+      formState.KeyWords = fields.KeyWords && fields.KeyWords.value ? (fields.KeyWords.value).split(',') : [];
+      formState.IsPublic = fields.IsPublic && fields.IsPublic.value * 1 == 1 ? true : false;
+      formState.CoverDisplay = fields.CoverDisplay ? fields.CoverDisplay.value : '';
+      formState.FolderId = fields.FolderId ? fields.FolderId.value : '';
       let userInfo = window.localStorage.getItem('userInfo');
       if (userInfo && !formState.ApprovedBy) {
         userInfo = JSON.parse(userInfo);
@@ -844,6 +836,7 @@ const getDetail = () => {
         data.BusinessUnitId = businessUnitId;
         formState.BusinessUnitId = businessUnitName;
       }
+      data.filterExpression = fields.PeopleQuery && fields.PeopleQuery.value ? fields.PeopleQuery.value : '';
     }
   })
 }
@@ -853,41 +846,7 @@ const handleSubmit = () => {
   formRef.value
     .validate()
     .then(() => {
-      console.log("values", formState, toRaw(formState));
-      // let obj = {
-      //   params: {
-      //     objTypeCode: props.objectTypeCode,
-      //     fields: {
-      //         ApprovedBy: {
-      //             Id: ""
-      //         },
-      //         BusinessUnitId: {
-      //             Id: data.BusinessUnitId
-      //         },
-      //         IsImportant: formState.IsImportant?1:0,
-      //         IsTop: formState.IsTop ? 1 : 0,
-      //         AttachRightCode: formState.AttachRightCode,
-      //         EndTopDate: dayjs(formState.EndTopDate).format("YYYY-MM-DD hh:mm:ss"),
-      //         ApprovedOn: dayjs(formState.ApprovedOn).format("YYYY-MM-DD hh:mm:ss"),
-      //         StateCode: 1,
-      //         KeyWords: formState.KeyWords.join(',') || '',
-      //         IsPublic: formState.IsPublic ? 1 : 0,
-      //         CoverDisplay: formState.CoverDisplay,
-      //         Title: "",
-      //         FolderId: {
-      //             Id: props.FolderId
-      //         }
-      //     },
-      //     id: props.id,
-      //     ContentTypeCode: 1,
-      //   },
-      // };
-      // var messages = JSON.stringify(obj);
-      // proxy.$get(Interface.saveRecord, { message: messages }).then((res) => {
-      //   formRef.value.resetFields();
-      //   message.warning("保存成功！");
-      //   emit("cancel", false);
-      // });
+      //console.log("values", formState, toRaw(formState));
       let url = Interface.edit;
       let d = {
         actions: [{
@@ -928,7 +887,7 @@ const handleSubmit = () => {
         //formRef.value.resetFields();
         if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
           props.id = res.actions[0].returnValue.id;
-          data.uploadData.id = props.id;
+          data.uploadData.id = res.actions[0].returnValue.id;
           message.success("保存成功！");
           data.step = 1;
         }
@@ -959,72 +918,152 @@ var columns = [
     title: "序号",
     dataIndex: "index",
     key: "index",
+    width: 70
   },
   {
     title: "头像",
     dataIndex: "AvatarImg",
-    key: 'AvatarImg'
+    key: 'AvatarImg',
+    width: 80
   },
   {
     title: "姓名",
     dataIndex: "FullName",
   },
   {
+    title: "工号",
+    dataIndex: "EmployeeId",
+  },
+  {
     title: "部门",
     dataIndex: "BusinessUnitId",
   },
-  {
-    title: "角色",
-    dataIndex: "RoleCode",
-  },
-
   // {
   //   title: "操作",
   //   key: "Action",
   //   width: 150,
   // },
 ];
+const getQuery = () => {
+  data.peopleList = [];
+  data.pagination.total = 0;
+  let filterQuery = '';
+  if (data.FilterExpresssionList && data.FilterExpresssionList.length) {
+
+  }
+  proxy.$post(Interface.list2, {
+    filterId: '',
+    objectTypeCode: '8',
+    entityName: 'SystemUser',
+    filterQuery: filterQuery,
+    search: '',
+    page: data.pagination.current,
+    rows: data.pagination.pageSize,
+    sort: '',
+    order: 'ASC',
+    displayColumns: 'FullName,BusinessUnitId,EmployeeId'
+  }).then(res => {
+    var list = [];
+    data.total = res.pageInfo ? res.pageInfo.total : 0;
+    data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
+    for (var i = 0; i < res.nodes.length; i++) {
+      var item = res.nodes[i];
+      for (var cell in item) {
+        if (cell != 'id' && cell != 'nameField') {
+          item[cell] = girdFormatterValue(cell, item);
+        }
+      }
+      item['AvatarImg'] = '/api/one/user/avatar/' + item.id;
+      list.push(item)
+    }
+    data.peopleList = list;
+
+  })
+}
 //改变页码
 const handleTableChange = (pag, filters, sorter) => {
   data.pagination.current = pag.current;
   getQuery();
 }
 const getFilterQuery = (e) => {
-  console.log("e", e);
-  data.filterExpression = e;
+  console.log('filterExpression:', e);
+  if (e) {
+    data.filterExpression = e;
+  }
+  else {
+    data.filterExpression = '';
+  }
+}
+//查询
+const handleSearch = () => {
+  data.pagination.current = 1;
+  getQuery();
 }
 //获取人员筛选器数据
 const getFilterExpresssionList = () => {
-  proxy.$get(Interface.flow.handleDetail, {
-    ProcessId: data.processId,
-    StepId: props.stepId,
-    StepCode: props.stepCode
-  }).then(res => {
-    let Variables = res.Variables;
-    Variables.forEach(item => {
-      for (let key in formState.Variables) {
-        if (item.Id == formState.Variables[key].value) {
-          formState.Variables[key].checkbox = true;
-        }
-      }
-    });
-    let StepVariables = res.StepVariables;
-    StepVariables.Variables.forEach(item => {
-      for (let key in formState.StepVariables) {
-        if (item.Id == formState.StepVariables[key].value) {
-          formState.StepVariables[key].checkbox = true;
-        }
-      }
-    })
-    let Groups = res.Groups;
-    Groups.forEach(item => {
-      data.targetKeys.push(item.ObjectTypeCode + ':' + item.Id);
-    })
-    formState.scope = res.FilterScope.Scope;
-    data.FilterExpresssionList = res.FilterExpresssion;
-  })
+  if (data.filterExpression) {
+    let filterExpression = JSON.parse(data.filterExpression);
+    if (filterExpression && filterExpression.length) {
+      data.FilterExpresssionList = filterExpression;
+      data.FilterExpresssionList.forEach(v => {
+        v['operatorType'] = '';
+      });
+    }
+  }
+  else {
+    data.filterExpression = '';
+    data.FilterExpresssionList = [];
+  }
+  data.step = 2;
 }
+//保存筛选器数据
+const saveFilterExpresssionList = () => {
+  let url = Interface.edit;
+  let d = {
+    actions: [{
+      id: "2919;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        recordInput: {
+          allowSaveOnDuplicate: false,
+          apiName: 'Content',
+          objTypeCode: props.objectTypeCode,
+          fields: {
+            PeopleQuery: data.filterExpression
+          }
+        }
+      }
+    }]
+  };
+  if (props.id) {
+    d.actions[0].params.recordId = props.id;
+  }
+  let obj = {
+    message: JSON.stringify(d)
+  }
+  proxy.$post(url, obj).then(res => {
+    //formRef.value.resetFields();
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+      message.success("保存成功！");
+      setTimeout(function () {
+        emit("cancel", false);
+        let reUrl = router.resolve({
+          path: "/lightning/o/Content/home",
+          query: {
 
+          }
+        })
+        window.open(reUrl.href);
+      }, 1000)
+    }
+    else {
+      message.error("保存失败！");
+    }
+  });
+
+}
+//获取媒体图片
 const getFiles = () => {
   data.fileList = [];
   data.ImageList = [];
@@ -1037,7 +1076,7 @@ const getFiles = () => {
       params: {
         pageNumber: 1,
         pageSize: 1000,
-        contentId:props.id
+        contentId: props.id
       }
     }]
   };
@@ -1084,7 +1123,7 @@ const getFiles = () => {
 };
 const beforeUpload = (e) => {
   //data.uploadData.entityName = 'Media';
-  data.uploadData.id = props.id;
+  //data.uploadData.id = props.id;
   console.log("beforeUpload", e);
 }
 const changeFiles = (e) => {
@@ -1124,12 +1163,12 @@ const handlePreviewFile = (item) => {
     data.isPdf = true;
   }
   else if (item.fileExtension == 'txt') {
-      data.txtParams = {
-          name: item.name,
-          viewUrl: item.viewUrl,
-          downloadUrl: item.downloadUrl
-      };
-      data.isTxt = true;
+    data.txtParams = {
+      name: item.name,
+      viewUrl: item.viewUrl,
+      downloadUrl: item.downloadUrl
+    };
+    data.isTxt = true;
   }
   else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
     //let medittype = 0;
@@ -1238,7 +1277,7 @@ const deleteFile = (id) => {
     }
 
     .empty {
-      height: 40%;
+      height: 60px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1514,7 +1553,30 @@ input[aria-hidden="true"] {
     }
   }
 }
+
 .RelaseInfoWrap {
+  .modalCenter {
+    .ant-form {
+      height: 100%;
+
+      .section {
+        height: 100%;
+
+        .peopleRow {
+          height: calc(100% - 172px);
+
+          .peopleItem {
+            height: 100%;
+
+            .ant-table-wrapper {
+              height: calc(100% - 93px) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
   .modalCenter1 {
     .section .sectionRow .sectionItem .ant-row {
       width: 100%;
@@ -1531,5 +1593,11 @@ input[aria-hidden="true"] {
     }
   }
 
+  .formRef3 {
+    .ant-input {
+      border: 1px solid #d9d9d9 !important;
+      border-radius: 6px !important;
+    }
+  }
 }
 </style>

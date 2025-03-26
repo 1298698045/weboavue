@@ -306,7 +306,6 @@ import dayjs from 'dayjs';
 import RadioDept from "@/components/commonModal/RadioDept.vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 import Delete from "@/components/listView/Delete.vue";
-import FilterQuery from "@/components/FilterQuery.vue";
 import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 import ImageView from "@/components/file/ImageView.vue";
 import PdfView from "@/components/file/PdfView.vue";

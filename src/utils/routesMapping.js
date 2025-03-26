@@ -36,7 +36,7 @@ export const routesMapping = {
     },
     // 会议管理
     MeetingManage: {
-        ResApply: () => import("../views/meeting/meetingRoom/MeetingRoomUse.vue"),
+        RoomReservation: () => import("../views/meeting/meetingRoom/MeetingRoomUse.vue"),
         Meeting: () => import("../views/meeting/calendar/index.vue"),
         MyMeeting: () => import("../views/meeting/list/index.vue"),
         MeetingSearch: () => import("../views/meeting/search/index.vue"),
