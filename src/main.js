@@ -33,7 +33,7 @@ function restoreRoutes() {
 
     //     console.log("router", router.getRoutes())
     // }
-    if(savedRoutes){
+    if (savedRoutes) {
         const parentRouteExists = router.hasRoute(savedRoutes.name);
         let parentRoute;
         if (!parentRouteExists) {
@@ -46,8 +46,8 @@ function restoreRoutes() {
             };
             router.addRoute(parentRoute);
         }
-        if(savedRoutes.children.length){
-            savedRoutes.children.forEach(item=>{
+        if (savedRoutes.children.length) {
+            savedRoutes.children.forEach(item => {
                 const newRoute = {
                     path: item.path,
                     name: item.name,
@@ -66,6 +66,27 @@ function restoreRoutes() {
 }
 // if (localStorage.getItem('savedRoutes')) {
 //     restoreRoutes();
+// }
+// // 恢复动态路由
+// if (store.state.dynamicRoutes.length > 0) {
+//     store.state.dynamicRoutes.forEach(route => {
+//         //   console.log("route", route);
+//         if (!router.hasRoute(route.name)) {
+//             if (route.children && route.children.length) {
+//                 route.children.forEach(row => {
+//                     row.component = eval(row.component)
+//                 })
+//             }
+//             const newRoute = {
+//                 path: route.path,
+//                 name: route.name,
+//                 component: eval(route.component),
+//                 meta: route.meta,
+//                 children: route.children,
+//             };
+//             router.addRoute(newRoute);
+//         }
+//     });
 // }
 app.use(router);
 app.use(Axios);

@@ -7,12 +7,28 @@
             </div>
             <div class="panelHeader" v-else>
                 <a-button @click="handleCloseModal">取消</a-button>
-                <a-button type="primary" @click="handleSave">保存</a-button>
+                <div class="moreActions">
+                    <a-button type="primary" @click="handleSave">保存</a-button>
+                    <a-dropdown :trigger="['click']">
+                        <div class="fh-btn fh-btn-icon">
+                            <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon" lwc-6qul4k2dv7m="" data-key="down" class="slds-icon slds-icon_x-small"><g lwc-6qul4k2dv7m=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" lwc-6qul4k2dv7m=""></path></g></svg>
+                        </div>
+                        <template #overlay>
+                            <a-menu class="fh-menu listViewMenu">
+                                <a-menu-item class="listView-menuItem" key="1" @click="handleSaveAs">另存为</a-menu-item>
+                            </a-menu>
+                        </template>
+                    </a-dropdown>
+                </div>
             </div>
             <div class="panelBody" ref="panelBdRef">
+                <div class="lock" style="color: #747474;" v-if="!isEditable">
+                    已锁定筛选器
+                    <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon" lwc-5tu1hcidoi8="" data-key="lock" class="iconSvg"><g lwc-5tu1hcidoi8=""><path d="M110 190h40c6 0 10-3 10-9v-1A100 100 0 01267 80c53 4 93 50 93 104v-3c0 6 4 9 10 9h40c6 0 10-3 10-9v-1A160 160 0 00252 20c-85 4-150 76-152 161 1 5 5 9 10 9zm-10-9v4zm360 89a40 40 0 00-40-40H100a40 40 0 00-40 40v190a40 40 0 0040 40h320a40 40 0 0040-40zM306 427c2 6-3 13-10 13h-73c-7 0-11-6-10-13l18-60a48 48 0 01-21-48 50 50 0 0139-38c32-6 60 17 60 47 0 16-8 31-21 39z" lwc-5tu1hcidoi8=""></path></g></svg>
+                </div>
                 <div class="bodyTitle">匹配所有这些筛选器</div>
                 <ul>
-                    <li v-for="(item,index) in filterList" :ref="(el) => setItemRefs(el, item, index)" :key="index" @click="handleItemOpenFilter(item,index,$event)">
+                    <li v-for="(item,index) in filterList" :ref="(el) => setItemRefs(el, item, index)" :key="index" @click.stop="isEditable && handleItemOpenFilter(item,index,$event)">
                         <div class="filterItemBox" :class="{'empty':item.label==''}">
                             <div class="trigger">
                                 <div class="fieldLabel">{{item.label==""?"新建筛选器":item.label}}</div>
@@ -24,13 +40,13 @@
                                     <span class="val rowEllipsis" v-else>{{item.val}}</span>
                                 </div>
                             </div>
-                            <div class="closeX">
+                            <div class="closeX" v-if="isEditable">
                                 <a-button type="link" @click.stop="handleRemoveItem(item,index)"><CloseOutlined style="color:rgb(116, 116, 116);" /></a-button>
                             </div>
                         </div>
                     </li>
                 </ul>
-                <div class="addFilterRemoveAll" v-if="filterList.length < 10">
+                <div class="addFilterRemoveAll" v-if="filterList.length < 10 && isEditable">
                     <a role="button" class=" addFilter" href="javascript:void(0);" @click="handleAddFilter">添加筛选器</a>
                     <a role="button" class="removeAll" href="javascript:void(0);" @click="handleAllDelete">全部删除</a>
                 </div>
@@ -90,7 +106,7 @@
                             </div>
                         </a-form-item>
                         <a-form-item style="text-align: right;">
-                            <a-button type="primary" @click="handleComplete">完成</a-button>
+                            <a-button @click="handleComplete">完成</a-button>
                         </a-form-item>
                     </a-form>
                 </div>
@@ -99,6 +115,7 @@
         <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
         <radio-user v-if="isRadioUser" :isShow="isRadioUser"  @cancel="isRadioUser=false" @selectVal="handleUserParams" :localId="formState.field"></radio-user>
         <LookupFilter v-if="isLookupFilter" :field="formState.field" :entityApiName="sObjectName" :lookEntityApiName="lookEntityApiName" :entityType="lookEntityType" :objectTypeCode="lookObjectTypeCode" :isShow="isLookupFilter" @select="handleSelectLook" @cancel="isLookupFilter=false" />
+        <FilterSaveAs :isShow="isSaveAs" v-if="isSaveAs" :sObjectName="sObjectName" :filterId="filterId" :filterLabel="filterLabel" :filterExpression="filterExpression" @cancel="isSaveAs = false"></FilterSaveAs>
     </div>
 </template>
 <script setup>
@@ -108,6 +125,7 @@
     import RadioUser from "@/components/commonModal/RadioUser.vue";
     import LookupFilter from "@/components/commonModal/LookupFilter.vue";
     import { message } from "ant-design-vue";
+    import FilterSaveAs from "./FilterSaveAs.vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const labelCol = ref({ style: { width: '60px' } });
@@ -150,14 +168,18 @@
         isLookupFilter: false,
         lookEntityApiName: "",
         lookObjectTypeCode: "",
-        isEdit: false
+        isEdit: false,
+        isEditable: false,
+        isSaveAs: false,
+        filterExpression: "",
+        filterLabel: ""
     })
     const panelBdRef = ref();
     const formRef = ref();
     let itemRefs = [];
     const { filterList, attributes, operatorList, dType, currentTop, isFormModal, options,
         isRadioDept, isRadioUser, isLookupFilter, lookEntityApiName, lookObjectTypeCode,
-        isEdit
+        isEdit, isEditable, isSaveAs, filterExpression, filterLabel
      } = toRefs(data);
      onMounted(()=>{
         // window.addEventListener("click", ()=>{
@@ -172,10 +194,13 @@
         proxy.$get(Interface.listView.getListView, {
             id: props.filterId
         }).then(res=>{
+            let { isEditable, label } = res.actions[0].returnValue;
             let fieldCriteria = res.actions[0].returnValue.fieldCriteria.map(item=>{
                 item.attribute = item.column;
                 return item;
             });
+            data.isEditable = isEditable;
+            data.filterLabel = label;
             getFilterList(fieldCriteria)
         })
     }
@@ -555,6 +580,31 @@
         data.isRadioUser = false;
     };
 
+    const handleSaveAs = () => {
+        let result = [];
+        data.filterList.forEach(function (v) {
+            let value = v.val;
+            if (!Array.isArray(v.val)) {
+                value = [v.val];
+            }
+            if(typeof v.val == 'boolean'){
+                value = v.val ? [1] : [0];
+            }
+            result.push({
+                // logical: v.logical,
+                attribute: v.field,
+                label: v.label,
+                operator: v.operator,
+                operands: value,
+                column: v.field,
+                picklistValues: v.picklistValues
+            });
+        });
+        let filterExpression = result;
+        data.filterExpression = filterExpression
+        data.isSaveAs = true;
+    };
+
     const handleSave = () => {
         // console.log("data.filterList",data.filterList);
         let result = [];
@@ -611,7 +661,7 @@
         })
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .filterContainer{
         width: 100%;
         height: 100%;
@@ -742,13 +792,29 @@
             }
         }
     }
-    :where(.css-dev-only-do-not-override-kqecok).ant-input{
-        border-color: #747474;
-    }
+    
     .icon-sousuo {
         position: absolute;
         top: 3px;
         right: 10px;
         cursor: pointer;
+    }
+    .moreActions{
+        display: flex;
+        .fh-btn{
+            display: flex;
+            align-items: center;
+            border-left: none;
+            border-radius: 0 4px 4px 0 !important;
+            text-align: center;
+        }
+        .ant-btn{
+            border-radius: 4px 0 0 4px !important;
+        }
+    }
+</style>
+<style>
+    .filterContainer :where(.css-dev-only-do-not-override-kqecok).ant-input{
+        border-color: #747474;
     }
 </style>

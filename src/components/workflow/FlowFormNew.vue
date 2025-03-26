@@ -22,7 +22,8 @@
                             </td>
                             <td v-else-if="col && col.field && col.field.displayCategory=='RelatedList'" :colspan="col.colspan" :style="setStyle(key,colKey)" style="background: #fff;padding: 10px;">
                                 <div class="childTableOption" v-if="print!=1 && stateCode!=2">
-                                    <a-button class="ant-btn-icon" @click="handleAddSubTable(col)">
+                                    <a-button @click="handleImportSubTable(col)">导入</a-button>
+                                    <a-button class="ant-btn-icon ml10" @click="handleAddSubTable(col)">
                                         <PlusOutlined />
                                     </a-button>
                                     <a-button :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleDelSubTable(col)">
@@ -83,6 +84,7 @@
         <Delete :external="false" :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="getSuggestionQuery"
             sObjectName="WFSuggestionLibrary" :recordId="suggestionId"
             objTypeCode="130" />
+        <BatchImportChild :isShow="isBatchImport" v-if="isBatchImport" @cancel="isBatchImport = false"></BatchImportChild>
     </div>
 </template>
 <script setup>
@@ -110,6 +112,7 @@
     import RadioUser from "@/components/commonModal/RadioUser.vue";
     import LookupFilter from "@/components/commonModal/LookupFilter.vue";
     import Delete from "@/components/listView/Delete.vue";
+    import BatchImportChild from "@/components/workflow/BatchImportChild.vue";
     import { formNodesValueObj } from "@/utils/common.js";
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
@@ -172,14 +175,15 @@
         isDelete: false,
         deleteDesc: "确定删除当前意见吗？",
         suggestionId: "",
-        suggestionObj: {}
+        suggestionObj: {},
+        isBatchImport: false
     });
     const { entityId, layoutData, rowCount, columnCount, cellData, mergeData, rows, mergeRowColData, 
         isRadioUser, isRadioDept, isLookup, fieldData, entityApiName, lookEntityApiName, lookObjectTypeCode, objectTypeCode, columns, comps, ruleId,
         processId, entityLayoutId, select, isLoad, entityObjectId, attributes, list, search, processInstanceId, objTypeCode, isSub,
         subRecordFieldData, relatedObjData, relatedEntityInfoList, toActivityID, deleteRelatedData,
         masterEntityPermission, relatedListEntityPermissions, maxRowNum, suggestions, isDelete, deleteDesc,
-        suggestionId, suggestionObj
+        suggestionId, suggestionObj, isBatchImport
      } = toRefs(data);
 
      const handleSetValue = (field, value) => {
@@ -1329,6 +1333,11 @@
         //     isBook = true;
         // }
         return isBook;  
+    };
+
+    // 导入子表
+    const handleImportSubTable = (col) => {
+        data.isBatchImport = true;
     };
 
     // 添加子表行

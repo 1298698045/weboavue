@@ -41,7 +41,6 @@ import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
 import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
-const router = useRouter();
 
 // console.log(store.state.collapsed, "123132");
 const state = reactive({
@@ -54,7 +53,7 @@ const handleMenuSwitch = () => {
 };
 const data = reactive({
   appList: [],
-  appCode: localStorage.getItem("appCode"),
+  appCode: "",
   currentAppName: ""
 });
 const { appList, appCode, currentAppName } = toRefs(data);
@@ -83,54 +82,24 @@ const getModuleAppList = () => {
 // getModuleAppList();
 
 const changeCode = (e) => {
-  console.log('e', e);
-  data.appCode = e.AppCode;
+  // console.log('e', e);
+  data.appCode = e;
   localStorage.setItem("appCode", data.appCode);
-  // store.dispatch("getSubModules", e);
-  router.push(e.tabs[0].navAction.url);
+  store.dispatch("getSubModules", e);
 }
 
 
-// watch(()=> route.path, ()=>{
-//   console.log("route==", route.meta);
-//   let appCode = route.meta.appCode;
-//   let moduleName = route.meta.moduleName;
-//   let localAppCode = localStorage.getItem("appCode");
-//   if(appCode && appCode != localAppCode){
-//     store.dispatch("getSubModules", appCode);
-//     localStorage.setItem("appCode", appCode);
-//     localStorage.setItem("moduleName", moduleName);
-//   }
-// },{immediate: true})
-
-// watch(()=>data.appCode, (newVal, oldVal)=>{
-//   let modulesStr = localStorage.getItem("modules");
-//   let modules = JSON.parse(modulesStr);
-//   if(modules && modules.length){
-//     let subModules = modules.filter(item=>item.AppCode == newVal)[0].tabs;
-//     if(subModules && subModules.length){
-//       store.commit('setSubModules', subModules);
-//     }
-//     // router.push(subModules[0].navAction.url);
-//   }
-// },{immediate: true, deep: true})
-
-// watch(()=> route.path, (newVal, oldVal)=> {
-//   console.log("route==", route.meta);
-//   let appCode = route.meta.appCode;
-//   data.appCode = appCode;
-//   let modules = JSON.parse(localStorage.getItem("modules"));
-//   if(modules && modules.length){
-//     let subModules = modules.filter(item=>item.AppCode == appCode)[0].tabs;
-//     if(subModules && subModules.length){
-//       let list = JSON.stringify(subModules);
-//       console.log("list", list);
-//       localStorage.setItem("subModules", list);
-//     }
-//   }
-// },{immediate: true, deep: true})
-
-
+watch(()=> route.path, ()=>{
+  console.log("route==", route.meta);
+  let appCode = route.meta.appCode;
+  let moduleName = route.meta.moduleName;
+  let localAppCode = localStorage.getItem("appCode");
+  if(appCode && appCode != localAppCode){
+    store.dispatch("getSubModules", appCode);
+    localStorage.setItem("appCode", appCode);
+    localStorage.setItem("moduleName", moduleName);
+  }
+},{immediate: true})
 
 
 </script>

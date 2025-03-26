@@ -8,7 +8,7 @@
         </div>
         <div class="panelBody">
             <div class="chartPicklistWrapper">
-                <FhSelect label="选择图表" v-if="chartOptions.length" :options="chartOptions" @row="changeChart" />
+                <FhSelect label="选择图表" v-if="chartOptions.length" ref="selectRef" :options="chartOptions" :currentId="chartId" @row="changeChart" />
             </div>
             <div class="chartContainer">
                 <div id="showChart" style="width: 100%;height: 100%;"></div>
@@ -71,8 +71,8 @@
             </ul>
         </div>
     </div>
-    <NewChart :isShow="isNewChart" v-if="isNewChart" @cancel="isNewChart=false" :filterId="filterId" :sObjectName="sObjectName" @success="success" />
-    <Delete :isShow="isDelete" v-if="isDelete" @cancel="isDelete=false" desc="确定要删除当前图表吗？" sObjectName="ListViewChart" objTypeCode="1040" :recordId="recordId" @ok="getMethodData" />
+    <NewChart :isShow="isNewChart" v-if="isNewChart" @cancel="isNewChart=false" :filterId="filterId" :sObjectName="sObjectName" :recordId="recordId" @success="success" />
+    <Delete :isShow="isDelete" v-if="isDelete" @cancel="isDelete=false" desc="确定要删除当前图表吗？" sObjectName="ListViewChart" objTypeCode="1040" :recordId="recordId" @ok="deleteOk" />
 </template>
 <script setup>
     import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, h, nextTick, defineProps, defineEmits, defineExpose } from "vue";
@@ -89,6 +89,7 @@
         sObjectName: String
     })
     const emit = defineEmits(['close']);
+    const selectRef = ref(null);
     const data = reactive({
         isNewChart: false,
         chartType: "vbar", 
@@ -98,11 +99,13 @@
         chartOptions: [],
         listData: [],
         isDelete: false,
-        recordId: ""
+        recordId: "",
+        chartId: "",
+        title: ""
     });
-    const { isNewChart, chartType, chartTypes, chartActions, newChartAction, chartOptions, listData, isDelete, recordId } = toRefs(data);
+    const { isNewChart, chartType, chartTypes, chartActions, newChartAction, chartOptions, listData, isDelete, recordId, chartId, title } = toRefs(data);
     
-    const getMethodData = () => {
+    const getMethodData = async () => {
         let obj = {
             actions: [{
                 id: "0157;a",
@@ -117,18 +120,18 @@
         let d = {
             message: JSON.stringify(obj)
         }
-        proxy.$post(Interface.listView.chartData, d).then(res=>{
-            let { chartTypes, chartActions, newChartAction, chartOptions } = res.actions[0].returnValue;
-            data.chartTypes = chartTypes;
-            data.newChartAction = newChartAction;
-            data.chartActions = chartActions;
-            data.chartOptions = chartOptions;
-
-        })
+        
+        let res = await proxy.$post(Interface.listView.chartData, d);
+        let { chartTypes, chartActions, newChartAction, chartOptions } = res.actions[0].returnValue;
+        data.chartTypes = chartTypes;
+        data.newChartAction = newChartAction;
+        data.chartActions = chartActions;
+        data.chartOptions = chartOptions;
     }
     getMethodData();
     
     const getChartItems = (row) => {
+        data.title = row.label;
         let obj = {
             actions: [{
                 id: "4306;a",
@@ -162,9 +165,19 @@
 
         })
     }
-    const success = () => {
-        data.isNewChart = false;
+    const success = async (id) => {
+        // data.isNewChart = false;
+        data.chartId = id;
+        await getMethodData();
+        // selectRef.value.setCurrentOption();
+    };
+
+    const deleteOk = async () => {
+        data.chartId = "";
+        await getMethodData();
+        // selectRef.value.setCurrentOption();
     }
+
     const loadChartData = () => {
         nextTick(()=>{
             let lables = data.listData.map(item=>item.label);
@@ -209,7 +222,7 @@
                     },
                     yAxis: {
                         type: 'category',
-                        data: labels
+                        data: lables
                     },
                     series: [
                         {
@@ -218,7 +231,7 @@
                         }
                     ],
                     title: {
-                        text: "标题",
+                        text: data.title,
                         textStyle: {
                             textAlign: "center"
                         }
@@ -270,10 +283,14 @@
         data.isNewChart = true;
     };
     const handleActionsChart = (item) => {
+        console.log("item", item);
         if(item.devNameOrId=='NewObjectHomeChartAction'){
+            data.recordId = "";
             data.isNewChart = true;
         } else if(item.devNameOrId=='DeleteObjectHomeChartAction'){
             data.isDelete = true;
+        } else if(item.devNameOrId == 'EditObjectHomeChartAction'){
+            data.isNewChart = true;
         }
     }
     const handleCloseModal = () => {

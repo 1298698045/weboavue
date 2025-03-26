@@ -6,7 +6,7 @@ import { routesMapping } from "@/utils/routesMapping.js";
 export default createStore({
   state: {
     collapsed: false,
-    moduleName: localStorage.getItem("moduleName") || "",
+    moduleName: "",
     groupId: "",
     currentData: {}, // 当前模板数据
     tabListCurrent: 0, // 当前选中的tab
@@ -25,7 +25,6 @@ export default createStore({
     },
     setModuleName(state, val) {
       state.moduleName = val;
-      localStorage.setItem("moduleName", val);
     },
     setGroupId(state, val) {
       state.groupId = val;
@@ -188,10 +187,6 @@ export default createStore({
               if (splitPaths.length == 4 && subPath.indexOf("/lightning/o/") != -1) {
                 componentPath = () => import("../views/listView/index.vue");
                 subPath = subPath.replace(/\/o\/[^/]+$/, '/o/:sObjectName');
-              } else if(splitPaths.length == 5 && subPath.indexOf("/page/dashboard/") != -1){
-                // 处理通用门户
-                componentPath = () => import("../views/home/commonHome.vue");
-                subPath = subPath.replace(/\/dashboard\/[^/]+$/, '/dashboard/:sObjectName');
               } else {
                 componentPath = obj || (() => import("@/views/NotFound.vue"));
               }
@@ -217,23 +212,12 @@ export default createStore({
         });
         
         // 保存所有动态路由配置
-        allDynamicRoutes.forEach(item=>{
-          console.log("item.component", item.component);
-          item.component = String(item.component);
-          if(item.children && item.children.length){
-            item.children.forEach(row=>{
-              row.component = String(row.component);
-            })
-          }
-        })
-        console.log("allDynamicRoutes", allDynamicRoutes);
         commit('setDynamicRoutes', allDynamicRoutes);
         
         localStorage.setItem("appCode", modules[0].AppCode);
         commit('setModuleName', modules[0].Label);
         commit('setAppCode', modules[0].AppCode);
         router.push(modules[0].tabs[0].navAction.url);
-        // router.push("/workflow/o/instance/add");
       }
     },
     async getSubModules({ commit, state }, appCode) {

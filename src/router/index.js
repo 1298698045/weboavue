@@ -670,6 +670,29 @@ if (localStorage.getItem('savedRoutes')) {
   store.commit("setSubModules", subModules);
   store.commit("setModuleName", moduleName);
 }
+
+// 恢复动态路由
+if (store.state.dynamicRoutes.length > 0) {
+  store.state.dynamicRoutes.forEach(route => {
+      //   console.log("route", route);
+      if (!router.hasRoute(route.name)) {
+          if (route.children && route.children.length) {
+              route.children.forEach(row => {
+                  row.component = eval(row.component)
+              })
+          }
+          const newRoute = {
+              path: route.path,
+              name: route.name,
+              component: eval(route.component),
+              meta: route.meta,
+              children: route.children,
+          };
+          router.addRoute(newRoute);
+      }
+  });
+}
+
 router.beforeEach((to, from, next)=>{
   const route = router.resolve(to.path);
   if(route.matched.length > 0){

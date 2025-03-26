@@ -224,7 +224,7 @@
           <div class="btnGroup ml4">
             <a-tooltip placement="topLeft" title="图表">
               <a-button class="ant-btn-icon" :class="{'active':isChartModal}" title="图表"
-                @click="isChartModal=!isChartModal">
+                @click="handleShowChart">
                 <svg class="btn_icon" focusable="false" data-key="chart" aria-hidden="true" viewBox="0 0 520 520"
                   part="icon">
                   <g>
@@ -551,6 +551,8 @@
     refreshFilterLoad();
   }
   const handleShowSearch = () => {
+    data.isChartModal = false;
+    data.isFilterModal = false;
     data.isSearchModal = true;
   }
   const loadSearchQuery = (e) => {
@@ -859,8 +861,15 @@
         break;
     }
   };
+  const handleShowChart = () => {
+    data.isFilterModal = false;
+    data.isSearchModal = false;
+    data.isChartModal = true;
+  };
   // 显示筛选器
   const handleShowFilter = () => {
+    data.isChartModal = false;
+    data.isSearchModal = false;
     data.isFilterModal = true;
   };
   const closeFilterModal = () => {

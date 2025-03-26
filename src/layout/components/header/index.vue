@@ -449,7 +449,7 @@ const handleGoModule = (item) => {
   // console.log("item", item);
   store.commit('setModuleName',item.Label);
   localStorage.setItem("moduleName", item.Label);
-  emit("changeCode", item.AppCode);
+  emit("changeCode", item);
   // router.push({
   //     path:"/"+item.Name
   // });

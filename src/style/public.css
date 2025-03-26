@@ -333,6 +333,13 @@ a {
         margin-left: -1px;
     }
 }
+.ant-btn.active{
+    background: #1055BC;
+    color: #fff;
+    &:hover{
+        color: #fff !important;
+    }
+}
 .moreMenuBox{
     max-width: 500px;
     position: absolute;

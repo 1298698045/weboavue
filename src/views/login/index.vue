@@ -97,6 +97,8 @@
     }
     const formRef = ref(null);
     const formState = reactive({
+        userName: "jackliu",
+        // password: "Hospital@80",
         userName: "",
         password: "",
         captureId: ""

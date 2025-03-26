@@ -58,30 +58,77 @@ const state = reactive({
   rootSubmenuKeys: [],
 });
 
-watch(()=> store.state.moduleName, (newVal,oldVal)=>{
-  setTimeout(()=>{
-    data.appTabs = store.state.subModules.map(item=>{
-      item.label = item.navAction.label;
-      item.key = item.name;
-      item.icon = () => h("i", {
-        class: ["iconfont", "icon-tongxunlu1"],
-      });
-      return item;
-    });
-  }, 1000);
-}, {immediate: true, deep: true});
+// watch(()=> store.state.moduleName, (newVal,oldVal)=>{
+//   setTimeout(()=>{
+//     data.appTabs = store.state.subModules.map(item=>{
+//       item.label = item.navAction.label;
+//       item.key = item.name;
+//       item.icon = () => h("i", {
+//         class: ["iconfont", "icon-tongxunlu1"],
+//       });
+//       return item;
+//     });
+//   }, 1000);
+// }, {immediate: true, deep: true});
 
 // watch(()=> route.path, ()=>{
 //   state.selectedKeys = [route.name];
 // })
+
+// watch(()=> props.appCode, (newVal, oldVal)=>{
+//   console.log("appcode", newVal, oldVal);
+//   let modules = JSON.parse(localStorage.getItem("modules"));
+//   if(modules && modules.length){
+//     let subModules = modules.filter(item=>item.AppCode == newVal)[0].tabs;
+//     if(subModules && subModules.length){
+//       data.appTabs = subModules.map(item=>{
+//         item.label = item.navAction.label;
+//         item.key = item.name;
+//         item.icon = () => h("i", {
+//           class: ["iconfont", "icon-tongxunlu1"],
+//         });
+//         return item;
+//       });
+//     }
+//   }
+// }, {deep: true, immediate: true});
+
+watch(()=>route.path, (newVal, oldVal)=>{
+  if(router.hasRoute(route.name)){
+    console.log('hasRoute-appCode', route.meta.appCode);
+    let modules = JSON.parse(localStorage.getItem("modules"));
+    let findRow = modules.filter(item=>item.AppCode == route.meta.appCode);
+    let subModules = findRow[0].tabs;
+    store.commit("setModuleName", findRow[0].Label);
+    if(subModules && subModules.length){
+      data.appTabs = subModules.map(item=>{
+        item.label = item.navAction.label;
+        item.key = item.name;
+        item.icon = () => h("i", {
+          class: ["iconfont", "icon-tongxunlu1"],
+        });
+        return item;
+      });
+    }
+  }
+},{ immediate: true, deep: true });
 
 watch(
   () => route,
   (newRoute) => {
     // console.log("menu-route", newRoute.params.sObjectName);
     // state.selectedKeys = [newRoute.params.sObjectName || newRoute.name]; // 确保选中最新的路由名称
+    console.log("newRoute", newRoute);
     let menuName = localStorage.getItem("menuName");
-    state.selectedKeys = [newRoute.params.sObjectName || menuName || newRoute.name];
+    let name;
+    if(newRoute.params.sObjectName){
+      name = newRoute.params.sObjectName;
+    }else {
+      name = newRoute.name;
+    }
+    console.log("name", name);
+    // state.selectedKeys = [newRoute.params.sObjectName || menuName || newRoute.name];
+    state.selectedKeys = [name];
   },
   { immediate: true, deep: true }
 );
@@ -104,7 +151,7 @@ const onOpenChange = () => {}
   @import "../../../style/icon/document/font_p2dc72qnu9q/iconfont.css";
   @import "../../../style/icon/contract/font_jlf4hlwwgvr/iconfont.css";
 .menuContainer {
-  height: calc(~"100% - 40px");
+  height: calc(100% - 40px);
   overflow: auto;
 }
 </style>
