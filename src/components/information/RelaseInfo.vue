@@ -948,8 +948,14 @@ const getQuery = () => {
   data.peopleList = [];
   data.pagination.total = 0;
   let filterQuery = '';
-  if (data.FilterExpresssionList && data.FilterExpresssionList.length) {
-
+  let filterExpression = JSON.parse(data.filterExpression);
+  console.log(filterExpression,66666666)
+  if (filterExpression && filterExpression.length) {
+    filterExpression.forEach(v => {
+      if(v.operands&&v.operands.length){
+        filterQuery+='\n'+v.attribute+'\t'+v.operator+'\t'+v.operands.join(',');
+      }
+    });
   }
   proxy.$post(Interface.list2, {
     filterId: '',

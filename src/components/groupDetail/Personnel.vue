@@ -25,7 +25,7 @@
           <div class="rightOption">
             <a-button class="ml10" type="primary" @click="onSearch">查询</a-button>
             <a-button class="ml10" type="default" @click="onClear">重置</a-button>
-            <a-button class="ml10" type="default">导出</a-button>
+            <a-button class="ml10" type="default" @click="onExport">导出</a-button>
           </div>
         </div>
         <a-table :columns="columns" :dataSource="listData" :scroll="{ y: tableHeight }" :pagination="false"
@@ -93,7 +93,7 @@ import {
   ArrowDownOutlined,
 } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
-import { girdFormatterValue } from "@/utils/common.js";
+import { girdFormatterValue, commonExport } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 import RadioUser from "@/components/commonModal/MultipleUser.vue";
@@ -397,6 +397,60 @@ const DisplayOrderChange = (item, index, type) => {
       }
     }
   });
+}
+const onExport = () => {
+    let entityName = 'GroupMembership';
+    let displayColumns = 'RegardingObjectIdName,PhotoUrl,FullName,BusinessUnitIdName,RoleCode,MobilePhone,EMailAddress,WorkStatus,DisplayOrder';
+    let sortExpression = [
+        {
+            "label": "",
+            "name": "DisplayOrder",
+            "sort": "ASC"
+        }
+    ];
+    let conditionExpression = [
+        {
+            "column": 'GroupId',
+            "operands": [
+              props.id
+            ],
+            "operator": "eq",
+            "_conditionOperator": "Equal"
+        },
+        {
+            "column": 'RoleCode',
+            "operands": [
+            '0'
+            ],
+            "operator": "eq",
+            "_conditionOperator": "Equal"
+        }
+    ];
+  if (data.activeKey == 1) {
+    conditionExpression = [
+        {
+            "column": 'GroupId',
+            "operands": [
+              props.id
+            ],
+            "operator": "eq",
+            "_conditionOperator": "Equal"
+        },
+        {
+            "column": 'RoleCode',
+            "operands": [
+            '2'
+            ],
+            "operator": "eq",
+            "_conditionOperator": "Equal"
+        }
+    ];
+  }
+    let fileName = '小组成员';
+    if(data.activeKey == 1){
+      fileName = '小组管理员';
+    }
+    commonExport(entityName, displayColumns, sortExpression, conditionExpression, fileName);
 }
 onMounted(() => {
   let h = document.documentElement.clientHeight;

@@ -238,60 +238,6 @@ const res = require("@/localData/treedata.json");
 const gData = ref([]);
 const gDataAll = ref([]);
 
-//全部目录
-const getTreeData = () => {
-  gData.value = [];
-  gDataAll.value = [];
-  let url = Interface.content.folder.get;
-  let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-      }
-    }]
-  };
-  let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-      let formTree = (list) => {
-        list.forEach(item => {
-          if (item.children) {
-            formTree(item.children);
-          }
-          item.key = item.id;
-          item.value = item.id;
-          item.isFavor = item.isFavor || false;
-        })
-      }
-      let response = res.actions[0].returnValue;
-      formTree(response);
-      console.log("formTree", response);
-      gData.value = response;
-      gDataAll.value = response;
-    }
-  });
-  // proxy.$get(Interface.information.contentTree,{}).then((response)=>{
-  //     let formTree = (list) => {
-  //       list.forEach(item=>{
-  //         if(item.children){
-  //           formTree(item.children);
-  //         }
-  //         item.key = item.id;
-  //         item.value = item.id;
-  //         item.isFavor=item.isFavor||false;
-  //       })
-  //     }
-  //     formTree(response);
-  //     console.log("formTree",response)
-  //     gData.value = response;
-  //     gDataAll.value = response;
-  // })
-}
-
 //收藏目录
 const getFavorite = () => {
   gData.value = [];
@@ -581,6 +527,60 @@ const tabContent = ref(null);
 const contentRef = ref(null);
 let formSearchHeight = ref(null);
 const gridRef = ref(null);
+//全部目录
+const getTreeData = () => {
+  gData.value = [];
+  gDataAll.value = [];
+  let url = Interface.content.folder.get;
+  let d = {
+    actions: [{
+      id: "2919;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        search:data.searchVal
+      }
+    }]
+  };
+  let obj = {
+    message: JSON.stringify(d)
+  }
+  proxy.$post(url, obj).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+      let formTree = (list) => {
+        list.forEach(item => {
+          if (item.children) {
+            formTree(item.children);
+          }
+          item.key = item.id;
+          item.value = item.id;
+          item.isFavor = item.isFavor || false;
+        })
+      }
+      let response = res.actions[0].returnValue;
+      formTree(response);
+      console.log("formTree", response);
+      gData.value = response;
+      gDataAll.value = response;
+    }
+  });
+  // proxy.$get(Interface.information.contentTree,{}).then((response)=>{
+  //     let formTree = (list) => {
+  //       list.forEach(item=>{
+  //         if(item.children){
+  //           formTree(item.children);
+  //         }
+  //         item.key = item.id;
+  //         item.value = item.id;
+  //         item.isFavor=item.isFavor||false;
+  //       })
+  //     }
+  //     formTree(response);
+  //     console.log("formTree",response)
+  //     gData.value = response;
+  //     gDataAll.value = response;
+  // })
+}
 const leftTreeTopChange = (e) => {
   if (e == '全部目录') {
     getTreeData();
@@ -591,20 +591,21 @@ const leftTreeTopChange = (e) => {
   //console.log(e)
 }
 const onSearch = (e) => {
-  gData.value = gDataAll.value.filter(item => {
-    if (item.name.indexOf(data.searchVal) != -1) {
-      return item;
-    }
-    else {
-      if (item.children && item.children.length) {
-        for (var i = 0; i < item.children.length; i++) {
-          if (item.children[i].name.indexOf(data.searchVal) != -1) {
-            return item.children[i];
-          }
-        }
-      }
-    }
-  })
+  // gData.value = gDataAll.value.filter(item => {
+  //   if (item.name.indexOf(data.searchVal) != -1) {
+  //     return item;
+  //   }
+  //   else {
+  //     if (item.children && item.children.length) {
+  //       for (var i = 0; i < item.children.length; i++) {
+  //         if (item.children[i].name.indexOf(data.searchVal) != -1) {
+  //           return item.children[i];
+  //         }
+  //       }
+  //     }
+  //   }
+  // })
+  getTreeData();
 }
 const onSelect = (keys, { node }) => {
   //console.log(node)

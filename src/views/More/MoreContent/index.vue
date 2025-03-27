@@ -562,9 +562,10 @@ const handleDeptParams = (e) => {
     data.isRadioDept = false;
 };
 const onSearchTree = (e) => {
-    data.treeData = data.treeDataAll.filter(item => {
-        return item.name.indexOf(data.searchTreeVal) !== -1;
-    })
+    // data.treeData = data.treeDataAll.filter(item => {
+    //     return item.name.indexOf(data.searchTreeVal) !== -1;
+    // })
+    getTreeData();
 };
 // 右侧tab
 const changeRightTab = (e) => {

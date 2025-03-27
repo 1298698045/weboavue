@@ -4,7 +4,7 @@
             <div class="panel-head">
                 <div class="panel-title">{{ title }}</div>
                 <div class="panel-btn">
-                    <!-- <a-button class="ml10" type="primary">导出</a-button> -->
+                    <a-button class="ml10" type="primary" @click="exportData">导出</a-button>
                 </div>
             </div>
             <div class="panel-bd panel-bd1">
@@ -79,7 +79,7 @@ import {
     CheckCircleOutlined
 } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
-import { girdFormatterValue } from "@/utils/common.js";
+import { girdFormatterValue, commonExport } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 import RadioDept from "@/components/commonModal/RadioDept.vue";
@@ -310,6 +310,29 @@ const handleView = (id) => {
     data.isTaskDetail = true;
     //window.open('/#/lightning/r/Workflow/instance/detail?id='+id+'&reurl=');
 };
+const exportData = () => {
+    let entityName = props.entityApiName;
+    let displayColumns = data.displayColumns;
+    let sortExpression = [
+        {
+            "label": "",
+            "name": "CreatedOn",
+            "sort": "DESC"
+        }
+    ];
+    let conditionExpression = [
+        {
+            "column": props.RegardingObjectIdName,
+            "operands": [
+                props.id
+            ],
+            "operator": "eq",
+            "_conditionOperator": "Equal"
+        }
+    ];
+    let fileName = data.title;
+    commonExport(entityName, displayColumns, sortExpression, conditionExpression, fileName);
+}
 onMounted(() => {
     data.title = props.title;
     if (props.columns && props.columns.length) {

@@ -78,7 +78,7 @@
             <!-- <a-button class="ml10" type="primary" @click="AddPeople">邀请参与人</a-button> -->
             <a-button class="ml10" type="primary" @click="onSearch">查询</a-button>
             <a-button class="ml10" type="default" @click="onClear">重置</a-button>
-            <a-button class="ml10" type="default">导出</a-button>
+            <a-button class="ml10" type="default" @click="onExport">导出</a-button>
           </div>
         </div>
         <a-table :columns="columns" :dataSource="listData" :scroll="{ y: tableHeight }" :pagination="false"
@@ -178,7 +178,7 @@ import {
   ClockCircleOutlined
 } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
-import { girdFormatterValue } from "@/utils/common.js";
+import { girdFormatterValue, commonExport } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 import RadioDept from "@/components/commonModal/RadioDept.vue";
@@ -497,6 +497,36 @@ const getDetail = () => {
     }
   })
 
+}
+const onExport = () => {
+    let entityName = data.sObjectName;
+    let displayColumns = 'BusinessUnitName,ReaderId,IsRead,ReadOn,IPAddr';
+    let sortExpression = [
+        {
+            "label": "",
+            "name": "ReadOn",
+            "sort": "DESC"
+        }
+    ];
+    let conditionExpression = [
+        {
+            "column": 'ObjectId',
+            "operands": [
+                'A76FDE3A-41BD-4BBE-A67D-7A292DA31274'
+            ],
+            "operator": "eq",
+            "_conditionOperator": "Equal"
+        }
+    ];
+    let fileName = '';
+    if(data.IsRead == ''){
+      fileName = '全部记录';
+    }else if(data.IsRead == '0'){
+      fileName = '未读记录';
+    }else if(data.IsRead == '1'){
+      fileName = '已读记录';
+    }
+    commonExport(entityName, displayColumns, sortExpression, conditionExpression, fileName);
 }
 onMounted(() => {
   let h = document.documentElement.clientHeight;

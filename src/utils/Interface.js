@@ -491,6 +491,7 @@ const Interface = {
     revision: baseUrl + "/institution/revision", // 修订制度
     abolish: baseUrl + "/institution/abolish", // 废除制度
     batchAddStamp: baseUrl + "/institution/filestamp/batch" // 批量添加文件水印
-  }
+  },
+  commonExport: baseUrl + "/aura/data/pump/entity/export", // 通用导出
 };
 export default Interface;

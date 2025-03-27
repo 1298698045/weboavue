@@ -74,7 +74,7 @@
         <div class="detail-bd">
           <div class="tabContainer containerForm" v-if="activeKey == 0">
             <div class="tableBox">
-                <Editor v-if="isEditor" :mode="'doc'" placeholder="" ref="editorRef" :height="height" @input="getContent" />
+                <Editor v-if="isEditor" :mode="'doc'" placeholder="" ref="editorRef" :height="height" @input="getContent" :value="id" />
                 <div class="tableBox-Bottom">
                     <div class="tableBox-Bottom-Btn" @click="addDoc">
                         <span class="tableBox-Bottom-Btn-Icon">

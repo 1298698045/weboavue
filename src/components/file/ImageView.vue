@@ -922,6 +922,7 @@ onMounted(() => {
     //max-width: 80%;
     margin-top: 20px;
     border: 0;
+    width: 100% !important;
 }
 
 // :deep(.slick-arrow) {

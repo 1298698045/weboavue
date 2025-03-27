@@ -44,7 +44,44 @@
                                 </div>
                                 <div class="TEditorWrap CommentWrap" v-if="activeKey == '6000' || activeKey == '0'">
                                     <TEditor ref="editorRef" :placeholder="'有什么新鲜事想分享给大家?'" @input="getInputContent"
-                                        :height="230" />
+                                        :id="uploadId" :height="230" />
+                                    <div class="RelaseInfoUpload" v-if="ImageList.length">
+                                        <div class="uploadPanel">
+                                            <div class="inboxFileList">
+                                                <div class="inboxFileItem" v-for="(item, index) in ImageList"
+                                                    :key="index">
+                                                    <div class="FileInfo">
+                                                        <img :src="item.viewUrl" class="img" />
+                                                        <div class="fileOptionShow" :title="(item.name || '')">
+                                                            <div class="btns">
+                                                                <a-tooltip title="预览" placement="top">
+                                                                    <a-button type="text" :icon="h(EyeOutlined)"
+                                                                        @click="handlePreviewFile(item, index)"></a-button>
+                                                                </a-tooltip>
+                                                                <a-tooltip title="删除" placement="top">
+                                                                    <a-button type="text" :icon="h(CloseOutlined)"
+                                                                        @click="deleteFile(index)"></a-button>
+                                                                </a-tooltip>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="inboxFileItem">
+                                                    <a-upload-dragger accept="image/*" v-model:fileList="fileList"
+                                                        :headers="headers" @change="changeFiles" :data="uploadData"
+                                                        :action="Interface.information.uploadMedia"
+                                                        :customRequest="changeRequest" :showUploadList="false" multiple
+                                                        name="files" :before-upload="beforeUpload">
+                                                        <div class="uploadRow">
+                                                            <p class="ant-upload-drag-icon">
+                                                                <PlusOutlined />
+                                                            </p>
+                                                        </div>
+                                                    </a-upload-dragger>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="VoteWrap" v-if="activeKey == '30400'">
                                     <div class="VoteLabel">问题</div>
@@ -52,7 +89,10 @@
                                         :rows="3"></a-textarea>
                                     <template v-for="(item, index) in VoteOptions" :key="index">
                                         <div class="VoteLabel">选项{{ index + 1 }}</div>
-                                        <a-input class="VoteInput" v-model:value="item.name"></a-input>
+                                        <div class="VoteOption">
+                                            <a-input class="VoteInput" v-model:value="item.name"></a-input>
+                                            <DeleteOutlined title="删除选项" @click="deleteVoteOption(index)" />
+                                        </div>
                                     </template>
                                 </div>
                                 <div class="TEditorWrap QuestionWrap" v-if="activeKey == '30401' || activeKey == '1'">
@@ -61,7 +101,7 @@
                                         :rows="3"></a-textarea>
                                     <div class="QuestionLabel">详细信息</div>
                                     <TEditor ref="editorRef2" :placeholder="'如果您还需要补充，请在此处添加一些细节...'" :height="230"
-                                        @input="getInputContent2" />
+                                        :id="uploadId" @input="getInputContent2" />
                                 </div>
                             </div>
                             <div class="optionalWrap">
@@ -69,6 +109,14 @@
                                     v-if="activeKey == '30400'">
                                     <PlusOutlined />添加新选项
                                 </a-button>
+                                <a-upload v-if="activeKey == '0'" accept="image/*" v-model:fileList="fileList"
+                                    :headers="headers" @change="changeFiles" :data="uploadData"
+                                    :customRequest="changeRequest" :action="Interface.information.uploadMedia"
+                                    :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
+                                    <a-button type="primary" class="optionalWrapLeft">
+                                        <PlusOutlined />添加图片
+                                    </a-button>
+                                </a-upload>
                                 <a-button type="primary" class="optionalWrapRight" @click="handleSendStatus"
                                     :disabled="!data.text">发布</a-button>
                             </div>
@@ -125,6 +173,10 @@
                                         </div>
                                         <div class="commentContent" v-if="activeKey == '0'">
                                             <div v-html="item.Content || '暂无'" class="commentContentItem"></div>
+                                            <div class="commentContentItem picturesList" v-if="item.pictures.length">
+                                                <img v-for="(ite, idx) in item.pictures" :key="idx" :src="ite.viewUrl"
+                                                    class="img" />
+                                            </div>
                                         </div>
                                         <div class="commentContent" v-if="activeKey == '1'">
                                             <div v-html="item.Content || '暂无'" class="commentContentItem"></div>
@@ -136,7 +188,7 @@
                                                 <a-radio-group v-model:value="item.value" class="commentContentRadio"
                                                     :class="{ 'isSubmit': item.isSubmit }" :disabled="item.isSubmit"
                                                     @change="(e) => { ContentRadioChange(e, item) }">
-                                                    <a-radio v-for="(ite, idx) in item.Options" :key="idx"
+                                                    <a-radio v-for="(ite, idx) in item.options" :key="idx"
                                                         :style="radioStyle" :value="ite.pollOptionId">
                                                         {{ idx + 1 }}.{{ ite.name }}
                                                         <div v-if="item.isSubmit" class="option-percentage">
@@ -144,7 +196,7 @@
                                                                 :percent="ite.percentage" :size="8" :show-info="true"
                                                                 :title="'占比' + ite.percentage + '%'"></a-progress>
                                                             <span class="option-count">{{ ite.checkedQty || 0
-                                                            }}票&nbsp;&nbsp;&nbsp;&nbsp;{{
+                                                                }}票&nbsp;&nbsp;&nbsp;&nbsp;{{
                                                                     ite.percentage || 0
                                                                 }}%</span>
                                                         </div>
@@ -265,9 +317,13 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="empty" v-if="listData1[item.id].length == 0">
+                                                    <img :src="require('@/assets/img/empty.png')" alt="" />
+                                                    <p class="emptyDesc">当前暂无评论</p>
+                                                </div>
                                                 <div class="pagination">
-                                                    <a-pagination show-size-changer show-quick-jumper
-                                                        :pageSizeOptions="['10', '20', '50', '80', '100']"
+                                                    <a-pagination show-size-changer
+                                                        :pageSizeOptions="['5', '10', '20', '50', '80', '100']"
                                                         :pageSize="rows" @showSizeChange="sizeChange"
                                                         v-model:current="page" :total="total" @change="ChangePage"
                                                         :show-total="total => `共 ${total} 条`" />
@@ -276,16 +332,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="empty" v-if="listData.length == 0">
+                                    <img :src="require('@/assets/img/empty.png')" alt="" />
+                                    <p class="emptyDesc">当前暂无数据</p>
+                                </div>
+                                <div class="pagination">
+                                    <a-pagination show-size-changer :pageSizeOptions="['10', '20', '50', '80', '100']"
+                                        :pageSize="rows0" @showSizeChange="sizeChange0" v-model:current="page0"
+                                        :total="total0" @change="ChangePage0" :show-total="total0 => `共 ${total0} 条`" />
+                                </div>
                             </div>
-                            <!-- <div class="pagination">
-                                <a-pagination
-                                show-size-changer
-                                show-quick-jumper
-                                :pageSizeOptions="['10', '20', '50', '80', '100']"
-                                :pageSize="rows"
-                                @showSizeChange="sizeChange"
-                                v-model:current="page" :total="total" @change="ChangePage" :show-total="total => `共 ${total} 条`" />
-                            </div> -->
+
                         </div>
                     </div>
                 </div>
@@ -342,10 +399,11 @@
         </div>
         <Delete :isShow="isDelete" :desc="deleteDesc" :sObjectName="sObjectName" :recordId="recordId"
             :objTypeCode="objectTypeCode" :external="external" @cancel="closeDelete" @ok="deleteOk" />
+        <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
     </div>
 </template>
 <script setup>
-import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw, defineProps, nextTick } from "vue";
+import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw, defineProps, nextTick, h } from "vue";
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
@@ -357,13 +415,14 @@ import localeData from 'dayjs/plugin/localeData';
 dayjs.extend(calendar);
 dayjs.extend(weekday);
 dayjs.extend(localeData);
-import { UserOutlined, LikeOutlined, DeleteOutlined, ExportOutlined, MessageOutlined, BarsOutlined, MoreOutlined, SearchOutlined, LikeFilled, LoadingOutlined, PlusOutlined } from "@ant-design/icons-vue";
+import { UserOutlined, LikeOutlined, DeleteOutlined, ExportOutlined, MessageOutlined, BarsOutlined, MoreOutlined, SearchOutlined, LikeFilled, LoadingOutlined, PlusOutlined, CloseOutlined, EyeOutlined } from "@ant-design/icons-vue";
 import { notification } from 'ant-design-vue';
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import Delete from "@/components/listView/Delete.vue";
 import TEditor from "@/components/TEditor.vue";
+import ImageView from "@/components/file/ImageView.vue";
 const { proxy } = getCurrentInstance();
 const props = defineProps({
     title: String,
@@ -377,11 +436,15 @@ const radioStyle = reactive({
     height: '30px',
     lineHeight: '30px',
 });
+const token = localStorage.getItem("token");
 const data = reactive({
     listData: [],
     listData1: {},
+    page0: 1,
+    rows0: 10,
+    total0: 0,
     page: 1,
-    rows: 10,
+    rows: 5,
     total: 0,
     text: "",
     description: "",
@@ -396,6 +459,7 @@ const data = reactive({
     OwningUser: '',
     OwningUserName: '',
     id: '',
+    uploadId: '',
     item: {},
     keyIndex: 1,
     selectmenu: 1,
@@ -415,12 +479,46 @@ const data = reactive({
             name: '',
             displayOrder: 3
         },
-    ]
+    ],
+    fileList: [],
+    ImageList: [],
+    uploadData: {
+        id: ''
+    },
+    headers: {
+        Authorization: token,
+        Token: token,
+    },
+    isPhoto: false,
+    photoParams: {},
 })
-const { id, item, VoteOptions, activeKey, loading, typeitem, type, OwningUserName, listData1, selectmenu, keyIndex, listData, page, rows, total, text, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
+const { fileList, ImageList, uploadData, headers, isPhoto, photoParams, id, uploadId, item, VoteOptions, activeKey, loading, typeitem, type, OwningUserName, listData1, selectmenu, keyIndex, listData, page0, rows0, total0, page, rows, total, text, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
 const changeMenu = (e) => {
     data.selectmenu = e;
     data.keyIndex = 1;
+    data.ImageList = [];
+    data.VoteOptions = [
+        {
+            name: '',
+            displayOrder: 1
+        },
+        {
+            name: '',
+            displayOrder: 2
+        },
+        {
+            name: '',
+            displayOrder: 3
+        },
+    ];
+    data.text = "";
+    data.description = "";
+    if (data.activeKey == '0') {
+        editorRef.value.content = "";
+    }
+    if (data.activeKey == '1') {
+        editorRef2.value.content = "";
+    }
     getStatusList();
 }
 const getValue = (list) => {
@@ -429,10 +527,12 @@ const getValue = (list) => {
 }
 const getStatusList = () => {
     data.loading = true;
-    if (data.keyIndex) { } else { return false }
-    if (data.keyIndex == 1) {
-        data.listData = [];
-    }
+    // if (data.keyIndex) { } else { return false }
+    // if (data.keyIndex == 1) {
+    //     data.listData = [];
+    // }
+    data.total0 = 0;
+    data.listData = [];
     let url = Interface.status.query;
     if (data.selectmenu == 2) {
         url = Interface.status.mine;
@@ -443,8 +543,8 @@ const getStatusList = () => {
             descriptor: "",
             callingDescriptor: "UNKNOWN",
             params: {
-                pageSize: 10,
-                pageNumber: data.keyIndex,
+                pageSize: data.rows0,
+                pageNumber: data.page0,
                 ChatterTypeCode: data.activeKey,
                 search: data.searchVal || ''
             }
@@ -456,6 +556,7 @@ const getStatusList = () => {
     proxy.$post(url, obj).then(res => {
         var list = [];
         if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.rows) {
+            data.total0 = res.actions[0].returnValue.total || res.actions[0].returnValue.rows.length || 0;
             for (var i = 0; i < res.actions[0].returnValue.rows.length; i++) {
                 var item = res.actions[0].returnValue.rows[i];
                 for (var cell in item) {
@@ -470,24 +571,36 @@ const getStatusList = () => {
                 item['NumOfLike'] = item.numOfLike || 0;
                 item['NumOfComment'] = item.numOfComment || 0;
                 item['IsLike'] = item.isLike * 1 == 1 ? true : false;
-                item['Options'] = item.options || [];
+                item['options'] = item.options || [];
                 item['value'] = item.options && item.options.length ? getValue(item.options) : '';
-                for (var j = 0; j < item.Options.length; j++) {
-                    let ite = item.Options[j];
-                    ite.percentage = ite.checkedQty && ite.checkedQty * 1 ? ((ite.checkedQty * 1 / ite.checkedQty * 1) * 100).toFixed(1) : 0;
+                item['pictures'] = item.pictures || [];
+                item['totalPeople'] = item.totalPeople || 0;
+                for (var j = 0; j < item.options.length; j++) {
+                    let ite = item.options[j];
+                    ite.percentage = ite.checkedQty && item.totalPeople ? ((ite.checkedQty * 1 / item.totalPeople * 1) * 100).toFixed(1) : 0;
                 }
                 list.push(item);
             }
         }
-        if (list && list.length) {
-            data.listData = data.listData.concat(list);
-        }
+        // if (list && list.length) {
+        //     data.listData = data.listData.concat(list);
+        // }
+        data.listData = list;
     })
     setTimeout(function () {
         data.loading = false;
     }, 500)
 }
-//改变页码
+//改变页码-状态
+const ChangePage0 = (page, pageSize) => {
+    data.page0 = page;
+    data.rows0 = pageSize;
+    getStatusList();
+}
+const sizeChange0 = (current, size) => {
+    ChangePage0(current, size)
+}
+//改变页码-评论
 const ChangePage = (page, pageSize) => {
     data.page = page;
     data.rows = pageSize;
@@ -525,6 +638,10 @@ const handleSendStatus = () => {
                 }
             }]
         };
+        if (data.activeKey == '0') {
+            url = Interface.status.submit;
+            d.actions[0].params.pictures = data.ImageList;
+        }
         if (data.activeKey == '1') {
             url = Interface.question.submit;
             d.actions[0].params.description = data.description;
@@ -540,7 +657,22 @@ const handleSendStatus = () => {
             if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
                 message.success("发布成功！");
                 data.keyIndex = 1;
-                getStatusList();
+                data.page0 = 1;
+                data.ImageList = [];
+                data.VoteOptions = [
+                    {
+                        name: '',
+                        displayOrder: 1
+                    },
+                    {
+                        name: '',
+                        displayOrder: 2
+                    },
+                    {
+                        name: '',
+                        displayOrder: 3
+                    },
+                ];
                 data.text = "";
                 data.description = "";
                 if (data.activeKey == '0') {
@@ -549,6 +681,7 @@ const handleSendStatus = () => {
                 if (data.activeKey == '1') {
                     editorRef2.value.content = "";
                 }
+                getStatusList();
             }
         });
     }
@@ -667,6 +800,7 @@ const closeDelete = (e) => {
 const deleteOk = (e) => {
     if (data.type * 1 == 1) {
         data.keyIndex = 1;
+        data.page0 = 1;
         getStatusList();
     }
     else {
@@ -676,10 +810,12 @@ const deleteOk = (e) => {
 const loadQuestionData = (e) => {
     data.searchVal = e;
     data.keyIndex = 1;
+    data.page0 = 1;
     getStatusList();
 };
 const onSearch = () => {
     data.keyIndex = 1;
+    data.page0 = 1;
     getStatusList();
 }
 const getInputContent = (e) => {
@@ -691,9 +827,30 @@ const getInputContent2 = (e) => {
 const addQuestionOption = () => {
     data.VoteOptions.push({ name: '', displayOrder: data.VoteOptions.length + 1 });
 };
+const deleteVoteOption = (index) => {
+    data.VoteOptions.splice(index, 1);
+};
 const changeTab = (e) => {
+    data.ImageList = [];
+    data.VoteOptions = [
+        {
+            name: '',
+            displayOrder: 1
+        },
+        {
+            name: '',
+            displayOrder: 2
+        },
+        {
+            name: '',
+            displayOrder: 3
+        },
+    ];
     data.activeKey = e;
     data.keyIndex = 1;
+    data.page0 = 1;
+    data.text = "";
+    data.description = "";
     getStatusList();
 }
 //获取评论点赞
@@ -882,12 +1039,13 @@ const handlePoll = (item) => {
         if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
             message.success("投票成功！");
             item.isSubmit = true;
-            for (var j = 0; j < item.Options.length; j++) {
-                if (item.Options[j].pollOptionId == item.value) {
-                    item.Options[j].isChecked = true;
-                    item.Options[j].checkedQty = item.Options[j].checkedQty * 1 > 0 ? item.Options[j].checkedQty * 1 + 1 : 1;
+            item.totalPeople = item.totalPeople * 1 + 1;
+            for (var j = 0; j < item.options.length; j++) {
+                if (item.options[j].pollOptionId == item.value) {
+                    item.options[j].isChecked = true;
+                    item.options[j].checkedQty = item.options[j].checkedQty * 1 > 0 ? item.options[j].checkedQty * 1 + 1 : 1;
                 }
-
+                item.options[j].percentage = item.options[j].checkedQty && item.totalPeople ? ((item.options[j].checkedQty * 1 / (item.totalPeople * 1)) * 100).toFixed(1) : 0;
             }
         }
         else {
@@ -899,6 +1057,49 @@ const handlePoll = (item) => {
             }
         }
     });
+}
+const getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+const beforeUpload = (e) => {
+    //console.log("beforeUpload", e);
+    if (e) {
+        getBase64(e).then(imageUrl => {
+            data.ImageList.push({
+                id: e.uid,
+                downloadUrl: imageUrl,
+                viewUrl: imageUrl,
+                fileExtension: 'png',
+                name: e.name
+            })
+        });
+        //message.success("上传成功！");
+    }
+}
+const changeFiles = (e) => {
+    //console.log("changeFiles", e);
+}
+const changeRequest = (e) => {
+    //console.log("changeRequest", e);
+}
+//预览图片
+const handlePreviewFile = (item, index) => {
+    data.photoParams = {
+        id: item.id,
+        item: item,
+        imageList: data.ImageList,
+        index: index
+    };
+    data.isPhoto = true;
+};
+//删除图片
+const deleteFile = (index) => {
+    data.ImageList.splice(index, 1);
 }
 onMounted(() => {
     let userInfo = window.localStorage.getItem('userInfo');
@@ -931,7 +1132,7 @@ onMounted(() => {
                 (clientHeight + scrollTop >= scrollHeight)
             ) {
                 data.keyIndex = data.keyIndex + 1;
-                getStatusList();
+                //getStatusList();
             }
         },
         true
@@ -975,6 +1176,10 @@ onMounted(() => {
         .optionalWrap {
             text-align: right;
             padding-top: 10px;
+
+            .ant-upload-wrapper {
+                float: left;
+            }
 
             .optionalWrapLeft {
                 float: left;
@@ -1374,7 +1579,9 @@ onMounted(() => {
     }
 
     .panelCommunityCommentWrap .pagination {
-        margin: 10px 15px 8px;
+        padding: 15px 15px 13px;
+        background: #fff;
+        margin-top: 0;
     }
 
     .commentBtn {
@@ -1445,7 +1652,7 @@ onMounted(() => {
 
         .commentBtn {
             display: block;
-            margin-top: 10px;
+            margin-top: 0px;
             text-align: right !important;
         }
 
@@ -1531,6 +1738,26 @@ onMounted(() => {
 }
 
 .CommunityCommentWrap {
+    .empty {
+        height: 140px !important;
+        margin-bottom: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        color: #666;
+        background: #fff;
+
+        img {
+            width: 50px;
+        }
+
+        .emptyDesc {
+            font-size: 14px;
+        }
+    }
+
     .VoteWrap {
         padding: 15px;
     }
@@ -1550,6 +1777,15 @@ onMounted(() => {
         margin-bottom: 6px;
     }
 
+    .VoteOption {
+        display: flex;
+
+        .anticon {
+            margin-left: 10px;
+            position: relative;
+            top: -3px;
+        }
+    }
 
     .option-percentage {
         width: 100%;
@@ -1567,6 +1803,10 @@ onMounted(() => {
             .ant-progress-outer {
                 padding-right: 15px !important;
                 padding-top: 3px !important;
+            }
+
+            .ant-progress-bg {
+                background-color: #1677ff !important;
             }
 
             .anticon-check-circle,
@@ -1637,6 +1877,104 @@ onMounted(() => {
         .ant-radio {
             position: relative;
             top: -13px;
+        }
+    }
+
+    .RelaseInfoUpload {
+        height: auto;
+        width: 100%;
+        padding: 0;
+
+        .uploadPanel {
+            .ant-upload-drag {
+                background: transparent !important;
+                width: 124px;
+                border: none !important;
+            }
+
+            .ant-upload-wrapper {
+                width: 124px !important;
+                display: inline-block;
+            }
+
+            .uploadRow {
+                height: 100%;
+                line-height: 115px;
+            }
+        }
+
+        .uploadPanel {
+            .inboxFileList {
+                display: flex;
+                flex-wrap: wrap;
+                margin-top: 20px;
+                position: relative;
+                left: 4px;
+
+                .ant-btn.ant-btn-text,
+                .ant-btn.ant-btn-text:hover {
+                    color: #000 !important;
+                }
+
+                .inboxFileItem {
+                    width: 134px;
+                    height: 134px;
+                    border-radius: 4px;
+                    background: #f2f3f5;
+                    padding: 5px;
+                    box-sizing: border-box;
+                    margin-right: 10px;
+                    margin-bottom: 10px;
+                    cursor: pointer;
+                    display: flex;
+                    overflow: hidden;
+                    position: relative;
+
+                    .FileInfo {
+                        flex: 1;
+                        margin-left: 0px;
+                        overflow: hidden;
+                        color: #1d2129;
+                        width: 124px;
+                        height: 124px;
+                        position: relative;
+                        top: 0px;
+
+                        img {
+                            width: 124px;
+                            height: 124px;
+                        }
+
+                        .fileSize {
+                            color: #4e5969;
+                            padding-top: 4px;
+                        }
+
+                        .fileOptionShow {
+                            position: absolute;
+                            width: calc(~"100% - 0px");
+                            height: 124px;
+                            left: 0;
+                            top: 0;
+                            background: rgba(242, 243, 245, .8);
+                            display: none;
+
+                            .btns {
+                                display: flex;
+                                align-items: center;
+                                height: 100%;
+                                justify-content: center;
+                                padding-right: 0px;
+                                box-sizing: border-box;
+                            }
+                        }
+                    }
+
+                    &:hover .fileOptionShow {
+                        display: block;
+                    }
+                }
+            }
         }
     }
 }
