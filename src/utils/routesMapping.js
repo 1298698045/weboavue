@@ -240,10 +240,7 @@ export const routesMapping = {
         //     isCommon: true
         // },
     },
-    //文件管理
-    File: {
-        FileManager: () => import("../views/fileAdmin/index.vue")
-    },
+    //网盘
     CloudFile: {
         FileManager: () => import("../views/fileAdmin/index.vue")
     }

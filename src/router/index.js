@@ -440,7 +440,8 @@ const staticRoutes = [
     component: Layout,
     redirect: "/lightning/page/knowledge/RuleArticleMine/home",
     meta: {
-      name: "制度文件"
+      name: "制度文件",
+      appCode:"02u90000009"
     },
     children: [
       {
@@ -508,11 +509,22 @@ const staticRoutes = [
     path: "/OfficialDocument",
     name: "OfficialDocument",
     component: Layout,
-    redirect: "/lightning/o/official/doc/Oversee",
+    redirect: "/lightning/page/OfficialDocument/dashboard",
     meta: {
-      name: "公文管理"
+      name: "公文管理",
+      appCode:"02d90000083"
     },
     children: [
+      {
+        path: "/lightning/page/OfficialDocument/dashboard",
+        component: () => import("../views/documentAdmin/home/index.vue"),
+        name: "OfficialDocumentHome",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "公文中心",
+          icon: "huiyicanhuiren"
+        },
+      },
       {
         path: "/lightning/o/official/doc/Oversee",
         component: () => import("../views/listView/index2.vue"),
@@ -560,13 +572,67 @@ const staticRoutes = [
     children: [
       {
         path: "/lightning/page/ContentFolderTree",
-        //component: () => import("../views/listView/index2.vue"),
         component: () => import("../views/ContentFolderTree/index.vue"),
         name: "ContentFolderManage",
         icon: "huiyicanhuiren",
         meta: {
           name: "目录管理",
           icon: "huiyicanhuiren",
+        }
+      }
+    ]
+  },
+  {
+    path: "/Reimburse",
+    name: "Reimburse",
+    component: Layout,
+    redirect: "/lightning/page/dashboard/MyReimburse",
+    meta: {
+      name: "我的报账",
+      appCode:"02r90001800"
+    },
+    children: [
+      {
+        path: "/lightning/page/dashboard/MyReimburse",
+        component: () => import("../views/home/commonHome.vue"),
+        name: "MyReimburse",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "主页",
+          icon: "huiyicanhuiren"
+        }
+      },
+      {
+        path: "/lightning/page/ReimburseTravelMy/home",
+        name: "ReimburseTravelMy",
+        component: () => import("../views/listView/index2.vue"),
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "我的差旅报销",
+          icon: "huiyicanhuiren",
+          entityType:'F05',
+          objectTypeCode:'7005',
+          entityName:'ReimburseTravelExpense',
+        },
+      },
+      {
+        path: "/lightning/page/ReimburseMine/home",
+        component: () => import("../views/reimburse/reimburseMine/index.vue"),
+        name: "ReimburseMine",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "我的报账",
+          icon: "huiyicanhuiren"
+        }
+      },
+      {
+        path: "/lightning/page/MyInvoice/home",
+        component: () => import("../views/reimburse/myInvoice/index.vue"),
+        name: "MyInvoice",
+        icon: "huiyicanhuiren",
+        meta: {
+          name: "我的发票",
+          icon: "huiyicanhuiren"
         }
       }
     ]

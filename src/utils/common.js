@@ -1,6 +1,4 @@
-import axios from "axios";
 import Interface from "@/utils/Interface.js";
-import { message } from "ant-design-vue";
 // 格式化树结构
 export const formTreeData = (list, id, pid) => {
   var result = [];

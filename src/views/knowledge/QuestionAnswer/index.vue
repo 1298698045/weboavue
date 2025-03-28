@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div>
-            <div class="middleContent">
+            <div class="middleContent" v-if="!isShowDetail">
                 <div class="panel panel1">
                     <div class="panel-bd">
                         <div class="panelCommunityCommentWrap">
@@ -85,7 +85,7 @@
                                             <DeleteOutlined title="删除选项" @click="deleteVoteOption(index)" />
                                         </div>
                                     </template>
-                                </div> -->
+</div> -->
                                 <div class="TEditorWrap QuestionWrap" v-if="activeKey == '30401' || activeKey == '1'">
                                     <div class="QuestionLabel">问题</div>
                                     <a-textarea class="Votetextarea" v-model:value="data.text" placeholder="有什么问题需要解答？"
@@ -155,6 +155,226 @@
                                                     <a-menu>
                                                         <a-menu-item
                                                             v-if="item.OwningUserId && data.OwningUser && data.OwningUser == item.OwningUserId"
+                                                            @click.stop="handleDelete(item.id, 1, '')">
+                                                            <DeleteOutlined /><span class="a-menu-item-label">删除</span>
+                                                        </a-menu-item>
+                                                    </a-menu>
+                                                </template>
+                                            </a-dropdown>
+                                        </div>
+                                        <div class="commentContent" v-if="activeKey == '0'" @click="handleDetail(item)">
+                                            <div v-html="item.Content || '暂无'" class="commentContentItem"></div>
+                                            <div class="commentContentItem picturesList" v-if="item.pictures.length">
+                                                <img v-for="(ite, idx) in item.pictures" :key="idx" :src="ite.viewUrl"
+                                                    class="img" />
+                                            </div>
+                                        </div>
+                                        <div class="commentContent" v-if="activeKey == '1'" @click="handleDetail(item)">
+                                            <div v-html="item.Content || '暂无'" class="commentContentItem"></div>
+                                            <div v-html="item.Description" class="commentContentItem"></div>
+                                        </div>
+                                        <div class="commentContent" v-if="activeKey == '30400'"
+                                            @click="handleDetail(item)">
+                                            <div class="VoteItem">
+                                                <div v-html="item.Content || '暂无'" class="commentContentItem"></div>
+                                                <a-radio-group v-model:value="item.value" class="commentContentRadio"
+                                                    :class="{ 'isSubmit': item.isSubmit }" :disabled="item.isSubmit"
+                                                    @change="(e) => { ContentRadioChange(e, item) }">
+                                                    <a-radio v-for="(ite, idx) in item.options" :key="idx"
+                                                        :style="radioStyle" :value="ite.pollOptionId">
+                                                        {{ idx + 1 }}.{{ ite.name }}
+                                                        <div v-if="item.isSubmit" class="option-percentage">
+                                                            <a-progress class="option-progress"
+                                                                :percent="ite.percentage" :size="8" :show-info="true"
+                                                                :title="'占比' + ite.percentage + '%'"></a-progress>
+                                                            <span class="option-count">{{ ite.checkedQty || 0
+                                                                }}票&nbsp;&nbsp;&nbsp;&nbsp;{{
+                                                                    ite.percentage || 0
+                                                                }}%</span>
+                                                        </div>
+                                                    </a-radio>
+                                                </a-radio-group>
+                                                <div class="vote-shur-btn">
+                                                    <div v-if="item.isSubmit" class="disabled">你已投票</div>
+                                                    <div v-if="!item.isSubmit" :class="{ 'disabled': !item.value }"
+                                                        @click.stop="handlePoll(item)">提交</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="commentBtn">
+                                            <span class="commentBtn-item" title="分享">
+                                                <ExportOutlined /><span>{{ item.NumOfForward || 0 }}</span>
+                                            </span>
+                                            <span class="commentBtn-item" title="评论" v-if="!item.IsShowReply"
+                                                @click.stop="getCommentList(item.id, item)">
+                                                <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
+                                            </span>
+                                            <span class="commentBtn-item" title="评论" v-if="item.IsShowReply"
+                                                @click.stop="item.IsShowReply = false" style="color: #1677ff;">
+                                                <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
+                                            </span>
+                                            <span class="commentBtn-item" title="点赞" v-if="!item.IsLike"
+                                                @click.stop="handleLike1(item)">
+                                                <LikeOutlined /><span>{{ item.NumOfLike || 0 }}</span>
+                                            </span>
+                                            <span class="commentBtn-item" title="取消点赞" v-if="item.IsLike"
+                                                @click.stop="handleLike1(item)" style="color: red;">
+                                                <LikeFilled /><span>{{ item.NumOfLike || 0 }}</span>
+                                            </span>
+                                        </div>
+                                        <div class="commentReply" v-if="item.IsShowReply">
+                                            <div class="commentBox">
+                                                <div class="leftAvatar">
+                                                    <a-avatar :size="37">
+                                                        <!-- <template #icon><UserOutlined /></template> -->
+                                                        <img :src="'/api/one/user/avatar/' + data.OwningUser" alt=""
+                                                            class="commentAvatar" />
+                                                    </a-avatar>
+                                                </div>
+                                                <div class="rightTextare">
+                                                    <textarea class="textarea" v-model="item.comment"
+                                                        placeholder-class="placeholder" placeholder="" name="" id=""
+                                                        cols="30" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="optionalWrap">
+                                                <a-button type="primary"
+                                                    @click.stop="handleSendComment(item, item)">评论</a-button>
+                                            </div>
+                                            <div class="commentList">
+                                                <div class="commentItemBox"
+                                                    v-for="(item1, index1) in listData1[item.id]" :key="index1">
+                                                    <div class="leftAvatar">
+                                                        <a-avatar :size="37">
+                                                            <!-- <template #icon><UserOutlined /></template> -->
+                                                            <img :src="'/api/one/user/avatar/' + item1.OwningUserId"
+                                                                alt="" class="commentAvatar" />
+                                                        </a-avatar>
+                                                    </div>
+                                                    <div class="rightComment">
+                                                        <div class="commentName">{{ item1.Title || item1.OwningUser ||
+                                                            '暂无' }}
+                                                        </div>
+                                                        <div class="commentTime">
+                                                            {{ item1.CreatedOn }}
+                                                        </div>
+                                                        <div class="commentContent">{{ item1.Content || '暂无' }}
+                                                        </div>
+                                                        <div class="commentBtn">
+                                                            <span class="commentBtn-item" title="删除"
+                                                                v-if="item1.OwningUserId && data.OwningUser && data.OwningUser == item1.OwningUserId"
+                                                                @click.stop="handleDelete(item1.id, 2, item)">
+                                                                <DeleteOutlined />
+                                                            </span>
+                                                            <span class="commentBtn-item" title="回复"
+                                                                v-if="!item1.IsShowReply"
+                                                                @click.stop="item1.IsShowReply = true">
+                                                                <MessageOutlined /><span></span>
+                                                            </span>
+                                                            <span class="commentBtn-item" title="回复"
+                                                                v-if="item1.IsShowReply"
+                                                                @click.stop="item1.IsShowReply = false"
+                                                                style="color: #1677ff;">
+                                                                <MessageOutlined /><span></span>
+                                                            </span>
+                                                            <span class="commentBtn-item" title="点赞"
+                                                                v-if="!item1.IsLike"
+                                                                @click.stop="handleLike2(item1, true)">
+                                                                <LikeOutlined /><span>{{ item1.NumOfLike || 0 }}</span>
+                                                            </span>
+                                                            <span class="commentBtn-item" title="取消点赞"
+                                                                v-if="item1.IsLike"
+                                                                @click.stop="handleLike2(item1, false)"
+                                                                style="color: red;">
+                                                                <LikeFilled /><span>{{ item1.NumOfLike || 0 }}</span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="commentReply" v-if="item1.IsShowReply">
+                                                            <div class="commentBox">
+                                                                <div class="leftAvatar">
+                                                                    <a-avatar :size="37">
+                                                                        <!-- <template #icon><UserOutlined /></template> -->
+                                                                        <img :src="'/api/one/user/avatar/' + data.OwningUser"
+                                                                            alt="" class="commentAvatar" />
+                                                                    </a-avatar>
+                                                                </div>
+                                                                <div class="rightTextare">
+                                                                    <textarea class="textarea" v-model="item1.comment"
+                                                                        placeholder-class="placeholder" placeholder=""
+                                                                        name="" id="" cols="30" rows="3"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="optionalWrap">
+                                                                <a-button type="primary"
+                                                                    @click.stop="handleSendComment(item, item1)">回复</a-button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="empty"
+                                                    v-if="listData1[item.id] && listData1[item.id].length == 0">
+                                                    <img :src="require('@/assets/img/empty.png')" alt="" />
+                                                    <p class="emptyDesc">当前暂无评论</p>
+                                                </div>
+                                                <div class="pagination">
+                                                    <a-pagination show-size-changer
+                                                        :pageSizeOptions="['5', '10', '20', '50', '80', '100']"
+                                                        :pageSize="rows" @showSizeChange="sizeChange"
+                                                        v-model:current="page" :total="total" @change="ChangePage"
+                                                        :show-total="total => `共 ${total} 条`" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="empty" v-if="listData.length == 0">
+                                    <img :src="require('@/assets/img/empty.png')" alt="" />
+                                    <p class="emptyDesc">当前暂无数据</p>
+                                </div>
+                                <div class="pagination">
+                                    <a-pagination show-size-changer :pageSizeOptions="['10', '20', '50', '80', '100']"
+                                        :pageSize="rows0" @showSizeChange="sizeChange0" v-model:current="page0"
+                                        :total="total0" @change="ChangePage0" :show-total="total0 => `共 ${total0} 条`" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="middleContent detailContent" v-if="isShowDetail">
+                <div class="panel panel2">
+                    <div class="panel-bd">
+                        <div class="panelCommunityCommentWrap">
+                            <div class="commentSearch">
+                                <div class="detailContentTop">
+                                    <LeftOutlined class="detailContentTopIcon" @click="returnBack" />
+                                    <span class="detailContentTopText">问题详情</span>
+                                </div>
+                            </div>
+                            <div class="commentList">
+                                <div class="commentItemBox" v-for="(item, index) in listData" :key="index">
+                                    <div class="leftAvatar">
+                                        <a-avatar :size="37">
+                                            <!-- <template #icon><UserOutlined /></template> -->
+                                            <img :src="'/api/one/user/avatar/' + item.OwningUserId" alt=""
+                                                class="commentAvatar" />
+                                        </a-avatar>
+                                    </div>
+                                    <div class="rightComment">
+                                        <div class="commentName">{{ item.OwningUser || '暂无' }}</div>
+                                        <div class="commentTime">
+                                            {{ item.CreatedOn }}
+                                        </div>
+                                        <div class="commentMore">
+                                            <a-dropdown :trigger="['hover']" class="ml10">
+                                                <span class="btn-drop">
+                                                    <MoreOutlined />
+                                                </span>
+                                                <template #overlay>
+                                                    <a-menu>
+                                                        <a-menu-item
+                                                            v-if="item.OwningUserId && data.OwningUser && data.OwningUser == item.OwningUserId"
                                                             @click="handleDelete(item.id, 1, '')">
                                                             <DeleteOutlined /><span class="a-menu-item-label">删除</span>
                                                         </a-menu-item>
@@ -187,7 +407,7 @@
                                                                 :percent="ite.percentage" :size="8" :show-info="true"
                                                                 :title="'占比' + ite.percentage + '%'"></a-progress>
                                                             <span class="option-count">{{ ite.checkedQty || 0
-                                                            }}票&nbsp;&nbsp;&nbsp;&nbsp;{{
+                                                                }}票&nbsp;&nbsp;&nbsp;&nbsp;{{
                                                                     ite.percentage || 0
                                                                 }}%</span>
                                                         </div>
@@ -204,14 +424,14 @@
                                             <span class="commentBtn-item" title="分享">
                                                 <ExportOutlined /><span>{{ item.NumOfForward || 0 }}</span>
                                             </span>
-                                            <span class="commentBtn-item" title="评论" v-if="!item.IsShowReply"
-                                                @click="item.IsShowReply = true; getCommentList(item.id, item)">
+                                            <span class="commentBtn-item" title="评论"
+                                                @click="getCommentList(item.id, item)">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
                                             </span>
-                                            <span class="commentBtn-item" title="评论" v-if="item.IsShowReply"
+                                            <!-- <span class="commentBtn-item" title="评论" v-if="item.IsShowReply"
                                                 @click="item.IsShowReply = false" style="color: #1677ff;">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
-                                            </span>
+                                            </span> -->
                                             <span class="commentBtn-item" title="点赞" v-if="!item.IsLike"
                                                 @click="handleLike1(item)">
                                                 <LikeOutlined /><span>{{ item.NumOfLike || 0 }}</span>
@@ -238,7 +458,7 @@
                                             </div>
                                             <div class="optionalWrap">
                                                 <a-button type="primary"
-                                                    @click="handleSendComment(item, item)">发布</a-button>
+                                                    @click="handleSendComment(item, item)">评论</a-button>
                                             </div>
                                             <div class="commentList">
                                                 <div class="commentItemBox"
@@ -308,7 +528,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="empty" v-if="listData1[item.id].length == 0">
+                                                <div class="empty"
+                                                    v-if="listData1[item.id] && listData1[item.id].length == 0">
                                                     <img :src="require('@/assets/img/empty.png')" alt="" />
                                                     <p class="emptyDesc">当前暂无评论</p>
                                                 </div>
@@ -326,11 +547,6 @@
                                 <div class="empty" v-if="listData.length == 0">
                                     <img :src="require('@/assets/img/empty.png')" alt="" />
                                     <p class="emptyDesc">当前暂无数据</p>
-                                </div>
-                                <div class="pagination">
-                                    <a-pagination show-size-changer :pageSizeOptions="['10', '20', '50', '80', '100']"
-                                        :pageSize="rows0" @showSizeChange="sizeChange0" v-model:current="page0"
-                                        :total="total0" @change="ChangePage0" :show-total="total0 => `共 ${total0} 条`" />
                                 </div>
                             </div>
 
@@ -406,7 +622,7 @@ import localeData from 'dayjs/plugin/localeData';
 dayjs.extend(calendar);
 dayjs.extend(weekday);
 dayjs.extend(localeData);
-import { UserOutlined, LikeOutlined, DeleteOutlined, ExportOutlined, MessageOutlined, BarsOutlined, MoreOutlined, SearchOutlined, LikeFilled, LoadingOutlined, PlusOutlined, CloseOutlined, EyeOutlined } from "@ant-design/icons-vue";
+import { UserOutlined, LikeOutlined, DeleteOutlined, ExportOutlined, MessageOutlined, BarsOutlined, MoreOutlined, SearchOutlined, LikeFilled, LoadingOutlined, PlusOutlined, CloseOutlined, EyeOutlined, LeftOutlined } from "@ant-design/icons-vue";
 import { notification } from 'ant-design-vue';
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
@@ -471,7 +687,7 @@ const data = reactive({
             displayOrder: 3
         },
     ],
-    fileList:[],
+    fileList: [],
     ImageList: [],
     uploadData: {
         id: ''
@@ -482,9 +698,11 @@ const data = reactive({
     },
     isPhoto: false,
     photoParams: {},
+    isShowDetail: false
 })
-const { fileList, ImageList, uploadData, headers, isPhoto, photoParams, id, uploadId, item, VoteOptions, activeKey, loading, typeitem, type, OwningUserName, listData1, selectmenu, keyIndex, listData, page0, rows0, total0, page, rows, total, text, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
+const { isShowDetail, fileList, ImageList, uploadData, headers, isPhoto, photoParams, id, uploadId, item, VoteOptions, activeKey, loading, typeitem, type, OwningUserName, listData1, selectmenu, keyIndex, listData, page0, rows0, total0, page, rows, total, text, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
 const changeMenu = (e) => {
+    data.isShowDetail = false;
     data.selectmenu = e;
     data.keyIndex = 1;
     data.ImageList = [];
@@ -504,10 +722,10 @@ const changeMenu = (e) => {
     ];
     data.text = "";
     data.description = "";
-    if (data.activeKey == '0') {
+    if (data.activeKey == '0' && editorRef && editorRef.value) {
         editorRef.value.content = "";
     }
-    if (data.activeKey == '1') {
+    if (data.activeKey == '1' && editorRef2 && editorRef2.value) {
         editorRef2.value.content = "";
     }
     getStatusList();
@@ -525,9 +743,9 @@ const getStatusList = () => {
     data.total0 = 0;
     data.listData = [];
     let url = Interface.question.query;
-    let filterQuery='\nChatterTypeCode\teq\t1';
+    let filterQuery = '\nChatterTypeCode\teq\t1';
     if (data.selectmenu == 2) {
-        filterQuery='\nChatterTypeCode\teq\t1\nCreatedBy\teq-userid';
+        filterQuery = '\nChatterTypeCode\teq\t1\nCreatedBy\teq-userid';
     }
     let d = {
         actions: [{
@@ -632,7 +850,7 @@ const handleSendStatus = () => {
         };
         if (data.activeKey == '0') {
             url = Interface.status.submit;
-            d.actions[0].params.pictures = data.ImageList;
+            //d.actions[0].params.pictures = data.ImageList;
         }
         if (data.activeKey == '1') {
             url = Interface.question.submit;
@@ -719,6 +937,9 @@ const handleSendComment = (item, item1) => {
     }
 }
 const getCommentList = (id, ite) => {
+    data.listData.forEach(v => {
+        v.IsShowReply = false;
+    });
     data.listData1[data.id] = [];
     data.total = 0;
     if (id) {
@@ -727,6 +948,7 @@ const getCommentList = (id, ite) => {
         data.page = 1;
     }
     let item0 = data.item;
+    item0.IsShowReply = true;
     let url = Interface.status.comment;
     let d = {
         actions: [{
@@ -1094,6 +1316,17 @@ const handlePreviewFile = (item, index) => {
 const deleteFile = (index) => {
     data.ImageList.splice(index, 1);
 }
+//打开详情
+const handleDetail = (item) => {
+    data.listData = [item];
+    data.isShowDetail = true;
+    getCommentList(item.id, item);
+}
+//返回主页列表
+const returnBack = () => {
+    data.isShowDetail = false;
+    changeMenu(data.selectmenu);
+}
 onMounted(() => {
     let userInfo = window.localStorage.getItem('userInfo');
     if (userInfo) {
@@ -1392,6 +1625,35 @@ onMounted(() => {
             flex: 1;
             margin-right: 15px;
             height: 100%;
+
+            .commentContent {
+                cursor: pointer;
+            }
+        }
+
+        .detailContent {
+            .detailContentTop {
+                width: 100%;
+                height: 46px;
+                line-height: 46px;
+                display: flex;
+                align-items: center;
+                box-sizing: border-box;
+                padding: 0 14px;
+                margin-top: 3px;
+                position: relative;
+
+                .detailContentTopIcon {
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+
+                .detailContentTopText {
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin-left: 10px;
+                }
+            }
         }
 
         .rightContent {

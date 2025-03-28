@@ -41,105 +41,115 @@
                         <div class="tableBox">
                             <div id="main-content">
                                 <table class="table1">
-                                    <tr>
-                                        <td colspan="6" class="formtd">
-                                            <p class="formtitle">制度台账</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="1">制度编号</td>
-                                        <td colspan="2" class="righttd">{{ FormData.ArticleNumber || '' }}</td>
-                                        <td colspan="1">制度名称</td>
-                                        <td colspan="2" class="righttd">{{ FormData.Title || '' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="1">版本号</td>
-                                        <td colspan="2" class="righttd">{{ FormData.VersionNumber || '' }}</td>
-                                        <td colspan="1">状态</td>
-                                        <td colspan="2" class="righttd">
-                                            <span style="color:#bbb;" v-if="FormData.StateCode == '0'">草稿</span>
-                                            <span style="color:#31BA6A;" v-if="FormData.StateCode == '1'">已发布</span>
-                                            <span style="color:#F9A6AB;" v-if="FormData.StateCode == '2'">已废止</span>
-                                            <span style="color:#015ba7;" v-if="FormData.StateCode == '3'">流转中</span>
-                                            <span style="color:#F9A6AB;" v-if="FormData.StateCode == '4'">未通过</span>
-                                            <span style="color:#015ba7;" v-if="FormData.StateCode == '5'">已修订</span>
-                                            <span style="color:#015ba7;" v-if="FormData.StateCode == '6'">已变更</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="1">制度目录</td>
-                                        <td colspan="2" class="righttd">
-                                            {{ FormData.FolderName || '' }}</td>
-                                        <td colspan="1">公开方式</td>
-                                        <td colspan="2" class="righttd">{{ FormData.PublicationScope || '' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="1">生效日期</td>
-                                        <td colspan="2" class="righttd">{{ FormData.ActiveOn || '' }}</td>
-                                        <td colspan="1">失效日期</td>
-                                        <td colspan="2" class="righttd">{{ FormData.ExpiresOn || '' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="1">编制人</td>
-                                        <td colspan="2" class="righttd">
-                                            {{ FormData.CreatedByName || '' }}
-                                        </td>
-                                        <td colspan="1">编制部门</td>
-                                        <td colspan="2" class="righttd">
-                                            {{ FormData.BusinessUnitName || '' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="1">制度文件</td>
-                                        <td colspan="5" class="righttd">
-                                            <div class="tagWrap">
-                                                <div class="tag fileItemImg" v-for="(item, index) in fileList"
-                                                    :key="index">
-                                                    <img src="/src/assets/img/filetype/doc.png"
-                                                        v-if="item.FileExtension == 'ocx' || item.FileExtension == 'docx' || item.FileExtension == 'doc'" />
-                                                    <img src="/src/assets/img/filetype/rar.png"
-                                                        v-else-if="item.FileExtension == 'rar' || item.FileExtension == 'zip'" />
-                                                    <img src="/src/assets/img/filetype/Excel.png"
-                                                        v-else-if="item.FileExtension == 'xlsx' || item.FileExtension == 'xls'" />
-                                                    <img src="/src/assets/img/filetype/pdf.png"
-                                                        v-else-if="item.FileExtension == 'pdf'" />
-                                                    <img src="/src/assets/img/filetype/TXT.png"
-                                                        v-else-if="item.FileExtension == 'TXT' || item.FileExtension == 'txt'" />
-                                                    <img src="/src/assets/img/filetype/PPT.png"
-                                                        v-else-if="item.FileExtension == 'ppt' || item.FileExtension == 'pptx'" />
-                                                    <img src="/src/assets/img/filetype/voice.png"
-                                                        v-else-if="item.FileExtension == 'mp3' || item.FileExtension == '.mp3'" />
-                                                    <img src="/src/assets/img/filetype/video.png"
-                                                        v-else-if="item.FileExtension == 'mp4' || item.FileExtension == '.mp4'" />
-                                                    <img src="/src/assets/img/filetype/defaultImg.png"
-                                                        v-else-if="item.FileExtension == 'jpg' || item.FileExtension == 'png' || item.FileExtension == 'gif'" />
-                                                    <img src="/src/assets/img/filetype/File.png" v-else />
-                                                    <div class="filename">{{ item.Name }}&nbsp;&nbsp;&nbsp;{{
-                                                        item.fileSize &&
-                                                            Number(item.fileSize) ?
-                                                            (Number(item.fileSize) / 1024).toFixed(1) + 'KB' : '' }}</div>
-                                                    <div class="filebtn">
-                                                        <a href="javascript:void(0)"
-                                                            @click="handlePreviewFile(item)">查看</a>
-                                                        <a href="javascript:void(0)" @click="downloadFile(item)">下载</a>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="6" class="formtd">
+                                                <p class="formtitle">制度台账</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">制度编号</td>
+                                            <td colspan="2" class="righttd">{{ FormData.ArticleNumber || '' }}</td>
+                                            <td colspan="1">制度名称</td>
+                                            <td colspan="2" class="righttd">{{ FormData.Title || '' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">版本号</td>
+                                            <td colspan="2" class="righttd">{{ FormData.VersionNumber || '' }}</td>
+                                            <td colspan="1">状态</td>
+                                            <td colspan="2" class="righttd">
+                                                <span style="color:#bbb;" v-if="FormData.StateCode == '0'">草稿</span>
+                                                <span style="color:#31BA6A;" v-if="FormData.StateCode == '1'">已发布</span>
+                                                <span style="color:#F9A6AB;" v-if="FormData.StateCode == '2'">已废止</span>
+                                                <span style="color:#015ba7;" v-if="FormData.StateCode == '3'">流转中</span>
+                                                <span style="color:#F9A6AB;" v-if="FormData.StateCode == '4'">未通过</span>
+                                                <span style="color:#015ba7;" v-if="FormData.StateCode == '5'">已修订</span>
+                                                <span style="color:#015ba7;" v-if="FormData.StateCode == '6'">已变更</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">制度目录</td>
+                                            <td colspan="2" class="righttd">
+                                                {{ FormData.FolderName || '' }}</td>
+                                            <td colspan="1">公开方式</td>
+                                            <td colspan="2" class="righttd">{{ FormData.PublicationScope || '' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">生效日期</td>
+                                            <td colspan="2" class="righttd">{{ FormData.ActiveOn || '' }}</td>
+                                            <td colspan="1">失效日期</td>
+                                            <td colspan="2" class="righttd">{{ FormData.ExpiresOn || '' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">编制人</td>
+                                            <td colspan="2" class="righttd">
+                                                {{ FormData.CreatedByName || '' }}
+                                            </td>
+                                            <td colspan="1">编制部门</td>
+                                            <td colspan="2" class="righttd">
+                                                {{ FormData.BusinessUnitName || '' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1">制度文件</td>
+                                            <td colspan="5" class="righttd">
+                                                <div class="tagWrap">
+                                                    <div class="tag fileItemImg" v-for="(item, index) in fileList"
+                                                        :key="index">
+                                                        <img src="/src/assets/img/filetype/doc.png"
+                                                            v-if="item.FileExtension == 'ocx' || item.FileExtension == 'docx' || item.FileExtension == 'doc'" />
+                                                        <img src="/src/assets/img/filetype/rar.png"
+                                                            v-else-if="item.FileExtension == 'rar' || item.FileExtension == 'zip'" />
+                                                        <img src="/src/assets/img/filetype/Excel.png"
+                                                            v-else-if="item.FileExtension == 'xlsx' || item.FileExtension == 'xls'" />
+                                                        <img src="/src/assets/img/filetype/pdf.png"
+                                                            v-else-if="item.FileExtension == 'pdf'" />
+                                                        <img src="/src/assets/img/filetype/TXT.png"
+                                                            v-else-if="item.FileExtension == 'TXT' || item.FileExtension == 'txt'" />
+                                                        <img src="/src/assets/img/filetype/PPT.png"
+                                                            v-else-if="item.FileExtension == 'ppt' || item.FileExtension == 'pptx'" />
+                                                        <img src="/src/assets/img/filetype/voice.png"
+                                                            v-else-if="item.FileExtension == 'mp3' || item.FileExtension == '.mp3'" />
+                                                        <img src="/src/assets/img/filetype/video.png"
+                                                            v-else-if="item.FileExtension == 'mp4' || item.FileExtension == '.mp4'" />
+                                                        <img src="/src/assets/img/filetype/defaultImg.png"
+                                                            v-else-if="item.FileExtension == 'jpg' || item.FileExtension == 'png' || item.FileExtension == 'gif'" />
+                                                        <img src="/src/assets/img/filetype/File.png" v-else />
+                                                        <div class="filename">{{ item.Name }}&nbsp;&nbsp;&nbsp;{{
+                                                            item.fileSize &&
+                                                                Number(item.fileSize) ?
+                                                                (Number(item.fileSize) / 1024).toFixed(1) + 'KB' : '' }}
+                                                        </div>
+                                                        <div class="filebtn">
+                                                            <a href="javascript:void(0)"
+                                                                @click="handlePreviewFile(item)">查看</a>
+                                                            <a href="javascript:void(0)"
+                                                                @click="downloadFile(item)">下载</a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey == 1">
-                    <Related :id="id" :type="'page'" :entityApiName="'InstitutionHistory'" :RegardingObjectIdName="'ContentId'" :ObjectTypeCode="'100207'" :columns="columns1" :title="'变更记录'" />
+                    <Related :id="id" :type="'page'" :entityApiName="'InstitutionHistory'"
+                        :RegardingObjectIdName="'ContentId'" :ObjectTypeCode="'100207'" :columns="columns1"
+                        :title="'变更记录'" />
                 </div>
                 <div class="tabContainer" v-if="activeKey == 2">
-                    <Related :id="id" :type="'page'" :entityApiName="'KbArticleVersion'" :RegardingObjectIdName="'KbArticleId'" :ObjectTypeCode="'3030'" :columns="columns2" :title="'修订记录'" />
+                    <Related :id="id" :type="'page'" :entityApiName="'KbArticleVersion'"
+                        :RegardingObjectIdName="'NewKbArticleId'" :ObjectTypeCode="'3030'" :columns="columns2"
+                        :title="'修订记录'" />
                 </div>
                 <div class="tabContainer" v-if="activeKey == 3">
-                    <Related :id="id" :type="'page'" :entityApiName="'KbArticleAbolish'" :RegardingObjectIdName="'KbArticleId'" :ObjectTypeCode="'3031'" :columns="columns3" :title="'废止记录'" />
+                    <Related :id="id" :type="'page'" :entityApiName="'KbArticleAbolish'"
+                        :RegardingObjectIdName="'KbArticleId'" :ObjectTypeCode="'3031'" :columns="columns3"
+                        :title="'废止记录'" />
                 </div>
                 <div class="tabContainer" v-if="activeKey == 4">
                     <Comment :isTitle="false" :id="id" />
@@ -165,13 +175,8 @@
         <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
         <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
         <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
-        <InfoNotes
-        v-if="isNotes"
-        :isShow="isNotes"
-        :id="id"
-        :objectTypeCode="objectTypeCode"
-        @cancel="isNotes=false;"
-        />
+        <InfoNotes v-if="isNotes" :isShow="isNotes" :id="id" :objectTypeCode="objectTypeCode"
+            @cancel="isNotes = false;" />
     </div>
 </template>
 <script setup>
@@ -264,8 +269,8 @@ const data = reactive({
     pdfParams: {},
     isTxt: false,
     txtParams: {},
-    objectTypeCode:100204,
-    isNotes:false
+    objectTypeCode: 100204,
+    isNotes: false
 })
 const { isNotes, objectTypeCode, isTxt, txtParams, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData, FormData, ImageList, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
     isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
@@ -556,186 +561,186 @@ const deleteFile = (id) => {
     });
 }
 const columns1 = [
-{
-      title: "序号",
-      key: "index",
-      width: 80,
-  },
-  {
-      title: "制度编号",
-      key: "ArticleNumber",
-      width: 200,
-  },
-  {
-      title: "制度文件",
-      key: "ContentId"
-  },
-  {
-      title: "栏目",
-      key: "FolderId",
-  },
-  {
-      title: "公开方式",
-      key: "PublicationScope",
-  },
-  {
-      title: "生效日期",
-      key: "ActiveOn",
-      width: 120,
-  },
-  {
-      title: "失效日期",
-      key: "ExpiresOn",
-      width: 120,
-  },
-  {
-      title: "审批发布人",
-      key: "ApprovedBy",
-  },
     {
-      title: "发布部门",
-      key: "BusinessUnitId",
+        title: "序号",
+        key: "index",
+        width: 80,
     },
     {
-      title: "状态",
-      key: "StateCode",
+        title: "制度编号",
+        key: "ArticleNumber",
+        width: 200,
     },
     {
-      title: "版本号",
-      key: "VersionNumber",
+        title: "制度文件",
+        key: "ContentId"
     },
     {
-      title: "创建人",
-      key: "CreatedBy",
+        title: "栏目",
+        key: "FolderId",
     },
     {
-      title: "创建时间",
-      key: "CreatedOn",
-      width: 120,
+        title: "公开方式",
+        key: "PublicationScope",
     },
     {
-      title: "修改人",
-      key: "ModifiedBy",
+        title: "生效日期",
+        key: "ActiveOn",
+        width: 120,
     },
     {
-      title: "修改时间",
-      key: "ModifiedOn",
-      width: 120,
+        title: "失效日期",
+        key: "ExpiresOn",
+        width: 120,
+    },
+    {
+        title: "审批发布人",
+        key: "ApprovedBy",
+    },
+    {
+        title: "发布部门",
+        key: "BusinessUnitId",
+    },
+    {
+        title: "状态",
+        key: "StateCode",
+    },
+    {
+        title: "版本号",
+        key: "VersionNumber",
+    },
+    {
+        title: "创建人",
+        key: "CreatedBy",
+    },
+    {
+        title: "创建时间",
+        key: "CreatedOn",
+        width: 120,
+    },
+    {
+        title: "修改人",
+        key: "ModifiedBy",
+    },
+    {
+        title: "修改时间",
+        key: "ModifiedOn",
+        width: 120,
     }
-  ];
-  const columns2 = [
-  {
-      title: "序号",
-      key: "index",
-      width: 80,
-  },
-  {
-      title: "制度编号",
-      key: "ArticleNumber",
-      width: 200,
-  },
-  {
-      title: "制度文件",
-      key: "KbArticleId"
-  },
-  {
-      title: "修订日期",
-      key: "VersionOn",
-      width: 120,
-  },
+];
+const columns2 = [
     {
-      title: "修订部门",
-      key: "OwningBusinessUnit",
+        title: "序号",
+        key: "index",
+        width: 80,
     },
     {
-      title: "修订背景",
-      key: "Description",
+        title: "制度编号",
+        key: "ArticleNumber",
+        width: 200,
     },
     {
-      title: "状态",
-      key: "StateCode",
+        title: "制度文件",
+        key: "KbArticleId"
     },
     {
-      title: "版本号",
-      key: "VersionNumber",
+        title: "修订日期",
+        key: "VersionOn",
+        width: 120,
     },
     {
-      title: "创建人",
-      key: "CreatedBy",
+        title: "修订部门",
+        key: "OwningBusinessUnit",
     },
     {
-      title: "创建时间",
-      key: "CreatedOn",
-      width: 120,
+        title: "修订背景",
+        key: "Description",
     },
     {
-      title: "修改人",
-      key: "ModifiedBy",
+        title: "状态",
+        key: "StateCode",
     },
     {
-      title: "修改时间",
-      key: "ModifiedOn",
-      width: 120,
+        title: "版本号",
+        key: "VersionNumber",
+    },
+    {
+        title: "创建人",
+        key: "CreatedBy",
+    },
+    {
+        title: "创建时间",
+        key: "CreatedOn",
+        width: 120,
+    },
+    {
+        title: "修改人",
+        key: "ModifiedBy",
+    },
+    {
+        title: "修改时间",
+        key: "ModifiedOn",
+        width: 120,
     }
-  ];
- const columns3 = [
- {
-      title: "序号",
-      key: "index",
-      width: 80,
-  },
-  {
-      title: "制度编号",
-      key: "ArticleNumber",
-      width: 200,
-  },
-  {
-      title: "制度文件",
-      key: "KbArticleId"
-  },
-  {
-      title: "废止日期",
-      key: "AbolishedOn",
-      width: 120,
-  },
+];
+const columns3 = [
     {
-      title: "废止部门",
-      key: "OwningBusinessUnit",
+        title: "序号",
+        key: "index",
+        width: 80,
     },
     {
-      title: "废止原因",
-      key: "Description",
+        title: "制度编号",
+        key: "ArticleNumber",
+        width: 200,
     },
     {
-      title: "状态",
-      key: "StateCode",
+        title: "制度文件",
+        key: "KbArticleId"
     },
     {
-      title: "版本号",
-      key: "VersionNumber",
+        title: "废止日期",
+        key: "AbolishedOn",
+        width: 120,
     },
     {
-      title: "创建人",
-      key: "CreatedBy",
+        title: "废止部门",
+        key: "OwningBusinessUnit",
     },
     {
-      title: "创建时间",
-      key: "CreatedOn",
-      width: 120,
+        title: "废止原因",
+        key: "Description",
     },
     {
-      title: "修改人",
-      key: "ModifiedBy",
+        title: "状态",
+        key: "StateCode",
     },
     {
-      title: "修改时间",
-      key: "ModifiedOn",
-      width: 120,
+        title: "版本号",
+        key: "VersionNumber",
+    },
+    {
+        title: "创建人",
+        key: "CreatedBy",
+    },
+    {
+        title: "创建时间",
+        key: "CreatedOn",
+        width: 120,
+    },
+    {
+        title: "修改人",
+        key: "ModifiedBy",
+    },
+    {
+        title: "修改时间",
+        key: "ModifiedOn",
+        width: 120,
     }
-  ];
-  // 备注
+];
+// 备注
 const handleNotes = () => {
-  data.isNotes = true;
+    data.isNotes = true;
 };
 onMounted(() => {
     if (data.id) {

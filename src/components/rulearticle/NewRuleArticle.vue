@@ -1036,7 +1036,7 @@ const handleSave = () => {
 const handleVersion = () => {
   let url = Interface.rulearticle.revision;
   let oldData0=data.oldData;
-  oldData0.id=data.id;
+  oldData0.ValueId=data.id;
   oldData0.description=formState.Description;
   let d = {
     actions: [{
