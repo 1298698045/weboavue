@@ -95,7 +95,8 @@ const Interface = {
     getFilter: "", //
     saveFilter: baseUrl + "/aura/listViewManager/updateListView", // 保存筛选器
     getListShareData: baseUrl + "/aura/ListViewEntityShareDataProvider/getListShareData", // 列表视图 - 获取共享设置
-        getSearchFilter: baseUrl + "/aura/listViewManager/getSearchFilter", // 获查搜索筛选器字段
+    getSearchFilter: baseUrl + "/aura/listViewManager/getSearchFilter", // 获查搜索筛选器字段
+    export: baseUrl + "/aura/ListViewManager/data/export", // 导出
   },
   uilook: "/localData/ui.entity.lookup.json",
   entityFilter: "/localData/entity.filter.get.json",

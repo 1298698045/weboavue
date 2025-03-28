@@ -98,9 +98,9 @@
     const formRef = ref(null);
     const formState = reactive({
         userName: "jackliu",
-        // password: "Hospital@80",
-        userName: "",
-        password: "",
+        password: "Hospital@80",
+        // userName: "",
+        // password: "",
         captureId: ""
     });
     //const validateImg = ref(require("@/assets/img/twoDimensionalStats-thumb.png"));

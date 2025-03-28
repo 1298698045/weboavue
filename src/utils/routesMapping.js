@@ -243,5 +243,8 @@ export const routesMapping = {
     //文件管理
     File: {
         FileManager: () => import("../views/fileAdmin/index.vue")
+    },
+    CloudFile: {
+        FileManager: () => import("../views/fileAdmin/index.vue")
     }
 }
