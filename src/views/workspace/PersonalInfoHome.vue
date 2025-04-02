@@ -134,7 +134,7 @@ import PersonalInfoView from "@/views/workspace/PersonalInfoView.vue";
 import PersonalSalaryView from "@/views/workspace/PersonalSalaryView.vue";
 import PersonalAssetView from "@/views/workspace/PersonalAssetView.vue";
 import UpdateAvatarImage from "@/components/UpdateAvatarImage.vue";
-import Related from "@/components/detail/Related2.vue";
+import Related from "@/components/commonTab/RelatedTableList.vue";
 const { proxy } = getCurrentInstance();
 const editorRef = ref();
 const route = useRoute();

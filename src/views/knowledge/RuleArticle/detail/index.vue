@@ -200,7 +200,7 @@ import {
     CloseOutlined,
     EyeOutlined
 } from "@ant-design/icons-vue";
-import Related from "@/components/detail/Related2.vue";
+import Related from "@/components/commonTab/RelatedTableList.vue";
 import Info from "@/components/detail/Info.vue";
 import ReadRecord from "@/components/detail/ReadRecord.vue";
 import Comment from "@/components/detail/Comment.vue";
@@ -215,7 +215,7 @@ import CirculationModal from "@/components/workflow/CirculationModal.vue";
 import Delegate from "@/components/workflow/Delegate.vue";
 import Urging from "@/components/workflow/Urging.vue";
 import RelateInstance from "@/components/workflow/RelateInstance.vue";
-import InfoNotes from "@/components/commonTab/RelatedNote.vue";
+import InfoNotes from "@/components/commonModal/RelatedNote.vue";
 import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 import ImageView from "@/components/file/ImageView.vue";
 import PdfView from "@/components/file/PdfView.vue";

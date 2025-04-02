@@ -63,10 +63,11 @@
                         <div class="commentItemBox" v-for="(item, index) in listData" :key="index">
                             <div class="leftAvatar">
                                 <a-avatar :size="37">
-                                    <template #icon>
+                                    <!-- <template #icon>
                                         <UserOutlined />
-                                    </template>
-                                    <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
+                                    </template> -->
+                                    <img :src="'/api/one/user/avatar/' + item.OwningUserId" alt=""
+                                        class="commentAvatar" />
                                 </a-avatar>
                             </div>
                             <div class="rightComment">
@@ -75,6 +76,10 @@
                                     {{ item.CreatedOn }}
                                 </div>
                                 <div class="commentContent" v-html="item.Description || '暂无'"></div>
+                                <div class="commentContentItem picturesList">
+                                    <img v-for="(ite, idx) in item.pictures" :key="idx" :src="ite.viewUrl" class="img"
+                                        @click="handlePreviewImg(ite, idx, item)" />
+                                </div>
                                 <div class="commentBtn">
                                     <!-- <span class="deleteComment" @click="handleDelete(item.id)">删除</span> -->
                                     <!-- <span class="commentBtn-item" title="删除" v-if="item.OwningUserId&&data.OwningUser&&data.OwningUser==item.OwningUserId" @click="handleDelete(item.id)" ><DeleteOutlined /></span> -->
@@ -83,7 +88,7 @@
                                         <LikeOutlined /><span>{{ item.NumOfLike || 0 }}</span>
                                     </span>
                                     <span class="commentBtn-item" title="取消点赞" v-if="item.IsLike"
-                                        @click="handleLike(item)" style="color: red;">
+                                        @click="handleLike(item)" style="color: #ff7d00;">
                                         <LikeFilled /><span>{{ item.NumOfLike || 0 }}</span>
                                     </span>
                                 </div>
@@ -101,6 +106,7 @@
         </div>
         <Delete :isShow="isDelete" :desc="deleteDesc" :sObjectName="sObjectName" :recordId="recordId"
             :objTypeCode="objectTypeCode" :external="external" @cancel="closeDelete" @ok="deleteOk" />
+        <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
     </div>
 </template>
 <script setup>
@@ -122,6 +128,7 @@ import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import Delete from "@/components/listView/Delete.vue";
+import ImageView from "@/components/file/ImageView.vue";
 const { proxy } = getCurrentInstance();
 const props = defineProps({
     title: String,
@@ -141,9 +148,11 @@ const data = reactive({
     sObjectName: 'Chatter',
     deleteDesc: '确定要删除吗？',
     external: false,
-    OwningUser: ''
+    OwningUser: '',
+    isPhoto: false,
+    photoParams: {}
 })
-const { listData, page, rows, total, comment, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
+const { photoParams, isPhoto, listData, page, rows, total, comment, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
 const getCommentList_old = () => {
     // proxy.$get(Interface.commentList,{
     //     meetingid:"4c51a922-8762-40ae-9e10-5e1fa3f51a60",
@@ -198,7 +207,7 @@ const getCommentList_old = () => {
 const getCommentList = () => {
     data.listData = [];
     data.total = 0;
-    let filterQuery = '\nRegardingObjectId\teq\t' + props.id;
+    //let filterQuery = '\nRegardingObjectId\teq\t' + props.id;
     let url = Interface.status.query;
     let d = {
         actions: [{
@@ -208,6 +217,7 @@ const getCommentList = () => {
             params: {
                 pageSize: data.rows,
                 pageNumber: data.page,
+                chatterTypeCode: 0,
                 RegardingObjectId: props.id,
                 search: ''
             }
@@ -223,23 +233,25 @@ const getCommentList = () => {
             for (var i = 0; i < res.actions[0].returnValue.rows.length; i++) {
                 var item = res.actions[0].returnValue.rows[i];
                 for (var cell in item) {
-                    if (cell == 'ImageUrls') {
-                        item[cell] = require('@/assets/img/avatar-r.png');
-                    }
                     if (cell == 'CreatedOn' || cell == 'createdOn') {
                         item['CreatedOn'] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
                     }
                 }
-                if (!item['ImageUrls']) {
-                    item['ImageUrls'] = require('@/assets/img/avatar-r.png');
-                }
-                item['OwningUserId'] = item.createdBy || '';
                 item['OwningUser'] = item.createdByName || '';
+                item['OwningUserId'] = item.createdBy || '';
                 item['Description'] = item.text == '' ? '<span style="color:rgba(0, 0, 0, 0.25);">暂无内容</span>' : item.text;
                 item['NumOfLike'] = item.numOfLike || 0;
                 item['NumOfComment'] = item.numOfComment || 0;
-                item['Islike'] = item.isLike || false;
-                list.push(item)
+                item['IsLike'] = item.isLike * 1 == 1 ? true : false;
+                item['options'] = item.options || [];
+                item['value'] = item.options && item.options.length ? getValue(item.options) : '';
+                item['pictures'] = item.pictures || [];
+                item['totalPeople'] = item.totalPeople || 0;
+                for (var j = 0; j < item.options.length; j++) {
+                    let ite = item.options[j];
+                    ite.percentage = ite.checkedQty && item.totalPeople ? ((ite.checkedQty * 1 / item.totalPeople * 1) * 100).toFixed(1) : 0;
+                }
+                list.push(item);
             }
         }
         if (list && list.length) {
@@ -315,24 +327,16 @@ const deleteOk = (e) => {
 };
 //点赞&取消点赞
 const handleLike = (item) => {
+    let url = Interface.status.setStatusLike;
     if (!item.IsLike) {
-        let url = Interface.create;
         let d = {
             actions: [{
                 id: "2919;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                    recordInput: {
-                        allowSaveOnDuplicate: false,
-                        apiName: 'ChatterLike',
-                        objTypeCode: '6004',
-                        fields: {
-                            CommentId: item.id,
-                            CreatedBy: data.OwningUser,
-                            LikeType: 1,
-                        }
-                    }
+                    id: item.id,
+                    likeAction: 1
                 }
             }]
         };
@@ -355,22 +359,21 @@ const handleLike = (item) => {
             }
         });
     } else {
-        let obj = {
+        let d = {
             actions: [{
                 id: "2919;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                    recordId: item.LikeId || '',
-                    apiName: 'ContentLikes',
-                    objTypeCode: 100206,
+                    id: item.id,
+                    likeAction: 0
                 }
             }]
         };
-        let d = {
-            message: JSON.stringify(obj)
-        };
-        proxy.$post(Interface.delete, d).then(res => {
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(url, obj).then(res => {
             if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                 message.success("取消点赞成功");
                 item.NumOfLike = item.NumOfLike * 1 - 1 > 0 ? item.NumOfLike * 1 - 1 : 0;
@@ -383,9 +386,20 @@ const handleLike = (item) => {
                     message.error("取消点赞失败");
                 }
             }
-        })
+        });
     }
 }
+//预览状态图片
+const handlePreviewImg = (ite, idx, item) => {
+    data.photoParams = {
+        id: ite.id,
+        item: ite,
+        imageList: item.pictures,
+        index: idx
+    };
+    data.isPhoto = true;
+    console.log(item)
+};
 onMounted(() => {
     let userInfo = window.localStorage.getItem('userInfo');
     if (userInfo) {
@@ -630,6 +644,27 @@ onMounted(() => {
         .emptyDesc {
             color: #ccc;
             margin-top: 10px;
+        }
+    }
+
+    .picturesList {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 10px;
+
+        .img {
+            width: 165px;
+            height: 165px;
+            border-radius: 4px;
+            background: #f2f3f5;
+            padding: 5px;
+            box-sizing: border-box;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            overflow: hidden;
+            position: relative;
         }
     }
 }

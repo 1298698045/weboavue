@@ -1,16 +1,26 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="900px" style="top:10px;" :maskClosable="false" @cancel="handleCancel"
-      @ok="handleSubmit">
+    <a-modal v-model:open="props.isShow" width="900px" class="reimburseDetailModal" style="top:38px;"
+      :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
       <template #title>
-        <div>发票详情</div>
+        <div class="titleLeft">报销详情</div>
       </template>
       <div class="modalContainer invoiceDetailWrap">
+        <div class="tabWrap">
+          <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
+            <a-tab-pane v-for="(item, index) in tabs" :key="index">
+              <template #tab>
+                <span>
+                  {{ item.label }}
+                </span>
+              </template>
+            </a-tab-pane>
+          </a-tabs>
+        </div>
         <div class="modalCenter" :style="{ height: height + 'px' }">
-          <div class="detailInfo">
-            <div class="detailTitle">电子发票（普通发票）</div>
+          <div class="detailInfo" v-if="activeKey == 0">
             <div class="fh-section" v-for="(item, index) in layoutList" :key="index">
-              <!-- <div class="fh-section-label" v-if="item.title != '内容' && item.title != '回执'">{{ item.title }}</div> -->
+              <div class="fh-section-label" v-if="item.title != '内容' && item.title != '回执'">{{ item.title }}</div>
               <div class="section-content">
                 <div class="sectionRow" v-for="(row, rowIdx) in item.rows" :key="rowIdx">
                   <div class="sectionCol" v-for="(attr, attrIdx) in row.attributes" :key="attrIdx">
@@ -19,8 +29,8 @@
                     </div>
                     <div class="sectionCol_body">
                       <div class="ownerName">
-                        <span
-                          v-if="attr.attributes.type == 'B'">{{ list[attr.localId].displayValue == 'true' || list[attr.localId].displayValue == true ? '是' : '否' }}</span>
+                        <span v-if="attr.attributes.type == 'B'">{{ list[attr.localId].displayValue == 'true' ||
+                          list[attr.localId].displayValue == true ? '是' : '否' }}</span>
                         <span v-else-if="attr.attributes.type == 'z' || attr.attributes.type == 'X'"><span
                             v-html="list[attr.localId]?.displayValue"></span></span>
                         <span v-else>{{ list[attr.localId]?.displayValue }}</span>
@@ -31,20 +41,22 @@
               </div>
             </div>
           </div>
+          <RelatedList v-if="activeKey == 1" :id="props.id" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :fullName="''" />
         </div>
       </div>
       <template #footer>
         <div>
-          <a-button @click="handleCancel">取消</a-button>
-          <a-button type="primary" @click.prevent="handleEdit">编辑</a-button>
-          <a-button type="primary" @click.prevent="handleView">查看原始电票</a-button>
+          <a-button @click="handleCancel">关闭</a-button>
+          <!-- <a-button type="primary" @click.prevent="handleEdit">编辑</a-button> -->
         </div>
       </template>
     </a-modal>
     <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false"
       :title="data.recordId ? '编辑' : '新建'" @success="getDetail" :id="recordId" :objectTypeCode="objectTypeCode"
       :entityApiName="sObjectName"></common-form-modal>
-      <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+    <addInvoice :isShow="isNew" v-if="isNew" :id="props.id" @ok="getDetail" @cancel="isNew = false" :entityId="entityId"
+      :entityApiName="sObjectName" :objTypeCode="objectTypeCode" :name="'发票'" />
+    <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
   </div>
 </template>
 <script setup>
@@ -68,16 +80,18 @@ import {
   UserOutlined,
 } from "@ant-design/icons-vue";
 import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+import RelatedList from "@/components/detail/RelatedList.vue";
 import PdfView from "@/components/file/PdfView.vue";
 import { message } from "ant-design-vue";
 import { useStore } from "vuex";
 let store = useStore();
 import Interface from "@/utils/Interface.js";
+import addInvoice from "@/components/reimburse/invoice/addInvoice.vue";
 const { proxy } = getCurrentInstance();
 const props = defineProps({
   isShow: Boolean,
   id: String,
-  type: String
+  InvoiceType: String
 });
 const formRef = ref();
 const emit = defineEmits(["cancel"]);
@@ -94,9 +108,19 @@ const data = reactive({
   layoutList: [],
   list: [],
   isPdf: false,
-  pdfParams: {}
+  pdfParams: {},
+  isNew: false,
+  entityId:'',
+  activeKey:0,
+  tabs: [
+  {
+      label: "基本信息",
+    },
+    {
+      label: "相关列表",
+    }]
 });
-const { isPdf, pdfParams, list, layoutList, height, isCommon, recordId, objectTypeCode, sObjectName, isShowDetail } = toRefs(data);
+const { activeKey, tabs, entityId, isNew, isPdf, pdfParams, list, layoutList, height, isCommon, recordId, objectTypeCode, sObjectName, isShowDetail } = toRefs(data);
 const getDetail = () => {
   // data.isShowDetail=false;
   // nextTick(()=>{
@@ -134,45 +158,45 @@ const getDetail = () => {
     }
   })
 }
-const handleView=()=>{
-  data.pdfParams = {
-      id: props.id,
-      name: '电子发票',
-      index: 0,
-      viewUrl: '/api/file/preview/pdf/1D1412CF-2FC7-4382-A7C3-A97DAF713A32',
-      downloadUrl: '/api/file/download?id=1D1412CF-2FC7-4382-A7C3-A97DAF713A32'
-    };
-    data.isPdf = true;
-}
+const changeTabs = (e) => {
+  data.activeKey = e;
+};
 //编辑
 const handleEdit = (key) => {
   data.recordId = key;
-  data.isCommon = true;
+  //data.isCommon = true;
+  data.isNew = true;
 }
 // 通用弹窗关闭
 const handleCommonCancel = (params) => {
   data.isCommon = false;
 };
 onMounted(() => {
-  data.height = document.documentElement.clientHeight - 150;
+  data.height = document.documentElement.clientHeight - 250;
   data.recordId = props.id;
   getDetail();
   window.addEventListener("resize", (e) => {
-    data.height = document.documentElement.clientHeight - 150;
+    data.height = document.documentElement.clientHeight - 250;
   });
 });
 </script>
 <style lang="less">
 @import url("@/style/modal.less");
 
-.invoiceDetailWrap {
+.reimburseDetailModal {
+  .tabWrap{
+    position: relative;
+    top: -5px;
+  }
   .detailInfo {
-    .detailTitle{
+    .detailTitle {
       font-size: 16px;
       height: 55px;
       line-height: 40px;
       text-align: center;
+      color: #000;
     }
+
     .fh-section {
       margin-bottom: 8px;
 

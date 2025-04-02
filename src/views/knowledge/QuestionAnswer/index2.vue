@@ -970,7 +970,7 @@ const handleSendStatus = () => {
                 data.text = "";
                 data.description = "";
                 if (data.activeKey == '0') {
-                    editorRef.value.content = "";
+                    //editorRef.value.content = "";
                     if (data.ImageList && data.ImageList.length) {
                         data.ImageList.forEach(v => {
                             let fd = new FormData();

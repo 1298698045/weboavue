@@ -179,7 +179,7 @@
   import { useRouter, useRoute } from "vue-router";
   import Related from "@/components/detail/Related.vue";
   import Info from "@/components/detail/Info.vue";
-  import InfoNotes from "@/components/commonTab/RelatedNote.vue";
+  import InfoNotes from "@/components/commonModal/RelatedNote.vue";
   import ChangeStatus from "@/components/information/ChangeStatus.vue";
   import InfoRemind from "@/components/information/InfoRemind.vue";
   import InfoAddClass from "@/components/information/InfoAddClass.vue";

@@ -229,7 +229,7 @@ import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 // 选人
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 // 备注
-import Notes from "@/components/commonTab/RelatedNote.vue";
+import Notes from "@/components/commonModal/RelatedNote.vue";
 //import CommonFormModal from "@/components/listView/CommonFormModal.vue";
 // 编辑
 import AddGroup from "@/components/groupDetail/AddGroup.vue";

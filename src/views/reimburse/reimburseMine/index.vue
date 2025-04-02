@@ -1,5 +1,5 @@
 <template>
-  <div class="todoList documentAdmin">
+  <div class="todoList reimburseMineWrap">
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
@@ -9,34 +9,16 @@
       </div>
       <div class="headerRight">
         <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
+        <a-button type="primary" class="ml10" @click="handleNewForm">新建报销单</a-button>
+        <!-- <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
+          @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false">
+          <a-button class="ml10" type="primary">上传</a-button>
+        </a-upload> -->
       </div>
     </div>
     <div class="todo-content">
       <a-row>
-        <!-- <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">
-            <div class="wea-left-tree">
-              <div class="wea-left-tree-search">
-                <a-input-search v-model:value="data.searchVal" placeholder="" @search="onSearch" />
-              </div>
-              <div class="wea-left-tree-scroll">
-                <a-tree :style="{height: tableHeight+'px'}" :expanded-keys="expandedKeys"
-                  :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
-                  @select="onSelect"
-                  @expand="onExpand">
-                  <template #switcherIcon="{ switcherCls }">
-                    <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
-                    </CaretDownOutlined>
-                  </template>
-<template v-slot:title="{ name, data, isLeaf, text, quantity }">
-                    <span>{{ name }}<span class="tree-num">{{ quantity }}</span></span>
-                  </template>
-</a-tree>
-</div>
-</div>
-</a-col> -->
         <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
-          <!-- <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
-              :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div> -->
           <div style="height: 100%" ref="contentRef">
             <div class="wea-tab">
               <a-tabs v-model:activeKey="activeKey" @change="changeTab">
@@ -47,13 +29,8 @@
                     </span>
                   </template>
                 </a-tab-pane>
-                <!-- <a-tab-pane key="2" tab="待处理" force-render></a-tab-pane>
-                    <a-tab-pane key="3" tab="待阅"></a-tab-pane> -->
               </a-tabs>
               <div class="tabsBtn">
-                <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-                    <a-button type="primary" class="ml10">批量发布</a-button>
-                    <a-button class="ml10">批量取消发布</a-button> -->
               </div>
             </div>
             <list-form-search ref="searchRef" @search="handleSearch" entityApiName="OfficialDocumentIn"
@@ -68,18 +45,64 @@
         </a-col>
       </a-row>
     </div>
-    <!-- 委派 -->
-    <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal"
-      v-if="isModal" />
-    <!-- 跳转 -->
-    <Jump v-if="isJump" :isShow="isJump" :paramsData="jumpData.params" @update-status="isJump = false" />
-    <!-- 加签 -->
-    <Countersign v-if="isCountersign" :isShow="isCountersign" :paramsData="CountersignData.params"
-      @update-status="isCountersign = false" />
-    <!-- 发布 -->
-    <ReleaseFlow v-if="isRelease" :isShow="isRelease" :id="ProcessInstanceId" @cancel="cancelRelase"></ReleaseFlow>
-    <NewCategory v-if="isCategory" @cancel="cancelCategory" :isShow="isCategory" :id="treeId" ObjectTypeCode="流程" />
-    <EditFlowDefine v-if="isEditFlow" :isShow="isEditFlow" :id="id" @cancel="cancelEditFlowDefine" />
+
+    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false"
+      :title="data.recordId ? '编辑' : '新建'" @success="handleSearch('')" :id="recordId" :objectTypeCode="objectTypeCode"
+      :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue"
+      :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
+    <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="isDelete = false" @ok="handleSearch('')"
+      :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+    <reimburseDetail v-if="isDetail" :isShow="isDetail" :id="recordId" @cancel="isDetail = false" />
+      <div class="modal">
+            <a-modal v-model:open="isModal" width="550px" :style="'top:'+top+'px'" :maskClosable="false" @cancel="handleCancel" @ok="handleOk">
+                <template #title>
+                    <div>
+                      新建报销单
+                    </div>
+                </template>
+                <div class="modalContainer">
+                    <div class="modalCenter" style="height:440px;">
+                        <a-form ref="formRef" :label-col="labelCol" class="CreateProcess1" :model="formState">
+                            <div class="form-tip">请输入流程事务标题，建立事务</div>
+                            <a-form-item label="流程：" name="ProcessName">
+                                <div class="ProcessName">{{ formState.ProcessName || '' }}</div>
+                            </a-form-item>
+                            <a-form-item name="BusinessUnitId" label="创建身份："
+                                :rules="[{ required: true, message: '请选择发起部门' }]">
+                                <a-select v-model:value="formState.BusinessUnitId">
+                                    <a-select-option v-for="(item, index) in formState.BusinessUnitList" :key="index"
+                                        :value="item.BusinessUnitId">{{ item.organizationIdName }}/{{
+                                        item.businessUnitIdName
+                                        }}</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item class="processTitle" label="标题：" name="Title"
+                                :rules="[{ required: true, message: '标题不能为空' }]">
+                                <a-input v-model:value="formState.Title" />
+                                <div class="form-tip1">默认标题是 流程名称 部门名称，为了查询方便，请输入流程真实标题。</div>
+                                <div class="form-tip1">如收文 关于XX来文 XX科室 XX人。</div>
+                            </a-form-item>
+                            <a-form-item name="Priority" label="紧急程度：">
+                                <a-select v-model:value="formState.Priority">
+                                    <a-select-option value="0">普通</a-select-option>
+                                    <a-select-option value="1">紧急</a-select-option>
+                                    <a-select-option value="2">加急</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item label="备注：" name="Description">
+                                <a-textarea :rows="3" v-model:value="formState.Description" />
+                            </a-form-item>
+                        </a-form>
+                    </div>
+                </div>
+                <template #footer>
+                    <div>
+                        <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
+                        <a-button @click="handleCancel">取消</a-button>
+                    </div>
+                </template>
+            </a-modal>
+        </div>
   </div>
 </template>
 <script setup>
@@ -96,139 +119,19 @@ import { message } from "ant-design-vue";
 import Ntable from "@/components/Ntable.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
 
-import NewCategory from "@/components/workflow/NewCategory.vue";
-import EditFlowDefine from "@/components/workflow/EditFlowDefine.vue";
-import Delegate from "@/components/workflow/Delegate.vue";
-import Jump from "@/components/workflow/Jump.vue";
-import Countersign from "@/components/workflow/Countersign.vue";
-import ReleaseFlow from "@/components/workflow/ReleaseFlow.vue"
 import { useRouter, useRoute } from "vue-router";
 import useWorkAdmin from "@/utils/flow/workAdmin";
+import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+import Delete from "@/components/listView/Delete.vue";
+import reimburseDetail from "@/components/reimburse/reimburse/reimburseDetail.vue";
 import { formTreeData, girdFormatterValue } from "@/utils/common.js";
 const { tabList } = useWorkAdmin();
 console.log("tabList", tabList);
 const route = useRoute();
 const router = useRouter();
-
-const x = 3;
-const y = 2;
-const z = 1;
 const { proxy } = getCurrentInstance();
-const genData = [];
-const generateData = (_level, _preKey, _tns) => {
-  const preKey = _preKey || "0";
-  const tns = _tns || genData;
-  const children = [];
-  for (let i = 0; i < x; i++) {
-    const key = `${preKey}-${i}`;
-    tns.push({
-      title: key,
-      key,
-    });
-    if (i < y) {
-      children.push(key);
-    }
-  }
-  if (_level < 0) {
-    return tns;
-  }
-  const level = _level - 1;
-  children.forEach((key, index) => {
-    tns[index].children = [];
-    return generateData(level, key, tns[index].children);
-  });
-};
-generateData(z);
-const dataList = [];
-const generateList = (data) => {
-  for (let i = 0; i < data.length; i++) {
-    const node = data[i];
-    const key = node.key;
-    dataList.push({
-      key,
-      title: key,
-    });
-    if (node.children) {
-      generateList(node.children);
-    }
-  }
-};
-generateList(genData);
-const getParentKey = (key, tree) => {
-  let parentKey;
-  for (let i = 0; i < tree.length; i++) {
-    const node = tree[i];
-    if (node.children) {
-      if (node.children.some((item) => item.key === key)) {
-        parentKey = node.key;
-      } else if (getParentKey(key, node.children)) {
-        parentKey = getParentKey(key, node.children);
-      }
-    }
-  }
-  return parentKey;
-};
-const expandedKeys = ref([]);
-const searchValue = ref("");
-const autoExpandParent = ref(true);
-const res = require("@/localData/treedata.json");
-const gData = ref([]);
-const gDataAll = ref([]);
-// proxy.$get('/localData/treedata.json', {}).then((res) => {
-//   console.log("res-processTree", res);
-//   let listData = res.data;
-//   let formTree = (list) => {
-//     list.forEach(item => {
-//       if (item.children) {
-//         formTree(item.children);
-//       }
-//       item.key = item.id;
-//       item.value = item.id;
-//     })
-//   }
-//   formTree(listData);
-//   console.log("formTree", listData)
-//   gData.value = listData;
-//   gDataAll.value = listData;
-// })
-// proxy.$get(Interface.documentAdmin.tree,{
-//     entity: "docouttype"
-// }).then((res)=>{
-//     let listData = formTreeData(res.rows,'id','pid');
-//     let formTree = (list) => {
-//         list.forEach(item => {
-//         if (item.children) {
-//             formTree(item.children);
-//         }
-//         item.key = item.id;
-//         item.value = item.id;
-//         item.name = item.text;
-//         })
-//     }
-//     formTree(listData);
-//     gData.value = listData;
-//     gDataAll.value = listData;
-// })
-// console.log("genData",genData,treeList)
 
-const onExpand = (keys) => {
-  expandedKeys.value = keys;
-  autoExpandParent.value = false;
-};
-// watch(searchValue, (value) => {
-//   const expanded = dataList
-//     .map((item) => {
-//       if (item.title.indexOf(value) > -1) {
-//         return getParentKey(item.key, gData.value);
-//       }
-//       return null;
-//     })
-//     .filter((item, i, self) => item && self.indexOf(item) === i);
-//   expandedKeys.value = expanded;
-//   searchValue.value = value;
-//   autoExpandParent.value = true;
-// });
-
+const token = localStorage.getItem("token");
 let data = reactive({
   isCollapsed: true,
   tableHeight: '',
@@ -236,52 +139,22 @@ let data = reactive({
     children: 'children', title: 'name', key: 'id'
   },
   tabs0: [
-    {
-      label: "全部",
-      count: '',
-      filterquery: '',
-    },
-    {
-      label: "流转中",
-      count: '',
-      filterquery: '\nStateCode\teq\t1',
-    },
-    {
-      label: "已完成",
-      count: '',
-      filterquery: '\nStateCode\teq\t3',
-    },
-    {
-      label: "已退回",
-      count: '',
-      filterquery: '\nStateCode\teq\t6',
-    },
-    {
-      label: "已撤销",
-      count: '',
-      filterquery: '\nStateCode\teq\t5',
-    },
-    {
-      label: "草稿",
-      count: '',
-      filterquery: '\nStateCode\teq\t0',
-    }
   ],
   tabs: [],
   //tabs: tabList,
   activeKey: 0,
-  entityType:'F01',
+  entityType: 'F01',
   queryParams: {
     filterId: '',
     objectTypeCode: '7001',
     entityName: 'ReimburseBill',
     filterQuery: '',
     //filterQuery:'\nCreatedBy\teq-userid',
-    //displayColumns:'ProcessInstanceNumber,Name,ProcessId,StateCode,ExpiredOn,AttachQty,CreatedBy,CurrentStepName,CreatedOn,BusinessUnitId,ModifiedOn,Priority,ProcessInstanceId,WFRuleLogId,ExecutorIdentityName',
+    //displayColumns:'',
     sort: 'CreatedOn',
     order: 'desc'
   },
-  layoutName:'mineReimburseBill',
+  layoutName: 'mineReimburseBill',
   isModal: false,
   isCirculation: false,
   searchVal: "",
@@ -294,19 +167,45 @@ let data = reactive({
   isRelease: false,
   ProcessInstanceId: "",
   formSearchFilterquery: "",
-  SearchFields: []
+  SearchFields: [],
+  isCommon: false,
+  recordId: '',
+  objectTypeCode: '7001',
+  sObjectName: 'ReimburseBill',
+  relatedObjectAttributeValue: '',
+  relatedObjectAttributeName: '',
+  isDelete: false,
+  deleteDesc: '确定要删除吗？',
+  external: false,
+  uploadData: {
+    parentId: '',
+    entityName: ''
+  },
+  headers: {
+    Authorization: token,
+    Token: token,
+  },
+  fileList: [],
+  isDetail: false,
+  InvoiceType: '',
+  isNew: false,
+  entityId: '',
+  rowRecord: {},
+  top:0
 });
-const handleCollapsed = () => {
-  data.isCollapsed = !data.isCollapsed;
-  changeHeight();
-};
-
-const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
+const { top, rowRecord, entityId, isNew, InvoiceType, isDetail, fileList, uploadData, headers, isDelete, deleteDesc, external, isCommon, recordId, objectTypeCode, sObjectName, relatedObjectAttributeValue, relatedObjectAttributeName, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
   isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields } = toRefs(data);
-//   console.log("tabs", data.tabs);
 const tabContent = ref(null);
 const contentRef = ref(null);
 const searchRef = ref(null);
+const formState = reactive({
+    ProcessName: "",
+    BusinessUnitId: "",
+    Title: "",
+    Priority: "0",
+    Description: "",
+    BusinessUnitList: [],
+})
 let formSearchHeight = ref(null);
 const gridRef = ref(null);
 const onSearch = (e) => {
@@ -318,13 +217,18 @@ const onSelect = (keys) => {
   data.treeId = keys[0];
   handleSearch(data.formSearchFilterquery);
 };
-onMounted(() => {
-  window.addEventListener('resize', changeHeight)
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
-  getTabs();
-})
+const beforeUpload = (e) => {
+  console.log("beforeUpload", e);
+}
+const changeFiles = (e) => {
+  // console.log("e", e);
+  if (e.file.status == "done") {
+    message.success("上传成功！");
+    handleSearch();
+  } else if (e.file.status == "error") {
+    message.error("上传失败！");
+  }
+}
 function changeHeight(h) {
   if (typeof h == 'number') {
     formSearchHeight.value = h;
@@ -333,13 +237,12 @@ function changeHeight(h) {
   let tabsHeight = 46;
   let height = contentHeight - tabsHeight - formSearchHeight.value;
   data.tableHeight = height;
-  console.log('data', data.tableHeight);
+  data.top= (document.documentElement.clientHeight - 565)/2;
+  //console.log('data', data.tableHeight);
   //console.log("gridRef", gridRef.value.loadGrid())
   //handleSearch();
 }
-const cancelRelase = (e) => {
-  data.isRelease = e;
-}
+
 const handleSearch = (filterquery) => {
   data.queryParams.filterQuery = '';
   //data.queryParams.filterQuery='\nCreatedBy\teq-userid';
@@ -365,7 +268,9 @@ const getColumns = (id) => {
       var str = `
                 <div class="iconBox">
             <div class="popup">
-            <div class="option-item" id=${row.id} onclick="handleTo('${row.viewUrl}')">查看</div>
+            <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}','${row.InvoiceType && row.InvoiceType.value ? row.InvoiceType.value : ''}')">查看</div>
+            <div class="option-item" id=${row.id} onclick="handleEdit('${row.id}')">编辑</div>
+            <div class="option-item" id=${row.id} onclick="handleDelete('${row.id}')">删除</div>
             </div>
             <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
         `
@@ -438,85 +343,18 @@ const getTabs = () => {
     getColumns(data.queryParams.filterId);
   })
 }
-// getTabs();
-
-const handleMenuClick = () => {
-
-}
-const DelegateRef = ref();
-
-function handleTo(viewUrl) {
-  // router.push({
-  //   path: "/detail",
-  //   query: {
-  //     id: id
-  //   }
-  // });
+function handleTo(viewUrl,id) {
+  router.push({
+    path: "/lightning/r/Workflow/instance/detail",
+    query: {
+      id: id,
+      reurl:'/lightning/page/ReimburseMine/home'
+    }
+  });
   window.open(viewUrl)
 }
-const EditFlow = (id) => {
-  console.log("id", id);
-  data.id = id;
-  data.isEditFlow = true;
-}
-const DelegateData = reactive({
-  params: {}
-})
-const CirculationData = reactive({
-  params: {}
-})
-const jumpData = reactive({
-  params: {}
-})
-const CountersignData = reactive({
-  params: {}
-})
-const updateStatus = (e) => {
-  data.isModal = e;
-  data.isCirculation = e;
-}
-// 委派
-function DelegateFn(InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName) {
-  // console.log("RuleLogId",RuleLogId, DelegateRef);
-  DelegateData.params = {
-    InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName
-  }
-  console.log(DelegateData.params)
-  data.isModal = true;
-}
-function CirculationFn(InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName) {
-  CirculationData.params = {
-    InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName
-  }
-  data.isCirculation = true;
-}
-// 跳转
-function handleJump(ProcessId, ProcessIdName, ProcessInstanceId) {
-  jumpData.params = {
-    ProcessId, ProcessIdName, ProcessInstanceId
-  }
-  data.isJump = true;
-}
-// 加签
-function handleCountersign(ProcessId, ProcessIdName, ProcessInstanceId) {
-  CountersignData.params = {
-    ProcessId, ProcessIdName, ProcessInstanceId
-  }
-  data.isCountersign = true;
-}
-// 发布
-const handleRelase = (ProcessInstanceId) => {
-  data.ProcessInstanceId = ProcessInstanceId;
-  data.isRelease = true;
-}
-window.handleRelase = handleRelase;
-window.handleJump = handleJump;
-window.handleCountersign = handleCountersign;
 window.handleTo = handleTo;
-window.EditFlow = EditFlow;
 window.data = data;
-window.DelegateFn = DelegateFn;
-const imgUrl = require("@/assets/flow/checkbox_checked.gif");
 const gridUrl = ref(Interface.list2);
 
 const columns = ref([]);
@@ -535,23 +373,131 @@ const changeTab = (e) => {
   }
   getColumns(data.queryParams.filterId);
 }
-// 添加分类
-const handleAddCategory = (key) => {
-  console.log("key:", key);
-  data.isCategory = true;
+
+//新建
+const handleNew = () => {
+  data.recordId = '';
+  data.isCommon = true;
+  //data.isNew = true;
 }
-// 编辑
-const handleEditCategory = (key) => {
-  console.log("key:", key);
-  data.treeId = key;
-  data.isCategory = true;
+//新建报销单
+const handleNewForm = () => {
+  formState.ProcessName = '报销申请单';
+  data.rowRecord = {
+    description: null,
+    folderId: "081CF0B8-A1A8-42E6-8EE1-58FBF4B62720",
+    isFavorite: false,
+    name: "报销申请单",
+    processId: "8166C971-1E16-482B-BB41-D1E403FB3220"
+  };
+  getDeptList();
+  data.isModal = true;
 }
-const cancelCategory = (e) => {
-  data.isCategory = e;
+//编辑
+const handleEdit = (id) => {
+  data.recordId = id;
+  data.isCommon = true;
+  //data.isNew = true;
+}
+window.handleEdit = handleEdit;
+//删除
+const handleDelete = (id) => {
+  data.isDelete = true;
+  data.recordId = id;
 };
-const cancelEditFlowDefine = (e) => {
-  data.isEditFlow = e;
+window.handleDelete = handleDelete;
+// 通用弹窗关闭
+const handleCommonCancel = (params) => {
+  data.isCommon = false;
+};
+
+//打开详情
+const handleDetail = (id, InvoiceType) => {
+  data.recordId = id;
+  data.InvoiceType = InvoiceType;
+  data.isDetail = true;
 }
+window.handleDetail = handleDetail;
+const handleOk = () => {
+    isModal.value = false;
+}
+const handleCancel = () => {
+    isModal.value = false;
+}
+const formRef = ref();
+const handleSubmit = () => {
+    formRef.value.validate().then(() => {
+        //console.log('values', formState, toRaw(formState));
+        let obj = {
+            "actions": [
+                {
+                    "id": "4270;a",
+                    "descriptor": "aura://RecordUiController/ACTION$getRecordWithFields",
+                    "callingDescriptor": "UNKNOWN",
+                    "params": {
+                        "processId": data.rowRecord.processId,
+                        "priority": formState.Priority,
+                        "name": formState.Title,
+                        "businessUnitId": formState.BusinessUnitId,
+                        "description": formState.Description
+                    }
+                }
+            ]
+        };
+        let d = {
+            message: JSON.stringify(obj)
+        };
+        proxy.$post(Interface.workflow.new, d).then(res => {
+            if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+                message.success("新建流程成功");
+                let url = router.resolve({
+                    name: "FlowDetail",
+                    query: {
+                        id: res.actions[0].returnValue.id,
+                        reurl: '/lightning/o/workflow/doing'
+                    },
+                });
+                window.open(url.href);
+                handleCancel();
+            } else {
+                if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+                    message.success(res.actions[0].errorMessage);
+                }
+                else {
+                    message.error("新建流程失败");
+                }
+            }
+        })
+    }).catch(err => {
+        console.log('error', err);
+    });
+}
+// 获取部门
+const getDeptList = () => {
+    // proxy.$get(Interface.businessunitList,{}).then(res=>{
+    //     formState.BusinessUnitList = res.businessUnits;
+    //     formState.Title = data.rowRecord.name + ' ' + res.businessUnits[0].name;
+    //     formState.BusinessUnitId =  res.businessUnits[0].id;
+    // })
+    const now = new Date();
+    const nowtime = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+    let userInfo = window.localStorage.getItem('userInfo');
+    if (userInfo) {
+        userInfo = JSON.parse(userInfo);
+        formState.BusinessUnitId = userInfo.businessUnitId;
+        data.userId = userInfo.userId;
+    }
+    proxy.$post(Interface.user.getBusinessUnits, {}).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
+            formState.BusinessUnitList = res.actions[0].returnValue;
+            for (var i = 0; i < formState.BusinessUnitList.length; i++) {
+                if (formState.BusinessUnitList[i].BusinessUnitId == formState.BusinessUnitId) {
+                    formState.Title = data.rowRecord.name + ' ' + formState.BusinessUnitList[i].businessUnitIdName + ' ' + formState.BusinessUnitList[i].FullName + ' ' + nowtime;
+                }
+            }
+        }
+    })
+};
 watch(() => route, (newVal, oldVal) => {
   if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
     if (route.path == '/lightning/page/ReimburseMine/home') {
@@ -572,27 +518,35 @@ watch(() => route, (newVal, oldVal) => {
     }
   }
 }, { deep: true, immediate: true })
+onMounted(() => {
+  data.top= (document.documentElement.clientHeight - 565)/2;
+  window.addEventListener('resize', changeHeight)
+  // this.$nextTick(()=>{
+  //   getTabs();
+  // })
+  getTabs();
+})
 </script>
 <style lang="less">
 @import "@/style/flow/treeList.less";
 </style>
-<style scoped lang="less">
-.wea-left-tree-search {
-  padding-left: 14px;
-}
-
-.treeRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 10px;
-
-  .num {
-    color: #aaa;
+<style lang="less" scoped>
+.reimburseMineWrap {
+  .wea-left-tree-search {
+    padding-left: 14px;
   }
-}
 
-.documentAdmin {
+  .treeRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 10px;
+
+    .num {
+      color: #aaa;
+    }
+  }
+
   .todo-content .ant-row .wea-left-right-layout-left .wea-left-tree .wea-left-tree-search {
     padding-left: 14px;
   }
@@ -616,7 +570,31 @@ watch(() => route, (newVal, oldVal) => {
     display: none;
   }
 }
+:deep .CreateProcess1 {
+    .ant-form-item {
+        margin-bottom: 20px !important;
+    }
+    .ant-form-item-label{
+        width: 100px !important;
+    }
+    .processTitle .ant-row .ant-col .ant-form-item-required {
+        color: rgba(0, 0, 0, 0.88) !important;
+    }
 
+    .processTitle .ant-row .form-tip1 {
+        color: rgba(0, 0, 0, 0.88) !important;
+    }
+
+    .ProcessName {
+        color: rgba(0, 0, 0, 0.88) !important;
+    }
+
+    .form-tip {
+        font-size: 12px;
+        margin-bottom: 12px;
+        color: #606266;
+    }
+}
 :deep .iconBox {
   text-align: center;
 
