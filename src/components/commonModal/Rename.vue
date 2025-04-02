@@ -38,10 +38,10 @@
     const labelCol = ref({ style: { width: '100px' } });
     const props = defineProps({
         isShow: Boolean,
-        entityApiName: String,
+        sObjectName: String,
         objTypeCode: String,
-        recordId: String,
-        fileName: String,
+        id: String,
+        name: String,
         fieldName: String
     })
     const emit = defineEmits(['cancel', 'success']);
@@ -56,8 +56,8 @@
         name: ""
     });
     console.log(props)
-    if(props.fileName){
-        formState.name = props.fileName;
+    if(props.name){
+        formState.name = props.name;
     }
     const handleSearch = (val) => {
         console.log('val', val);
@@ -84,11 +84,11 @@
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                    recordId: props.recordId,
+                    recordId: props.id,
                     recordInput: {
                         allowSaveOnDuplicate: false,
-                        apiName: props.entityApiName,
-                        objTypeCode: props.objectTypeCode,
+                        apiName: props.sObjectName,
+                        objTypeCode: props.objTypeCode,
                         fields: {
                             [props.fieldName]: formState.name
                         }
@@ -106,10 +106,10 @@
             }
             else {
                 if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
-                    message.success(res.actions[0].errorMessage);
+                    message.error(res.actions[0].errorMessage);
                 }
                 else {
-                    message.success("重命名失败");
+                    message.error("重命名失败");
                 }
             }
             setTimeout(function () {

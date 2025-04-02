@@ -1,719 +1,188 @@
 <template>
-    <div class="detailWrap">
+    <div class="detailWrap" style="min-height: 100vh;">
         <div class="detail-header">
-            <div class="leftBox">
-                <div class="title">
-                    <span class="backText" @click="backToList"> « 返回列表</span>
-                    <span v-if="!isEdit" @click="EditTitle">{{data.Title||'02 差旅费报销流程 院领导 jackliu3 2023-09-22'}}&nbsp;<EditOutlined /></span>
-                    <a-input ref="detailTitleInputDom" v-if="isEdit" v-model:value="data.Title" class="detailTitleInput" @blur="handleSave"></a-input>
+            <div class="primaryFieldRow">
+                <div class="fieldCol" style="flex: 1;">
+                    <div class="profilePicWrapper">
+                        <div style="background-color: #3BA755;" class="forceEntityIcon">
+                            <img :src="require('@/assets/img/task_120.png')" alt="">
+                        </div>
+                    </div>
+                    <div class="media__body">
+                        <h1>
+                            <div class="entityNameTitle">通用详情</div>
+                            <div class="pageHeadTitle">{{ Name }}</div>
+                        </h1>
+                    </div>
                 </div>
-                <div class="tabWrap">
-                    <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
-                        <a-tab-pane v-for="(item,index) in tabs" :key="index">
-                            <template #tab>
-                                <span>
-                                    {{item.label}}
-                                </span>
+                <div class="fieldCol actionsContainer">
+                    <!-- <div class="fh-btn-group">
+                        <div class="fh-btn">批量录入岗位职责</div>
+                        <div class="fh-btn">添加岗位职责</div>
+                        <div class="fh-btn" @click="handleEdit">编辑</div>
+                        <div class="fh-btn">复制</div>
+                        <div class="fh-btn" @click="printPostInstructions">打印岗位说明</div>
+                        <a-dropdown :trigger="['click']">
+                            <div class="fh-btn fh-btn-icon">
+                                <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon" lwc-6qul4k2dv7m="" data-key="down" class="slds-icon slds-icon_x-small"><g lwc-6qul4k2dv7m=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" lwc-6qul4k2dv7m=""></path></g></svg>
+                            </div>
+                            <template #overlay>
+                                <a-menu :trigger="['click']" style="padding: 10px 0;border: 1px solid #333;border-radius: 4px;">
+                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
+                                        新建备注
+                                    </a-menu-item>
+                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
+                                        撤销
+                                    </a-menu-item>
+                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
+                                        复制
+                                    </a-menu-item>
+                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
+                                        导出说明书
+                                    </a-menu-item>
+                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
+                                        下载说明书
+                                    </a-menu-item>
+                                </a-menu>
                             </template>
-                        </a-tab-pane>
-                    </a-tabs>
+                        </a-dropdown>
+                    </div> -->
                 </div>
             </div>
-            <div class="rightBox">
-                <a-button class="ml10" @click="openZW">正文</a-button>
-                <a-button type="primary" class="ml10" @click="handSave">保存表单</a-button>
-                <a-button type="primary" danger class="ml10" @click="handleRejection">审批拒绝</a-button>
-                <a-button type="primary" class="ml10" @click="handleSubmitProcess">提交流程</a-button>
-                <a-dropdown :trigger="['hover']" class="ml10">
-                    <span class="btn-drop">
-                      <UnorderedListOutlined style="color: #1D2129;" />
-                    </span>
-                    <template #overlay>
-                      <a-menu>
-                        <a-menu-item key="1" @click="handleUrging">
-                          催办
-                        </a-menu-item>
-                        <a-menu-item key="2" @click="handleCirculation">
-                          传阅他人
-                        </a-menu-item>
-                        <a-menu-item key="3" @click="handleDelegate">
-                          委托
-                        </a-menu-item>
-                        <a-menu-item key="4" @click="printForm">
-                            打印审批单
-                        </a-menu-item>
-                        <a-menu-item key="5" @click="printForm">
-                            PDF
-                        </a-menu-item>
-                      </a-menu>
-                    </template>
-                  </a-dropdown>
-            </div>
+            <ul class="pageHeader-from">
+                <li class="listRecordItem">
+                    <div class="formLabel">名称</div>
+                    <div class="formVal">
+                        <a href="javascript:;" class="textUnderline">{{Name}}</a>
+                    </div>
+                </li>
+            </ul>
         </div>
-        <div class="detail-scroll">
-            <div class="detail-bd">
-                <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
-                    <div class="leftContent" :class="{'active':!isAside}">
-                        <div class="tableBox" style="width: 100%;overflow: auto;" :class="{'active':!isAside}">
-                            <FlowForm />
-                        </div>
-                        <div class="reqWrap">
-                            <div class="reqHead">
-                                <a-tabs v-model:activeKey="reqIndex" @change="changeTab">
-                                    <a-tab-pane :key="1" tab="流转意见"></a-tab-pane>
-                                    <a-tab-pane :key="2" tab="与我相关"></a-tab-pane>
-                                </a-tabs>
-                            </div>
-                            <div class="reqBd">
-                                <div class="reqSignList">
-                                    <div class="reqSignListCont" v-for="item in 3" :key="item">
-                                        <div class="content-left">
-                                            <div class="avatarImg">
-                                                <img :src="require('@/assets/img/fabe85b769064b61ad77a39d531a6e71.jpg')" alt="">
-                                            </div>
-                                            <div style="width: 132px;">
-                                                <p class="operate-name-label">
-                                                    <a href="javaScript:openhrm(611)">王晓丽</a>
-                                                </p>
-                                                <span class="left-department-span">
-                                                    <a href="/spa/hrm/engine.html#/hrmengine/organization?showTree=false&amp;isView=1&amp;type=department&amp;id=148&amp;_key=3b4uab" target="_blank" style="color: rgb(155, 155, 155); white-space: pre-wrap;">齐业成-业务发展部</a>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="content-right">
-                                            <div class="content-right-remark-html">
-                                                <br>
-                                            </div>
-                                            <p class="logitem-Recipient">
-                                                <span>接收人 : </span>
-                                                王晓丽 杨元文 杨文元（演示账号） 张理祯
-                                            </p>
-                                            <p class="loglist-item-operatedate">
-                                                <span style="margin-right: 8px;">2023-12-08 16:51:16 </span>
-                                                <span>[预制凭证 / 提交]</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="pagination">
-                                        <a-pagination v-model:current="pageCurrent" show-quick-jumper :total="500" @change="changePagination" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="rightAside">
-                        <div class="arrowIcon rightIcon" v-if="isAside" @click="isAside=false"></div>
-                        <div class="arrowIcon leftIcon" v-else @click="isAside=true"></div>
-                        <div v-if="isAside" class="asideScroll">
-                            <!-- <div class="panel">
-                                <div class="panel-head">
-                                    <div class="panel-title">
-                                        相关事务
-                                    </div>
-                                    <div class="panel-btn">
-                                        <a-button type="text" size="small" @click="addRelateInstance">添加关联</a-button>
-                                    </div>
-                                </div>
-                                <div class="panel-bd">
-                                    <div class="relevantList">
-                                        <div class="empty" v-if="relatedList.length==0">
-                                            <div>
-                                                <img :src="require('@/assets/img/empty.png')" alt="">
-                                                <p class="emptyDesc">当前暂无数据</p>
-                                            </div>
-                                        </div>
-                                        <div class="relevantItem" v-for="(item,index) in relatedList" :key="index">
-                                            <div class="relevantTitle">{{item.Name}}</div>
-                                            <div class="relevantTimerInfo">{{item.CreatedOn}} {{item.CreatedByName}}</div>
-                                            <a-popconfirm title="是否确定要删除？"
-                                                ok-text="确定"
-                                                cancel-text="取消"
-                                                @confirm="confirm"
-                                                @cancel="cancel">
-                                                <DeleteOutlined />
-                                            </a-popconfirm>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
-                            <div class="panel">
-                                <div class="panel-head">
-                                    <div class="panel-title">
-                                        附件 (0)
-                                    </div>
-                                    <div class="panel-btn">
-                                        <a-upload v-model:file-list="fileList" action="#" :showUploadList="false">
-                                            <a-button type="text" size="small">上传文件</a-button>
-                                        </a-upload>
-                                    </div>
-                                </div>
-                                <div class="panel-bd">
-                                    <div class="collapse">
-                                        <div class="collapseItem" v-for="(item, index) in categoryFiles" :key="index">
-                                            <div class="collapseHead" v-if="item.CategoryName && item.CategoryName!='null'">
-                                                <span class="collapseItemIcon">
-                                                    <!-- <DownOutlined /> -->
-                                                    <UpOutlined />
-                                                </span>
-                                                <span class="collapseItemName">
-                                                    {{item.CategoryName}}
-                                                </span>
-                                                <span class="addIcon">
-                                                    <PlusOutlined style="color: #3399ff;" />
-                                                </span>
-                                            </div>
-                                            <div class="collapseBd">
-                                                <div class="files">
-                                                    <div class="fileItem" v-for="(row, idx) in item.Files" :key="row.Id" :idx="idx">
-                                                        <div class="fileItemImg">
-                                                            <img :src="require('@/assets/img/filetype/doc.png')" v-if="row.FileExtension == 'ocx' || 
-                                                            row.FileExtension == 'docx' || row.FileExtension == 'doc'" />
-                                                            <img :src="require('@/assets/img/filetype/rar.png')" v-else-if="row.FileExtension == 'rar' || 
-                                                            row.FileExtension == 'zip'" />
-                                                            <img :src="require('@/assets/img/filetype/Excel.png')" v-else-if="row.FileExtension == 'xlsx' || 
-                                                            row.FileExtension == 'xls'" />
-                                                            <img :src="require('@/assets/img/filetype/pdf.png')" v-else-if="row.FileExtension == 'pdf'" />
-                                                            <img :src="require('@/assets/img/filetype/TXT.png')" v-else-if="row.FileExtension == 'TXT'||row.FileExtension == 'txt'" />
-                                                            <img :src="require('@/assets/img/filetype/PPT.png')" v-else-if="row.FileExtension == 'ppt'||row.FileExtension == 'pptx'" />
-                                                            <img :src="require('@/assets/img/filetype/video.png')" v-else-if="row.FileExtension == 'mp4'||row.FileExtension == '.mp4'" />
-                                                            <img :src="require('@/assets/img/filetype/defaultImg.png')" v-else-if="row.FileExtension == 'jpg'||row.FileExtension == 'png'||row.FileExtension == 'gif'" />
-                                                            <img :src="require('@/assets/img/filetype/File.png')" v-else />
-                                                        </div>
-                                                        <div class="fileItemInfo">
-                                                            <p class="name">{{row.Name}}</p>
-                                                            <p class="link">
-                                                                <a href="javascript:;" @click="openZW(row)">查看</a>
-                                                                ·
-                                                                <a href="javascript:;" @click="openZW(row)">下载</a>
-                                                            </p>
-                                                            <p class="time">
-                                                                <span>{{row.CreatedOn}}&nbsp;·</span>
-                                                                &nbsp;
-                                                                <span>{{row.FileSize}}</span>
-                                                            </p>
-                                                        </div>
-                                                        <div class="iconOpera">
-                                                            <a-dropdown trigger="click">
-                                                                <DownOutlined style="font-size: 12px;" />
-                                                                <template #overlay>
-                                                                    <a-menu>
-                                                                        <a-menu-item>
-                                                                            <a href="javascript:;" @click="openZW(row)">查看</a>
-                                                                        </a-menu-item>
-                                                                        <a-menu-item>
-                                                                            <a-popconfirm title="是否确定要删除？"
-                                                                                ok-text="确定"
-                                                                                cancel-text="取消"
-                                                                                @confirm="confirm"
-                                                                                @cancel="cancel">
-                                                                                <a href="javascript:;">删除</a>
-                                                                            </a-popconfirm>
-                                                                        </a-menu-item>
-                                                                    </a-menu>
-                                                                  </template>
-                                                            </a-dropdown>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="detail-main">
+            <div class="uiTabBar">
+                <ul class="tabs_nav">
+                    <li class="tabs_nav_item" :class="{'active':activeKey==index}"  v-for="(item,index) in tabs" :key="index"  @click="changeTabs(index)">
+                        <a href="javascript:;" class="tabItemHead">
+                            {{item.label}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="record-container" style="height: calc(100% - 50px);">
+                <div class="recordLayout" v-if="activeKey==0">
+                    <DetailInfo :id="id" :objectTypeCode="objectTypeCode" :entityApiName="entityApiName" />
                 </div>
-                <div class="tabContainer" v-if="activeKey==1">
-                    <div class="detailContent"></div>
+                <div class="recordLayout" v-if="activeKey==1">
+                    <RelatedList :id="id" :objectTypeCode="objectTypeCode" :entityApiName="entityApiName" fullName="Name" />
                 </div>
-                <div class="tabContainer" v-if="activeKey==2">
-                    <Related :id="id" @addRelateInstance="addRelateInstance" />
-                </div>
-                <div class="tabContainer" v-if="activeKey==3">
-                    <Attachment :id="id" @addRelateInstance="addRelateInstance" />
-                </div>
-                <div class="tabContainer" v-if="activeKey==4">
-                    <div class="detailContent">
-                        <DetailInfo class="DetailInfo" :id="id" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
-                    </div>
-                </div>
-                <div class="tabContainer" v-if="activeKey==5">
-                    <Info @handleUrging="handleUrging" :id="id" />
-                </div>
-                <div class="tabContainer" v-if="activeKey==6">
-                    <read-record :id="id" />
-                </div>
-                <div class="tabContainer" v-if="activeKey==7">
-                    <Comment :title="'讨论留言'" :id="id" :RegardingObjectTypeCode="'122'" />
+                <div class="recordLayout" v-if="activeKey==2">
+                    <FilesList  :parentId="id" :entityName="entityApiName"></FilesList>
                 </div>
             </div>
         </div>
-        <div class="detail-footer">
-            <div class="flexEnd">
-                <div class="rightBox">
-                    <a-button class="ml10" @click="openZW">正文</a-button>
-                    <a-button type="primary" class="ml10" @click="handSave">保存表单</a-button>
-                    <a-button type="primary" class="ml10"  @click="handleSubmitProcess">提交流程</a-button>
-                    <a-dropdown :trigger="['hover']" class="ml10">
-                        <span class="btn-drop">
-                          <UnorderedListOutlined style="color: #1D2129;" />
-                        </span>
-                        <template #overlay>
-                          <a-menu>
-                            <a-menu-item key="1" @click="handleUrging">
-                              催办
-                            </a-menu-item>
-                            <a-menu-item key="2" @click="handleCirculation">
-                                传阅他人
-                            </a-menu-item>
-                            <a-menu-item key="3" @click="handleDelegate">
-                                委托
-                            </a-menu-item>
-                            <a-menu-item key="4" @click="printForm">
-                                打印审批单
-                            </a-menu-item>
-                            <a-menu-item key="5" @click="printForm">
-                                PDF
-                            </a-menu-item>
-                          </a-menu>
-                        </template>
-                      </a-dropdown>
-                </div>
-            </div>
-        </div>
-        <SubmitProcess ref="processRef" v-if="isProcess" :isShow="isProcess" @update-status="updateStatus" :paramsData="ProcessData" />
-        <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" @update-status="updateStatus" :paramsData="RejectionData"  />
-        <circulation-modal ref="circulationRef" @update-status="updateStatus" v-if="isCirculation" :paramsData="CirculationData.params" :isShow="isCirculation"></circulation-modal>
-        <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
-        <Urging ref="UrgingRef" @update-status="updateStatus" v-if="isUrging" :paramsData="UrgingData.params" :isShow="isUrging" />
-        <RelateInstance v-if="isRelateInstance" :id="id" :entityApiName="lookEntityApiName" :entityType="lookEntityType" :objectTypeCode="lookObjectTypeCode" :isShow="isRelateInstance" @select="handleSelectLook" @cancel="isRelateInstance=false" />
+        <ConfirmModal :isShow="isConfirm" v-if="isConfirm" :desc="desc" @cancel="isConfirm=false" @ok="handleOkConfirm" />
+        <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon=false" title="编辑" @success="loadInfo" :id="id" :objectTypeCode="objectTypeCode" :entityApiName="entityApiName"></common-form-modal>
+        <Delete :isShow="isDelete" v-if="isDelete" desc="是否确定要删除？" :recordId="id" :sObjectName="entityApiName" :objTypeCode="objectTypeCode" @cancel="isDelete=false"  />
     </div>
-</template>
-<script setup>
-    import "@/style/detail.less";
-    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw,watch,nextTick } from "vue";
+  </template>
+  <script setup>
+    import "@/style/detailCommon.less";
+    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw } from "vue";
     import {
         UnorderedListOutlined,
         DownOutlined,
         CaretDownOutlined,
         DeleteFilled,
-        DeleteOutlined,
-        UpOutlined,
-        PlusOutlined,
-        EditOutlined
+        DeleteOutlined, SearchOutlined
     } from "@ant-design/icons-vue";
-    import Related from "@/components/detail/Related.vue";
-    import Attachment from "@/components/detail/Attachment.vue";
-    import Info from "@/components/detail/Info.vue";
-    import ReadRecord from "@/components/detail/ReadRecord.vue";
-    import Comment from "@/components/detail/Comment2.vue";
+    import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
-    import useWrokDetail from "@/utils/workDetail";
-    const { relatedList, getRelatedWork } = useWrokDetail();
-    import SubmitProcess from "@/components/workflow/SubmitProcess.vue";
-    import ApprovalRejection from "@/components/workflow/ApprovalRejection.vue";
-    import CirculationModal from "@/components/workflow/CirculationModal.vue";
-    import Delegate from "@/components/workflow/Delegate.vue";
-    import Urging from "@/components/workflow/Urging.vue";
-    import RelateInstance from "@/components/workflow/RelateInstance.vue";
-    import DetailInfo from "@/components/detail/DetailInfo.vue";
-    import FlowForm from "@/components/workflow/FlowForm.vue";
+  
+    import DetailInfo from  "@/components/detail/DetailInfo.vue";
+    
+    import ConfirmModal from "@/components/commonModal/Confirm.vue";
+    import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+    import Delete from "@/components/listView/Delete.vue";
+    import FilesList from "@/components/detail/FilesList.vue";
+    import RelatedList from "@/components/detail/RelatedList.vue";
+  
+  
     import { useRouter, useRoute } from "vue-router";
-    import { message } from "ant-design-vue";
-    const route = useRoute();
     const router = useRouter();
+    const route = useRoute();
+  
+    const labelCol = ref({ style: { width: '150px',textAlign:"left" } });
+  
+    const filterOption = (input, option) => {
+        return option.label.toLowerCase().includes(input.toLowerCase());
+    };
+  
     const data = reactive({
         tabs: [
-            {
-                label: "表单信息"
-            },
-            {
-                label: "流程图"
-            },
-            {
-                label: "关联事务"
-            },
-            {
-                label: "附件信息"
-            },
             {
                 label: "基本信息"
             },
             {
-                label: "流转信息"
+                label: "相关列表"
             },
             {
-                label: "阅读记录"
-            },
-            {
-                label: "讨论留言"
-            },
+                label: "附件"
+            }
         ],
         activeKey: 0,
-        isProcess: false,
-        isRejection: false,
-        ProcessData: {},
-        RejectionData: {},
-        isCirculation: false,
-        isModal: false,
-        isUrging: false,
-        categoryFiles: [],
-        isAside: true,
-        reqIndex: 1,
-        pageCurrent: 1,
+        desc: "",
+        isConfirm: false,
+        isCommon: false,
         id: route.query.id,
-        objectTypeCode:'122',
-        sObjectName:'WFProcessInstance',
-        fileList:[],
-        isRelateInstance:false,
-        lookEntityApiName: "",
-        lookObjectTypeCode: "",
-        lookEntityType:"",
-        Title:'',
-        isEdit:false,
+        objectTypeCode: route.query.objectTypeCode,
+        entityApiName: route.query.entityType,
+        isDelete: false,
+        Name: "",
+        templateName: "",
     })
-    const { isEdit,Title,objectTypeCode,sObjectName,tabs, activeKey, isProcess,isRejection, ProcessData, RejectionData,
-         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex,id,fileList,isRelateInstance,lookEntityApiName,lookObjectTypeCode,lookEntityType,
-         pageCurrent } = toRefs(data);
-    const detailTitleInputDom=ref(null);
+    const { tabs, activeKey, desc, isConfirm, isCommon, id, objectTypeCode, entityApiName, 
+    isDelete, Name, templateName } = toRefs(data);
+
     const changeTabs = (e) => {
         data.activeKey = e;
-    }
-    const backToList = () =>{
-        if(route.query.reurl){
-            router.push({
-                path: route.query.reurl,
-                query: {
-                }
-            });
-        }
-        //window.history.go(-1);
-    }
-    getRelatedWork();
-
-    const changeTab = () => {
-        
-    }
-    
-    const handleSubmitProcess = () => {
-        data.isProcess = true;
-    }
-    const handleRejection = () => {
-        data.isRejection = true;
-    }
-    const updateStatus = () => {
-        data.isProcess = false;
-        data.isRejection = false;
-        data.isCirculation = false;
-        data.isModal = false;
-        data.isUrging = false;
-    }
-    const CirculationData = reactive({
-        params: {}
-    })
-    const DelegateData = reactive({
-        params: {}
-    })
-    function CirculationFn(InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName){
-        CirculationData.params = {
-            InstanceId,RuleLogId,InstanceIdName,ExecutorIdentityName
-        }
-        data.isCirculation = true;
-    }
-    const handleCirculation = () => {
-        data.isCirculation = true;
-    }
-    const handleDelegate = () => {
-        data.isModal = true;
-    }
-    const UrgingData = reactive({
-        params: {}
-    })
-    const handleUrging = () => {
-        data.isUrging = true;
+    };
+  
+    const handleEdit = () => {
+      data.isCommon = true;
     };
 
-    const getFiles = () => {
-        proxy.$get(Interface.flow.files, {
-            InstanceId: "",
-            InstanceState: 1,
-            right: 16
-        }).then(res=>{
-            data.categoryFiles = res.CategoryFiles
-        })
+    // 加载基本信息
+    const loadInfo = () => {
+      data.isCommon = false;
+      getDetail();
     };
-    getFiles();
-    const changePagination = (e) => {
 
-    };
-    const openZW=(row)=>{
-        let url='';
-        if(row&&row.FileExtension == 'pdf'){
-            url='/pdfjs/web/viewer.html?file='+encodeURIComponent('../../resources/uploadfiles'+row.ViewLinkUrl)+"";
-        }
-        window.open(url);
+    // 删除
+    const handleDelete = () => {
+      data.isDelete = true;
     }
-    //保存
-    const handSave=()=>{
-        message.success("保存成功");
-    }
-    //打印
-    const printForm= () => {
-            let url = router.resolve({
-                path:'/lightning/workflow/WFFormPrint',
-                name: "WFFormPrint",
-                query: {
-                    id: route.query.id,
-                },
-            });
-            window.open(url.href);
-    }
-    //添加关联事务
-    const addRelateInstance=()=>{
-        data.isRelateInstance=true;
-    }
-    //关联事务选中
-    const handleSelectLook=()=>{
-        data.isRelateInstance=false;
-    }
+
     const getDetail = () => {
-  let d = {
+        let obj = {
             actions:[{
                 id: "4270;a",
                 descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                recordId: data.id,
-                apiName:data.sObjectName,
-                objTypeCode: data.objectTypeCode
+                    recordId: data.id,
+                    apiName: data.entityApiName
                 }
             }]
         };
-        let obj = {
-            message: JSON.stringify(d)
-        }
-        proxy.$post(Interface.detail,obj).then(res=>{
-            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.fields){
-            let fields=res.actions[0].returnValue.fields;
-            if(fields.Name.value){
-                data.Title=fields.Name.value;
-              }
-            }
-        })
-};
-const handleSave = () => {
-    data.isEdit=false;
-        let url=Interface.create;
         let d = {
-        actions:[{
-            id: "2919;a",
-            descriptor: "",
-            callingDescriptor: "UNKNOWN",
-            params: {
-              recordInput: {
-                allowSaveOnDuplicate: false,
-                apiName:data.sObjectName,
-                objTypeCode: data.objectTypeCode,
-                fields: {
-                    Name:data.Title,
-                }
-              }              
-            }
-        }]
-    };
-    if(data.id){
-        url=Interface.edit;
-        d.actions[0].params.recordId=data.id;
-    }
-    let obj = {
-        message: JSON.stringify(d)
-    }
-        proxy.$post(url,obj).then(res=>{
-          if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
-                message.success("保存成功！");
-          }
-          else{
-            if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
-                message.success(res.actions[0].errorMessage);
-            }
-            else{
-                message.success("保存失败！");
-            }
-          }
-        });
-    }
-    const EditTitle=()=>{
-        data.isEdit=true;
-        nextTick(()=>{
-            setTimeout(function(){
-                detailTitleInputDom.value.focus();
-            })
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.detail, d).then(res=>{
+          let fields = res.actions[0].returnValue.fields;
+          data.Name = fields.Name.displayValue;
         })
-    }
-    watch(route.query.id,(newVal,oldVal)=>{
-        getDetail();
-    },{deep: true, immediate: true})
-
-</script>
-<style lang="less" scoped>
-    .collapse{
-        .collapseItem{
-            margin: 5px;
-            .collapseHead{
-                height: 32px;
-                background: #f3f2f2;
-                color: #4e5969;
-                border-radius: 4px;
-                font-size: 13px;
-                padding: 0 10px;
-                display: flex;
-                align-items: center;
-                .collapseItemName{
-                    flex: 1;
-                    padding-left: 10px;
-                }
-            }
-            .collapseBd{
-                background: #fff;
-                .files{
-                    .fileItem{
-                        display: flex;
-                        padding: 10px;
-                        border-bottom: 1px solid #e5e6eb;
-                        .fileItemImg{
-                            width: 40px;
-                            height: 40px;
-                            img{
-                                width: 100%;
-                                height: 100%;
-                            }
-                        }
-                        .fileItemInfo{
-                            flex: 1;
-                            font-size: 14px;
-                            margin-left: 10px;
-                            .link{
-                                a{
-                                    color: #3399ff;
-                                }
-                            }
-                            .time{
-                                font-size: 12px;
-                                color: #b8bbcc;
-                            }
-                        }
-                        
-                    }
-                }
-            }
-        }
-    }
-
-    .reqWrap{
-        width: 100%;
-        margin-top: 20px;
-        box-shadow: 0 0 5px #ddd;
-        background: #fff;
-        .reqHead{
-            height: 48px;
-            line-height: 48px;
-            background: #f4f4f4;
-            border: 1px solid #d0d0d0;
-            border-top-width: 0;
-        }
-        .reqBd{
-            .reqSignList>div{
-                border-top-width: 0;
-            }
-            .reqSignList{
-                padding: 11px 10px;
-                .reqSignListCont{
-                    position: relative;
-                    padding: 15px 21px;
-                    border-bottom: 1px dashed #e4e4e4;
-                    display: flex;
-                    .content-left>div{
-                        line-height: 24px;
-                        margin-right: 10px;
-                    }
-                    .content-left{
-                        padding-left: 48px;
-                        line-height: 36px;
-                        display: flex;
-                        .avatarImg{
-                            width: 36px;
-                            height: 36px;
-                            border-radius: 50%;
-                            margin: 5px 0 0 -48px;
-                            text-align: center;
-                            margin-right: 10px;
-                            img{
-                                width: 100%;
-                                height: 100%;
-                                border-radius: 50%;
-                            }
-                        }
-                        .operate-name-label{
-                            display: inline-block;
-                            word-break: break-all;
-                            color: #4d7ad8;
-                        }
-                        .left-department-span{
-                            word-break: break-all;
-                            display: inline-block;
-                        }
-                    }
-                    .content-right{
-                        flex: 1;
-                        .content-right-remark-html{
-                            min-height: 24px;
-                            word-wrap: break-word;
-                            word-break: normal;
-                        }
-                        .logitem-Recipient{
-                            line-height: 24px;
-                            color: #8a8a8a;
-                        }
-                        .loglist-item-operatedate{
-                            line-height: 22px;
-                            margin-top: 10px;
-                            color: #9a9a9a;
-                            overflow: hidden;
-                        }
-                    }
-                }
-                .pagination{
-                    text-align: right;
-                    padding: 15px 0 10px 0;
-                }
-            }
-        }
-    }
-    .detailWrap{
-        .detail-footer{
-            display: none;
-        }
-        .detail-scroll{
-            height: calc(~'100% - 71px');
-        }
-        .rightAside{
-            height: calc(~'100% - 30px');
-        }
-        .detailContent{
-            width: 100%;
-            padding: 20px;
-            background: #fff;
-            border-radius: 4px;
-            overflow: auto;
-        }
-        .backText{
-            width: 90px;
-        }
-        .detailTitleInput{
-            margin-top: -8px;
-            position: relative;
-            top: 6px;
-        }
-    }
-</style>
+    };
+    getDetail();
+  
+  </script>

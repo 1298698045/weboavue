@@ -71,7 +71,7 @@ const staticRoutes = [
     component: () => import("../views/oa/groupDetail/index.vue"),
   },
   {
-    path: "/detail",
+    path: "/lightning/r/Record/view",
     name: "Detail",
     component: () => import("../views/detail/detail.vue"),
   },
@@ -762,7 +762,7 @@ if (store.state.dynamicRoutes.length > 0) {
 router.beforeEach((to, from, next)=>{
   const route = router.resolve(to.path);
   if(route.matched.length > 0){
-    if(to.meta.name == '通用列表1'){
+    if(to.meta.name == '通用列表1' || to.meta.name == "DashboardHome"){
       // debugger
       console.log("to", to, from, next);
       console.log(localStorage.getItem("appCode"))

@@ -14,13 +14,8 @@
                 </h2>
                 <div class="relatedHeadActions">
                     <div class="btnBox" v-for="(item, index) in actionList" :key="index">
-                        <div class="btnGroup ml10" v-if="Array.isArray(item)">
-                          <a-button
-                            v-for="(row, idx) in item"
-                            :key="idx"
-                            @click="handleBtnActions(row.devNameOrId)"
-                            >{{ row.label }}</a-button
-                          >
+                        <div class="fh-btn-group ml10" v-if="Array.isArray(item)">
+                            <div class="fh-btn" v-for="(row, idx) in item" :key="idx" @click="handleBtnActions(row.devNameOrId)">{{row.label}}</div>
                         </div>
                         <a-button class="ml10" @click="handleBtnActions(item.devNameOrId)" v-else>{{ item.label }}</a-button>
                     </div>
@@ -212,7 +207,9 @@
                     if (Array.isArray(temp[temp.length - 1])) {
                         temp[temp.length - 1].push(item);
                     } else {
-                        temp.push(item);
+                        // temp.push(item);
+                      (temp[0] ||= []).push(item);
+
                     }
                 }
             }

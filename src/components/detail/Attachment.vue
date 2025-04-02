@@ -102,10 +102,10 @@
       :isShow="isRename"
       v-if="isRename"
       @cancel="handleRenameCancel"
-      :recordId="recordId"
+      :id="recordId"
       fieldName="Name"
-      :fileName="fileName"
-      entityApiName="RelatedAttachment"
+      :name="fileName"
+      sObjectName="RelatedAttachment"
       objTypeCode="1001"
       @success="getQuery"
     />
