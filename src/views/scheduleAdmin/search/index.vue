@@ -38,29 +38,49 @@
             <!-- <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
               :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div> -->
             <div style="height: 100%" ref="contentRef">
-              <div class="wea-tab">
-                <a-tabs v-model:activeKey="activeKey" @change="changeTab">
-                  <a-tab-pane v-for="(item,index) in data.tabs" :key="index">
-                    <template #tab>
-                      <span>
-                        {{item.label}}
-                      </span>
-                    </template>
-                  </a-tab-pane>
-                  <!-- <a-tab-pane key="2" tab="待处理" force-render></a-tab-pane>
-                    <a-tab-pane key="3" tab="待阅"></a-tab-pane> -->
-                </a-tabs>
-                <div class="tabsBtn">
-                  <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-                    <a-button type="primary" class="ml10">批量发布</a-button>
-                    <a-button class="ml10">批量取消发布</a-button> -->
+              <div class="wea-header">
+                <div class="wea-tab">
+                  <a-tabs v-model:activeKey="activeKey" @change="changeTab">
+                    <a-tab-pane v-for="(item,index) in data.tabs" :key="index">
+                      <template #tab>
+                        <span>
+                          {{item.label}}
+                        </span>
+                      </template>
+                    </a-tab-pane>
+                    <!-- <a-tab-pane key="2" tab="待处理" force-render></a-tab-pane>
+                      <a-tab-pane key="3" tab="待阅"></a-tab-pane> -->
+                  </a-tabs>
+                  <div class="tabsBtn">
+                    <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
+                      <a-button type="primary" class="ml10">批量发布</a-button>
+                      <a-button class="ml10">批量取消发布</a-button> -->
+                  </div>
+                </div>
+                <div class="opera-btn">
+                  <a-tooltip placement="topLeft" title="高级搜索">
+                    <a-button class="ant-btn-icon ml4" :class="{'active':isSearchModal}" @click="handleShowSearch">
+                      <svg class="btn_icon" focusable="false" data-key="search" aria-hidden="true" viewBox="0 0 520 520"
+                        part="icon">
+                        <g>
+                          <path
+                            d="M496 453L362 320a189 189 0 10-340-92 190 190 0 00298 135l133 133a14 14 0 0021 0l21-21a17 17 0 001-22zM210 338a129 129 0 11130-130 129 129 0 01-130 130z">
+                          </path>
+                        </g>
+                      </svg>
+                    </a-button>
+                  </a-tooltip>
                 </div>
               </div>
-              <list-form-search ref="searchRef" @search="handleSearch" entityApiName="ActivityPointer" :SearchFields="SearchFields"
-                @update-height="changeHeight"></list-form-search>
+              <!-- <list-form-search ref="searchRef" @search="handleSearch" entityApiName="ActivityPointer" :SearchFields="SearchFields"
+                @update-height="changeHeight"></list-form-search> -->
               <div class="wea-tabContent" :style="{height:tableHeight+'px'}" ref="tabContent">
                 <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
                 <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Ntable>
+                <div class="listRightModal searchModalWrap" v-if="isSearchModal">
+                  <SearchQuery :sObjectName="sObjectName" filterId="" @cancel="isSearchModal = false"
+                    @load="loadSearchQuery"></SearchQuery>
+                </div>
               </div>
             </div>
           </a-col>
@@ -107,6 +127,7 @@
     import { useRouter, useRoute } from "vue-router";
     import useWorkAdmin from "@/utils/flow/workAdmin";
     import AddSchedule from "@/components/schedule/AddSchedule.vue";
+    import SearchQuery from "@/components/listView/SearchQuery.vue";
     import { formTreeData,girdFormatterValue } from "@/utils/common.js";
     const { tabList } = useWorkAdmin();
     console.log("tabList", tabList);
@@ -349,6 +370,7 @@
             end:"",
             endDate:""
         },
+        isSearchModal: false,
     });
     const handleCollapsed = () => {
       data.isCollapsed = !data.isCollapsed;
@@ -356,7 +378,7 @@
     };
   
     const { paramsTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,CalendarActionsConfig,isScheduleDetail,isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
-      isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId,SearchFields,isAddSchedule } = toRefs(data);
+      isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId,SearchFields,isAddSchedule, isSearchModal } = toRefs(data);
     //   console.log("tabs", data.tabs);
     const tabContent = ref(null);
     const contentRef = ref(null);
@@ -382,15 +404,25 @@
       // this.$nextTick(()=>{
       //   getTabs();
       // })
+
+      window.dispatchEvent(new Event('resize'))
       getTabs();
     })
+    const handleShowSearch = () => {
+      data.isSearchModal = true;
+    };
+    const loadSearchQuery = (e) => {
+      data.isSearchModal = false;
+      data.queryParams.filterCondition = JSON.stringify(e);
+      gridRef.value.loadGrid(data.queryParams);
+    };
     function changeHeight(h) {
-      if (typeof h == 'number') {
-        formSearchHeight.value = h;
-      }
+      // if (typeof h == 'number') {
+      //   formSearchHeight.value = h;
+      // }
       let contentHeight = contentRef.value.clientHeight;
       let tabsHeight = 46;
-      let height = contentHeight - tabsHeight - formSearchHeight.value;
+      let height = contentHeight - tabsHeight;
       data.tableHeight = height;
       console.log('data', data.tableHeight);
       //console.log("gridRef", gridRef.value.loadGrid())
@@ -468,7 +500,7 @@
       columns.value=columnslist;
       nextTick(()=>{
         gridRef.value.loadGrid(data.queryParams);
-        searchRef.value.getSearchLayout();
+        // searchRef.value.getSearchLayout();
       })
       
     })

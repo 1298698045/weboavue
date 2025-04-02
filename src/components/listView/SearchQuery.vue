@@ -7,6 +7,7 @@
                     <a-button type="link" @click="handleSetField">字段设置</a-button>
                 </div>
                 <div class="right-options">
+                    <a-button class="ml10" @click="handleClear">清空</a-button>
                     <a-button class="ml10" @click="handleSave">搜索</a-button>
                     <a-button type="link" @click="handleCloseModal">
                         <CloseOutlined style="color:rgb(116, 116, 116)" />
@@ -17,11 +18,11 @@
                 <div class="search-form">
                     <a-form :model="list" ref="formRef" :label-col="labelCol" labelAlign="left">
                         <div class="form-item" v-for="(item, index) in filterableColumns" :key="index">
-                            <a-form-item class="formItem" name="item.column" :label="item.label"
+                            <a-form-item class="formItem" :name="item.column" :label="item.label"
                                 v-if="item.dataType=='S'">
                                 <a-input :placeholder="'请输入'+item.label" v-model:value="list[item.column]"></a-input>
                             </a-form-item>
-                            <a-form-item class="formItem" :label="item.label"
+                            <a-form-item class="formItem" :label="item.label" :name="item.column"
                                 v-if="item.dataType=='L' || item.dataType=='LT' || item.dataType=='DT'">
                                 <a-select :placeholder="'请选择'+item.label" mode="multiple"
                                     v-model:value="list[item.column]">
@@ -29,7 +30,7 @@
                                         :value="row.value">{{row.label}}</a-select-option>
                                 </a-select>
                             </a-form-item>
-                            <a-form-item class="formItem" :label="item.label" v-if="item.dataType=='D'">
+                            <a-form-item class="formItem" :label="item.label" :name="item.column" v-if="item.dataType=='D'">
                                 <div class="time-box">
                                     <a-select :placeholder="'请选择'+item.label" v-model:value="list[item.column]">
                                         <a-select-option value="today">今天</a-select-option>
@@ -49,7 +50,7 @@
                                     </div>
                                 </div>
                             </a-form-item>
-                            <a-form-item class="formItem" :label="item.label"
+                            <a-form-item class="formItem" :label="item.label" :name="item.column"
                                 v-if="['O', 'Y', 'U', 'Y_MD'].includes(item.dataType)">
                                 <a-select :placeholder="'请选择'+item.label" v-model:value="list[item.column]" allowClear
                                     :filter-option="filterOption" showSearch @search="(e)=>{searchlookup(e, item)}"
@@ -78,12 +79,16 @@
     </div>
 </template>
 <script setup>
-    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, h, nextTick, defineProps, defineEmits, defineExpose } from "vue";
+    import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, h, nextTick, defineProps, defineEmits, defineExpose, toRaw } from "vue";
     import { CloseOutlined, SearchOutlined } from "@ant-design/icons-vue";
     import SetSearchField from "./SetSearchField.vue";
     import LookupFilter from "@/components/commonModal/LookupFilter.vue";
-    
+
     import Interface from "@/utils/Interface.js";
+
+    import { useStore } from "vuex";
+    const store = useStore();
+
     const { proxy } = getCurrentInstance();
     const labelCol = ref({ style: { width: '100px' } });
     const props = defineProps({
@@ -118,6 +123,10 @@
         objectTypeCode: ""
     })
     const { isSetSearchField, searchLayoutId, filterableColumns, list, attributes, search, isLookup, localId, lookEntityApiName, objectTypeCode } = toRefs(data);
+
+    let searchList = toRaw(store.state.searchList);
+    let searchOptions = toRaw(store.state.searchOptions);
+    console.log("searchList", searchList);
 
     const filterOption = (input, option) => {
         return option.label.toLowerCase().includes(input.toLowerCase());
@@ -173,6 +182,12 @@
                     data.search[item.column] = [];
                 }
             })
+            if(Object.keys(searchList).length){
+                data.list = searchList;
+            }
+            if(Object.keys(searchOptions).length){
+                data.search = searchOptions;
+            }
         })
     };
 
@@ -257,6 +272,9 @@
     const handleCloseModal = () => {
         emit("cancel", false);
     }
+    const handleClear = () => {
+        formRef.value.resetFields();
+    };
     const handleSave = () => {
         // let filterQuery = "";
         // for(let key in data.list){
@@ -323,6 +341,10 @@
         });
         data.filterCondition = filterCondition;
         console.log("filterCondition", filterCondition);
+        const list = JSON.parse(JSON.stringify(data.list));
+        const search = JSON.parse(JSON.stringify(data.search));
+        store.commit("setSearchList", list);
+        store.commit("setSearchOptions", search);
         emit("load", filterCondition);
     };
 

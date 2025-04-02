@@ -17,7 +17,9 @@ export default createStore({
     modules: JSON.parse(localStorage.getItem("modules")) || [],
     subModules: [],
     appCode: localStorage.getItem("appCode") || "",
-    dynamicRoutes: JSON.parse(localStorage.getItem("dynamic_routes")) || []
+    dynamicRoutes: JSON.parse(localStorage.getItem("dynamic_routes")) || [],
+    searchList: {}, // 高级搜索
+    searchOptions: {}, // 高级搜索
   },
   mutations: {
     setCollapsed(state, val) {
@@ -48,6 +50,12 @@ export default createStore({
     setDynamicRoutes(state, routes) {
       state.dynamicRoutes = routes;
       localStorage.setItem("dynamic_routes", JSON.stringify(routes));
+    },
+    setSearchList(state, val){
+      state.searchList = val;
+    },
+    setSearchOptions(state, val){
+      state.searchOptions = val;
     }
   },
   actions: {
