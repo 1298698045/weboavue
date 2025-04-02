@@ -9,6 +9,11 @@
       </div>
       <div class="headerRight">
         <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
+        <a-button type="primary" class="ml10" @click="handleNew">手动添加发票</a-button>
+                <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
+                  @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false">
+                  <a-button class="ml10" type="primary">发票识别</a-button>
+                </a-upload>
       </div>
     </div>
     <div class="todo-content">
@@ -68,6 +73,7 @@
         </a-col>
       </a-row>
     </div>
+
     <!-- 委派 -->
     <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal"
       v-if="isModal" />
@@ -80,6 +86,17 @@
     <ReleaseFlow v-if="isRelease" :isShow="isRelease" :id="ProcessInstanceId" @cancel="cancelRelase"></ReleaseFlow>
     <NewCategory v-if="isCategory" @cancel="cancelCategory" :isShow="isCategory" :id="treeId" ObjectTypeCode="流程" />
     <EditFlowDefine v-if="isEditFlow" :isShow="isEditFlow" :id="id" @cancel="cancelEditFlowDefine" />
+    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false" :title="data.recordId ? '编辑' : '新建'"
+      @success="handleSearch('')" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"
+      :relatedObjectAttributeValue="relatedObjectAttributeValue"
+      :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
+      <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="handleSearch('')" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+      <invoiceDetail
+        v-if="isDetail"
+        :isShow="isDetail"
+        :id="recordId"
+        @cancel="isDetail=false"
+      />
   </div>
 </template>
 <script setup>
@@ -104,6 +121,9 @@ import Countersign from "@/components/workflow/Countersign.vue";
 import ReleaseFlow from "@/components/workflow/ReleaseFlow.vue"
 import { useRouter, useRoute } from "vue-router";
 import useWorkAdmin from "@/utils/flow/workAdmin";
+import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+import Delete from "@/components/listView/Delete.vue";
+import invoiceDetail from "@/components/reimburse/invoice/detail/invoiceDetail.vue";
 import { formTreeData, girdFormatterValue } from "@/utils/common.js";
 const { tabList } = useWorkAdmin();
 console.log("tabList", tabList);
@@ -228,7 +248,7 @@ const onExpand = (keys) => {
 //   searchValue.value = value;
 //   autoExpandParent.value = true;
 // });
-
+const token = localStorage.getItem("token");
 let data = reactive({
   isCollapsed: true,
   tableHeight: '',
@@ -270,7 +290,7 @@ let data = reactive({
   tabs: [],
   //tabs: tabList,
   activeKey: 0,
-  entityType:'I0E',
+  entityType: 'I0E',
   queryParams: {
     filterId: '',
     objectTypeCode: '1090',
@@ -281,7 +301,7 @@ let data = reactive({
     sort: 'CreatedOn',
     order: 'desc'
   },
-  layoutName:'MyInvoice',
+  layoutName: 'MyInvoice',
   isModal: false,
   isCirculation: false,
   searchVal: "",
@@ -294,14 +314,33 @@ let data = reactive({
   isRelease: false,
   ProcessInstanceId: "",
   formSearchFilterquery: "",
-  SearchFields: []
+  SearchFields: [],
+  isCommon: false,
+  recordId: '',
+  objectTypeCode: '1090',
+  sObjectName: 'Invoice',
+  relatedObjectAttributeValue: '',
+  relatedObjectAttributeName: '',
+  isDelete: false,
+  deleteDesc: '确定要删除吗？',
+  external: false,
+  uploadData: {
+    parentId: '',
+    entityName: ''
+  },
+  headers: {
+    Authorization: token,
+    Token: token,
+  },
+  fileList: [],
+  isDetail:false
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
   changeHeight();
 };
 
-const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
+const { isDetail, fileList, uploadData, headers, isDelete, deleteDesc, external, isCommon, recordId, objectTypeCode, sObjectName, relatedObjectAttributeValue, relatedObjectAttributeName, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
   isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields } = toRefs(data);
 //   console.log("tabs", data.tabs);
 const tabContent = ref(null);
@@ -318,6 +357,18 @@ const onSelect = (keys) => {
   data.treeId = keys[0];
   handleSearch(data.formSearchFilterquery);
 };
+const beforeUpload = (e) => {
+  console.log("beforeUpload", e);
+}
+const changeFiles = (e) => {
+  // console.log("e", e);
+  if (e.file.status == "done") {
+    message.success("上传成功！");
+    handleSearch();
+  }else if (e.file.status == "error") {
+    message.error("上传失败！");
+  }
+}
 onMounted(() => {
   window.addEventListener('resize', changeHeight)
   // this.$nextTick(()=>{
@@ -365,7 +416,7 @@ const getColumns = (id) => {
       var str = `
                 <div class="iconBox">
             <div class="popup">
-            <div class="option-item" id=${row.id} onclick="handleTo('${row.viewUrl}')">查看</div>
+            <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}')">查看</div>
             </div>
             <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
         `
@@ -552,6 +603,26 @@ const cancelCategory = (e) => {
 const cancelEditFlowDefine = (e) => {
   data.isEditFlow = e;
 }
+//新建
+const handleNew = (e) => {
+  data.recordId = '';
+  data.isCommon = true;
+}
+//编辑
+const handleEdit = (key) => {
+  data.recordId = key;
+  data.isCommon = true;
+}
+// 通用弹窗关闭
+const handleCommonCancel = (params) => {
+  data.isCommon = false;
+};
+//打开详情
+const handleDetail=(id)=>{
+  data.recordId=id;
+  data.isDetail=true;
+}
+window.handleDetail=handleDetail;
 watch(() => route, (newVal, oldVal) => {
   if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
     if (route.path == '/lightning/page/MyInvoice/home') {
@@ -564,8 +635,8 @@ watch(() => route, (newVal, oldVal) => {
         sort: 'CreatedOn',
         order: 'desc'
       }
-      data.entityType='I0E';
-      data.layoutName='MyInvoice'
+      data.entityType = 'I0E';
+      data.layoutName = 'MyInvoice'
       setTimeout(function () {
         gridRef.value.loadGrid(data.queryParams);
       }, 1000)

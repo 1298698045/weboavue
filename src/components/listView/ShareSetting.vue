@@ -18,6 +18,40 @@
                                 <a-radio value="3">与用户小组共享列表视图</a-radio>
                             </a-radio-group>
                         </a-form-item>
+                        <!-- <a-form-item name="role" v-if="formState.resource==3">
+                            <div class="menuRow">
+                                <a-dropdown>
+                                    <template #overlay>
+                                      <a-menu @click="handleMenu">
+                                        <a-menu-item v-for="(item,index) in menus" :key="item.key">
+                                          <UserOutlined />
+                                          {{item.name}}
+                                        </a-menu-item>
+                                      </a-menu>
+                                    </template>
+                                    <a-button>
+                                      <UserOutlined />
+                                      <DownOutlined />
+                                    </a-button>
+                                </a-dropdown>
+                                <a-select
+                                    class="aselect"
+                                    v-model:value="formState.role"
+                                    show-search
+                                    mode="multiple"
+                                    :placeholder="'搜索'+currentMenu"
+                                    :default-active-first-option="false"
+                                    :filter-option="false"
+                                    :not-found-content="null"
+                                    @search="handleSearch"
+                                    @change="handleChange"
+                                    @dropdownVisibleChange="getPeople"
+                                >
+                                    <template #suffixIcon><SearchOutlined class="ant-select-suffix" /></template>
+                                    <a-select-option :value="item.ID" v-for="(item,index) in listData" :key="index">{{item.Name}}</a-select-option>
+                                </a-select>
+                            </div>
+                        </a-form-item> -->
                         <div class="forceEntityShare" v-if="formState.resource==3">
                             <div class="uiInput">
                                 <label for="1403:0" class="uiLabel-left form-element__label uiLabel">
@@ -126,11 +160,9 @@
                                                             :style="{'background':currentEntity==2 || currentEntity == 3 ? '#34BECD' : '#779EF2'}">
                                                             <span class="uiImage">
                                                                 <img v-if="currentEntity=='1'||currentEntity=='4'"
-                                                                    :src="require('@/assets/img/groups_120.png')"
-                                                                    alt="">
+                                                                    src="@/assets/img/groups_120.png" alt="">
                                                                 <img v-if="currentEntity=='2'||currentEntity=='3'"
-                                                                    :src="require('@/assets/img/hierarchy_120.png')"
-                                                                    alt="">
+                                                                    src="@/assets/img/hierarchy_120.png" alt="">
                                                             </span>
                                                         </div>
                                                         <span class="entityLabel">{{item.Name}}</span>
@@ -149,11 +181,9 @@
                                                                 class="pillIcon">
                                                                 <span class="uiImage">
                                                                     <img v-if="item.entity=='1'||item.entity=='4'"
-                                                                        :src="require('@/assets/img/groups_120.png')"
-                                                                        alt="">
+                                                                        src="@/assets/img/groups_120.png" alt="">
                                                                     <img v-if="item.entity=='2'||item.entity=='3'"
-                                                                        :src="require('@/assets/img/hierarchy_120.png')"
-                                                                        alt="">
+                                                                        src="@/assets/img/hierarchy_120.png" alt="">
                                                                 </span>
                                                             </span>
                                                             <span class="pillText">{{item.Name}}</span>
@@ -169,6 +199,42 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="advancedEditSection">
+                                <div class="section-title">
+                                    与 {{currentShares.length}} 个用户小组共享。
+                                </div>
+                                <div class="search">
+                                    <a-input placeholder="筛选用户组"></a-input>
+                                </div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th width="259">名称</th>
+                                            <th width="259">类型</th>
+                                            <th width="50"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, index) in currentShares" :key="index">
+                                            <td>{{item.name}}</td>
+                                            <td>{{item.typeCode}}</td>
+                                            <td>
+                                                <span class="close-icon" @click="handleDeleteShare(item)">
+                                                    <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520"
+                                                        part="icon" lwc-3bq099ugqsh="" data-key="close" class="iconSvg">
+                                                        <g lwc-3bq099ugqsh="">
+                                                            <path
+                                                                d="M310 254l130-131c6-6 6-15 0-21l-20-21c-6-6-15-6-21 0L268 212a10 10 0 01-14 0L123 80c-6-6-15-6-21 0l-21 21c-6 6-6 15 0 21l131 131c4 4 4 10 0 14L80 399c-6 6-6 15 0 21l21 21c6 6 15 6 21 0l131-131a10 10 0 0114 0l131 131c6 6 15 6 21 0l21-21c6-6 6-15 0-21L310 268a10 10 0 010-14z"
+                                                                lwc-3bq099ugqsh=""></path>
+                                                        </g>
+                                                    </svg>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </a-form>
                 </div>
@@ -179,6 +245,8 @@
                     <a-button type="primary" @click.prevent="handleSubmit">保存</a-button>
                 </div>
             </template>
+            <Delete :isShow="isDelete" v-if="isDelete" @cancel="isDelete=false" desc="是否确定要删除？" @ok="getListShareData"
+                sObjectName="RecordAccessControl" :recordId="deleteId" />
         </a-modal>
     </div>
 </template>
@@ -190,16 +258,84 @@
     import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
+    import Delete from "@/components/listView/Delete.vue";
     const { proxy } = getCurrentInstance();
-
     const labelCol = ref({ style: { width: '100px' } });
     const props = defineProps({
         isShow: Boolean,
         sObjectName: String,
         recordId: String
-    })
+    });
+
     const emit = defineEmits(['cancel', 'load']);
+
     const modelContentRef = ref(null);
+
+    const data = reactive({
+        listData: [],
+        menus: [
+            {
+                key: 1,
+                name: "角色"
+            },
+            {
+                key: 2,
+                name: "小组"
+            },
+            {
+                key: 3,
+                name: "部门"
+            },
+            {
+                key: 4,
+                name: "用户"
+            }
+        ],
+        currentMenu: "角色",
+        top: "",
+        currentEntity: '1',
+        selectList: [],
+        currentShares: [],
+        isDelete: false,
+        deleteId: ""
+    })
+    const { listData, menus, currentMenu, top, currentEntity, selectList, currentShares, deleteId, isDelete } = toRefs(data);
+
+    const formState = reactive({
+        name: "",
+        apiname: "",
+        resource: "",
+        role: []
+    });
+
+    const currentApiName = computed(() => {
+        return data.currentEntity == '1' ? 'Role' : data.currentEntity == '2' ?
+            'Group' : data.currentEntity == '3' ? '	BusinessUnit' : data.currentEntity == '4' ? 'SystemUser' : '';
+    });
+
+    const getListShareData = () => {
+        let obj = {
+            actions: [{
+                id: "5642;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    listViewId: props.recordId
+                },
+                storable: true
+            }]
+        }
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        proxy.$post(Interface.listView.getListShareData, d).then(res => {
+            // console.log("res", res);
+            let currentShares = res.actions[0].returnValue.currentShares;
+            data.currentShares = currentShares;
+        })
+    };
+    getListShareData();
+
     const getData = () => {
         proxy.$get(Interface.listView.getListView, {
             id: props.recordId
@@ -261,6 +397,7 @@
         if (data.selectList && data.selectList.length) {
             data.selectList.map(item => {
                 shareIds.push({
+                    name: item.Name,
                     objectTypeCode: item.objectTypeCode,
                     entityName: item.entityName,
                     id: item.id
@@ -303,10 +440,10 @@
             }
             else {
                 if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
-                    message.success(res.actions[0].errorMessage);
+                    message.error(res.actions[0].errorMessage);
                 }
                 else {
-                    message.success("保存失败");
+                    message.error("保存失败");
                 }
             }
             setTimeout(function () {
@@ -314,42 +451,10 @@
             }, 1000)
         })
     }
-    const data = reactive({
-        listData: [],
-        menus: [
-            {
-                key: 1,
-                name: "角色"
-            },
-            {
-                key: 2,
-                name: "小组"
-            },
-            {
-                key: 3,
-                name: "部门"
-            },
-            {
-                key: 4,
-                name: "用户"
-            }
-        ],
-        currentMenu: "角色",
-        top: "",
-        currentEntity: '1',
-        selectList: []
-    })
-    const { listData, menus, currentMenu, top, currentEntity, selectList } = toRefs(data);
-    const formState = reactive({
-        name: "",
-        apiname: "",
-        resource: "",
-        role: []
-    })
-    const currentApiName = computed(() => {
-        return data.currentEntity == '1' ? 'Role' : data.currentEntity == '2' ?
-            'Group' : data.currentEntity == '3' ? '	BusinessUnit' : data.currentEntity == '4' ? 'SystemUser' : '';
-    });
+
+
+
+
     const handleMenu = (e) => {
         console.log("e", e);
         data.currentMenu = data.menus.find(item => item.key == e.key).name;
@@ -360,7 +465,7 @@
     }
     const handleChange = (e) => {
     }
-    const getPeople = (val = "") => {
+    const getPeople = async (val = "") => {
         let obj = {
             actions: [{
                 id: "6129;a",
@@ -389,21 +494,18 @@
         let d = {
             message: JSON.stringify(obj)
         }
-        proxy.$post(Interface.lookup, d).then(res => {
-            if (res && res.actions.length && res.actions[0].returnValue) {
-                let list = res.actions[0].returnValue.lookupResults.records;
-                let result = [];
-                list.forEach(item => {
-                    result.push({
-                        ID: item.fields.Id.value,
-                        Name: item.fields.Name.value
-                    })
-                });
-                data.listData = result;
-            }else { 
-                data.listData = [];
-            }
-        })
+        const res = await proxy.$post(Interface.lookup, d);
+        let result = [];
+        if(res && res.actions.length && res.actions[0].returnValue){
+          let list = res.actions[0].returnValue.lookupResults.records;
+          list.forEach(item=>{
+            result.push({
+                ID: item.fields.Id.value,
+                Name: item.fields.Name.value
+            })
+          });
+        }
+        data.listData = result;
     }
     getPeople();
     onMounted(() => {
@@ -416,7 +518,6 @@
     }));
 
     const handleSelectEntity = (e) => {
-        console.log("e", e);
         data.currentEntity = e.key;
         getPeople();
     }
@@ -454,6 +555,10 @@
     };
     const handleDelUser = (item, index) => {
         data.selectList.splice(index, 1);
+    }
+    const handleDeleteShare = (item) => {
+        data.deleteId = item.ValueId;
+        data.isDelete = true;
     }
 </script>
 <style lang="less" scoped>
@@ -696,6 +801,69 @@
                     height: 100%;
                     vertical-align: middle;
                     display: inherit;
+                }
+            }
+        }
+    }
+
+    .advancedEditSection {
+        margin-top: 20px;
+
+        .section-title {
+            background: #f3f3f3;
+            padding-left: 8px;
+            line-height: 30px;
+            border-radius: 4px;
+        }
+
+        .search {
+            padding: 10px 8px;
+        }
+
+        table {
+            table-layout: fixed;
+            border-collapse: collapse;
+
+            thead {
+                tr {
+                    th {
+                        padding: 4px 8px;
+                        height: 32px;
+                        background: #f3f3f3;
+                        text-align: left;
+                        border-right: 1px solid #aeaeae;
+
+                        &:last-child {
+                            border-right: none;
+                        }
+
+                        &:hover {
+                            background: #fff;
+                        }
+                    }
+                }
+            }
+
+            tbody {
+                tr {
+                    td {
+                        border-top: 1px solid #c9c9c9;
+                        border-bottom: 1px solid #c9c9c9;
+                        padding: 4px 8px;
+                    }
+
+                    &:hover {
+                        td {
+                            background: #f3f3f3;
+                            border-top: 2px solid #c9c9c9;
+                            border-bottom: 2px solid #c9c9c9;
+                        }
+                    }
+
+                    .close-icon {
+                        color: #747474;
+                        cursor: pointer;
+                    }
                 }
             }
         }

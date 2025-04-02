@@ -243,5 +243,9 @@ export const routesMapping = {
     //网盘
     CloudFile: {
         FileManager: () => import("../views/fileAdmin/index.vue")
+    },
+    //我的报账
+    MyReimburse: {
+
     }
 }

@@ -92,24 +92,24 @@
                                         :rows="3"></a-textarea>
                                     <div class="QuestionLabel">详细信息</div>
                                     <TEditor ref="editorRef2" :placeholder="'如果您还需要补充，请在此处添加一些细节...'" :height="230"
-                                        :id="uploadId" @input="getInputContent2" />
+                                        :mode="'chatter'" :id="uploadId" @input="getInputContent2" />
                                 </div>
                             </div>
                             <div class="optionalWrap">
-                                <a-button type="primary" class="optionalWrapLeft" @click="addQuestionOption"
+                                <!-- <a-button type="primary" class="optionalWrapLeft" @click="addQuestionOption"
                                     v-if="activeKey == '30400'">
                                     <PlusOutlined />添加新选项
-                                </a-button>
-                                <a-upload v-if="activeKey == '0'" accept="image/*" v-model:fileList="fileList"
+                                </a-button> -->
+                                <!-- <a-upload v-if="activeKey == '0'" accept="image/*" v-model:fileList="fileList"
                                     :headers="headers" @change="changeFiles" :data="uploadData"
                                     :customRequest="changeRequest" :action="Interface.information.uploadMedia"
                                     :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
                                     <a-button type="primary" class="optionalWrapLeft">
                                         <PlusOutlined />添加图片
                                     </a-button>
-                                </a-upload>
+                                </a-upload> -->
                                 <a-button type="primary" class="optionalWrapRight" @click="handleSendStatus"
-                                    :disabled="!data.text">发布</a-button>
+                                    :disabled="!data.text">发送</a-button>
                             </div>
                         </div>
                     </div>
@@ -188,7 +188,7 @@
                                                                 :percent="ite.percentage" :size="8" :show-info="true"
                                                                 :title="'占比' + ite.percentage + '%'"></a-progress>
                                                             <span class="option-count">{{ ite.checkedQty || 0
-                                                                }}票&nbsp;&nbsp;&nbsp;&nbsp;{{
+                                                            }}票&nbsp;&nbsp;&nbsp;&nbsp;{{
                                                                     ite.percentage || 0
                                                                 }}%</span>
                                                         </div>
@@ -202,15 +202,15 @@
                                             </div>
                                         </div>
                                         <div class="commentBtn">
-                                            <span class="commentBtn-item" title="分享">
+                                            <!-- <span class="commentBtn-item" title="分享">
                                                 <ExportOutlined /><span>{{ item.NumOfForward || 0 }}</span>
-                                            </span>
+                                            </span> -->
                                             <span class="commentBtn-item" title="评论" v-if="!item.IsShowReply"
                                                 @click.stop="getCommentList(item.id, item)">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
                                             </span>
                                             <span class="commentBtn-item" title="评论" v-if="item.IsShowReply"
-                                                @click.stop="item.IsShowReply = false" style="color: #1677ff;">
+                                                @click.stop="item.IsShowReply = false" style="color: #ff7d00;">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
                                             </span>
                                             <span class="commentBtn-item" title="点赞" v-if="!item.IsLike"
@@ -218,7 +218,7 @@
                                                 <LikeOutlined /><span>{{ item.NumOfLike || 0 }}</span>
                                             </span>
                                             <span class="commentBtn-item" title="取消点赞" v-if="item.IsLike"
-                                                @click.stop="handleLike1(item)" style="color: red;">
+                                                @click.stop="handleLike1(item)" style="color: #ff7d00;">
                                                 <LikeFilled /><span>{{ item.NumOfLike || 0 }}</span>
                                             </span>
                                         </div>
@@ -238,12 +238,13 @@
                                                 </div>
                                             </div>
                                             <div class="optionalWrap">
-                                                <a-button type="primary"
+                                                <a-button type="primary" :disabled="!item.comment"
                                                     @click.stop="handleSendComment(item, item)">评论</a-button>
                                             </div>
-                                            <div class="commentList">
+                                            <div class="commentList" v-if="listData1[item.id]">
                                                 <div class="commentItemBox"
-                                                    v-for="(item1, index1) in listData1[item.id]" :key="index1">
+                                                    v-for="(item1, index1) in listData1[item.id].slice(0, 5)"
+                                                    :key="index1">
                                                     <div class="leftAvatar">
                                                         <a-avatar :size="37">
                                                             <!-- <template #icon><UserOutlined /></template> -->
@@ -274,7 +275,7 @@
                                                             <span class="commentBtn-item" title="回复"
                                                                 v-if="item1.IsShowReply"
                                                                 @click.stop="item1.IsShowReply = false"
-                                                                style="color: #1677ff;">
+                                                                style="color: #ff7d00;">
                                                                 <MessageOutlined /><span></span>
                                                             </span>
                                                             <span class="commentBtn-item" title="点赞"
@@ -285,7 +286,7 @@
                                                             <span class="commentBtn-item" title="取消点赞"
                                                                 v-if="item1.IsLike"
                                                                 @click.stop="handleLike2(item1, false)"
-                                                                style="color: red;">
+                                                                style="color: #ff7d00;">
                                                                 <LikeFilled /><span>{{ item1.NumOfLike || 0 }}</span>
                                                             </span>
                                                         </div>
@@ -305,24 +306,30 @@
                                                                 </div>
                                                             </div>
                                                             <div class="optionalWrap">
-                                                                <a-button type="primary"
+                                                                <a-button type="primary" :disabled="!item1.comment"
                                                                     @click.stop="handleSendComment(item, item1)">回复</a-button>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div class="linkMore"
+                                                    v-if="listData1[item.id] && listData1[item.id].length > 5"
+                                                    @click="handleDetail(item)">
+                                                    <span class="linkMoreText">查看全部{{ total || 0 }}条评论</span>
+                                                    <RightOutlined class="linkMoreIcon" />
                                                 </div>
                                                 <div class="empty"
                                                     v-if="listData1[item.id] && listData1[item.id].length == 0">
                                                     <img :src="require('@/assets/img/empty.png')" alt="" />
                                                     <p class="emptyDesc">当前暂无评论</p>
                                                 </div>
-                                                <div class="pagination">
+                                                <!-- <div class="pagination">
                                                     <a-pagination show-size-changer
                                                         :pageSizeOptions="['5', '10', '20', '50', '80', '100']"
                                                         :pageSize="rows" @showSizeChange="sizeChange"
                                                         v-model:current="page" :total="total" @change="ChangePage"
                                                         :show-total="total => `共 ${total} 条`" />
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -331,11 +338,11 @@
                                     <img :src="require('@/assets/img/empty.png')" alt="" />
                                     <p class="emptyDesc">当前暂无数据</p>
                                 </div>
-                                <div class="pagination">
+                                <!-- <div class="pagination">
                                     <a-pagination show-size-changer :pageSizeOptions="['10', '20', '50', '80', '100']"
                                         :pageSize="rows0" @showSizeChange="sizeChange0" v-model:current="page0"
                                         :total="total0" @change="ChangePage0" :show-total="total0 => `共 ${total0} 条`" />
-                                </div>
+                                </div> -->
                             </div>
 
                         </div>
@@ -407,7 +414,7 @@
                                                                 :percent="ite.percentage" :size="8" :show-info="true"
                                                                 :title="'占比' + ite.percentage + '%'"></a-progress>
                                                             <span class="option-count">{{ ite.checkedQty || 0
-                                                                }}票&nbsp;&nbsp;&nbsp;&nbsp;{{
+                                                            }}票&nbsp;&nbsp;&nbsp;&nbsp;{{
                                                                     ite.percentage || 0
                                                                 }}%</span>
                                                         </div>
@@ -421,15 +428,15 @@
                                             </div>
                                         </div>
                                         <div class="commentBtn">
-                                            <span class="commentBtn-item" title="分享">
+                                            <!-- <span class="commentBtn-item" title="分享">
                                                 <ExportOutlined /><span>{{ item.NumOfForward || 0 }}</span>
-                                            </span>
+                                            </span> -->
                                             <span class="commentBtn-item" title="评论"
                                                 @click="getCommentList(item.id, item)">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
                                             </span>
                                             <!-- <span class="commentBtn-item" title="评论" v-if="item.IsShowReply"
-                                                @click="item.IsShowReply = false" style="color: #1677ff;">
+                                                @click="item.IsShowReply = false" style="color: #ff7d00;">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
                                             </span> -->
                                             <span class="commentBtn-item" title="点赞" v-if="!item.IsLike"
@@ -437,7 +444,7 @@
                                                 <LikeOutlined /><span>{{ item.NumOfLike || 0 }}</span>
                                             </span>
                                             <span class="commentBtn-item" title="取消点赞" v-if="item.IsLike"
-                                                @click="handleLike1(item)" style="color: red;">
+                                                @click="handleLike1(item)" style="color: #ff7d00;">
                                                 <LikeFilled /><span>{{ item.NumOfLike || 0 }}</span>
                                             </span>
                                         </div>
@@ -457,7 +464,7 @@
                                                 </div>
                                             </div>
                                             <div class="optionalWrap">
-                                                <a-button type="primary"
+                                                <a-button type="primary" :disabled="!item.comment"
                                                     @click="handleSendComment(item, item)">评论</a-button>
                                             </div>
                                             <div class="commentList">
@@ -493,7 +500,7 @@
                                                             <span class="commentBtn-item" title="回复"
                                                                 v-if="item1.IsShowReply"
                                                                 @click="item1.IsShowReply = false"
-                                                                style="color: #1677ff;">
+                                                                style="color: #ff7d00;">
                                                                 <MessageOutlined /><span></span>
                                                             </span>
                                                             <span class="commentBtn-item" title="点赞"
@@ -502,7 +509,7 @@
                                                             </span>
                                                             <span class="commentBtn-item" title="取消点赞"
                                                                 v-if="item1.IsLike" @click="handleLike2(item1, false)"
-                                                                style="color: red;">
+                                                                style="color: #ff7d00;">
                                                                 <LikeFilled /><span>{{ item1.NumOfLike || 0 }}</span>
                                                             </span>
                                                         </div>
@@ -522,7 +529,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="optionalWrap">
-                                                                <a-button type="primary"
+                                                                <a-button type="primary" :disabled="!item1.comment"
                                                                     @click="handleSendComment(item, item1)">回复</a-button>
                                                             </div>
                                                         </div>
@@ -535,7 +542,7 @@
                                                 </div>
                                                 <div class="pagination">
                                                     <a-pagination show-size-changer
-                                                        :pageSizeOptions="['5', '10', '20', '50', '80', '100']"
+                                                        :pageSizeOptions="['10', '20', '50', '80', '100']"
                                                         :pageSize="rows" @showSizeChange="sizeChange"
                                                         v-model:current="page" :total="total" @change="ChangePage"
                                                         :show-total="total => `共 ${total} 条`" />
@@ -622,7 +629,7 @@ import localeData from 'dayjs/plugin/localeData';
 dayjs.extend(calendar);
 dayjs.extend(weekday);
 dayjs.extend(localeData);
-import { UserOutlined, LikeOutlined, DeleteOutlined, ExportOutlined, MessageOutlined, BarsOutlined, MoreOutlined, SearchOutlined, LikeFilled, LoadingOutlined, PlusOutlined, CloseOutlined, EyeOutlined, LeftOutlined } from "@ant-design/icons-vue";
+import { UserOutlined, LikeOutlined, DeleteOutlined, ExportOutlined, MessageOutlined, BarsOutlined, MoreOutlined, SearchOutlined, LikeFilled, LoadingOutlined, PlusOutlined, CloseOutlined, EyeOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 import { notification } from 'ant-design-vue';
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
@@ -651,7 +658,7 @@ const data = reactive({
     rows0: 10,
     total0: 0,
     page: 1,
-    rows: 5,
+    rows: 10,
     total: 0,
     text: "",
     description: "",
@@ -705,6 +712,7 @@ const changeMenu = (e) => {
     data.isShowDetail = false;
     data.selectmenu = e;
     data.keyIndex = 1;
+    data.page0 = 1;
     data.ImageList = [];
     data.VoteOptions = [
         {
@@ -736,12 +744,12 @@ const getValue = (list) => {
 }
 const getStatusList = () => {
     data.loading = true;
-    // if (data.keyIndex) { } else { return false }
-    // if (data.keyIndex == 1) {
-    //     data.listData = [];
-    // }
+    if (data.keyIndex) { } else { return false }
+    if (data.keyIndex == 1) {
+        data.listData = [];
+    }
     data.total0 = 0;
-    data.listData = [];
+    //data.listData = [];
     let url = Interface.question.query;
     let filterQuery = '\nChatterTypeCode\teq\t1';
     if (data.selectmenu == 2) {
@@ -754,7 +762,7 @@ const getStatusList = () => {
             callingDescriptor: "UNKNOWN",
             params: {
                 pageSize: data.rows0,
-                pageNumber: data.page0,
+                pageNumber: data.keyIndex,
                 filterQuery: filterQuery,
                 search: data.searchVal || ''
             }
@@ -792,10 +800,10 @@ const getStatusList = () => {
                 list.push(item);
             }
         }
-        // if (list && list.length) {
-        //     data.listData = data.listData.concat(list);
-        // }
-        data.listData = list;
+        if (list && list.length) {
+            data.listData = data.listData.concat(list);
+        }
+        //data.listData = list;
     })
     setTimeout(function () {
         data.loading = false;
@@ -865,7 +873,7 @@ const handleSendStatus = () => {
         }
         proxy.$post(url, obj).then(res => {
             if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-                message.success("发布成功！");
+                message.success("发送成功！");
                 data.keyIndex = 1;
                 data.page0 = 1;
                 data.ImageList = [];
@@ -1022,7 +1030,7 @@ const deleteOk = (e) => {
     }
 };
 const loadQuestionData = (e) => {
-    data.searchVal = e;
+    //data.searchVal = e;
     data.keyIndex = 1;
     data.page0 = 1;
     getStatusList();
@@ -1324,7 +1332,6 @@ const handleDetail = (item) => {
 }
 //返回主页列表
 const returnBack = () => {
-    data.isShowDetail = false;
     changeMenu(data.selectmenu);
 }
 onMounted(() => {
@@ -1355,10 +1362,10 @@ onMounted(() => {
             if (
                 scrollTop &&
                 clientHeight &&
-                (clientHeight + scrollTop >= scrollHeight)
+                (clientHeight + scrollTop >= scrollHeight) && !data.isShowDetail
             ) {
                 data.keyIndex = data.keyIndex + 1;
-                //getStatusList();
+                getStatusList();
             }
         },
         true
@@ -1573,7 +1580,7 @@ onMounted(() => {
     }
 
     .commentBtn-item:first-child {
-        margin-left: 10px;
+        margin-left: 100px;
     }
 
     .commentBtn-item:last-child {
@@ -1605,7 +1612,7 @@ onMounted(() => {
 .CommunityCommentWrap {
     overflow: auto;
     height: 100%;
-    padding: 5px;
+    padding: 0px;
 
     .mainContent {
         display: flex;
@@ -1617,13 +1624,13 @@ onMounted(() => {
         .leftContent {
             width: 182px;
             height: 100%;
-            margin-right: 15px;
+            margin-right: 10px;
         }
 
         .middleContent {
             width: auto;
             flex: 1;
-            margin-right: 15px;
+            margin-right: 10px;
             height: 100%;
 
             .commentContent {
@@ -1711,7 +1718,7 @@ onMounted(() => {
     .panel1 {
         min-height: 370px;
         height: auto;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
         padding: 15px;
         padding-top: 15px;
         padding-right: 0;
@@ -1738,14 +1745,14 @@ onMounted(() => {
 
             .commentItemBox {
                 background: #fff;
-                margin-bottom: 15px;
+                margin-bottom: 10px;
                 border-radius: 5px;
             }
         }
 
         .commentSearch {
             padding: 3px 0px 5px 0;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
             background: #fff;
             border-radius: 5px;
 
@@ -1860,7 +1867,23 @@ onMounted(() => {
         font-size: 22px;
         top: 1.1px;
     }
-
+    .ant-btn{
+        border-radius: 20px !important;
+    }
+    .ant-btn-primary{
+        background: #ff7d00 !important;
+        border: 1px solid #ff7d00 !important;
+        color: #fff !important;
+    }
+    .ant-btn-primary:hover {
+        opacity: 0.8;
+    }
+    .ant-btn-primary:disabled{
+        background: #ff7d00 !important;
+        border: 1px solid #ff7d00 !important;
+        opacity: 0.5;
+        color: #fff !important;
+    }
     .commentReply {
         margin-top: 12px;
 
@@ -1892,7 +1915,9 @@ onMounted(() => {
         .ant-btn {
             font-size: 13px;
             height: 26px;
-            padding: 0px 8px;
+            padding: 0px 10px;
+            border-radius: 20px !important;
+            padding-top: 2px;
         }
 
         .commentList {
@@ -1960,7 +1985,7 @@ onMounted(() => {
     }
 
     button.tox-tbtn.tox-tbtn--select.tox-tbtn--bespoke {
-        width: 113px !important;
+        width: 90px !important;
     }
 }
 
@@ -2231,6 +2256,52 @@ onMounted(() => {
                 }
             }
         }
+    }
+
+    .picturesList {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 10px;
+
+        .img {
+            width: 165px;
+            height: 165px;
+            border-radius: 4px;
+            background: #f2f3f5;
+            padding: 5px;
+            box-sizing: border-box;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+    }
+
+    .linkMore {
+        height: 33px;
+        background: #fff;
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: end;
+
+        .linkMoreText {
+            margin-right: 10px;
+        }
+
+        .linkMoreIcon {
+            font-size: 14px;
+            position: relative;
+            top: -2px;
+        }
+    }
+
+    .linkMore:hover {
+        color: #ff7d00;
     }
 }
 </style>

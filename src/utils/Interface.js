@@ -44,6 +44,7 @@ const Interface = {
     getWorkflowTemplates: baseUrl + "/objectmanager/template/auth/getWorkflowTemplates", // 获取某个对象对应的所有简当权限
     stati: baseUrl + "/aura/workflow/report/stati",//流程效率统计
     abstract: baseUrl + "/aura/workflow/report/abstract/get",//流程统计摘要
+    import: baseUrl + "/aura/flow/form/entity/import", // 流程子表数据导入
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",

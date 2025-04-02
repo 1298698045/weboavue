@@ -84,7 +84,7 @@
         <Delete :external="false" :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="getSuggestionQuery"
             sObjectName="WFSuggestionLibrary" :recordId="suggestionId"
             objTypeCode="130" />
-        <BatchImportChild :isShow="isBatchImport" v-if="isBatchImport" @cancel="isBatchImport = false"></BatchImportChild>
+        <BatchImportChild :isShow="isBatchImport" v-if="isBatchImport" :subEntityName="subEntityName" :forignFieldName="forignFieldName" :forignFieldValue="processInstanceId" @cancel="isBatchImport = false"></BatchImportChild>
     </div>
 </template>
 <script setup>
@@ -176,14 +176,16 @@
         deleteDesc: "确定删除当前意见吗？",
         suggestionId: "",
         suggestionObj: {},
-        isBatchImport: false
+        isBatchImport: false,
+        subEntityName: "",
+        forignFieldName: ""
     });
     const { entityId, layoutData, rowCount, columnCount, cellData, mergeData, rows, mergeRowColData, 
         isRadioUser, isRadioDept, isLookup, fieldData, entityApiName, lookEntityApiName, lookObjectTypeCode, objectTypeCode, columns, comps, ruleId,
         processId, entityLayoutId, select, isLoad, entityObjectId, attributes, list, search, processInstanceId, objTypeCode, isSub,
         subRecordFieldData, relatedObjData, relatedEntityInfoList, toActivityID, deleteRelatedData,
         masterEntityPermission, relatedListEntityPermissions, maxRowNum, suggestions, isDelete, deleteDesc,
-        suggestionId, suggestionObj, isBatchImport
+        suggestionId, suggestionObj, isBatchImport, subEntityName, forignFieldName
      } = toRefs(data);
 
      const handleSetValue = (field, value) => {
@@ -1337,6 +1339,11 @@
 
     // 导入子表
     const handleImportSubTable = (col) => {
+        console.log("col", col, data.relatedObjData, data.relatedEntityInfoList, data.processInstanceId);
+        let { relatedName } = data.relatedObjData[col.field.id];
+        data.subEntityName = relatedName;
+        let row = data.relatedEntityInfoList.find(item=>item.relatedEntity == relatedName);
+        data.forignFieldName = row.relatedEntityJoinField;
         data.isBatchImport = true;
     };
 

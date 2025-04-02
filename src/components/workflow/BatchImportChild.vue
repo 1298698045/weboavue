@@ -14,14 +14,17 @@
                             <div class="sectionTitle">基本信息</div>
                             <div class="sectionRow">
                                 <a-form-item label="导入文件:">
-                                    <a-upload v-model:fileList="formState.upload"
-                                        name="logo"
-                                        action="/upload.do"
-                                        list-type="picture"
-                                    >
-                                    <a-button>导入文件</a-button>
-                                    <span class="desc" style="padding-left: 20px;">未选择任何文件</span>
-                                  </a-upload>
+                                    <a-upload name="file" :headers="headers" v-model:file-list="fileList"
+                                        :data="uploadData" :action="Interface.workflow.import"
+                                        :before-upload="beforeUpload" :showUploadList="false" @change="changeFiles">
+                                        <a-button>导入文件</a-button>
+                                        <span class="desc" style="padding-left: 20px;">未选择任何文件</span>
+                                    </a-upload>
+                                    <!-- <a-upload v-model:fileList="formState.upload" name="logo" action="/upload.do"
+                                        list-type="picture">
+                                        <a-button>导入文件</a-button>
+                                        <span class="desc" style="padding-left: 20px;">未选择任何文件</span>
+                                    </a-upload> -->
                                 </a-form-item>
                             </div>
                             <div class="sectionRow">
@@ -60,22 +63,56 @@
     const props = defineProps({
         isShow: Boolean,
         sObjectName: String,
-        recordId: String
+        recordId: String,
+        subEntityName: String,
+        forignFieldName: String,
+        forignFieldValue: String
     })
     const emit = defineEmits(['cancel', 'load']);
     const modelContentRef = ref(null);
     const formState = reactive({
         upload: []
-    })
+    });
+    const token = localStorage.getItem("token");
     const data = reactive({
-        top: ""
+        top: "",
+        headers: {
+            Authorization: token,
+            Token: token,
+        },
+        uploadData: {
+            entityName: props.subEntityName,
+            forignFieldName: props.forignFieldName,
+            forignFieldValue: props.forignFieldValue
+        },
     })
-    const { top } = toRefs(data);
+    const { top, headers, uploadData } = toRefs(data);
 
     onMounted(() => {
         let h = modelContentRef.value.clientHeight;
         data.top = (h + 126) / 2 + 'px';
-    })
+    });
+    const beforeUpload = (file) => {
+        // const isPNG = file.type === 'image/png';
+        // if (!isPNG) {
+        //     message.error(`签名文件只可以上传PNG格式的文件`);
+        // }
+        // return isPNG || Upload.LIST_IGNORE;
+        return true;
+    };
+    const changeFiles = ({ file }) => {
+        if (file.status === "done") {
+            const state = file.response?.actions?.[0]?.state;
+            if (state === "SUCCESS") {
+                message.success("上传成功！");
+                // getFiles();
+            } else {
+                message.error("上传失败！");
+            }
+        } else if (file.status === "error") {
+            message.error("上传失败！");
+        }
+    };
     const setTop = computed(() => ({
         top: data.top
     }));
@@ -83,7 +120,7 @@
         emit("cancel", false);
     }
     const handleSubmit = () => {
-        emit("cancel", false);
+        emit("success", false);
     }
 </script>
 <style lang="less" scoped>

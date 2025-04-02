@@ -43,8 +43,10 @@
                                     </a-tabs>
                                 </div>
                                 <div class="TEditorWrap CommentWrap" v-if="activeKey == '6000' || activeKey == '0'">
-                                    <TEditor ref="editorRef" :placeholder="'有什么新鲜事想分享给大家?'" @input="getInputContent"
-                                        :id="uploadId" :height="230" />
+                                    <!-- <TEditor ref="editorRef" :placeholder="'有什么新鲜事想分享给大家?'" @input="getInputContent" :mode="'chatter'"
+                                        :id="uploadId" :height="230" /> -->
+                                    <a-textarea class="Votetextarea" v-model:value="data.text"
+                                        placeholder="有什么新鲜事想分享给大家？" :rows="6"></a-textarea>
                                     <div class="RelaseInfoUpload" v-if="ImageList.length">
                                         <div class="uploadPanel">
                                             <div class="inboxFileList">
@@ -101,7 +103,7 @@
                                         :rows="3"></a-textarea>
                                     <div class="QuestionLabel">详细信息</div>
                                     <TEditor ref="editorRef2" :placeholder="'如果您还需要补充，请在此处添加一些细节...'" :height="230"
-                                        :id="uploadId" @input="getInputContent2" />
+                                        :mode="'chatter'" :id="uploadId" @input="getInputContent2" />
                                 </div>
                             </div>
                             <div class="optionalWrap">
@@ -113,12 +115,56 @@
                                     :headers="headers" @change="changeFiles" :data="uploadData"
                                     :customRequest="changeRequest" :action="Interface.information.uploadMedia"
                                     :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
-                                    <a-button type="primary" class="optionalWrapLeft">
+                                    <!-- <a-button type="primary" class="optionalWrapLeft">
                                         <PlusOutlined />添加图片
-                                    </a-button>
+                                    </a-button> -->
+                                    <div class="optionbtn">
+                                        <div class="optionbtn-icon">
+                                            <svg title="添加图片" viewBox="0 0 24 24" aria-hidden="true"
+                                                class="r-1cvl2hr r-4qtqp9 r-yyyyoo r-z80fyv r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-19wmn03">
+                                                <g>
+                                                    <path
+                                                        d="M3 5.5C3 4.119 4.119 3 5.5 3h13C19.881 3 21 4.119 21 5.5v13c0 1.381-1.119 2.5-2.5 2.5h-13C4.119 21 3 19.881 3 18.5v-13zM5.5 5c-.276 0-.5.224-.5.5v9.086l3-3 3 3 5-5 3 3V5.5c0-.276-.224-.5-.5-.5h-13zM19 15.414l-3-3-5 5-3-3-3 3V18.5c0 .276.224.5.5.5h13c.276 0 .5-.224.5-.5v-3.086zM9.75 7C8.784 7 8 7.784 8 8.75s.784 1.75 1.75 1.75 1.75-.784 1.75-1.75S10.716 7 9.75 7z">
+                                                    </path>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="optionbtn-label">
+                                            图片
+                                        </div>
+                                    </div>
                                 </a-upload>
                                 <a-button type="primary" class="optionalWrapRight" @click="handleSendStatus"
-                                    :disabled="!data.text">发布</a-button>
+                                    :disabled="!data.text">发送</a-button>
+                                <div class="optionalWrapRight" v-if="activeKey == '0'">
+                                    <a-dropdown class="optionalDropdown">
+                                        <div class="show">
+                                            <span class="text">{{ submitType }}</span>
+                                            <span class="arrowIcon">
+                                                <!-- <DownOutlined /> -->
+                                                <svg class="moreaction" width="12" height="16" viewBox="0 0 520 520"
+                                                    fill="none" role="presentation">
+                                                    <path
+                                                        d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
+                                                        fill="#747474">
+                                                    </path>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <template #overlay>
+                                            <a-menu>
+                                                <a-menu-item v-for="(item, index) in submitTypeList" :key="index">
+                                                    <div class="menu-row"
+                                                        @click="selectOption('submitType', item.value)"
+                                                        :class="{ 'selectOptionActive': submitType == item.value }">
+                                                        <span class="menuText">{{ item.label }}</span>
+                                                    </div>
+                                                </a-menu-item>
+                                            </a-menu>
+                                        </template>
+                                    </a-dropdown>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -211,15 +257,15 @@
                                             </div>
                                         </div>
                                         <div class="commentBtn">
-                                            <span class="commentBtn-item" title="分享">
+                                            <!-- <span class="commentBtn-item" title="分享">
                                                 <ExportOutlined /><span>{{ item.NumOfForward || 0 }}</span>
-                                            </span>
+                                            </span> -->
                                             <span class="commentBtn-item" title="评论" v-if="!item.IsShowReply"
                                                 @click.stop="getCommentList(item.id, item)">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
                                             </span>
                                             <span class="commentBtn-item" title="评论" v-if="item.IsShowReply"
-                                                @click.stop="item.IsShowReply = false" style="color: #1677ff;">
+                                                @click.stop="item.IsShowReply = false" style="color: #ff7d00;">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
                                             </span>
                                             <span class="commentBtn-item" title="点赞" v-if="!item.IsLike"
@@ -227,7 +273,7 @@
                                                 <LikeOutlined /><span>{{ item.NumOfLike || 0 }}</span>
                                             </span>
                                             <span class="commentBtn-item" title="取消点赞" v-if="item.IsLike"
-                                                @click.stop="handleLike1(item)" style="color: red;">
+                                                @click.stop="handleLike1(item)" style="color: #ff7d00;">
                                                 <LikeFilled /><span>{{ item.NumOfLike || 0 }}</span>
                                             </span>
                                         </div>
@@ -247,12 +293,13 @@
                                                 </div>
                                             </div>
                                             <div class="optionalWrap">
-                                                <a-button type="primary"
+                                                <a-button type="primary" :disabled="!item.comment"
                                                     @click.stop="handleSendComment(item, item)">评论</a-button>
                                             </div>
-                                            <div class="commentList">
+                                            <div class="commentList" v-if="listData1[item.id]">
                                                 <div class="commentItemBox"
-                                                    v-for="(item1, index1) in listData1[item.id]" :key="index1">
+                                                    v-for="(item1, index1) in listData1[item.id].slice(0, 5)"
+                                                    :key="index1">
                                                     <div class="leftAvatar">
                                                         <a-avatar :size="37">
                                                             <!-- <template #icon><UserOutlined /></template> -->
@@ -283,7 +330,7 @@
                                                             <span class="commentBtn-item" title="回复"
                                                                 v-if="item1.IsShowReply"
                                                                 @click.stop="item1.IsShowReply = false"
-                                                                style="color: #1677ff;">
+                                                                style="color: #ff7d00;">
                                                                 <MessageOutlined /><span></span>
                                                             </span>
                                                             <span class="commentBtn-item" title="点赞"
@@ -294,7 +341,7 @@
                                                             <span class="commentBtn-item" title="取消点赞"
                                                                 v-if="item1.IsLike"
                                                                 @click.stop="handleLike2(item1, false)"
-                                                                style="color: red;">
+                                                                style="color: #ff7d00;">
                                                                 <LikeFilled /><span>{{ item1.NumOfLike || 0 }}</span>
                                                             </span>
                                                         </div>
@@ -314,24 +361,30 @@
                                                                 </div>
                                                             </div>
                                                             <div class="optionalWrap">
-                                                                <a-button type="primary"
+                                                                <a-button type="primary" :disabled="!item1.comment"
                                                                     @click.stop="handleSendComment(item, item1)">回复</a-button>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div class="linkMore"
+                                                    v-if="listData1[item.id] && listData1[item.id].length > 5"
+                                                    @click="handleDetail(item)">
+                                                    <span class="linkMoreText">查看全部{{ total || 0 }}条评论</span>
+                                                    <RightOutlined class="linkMoreIcon" />
                                                 </div>
                                                 <div class="empty"
                                                     v-if="listData1[item.id] && listData1[item.id].length == 0">
                                                     <img :src="require('@/assets/img/empty.png')" alt="" />
                                                     <p class="emptyDesc">当前暂无评论</p>
                                                 </div>
-                                                <div class="pagination">
+                                                <!-- <div class="pagination">
                                                     <a-pagination show-size-changer
                                                         :pageSizeOptions="['5', '10', '20', '50', '80', '100']"
                                                         :pageSize="rows" @showSizeChange="sizeChange"
                                                         v-model:current="page" :total="total" @change="ChangePage"
                                                         :show-total="total => `共 ${total} 条`" />
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -340,11 +393,11 @@
                                     <img :src="require('@/assets/img/empty.png')" alt="" />
                                     <p class="emptyDesc">当前暂无数据</p>
                                 </div>
-                                <div class="pagination">
+                                <!-- <div class="pagination">
                                     <a-pagination show-size-changer :pageSizeOptions="['10', '20', '50', '80', '100']"
                                         :pageSize="rows0" @showSizeChange="sizeChange0" v-model:current="page0"
                                         :total="total0" @change="ChangePage0" :show-total="total0 => `共 ${total0} 条`" />
-                                </div>
+                                </div> -->
                             </div>
 
                         </div>
@@ -432,15 +485,15 @@
                                             </div>
                                         </div>
                                         <div class="commentBtn">
-                                            <span class="commentBtn-item" title="分享">
+                                            <!-- <span class="commentBtn-item" title="分享">
                                                 <ExportOutlined /><span>{{ item.NumOfForward || 0 }}</span>
-                                            </span>
+                                            </span> -->
                                             <span class="commentBtn-item" title="评论"
                                                 @click="getCommentList(item.id, item)">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
                                             </span>
                                             <!-- <span class="commentBtn-item" title="评论" v-if="item.IsShowReply"
-                                                @click="item.IsShowReply = false" style="color: #1677ff;">
+                                                @click="item.IsShowReply = false" style="color: #ff7d00;">
                                                 <MessageOutlined /><span>{{ item.NumOfComment || 0 }}</span>
                                             </span> -->
                                             <span class="commentBtn-item" title="点赞" v-if="!item.IsLike"
@@ -448,7 +501,7 @@
                                                 <LikeOutlined /><span>{{ item.NumOfLike || 0 }}</span>
                                             </span>
                                             <span class="commentBtn-item" title="取消点赞" v-if="item.IsLike"
-                                                @click="handleLike1(item)" style="color: red;">
+                                                @click="handleLike1(item)" style="color: #ff7d00;">
                                                 <LikeFilled /><span>{{ item.NumOfLike || 0 }}</span>
                                             </span>
                                         </div>
@@ -468,7 +521,7 @@
                                                 </div>
                                             </div>
                                             <div class="optionalWrap">
-                                                <a-button type="primary"
+                                                <a-button type="primary" :disabled="!item.comment"
                                                     @click="handleSendComment(item, item)">评论</a-button>
                                             </div>
                                             <div class="commentList">
@@ -504,7 +557,7 @@
                                                             <span class="commentBtn-item" title="回复"
                                                                 v-if="item1.IsShowReply"
                                                                 @click="item1.IsShowReply = false"
-                                                                style="color: #1677ff;">
+                                                                style="color: #ff7d00;">
                                                                 <MessageOutlined /><span></span>
                                                             </span>
                                                             <span class="commentBtn-item" title="点赞"
@@ -513,7 +566,7 @@
                                                             </span>
                                                             <span class="commentBtn-item" title="取消点赞"
                                                                 v-if="item1.IsLike" @click="handleLike2(item1, false)"
-                                                                style="color: red;">
+                                                                style="color: #ff7d00;">
                                                                 <LikeFilled /><span>{{ item1.NumOfLike || 0 }}</span>
                                                             </span>
                                                         </div>
@@ -533,7 +586,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="optionalWrap">
-                                                                <a-button type="primary"
+                                                                <a-button type="primary" :disabled="!item1.comment"
                                                                     @click="handleSendComment(item, item1)">回复</a-button>
                                                             </div>
                                                         </div>
@@ -546,7 +599,7 @@
                                                 </div>
                                                 <div class="pagination">
                                                     <a-pagination show-size-changer
-                                                        :pageSizeOptions="['5', '10', '20', '50', '80', '100']"
+                                                        :pageSizeOptions="['10', '20', '50', '80', '100']"
                                                         :pageSize="rows" @showSizeChange="sizeChange"
                                                         v-model:current="page" :total="total" @change="ChangePage"
                                                         :show-total="total => `共 ${total} 条`" />
@@ -633,7 +686,7 @@ import localeData from 'dayjs/plugin/localeData';
 dayjs.extend(calendar);
 dayjs.extend(weekday);
 dayjs.extend(localeData);
-import { UserOutlined, LikeOutlined, DeleteOutlined, ExportOutlined, MessageOutlined, BarsOutlined, MoreOutlined, SearchOutlined, LikeFilled, LoadingOutlined, PlusOutlined, CloseOutlined, EyeOutlined, LeftOutlined } from "@ant-design/icons-vue";
+import { UserOutlined, LikeOutlined, DeleteOutlined, ExportOutlined, MessageOutlined, BarsOutlined, MoreOutlined, SearchOutlined, LikeFilled, LoadingOutlined, PlusOutlined, CloseOutlined, EyeOutlined, LeftOutlined, RightOutlined, DownOutlined } from "@ant-design/icons-vue";
 import { notification } from 'ant-design-vue';
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
@@ -663,7 +716,7 @@ const data = reactive({
     rows0: 10,
     total0: 0,
     page: 1,
-    rows: 5,
+    rows: 10,
     total: 0,
     text: "",
     description: "",
@@ -710,13 +763,33 @@ const data = reactive({
     },
     isPhoto: false,
     photoParams: {},
-    isShowDetail: false
+    isShowDetail: false,
+    submitType: '公开',
+    submitTypeList: [
+        {
+            value: "公开",
+            label: "公开"
+        },
+        {
+            value: "好友圈",
+            label: "好友圈"
+        },
+        {
+            value: "仅自己可见",
+            label: "仅自己可见"
+        },
+        {
+            value: "群可见",
+            label: "群可见"
+        }
+    ]
 })
-const { isShowDetail, fileList, ImageList, uploadData, headers, isPhoto, photoParams, id, uploadId, item, VoteOptions, activeKey, loading, typeitem, type, OwningUserName, listData1, selectmenu, keyIndex, listData, page0, rows0, total0, page, rows, total, text, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
+const { submitType, submitTypeList, isShowDetail, fileList, ImageList, uploadData, headers, isPhoto, photoParams, id, uploadId, item, VoteOptions, activeKey, loading, typeitem, type, OwningUserName, listData1, selectmenu, keyIndex, listData, page0, rows0, total0, page, rows, total, text, searchVal, isDelete, recordId, objectTypeCode, sObjectName, deleteDesc, external } = toRefs(data);
 const changeMenu = (e) => {
     data.isShowDetail = false;
     data.selectmenu = e;
     data.keyIndex = 1;
+    data.page0 = 1;
     data.ImageList = [];
     data.VoteOptions = [
         {
@@ -748,12 +821,12 @@ const getValue = (list) => {
 }
 const getStatusList = () => {
     data.loading = true;
-    // if (data.keyIndex) { } else { return false }
-    // if (data.keyIndex == 1) {
-    //     data.listData = [];
-    // }
+    if (data.keyIndex) { } else { return false }
+    if (data.keyIndex == 1) {
+        data.listData = [];
+    }
     data.total0 = 0;
-    data.listData = [];
+    //data.listData = [];
     let url = Interface.status.query;
     if (data.selectmenu == 2) {
         url = Interface.status.mine;
@@ -765,7 +838,7 @@ const getStatusList = () => {
             callingDescriptor: "UNKNOWN",
             params: {
                 pageSize: data.rows0,
-                pageNumber: data.page0,
+                pageNumber: data.keyIndex,
                 ChatterTypeCode: data.activeKey,
                 search: data.searchVal || ''
             }
@@ -803,10 +876,10 @@ const getStatusList = () => {
                 list.push(item);
             }
         }
-        // if (list && list.length) {
-        //     data.listData = data.listData.concat(list);
-        // }
-        data.listData = list;
+        if (list && list.length) {
+            data.listData = data.listData.concat(list);
+        }
+        //data.listData = list;
     })
     setTimeout(function () {
         data.loading = false;
@@ -877,7 +950,7 @@ const handleSendStatus = () => {
         proxy.$post(url, obj).then(res => {
             if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                 let id = res.actions[0].returnValue.id
-                message.success("发布成功！");
+                message.success("发送成功！");
                 data.keyIndex = 1;
                 data.page0 = 1;
                 data.VoteOptions = [
@@ -1061,7 +1134,7 @@ const deleteOk = (e) => {
     }
 };
 const loadQuestionData = (e) => {
-    data.searchVal = e;
+    //data.searchVal = e;
     data.keyIndex = 1;
     data.page0 = 1;
     getStatusList();
@@ -1375,8 +1448,12 @@ const handleDetail = (item) => {
 }
 //返回主页列表
 const returnBack = () => {
-    data.isShowDetail = false;
     changeMenu(data.selectmenu);
+}
+//选择公开方式
+const selectOption = (name, value) => {
+    let index = data[name + 'List'].findIndex(item => item.value == value);
+    data[name] = (data[name + 'List'][index]).label;
 }
 onMounted(() => {
     let userInfo = window.localStorage.getItem('userInfo');
@@ -1406,10 +1483,10 @@ onMounted(() => {
             if (
                 scrollTop &&
                 clientHeight &&
-                (clientHeight + scrollTop >= scrollHeight)
+                (clientHeight + scrollTop >= scrollHeight) && !data.isShowDetail
             ) {
                 data.keyIndex = data.keyIndex + 1;
-                //getStatusList();
+                getStatusList();
             }
         },
         true
@@ -1464,6 +1541,7 @@ onMounted(() => {
 
             .optionalWrapRight {
                 float: right;
+                margin-top: 3px;
             }
         }
 
@@ -1624,7 +1702,7 @@ onMounted(() => {
     }
 
     .commentBtn-item:first-child {
-        margin-left: 10px;
+        margin-left: 100px;
     }
 
     .commentBtn-item:last-child {
@@ -1656,7 +1734,7 @@ onMounted(() => {
 .CommunityCommentWrap {
     overflow: auto;
     height: 100%;
-    padding: 5px;
+    padding: 0px;
 
     .mainContent {
         display: flex;
@@ -1668,13 +1746,13 @@ onMounted(() => {
         .leftContent {
             width: 182px;
             height: 100%;
-            margin-right: 15px;
+            margin-right: 10px;
         }
 
         .middleContent {
             width: auto;
             flex: 1;
-            margin-right: 15px;
+            margin-right: 10px;
             height: 100%;
 
             .commentContent {
@@ -1760,9 +1838,9 @@ onMounted(() => {
     }
 
     .panel1 {
-        min-height: 370px;
+        min-height: 310px;
         height: auto;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
         padding: 15px;
         padding-top: 15px;
         padding-right: 0;
@@ -1789,14 +1867,14 @@ onMounted(() => {
 
             .commentItemBox {
                 background: #fff;
-                margin-bottom: 15px;
+                margin-bottom: 10px;
                 border-radius: 5px;
             }
         }
 
         .commentSearch {
             padding: 3px 0px 5px 0;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
             background: #fff;
             border-radius: 5px;
 
@@ -1912,6 +1990,27 @@ onMounted(() => {
         top: 1.1px;
     }
 
+    .ant-btn {
+        border-radius: 20px !important;
+    }
+
+    .ant-btn-primary {
+        background: #ff7d00 !important;
+        border: 1px solid #ff7d00 !important;
+        color: #fff !important;
+    }
+
+    .ant-btn-primary:hover {
+        opacity: 0.8;
+    }
+
+    .ant-btn-primary:disabled {
+        background: #ff7d00 !important;
+        border: 1px solid #ff7d00 !important;
+        opacity: 0.5;
+        color: #fff !important;
+    }
+
     .commentReply {
         margin-top: 12px;
 
@@ -1943,7 +2042,8 @@ onMounted(() => {
         .ant-btn {
             font-size: 13px;
             height: 26px;
-            padding: 0px 8px;
+            padding: 0px 10px;
+            border-radius: 20px !important;
         }
 
         .commentList {
@@ -2011,7 +2111,7 @@ onMounted(() => {
     }
 
     button.tox-tbtn.tox-tbtn--select.tox-tbtn--bespoke {
-        width: 113px !important;
+        width: 90px !important;
     }
 }
 
@@ -2076,6 +2176,8 @@ onMounted(() => {
         border: 1px solid #dedede !important;
         border-radius: 4px !important;
         margin-bottom: 6px;
+        font-size: 15px;
+        padding-top: 8px;
     }
 
     .VoteLabel,
@@ -2213,7 +2315,7 @@ onMounted(() => {
             .inboxFileList {
                 display: flex;
                 flex-wrap: wrap;
-                margin-top: 20px;
+                margin-top: 0px;
                 position: relative;
                 left: 4px;
 
@@ -2229,8 +2331,9 @@ onMounted(() => {
                     background: #f2f3f5;
                     padding: 5px;
                     box-sizing: border-box;
+                    margin-top: 10px;
                     margin-right: 10px;
-                    margin-bottom: 10px;
+                    margin-bottom: 0px;
                     cursor: pointer;
                     display: flex;
                     overflow: hidden;
@@ -2303,6 +2406,96 @@ onMounted(() => {
             overflow: hidden;
             position: relative;
         }
+    }
+
+    .linkMore {
+        height: 33px;
+        background: #fff;
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: end;
+
+        .linkMoreText {
+            margin-right: 10px;
+        }
+
+        .linkMoreIcon {
+            font-size: 14px;
+            position: relative;
+            top: -2px;
+        }
+    }
+
+    .linkMore:hover {
+        color: #ff7d00;
+    }
+
+    .optionalWrap {
+        cursor: pointer;
+        margin-left: 2px;
+
+        .optionbtn {
+            .optionbtn-icon {
+                width: 25px;
+                height: 25px;
+
+                svg {
+                    fill: #838383;
+                }
+            }
+
+            .optionbtn-label {
+                font-size: 11px;
+                color: #636363;
+            }
+        }
+
+        .optionbtn:hover {
+            .optionbtn-icon {
+                svg {
+                    fill: #ff7d00;
+                }
+            }
+
+            .optionbtn-label {
+                color: #ff7d00;
+            }
+        }
+
+    }
+
+    .optionalDropdown {
+        font-size: 14px;
+        height: 32px;
+        line-height: 24px;
+        padding: 4px 10px;
+        padding-left: 12px;
+        border-radius: 20px;
+        background: #ccc !important;
+        border: 1px solid #ccc !important;
+        opacity: 0.5;
+        color: #000 !important;
+        margin-right: 10px;
+        display: flex;
+
+        .arrowIcon {
+            position: relative;
+            top: 3px;
+        }
+
+        .text {
+            margin-right: 5px;
+        }
+
+    }
+}
+
+.selectOptionActive {
+    .menuText {
+        color: #ff7d00;
     }
 }
 </style>
