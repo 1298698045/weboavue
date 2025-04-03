@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="850px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+    <a-modal v-model:open="props.isShow" width="850px" style="top:38px;" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
       <template #title>
         <div>
           {{ title }}
@@ -8,7 +8,7 @@
       </template>
       <div class="modalContainer addInvoiceWrap">
         <RadioDept :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
-        <div class="modalCenter modalCenter1" :style="{ height: height + 'px!important' }" v-show="step == 0">
+        <div class="modalCenter modalCenter1" :style="{ height: height + 'px !important' }" v-show="step == 0">
           <!-- <div class="form-legend-desktop">
             <abbr class="required">*</abbr>
             = 必填信息
@@ -135,14 +135,14 @@
             </div>
           </a-form>
         </div>
-        <div class="modalCenter modalCenter1" :style="{ height: height + 'px!important' }" v-show="step == 1">
+        <div class="modalCenter modalCenter1" :style="{ height: height + 'px !important' }" v-show="step == 1">
           <div class="section">
             <div class="sectionTitle sectionTitle2">电子发票</div>
             <div class="sectionRow">
               <div class="sectionItem">
                 <div class="uploadPanel">
-                  <a-upload-dragger v-model:file-list="fileList" :headers="headers" @change="changeFiles"
-                    :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false" multiple name="files"
+                  <a-upload-dragger accept=".pdf" v-model:file-list="fileList" :headers="headers" @change="changeFiles"
+                    :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false" name="files"
                     :before-upload="beforeUpload">
                     <div class="uploadRow">
                       <p class="ant-upload-drag-icon">
@@ -151,8 +151,8 @@
                       <p class="ant-upload-text">将电子发票pdf文件拖到此处，或点击上传</p>
                     </div>
                   </a-upload-dragger>
-                  <div class="inboxFileList">
-                    <div class="inboxFileItem" v-for="(item, index) in attachments" :key="index">
+                  <div class="inboxFileList" v-if="attachments&&attachments.length">
+                    <div class="inboxFileItem" v-for="(item, index) in attachments.slice(0, 1)" :key="index">
                       <div class="leftImg">
                         <img src="/src/assets/img/filetype/doc.png"
                           v-if="item.fileExtension == 'ocx' || item.fileExtension == 'docx' || item.fileExtension == 'doc' ||
@@ -267,8 +267,6 @@ import TxtView from "@/components/file/TxtView.vue";
 import Interface from "@/utils/Interface.js";
 import dayjs from 'dayjs';
 const { proxy } = getCurrentInstance();
-console.log(document.documentElement.clientHeight);
-const labelCol = ref({ style: { width: "100px" } });
 const props = defineProps({
   isShow: Boolean,
   objectTypeCode: String,
@@ -288,7 +286,7 @@ const formState = reactive({});
 const token = localStorage.getItem("token");
 const data = reactive({
   title: "",
-  height: document.documentElement.clientHeight - 350,
+  height: "",
   keywords: [],
   treeData: [],
   fileList: [],
@@ -927,8 +925,9 @@ onMounted(() => {
     data.currentBusinessUnitId = businessUnitId;
     data.currentBusinessUnitName = businessUnitName;
   }
+  data.height = document.documentElement.clientHeight - 200
   window.addEventListener("resize", (e) => {
-    data.height = document.documentElement.clientHeight - 350;
+    data.height = document.documentElement.clientHeight - 200;
   });
   if (props.id) {
     data.title = '编辑' + (props.name || '');

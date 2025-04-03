@@ -636,7 +636,15 @@ const staticRoutes = [
         }
       }
     ]
-  }
+  },
+  {
+    path: "/lightning/r/contract/view",
+    name: "ContractDeatil",
+    component: () => import("../views/contract/detail/index.vue"),
+    meta: {
+      name: "合同详情页"
+    },
+  },
 ];
 
 const router = createRouter({

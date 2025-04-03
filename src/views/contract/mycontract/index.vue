@@ -1,15 +1,15 @@
 <template>
-  <div class="todoList reimburseMineWrap">
+  <div class="todoList myContractWrap">
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
           <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
         </div>
-        <span class="headerTitle">我的报账</span>
+        <span class="headerTitle">我的合同</span>
       </div>
       <div class="headerRight">
-        <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
-        <a-button type="primary" class="ml10" @click="handleNewForm">新建报销单</a-button>
+        <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
+        <!-- <a-button type="primary" class="ml10" @click="handleNewForm">新建合同单</a-button> -->
         <!-- <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
           @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false">
           <a-button class="ml10" type="primary">上传</a-button>
@@ -35,8 +35,70 @@
             </div>
             <list-form-search ref="searchRef" @search="handleSearch" entityApiName="OfficialDocumentIn"
               :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search>
+            <div class="statistics" v-if="isStatistics">
+              <div class="statisticItem">
+                <div class="statisticLeft">
+                  <div class="statisticName">合同总数</div>
+                  <div class="statisticCount">
+                    {{ statistics.ContractNumber }}
+                  </div>
+                </div>
+                <div class="statisticRight">
+                  <p class="icon">
+                    <FileTextOutlined />
+                  </p>
+                </div>
+              </div>
+              <div class="statisticItem">
+                <div class="statisticLeft">
+                  <div class="statisticName">合同总金额</div>
+                  <div class="statisticCount">{{ statistics.Total }}</div>
+                </div>
+                <div class="statisticRight">
+                  <p class="icon">
+                    <PayCircleOutlined />
+                  </p>
+                </div>
+              </div>
+              <div class="statisticItem">
+                <div class="statisticLeft">
+                  <div class="statisticName">履行中金额</div>
+                  <div class="statisticCount">
+                    {{ statistics.ImplementTotal }}
+                  </div>
+                </div>
+                <div class="statisticRight">
+                  <p class="icon">
+                    <PayCircleOutlined />
+                  </p>
+                </div>
+              </div>
+              <div class="statisticItem">
+                <div class="statisticLeft">
+                  <div class="statisticName">暂停合同总金额</div>
+                  <div class="statisticCount">{{ statistics.StopTotal }}</div>
+                </div>
+                <div class="statisticRight">
+                  <p class="icon">
+                    <PayCircleOutlined />
+                  </p>
+                </div>
+              </div>
+              <div class="statisticItem">
+                <div class="statisticLeft">
+                  <div class="statisticName">解除合同总金额</div>
+                  <div class="statisticCount">
+                    {{ statistics.SuspendedTotal }}
+                  </div>
+                </div>
+                <div class="statisticRight">
+                  <p class="icon">
+                    <PayCircleOutlined />
+                  </p>
+                </div>
+              </div>
+            </div>
             <div class="wea-tabContent" :style="{ height: tableHeight + 'px' }" ref="tabContent">
-              <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
               <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
                 :isCollapsed="isCollapsed">
               </Ntable>
@@ -45,64 +107,12 @@
         </a-col>
       </a-row>
     </div>
-
     <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false"
       :title="data.recordId ? '编辑' : '新建'" @success="handleSearch('')" :id="recordId" :objectTypeCode="objectTypeCode"
       :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue"
       :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
     <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="isDelete = false" @ok="handleSearch('')"
       :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
-    <reimburseDetail v-if="isDetail" :isShow="isDetail" :id="recordId" @cancel="isDetail = false" />
-      <div class="modal">
-            <a-modal v-model:open="isModal" width="550px" :style="'top:'+top+'px'" :maskClosable="false" @cancel="handleCancel" @ok="handleOk">
-                <template #title>
-                    <div>
-                      新建报销单
-                    </div>
-                </template>
-                <div class="modalContainer">
-                    <div class="modalCenter" style="height:440px;">
-                        <a-form ref="formRef" :label-col="labelCol" class="CreateProcess1" :model="formState">
-                            <div class="form-tip">请输入流程事务标题，建立事务</div>
-                            <a-form-item label="流程：" name="ProcessName">
-                                <div class="ProcessName">{{ formState.ProcessName || '' }}</div>
-                            </a-form-item>
-                            <a-form-item name="BusinessUnitId" label="创建身份："
-                                :rules="[{ required: true, message: '请选择发起部门' }]">
-                                <a-select v-model:value="formState.BusinessUnitId">
-                                    <a-select-option v-for="(item, index) in formState.BusinessUnitList" :key="index"
-                                        :value="item.BusinessUnitId">{{ item.organizationIdName }}/{{
-                                        item.businessUnitIdName
-                                        }}</a-select-option>
-                                </a-select>
-                            </a-form-item>
-                            <a-form-item class="processTitle" label="标题：" name="Title"
-                                :rules="[{ required: true, message: '标题不能为空' }]">
-                                <a-input v-model:value="formState.Title" />
-                                <div class="form-tip1">默认标题是 流程名称 部门名称，为了查询方便，请输入流程真实标题。</div>
-                                <div class="form-tip1">如收文 关于XX来文 XX科室 XX人。</div>
-                            </a-form-item>
-                            <a-form-item name="Priority" label="紧急程度：">
-                                <a-select v-model:value="formState.Priority">
-                                    <a-select-option value="0">普通</a-select-option>
-                                    <a-select-option value="1">紧急</a-select-option>
-                                    <a-select-option value="2">加急</a-select-option>
-                                </a-select>
-                            </a-form-item>
-                            <a-form-item label="备注：" name="Description">
-                                <a-textarea :rows="3" v-model:value="formState.Description" />
-                            </a-form-item>
-                        </a-form>
-                    </div>
-                </div>
-                <template #footer>
-                    <div>
-                        <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
-                        <a-button @click="handleCancel">取消</a-button>
-                    </div>
-                </template>
-            </a-modal>
-        </div>
   </div>
 </template>
 <script setup>
@@ -110,12 +120,13 @@ import {
   UnorderedListOutlined,
   DownOutlined,
   CaretDownOutlined,
-  UserOutlined
+  UserOutlined,
+  PayCircleOutlined,
+  FileTextOutlined
 } from "@ant-design/icons-vue";
 import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, nextTick } from "vue";
 import Interface from "@/utils/Interface.js";
 import { message } from "ant-design-vue";
-// import Dtable from "@/components/Dtable.vue";
 import Ntable from "@/components/Ntable.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
 
@@ -123,7 +134,6 @@ import { useRouter, useRoute } from "vue-router";
 import useWorkAdmin from "@/utils/flow/workAdmin";
 import CommonFormModal from "@/components/listView/CommonFormModal.vue";
 import Delete from "@/components/listView/Delete.vue";
-import reimburseDetail from "@/components/reimburse/reimburse/reimburseDetail.vue";
 import { formTreeData, girdFormatterValue } from "@/utils/common.js";
 const { tabList } = useWorkAdmin();
 console.log("tabList", tabList);
@@ -141,20 +151,19 @@ let data = reactive({
   tabs0: [
   ],
   tabs: [],
-  //tabs: tabList,
   activeKey: 0,
-  entityType: 'F01',
+  entityType: '800',
   queryParams: {
     filterId: '',
-    objectTypeCode: '7001',
-    entityName: 'ReimburseBill',
+    objectTypeCode: '1010',
+    entityName: 'Contract',
     filterQuery: '',
     //filterQuery:'\nCreatedBy\teq-userid',
     //displayColumns:'',
     sort: 'CreatedOn',
     order: 'desc'
   },
-  layoutName: 'mineReimburseBill',
+  layoutName: 'myContract',
   isModal: false,
   isCirculation: false,
   searchVal: "",
@@ -187,24 +196,25 @@ let data = reactive({
   },
   fileList: [],
   isDetail: false,
-  InvoiceType: '',
   isNew: false,
   entityId: '',
   rowRecord: {},
-  top:0
+  top: 0,
+  isStatistics: true,
+  statistics: {}
 });
-const { top, rowRecord, entityId, isNew, InvoiceType, isDetail, fileList, uploadData, headers, isDelete, deleteDesc, external, isCommon, recordId, objectTypeCode, sObjectName, relatedObjectAttributeValue, relatedObjectAttributeName, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
+const { statistics, isStatistics, top, rowRecord, entityId, isNew, isDetail, fileList, uploadData, headers, isDelete, deleteDesc, external, isCommon, recordId, objectTypeCode, sObjectName, relatedObjectAttributeValue, relatedObjectAttributeName, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
   isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields } = toRefs(data);
 const tabContent = ref(null);
 const contentRef = ref(null);
 const searchRef = ref(null);
 const formState = reactive({
-    ProcessName: "",
-    BusinessUnitId: "",
-    Title: "",
-    Priority: "0",
-    Description: "",
-    BusinessUnitList: [],
+  ProcessName: "",
+  BusinessUnitId: "",
+  Title: "",
+  Priority: "0",
+  Description: "",
+  BusinessUnitList: [],
 })
 let formSearchHeight = ref(null);
 const gridRef = ref(null);
@@ -237,10 +247,11 @@ function changeHeight(h) {
   let tabsHeight = 46;
   let height = contentHeight - tabsHeight - formSearchHeight.value;
   data.tableHeight = height;
-  data.top= (document.documentElement.clientHeight - 565)/2;
-  //console.log('data', data.tableHeight);
-  //console.log("gridRef", gridRef.value.loadGrid())
-  //handleSearch();
+  if (data.isStatistics) {
+    data.tableHeight = height - 100;
+  }
+  data.top = (document.documentElement.clientHeight - 565) / 2;
+
 }
 
 const handleSearch = (filterquery) => {
@@ -251,7 +262,7 @@ const handleSearch = (filterquery) => {
     data.queryParams.filterQuery += filterquery;
   }
   if (data.treeId) {
-    data.queryParams.filterQuery += '\nDocumentTypeCode\tin\t' + data.treeId;
+    data.queryParams.filterQuery += '\n\tin\t' + data.treeId;
   }
   gridRef.value.loadGrid(data.queryParams);
 }
@@ -268,7 +279,7 @@ const getColumns = (id) => {
       var str = `
                 <div class="iconBox">
             <div class="popup">
-            <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}','${row.InvoiceType && row.InvoiceType.value ? row.InvoiceType.value : ''}')">查看</div>
+            <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}','${row.viewUrl}')">查看</div>
             <div class="option-item" id=${row.id} onclick="handleEdit('${row.id}')">编辑</div>
             <div class="option-item" id=${row.id} onclick="handleDelete('${row.id}')">删除</div>
             </div>
@@ -286,13 +297,52 @@ const getColumns = (id) => {
     if (res && res.actions && res.actions[0]) { } else { return }
     let fields = res.actions[0].returnValue.fields;
     fields.forEach(item => {
-      if (item.name != 'Name') {
+      if (item.name == 'Name') {
         columnslist.push({
           field: item.name,
           title: item.label,
           sortable: true,
           formatter: function formatter(value, row, index) {
-            return girdFormatterValue(item.name, row);
+            let url = row.viewUrl;
+            return '<a style="color:#015ba7;font-size:13px;" href="' + url + '" target="_blank">' + girdFormatterValue(item.name, row) + '</a>';
+          }
+        });
+      }
+      else if (item.name == 'PaymentPercentage') {
+        columnslist.push({
+          field: item.name,
+          title: item.label,
+          sortable: true,
+          formatter: function formatter(value, row, index) {
+            let percentage = value ? value.value : 0;
+            return '<div class="PaymentPercentage"><div role="progressbar" class="ant-progress ant-progress-line ant-progress-status-success ant-progress-show-info ant-progress-8 css-dev-only-do-not-override-kqecok td-progress"><div class="ant-progress-outer" style="height: 8px;"><div class="ant-progress-inner"><div class="ant-progress-bg" style="width: ' + percentage + '%; height: 8px;"></div><!----></div></div></div><div class="td-progress-text">' + ((percentage * 1).toFixed(2)) + '%</div></div>';
+          }
+        });
+      }
+      else if (item.name == 'StateCode') {
+        columnslist.push({
+          field: item.name,
+          title: item.label,
+          sortable: true,
+          formatter: function formatter(value, row, index) {
+            let StateCode = value ? value.value : '';
+            let color = '#FF5722';
+            if (StateCode * 1 == 0) {
+              color = '#FF5722';
+            } else if (StateCode * 1 == 1) {
+              color = '#5AAAFF';
+            } else if (StateCode * 1 == 2) {
+              color = '#31BA6A';
+            } else if (StateCode * 1 == 3) {
+              color = '#8DAAFF';
+            } else if (StateCode * 1 == 4) {
+              color = '#F9A6AB';
+            } else if (StateCode * 1 == 5) {
+              color = '#555';
+            } else if (StateCode * 1 == 6) {
+              color = '#FF5722';
+            }
+            return '<div class="badge" style="background:' + color + ';">' + girdFormatterValue(item.name, row) + '</div>';
           }
         });
       }
@@ -302,8 +352,7 @@ const getColumns = (id) => {
           title: item.label,
           sortable: true,
           formatter: function formatter(value, row, index) {
-            let url = row.viewUrl;
-            return '<a style="color:#015ba7;font-size:13px;" href="' + url + '" target="_blank">' + girdFormatterValue(item.name, row) + '</a>';
+            return girdFormatterValue(item.name, row);
           }
         });
       }
@@ -323,7 +372,6 @@ const getTabs = () => {
     entityName: data.queryParams.entityName,
     layoutName: data.layoutName
   }).then(res => {
-    //console.log("tabs", res)
     if (res && res.tabs && res.tabs.length) {
       let list = res.tabs;
       list.forEach(item => {
@@ -343,17 +391,7 @@ const getTabs = () => {
     getColumns(data.queryParams.filterId);
   })
 }
-function handleTo(viewUrl,id) {
-  router.push({
-    path: "/lightning/r/Workflow/instance/detail",
-    query: {
-      id: id,
-      reurl:'/lightning/page/ReimburseMine/home'
-    }
-  });
-  window.open(viewUrl)
-}
-window.handleTo = handleTo;
+
 window.data = data;
 const gridUrl = ref(Interface.list2);
 
@@ -380,19 +418,6 @@ const handleNew = () => {
   data.isCommon = true;
   //data.isNew = true;
 }
-//新建报销单
-const handleNewForm = () => {
-  formState.ProcessName = '报销申请单';
-  data.rowRecord = {
-    description: null,
-    folderId: "081CF0B8-A1A8-42E6-8EE1-58FBF4B62720",
-    isFavorite: false,
-    name: "报销申请单",
-    processId: "8166C971-1E16-482B-BB41-D1E403FB3220"
-  };
-  getDeptList();
-  data.isModal = true;
-}
 //编辑
 const handleEdit = (id) => {
   data.recordId = id;
@@ -412,106 +437,44 @@ const handleCommonCancel = (params) => {
 };
 
 //打开详情
-const handleDetail = (id, InvoiceType) => {
-  data.recordId = id;
-  data.InvoiceType = InvoiceType;
-  data.isDetail = true;
+const handleDetail = (id, viewUrl) => {
+  //window.open(viewUrl)
+  let url = router.resolve({
+    name: "ContractDeatil",
+    query: {
+      id: id,
+      entityType: data.queryParams.entityName,
+      objectTypeCode: data.queryParams.objectTypeCode
+    },
+  });
+  window.open(url.href);
 }
 window.handleDetail = handleDetail;
-const handleOk = () => {
-    isModal.value = false;
-}
-const handleCancel = () => {
-    isModal.value = false;
-}
-const formRef = ref();
-const handleSubmit = () => {
-    formRef.value.validate().then(() => {
-        //console.log('values', formState, toRaw(formState));
-        let obj = {
-            "actions": [
-                {
-                    "id": "4270;a",
-                    "descriptor": "aura://RecordUiController/ACTION$getRecordWithFields",
-                    "callingDescriptor": "UNKNOWN",
-                    "params": {
-                        "processId": data.rowRecord.processId,
-                        "priority": formState.Priority,
-                        "name": formState.Title,
-                        "businessUnitId": formState.BusinessUnitId,
-                        "description": formState.Description
-                    }
-                }
-            ]
-        };
-        let d = {
-            message: JSON.stringify(obj)
-        };
-        proxy.$post(Interface.workflow.new, d).then(res => {
-            if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
-                message.success("新建流程成功");
-                let url = router.resolve({
-                    name: "FlowDetail",
-                    query: {
-                        id: res.actions[0].returnValue.id,
-                        reurl: '/lightning/o/workflow/doing'
-                    },
-                });
-                window.open(url.href);
-                handleCancel();
-            } else {
-                if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
-                    message.success(res.actions[0].errorMessage);
-                }
-                else {
-                    message.error("新建流程失败");
-                }
-            }
-        })
-    }).catch(err => {
-        console.log('error', err);
-    });
-}
-// 获取部门
-const getDeptList = () => {
-    // proxy.$get(Interface.businessunitList,{}).then(res=>{
-    //     formState.BusinessUnitList = res.businessUnits;
-    //     formState.Title = data.rowRecord.name + ' ' + res.businessUnits[0].name;
-    //     formState.BusinessUnitId =  res.businessUnits[0].id;
-    // })
-    const now = new Date();
-    const nowtime = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
-    let userInfo = window.localStorage.getItem('userInfo');
-    if (userInfo) {
-        userInfo = JSON.parse(userInfo);
-        formState.BusinessUnitId = userInfo.businessUnitId;
-        data.userId = userInfo.userId;
-    }
-    proxy.$post(Interface.user.getBusinessUnits, {}).then(res => {
-        if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
-            formState.BusinessUnitList = res.actions[0].returnValue;
-            for (var i = 0; i < formState.BusinessUnitList.length; i++) {
-                if (formState.BusinessUnitList[i].BusinessUnitId == formState.BusinessUnitId) {
-                    formState.Title = data.rowRecord.name + ' ' + formState.BusinessUnitList[i].businessUnitIdName + ' ' + formState.BusinessUnitList[i].FullName + ' ' + nowtime;
-                }
-            }
-        }
-    })
+//获取统计数据
+const getStatistics = () => {
+  proxy.$get(Interface.contract.execution.statistics, {
+    Type: 0,
+    ContractType: 2,
+    objtypecode: 1010,
+  }).then((res) => {
+    console.log("res", res);
+    data.statistics = res.data.listData.Table[0];
+  });
 };
 watch(() => route, (newVal, oldVal) => {
   if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/lightning/page/ReimburseMine/home') {
+    if (route.path == '/_ui/contract/home/my') {
       //getTreeData();
       data.queryParams = {
         filterId: '',
-        objectTypeCode: '7001',
-        entityName: 'ReimburseBill',
+        objectTypeCode: '1010',
+        entityName: 'Contract',
         filterQuery: '',
         sort: 'CreatedOn',
         order: 'desc'
       }
-      data.entityType='F01';
-      data.layoutName='mineReimburseBill';
+      data.entityType = '800';
+      data.layoutName = 'myContract';
       setTimeout(function () {
         getTabs();
       }, 1000)
@@ -519,19 +482,18 @@ watch(() => route, (newVal, oldVal) => {
   }
 }, { deep: true, immediate: true })
 onMounted(() => {
-  data.top= (document.documentElement.clientHeight - 565)/2;
+  changeHeight();
+  data.top = (document.documentElement.clientHeight - 565) / 2;
   window.addEventListener('resize', changeHeight)
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
   getTabs();
+  getStatistics();
 })
 </script>
 <style lang="less">
 @import "@/style/flow/treeList.less";
 </style>
 <style lang="less" scoped>
-.reimburseMineWrap {
+.myContractWrap {
   .wea-left-tree-search {
     padding-left: 14px;
   }
@@ -569,32 +531,95 @@ onMounted(() => {
   .ant-row .wea-left-right-layout-left .wea-left-tree .wea-left-tree-scroll .ant-tree-treenode:hover .tree-num {
     display: none;
   }
+
+  .statistics {
+    display: flex;
+    padding: 10px;
+    background: #efeff4;
+
+    .statisticItem {
+      flex: 1;
+      border: 1px solid #eee;
+      margin-right: 10px;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 80px;
+      border: 1px solid #e5e5e5 !important;
+      border-left: 5px solid #e5e5e5 !important;
+      color: #666;
+      line-height: 1.6;
+      background: #fff;
+
+      .statisticLeft {
+        .statisticCount {
+          font-weight: 700;
+          font-size: 22px;
+        }
+      }
+
+      .statisticRight {
+        .icon {
+          font-size: 44px;
+          color: var(--textColor);
+          position: relative;
+          top: -1px;
+        }
+      }
+    }
+
+    .statisticItem:last-child {
+      margin-right: 0;
+    }
+  }
+
+  :deep .badge {
+    display: block;
+    margin: 0 auto;
+    width: 69px;
+    line-height: 24px;
+    color: #fff;
+    background: #8DAAFF;
+    font-size: 12px;
+    border-radius: 10px;
+    text-align: center;
+    height: 23px;
+    box-sizing: border-box;
+  }
+
+  :deep .PaymentPercentage {
+    font-size: 12px;
+
+    .td-progress {
+      margin: 0 !important;
+      .ant-progress-inner {
+        background-color: #e5e5e5;
+        border-radius: 6px;
+      }
+
+      .ant-progress-outer {
+        padding-top: 3px !important;
+      }
+
+      .ant-progress-bg {
+        background-color: #1677ff !important;
+        border-radius: 6px;
+      }
+
+      .anticon-check-circle,
+      .ant-progress-text {
+        display: none !important;
+      }
+    }
+    .td-progress-text{
+        margin-top: 2px;
+        color: #666;
+        margin-left: 1px;
+      }
+  }
 }
-:deep .CreateProcess1 {
-    .ant-form-item {
-        margin-bottom: 20px !important;
-    }
-    .ant-form-item-label{
-        width: 100px !important;
-    }
-    .processTitle .ant-row .ant-col .ant-form-item-required {
-        color: rgba(0, 0, 0, 0.88) !important;
-    }
 
-    .processTitle .ant-row .form-tip1 {
-        color: rgba(0, 0, 0, 0.88) !important;
-    }
-
-    .ProcessName {
-        color: rgba(0, 0, 0, 0.88) !important;
-    }
-
-    .form-tip {
-        font-size: 12px;
-        margin-bottom: 12px;
-        color: #606266;
-    }
-}
 :deep .iconBox {
   text-align: center;
 

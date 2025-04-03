@@ -99,7 +99,7 @@ const data = reactive({
   isPdf: false,
   pdfParams: {},
   isNew: false,
-  entityId:''
+  entityId: ''
 });
 const { entityId, isNew, isPdf, pdfParams, list, layoutList, height, isCommon, recordId, objectTypeCode, sObjectName, isShowDetail } = toRefs(data);
 const getDetail = () => {
@@ -140,14 +140,28 @@ const getDetail = () => {
   })
 }
 const handleView = () => {
-  data.pdfParams = {
-    id: props.id,
-    name: '电子发票',
-    index: 0,
-    viewUrl: '/api/file/preview/pdf/1D1412CF-2FC7-4382-A7C3-A97DAF713A32',
-    downloadUrl: '/api/file/download?id=1D1412CF-2FC7-4382-A7C3-A97DAF713A32'
-  };
-  data.isPdf = true;
+  let url = Interface.getFiles;
+  let d = {
+    parentId: props.id,
+    page: 1,
+    rows: 10
+  }
+  proxy.$post(url, d).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue && res.actions[0].returnValue.length) {
+      let item = res.actions[0].returnValue[0];
+      data.pdfParams = {
+        id: item.id,
+        name: item.name,
+        index: 0,
+        viewUrl: item.viewUrl,
+        downloadUrl: item.downloadUrl
+      };
+      data.isPdf = true;
+    } else {
+      message.error('暂无原始电子发票pdf文件！');
+    }
+  })
+
 }
 //编辑
 const handleEdit = (key) => {

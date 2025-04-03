@@ -246,6 +246,13 @@ export const routesMapping = {
     },
     //我的报账
     MyReimburse: {
-
+        //MyReimburse: () => import("../views/home/commonHome.vue"),
+        ReimburseTravelMy: () => import("../views/listView/index.vue"),
+        ReimburseMine: () => import("../views/reimburse/reimburseMine/index.vue"),
+        MyInvoice: () => import("../views/reimburse/myInvoice/index.vue"),
+    },
+    //合同管理
+    contract: {
+        mycontract: () => import("../views/contract/mycontract/index.vue")
     }
 }

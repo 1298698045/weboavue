@@ -363,7 +363,7 @@ watch(() => route, (newVal, oldVal) => {
       data.entityType = 'I0E';
       data.layoutName = 'MyInvoice'
       setTimeout(function () {
-        gridRef.value.loadGrid(data.queryParams);
+        getTabs();
       }, 1000)
     }
   }

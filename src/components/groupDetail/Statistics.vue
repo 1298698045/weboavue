@@ -33,22 +33,37 @@
           <div class="abstractItem">
             <div class="abstractItem-title">帖子数量</div>
             <div class="abstractItem-num">{{ statistics.postCount||0 }}</div>
+            <div class="abstractItem-icon">
+
+            </div>
           </div>
           <div class="abstractItem">
             <div class="abstractItem-title">点赞数量</div>
             <div class="abstractItem-num">{{ statistics.likeCount||0 }}</div>
+            <div class="abstractItem-icon">
+              
+            </div>
           </div>
           <div class="abstractItem">
             <div class="abstractItem-title">组人数</div>
             <div class="abstractItem-num">{{ statistics.peopleCount||0 }}</div>
+            <div class="abstractItem-icon">
+              
+            </div>
           </div>
           <div class="abstractItem">
             <div class="abstractItem-title">问题数量</div>
             <div class="abstractItem-num">{{ statistics.questionCount||0 }}</div>
+            <div class="abstractItem-icon">
+              
+            </div>
           </div>
           <div class="abstractItem">
             <div class="abstractItem-title">文件数量</div>
             <div class="abstractItem-num">{{ statistics.fileCount||0 }}</div>
+            <div class="abstractItem-icon">
+              
+            </div>
           </div>
         </div>
       </div>
@@ -138,10 +153,13 @@ const loadChart = () => {
     "十一月",
     "十二月",
   ];
-  data.groupPostChatter.forEach((item) => {
+  if(data.groupPostChatter&&data.groupPostChatter.length){
+    chartName=[];
+    data.groupPostChatter.reverse().forEach((item) => {
     chartName.push(item.lable);
     chartData.push(item.value?Number(item.value) : 0);
   });
+  }
   var myChart;
   if (myChart != null && myChart != "" && myChart != undefined) {
     myChart.dispose(); //销毁
