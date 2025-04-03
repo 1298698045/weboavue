@@ -30,7 +30,7 @@
                                         :value="row.value">{{row.label}}</a-select-option>
                                 </a-select>
                             </a-form-item>
-                            <a-form-item class="formItem" :label="item.label" :name="item.column" v-if="item.dataType=='D'">
+                            <a-form-item class="formItem" :label="item.label" :name="item.column" v-if="['D', 'F', 'DT_M'].includes(item.dataType)">
                                 <div class="time-box">
                                     <a-select :placeholder="'请选择'+item.label" v-model:value="list[item.column]">
                                         <a-select-option value="today">今天</a-select-option>

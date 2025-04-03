@@ -95,9 +95,10 @@ const state = reactive({
 
 watch(()=>route.path, (newVal, oldVal)=>{
   if(router.hasRoute(route.name)){
-    console.log('hasRoute-appCode', route.meta.appCode);
+    // console.log('hasRoute-appCode', route.meta.appCode);
+    const appCode = route.meta.appCode || localStorage.getItem("appCode");
     let modules = JSON.parse(localStorage.getItem("modules"));
-    let findRow = modules.filter(item=>item.AppCode == route.meta.appCode);
+    let findRow = modules.filter(item=>item.AppCode == appCode);
     let subModules = findRow[0].tabs;
     store.commit("setModuleName", findRow[0].Label);
     if(subModules && subModules.length){

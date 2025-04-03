@@ -58,18 +58,21 @@
                   </div>
                 </div>
                 <div class="opera-btn">
-                  <a-tooltip placement="topLeft" title="高级搜索">
-                    <a-button class="ant-btn-icon ml4" :class="{'active':isSearchModal}" @click="handleShowSearch">
-                      <svg class="btn_icon" focusable="false" data-key="search" aria-hidden="true" viewBox="0 0 520 520"
-                        part="icon">
-                        <g>
-                          <path
-                            d="M496 453L362 320a189 189 0 10-340-92 190 190 0 00298 135l133 133a14 14 0 0021 0l21-21a17 17 0 001-22zM210 338a129 129 0 11130-130 129 129 0 01-130 130z">
-                          </path>
-                        </g>
-                      </svg>
-                    </a-button>
-                  </a-tooltip>
+                  <a-input-group compact>
+                    <a-input v-model:value="queryParams.search" @change="loadGrid" />
+                    <a-tooltip placement="topLeft" title="高级搜索">
+                      <a-button class="ant-btn-icon" :class="{'active':isSearchModal}" @click="handleShowSearch">
+                        <svg class="btn_icon" focusable="false" data-key="search" aria-hidden="true" viewBox="0 0 520 520"
+                          part="icon">
+                          <g>
+                            <path
+                              d="M496 453L362 320a189 189 0 10-340-92 190 190 0 00298 135l133 133a14 14 0 0021 0l21-21a17 17 0 001-22zM210 338a129 129 0 11130-130 129 129 0 01-130 130z">
+                            </path>
+                          </g>
+                        </svg>
+                      </a-button>
+                    </a-tooltip>
+                  </a-input-group>
                 </div>
               </div>
               <!-- <list-form-search ref="searchRef" @search="handleSearch" entityApiName="ActivityPointer" :SearchFields="SearchFields"
@@ -325,6 +328,7 @@
       activeKey: 0,
       queryParams: {
         filterId:'',
+        search: "",
         objectTypeCode:'4200',
         entityName:'ActivityPointer',
         filterQuery:'',
@@ -378,7 +382,7 @@
     };
   
     const { paramsTime,objectTypeCode,sObjectName,isDelete,deleteDesc,external,CalendarActionsConfig,isScheduleDetail,isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
-      isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId,SearchFields,isAddSchedule, isSearchModal } = toRefs(data);
+      isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId,SearchFields,isAddSchedule, isSearchModal, queryParams } = toRefs(data);
     //   console.log("tabs", data.tabs);
     const tabContent = ref(null);
     const contentRef = ref(null);
@@ -416,6 +420,9 @@
       data.queryParams.filterCondition = JSON.stringify(e);
       gridRef.value.loadGrid(data.queryParams);
     };
+    const loadGrid = () => {
+      gridRef.value.loadGrid(data.queryParams);
+    }
     function changeHeight(h) {
       // if (typeof h == 'number') {
       //   formSearchHeight.value = h;
