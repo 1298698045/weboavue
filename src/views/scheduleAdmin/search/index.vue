@@ -60,7 +60,8 @@
                 <div class="opera-btn">
                   <a-input-group compact>
                     <a-input v-model:value="queryParams.search" @change="loadGrid" />
-                    <a-tooltip placement="topLeft" title="高级搜索">
+                    <a-button @click="handleShowSearch">高级搜索</a-button>
+                    <!-- <a-tooltip placement="topLeft" title="高级搜索">
                       <a-button class="ant-btn-icon" :class="{'active':isSearchModal}" @click="handleShowSearch">
                         <svg class="btn_icon" focusable="false" data-key="search" aria-hidden="true" viewBox="0 0 520 520"
                           part="icon">
@@ -71,7 +72,7 @@
                           </g>
                         </svg>
                       </a-button>
-                    </a-tooltip>
+                    </a-tooltip> -->
                   </a-input-group>
                 </div>
               </div>
