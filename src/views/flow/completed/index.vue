@@ -116,26 +116,26 @@
           <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
             :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
           <div style="height: 100%" ref="contentRef">
-            <div class="wea-tab">
-              <a-tabs v-model:activeKey="activeKey" @change="changeTab">
-                <a-tab-pane v-for="(item, index) in data.tabs" :key="index">
-                  <template #tab>
-                    <span>
-                      {{ item.label }}
-                    </span>
-                  </template>
-                </a-tab-pane>
-                <!-- <a-tab-pane key="2" tab="待处理" force-render></a-tab-pane>
-                  <a-tab-pane key="3" tab="待阅"></a-tab-pane> -->
-              </a-tabs>
-              <div class="tabsBtn">
-                <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-                  <a-button type="primary" class="ml10">批量发布</a-button>
-                  <a-button class="ml10">批量取消发布</a-button> -->
+            <div class="wea-header">
+              <div class="wea-tab">
+                <a-tabs v-model:activeKey="activeKey" @change="changeTab">
+                  <a-tab-pane v-for="(item, index) in data.tabs" :key="index">
+                    <template #tab>
+                      <span>
+                        {{ item.label }}
+                      </span>
+                    </template>
+                  </a-tab-pane>
+                </a-tabs>
+                <div class="tabsBtn">
+                </div>
               </div>
+              <HighSearch @update-height="changeHeight" @search="handleSearch"
+                :entityApiName="data.queryParams.entityName">
+              </HighSearch>
             </div>
-            <list-form-search ref="searchRef" @search="handleSearch" :entityApiName="data.queryParams.entityName"
-              :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search>
+            <!-- <list-form-search ref="searchRef" @search="handleSearch" :entityApiName="data.queryParams.entityName"
+              :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search> -->
             <div class="wea-tabContent" :style="{ height: tableHeight + 'px' }" ref="tabContent">
               <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
               <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
@@ -191,6 +191,7 @@ import { message } from "ant-design-vue";
 // import Dtable from "@/components/Dtable.vue";
 import Ntable from "@/components/Ntable.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
+import HighSearch from "@/components/HighSearch.vue";
 import NewCategory from "@/components/workflow/NewCategory.vue";
 import Delegate from "@/components/workflow/Delegate.vue";
 import Jump from "@/components/workflow/Jump.vue";
@@ -383,14 +384,17 @@ let data = reactive({
   isConfirm: false,
   confirmText: '',
   confirmTitle: '',
-  isMenu: false
+  isMenu: false,
+  entityType: '123',
+  layoutName: 'CompletedInstance',
+  hightSearchParams: {}
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
   changeHeight();
 };
 
-const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isUrging, isSupervised, isFavor, searchVal, isMenu,
+const { hightSearchParams, entityType, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isUrging, isSupervised, isFavor, searchVal, isMenu,
   isCategory, treeId, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields, isDelete, deleteDesc, isConfirm, confirmText, confirmTitle } = toRefs(data);
 //   console.log("tabs", data.tabs);
 const tabContent = ref(null);
@@ -405,22 +409,16 @@ const onSearch = (e) => {
 }
 const onSelect = (keys) => {
   data.treeId = keys[0];
-  handleSearch(data.formSearchFilterquery);
+  handleSearch();
 };
-onMounted(() => {
-  window.addEventListener('resize', changeHeight)
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
-  getTabs();
-})
+
 function changeHeight(h) {
   if (typeof h == 'number') {
     formSearchHeight.value = h;
   }
-  let contentHeight = contentRef.value.clientHeight;
+  let contentHeight = document.documentElement.clientHeight - 120;
   let tabsHeight = 46;
-  let height = contentHeight - tabsHeight - formSearchHeight.value;
+  let height = contentHeight - tabsHeight
   data.tableHeight = height;
   console.log('data', data.tableHeight);
   //console.log("gridRef", gridRef.value.loadGrid())
@@ -429,14 +427,34 @@ function changeHeight(h) {
 const cancelRelase = (e) => {
   data.isRelease = e;
 }
-const handleSearch = (filterquery) => {
-  data.queryParams.filterQuery = '';
-  data.formSearchFilterquery = filterquery;
-  if (filterquery) {
-    data.queryParams.filterQuery += filterquery;
+const handleSearch = (obj) => {
+  data.queryParams = {
+    filterId: data.queryParams.filterId,
+    objectTypeCode: '123',
+    entityName: 'WFRuleLog',
+    sort: 'CreatedOn',
+    order: 'desc'
+  };
+  // data.formSearchFilterquery = filterquery;
+  // if (filterquery) {
+  //   data.queryParams.filterQuery += filterquery;
+  // }
+  if (obj) {
+    data.hightSearchParams = obj;
+    if (data.hightSearchParams) {
+      if (data.hightSearchParams.search) {
+        data.queryParams.search = data.hightSearchParams.search;
+      }
+      if (data.hightSearchParams.filterCondition) {
+        data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+      }
+    }
+  }
+  else {
+    data.hightSearchParams = {}
   }
   if (data.treeId) {
-    data.queryParams.filterQuery += '\nProcessId\tin\t' + data.treeId;
+    data.queryParams.filterQuery = '\nProcessId\tin\t' + data.treeId;
   }
   gridRef.value.loadGrid(data.queryParams);
 }
@@ -481,7 +499,7 @@ const getColumns = (id) => {
     }
   },];
   proxy.$get(Interface.listView.getFilterInfo, {
-    entityType: data.queryParams.objectTypeCode,
+    entityType: data.entityType,
     objectTypeCode: data.queryParams.objectTypeCode,
     search: "",
     filterId: id
@@ -499,7 +517,7 @@ const getColumns = (id) => {
               let result = girdFormatterValue(item.name, row);
               var ProcessInstanceId = row.ProcessInstanceId ? row.ProcessInstanceId.textValue : '';
               let id = row.id;
-              return '<a style="color:#1677ff;text-decoration: none;" href="/#/lightning/r/Workflow/instance/detail?id=' + id + '&print=1' + '&reurl=/lightning/o/workflow/done/list" target="_blank">' + result + '</a>';
+              return '<a class="namefield" title="' + result + '" href="/#/lightning/r/Workflow/instance/detail?id=' + id + '&print=1' + '&reurl=/lightning/o/workflow/done/list" target="_blank">' + result + '</a>';
             }
           });
         }
@@ -518,7 +536,7 @@ const getColumns = (id) => {
     columns.value = columnslist;
     nextTick(() => {
       gridRef.value.loadGrid(data.queryParams);
-      searchRef.value.getSearchLayout();
+      //searchRef.value.getSearchLayout();
     })
 
   })
@@ -528,7 +546,7 @@ const getColumns = (id) => {
 const getTabs = () => {
   proxy.$get(Interface.getTabs, {
     entityName: data.queryParams.entityName,
-    layoutName: 'CompletedInstance'
+    layoutName: data.layoutName
   }).then(res => {
     //console.log("tabs", res)
     if (res && res.tabs && res.tabs.length) {
@@ -758,15 +776,29 @@ const gridUrl = ref(Interface.list2);
 const columns = ref([]);
 const changeTab = (e) => {
   data.activeKey = e;
-  data.queryParams.filterQuery = '';
+  data.queryParams = {
+    filterId: data.queryParams.filterId,
+    objectTypeCode: '123',
+    entityName: 'WFRuleLog',
+    sort: 'CreatedOn',
+    order: 'desc'
+  };
   let filterColumnsList = (data.tabs)[e].filterableColumns;
   data.SearchFields = filterColumnsList;
   data.queryParams.filterId = data.tabs[e].filterId || '';
-  if (data.formSearchFilterquery) {
-    data.queryParams.filterQuery += data.formSearchFilterquery;
+  // if (data.formSearchFilterquery) {
+  //   data.queryParams.filterQuery += data.formSearchFilterquery;
+  // }
+  if (data.hightSearchParams) {
+    if (data.hightSearchParams.search) {
+      data.queryParams.search = data.hightSearchParams.search;
+    }
+    if (data.hightSearchParams.filterCondition) {
+      data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+    }
   }
   if (data.treeId) {
-    data.queryParams.filterQuery += '\nProcessId\tin\t' + data.treeId;
+    data.queryParams.filterQuery = '\nProcessId\tin\t' + data.treeId;
   }
   getColumns(data.queryParams.filterId);
 }
@@ -790,6 +822,33 @@ const handleClickMenu = (e) => {
 const handleMenuClick = () => {
 
 }
+watch(() => route, (newVal, oldVal) => {
+  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
+    if (route.path == '/lightning/o/workflow/done/list') {
+      //getTreeData();
+      data.queryParams = {
+        filterId: '',
+        objectTypeCode: '123',
+        entityName: 'WFRuleLog',
+        //filterQuery: '',
+        sort: 'CreatedOn',
+        order: 'desc'
+      }
+      data.entityType = '123';
+      data.layoutName = 'CompletedInstance'
+      setTimeout(function () {
+        getTabs();
+      }, 1000)
+    }
+  }
+}, { deep: true, immediate: true })
+onMounted(() => {
+  window.addEventListener('resize', changeHeight)
+  // this.$nextTick(()=>{
+  //   getTabs();
+  // })
+  getTabs();
+})
 </script>
 <style lang="less">
 @import "@/style/flow/treeList.less";
@@ -807,6 +866,42 @@ const handleMenuClick = () => {
 
   .num {
     color: #aaa;
+  }
+}
+
+.todoList {
+  .wea-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    //border-bottom: 1px solid #eaeaea;
+    padding-right: 0;
+    border: 0 !important;
+  }
+
+  .todo-content .ant-row .wea-tab {
+    height: 45px !important;
+
+    :deep .ant-tabs-nav::before {
+      display: none;
+    }
+  }
+
+  .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
+    height: 45px !important;
+  }
+
+  .wea-left-tree-scroll {
+    height: calc(~'100% - 50px') !important;
+  }
+
+  :deep .namefield {
+    color: #1677ff;
+    text-decoration: none;
+    max-width: 500px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

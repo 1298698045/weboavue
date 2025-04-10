@@ -1,16 +1,26 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="900px" class="invoiceDetailModal" style="top:38px;"
-      :maskClosable="false" @cancel="handleCancel" @ok="handleCancel">
+    <a-modal v-model:open="props.isShow" width="900px" class="RelatedDetailModal" style="top:38px;"
+      :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
       <template #title>
-        <div class="titleLeft">发票详情</div>
+        <div class="titleLeft">{{ props.title || '详情' }}</div>
       </template>
-      <div class="modalContainer invoiceDetailWrap">
+      <div class="modalContainer RelatedDetailWrap">
+        <div class="tabWrap">
+          <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
+            <a-tab-pane v-for="(item, index) in tabs" :key="index">
+              <template #tab>
+                <span>
+                  {{ item.label }}
+                </span>
+              </template>
+            </a-tab-pane>
+          </a-tabs>
+        </div>
         <div class="modalCenter" :style="{ height: height + 'px' }">
-          <div class="detailInfo">
-            <div class="detailTitle">{{ props.InvoiceType || '电子发票（普通发票）' }}</div>
+          <div class="detailInfo" v-if="activeKey == 0">
             <div class="fh-section" v-for="(item, index) in layoutList" :key="index">
-              <!-- <div class="fh-section-label" v-if="item.title != '内容' && item.title != '回执'">{{ item.title }}</div> -->
+              <div class="fh-section-label" v-if="item.title != '内容' && item.title != '回执'">{{ item.title }}</div>
               <div class="section-content">
                 <div class="sectionRow" v-for="(row, rowIdx) in item.rows" :key="rowIdx">
                   <div class="sectionCol" v-for="(attr, attrIdx) in row.attributes" :key="attrIdx">
@@ -31,21 +41,20 @@
               </div>
             </div>
           </div>
+          <RelatedList v-if="activeKey == 1" :id="props.id" :objectTypeCode="props.objectTypeCode"
+            :entityApiName="props.sObjectName" :fullName="''" />
         </div>
       </div>
       <template #footer>
         <div>
-          <a-button @click="handleCancel">取消</a-button>
-          <a-button type="primary" @click.prevent="handleEdit">编辑</a-button>
-          <a-button type="primary" @click.prevent="handleView">查看原始电票</a-button>
+          <a-button @click="handleCancel">关闭</a-button>
+          <!-- <a-button type="primary" @click.prevent="handleEdit">编辑</a-button> -->
         </div>
       </template>
     </a-modal>
     <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false"
-      :title="data.recordId ? '编辑' : '新建'" @success="getDetail" :id="recordId" :objectTypeCode="objectTypeCode"
-      :entityApiName="sObjectName"></common-form-modal>
-    <addInvoice :isShow="isNew" v-if="isNew" :id="props.id" @ok="getDetail" @cancel="isNew = false" :entityId="entityId"
-      :entityApiName="sObjectName" :objTypeCode="objectTypeCode" :name="'发票'" />
+      :title="data.recordId ? '编辑' : '新建'" @success="getDetail" :id="recordId" :objectTypeCode="props.objectTypeCode"
+      :entityApiName="props.sObjectName"></common-form-modal>
     <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
   </div>
 </template>
@@ -70,17 +79,19 @@ import {
   UserOutlined,
 } from "@ant-design/icons-vue";
 import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+import RelatedList from "@/components/detail/RelatedList.vue";
 import PdfView from "@/components/file/PdfView.vue";
 import { message } from "ant-design-vue";
 import { useStore } from "vuex";
 let store = useStore();
 import Interface from "@/utils/Interface.js";
-import addInvoice from "@/components/reimburse/invoice/addInvoice.vue";
 const { proxy } = getCurrentInstance();
 const props = defineProps({
   isShow: Boolean,
   id: String,
-  InvoiceType: String
+  sObjectName: String,
+  objectTypeCode: String,
+  title: String,
 });
 const formRef = ref();
 const emit = defineEmits(["cancel"]);
@@ -91,17 +102,23 @@ const data = reactive({
   height: "",
   isCommon: false,
   recordId: '',
-  objectTypeCode: '1090',
-  sObjectName: 'Invoice',
   isShowDetail: true,
   layoutList: [],
   list: [],
   isPdf: false,
   pdfParams: {},
   isNew: false,
-  entityId: ''
+  entityId: '',
+  activeKey: 0,
+  tabs: [
+    {
+      label: "基本信息",
+    },
+    {
+      label: "相关列表",
+    }]
 });
-const { entityId, isNew, isPdf, pdfParams, list, layoutList, height, isCommon, recordId, objectTypeCode, sObjectName, isShowDetail } = toRefs(data);
+const { activeKey, tabs, entityId, isNew, isPdf, pdfParams, list, layoutList, height, isCommon, recordId, isShowDetail } = toRefs(data);
 const getDetail = () => {
   // data.isShowDetail=false;
   // nextTick(()=>{
@@ -114,7 +131,7 @@ const getDetail = () => {
       callingDescriptor: "UNKNOWN",
       params: {
         recordId: props.id,
-        entityApiName: data.sObjectName,
+        entityApiName: props.sObjectName,
         defaultFieldValues: {
           entityId: ""
         },
@@ -139,30 +156,9 @@ const getDetail = () => {
     }
   })
 }
-const handleView = () => {
-  let url = Interface.getFiles;
-  let d = {
-    parentId: props.id,
-    page: 1,
-    rows: 10
-  }
-  proxy.$post(url, d).then(res => {
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue && res.actions[0].returnValue.length) {
-      let item = res.actions[0].returnValue[0];
-      data.pdfParams = {
-        id: item.id,
-        name: item.name,
-        index: 0,
-        viewUrl: item.viewUrl,
-        downloadUrl: item.downloadUrl
-      };
-      data.isPdf = true;
-    } else {
-      message.error('暂无原始电子发票pdf文件！');
-    }
-  })
-
-}
+const changeTabs = (e) => {
+  data.activeKey = e;
+};
 //编辑
 const handleEdit = (key) => {
   data.recordId = key;
@@ -174,18 +170,23 @@ const handleCommonCancel = (params) => {
   data.isCommon = false;
 };
 onMounted(() => {
-  data.height = document.documentElement.clientHeight - 200;
+  data.height = document.documentElement.clientHeight - 250;
   data.recordId = props.id;
   getDetail();
   window.addEventListener("resize", (e) => {
-    data.height = document.documentElement.clientHeight - 200;
+    data.height = document.documentElement.clientHeight - 250;
   });
 });
 </script>
 <style lang="less">
 @import url("@/style/modal.less");
 
-.invoiceDetailWrap {
+.RelatedDetailModal {
+  .tabWrap {
+    position: relative;
+    top: -5px;
+  }
+
   .detailInfo {
     .detailTitle {
       font-size: 16px;
@@ -312,47 +313,29 @@ onMounted(() => {
       }
     }
   }
-}
 
-.invoiceDetailModal {
-  .titleLeft {
-    text-align: left;
-    font-size: 15px;
-    color: #333;
-    font-weight: 900;
-    position: relative;
-    top: 10px;
-    left: 15px;
-  }
+  .relatedListWrap {
+    .left_relateds {
+      width: 150px !important;
+      overflow: hidden;
 
-  .ant-modal-header {
-    border: none;
-  }
+      .relatedMenu {
+        display: flex;
+        flex-direction: column;
 
-  .ant-modal-footer {
-    border: none;
-  }
-
-  .fh-section {
-    color: #333 !important;
-
-    .sectionCol {
-      padding: 5px 0 !important;
-
-      .sectionCol_label {
-        color: #999 !important;
-      }
-
-      .sectionCol_body {
-        border: none !important;
-        font-size: 14px !important;
+        .relatedMenuItem {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: inline-block;
+          max-width: 100%;
+          white-space: nowrap;
+        }
       }
     }
 
+    .right_RelatedGrid {
+      width: calc(~'100% - 150px') !important;
+    }
   }
-}
-
-input[aria-hidden="true"] {
-  display: none !important;
 }
 </style>

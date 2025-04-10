@@ -1,6 +1,7 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="850px" style="top:38px;" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
+    <a-modal v-model:open="props.isShow" width="850px" style="top:38px;" :maskClosable="false" @cancel="handleCancel"
+      @ok="handleSubmit">
       <template #title>
         <div>
           {{ title }}
@@ -151,7 +152,7 @@
                       <p class="ant-upload-text">将电子发票pdf文件拖到此处，或点击上传</p>
                     </div>
                   </a-upload-dragger>
-                  <div class="inboxFileList" v-if="attachments&&attachments.length">
+                  <div class="inboxFileList" v-if="attachments && attachments.length">
                     <div class="inboxFileItem" v-for="(item, index) in attachments.slice(0, 1)" :key="index">
                       <div class="leftImg">
                         <img src="/src/assets/img/filetype/doc.png"
@@ -560,6 +561,11 @@ const handleData = (res) => {
             }
           }
         }
+        if (['L', 'LT', 'DT'].includes(col.attributes.type)) {
+          if (props.relatedObjectAttributeName == col.localId) {
+            formState[col.localId] = props.relatedObjectAttributeValue.value;
+          }
+        }
       })
     })
   })
@@ -633,7 +639,7 @@ const getPickerList = () => {
     message: JSON.stringify(d)
   }
   proxy.$post(Interface.pickListValues, obj).then((res) => {
-    let picklistFieldValues = res.actions[0].returnValue;
+    let picklistFieldValues = res.actions[0].returnValue.picklistFieldValues;
     data.selectFixed = JSON.parse(JSON.stringify(picklistFieldValues));
     data.select = picklistFieldValues;
     // let picklistFieldMap = res.actions[0].returnValue.picklistFieldMap;
@@ -646,6 +652,7 @@ const getPickerList = () => {
     //   Controllerchange(formState[item.ControllerName], item.ControllerName, data.picklistFieldMap[item.ControllerName]);
     // };
     // console.log("data.picklistFieldMap",data.picklistFieldMap);
+    getLayout();
   });
 };
 // 字段映射关系
@@ -722,7 +729,7 @@ const searchlookup = (search, attribute) => {
   });
 };
 const getData = () => {
-  getLayout();
+  //getLayout();
   getPickerList();
 }
 const cancelDeptModal = (params) => {
@@ -1028,17 +1035,19 @@ onMounted(() => {
   }
 
   .sectionTitle {
-    width: 100%;
-    font-weight: 700;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 10px;
-    border-radius: 0;
-    font-size: 14px;
-    color: #868686;
-    border-bottom: 1px solid #e2e2e2;
-    background-color: #f4faff;
-    border-left: 2px solid #2b9dec;
+    font-weight: bold;
+    margin-bottom: 10px;
+    // width: 100%;
+    // font-weight: 700;
+    // height: 30px;
+    // line-height: 30px;
+    // padding-left: 10px;
+    // border-radius: 0;
+    // font-size: 14px;
+    // color: #868686;
+    // border-bottom: 1px solid #e2e2e2;
+    // background-color: #f4faff;
+    // border-left: 2px solid #2b9dec;
   }
 
   .uploadRow {
@@ -1219,5 +1228,9 @@ onMounted(() => {
       }
     }
   }
+}
+
+:deep input[aria-hidden="true"] {
+  display: none !important;
 }
 </style>

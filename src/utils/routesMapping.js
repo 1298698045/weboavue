@@ -16,7 +16,7 @@ export const routesMapping = {
         WorkflowMine: () => import("../views/flow/myStart/index.vue"),
         WorkflowSuperviselist: () => import("../views/NotFound.vue"),
         ProcessInstanceHome: () => import("../views/flow/search/index.vue"),
-        WfInstanceAttachFile: () => import("../views/NotFound.vue"),
+        WfInstanceAttachFile: () => import("../views/flow/attachFile/index.vue"),
         WFFormSearch: () => import("../views/flow/formSearch/index.vue"),
         InstaceDashboard: () => import("../views/flow/InstaceDashboard/index.vue"),
         wftask: () => import("../views/NotFound.vue"),
@@ -47,7 +47,6 @@ export const routesMapping = {
     },
     // 公文管理
     OfficialDocument: {
-        OfficialDocumentHome: () => import("../views/documentAdmin/home/index.vue"),
         DocOutMonitor: () => import("../views/documentAdmin/myDispatch/index.vue"),
         DocInMonitor: () => import("../views/documentAdmin/myReceiving/index.vue"),
         // docOversee: () => import("../views/listView/index.vue"),
@@ -107,12 +106,13 @@ export const routesMapping = {
         videomanager: () => import("../views/knowledge/Video/Home.vue"),
         KnowledgeAddWizard: () => import("../views/knowledge/KnowledgeMap/NewKbArticle.vue"),
         Subject: () => import("../views/knowledge/Specialist/index.vue"),
-        Notification: () => import("../views/information/list/Notice.vue"), 
+        Notification: () => import("../views/information/list/Notice.vue"),
+        ContentFolderTree: () => import("../views/ContentFolderTree/index.vue")
     },
     // 制度文件
     DocumentRule: {
-        // RuleArticleMine: () => import("../views/knowledge/RuleArticle/myhome/index.vue"), // 我的制度
-        // RuleArticleAdmin: () => import("../views/knowledge/RuleArticle/home/index.vue"), // 制度台账
+        RuleArticleMine: () => import("../views/knowledge/RuleArticle/myhome/index.vue"), // 我的制度
+        RuleArticleAdmin: () => import("../views/knowledge/RuleArticle/home/index.vue"), // 制度台账
         // KbArticleVersion: {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true
@@ -246,13 +246,25 @@ export const routesMapping = {
     },
     //我的报账
     MyReimburse: {
-        //MyReimburse: () => import("../views/home/commonHome.vue"),
-        ReimburseTravelMy: () => import("../views/listView/index.vue"),
+        ReimburseTravelMy: () => import("../views/reimburse/reimburseTravelMy/index.vue"),
         ReimburseMine: () => import("../views/reimburse/reimburseMine/index.vue"),
-        MyInvoice: () => import("../views/reimburse/myInvoice/index.vue"),
+        MyInvoice: () => import("../views/reimburse/myInvoice/index.vue")
     },
     //合同管理
-    contract: {
-        mycontract: () => import("../views/contract/mycontract/index.vue")
+    ContractAdmin: {
+        Invoice: () => import("../views/contract/invoice/index.vue"),
+        ContractAuditReport: () => import("../views/tablistView/index.vue"),
+        ContractDashboard: () => import("../views/contract/dashboard/index.vue"),
+        ContractSearch: () => import("../views/tablistView/index.vue"),
+        StampDuty: () => import("../views/tablistView/index.vue"),
+        ContractReport: () => import("../views/tablistView/index.vue"),
+        ContractSetup: () => import("../views/tablistView/index.vue"),
+        contractremind: () => import("../views/tablistView/index.vue"),
+        ContractChangeOwner: () => import("../views/tablistView/index.vue")
+    },
+    //我的合同
+    MyContract: {
+        mycontract: () => import("../views/contract/mycontract/index.vue"),
+        ContractWorkflow: () => import("../views/contract/contractWorkflow/index.vue")
     }
 }

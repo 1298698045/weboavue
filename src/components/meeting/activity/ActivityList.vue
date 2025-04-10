@@ -4,24 +4,25 @@
       <a-row>
         <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
           <div style="height: 100%" ref="contentRef">
-            <div class="wea-tab">
-              <a-tabs v-model:activeKey="activeKey" @change="changeTab">
-                <a-tab-pane v-for="(item, index) in data.tabs" :key="index">
-                  <template #tab>
-                    <span>
-                      {{ item.label }}
-                    </span>
-                  </template>
-                </a-tab-pane>
-              </a-tabs>
-              <div class="tabsBtn">
-                <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-                    <a-button type="primary" class="ml10">批量发布</a-button>
-                    <a-button class="ml10">批量取消发布</a-button> -->
+            <div class="wea-header">
+              <div class="wea-tab">
+                <a-tabs v-model:activeKey="activeKey" @change="changeTab">
+                  <a-tab-pane v-for="(item, index) in data.tabs" :key="index">
+                    <template #tab>
+                      <span>
+                        {{ item.label }}
+                      </span>
+                    </template>
+                  </a-tab-pane>
+                </a-tabs>
+                <div class="tabsBtn">
+                </div>
               </div>
+              <HighSearch @update-height="changeHeight" @search="handleSearch" :entityApiName="data.queryParams.entityName">
+              </HighSearch>
             </div>
-            <list-form-search ref="searchRef" @search="handleSearch" :entityApiName="data.queryParams.entityName"
-              :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search>
+            <!-- <list-form-search ref="searchRef" @search="handleSearch" :entityApiName="data.queryParams.entityName"
+              :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search> -->
             <div class="wea-tabContent" :style="{ height: tableHeight + 'px' }" ref="tabContent">
               <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
                 :isCollapsed="isCollapsed">
@@ -31,13 +32,13 @@
         </a-col>
       </a-row>
     </div>
-    <DeleteModall :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName"
-      :recordId="meetingId" :objTypeCode="objectTypeCode" :external="external" />
+    <DeleteModall :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch"
+      :sObjectName="sObjectName" :recordId="meetingId" :objTypeCode="objectTypeCode" :external="external" />
     <NewMeeting :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting"
       @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" :calendarType="''" />
     <MeetingDetailModall :isShow="isMeetingDetail" v-if="isMeetingDetail" :meetingId="meetingId"
       @cancel="isMeetingDetail = false" @edit="handleOpenEdit" @handleDelete="handleDelete1" />
-    
+
   </div>
 </template>
 <script setup>
@@ -53,7 +54,7 @@ import { message } from "ant-design-vue";
 // import Dtable from "@/components/Dtable.vue";
 import Ntable from "@/components/Ntable.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
-
+import HighSearch from "@/components/HighSearch.vue";
 import { useRouter, useRoute } from "vue-router";
 import useWorkAdmin from "@/utils/flow/workAdmin";
 // 详情
@@ -208,13 +209,14 @@ let data = reactive({
   isDelete: false,
   deleteDesc: '确定要删除吗？',
   external: false,
+  hightSearchParams: {}
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
   changeHeight();
 };
 
-const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, searchVal,
+const { hightSearchParams, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, searchVal,
   treeId, id, SearchFields, isAddSchedule, isNewMeeting, isRepeatMeeting, paramsTime,
   meetingId, isMeetingDetail, startTime, endTime, objectTypeCode, sObjectName, isDelete, deleteDesc, external } = toRefs(data);
 const tabContent = ref(null);
@@ -232,7 +234,7 @@ const onSearch = (e) => {
 }
 const onSelect = (keys) => {
   data.treeId = keys[0];
-  handleSearch(data.formSearchFilterquery);
+  handleSearch();
 };
 onMounted(() => {
   window.addEventListener('resize', changeHeight)
@@ -245,23 +247,42 @@ function changeHeight(h) {
   if (typeof h == 'number') {
     formSearchHeight.value = h;
   }
-  let contentHeight = contentRef.value.clientHeight;
+  let contentHeight = document.documentElement.clientHeight - 120;
   let tabsHeight = 46;
-  let height = contentHeight - formSearchHeight.value;
+  let height = contentHeight - 4;
   data.tableHeight = height - 46;
   //console.log('data', data.tableHeight);
   //console.log("gridRef", gridRef.value.loadGrid())
   //handleSearch();
 }
-const handleSearch = (filterquery) => {
-  data.queryParams.filterQuery = '';
-  //data.queryParams.filterQuery='\nCreatedBy\teq-userid';
-  data.formSearchFilterquery = filterquery;
-  if (filterquery) {
-    data.queryParams.filterQuery += filterquery;
+const handleSearch = (obj) => {
+  data.queryParams = {
+    filterId: data.queryParams.filterId,
+    objectTypeCode: '4400',
+    entityName: 'Campaign',
+    sort: 'CreatedOn',
+    order: 'desc'
+  };
+  // data.formSearchFilterquery = filterquery;
+  // if (filterquery) {
+  //   data.queryParams.filterQuery += filterquery;
+  // }
+  if (obj) {
+    data.hightSearchParams = obj;
+    if (data.hightSearchParams) {
+      if (data.hightSearchParams.search) {
+        data.queryParams.search = data.hightSearchParams.search;
+      }
+      if (data.hightSearchParams.filterCondition) {
+        data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+      }
+    }
+  }
+  else {
+    data.hightSearchParams = {}
   }
   if (data.treeId) {
-    data.queryParams.filterQuery += '\nOwningBusinessUnit\tin\t' + data.treeId;
+    data.queryParams.filterQuery = '\nOwningBusinessUnit\tin\t' + data.treeId;
   }
   gridRef.value.loadGrid(data.queryParams);
 }
@@ -311,7 +332,7 @@ const getColumns = (id) => {
     columns.value = columnslist;
     nextTick(() => {
       gridRef.value.loadGrid(data.queryParams);
-      searchRef.value.getSearchLayout();
+      //searchRef.value.getSearchLayout();
     })
 
   })
@@ -366,16 +387,29 @@ const gridUrl = ref(Interface.list2);
 const columns = ref([]);
 const changeTab = (e) => {
   data.activeKey = e;
-  data.queryParams.filterQuery = '';
-  //data.queryParams.filterQuery='\nCreatedBy\teq-userid';
+  data.queryParams = {
+    filterId: data.queryParams.filterId,
+    objectTypeCode: '4400',
+    entityName: 'Campaign',
+    sort: 'CreatedOn',
+    order: 'desc'
+  };
   let filterColumnsList = (data.tabs)[e].filterableColumns;
   data.SearchFields = filterColumnsList;
   data.queryParams.filterId = data.tabs[e].filterId || '';
-  if (data.formSearchFilterquery) {
-    data.queryParams.filterQuery += data.formSearchFilterquery;
+  // if (data.formSearchFilterquery) {
+  //   data.queryParams.filterQuery += data.formSearchFilterquery;
+  // }
+  if (data.hightSearchParams) {
+    if (data.hightSearchParams.search) {
+      data.queryParams.search = data.hightSearchParams.search;
+    }
+    if (data.hightSearchParams.filterCondition) {
+      data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+    }
   }
   if (data.treeId) {
-    data.queryParams.filterQuery += '\nOwningBusinessUnit\tin\t' + data.treeId;
+    data.queryParams.filterQuery = '\nOwningBusinessUnit\tin\t' + data.treeId;
   }
   getColumns(data.queryParams.filterId);
 }
@@ -491,6 +525,24 @@ window.openEdit = openEdit;
 
   .formSearch :deep .ant-form .ant-form-item {
     width: auto !important;
+  }
+
+  .wea-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eaeaea;
+    padding-right: 0;
+    border: 0;
+  }
+  .todo-content .ant-row .wea-tab{
+    height: 45px !important;
+    :deep .ant-tabs-nav::before{
+      display: none;
+    }
+  }
+  .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap{
+    height: 45px !important;
   }
 }
 

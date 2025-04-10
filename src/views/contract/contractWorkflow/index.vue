@@ -1,15 +1,15 @@
 <template>
-  <div class="todoList myContractWrap">
+  <div class="todoList contractWorkflowWrap">
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
           <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
         </div>
-        <span class="headerTitle">我的合同</span>
+        <span class="headerTitle">合同审批</span>
       </div>
       <div class="headerRight">
-        <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-        <!-- <a-button type="primary" class="ml10" @click="handleNewForm">新建合同单</a-button> -->
+        <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
+        <a-button type="primary" class="ml10" @click="handleNewForm">新建合同审批单</a-button>
         <!-- <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
           @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false">
           <a-button class="ml10" type="primary">上传</a-button>
@@ -35,7 +35,8 @@
                 <div class="tabsBtn">
                 </div>
               </div>
-              <HighSearch @update-height="changeHeight" @search="handleSearch" :entityApiName="data.queryParams.entityName">
+              <HighSearch @update-height="changeHeight" @search="handleSearch"
+                :entityApiName="data.queryParams.entityName">
               </HighSearch>
             </div>
             <!-- <list-form-search ref="searchRef" @search="handleSearch" entityApiName="OfficialDocumentIn"
@@ -118,6 +119,56 @@
       :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
     <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="isDelete = false" @ok="handleSearch('')"
       :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+      <div class="modal">
+      <a-modal v-model:open="isModal" width="550px" :style="'top:' + top + 'px'" :maskClosable="false"
+        @cancel="handleCancel" @ok="handleOk">
+        <template #title>
+          <div>
+            新建合同审批单
+          </div>
+        </template>
+        <div class="modalContainer">
+          <div class="modalCenter" style="height:440px;">
+            <a-form ref="formRef" :label-col="labelCol" class="CreateProcess1" :model="formState">
+              <div class="form-tip">请输入流程事务标题，建立事务</div>
+              <a-form-item label="流程：" name="ProcessName">
+                <div class="ProcessName">{{ formState.ProcessName || '' }}</div>
+              </a-form-item>
+              <a-form-item name="BusinessUnitId" label="创建身份：" :rules="[{ required: true, message: '请选择发起部门' }]">
+                <a-select v-model:value="formState.BusinessUnitId">
+                  <a-select-option v-for="(item, index) in formState.BusinessUnitList" :key="index"
+                    :value="item.BusinessUnitId">{{ item.organizationIdName }}/{{
+                      item.businessUnitIdName
+                    }}</a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item class="processTitle" label="标题：" name="Title"
+                :rules="[{ required: true, message: '标题不能为空' }]">
+                <a-input v-model:value="formState.Title" />
+                <div class="form-tip1">默认标题是 流程名称 部门名称，为了查询方便，请输入流程真实标题。</div>
+                <div class="form-tip1">如收文 关于XX来文 XX科室 XX人。</div>
+              </a-form-item>
+              <a-form-item name="Priority" label="紧急程度：">
+                <a-select v-model:value="formState.Priority">
+                  <a-select-option value="0">普通</a-select-option>
+                  <a-select-option value="1">紧急</a-select-option>
+                  <a-select-option value="2">加急</a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item label="备注：" name="Description">
+                <a-textarea :rows="3" v-model:value="formState.Description" />
+              </a-form-item>
+            </a-form>
+          </div>
+        </div>
+        <template #footer>
+          <div>
+            <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
+            <a-button @click="handleCancel">取消</a-button>
+          </div>
+        </template>
+      </a-modal>
+    </div>
   </div>
 </template>
 <script setup>
@@ -144,7 +195,13 @@ import HighSearch from "@/components/HighSearch.vue";
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
-
+const handleOk = () => {
+  isModal.value = false;
+}
+const handleCancel = () => {
+  isModal.value = false;
+}
+const formRef = ref();
 const token = localStorage.getItem("token");
 let data = reactive({
   isCollapsed: true,
@@ -156,17 +213,17 @@ let data = reactive({
   ],
   tabs: [],
   activeKey: 0,
-  entityType: '800',
+  entityType: '122',
   queryParams: {
     filterId: '',
-    objectTypeCode: '1010',
-    entityName: 'Contract',
+    objectTypeCode: '122',
+    entityName: 'WFProcessInstance',
     //filterQuery:'\nCreatedBy\teq-userid',
     //displayColumns:'',
     sort: 'CreatedOn',
     order: 'desc'
   },
-  layoutName: 'myContract',
+  layoutName: 'contractWorkflow',
   isModal: false,
   isCirculation: false,
   searchVal: "",
@@ -182,8 +239,8 @@ let data = reactive({
   SearchFields: [],
   isCommon: false,
   recordId: '',
-  objectTypeCode: '1010',
-  sObjectName: 'Contract',
+  objectTypeCode: '122',
+  sObjectName: 'WFProcessInstance',
   relatedObjectAttributeValue: '',
   relatedObjectAttributeName: '',
   isDelete: false,
@@ -203,7 +260,7 @@ let data = reactive({
   entityId: '',
   rowRecord: {},
   top: 0,
-  isStatistics: true,
+  isStatistics: false,
   statistics: {},
   hightSearchParams: {}
 });
@@ -234,15 +291,15 @@ function changeHeight(h) {
   if (data.isStatistics) {
     data.tableHeight = height - 100;
   }
-  //data.top = (document.documentElement.clientHeight - 565) / 2;
+  data.top = (document.documentElement.clientHeight - 565) / 2;
 
 }
 
 const handleSearch = (obj) => {
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '1010',
-    entityName: 'Contract',
+    objectTypeCode: '122',
+    entityName: 'WFProcessInstance',
     sort: 'CreatedOn',
     order: 'desc'
   };
@@ -282,12 +339,20 @@ const getColumns = (id) => {
       var str = `
                 <div class="iconBox">
             <div class="popup">
-            <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}','${row.viewUrl}')">查看</div>
-            <div class="option-item" id=${row.id} onclick="handleEdit('${row.id}')">编辑</div>
-            <div class="option-item" id=${row.id} onclick="handleDelete('${row.id}')">删除</div>
+              <div class="option-item" id=${row.id} onclick="handleToDo('${row.id}')">办理</div>
+              <div class="option-item" id=${row.id} onclick="handleDetail('${row.viewUrl}')">查看</div>
             </div>
             <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
         `
+      if (data.activeKey * 1 == 1) {
+        str = `
+                <div class="iconBox">
+            <div class="popup">
+            <div class="option-item" id=${row.id} onclick="handleDetail('${row.viewUrl}')">查看</div>
+            </div>
+            <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
+        `
+      }
       return str;
     }
   },];
@@ -306,8 +371,12 @@ const getColumns = (id) => {
           title: item.label,
           sortable: true,
           formatter: function formatter(value, row, index) {
-            let url = row.viewUrl;
-            return '<a style="color:#015ba7;font-size:13px;" href="' + url + '" target="_blank">' + girdFormatterValue(item.name, row) + '</a>';
+            let url = '/#/lightning/r/Workflow/instance/detail?id='+row.id+'&reurl=/lightning/page/contract/approve/home';
+            let val = girdFormatterValue(item.name, row);
+            if (data.activeKey * 1 == 1) {
+              url = row.viewUrl;
+            }
+            return '<a class="namefield" title="' + val + '" href="' + url + '" target="_blank">' + val + '</a>';
           }
         });
       }
@@ -335,9 +404,9 @@ const getColumns = (id) => {
             } else if (StateCode * 1 == 1) {
               color = '#5AAAFF';
             } else if (StateCode * 1 == 2) {
-              color = '#31BA6A';
-            } else if (StateCode * 1 == 3) {
               color = '#8DAAFF';
+            } else if (StateCode * 1 == 3) {
+              color = '#31BA6A';
             } else if (StateCode * 1 == 4) {
               color = '#F9A6AB';
             } else if (StateCode * 1 == 5) {
@@ -403,8 +472,8 @@ const changeTab = (e) => {
   data.activeKey = e;
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '1010',
-    entityName: 'Contract',
+    objectTypeCode: '122',
+    entityName: 'WFProcessInstance',
     sort: 'CreatedOn',
     order: 'desc'
   };
@@ -434,6 +503,19 @@ const handleNew = () => {
   data.isCommon = true;
   //data.isNew = true;
 }
+//新建合同审批单
+const handleNewForm = () => {
+  formState.ProcessName = '合同会签单';
+  data.rowRecord = {
+    description: null,
+    folderId: "C6707ACE-50A5-469E-96CA-B2956B5AC59D",
+    isFavorite: false,
+    name: "02 合同会签单",
+    processId: "A39549B4-6F8F-44FD-93C1-6455B845F765"
+  };
+  getDeptList();
+  data.isModal = true;
+}
 //编辑
 const handleEdit = (id) => {
   data.recordId = id;
@@ -451,19 +533,21 @@ window.handleDelete = handleDelete;
 const handleCommonCancel = (params) => {
   data.isCommon = false;
 };
-
-//打开详情
-const handleDetail = (id, viewUrl) => {
-  //window.open(viewUrl)
+//办理
+const handleToDo = (id) => {
   let url = router.resolve({
-    name: "ContractDeatil",
+    name: "FlowDetail",
     query: {
       id: id,
-      entityType: data.queryParams.entityName,
-      objectTypeCode: data.queryParams.objectTypeCode
+      reurl: '/lightning/page/contract/approve/home',
     },
   });
   window.open(url.href);
+}
+window.handleToDo = handleToDo;
+//打开详情
+const handleDetail = (viewUrl) => {
+  window.open(viewUrl);
 }
 window.handleDetail = handleDetail;
 //获取统计数据
@@ -477,21 +561,94 @@ const getStatistics = () => {
     data.statistics = res.data.listData.Table[0];
   });
 };
+// 获取部门
+const getDeptList = () => {
+  // proxy.$get(Interface.businessunitList,{}).then(res=>{
+  //     formState.BusinessUnitList = res.businessUnits;
+  //     formState.Title = data.rowRecord.name + ' ' + res.businessUnits[0].name;
+  //     formState.BusinessUnitId =  res.businessUnits[0].id;
+  // })
+  const now = new Date();
+  const nowtime = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+  let userInfo = window.localStorage.getItem('userInfo');
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+    formState.BusinessUnitId = userInfo.businessUnitId;
+    data.userId = userInfo.userId;
+  }
+  proxy.$post(Interface.user.getBusinessUnits, {}).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
+      formState.BusinessUnitList = res.actions[0].returnValue;
+      for (var i = 0; i < formState.BusinessUnitList.length; i++) {
+        if (formState.BusinessUnitList[i].BusinessUnitId == formState.BusinessUnitId) {
+          formState.Title = data.rowRecord.name + ' ' + formState.BusinessUnitList[i].businessUnitIdName + ' ' + formState.BusinessUnitList[i].FullName + ' ' + nowtime;
+        }
+      }
+    }
+  })
+};
+const handleSubmit = () => {
+  formRef.value.validate().then(() => {
+    //console.log('values', formState, toRaw(formState));
+    let obj = {
+      "actions": [
+        {
+          "id": "4270;a",
+          "descriptor": "aura://RecordUiController/ACTION$getRecordWithFields",
+          "callingDescriptor": "UNKNOWN",
+          "params": {
+            "processId": data.rowRecord.processId,
+            "priority": formState.Priority,
+            "name": formState.Title,
+            "businessUnitId": formState.BusinessUnitId,
+            "description": formState.Description
+          }
+        }
+      ]
+    };
+    let d = {
+      message: JSON.stringify(obj)
+    };
+    proxy.$post(Interface.workflow.new, d).then(res => {
+      if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+        message.success("新建流程成功");
+        let url = router.resolve({
+          name: "FlowDetail",
+          query: {
+            id: res.actions[0].returnValue.id,
+            reurl: '/lightning/o/workflow/doing'
+          },
+        });
+        window.open(url.href);
+        handleCancel();
+      } else {
+        if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+          message.success(res.actions[0].errorMessage);
+        }
+        else {
+          message.error("新建流程失败");
+        }
+      }
+    })
+  }).catch(err => {
+    console.log('error', err);
+  });
+}
 watch(() => route, (newVal, oldVal) => {
   if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/_ui/contract/home/my') {
+    if (route.path == '/lightning/page/contract/approve/home') {
       //getTreeData();
       data.queryParams = {
         filterId: '',
-        objectTypeCode: '1010',
-        entityName: 'Contract',
+        objectTypeCode: '122',
+        entityName: 'WFProcessInstance',
         //filterQuery: '',
         search: '',
         sort: 'CreatedOn',
         order: 'desc'
       }
-      data.entityType = '800';
-      data.layoutName = 'myContract';
+      data.entityType = '122';
+      data.layoutName = 'contractWorkflow';
       setTimeout(function () {
         getTabs();
       }, 1000)
@@ -500,7 +657,7 @@ watch(() => route, (newVal, oldVal) => {
 }, { deep: true, immediate: true })
 onMounted(() => {
   changeHeight();
-  //data.top = (document.documentElement.clientHeight - 565) / 2;
+  data.top = (document.documentElement.clientHeight - 565) / 2;
   window.addEventListener('resize', changeHeight)
   getTabs();
   getStatistics();
@@ -510,7 +667,7 @@ onMounted(() => {
 @import "@/style/flow/treeList.less";
 </style>
 <style lang="less" scoped>
-.myContractWrap {
+.contractWorkflowWrap {
   .wea-left-tree-search {
     padding-left: 14px;
   }
@@ -519,8 +676,34 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #eaeaea;
+    //border-bottom: 1px solid #eaeaea;
     padding-right: 0;
+    border: 0 !important;
+  }
+
+  .todo-content .ant-row .wea-tab {
+    height: 45px !important;
+
+    :deep .ant-tabs-nav::before {
+      display: none;
+    }
+  }
+
+  .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
+    height: 45px !important;
+  }
+
+  .wea-left-tree-scroll {
+    height: calc(~'100% - 50px') !important;
+  }
+
+  :deep .namefield {
+    color: #1677ff;
+    text-decoration: none;
+    max-width: 500px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .treeRow {

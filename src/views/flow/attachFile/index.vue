@@ -5,7 +5,7 @@
         <div class="icon-circle-base">
           <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
         </div>
-        <span class="headerTitle">我的发文</span>
+        <span class="headerTitle">流程附件</span>
       </div>
       <div class="headerRight">
         <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
@@ -14,29 +14,29 @@
     <div class="todo-content">
       <a-row>
         <!-- <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">
-            <div class="wea-left-tree">
-              <div class="wea-left-tree-search">
-                <a-input-search v-model:value="data.searchVal" placeholder="" @search="onSearch" />
-              </div>
-              <div class="wea-left-tree-scroll">
-                <a-tree :style="{height: tableHeight+'px'}" :expanded-keys="expandedKeys"
-                  :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
-                  @select="onSelect"
-                  @expand="onExpand">
-                  <template #switcherIcon="{ switcherCls }">
-                    <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
-                    </CaretDownOutlined>
-                  </template>
+          <div class="wea-left-tree">
+            <div class="wea-left-tree-search">
+              <a-input-search v-model:value="data.searchVal" placeholder="" @search="onSearch" />
+            </div>
+            <div class="wea-left-tree-scroll">
+              <a-tree :style="{height: tableHeight+'px'}" :expanded-keys="expandedKeys"
+                :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
+                @select="onSelect"
+                @expand="onExpand">
+                <template #switcherIcon="{ switcherCls }">
+                  <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
+                  </CaretDownOutlined>
+                </template>
 <template v-slot:title="{ name, data, isLeaf, text, quantity }">
-                    <span>{{ name }}<span class="tree-num">{{ quantity }}</span></span>
-                  </template>
+                  <span>{{ name }}<span class="tree-num">{{ quantity }}</span></span>
+                </template>
 </a-tree>
 </div>
 </div>
 </a-col> -->
         <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
           <!-- <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
-              :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div> -->
+            :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div> -->
           <div style="height: 100%" ref="contentRef">
             <div class="wea-header">
               <div class="wea-tab">
@@ -56,8 +56,8 @@
                 :entityApiName="data.queryParams.entityName">
               </HighSearch>
             </div>
-            <!-- <list-form-search ref="searchRef" @search="handleSearch" entityApiName="OfficialDocumentOut"
-              :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search> -->
+            <!-- <list-form-search ref="searchRef" @search="handleSearch" :entityApiName="data.queryParams.entityName" :SearchFields="SearchFields"
+              @update-height="changeHeight"></list-form-search> -->
             <div class="wea-tabContent" :style="{ height: tableHeight + 'px' }" ref="tabContent">
               <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
               <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
@@ -209,6 +209,35 @@ const gDataAll = ref([]);
 //     gData.value = listData;
 //     gDataAll.value = listData;
 // })
+//处理树
+const formTree = (list) => {
+  list.forEach(item => {
+    if (item.children) {
+      formTree(item.children);
+    }
+    item.children = [];
+    item.id = item.businessUnitId;
+    item.key = item.businessUnitId;
+    item.text = item.name;
+  })
+  return list
+}
+// 组织结构
+const getDeptTreeData = () => {
+  proxy.$get(Interface.deptTree, {
+    //entity: "organizationtree"
+  }).then(res => {
+    let list = [];
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+      list = res.actions[0].returnValue;
+    } else { return false }
+    list = formTree(list);
+    gData.value = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
+    gDataAll.value = list;
+    //console.log("deptTreeData", data.deptTreeData);
+  })
+}
+//getDeptTreeData();
 // console.log("genData",genData,treeList)
 
 const onExpand = (keys) => {
@@ -272,9 +301,9 @@ let data = reactive({
   activeKey: 0,
   queryParams: {
     filterId: '',
-    objectTypeCode: '100109',
-    entityName: 'OfficialDocumentOut',
-    filterQuery: '',
+    objectTypeCode: '1001',
+    entityName: 'RelatedAttachment',
+    //filterQuery: '',
     //filterQuery:'\nCreatedBy\teq-userid',
     //displayColumns:'ProcessInstanceNumber,Name,ProcessId,StateCode,ExpiredOn,AttachQty,CreatedBy,CurrentStepName,CreatedOn,BusinessUnitId,ModifiedOn,Priority,ProcessInstanceId,WFRuleLogId,ExecutorIdentityName',
     sort: 'CreatedOn',
@@ -293,8 +322,8 @@ let data = reactive({
   ProcessInstanceId: "",
   formSearchFilterquery: "",
   SearchFields: [],
-  layoutName: 'DocumentOutMine',
-  entityType: 'A09',
+  entityType: '00P',
+  layoutName: 'RelatedAttachment',
   hightSearchParams: {}
 });
 const handleCollapsed = () => {
@@ -302,7 +331,7 @@ const handleCollapsed = () => {
   changeHeight();
 };
 
-const { layoutName, entityType, hightSearchParams, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
+const { hightSearchParams, entityType, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
   isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields } = toRefs(data);
 //   console.log("tabs", data.tabs);
 const tabContent = ref(null);
@@ -311,14 +340,20 @@ const searchRef = ref(null);
 let formSearchHeight = ref(null);
 const gridRef = ref(null);
 const onSearch = (e) => {
-  gData.value = gDataAll.value.filter(item => {
-    return item.name.indexOf(data.searchVal) != -1;
+  //   gData.value = gDataAll.value.filter(item=>{
+  //     return item.name.indexOf(data.searchVal) != -1;
+  //   })
+  let list = gDataAll.value.filter(item => {
+    return item.text.indexOf(data.searchVal) !== -1;
   })
+  list = formTree(list);
+  gData.value = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
 }
 const onSelect = (keys) => {
   data.treeId = keys[0];
   handleSearch();
 };
+
 function changeHeight(h) {
   if (typeof h == 'number') {
     formSearchHeight.value = h;
@@ -337,14 +372,14 @@ const cancelRelase = (e) => {
 const handleSearch = (obj) => {
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '100109',
-    entityName: 'OfficialDocumentOut',
+    objectTypeCode: '1001',
+    entityName: 'RelatedAttachment',
     sort: 'CreatedOn',
     order: 'desc'
   };
-  // data.formSearchFilterquery = filterquery;
-  // if (filterquery) {
-  //   data.queryParams.filterQuery += filterquery;
+  // data.formSearchFilterquery=filterquery;
+  // if(filterquery){
+  //   data.queryParams.filterQuery+=filterquery;
   // }
   if (obj) {
     data.hightSearchParams = obj;
@@ -361,7 +396,7 @@ const handleSearch = (obj) => {
     data.hightSearchParams = {}
   }
   if (data.treeId) {
-    data.queryParams.filterQuery = '\nDocumentTypeCode\tin\t' + data.treeId;
+    //data.queryParams.filterQuery='\nOwningBusinessUnit\tin\t'+data.treeId;
   }
   gridRef.value.loadGrid(data.queryParams);
 }
@@ -375,10 +410,11 @@ const getColumns = (id) => {
     field: "Action",
     title: "操作",
     formatter: function formatter(value, row, index) {
+      var ProcessInstanceId = row.ProcessInstanceId ? row.ProcessInstanceId.lookupValue.value : '';
       var str = `
                 <div class="iconBox">
             <div class="popup">
-            <div class="option-item" id=${row.id} onclick="handleTo('${row.viewUrl}')">查看</div>
+            <div class="option-item" id=${ProcessInstanceId} onclick="handleDetailView('${ProcessInstanceId}')">查看</div>
             </div>
             <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
         `
@@ -394,27 +430,30 @@ const getColumns = (id) => {
     if (res && res.actions && res.actions[0]) { } else { return }
     let fields = res.actions[0].returnValue.fields;
     fields.forEach(item => {
-      if (item.name != 'Name') {
-        columnslist.push({
-          field: item.name,
-          title: item.label,
-          sortable: true,
-          formatter: function formatter(value, row, index) {
-            return girdFormatterValue(item.name, row);
-          }
-        });
-      }
-      else {
-        columnslist.push({
-          field: item.name,
-          title: item.label,
-          sortable: true,
-          formatter: function formatter(value, row, index) {
-            let url = row.viewUrl;
-            let val = girdFormatterValue(item.name, row);
-            return '<a class="namefield" title="' + val + '" href="' + url + '" target="_blank">' + val + '</a>';
-          }
-        });
+      if (item.name) {
+        if (item.name == 'Name') {
+          columnslist.push({
+            field: item.name,
+            title: item.label,
+            sortable: true,
+            formatter: function formatter(value, row, index) {
+              let val = girdFormatterValue(item.name, row);
+              var ProcessInstanceId = row.ProcessInstanceId ? row.ProcessInstanceId.lookupValue.value : '';
+              return `<a class="namefield" title="` + val + `" href="javascript:void(0)" onclick="handleDetailView('${ProcessInstanceId}')">${val}</a>`;
+            }
+          });
+        }
+        else if (item.name != 'ProcessInstanceId') {
+          columnslist.push({
+            field: item.name,
+            title: item.label,
+            sortable: true,
+            formatter: function formatter(value, row, index) {
+              return girdFormatterValue(item.name, row);
+            }
+          });
+        }
+
       }
     })
     columns.value = columnslist;
@@ -459,14 +498,13 @@ const handleMenuClick = () => {
 }
 const DelegateRef = ref();
 
-function handleTo(viewUrl) {
-  // router.push({
-  //   path: "/detail",
-  //   query: {
-  //     id: id
-  //   }
-  // });
-  window.open(viewUrl)
+function handleTo(id) {
+  router.push({
+    path: "/detail",
+    query: {
+      id: id
+    }
+  });
 }
 const EditFlow = (id) => {
   console.log("id", id);
@@ -532,22 +570,152 @@ window.data = data;
 window.DelegateFn = DelegateFn;
 const imgUrl = require("@/assets/flow/checkbox_checked.gif");
 const gridUrl = ref(Interface.list2);
+// const columns = ref(
+//     [
+//       {
+//         field: 'ids',
+//         checkbox: true
+//       },
+//       {
+//           field: "Action",
+//           title: "操作",
+//           formatter: function formatter(value, row, index) {
+//             var ProcessInstanceId=row.ProcessInstanceId?row.ProcessInstanceId.textValue:'';
+//             var ProcessIdName=row.ProcessId?row.ProcessId.lookupValue.displayName:'';
+//             var ProcessId=row.ProcessId?row.ProcessId.lookupValue.value:'';
+//             var WFRuleLogId=row.WFRuleLogId?row.WFRuleLogId.textValue:'';
+//             var ExecutorIdentityName=row.ExecutorIdentityName?row.ExecutorIdentityName.textValue:'';
+//             var str = `
+//               <div class="iconBox">
+//           <div class="popup">
+//           <div class="option-item" id=${ProcessInstanceId} onclick="handleTo('${ProcessInstanceId}')">查看</div>
+//           <div class="option-item" onclick="EditFlow('${row.id}')">打印</div>  
+//           <div class="option-item" onclick="handleJump('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">跳转</div>
+//           <div class="option-item" id=${WFRuleLogId} onclick="handleCountersign('${ProcessId}','${ProcessIdName}','${ProcessInstanceId}')">加签</div>
+//           <div class="option-item" onclick="DelegateFn('${ProcessInstanceId}','${WFRuleLogId}',\'${ProcessIdName}\','${ExecutorIdentityName}')">委派</div>  
+//           <div class="option-item" id=${WFRuleLogId} onclick="handleTo('${WFRuleLogId}')">撤销</div>
+//           <div class="option-item" id=${WFRuleLogId} onclick="handleTo('${WFRuleLogId}')">结束</div>
+//           <div class="option-item" id=${WFRuleLogId} onclick="handleRelase('${ProcessInstanceId}')">发布</div>
+//           </div>
+//           <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
+//       `
+//             return str;
+//           }
+//       },
+//       {
+//           field: "ProcessInstanceNumber",
+//           title: '流程编号',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('ProcessInstanceNumber',row);
+//           }
+//       },
+//       {
+//           field: 'Name',
+//           title: '标题',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('Name',row);
+//           }
+//       }, 
+//       {
+//           field: 'ProcessId',
+//           title: '流程名称',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('ProcessId',row);
+//           }
+//       }, 
+//       {
+//           field: 'StateCode',
+//           title: '状态',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('StateCode',row);
+//           }
+//       }, 
+//       {
+//           field: 'ExpiredOn',
+//           title: '截至时间',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('ExpiredOn',row);
+//           }
+//       }, 
+//       {
+//           field: 'AttachQty',
+//           title: '附件数量',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('AttachQty',row);
+//           }
+//       }, 
+//       {
+//           field: 'CreatedBy',
+//           title: '发起人',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('CreatedBy',row);
+//           }
+//       },
+//       {
+//           field: 'CurrentStepName',
+//           title: '当前步骤',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('CurrentStepName',row);
+//           }
+//       },
+//       {
+//           field: 'CreatedOn',
+//           title: '发起时间',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('CreatedOn',row);
+//           }
+//       },
+//       {
+//           field: 'BusinessUnitId',
+//           title: '发起人部门',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('BusinessUnitId',row);
+//           }
+//       }, 
+//       {
+//           field: 'ModifiedOn',
+//           title: '上一次修改时间',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('ModifiedOn',row);
+//           }
+//       }, 
+//       {
+//           field: 'Priority',
+//           title: '紧急程度',
+//           sortable: true,
+//           formatter: function formatter(value, row, index) {
+//             return girdFormatterValue('Priority',row);
+//           }
+//       }
+//     ]
+//   )
 
 const columns = ref([]);
 const changeTab = (e) => {
   data.activeKey = e;
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '100109',
-    entityName: 'OfficialDocumentOut',
+    objectTypeCode: '1001',
+    entityName: 'RelatedAttachment',
     sort: 'CreatedOn',
     order: 'desc'
   };
   let filterColumnsList = (data.tabs)[e].filterableColumns;
   data.SearchFields = filterColumnsList;
   data.queryParams.filterId = data.tabs[e].filterId || '';
-  // if (data.formSearchFilterquery) {
-  //   data.queryParams.filterQuery += data.formSearchFilterquery;
+  // if(data.formSearchFilterquery){
+  //   data.queryParams.filterQuery+=data.formSearchFilterquery;
   // }
   if (data.hightSearchParams) {
     if (data.hightSearchParams.search) {
@@ -558,7 +726,7 @@ const changeTab = (e) => {
     }
   }
   if (data.treeId) {
-    data.queryParams.filterQuery = '\nDocumentTypeCode\tin\t' + data.treeId;
+    //data.queryParams.filterQuery='\nOwningBusinessUnit\tin\t'+data.treeId;
   }
   getColumns(data.queryParams.filterId);
 }
@@ -579,20 +747,32 @@ const cancelCategory = (e) => {
 const cancelEditFlowDefine = (e) => {
   data.isEditFlow = e;
 }
+//打开详情页
+const handleDetailView = (id) => {
+  let reUrl = router.resolve({
+    path: "/lightning/r/Workflow/instance/view",
+    query: {
+      id: id,
+      reurl: '/lightning/o/workflow/Attachment/list'
+    }
+  })
+  window.open(reUrl.href);
+}
+window.handleDetailView = handleDetailView;
 watch(() => route, (newVal, oldVal) => {
   if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/lightning/page/OfficeDocumentOut/mine/home') {
+    if (route.path == '/lightning/o/workflow/Attachment/list') {
       //getTreeData();
       data.queryParams = {
         filterId: '',
-        objectTypeCode: '100109',
-        entityName: 'OfficialDocumentOut',
+        objectTypeCode: '1001',
+        entityName: 'RelatedAttachment',
         //filterQuery: '',
         sort: 'CreatedOn',
         order: 'desc'
       }
-      data.entityType = 'A09';
-      data.layoutName = 'DocumentOutMine'
+      data.entityType = '00P';
+      data.layoutName = 'RelatedAttachment'
       setTimeout(function () {
         getTabs();
       }, 1000)
@@ -650,6 +830,9 @@ onMounted(() => {
     display: none;
   }
 
+}
+
+.todoList {
   .wea-header {
     display: flex;
     justify-content: space-between;
@@ -669,10 +852,6 @@ onMounted(() => {
 
   .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
     height: 45px !important;
-  }
-
-  .wea-left-tree-scroll {
-    height: calc(~'100% - 50px') !important;
   }
 
   :deep .namefield {

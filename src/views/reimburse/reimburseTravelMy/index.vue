@@ -1,19 +1,19 @@
 <template>
-  <div class="todoList myInvoiceWrap">
+  <div class="todoList reimburseMineWrap">
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
           <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
         </div>
-        <span class="headerTitle">我的发票</span>
+        <span class="headerTitle">我的差旅报销</span>
       </div>
       <div class="headerRight">
         <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
-        <a-button type="primary" class="ml10" @click="handleNew">手动添加发票</a-button>
-        <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
+        <a-button type="primary" class="ml10" @click="handleNewForm">新建差旅报销单</a-button>
+        <!-- <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
           @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false">
-          <a-button class="ml10" type="primary">发票识别</a-button>
-        </a-upload>
+          <a-button class="ml10" type="primary">上传</a-button>
+        </a-upload> -->
       </div>
     </div>
     <div class="todo-content">
@@ -34,7 +34,8 @@
                 <div class="tabsBtn">
                 </div>
               </div>
-              <HighSearch @update-height="changeHeight" @search="handleSearch" :entityApiName="data.queryParams.entityName">
+              <HighSearch @update-height="changeHeight" @search="handleSearch"
+                :entityApiName="data.queryParams.entityName">
               </HighSearch>
             </div>
             <!-- <list-form-search ref="searchRef" @search="handleSearch" entityApiName="OfficialDocumentIn"
@@ -56,10 +57,58 @@
       :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
     <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="isDelete = false" @ok="handleSearch('')"
       :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
-    <invoiceDetail v-if="isDetail" :isShow="isDetail" :id="recordId" :InvoiceType="InvoiceType"
-      @cancel="isDetail = false" />
-    <addInvoice :isShow="isNew" v-if="isNew" :id="recordId" @ok="handleSearch('')" @cancel="isNew = false" :name="'发票'"
-      :entityApiName="sObjectName" :objTypeCode="objectTypeCode" :entityId="entityId" />
+    <RelatedDetail v-if="isDetail" :isShow="isDetail" :sObjectName="data.queryParams.entityName" :title="'差旅报销详情'"
+      :objectTypeCode="data.queryParams.objectTypeCode" :id="recordId" @cancel="isDetail = false" />
+    <div class="modal">
+      <a-modal v-model:open="isModal" width="550px" :style="'top:' + top + 'px'" :maskClosable="false"
+        @cancel="handleCancel" @ok="handleOk">
+        <template #title>
+          <div>
+            新建差旅报销单
+          </div>
+        </template>
+        <div class="modalContainer">
+          <div class="modalCenter" style="height:440px;">
+            <a-form ref="formRef" :label-col="labelCol" class="CreateProcess1" :model="formState">
+              <div class="form-tip">请输入流程事务标题，建立事务</div>
+              <a-form-item label="流程：" name="ProcessName">
+                <div class="ProcessName">{{ formState.ProcessName || '' }}</div>
+              </a-form-item>
+              <a-form-item name="BusinessUnitId" label="创建身份：" :rules="[{ required: true, message: '请选择发起部门' }]">
+                <a-select v-model:value="formState.BusinessUnitId">
+                  <a-select-option v-for="(item, index) in formState.BusinessUnitList" :key="index"
+                    :value="item.BusinessUnitId">{{ item.organizationIdName }}/{{
+                      item.businessUnitIdName
+                    }}</a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item class="processTitle" label="标题：" name="Title"
+                :rules="[{ required: true, message: '标题不能为空' }]">
+                <a-input v-model:value="formState.Title" />
+                <div class="form-tip1">默认标题是 流程名称 部门名称，为了查询方便，请输入流程真实标题。</div>
+                <div class="form-tip1">如收文 关于XX来文 XX科室 XX人。</div>
+              </a-form-item>
+              <a-form-item name="Priority" label="紧急程度：">
+                <a-select v-model:value="formState.Priority">
+                  <a-select-option value="0">普通</a-select-option>
+                  <a-select-option value="1">紧急</a-select-option>
+                  <a-select-option value="2">加急</a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item label="备注：" name="Description">
+                <a-textarea :rows="3" v-model:value="formState.Description" />
+              </a-form-item>
+            </a-form>
+          </div>
+        </div>
+        <template #footer>
+          <div>
+            <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
+            <a-button @click="handleCancel">取消</a-button>
+          </div>
+        </template>
+      </a-modal>
+    </div>
   </div>
 </template>
 <script setup>
@@ -80,8 +129,7 @@ import { useRouter, useRoute } from "vue-router";
 import useWorkAdmin from "@/utils/flow/workAdmin";
 import CommonFormModal from "@/components/listView/CommonFormModal.vue";
 import Delete from "@/components/listView/Delete.vue";
-import invoiceDetail from "@/components/reimburse/invoice/invoiceDetail.vue";
-import addInvoice from "@/components/reimburse/invoice/addInvoice.vue";
+import RelatedDetail from "@/components/commonModal/RelatedDetail.vue";
 import { formTreeData, girdFormatterValue } from "@/utils/common.js";
 const { tabList } = useWorkAdmin();
 console.log("tabList", tabList);
@@ -101,18 +149,18 @@ let data = reactive({
   tabs: [],
   //tabs: tabList,
   activeKey: 0,
-  entityType: 'I0E',
+  entityType: 'F05',
   queryParams: {
     filterId: '',
-    objectTypeCode: '1090',
-    entityName: 'Invoice',
+    objectTypeCode: '7005',
+    entityName: 'ReimburseTravelExpense',
     filterQuery: '',
     //filterQuery:'\nCreatedBy\teq-userid',
     //displayColumns:'',
     sort: 'CreatedOn',
     order: 'desc'
   },
-  layoutName: 'MyInvoice',
+  layoutName: 'myReimburseTravelExpense',
   isModal: false,
   isCirculation: false,
   searchVal: "",
@@ -128,8 +176,8 @@ let data = reactive({
   SearchFields: [],
   isCommon: false,
   recordId: '',
-  objectTypeCode: '1090',
-  sObjectName: 'Invoice',
+  objectTypeCode: '7005',
+  sObjectName: 'ReimburseTravelExpense',
   relatedObjectAttributeValue: '',
   relatedObjectAttributeName: '',
   isDelete: false,
@@ -145,16 +193,25 @@ let data = reactive({
   },
   fileList: [],
   isDetail: false,
-  InvoiceType: '',
   isNew: false,
   entityId: '',
+  rowRecord: {},
+  top: 0,
   hightSearchParams: {}
 });
-const { hightSearchParams, entityId, isNew, InvoiceType, isDetail, fileList, uploadData, headers, isDelete, deleteDesc, external, isCommon, recordId, objectTypeCode, sObjectName, relatedObjectAttributeValue, relatedObjectAttributeName, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
+const { hightSearchParams, top, rowRecord, entityId, isNew, isDetail, fileList, uploadData, headers, isDelete, deleteDesc, external, isCommon, recordId, objectTypeCode, sObjectName, relatedObjectAttributeValue, relatedObjectAttributeName, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
   isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields } = toRefs(data);
 const tabContent = ref(null);
 const contentRef = ref(null);
 const searchRef = ref(null);
+const formState = reactive({
+  ProcessName: "",
+  BusinessUnitId: "",
+  Title: "",
+  Priority: "0",
+  Description: "",
+  BusinessUnitList: [],
+})
 let formSearchHeight = ref(null);
 const gridRef = ref(null);
 const onSearch = (e) => {
@@ -178,7 +235,6 @@ const changeFiles = (e) => {
     message.error("上传失败！");
   }
 }
-
 function changeHeight(h) {
   if (typeof h == 'number') {
     formSearchHeight.value = h;
@@ -187,7 +243,8 @@ function changeHeight(h) {
   let tabsHeight = 46;
   let height = contentHeight - tabsHeight;
   data.tableHeight = height;
-  console.log('data', data.tableHeight);
+  data.top = (document.documentElement.clientHeight - 565) / 2;
+  //console.log('data', data.tableHeight);
   //console.log("gridRef", gridRef.value.loadGrid())
   //handleSearch();
 }
@@ -195,8 +252,8 @@ function changeHeight(h) {
 const handleSearch = (obj) => {
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '1090',
-    entityName: 'Invoice',
+    objectTypeCode: '7005',
+    entityName: 'ReimburseTravelExpense',
     sort: 'CreatedOn',
     order: 'desc'
   };
@@ -236,7 +293,7 @@ const getColumns = (id) => {
       var str = `
                 <div class="iconBox">
             <div class="popup">
-            <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}','${row.InvoiceType && row.InvoiceType.value ? row.InvoiceType.value : ''}')">查看</div>
+            <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}')">查看</div>
             <div class="option-item" id=${row.id} onclick="handleEdit('${row.id}')">编辑</div>
             <div class="option-item" id=${row.id} onclick="handleDelete('${row.id}')">删除</div>
             </div>
@@ -311,13 +368,14 @@ const getTabs = () => {
     getColumns(data.queryParams.filterId);
   })
 }
-function handleTo(viewUrl) {
-  // router.push({
-  //   path: "/detail",
-  //   query: {
-  //     id: id
-  //   }
-  // });
+function handleTo(viewUrl, id) {
+  router.push({
+    path: "/lightning/r/Workflow/instance/detail",
+    query: {
+      id: id,
+      reurl: '/lightning/page/ReimburseMine/home'
+    }
+  });
   window.open(viewUrl)
 }
 window.handleTo = handleTo;
@@ -329,8 +387,8 @@ const changeTab = (e) => {
   data.activeKey = e;
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '1090',
-    entityName: 'Invoice',
+    objectTypeCode: '7005',
+    entityName: 'ReimburseTravelExpense',
     sort: 'CreatedOn',
     order: 'desc'
   };
@@ -357,14 +415,27 @@ const changeTab = (e) => {
 //新建
 const handleNew = () => {
   data.recordId = '';
-  //data.isCommon = true;
-  data.isNew = true;
+  data.isCommon = true;
+  //data.isNew = true;
+}
+//新建差旅报销单
+const handleNewForm = () => {
+  formState.ProcessName = '02 差旅费报销流程';
+  data.rowRecord = {
+    description: null,
+    folderId: "F8FA5F1E-CF8D-41C1-9F9F-7C1C1CC19A07",
+    isFavorite: false,
+    name: "02 差旅费报销流程",
+    processId: "A3A2BCB7-D841-4786-9854-A51CD02ADE93"
+  };
+  getDeptList();
+  data.isModal = true;
 }
 //编辑
 const handleEdit = (id) => {
   data.recordId = id;
-  //data.isCommon = true;
-  data.isNew = true;
+  data.isCommon = true;
+  //data.isNew = true;
 }
 window.handleEdit = handleEdit;
 //删除
@@ -379,26 +450,105 @@ const handleCommonCancel = (params) => {
 };
 
 //打开详情
-const handleDetail = (id, InvoiceType) => {
+const handleDetail = (id) => {
   data.recordId = id;
-  data.InvoiceType = InvoiceType;
   data.isDetail = true;
 }
 window.handleDetail = handleDetail;
+const handleOk = () => {
+  isModal.value = false;
+}
+const handleCancel = () => {
+  isModal.value = false;
+}
+const formRef = ref();
+const handleSubmit = () => {
+  formRef.value.validate().then(() => {
+    //console.log('values', formState, toRaw(formState));
+    let obj = {
+      "actions": [
+        {
+          "id": "4270;a",
+          "descriptor": "aura://RecordUiController/ACTION$getRecordWithFields",
+          "callingDescriptor": "UNKNOWN",
+          "params": {
+            "processId": data.rowRecord.processId,
+            "priority": formState.Priority,
+            "name": formState.Title,
+            "businessUnitId": formState.BusinessUnitId,
+            "description": formState.Description
+          }
+        }
+      ]
+    };
+    let d = {
+      message: JSON.stringify(obj)
+    };
+    proxy.$post(Interface.workflow.new, d).then(res => {
+      if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+        message.success("新建流程成功");
+        let url = router.resolve({
+          name: "FlowDetail",
+          query: {
+            id: res.actions[0].returnValue.id,
+            reurl: '/lightning/o/workflow/doing'
+          },
+        });
+        window.open(url.href);
+        handleCancel();
+      } else {
+        if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+          message.success(res.actions[0].errorMessage);
+        }
+        else {
+          message.error("新建流程失败");
+        }
+      }
+    })
+  }).catch(err => {
+    console.log('error', err);
+  });
+}
+// 获取部门
+const getDeptList = () => {
+  // proxy.$get(Interface.businessunitList,{}).then(res=>{
+  //     formState.BusinessUnitList = res.businessUnits;
+  //     formState.Title = data.rowRecord.name + ' ' + res.businessUnits[0].name;
+  //     formState.BusinessUnitId =  res.businessUnits[0].id;
+  // })
+  const now = new Date();
+  const nowtime = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+  let userInfo = window.localStorage.getItem('userInfo');
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+    formState.BusinessUnitId = userInfo.businessUnitId;
+    data.userId = userInfo.userId;
+  }
+  proxy.$post(Interface.user.getBusinessUnits, {}).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
+      formState.BusinessUnitList = res.actions[0].returnValue;
+      for (var i = 0; i < formState.BusinessUnitList.length; i++) {
+        if (formState.BusinessUnitList[i].BusinessUnitId == formState.BusinessUnitId) {
+          formState.Title = data.rowRecord.name + ' ' + formState.BusinessUnitList[i].businessUnitIdName + ' ' + formState.BusinessUnitList[i].FullName + ' ' + nowtime;
+        }
+      }
+    }
+  })
+};
 watch(() => route, (newVal, oldVal) => {
   if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/lightning/page/MyInvoice/home') {
+    if (route.path == '/lightning/page/ReimburseTravelMy/home') {
       //getTreeData();
       data.queryParams = {
         filterId: '',
-        objectTypeCode: '1090',
-        entityName: 'Invoice',
+        objectTypeCode: '7005',
+        entityName: 'ReimburseTravelExpense',
         //filterQuery: '',
         sort: 'CreatedOn',
         order: 'desc'
       }
-      data.entityType = 'I0E';
-      data.layoutName = 'MyInvoice'
+      data.entityType = 'F05';
+      data.layoutName = 'myReimburseTravelExpense';
       setTimeout(function () {
         getTabs();
       }, 1000)
@@ -406,6 +556,7 @@ watch(() => route, (newVal, oldVal) => {
   }
 }, { deep: true, immediate: true })
 onMounted(() => {
+  data.top = (document.documentElement.clientHeight - 565) / 2;
   window.addEventListener('resize', changeHeight)
   // this.$nextTick(()=>{
   //   getTabs();
@@ -417,7 +568,7 @@ onMounted(() => {
 @import "@/style/flow/treeList.less";
 </style>
 <style lang="less" scoped>
-.myInvoiceWrap {
+.reimburseMineWrap {
   .wea-left-tree-search {
     padding-left: 14px;
   }
@@ -428,17 +579,21 @@ onMounted(() => {
     align-items: center;
     //border-bottom: 1px solid #eaeaea;
     padding-right: 0;
-    border: 0 !important;
+    border: 0;
   }
-  .todo-content .ant-row .wea-tab{
+
+  .todo-content .ant-row .wea-tab {
     height: 45px !important;
-    :deep .ant-tabs-nav::before{
+
+    :deep .ant-tabs-nav::before {
       display: none;
     }
   }
-  .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap{
+
+  .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
     height: 45px !important;
   }
+
   .treeRow {
     display: flex;
     justify-content: space-between;
@@ -471,6 +626,34 @@ onMounted(() => {
 
   .ant-row .wea-left-right-layout-left .wea-left-tree .wea-left-tree-scroll .ant-tree-treenode:hover .tree-num {
     display: none;
+  }
+}
+
+:deep .CreateProcess1 {
+  .ant-form-item {
+    margin-bottom: 20px !important;
+  }
+
+  .ant-form-item-label {
+    width: 100px !important;
+  }
+
+  .processTitle .ant-row .ant-col .ant-form-item-required {
+    color: rgba(0, 0, 0, 0.88) !important;
+  }
+
+  .processTitle .ant-row .form-tip1 {
+    color: rgba(0, 0, 0, 0.88) !important;
+  }
+
+  .ProcessName {
+    color: rgba(0, 0, 0, 0.88) !important;
+  }
+
+  .form-tip {
+    font-size: 12px;
+    margin-bottom: 12px;
+    color: #606266;
   }
 }
 

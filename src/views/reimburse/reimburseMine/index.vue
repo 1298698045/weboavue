@@ -20,21 +20,26 @@
       <a-row>
         <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
           <div style="height: 100%" ref="contentRef">
-            <div class="wea-tab">
-              <a-tabs v-model:activeKey="activeKey" @change="changeTab">
-                <a-tab-pane v-for="(item, index) in data.tabs" :key="index">
-                  <template #tab>
-                    <span>
-                      {{ item.label }}
-                    </span>
-                  </template>
-                </a-tab-pane>
-              </a-tabs>
-              <div class="tabsBtn">
+            <div class="wea-header">
+              <div class="wea-tab">
+                <a-tabs v-model:activeKey="activeKey" @change="changeTab">
+                  <a-tab-pane v-for="(item, index) in data.tabs" :key="index">
+                    <template #tab>
+                      <span>
+                        {{ item.label }}
+                      </span>
+                    </template>
+                  </a-tab-pane>
+                </a-tabs>
+                <div class="tabsBtn">
+                </div>
               </div>
+              <HighSearch @update-height="changeHeight" @search="handleSearch"
+                :entityApiName="data.queryParams.entityName">
+              </HighSearch>
             </div>
-            <list-form-search ref="searchRef" @search="handleSearch" entityApiName="OfficialDocumentIn"
-              :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search>
+            <!-- <list-form-search ref="searchRef" @search="handleSearch" entityApiName="OfficialDocumentIn"
+              :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search> -->
             <div class="wea-tabContent" :style="{ height: tableHeight + 'px' }" ref="tabContent">
               <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
               <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
@@ -52,57 +57,58 @@
       :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
     <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="isDelete = false" @ok="handleSearch('')"
       :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
-    <reimburseDetail v-if="isDetail" :isShow="isDetail" :id="recordId" @cancel="isDetail = false" />
-      <div class="modal">
-            <a-modal v-model:open="isModal" width="550px" :style="'top:'+top+'px'" :maskClosable="false" @cancel="handleCancel" @ok="handleOk">
-                <template #title>
-                    <div>
-                      新建报销单
-                    </div>
-                </template>
-                <div class="modalContainer">
-                    <div class="modalCenter" style="height:440px;">
-                        <a-form ref="formRef" :label-col="labelCol" class="CreateProcess1" :model="formState">
-                            <div class="form-tip">请输入流程事务标题，建立事务</div>
-                            <a-form-item label="流程：" name="ProcessName">
-                                <div class="ProcessName">{{ formState.ProcessName || '' }}</div>
-                            </a-form-item>
-                            <a-form-item name="BusinessUnitId" label="创建身份："
-                                :rules="[{ required: true, message: '请选择发起部门' }]">
-                                <a-select v-model:value="formState.BusinessUnitId">
-                                    <a-select-option v-for="(item, index) in formState.BusinessUnitList" :key="index"
-                                        :value="item.BusinessUnitId">{{ item.organizationIdName }}/{{
-                                        item.businessUnitIdName
-                                        }}</a-select-option>
-                                </a-select>
-                            </a-form-item>
-                            <a-form-item class="processTitle" label="标题：" name="Title"
-                                :rules="[{ required: true, message: '标题不能为空' }]">
-                                <a-input v-model:value="formState.Title" />
-                                <div class="form-tip1">默认标题是 流程名称 部门名称，为了查询方便，请输入流程真实标题。</div>
-                                <div class="form-tip1">如收文 关于XX来文 XX科室 XX人。</div>
-                            </a-form-item>
-                            <a-form-item name="Priority" label="紧急程度：">
-                                <a-select v-model:value="formState.Priority">
-                                    <a-select-option value="0">普通</a-select-option>
-                                    <a-select-option value="1">紧急</a-select-option>
-                                    <a-select-option value="2">加急</a-select-option>
-                                </a-select>
-                            </a-form-item>
-                            <a-form-item label="备注：" name="Description">
-                                <a-textarea :rows="3" v-model:value="formState.Description" />
-                            </a-form-item>
-                        </a-form>
-                    </div>
-                </div>
-                <template #footer>
-                    <div>
-                        <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
-                        <a-button @click="handleCancel">取消</a-button>
-                    </div>
-                </template>
-            </a-modal>
+    <RelatedDetail v-if="isDetail" :isShow="isDetail" :sObjectName="data.queryParams.entityName" :title="'报销详情'"
+      :objectTypeCode="data.queryParams.objectTypeCode" :id="recordId" @cancel="isDetail = false" />
+    <div class="modal">
+      <a-modal v-model:open="isModal" width="550px" :style="'top:' + top + 'px'" :maskClosable="false"
+        @cancel="handleCancel" @ok="handleOk">
+        <template #title>
+          <div>
+            新建报销单
+          </div>
+        </template>
+        <div class="modalContainer">
+          <div class="modalCenter" style="height:440px;">
+            <a-form ref="formRef" :label-col="labelCol" class="CreateProcess1" :model="formState">
+              <div class="form-tip">请输入流程事务标题，建立事务</div>
+              <a-form-item label="流程：" name="ProcessName">
+                <div class="ProcessName">{{ formState.ProcessName || '' }}</div>
+              </a-form-item>
+              <a-form-item name="BusinessUnitId" label="创建身份：" :rules="[{ required: true, message: '请选择发起部门' }]">
+                <a-select v-model:value="formState.BusinessUnitId">
+                  <a-select-option v-for="(item, index) in formState.BusinessUnitList" :key="index"
+                    :value="item.BusinessUnitId">{{ item.organizationIdName }}/{{
+                      item.businessUnitIdName
+                    }}</a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item class="processTitle" label="标题：" name="Title"
+                :rules="[{ required: true, message: '标题不能为空' }]">
+                <a-input v-model:value="formState.Title" />
+                <div class="form-tip1">默认标题是 流程名称 部门名称，为了查询方便，请输入流程真实标题。</div>
+                <div class="form-tip1">如收文 关于XX来文 XX科室 XX人。</div>
+              </a-form-item>
+              <a-form-item name="Priority" label="紧急程度：">
+                <a-select v-model:value="formState.Priority">
+                  <a-select-option value="0">普通</a-select-option>
+                  <a-select-option value="1">紧急</a-select-option>
+                  <a-select-option value="2">加急</a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item label="备注：" name="Description">
+                <a-textarea :rows="3" v-model:value="formState.Description" />
+              </a-form-item>
+            </a-form>
+          </div>
         </div>
+        <template #footer>
+          <div>
+            <a-button type="primary" @click.prevent="handleSubmit">确定</a-button>
+            <a-button @click="handleCancel">取消</a-button>
+          </div>
+        </template>
+      </a-modal>
+    </div>
   </div>
 </template>
 <script setup>
@@ -118,12 +124,12 @@ import { message } from "ant-design-vue";
 // import Dtable from "@/components/Dtable.vue";
 import Ntable from "@/components/Ntable.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
-
+import HighSearch from "@/components/HighSearch.vue";
 import { useRouter, useRoute } from "vue-router";
 import useWorkAdmin from "@/utils/flow/workAdmin";
 import CommonFormModal from "@/components/listView/CommonFormModal.vue";
 import Delete from "@/components/listView/Delete.vue";
-import reimburseDetail from "@/components/reimburse/reimburse/reimburseDetail.vue";
+import RelatedDetail from "@/components/commonModal/RelatedDetail.vue";
 import { formTreeData, girdFormatterValue } from "@/utils/common.js";
 const { tabList } = useWorkAdmin();
 console.log("tabList", tabList);
@@ -187,24 +193,24 @@ let data = reactive({
   },
   fileList: [],
   isDetail: false,
-  InvoiceType: '',
   isNew: false,
   entityId: '',
   rowRecord: {},
-  top:0
+  top: 0,
+  hightSearchParams: {}
 });
-const { top, rowRecord, entityId, isNew, InvoiceType, isDetail, fileList, uploadData, headers, isDelete, deleteDesc, external, isCommon, recordId, objectTypeCode, sObjectName, relatedObjectAttributeValue, relatedObjectAttributeName, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
+const { hightSearchParams, top, rowRecord, entityId, isNew, isDetail, fileList, uploadData, headers, isDelete, deleteDesc, external, isCommon, recordId, objectTypeCode, sObjectName, relatedObjectAttributeValue, relatedObjectAttributeName, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
   isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields } = toRefs(data);
 const tabContent = ref(null);
 const contentRef = ref(null);
 const searchRef = ref(null);
 const formState = reactive({
-    ProcessName: "",
-    BusinessUnitId: "",
-    Title: "",
-    Priority: "0",
-    Description: "",
-    BusinessUnitList: [],
+  ProcessName: "",
+  BusinessUnitId: "",
+  Title: "",
+  Priority: "0",
+  Description: "",
+  BusinessUnitList: [],
 })
 let formSearchHeight = ref(null);
 const gridRef = ref(null);
@@ -215,7 +221,7 @@ const onSearch = (e) => {
 }
 const onSelect = (keys) => {
   data.treeId = keys[0];
-  handleSearch(data.formSearchFilterquery);
+  handleSearch();
 };
 const beforeUpload = (e) => {
   console.log("beforeUpload", e);
@@ -233,25 +239,44 @@ function changeHeight(h) {
   if (typeof h == 'number') {
     formSearchHeight.value = h;
   }
-  let contentHeight = contentRef.value.clientHeight;
+  let contentHeight = document.documentElement.clientHeight - 120;
   let tabsHeight = 46;
-  let height = contentHeight - tabsHeight - formSearchHeight.value;
+  let height = contentHeight - tabsHeight;
   data.tableHeight = height;
-  data.top= (document.documentElement.clientHeight - 565)/2;
+  data.top = (document.documentElement.clientHeight - 565) / 2;
   //console.log('data', data.tableHeight);
   //console.log("gridRef", gridRef.value.loadGrid())
   //handleSearch();
 }
 
-const handleSearch = (filterquery) => {
-  data.queryParams.filterQuery = '';
-  //data.queryParams.filterQuery='\nCreatedBy\teq-userid';
-  data.formSearchFilterquery = filterquery;
-  if (filterquery) {
-    data.queryParams.filterQuery += filterquery;
+const handleSearch = (obj) => {
+  data.queryParams = {
+    filterId: data.queryParams.filterId,
+    objectTypeCode: '7001',
+    entityName: 'ReimburseBill',
+    sort: 'CreatedOn',
+    order: 'desc'
+  };
+  // data.formSearchFilterquery = filterquery;
+  // if (filterquery) {
+  //   data.queryParams.filterQuery += filterquery;
+  // }
+  if (obj) {
+    data.hightSearchParams = obj;
+    if (data.hightSearchParams) {
+      if (data.hightSearchParams.search) {
+        data.queryParams.search = data.hightSearchParams.search;
+      }
+      if (data.hightSearchParams.filterCondition) {
+        data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+      }
+    }
+  }
+  else {
+    data.hightSearchParams = {}
   }
   if (data.treeId) {
-    data.queryParams.filterQuery += '\nDocumentTypeCode\tin\t' + data.treeId;
+    data.queryParams.filterQuery = '\nDocumentTypeCode\tin\t' + data.treeId;
   }
   gridRef.value.loadGrid(data.queryParams);
 }
@@ -268,7 +293,7 @@ const getColumns = (id) => {
       var str = `
                 <div class="iconBox">
             <div class="popup">
-            <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}','${row.InvoiceType && row.InvoiceType.value ? row.InvoiceType.value : ''}')">查看</div>
+            <div class="option-item" id=${row.id} onclick="handleDetail('${row.id}')">查看</div>
             <div class="option-item" id=${row.id} onclick="handleEdit('${row.id}')">编辑</div>
             <div class="option-item" id=${row.id} onclick="handleDelete('${row.id}')">删除</div>
             </div>
@@ -311,7 +336,7 @@ const getColumns = (id) => {
     columns.value = columnslist;
     nextTick(() => {
       gridRef.value.loadGrid(data.queryParams);
-      searchRef.value.getSearchLayout();
+      //searchRef.value.getSearchLayout();
     })
 
   })
@@ -343,12 +368,12 @@ const getTabs = () => {
     getColumns(data.queryParams.filterId);
   })
 }
-function handleTo(viewUrl,id) {
+function handleTo(viewUrl, id) {
   router.push({
     path: "/lightning/r/Workflow/instance/detail",
     query: {
       id: id,
-      reurl:'/lightning/page/ReimburseMine/home'
+      reurl: '/lightning/page/ReimburseMine/home'
     }
   });
   window.open(viewUrl)
@@ -360,16 +385,29 @@ const gridUrl = ref(Interface.list2);
 const columns = ref([]);
 const changeTab = (e) => {
   data.activeKey = e;
-  data.queryParams.filterQuery = '';
-  //data.queryParams.filterQuery='\nCreatedBy\teq-userid';
+  data.queryParams = {
+    filterId: data.queryParams.filterId,
+    objectTypeCode: '7001',
+    entityName: 'ReimburseBill',
+    sort: 'CreatedOn',
+    order: 'desc'
+  };
   let filterColumnsList = (data.tabs)[e].filterableColumns;
   data.SearchFields = filterColumnsList;
   data.queryParams.filterId = data.tabs[e].filterId || '';
-  if (data.formSearchFilterquery) {
-    data.queryParams.filterQuery += data.formSearchFilterquery;
+  // if (data.formSearchFilterquery) {
+  //   data.queryParams.filterQuery += data.formSearchFilterquery;
+  // }
+  if (data.hightSearchParams) {
+    if (data.hightSearchParams.search) {
+      data.queryParams.search = data.hightSearchParams.search;
+    }
+    if (data.hightSearchParams.filterCondition) {
+      data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+    }
   }
   if (data.treeId) {
-    data.queryParams.filterQuery += '\nDocumentTypeCode\tin\t' + data.treeId;
+    data.queryParams.filterQuery = '\nDocumentTypeCode\tin\t' + data.treeId;
   }
   getColumns(data.queryParams.filterId);
 }
@@ -412,91 +450,90 @@ const handleCommonCancel = (params) => {
 };
 
 //打开详情
-const handleDetail = (id, InvoiceType) => {
+const handleDetail = (id) => {
   data.recordId = id;
-  data.InvoiceType = InvoiceType;
   data.isDetail = true;
 }
 window.handleDetail = handleDetail;
 const handleOk = () => {
-    isModal.value = false;
+  isModal.value = false;
 }
 const handleCancel = () => {
-    isModal.value = false;
+  isModal.value = false;
 }
 const formRef = ref();
 const handleSubmit = () => {
-    formRef.value.validate().then(() => {
-        //console.log('values', formState, toRaw(formState));
-        let obj = {
-            "actions": [
-                {
-                    "id": "4270;a",
-                    "descriptor": "aura://RecordUiController/ACTION$getRecordWithFields",
-                    "callingDescriptor": "UNKNOWN",
-                    "params": {
-                        "processId": data.rowRecord.processId,
-                        "priority": formState.Priority,
-                        "name": formState.Title,
-                        "businessUnitId": formState.BusinessUnitId,
-                        "description": formState.Description
-                    }
-                }
-            ]
-        };
-        let d = {
-            message: JSON.stringify(obj)
-        };
-        proxy.$post(Interface.workflow.new, d).then(res => {
-            if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
-                message.success("新建流程成功");
-                let url = router.resolve({
-                    name: "FlowDetail",
-                    query: {
-                        id: res.actions[0].returnValue.id,
-                        reurl: '/lightning/o/workflow/doing'
-                    },
-                });
-                window.open(url.href);
-                handleCancel();
-            } else {
-                if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
-                    message.success(res.actions[0].errorMessage);
-                }
-                else {
-                    message.error("新建流程失败");
-                }
-            }
-        })
-    }).catch(err => {
-        console.log('error', err);
-    });
+  formRef.value.validate().then(() => {
+    //console.log('values', formState, toRaw(formState));
+    let obj = {
+      "actions": [
+        {
+          "id": "4270;a",
+          "descriptor": "aura://RecordUiController/ACTION$getRecordWithFields",
+          "callingDescriptor": "UNKNOWN",
+          "params": {
+            "processId": data.rowRecord.processId,
+            "priority": formState.Priority,
+            "name": formState.Title,
+            "businessUnitId": formState.BusinessUnitId,
+            "description": formState.Description
+          }
+        }
+      ]
+    };
+    let d = {
+      message: JSON.stringify(obj)
+    };
+    proxy.$post(Interface.workflow.new, d).then(res => {
+      if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+        message.success("新建流程成功");
+        let url = router.resolve({
+          name: "FlowDetail",
+          query: {
+            id: res.actions[0].returnValue.id,
+            reurl: '/lightning/o/workflow/doing'
+          },
+        });
+        window.open(url.href);
+        handleCancel();
+      } else {
+        if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+          message.success(res.actions[0].errorMessage);
+        }
+        else {
+          message.error("新建流程失败");
+        }
+      }
+    })
+  }).catch(err => {
+    console.log('error', err);
+  });
 }
 // 获取部门
 const getDeptList = () => {
-    // proxy.$get(Interface.businessunitList,{}).then(res=>{
-    //     formState.BusinessUnitList = res.businessUnits;
-    //     formState.Title = data.rowRecord.name + ' ' + res.businessUnits[0].name;
-    //     formState.BusinessUnitId =  res.businessUnits[0].id;
-    // })
-    const now = new Date();
-    const nowtime = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
-    let userInfo = window.localStorage.getItem('userInfo');
-    if (userInfo) {
-        userInfo = JSON.parse(userInfo);
-        formState.BusinessUnitId = userInfo.businessUnitId;
-        data.userId = userInfo.userId;
-    }
-    proxy.$post(Interface.user.getBusinessUnits, {}).then(res => {
-        if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
-            formState.BusinessUnitList = res.actions[0].returnValue;
-            for (var i = 0; i < formState.BusinessUnitList.length; i++) {
-                if (formState.BusinessUnitList[i].BusinessUnitId == formState.BusinessUnitId) {
-                    formState.Title = data.rowRecord.name + ' ' + formState.BusinessUnitList[i].businessUnitIdName + ' ' + formState.BusinessUnitList[i].FullName + ' ' + nowtime;
-                }
-            }
+  // proxy.$get(Interface.businessunitList,{}).then(res=>{
+  //     formState.BusinessUnitList = res.businessUnits;
+  //     formState.Title = data.rowRecord.name + ' ' + res.businessUnits[0].name;
+  //     formState.BusinessUnitId =  res.businessUnits[0].id;
+  // })
+  const now = new Date();
+  const nowtime = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+  let userInfo = window.localStorage.getItem('userInfo');
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+    formState.BusinessUnitId = userInfo.businessUnitId;
+    data.userId = userInfo.userId;
+  }
+  proxy.$post(Interface.user.getBusinessUnits, {}).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
+      formState.BusinessUnitList = res.actions[0].returnValue;
+      for (var i = 0; i < formState.BusinessUnitList.length; i++) {
+        if (formState.BusinessUnitList[i].BusinessUnitId == formState.BusinessUnitId) {
+          formState.Title = data.rowRecord.name + ' ' + formState.BusinessUnitList[i].businessUnitIdName + ' ' + formState.BusinessUnitList[i].FullName + ' ' + nowtime;
         }
-    })
+      }
+    }
+  })
 };
 watch(() => route, (newVal, oldVal) => {
   if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
@@ -506,12 +543,12 @@ watch(() => route, (newVal, oldVal) => {
         filterId: '',
         objectTypeCode: '7001',
         entityName: 'ReimburseBill',
-        filterQuery: '',
+        //filterQuery: '',
         sort: 'CreatedOn',
         order: 'desc'
       }
-      data.entityType='F01';
-      data.layoutName='mineReimburseBill';
+      data.entityType = 'F01';
+      data.layoutName = 'mineReimburseBill';
       setTimeout(function () {
         getTabs();
       }, 1000)
@@ -519,7 +556,7 @@ watch(() => route, (newVal, oldVal) => {
   }
 }, { deep: true, immediate: true })
 onMounted(() => {
-  data.top= (document.documentElement.clientHeight - 565)/2;
+  data.top = (document.documentElement.clientHeight - 565) / 2;
   window.addEventListener('resize', changeHeight)
   // this.$nextTick(()=>{
   //   getTabs();
@@ -534,6 +571,27 @@ onMounted(() => {
 .reimburseMineWrap {
   .wea-left-tree-search {
     padding-left: 14px;
+  }
+
+  .wea-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    //border-bottom: 1px solid #eaeaea;
+    padding-right: 0;
+    border: 0 !important;
+  }
+
+  .todo-content .ant-row .wea-tab {
+    height: 45px !important;
+
+    :deep .ant-tabs-nav::before {
+      display: none;
+    }
+  }
+
+  .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
+    height: 45px !important;
   }
 
   .treeRow {
@@ -570,31 +628,35 @@ onMounted(() => {
     display: none;
   }
 }
+
 :deep .CreateProcess1 {
-    .ant-form-item {
-        margin-bottom: 20px !important;
-    }
-    .ant-form-item-label{
-        width: 100px !important;
-    }
-    .processTitle .ant-row .ant-col .ant-form-item-required {
-        color: rgba(0, 0, 0, 0.88) !important;
-    }
+  .ant-form-item {
+    margin-bottom: 20px !important;
+  }
 
-    .processTitle .ant-row .form-tip1 {
-        color: rgba(0, 0, 0, 0.88) !important;
-    }
+  .ant-form-item-label {
+    width: 100px !important;
+  }
 
-    .ProcessName {
-        color: rgba(0, 0, 0, 0.88) !important;
-    }
+  .processTitle .ant-row .ant-col .ant-form-item-required {
+    color: rgba(0, 0, 0, 0.88) !important;
+  }
 
-    .form-tip {
-        font-size: 12px;
-        margin-bottom: 12px;
-        color: #606266;
-    }
+  .processTitle .ant-row .form-tip1 {
+    color: rgba(0, 0, 0, 0.88) !important;
+  }
+
+  .ProcessName {
+    color: rgba(0, 0, 0, 0.88) !important;
+  }
+
+  .form-tip {
+    font-size: 12px;
+    margin-bottom: 12px;
+    color: #606266;
+  }
 }
+
 :deep .iconBox {
   text-align: center;
 

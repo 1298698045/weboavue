@@ -1,14 +1,17 @@
 <template>
-  <div class="todoList myContractWrap">
+  <div class="todoList tablistViewWrap">
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
           <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
         </div>
-        <span class="headerTitle">我的合同</span>
+        <span class="headerTitle">{{ pageTitle }}</span>
       </div>
       <div class="headerRight">
-        <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
+        <a-button type="primary" class="ml10" @click="handleNew" v-if="isNew">新建</a-button>
+        <a-button type="primary" class="ml10" v-if="layoutName == 'ContractAudit'">批量删除</a-button>
+        <a-button type="primary" class="ml10" v-if="layoutName == 'ContractAudit'">审计抽查</a-button>
+        <a-button type="primary" class="ml10" v-if="layoutName == 'ContractAudit'">生成审计报告</a-button>
         <!-- <a-button type="primary" class="ml10" @click="handleNewForm">新建合同单</a-button> -->
         <!-- <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
           @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false">
@@ -35,74 +38,14 @@
                 <div class="tabsBtn">
                 </div>
               </div>
-              <HighSearch @update-height="changeHeight" @search="handleSearch" :entityApiName="data.queryParams.entityName">
+              <HighSearch @update-height="changeHeight" @search="handleSearch"
+                :entityApiName="data.queryParams.entityName">
               </HighSearch>
             </div>
             <!-- <list-form-search ref="searchRef" @search="handleSearch" entityApiName="OfficialDocumentIn"
               :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search> -->
-            <div class="statistics" v-if="isStatistics">
-              <div class="statisticItem">
-                <div class="statisticLeft">
-                  <div class="statisticName">合同总数</div>
-                  <div class="statisticCount">
-                    {{ statistics.ContractNumber }}
-                  </div>
-                </div>
-                <div class="statisticRight">
-                  <p class="icon">
-                    <FileTextOutlined />
-                  </p>
-                </div>
-              </div>
-              <div class="statisticItem">
-                <div class="statisticLeft">
-                  <div class="statisticName">合同总金额</div>
-                  <div class="statisticCount">{{ statistics.Total }}</div>
-                </div>
-                <div class="statisticRight">
-                  <p class="icon">
-                    <PayCircleOutlined />
-                  </p>
-                </div>
-              </div>
-              <div class="statisticItem">
-                <div class="statisticLeft">
-                  <div class="statisticName">履行中金额</div>
-                  <div class="statisticCount">
-                    {{ statistics.ImplementTotal }}
-                  </div>
-                </div>
-                <div class="statisticRight">
-                  <p class="icon">
-                    <PayCircleOutlined />
-                  </p>
-                </div>
-              </div>
-              <div class="statisticItem">
-                <div class="statisticLeft">
-                  <div class="statisticName">暂停合同总金额</div>
-                  <div class="statisticCount">{{ statistics.StopTotal }}</div>
-                </div>
-                <div class="statisticRight">
-                  <p class="icon">
-                    <PayCircleOutlined />
-                  </p>
-                </div>
-              </div>
-              <div class="statisticItem">
-                <div class="statisticLeft">
-                  <div class="statisticName">解除合同总金额</div>
-                  <div class="statisticCount">
-                    {{ statistics.SuspendedTotal }}
-                  </div>
-                </div>
-                <div class="statisticRight">
-                  <p class="icon">
-                    <PayCircleOutlined />
-                  </p>
-                </div>
-              </div>
-            </div>
+            <!-- <div class="statistics" v-if="isStatistics">
+            </div> -->
             <div class="wea-tabContent" :style="{ height: tableHeight + 'px' }" ref="tabContent">
               <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
                 :isCollapsed="isCollapsed">
@@ -113,11 +56,16 @@
       </a-row>
     </div>
     <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false"
-      :title="data.recordId ? '编辑' : '新建'" @success="handleSearch('')" :id="recordId" :objectTypeCode="objectTypeCode"
-      :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue"
+      :title="data.recordId ? '编辑' + pageTitle : '新建' + pageTitle" @success="handleSearch('')" :id="recordId"
+      :objectTypeCode="data.queryParams.objectTypeCode" :entityApiName="data.queryParams.entityName"
+      :relatedObjectAttributeValue="relatedObjectAttributeValue"
       :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
     <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="isDelete = false" @ok="handleSearch('')"
-      :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
+      :sObjectName="data.queryParams.entityName" :recordId="recordId" :objTypeCode="data.queryParams.objectTypeCode"
+      :external="external" />
+    <RelatedDetail v-if="isDetail" :isShow="isDetail" :sObjectName="data.queryParams.entityName"
+      :title="pageTitle + '详情'" :objectTypeCode="data.queryParams.objectTypeCode" :id="recordId"
+      @cancel="isDetail = false" />
   </div>
 </template>
 <script setup>
@@ -134,13 +82,12 @@ import Interface from "@/utils/Interface.js";
 import { message } from "ant-design-vue";
 import Ntable from "@/components/Ntable.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
-import SearchQuery from "@/components/listView/SearchQuery.vue";
 import { useRouter, useRoute } from "vue-router";
-import useWorkAdmin from "@/utils/flow/workAdmin";
 import CommonFormModal from "@/components/listView/CommonFormModal.vue";
 import Delete from "@/components/listView/Delete.vue";
 import { formTreeData, girdFormatterValue } from "@/utils/common.js";
 import HighSearch from "@/components/HighSearch.vue";
+import RelatedDetail from "@/components/commonModal/RelatedDetail.vue";
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -156,17 +103,15 @@ let data = reactive({
   ],
   tabs: [],
   activeKey: 0,
-  entityType: '800',
+  entityType: '',
   queryParams: {
     filterId: '',
-    objectTypeCode: '1010',
-    entityName: 'Contract',
-    //filterQuery:'\nCreatedBy\teq-userid',
-    //displayColumns:'',
+    objectTypeCode: '',
+    entityName: '',
     sort: 'CreatedOn',
     order: 'desc'
   },
-  layoutName: 'myContract',
+  layoutName: '',
   isModal: false,
   isCirculation: false,
   searchVal: "",
@@ -182,8 +127,8 @@ let data = reactive({
   SearchFields: [],
   isCommon: false,
   recordId: '',
-  objectTypeCode: '1010',
-  sObjectName: 'Contract',
+  objectTypeCode: '',
+  sObjectName: '',
   relatedObjectAttributeValue: '',
   relatedObjectAttributeName: '',
   isDelete: false,
@@ -203,11 +148,12 @@ let data = reactive({
   entityId: '',
   rowRecord: {},
   top: 0,
-  isStatistics: true,
+  isStatistics: false,
   statistics: {},
-  hightSearchParams: {}
+  hightSearchParams: {},
+  pageTitle: ''
 });
-const { queryParams, hightSearchParams, statistics, isStatistics, top, rowRecord, entityId, isNew, isDetail, fileList, uploadData, headers, isDelete, deleteDesc, external, isCommon, recordId, objectTypeCode, sObjectName, relatedObjectAttributeValue, relatedObjectAttributeName, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
+const { pageTitle, queryParams, hightSearchParams, statistics, isStatistics, top, rowRecord, entityId, isNew, isDetail, fileList, uploadData, headers, isDelete, deleteDesc, external, isCommon, recordId, objectTypeCode, sObjectName, relatedObjectAttributeValue, relatedObjectAttributeName, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal, entityType, layoutName,
   isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields } = toRefs(data);
 const tabContent = ref(null);
 const contentRef = ref(null);
@@ -234,15 +180,15 @@ function changeHeight(h) {
   if (data.isStatistics) {
     data.tableHeight = height - 100;
   }
-  //data.top = (document.documentElement.clientHeight - 565) / 2;
+  data.top = (document.documentElement.clientHeight - 565) / 2;
 
 }
 
 const handleSearch = (obj) => {
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '1010',
-    entityName: 'Contract',
+    objectTypeCode: data.queryParams.objectTypeCode,
+    entityName: data.queryParams.entityName,
     sort: 'CreatedOn',
     order: 'desc'
   };
@@ -307,7 +253,8 @@ const getColumns = (id) => {
           sortable: true,
           formatter: function formatter(value, row, index) {
             let url = row.viewUrl;
-            return '<a style="color:#015ba7;font-size:13px;" href="' + url + '" target="_blank">' + girdFormatterValue(item.name, row) + '</a>';
+            let val = girdFormatterValue(item.name, row);
+            return '<a class="namefield" title="' + val + '" href="' + url + '" target="_blank">' + val + '</a>';
           }
         });
       }
@@ -403,8 +350,8 @@ const changeTab = (e) => {
   data.activeKey = e;
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '1010',
-    entityName: 'Contract',
+    objectTypeCode: data.queryParams.objectTypeCode,
+    entityName: data.queryParams.entityName,
     sort: 'CreatedOn',
     order: 'desc'
   };
@@ -454,16 +401,21 @@ const handleCommonCancel = (params) => {
 
 //打开详情
 const handleDetail = (id, viewUrl) => {
+  if (data.queryParams.entityName == 'Contract') {
+    let url = router.resolve({
+      name: "ContractDeatil",
+      query: {
+        id: id,
+        entityType: data.queryParams.entityName,
+        objectTypeCode: data.queryParams.objectTypeCode
+      },
+    });
+    window.open(url.href);
+  } else {
+    data.recordId = id;
+    data.isDetail = true;
+  }
   //window.open(viewUrl)
-  let url = router.resolve({
-    name: "ContractDeatil",
-    query: {
-      id: id,
-      entityType: data.queryParams.entityName,
-      objectTypeCode: data.queryParams.objectTypeCode
-    },
-  });
-  window.open(url.href);
 }
 window.handleDetail = handleDetail;
 //获取统计数据
@@ -477,40 +429,154 @@ const getStatistics = () => {
     data.statistics = res.data.listData.Table[0];
   });
 };
+const loadPage = () => {
+  data.isNew = false;
+  data.activeKey = 0;
+  let moduleName = window.localStorage.getItem('moduleName') || '';
+  let menuName = window.localStorage.getItem('menuName') || '';
+  let modules = window.localStorage.getItem('modules') || '';
+  modules = modules ? JSON.parse(modules) : '';
+  if (modules && modules.length) {
+    for (var i = 0; i < modules.length; i++) {
+      if (modules[i].Label == moduleName) {
+        for (var j = 0; j < modules[i].tabs.length; j++) {
+          if (modules[i].tabs[j].name == menuName) {
+            data.pageTitle = modules[i].tabs[j].navAction.label || '';
+          }
+        }
+      }
+    }
+  }
+  //合同审计
+  if (menuName == 'ContractAuditReport') {
+    data.queryParams = {
+      filterId: '',
+      objectTypeCode: '10185',
+      entityName: 'ContractAudit',
+      search: '',
+      sort: 'CreatedOn',
+      order: 'desc'
+    }
+    data.entityType = 'C85';
+    data.layoutName = 'ContractAudit';
+    data.isNew = true;
+  }
+  //合同搜索
+  else if (menuName == 'ContractSearch') {
+    data.queryParams = {
+      filterId: '',
+      objectTypeCode: '1010',
+      entityName: 'Contract',
+      search: '',
+      sort: 'CreatedOn',
+      order: 'desc'
+    }
+    data.entityType = '800';
+    data.layoutName = 'Contract';
+  }
+  //印花税
+  else if (menuName == 'StampDuty') {
+    data.queryParams = {
+      filterId: '',
+      objectTypeCode: '10190',
+      entityName: 'StampDuty',
+      search: '',
+      sort: 'CreatedOn',
+      order: 'desc'
+    }
+    data.entityType = 'C90';
+    data.layoutName = 'StampDuty';
+    data.isNew = true;
+  }
+  //合同报表-明细
+  else if (menuName == 'ContractReport') {
+    data.queryParams = {
+      filterId: '',
+      objectTypeCode: '1011',
+      entityName: 'ContractDetail',
+      search: '',
+      sort: 'CreatedOn',
+      order: 'desc'
+    }
+    data.entityType = 'C81';
+    data.layoutName = 'ContractDetail';
+  }
+  //合同设置-分类
+  else if (menuName == 'ContractSetup') {
+    data.queryParams = {
+      filterId: '',
+      objectTypeCode: '10187',
+      entityName: 'ContractCategory',
+      search: '',
+      sort: 'CreatedOn',
+      order: 'desc'
+    }
+    data.entityType = 'C87';
+    data.layoutName = 'ContractCategory';
+    data.isNew = true;
+  }
+  //合同提醒
+  else if (menuName == 'contractremind') {
+    data.queryParams = {
+      filterId: '',
+      objectTypeCode: '1010',
+      entityName: 'Contract',
+      search: '',
+      sort: 'CreatedOn',
+      order: 'desc'
+    }
+    data.entityType = '800';
+    data.layoutName = 'ContractRemind';
+  }
+  //合同变更
+  else if (menuName == 'ContractChangeOwner') {
+    data.queryParams = {
+      filterId: '',
+      objectTypeCode: '10189',
+      entityName: 'ContractChange',
+      search: '',
+      sort: 'CreatedOn',
+      order: 'desc'
+    }
+    data.entityType = 'C93';
+    data.layoutName = 'ContractChange';
+    data.isNew = true;
+  }
+  //发票管理
+  else if (menuName == 'Invoice') {
+    data.queryParams = {
+      filterId: '',
+      objectTypeCode: '1090',
+      entityName: 'Invoice',
+      search: '',
+      sort: 'CreatedOn',
+      order: 'desc'
+    }
+    data.entityType = 'I0E';
+    data.layoutName = 'invoiceOwner';
+  }
+  setTimeout(function () {
+    getTabs();
+    //getStatistics();
+  }, 1000)
+}
 watch(() => route, (newVal, oldVal) => {
   if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/_ui/contract/home/my') {
-      //getTreeData();
-      data.queryParams = {
-        filterId: '',
-        objectTypeCode: '1010',
-        entityName: 'Contract',
-        //filterQuery: '',
-        search: '',
-        sort: 'CreatedOn',
-        order: 'desc'
-      }
-      data.entityType = '800';
-      data.layoutName = 'myContract';
-      setTimeout(function () {
-        getTabs();
-      }, 1000)
-    }
+    loadPage();
   }
 }, { deep: true, immediate: true })
 onMounted(() => {
   changeHeight();
-  //data.top = (document.documentElement.clientHeight - 565) / 2;
+  data.top = (document.documentElement.clientHeight - 565) / 2;
   window.addEventListener('resize', changeHeight)
-  getTabs();
-  getStatistics();
+  loadPage();
 })
 </script>
 <style lang="less">
 @import "@/style/flow/treeList.less";
 </style>
 <style lang="less" scoped>
-.myContractWrap {
+.tablistViewWrap {
   .wea-left-tree-search {
     padding-left: 14px;
   }
@@ -519,8 +585,9 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #eaeaea;
+    //border-bottom: 1px solid #eaeaea;
     padding-right: 0;
+    border: 0 !important;
   }
 
   .treeRow {
@@ -644,6 +711,15 @@ onMounted(() => {
       color: #666;
       margin-left: 1px;
     }
+  }
+
+  :deep .namefield {
+    color: #1677ff;
+    text-decoration: none;
+    max-width: 500px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

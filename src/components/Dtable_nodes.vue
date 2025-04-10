@@ -76,7 +76,7 @@
       //     return data0
       // },
       loadFilter: loadFilter,
-      method: "get",
+      method: "post",
       columns: [columns],
       queryParams: queryParams,
       // data: tableList,

@@ -1,40 +1,31 @@
 <template>
   <div>
-    <a-modal
-      v-model:open="props.isShow"
-      width="1200px"
-      :maskClosable="false"
-      @cancel="handleCancel"
-      @ok="handleSubmit"
-    >
+    <a-modal v-model:open="props.isShow" width="1200px" :maskClosable="false" @cancel="handleCancel" @ok="handleSubmit">
       <template #title>
         <div>
           {{ title }}
         </div>
       </template>
       <div class="modalContainer">
-        <div class="modalCenter" style="padding: 10px 15px!important;max-height: inherit !important;" :style="{ height: height + 'px!important' }">
+        <div class="modalCenter" style="padding: 10px 15px!important;max-height: inherit !important;"
+          :style="{ height: height + 'px!important' }">
           <div class="searchBox">
-              <div class="searchForm" :class="{'active':isAdvance}">
-                  <a-input-search
-                      v-model:value="searchVal"
-                      placeholder="请输入名称"
-                      size="large"
-                      @search="onSearch"
-                      >
-                  </a-input-search>
-                  <a-button class="ml10" @click="advancedSearch">
-                      高级搜索
-                  </a-button>
+            <div class="searchForm hightSearchBox">
+              <a-input-search v-model:value="searchVal" placeholder="请输入名称" size="large" @search="onSearch">
+              </a-input-search>
+              <a-button class="ml10" @click="advancedSearch">
+                高级搜索
+              </a-button>
+            </div>
+            <div class="search-modal" v-if="isAdvance">
+              <div class="search-container">
+                <list-form-search ref="searchRef" @search="handleAdvanceSearch"></list-form-search>
               </div>
-              <div class="search-modal" v-if="isAdvance">
-                  <div class="search-container">
-                      <list-form-search ref="searchRef" @search="handleAdvanceSearch"></list-form-search>
-                  </div>
-                  <div class="search-footer"></div>
-              </div>
+              <div class="search-footer"></div>
+            </div>
           </div>
-          <Dtable ref="gridRef" :singleSelect="true" name="datagridFilter" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed" :loadFilter="loadFilter"></Dtable>
+          <Dtable ref="gridRef" :singleSelect="true" name="datagridFilter" :columns="columns" :gridUrl="gridUrl"
+            :tableHeight="tableHeight" :isCollapsed="isCollapsed" :loadFilter="loadFilter"></Dtable>
         </div>
       </div>
       <template #footer>
@@ -82,10 +73,10 @@ const props = defineProps({
   entityApiName: String,
   lookEntityApiName: String,
   lookObjectTypeCode: [Number, String],
-  filterQuery:String
+  filterQuery: String
 });
 const formRef = ref();
-const emit = defineEmits(["cancel","select"]);
+const emit = defineEmits(["cancel", "select"]);
 const handleCancel = () => {
   emit("cancel", false);
 };
@@ -94,10 +85,10 @@ const data = reactive({
   title: "通用选择",
   height: document.documentElement.clientHeight - 300,
   columns: [
-      {
-        field: 'ids',
-        checkbox: true
-      },
+    {
+      field: 'ids',
+      checkbox: true
+    },
   ],
   isCollapsed: false,
   tableHeight: document.documentElement.clientHeight - 370,
@@ -128,20 +119,24 @@ const advancedSearch = () => {
   data.isAdvance = !data.isAdvance;
 };
 const handleAdvanceSearch = (e) => {
+  data.isAdvance=false;
   console.log("高级搜索", e);
-  if(props.filterQuery){
-    e+=props.filterQuery;
+  if (props.filterQuery) {
+    e += props.filterQuery;
   }
-  gridRef.value.loadGrid({search: data.searchVal, filterQuery: e});
+  data.queryParams.search = data.searchVal;
+  data.queryParams.filterQuery = e;
+  gridRef.value.loadGrid(data.queryParams);
 }
-const handleMenu = (e)=> {
-  let item = data.menus.find(item=>item.key==e.key);
+const handleMenu = (e) => {
+  let item = data.menus.find(item => item.key == e.key);
   data.currentMenu = item.name;
   data.currentKey = item.key;
   getLook();
 }
 const onSearch = (e) => {
-  gridRef.value.loadGrid({search: e});
+  data.queryParams.search = e;
+  gridRef.value.loadGrid(data.queryParams);
 }
 onMounted(() => {
   window.addEventListener("resize", (e) => {
@@ -157,10 +152,10 @@ const loadFilter = (res) => {
   console.log("fields", fields);
   var data0 = { rows: [], total: 0 }
   if (res) {
-    if(res.nodes){
+    if (res.nodes) {
       let list = [];
-      fields.forEach(field=>{
-        list = res.nodes.map(row=>{
+      fields.forEach(field => {
+        list = res.nodes.map(row => {
           // if(row[field] && row[field].__typeName == 'TextField'){
           //   row[field] = row[field].textValue;
           // }else if(row[field] && row[field].__typeName == 'DateTimeField'){
@@ -170,61 +165,61 @@ const loadFilter = (res) => {
           // }else {
           //   row[field] = row[field].value || '';
           // }
-          row[field]=girdFormatterValue(field, row);
+          row[field] = girdFormatterValue(field, row);
           row.LIST_RECORD_ID = row.id;
           return row;
         })
       })
       data0.rows = list;
-    }else {
+    } else {
       data0.rows = res;
     }
   }
-  data0.total = res&&res.totalCount ? Number(res.totalCount) : data0.rows.length;
+  data0.total = res && res.totalCount ? Number(res.totalCount) : data0.rows.length;
   return data0
 }
 
 const getConfig = () => {
   let obj = {
-      actions: [{
-          id: "138;a",
-          descriptor: "",
-          callingDescriptor: "UNKNOWN",
-          params: {
-            targetApiName: props.lookEntityApiName,
-            q: "",
-            searchType: "",
-            objectApiName: props.entityApiName,
-            fieldApiName: props.field,
-            body: "",
-          }
-      }]
+    actions: [{
+      id: "138;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        targetApiName: props.lookEntityApiName,
+        q: "",
+        searchType: "",
+        objectApiName: props.entityApiName,
+        fieldApiName: props.field,
+        body: "",
+      }
+    }]
   };
   let d = {
-      message: JSON.stringify(obj)
+    message: JSON.stringify(obj)
   };
-  proxy.$post(Interface.lookupObj.column, d).then(res=>{
-      let { fields, nameField } = res.actions[0].returnValue;
-      fields.forEach(item=>{
-        data.columns.push({
-          field: item.column,
-          title: item.label,
-          sortable: item.isSortable,
-        });
+  proxy.$post(Interface.lookupObj.column, d).then(res => {
+    let { fields, nameField } = res.actions[0].returnValue;
+    fields.forEach(item => {
+      data.columns.push({
+        field: item.column,
+        title: item.label,
+        sortable: item.isSortable,
       });
-      data.nameField = nameField;
-      data.queryParams.displayColumns = fields.map(item=>item.column).join(',');
-      gridRef.value.loadGrid(data.queryParams);
+    });
+    data.nameField = nameField;
+    data.queryParams.displayColumns = fields.map(item => item.column).join(',');
+    gridRef.value.loadGrid(data.queryParams);
   })
 }
 getConfig();
 const handleSubmit = () => {
   let list = gridRef.value.getCheckList();
   console.log("checklist", list);
-  if(list.length){
-      emit("select", list[0], data.nameField);
-  }else {
-      Toast("至少选择一项！")
+  if (list.length) {
+    emit("select", list[0], data.nameField);
+  } else {
+    message.error("请至少选择一项！")
   }
 };
 </script>
@@ -232,63 +227,70 @@ const handleSubmit = () => {
 @import url("@/style/modal.less");
 </style>
 <style lang="less">
-.searchForm{
+.searchForm {
   width: 300px;
   margin-bottom: 10px;
   margin-left: auto;
   display: flex;
-  .ant-input-search{
+
+  .ant-input-search {
+    height: 32px !important;
+
+    input {
       height: 32px !important;
-      input{
-          height: 32px !important;
-      }
-  }
-  .ant-btn{
-      /* margin-left: -1px; */
-      /* border-left: none; */
-  }
-  
-  :where(.css-dev-only-do-not-override-kqecok).ant-input-search-large .ant-input-search-button{
-      width: 32px !important;
-      height: 32px !important;
+    }
   }
 
-  &.active{
-      .ant-input-search{
-          margin-right: 86px;
-      }
-      .ant-btn.searchBtn{
-          border-bottom: none;
-          position: absolute;
-          right: 0;
-          height: 43px;
-          z-index: 999999;
-          box-shadow: none;
-          border-left: 1px solid #dadada;
-      }
+
+  :where(.css-dev-only-do-not-override-kqecok).ant-input-search-large .ant-input-search-button {
+    width: 32px !important;
+    height: 32px !important;
   }
-  
-}
-.searchBox{
-  position: relative;
-  .search-modal{
-      width: 100%;
+
+  &.active {
+    .ant-input-search {
+      margin-right: 86px;
+    }
+
+    .ant-btn.searchBtn {
+      border-bottom: none;
       position: absolute;
-      height: 150px;
-      border: 1px solid #dadada;
-      z-index: 9999;
-      /* top: 100%; */
-      box-shadow: 0 0 2px #dadada;
-      background: #fff;
-      .search-container{
-          padding-left: 25px;
-          padding-right: 50px;
-          padding-top: 15px;
-          padding-bottom: 8px;
-      }
-      .search-footer{
-          
-      }
+      right: 0;
+      height: 43px;
+      z-index: 999999;
+      box-shadow: none;
+      border-left: 1px solid #dadada;
+    }
+  }
+
+}
+
+.searchBox {
+  position: relative;
+
+  .search-modal {
+    width: 100%;
+    position: absolute;
+    height: 150px;
+    border: 1px solid #dadada;
+    z-index: 9999;
+    /* top: 100%; */
+    box-shadow: 0 0 2px #dadada;
+    background: #fff;
+
+    .search-container {
+      padding-left: 25px;
+      padding-right: 50px;
+      padding-top: 15px;
+      padding-bottom: 8px;
+    }
+
+  }
+
+  .hightSearchBox {
+    .ant-btn.ant-btn-lg {
+      height: 32px !important;
+    }
   }
 }
 </style>

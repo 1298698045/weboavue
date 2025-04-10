@@ -41,7 +41,8 @@
               </div>
             </div>
           </div>
-          <RelatedList v-if="activeKey == 1" :id="props.id" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :fullName="''" />
+          <RelatedList v-if="activeKey == 1" :id="props.id" :objectTypeCode="props.objectTypeCode"
+            :entityApiName="props.sObjectName" :fullName="''" />
         </div>
       </div>
       <template #footer>
@@ -52,10 +53,10 @@
       </template>
     </a-modal>
     <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false"
-      :title="data.recordId ? '编辑' : '新建'" @success="getDetail" :id="recordId" :objectTypeCode="objectTypeCode"
-      :entityApiName="sObjectName"></common-form-modal>
+      :title="data.recordId ? '编辑' : '新建'" @success="getDetail" :id="recordId" :objectTypeCode="props.objectTypeCode"
+      :entityApiName="props.sObjectName"></common-form-modal>
     <addInvoice :isShow="isNew" v-if="isNew" :id="props.id" @ok="getDetail" @cancel="isNew = false" :entityId="entityId"
-      :entityApiName="sObjectName" :objTypeCode="objectTypeCode" :name="'发票'" />
+      :entityApiName="props.sObjectName" :objTypeCode="props.objectTypeCode" :name="'发票'" />
     <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
   </div>
 </template>
@@ -91,7 +92,8 @@ const { proxy } = getCurrentInstance();
 const props = defineProps({
   isShow: Boolean,
   id: String,
-  InvoiceType: String
+  sObjectName: String,
+  objectTypeCode: String,
 });
 const formRef = ref();
 const emit = defineEmits(["cancel"]);
@@ -102,25 +104,23 @@ const data = reactive({
   height: "",
   isCommon: false,
   recordId: '',
-  objectTypeCode: '1090',
-  sObjectName: 'Invoice',
   isShowDetail: true,
   layoutList: [],
   list: [],
   isPdf: false,
   pdfParams: {},
   isNew: false,
-  entityId:'',
-  activeKey:0,
+  entityId: '',
+  activeKey: 0,
   tabs: [
-  {
+    {
       label: "基本信息",
     },
     {
       label: "相关列表",
     }]
 });
-const { activeKey, tabs, entityId, isNew, isPdf, pdfParams, list, layoutList, height, isCommon, recordId, objectTypeCode, sObjectName, isShowDetail } = toRefs(data);
+const { activeKey, tabs, entityId, isNew, isPdf, pdfParams, list, layoutList, height, isCommon, recordId, isShowDetail } = toRefs(data);
 const getDetail = () => {
   // data.isShowDetail=false;
   // nextTick(()=>{
@@ -133,7 +133,7 @@ const getDetail = () => {
       callingDescriptor: "UNKNOWN",
       params: {
         recordId: props.id,
-        entityApiName: data.sObjectName,
+        entityApiName: props.sObjectName,
         defaultFieldValues: {
           entityId: ""
         },
@@ -184,10 +184,11 @@ onMounted(() => {
 @import url("@/style/modal.less");
 
 .reimburseDetailModal {
-  .tabWrap{
+  .tabWrap {
     position: relative;
     top: -5px;
   }
+
   .detailInfo {
     .detailTitle {
       font-size: 16px;
@@ -263,19 +264,21 @@ onMounted(() => {
     }
 
     .fh-section-label {
-      width: 100%;
-      font-weight: 700;
-      height: 30px;
-      line-height: 30px;
-      padding-left: 10px;
-
-      font-size: 14px;
-      color: #868686;
-      border-bottom: 1px solid #e2e2e2;
-      background-color: #f4faff !important;
-      border-left: 2px solid #2b9dec;
-      border-radius: 0 !important;
+      font-weight: bold;
       margin-bottom: 10px;
+      // width: 100%;
+      // font-weight: 700;
+      // height: 30px;
+      // line-height: 30px;
+      // padding-left: 10px;
+
+      // font-size: 14px;
+      // color: #868686;
+      // border-bottom: 1px solid #e2e2e2;
+      // background-color: #f4faff !important;
+      // border-left: 2px solid #2b9dec;
+      // border-radius: 0 !important;
+      // margin-bottom: 10px;
     }
 
     .slds-form-element {

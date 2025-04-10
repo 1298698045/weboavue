@@ -1,5 +1,5 @@
 <template>
-  <div class="ContentWrap">
+  <div class="PermissionWrap">
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
@@ -41,8 +41,9 @@
           <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
             :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
           <div style="height: 100%" ref="contentRef">
-            <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch"
-              :entityApiName="sObjectName" :SearchFields="SearchFields"></list-form-search>
+            <!-- <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch"
+              :entityApiName="sObjectName" :SearchFields="SearchFields"></list-form-search> -->
+              <HighSearch @update-height="changeHeight" @search="handleSearch" :entityApiName="sObjectName"></HighSearch>
             <div class="tableWrap" ref="tablelist">
               <div class="empty" v-if="!dataSource.length">
                 <img src="/src/assets/img/empty.png" alt="" />
@@ -74,9 +75,10 @@
                   </template>
                   <template v-if="column.key === 'Depth'">
                     <div>
-                      <a-select v-model:value="record.Depth" placeholder="请选择权限" @change="(e) => { changeDepth(e, record) }">
-                        <a-select-option v-for="(item, index) in DepthList" :value="item.value"
-                          :key="index">{{ item.label }}</a-select-option>
+                      <a-select v-model:value="record.Depth" placeholder="请选择权限"
+                        @change="(e) => { changeDepth(e, record) }">
+                        <a-select-option v-for="(item, index) in DepthList" :value="item.value" :key="index">{{
+                          item.label }}</a-select-option>
                       </a-select>
                     </div>
                   </template>
@@ -102,9 +104,9 @@
     <Delete v-if="data.isDelete" :isShow="data.isDelete" :desc="data.deleteDesc" @cancel="cancelDelete"
       @ok="refreshData" :sObjectName="sObjectName" :recordId="data.recordId" :objTypeCode="objectTypeCode"
       :external="data.external" />
-    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false" :title="data.recordId ? '编辑' : '新建'"
-      @success="refreshData" :id="data.recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"
-      :relatedObjectAttributeValue="relatedObjectAttributeValue"
+    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false"
+      :title="data.recordId ? '编辑' : '新建'" @success="refreshData" :id="data.recordId" :objectTypeCode="objectTypeCode"
+      :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue"
       :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
     <NewFolder v-if="isNewFolder" :isShow="isNewFolder" :treeData="gData" @cancel="isNewFolder = false"
       @success="refreshData" :id="data.recordId" :ParentId="data.SelectKey" :ParentIdName="data.SelectName" />
@@ -153,6 +155,7 @@ import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 import Delete from "@/components/listView/Delete.vue";
 import NewDepth from "@/components/information/NewDepth.vue";
 import { refresh } from "less";
+import HighSearch from "@/components/HighSearch.vue";
 const x = 3;
 const y = 2;
 const z = 1;
@@ -390,6 +393,7 @@ let data = reactive({
   isCirculation: false,
   isNew: false,
   searchVal: '',
+  search: '',
   value: "",
   isDelete: false,
   deleteDesc: '确定要删除吗？',
@@ -590,12 +594,13 @@ let data = reactive({
     { label: '读/写', value: '4', },
     { label: '读/写/删', value: '8', },
     { label: '管理（读/写/删/移动）', value: '16', },
-  ]
+  ],
+  hightSearchParams: {}
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
 };
-const { DepthList, dataSource, columns, pagination, CheckList, isConfirm, confirmText, confirmTitle, isNewFolder, selectedKeys, SelectName, SelectKey, relatedObjectAttributeValue, relatedObjectAttributeName, recordId, objectTypeCode, sObjectName, isCommon, isCollapsed, userId, tableHeight, fieldNames, activeKey, isModal, isCirculation, isNew, value, searchVal, SearchFields } = toRefs(data);
+const { hightSearchParams, search, DepthList, dataSource, columns, pagination, CheckList, isConfirm, confirmText, confirmTitle, isNewFolder, selectedKeys, SelectName, SelectKey, relatedObjectAttributeValue, relatedObjectAttributeName, recordId, objectTypeCode, sObjectName, isCommon, isCollapsed, userId, tableHeight, fieldNames, activeKey, isModal, isCirculation, isNew, value, searchVal, SearchFields } = toRefs(data);
 const tabContent = ref(null);
 const contentRef = ref(null);
 let formSearchHeight = ref(null);
@@ -611,7 +616,7 @@ const getTreeData = () => {
       descriptor: "",
       callingDescriptor: "UNKNOWN",
       params: {
-        search:data.searchVal
+        search: data.searchVal
       }
     }]
   };
@@ -690,23 +695,19 @@ onMounted(() => {
   }
   data.pagination.current = 1;
   //getQuery();
+  changeHeight();
   window.addEventListener('resize', changeHeight)
 })
-function changeHeight(h) {
-  // if(typeof h == 'number'){
-  //   formSearchHeight.value = h;
-  // }
-  // let contentHeight = contentRef.value.clientHeight;
-  // let tabsHeight = 46;
-  // let height = contentHeight - formSearchHeight.value;
-  // data.tableHeight = height;
-  // console.log('data',data.tableHeight);
-  let h1 = tablelist.value.clientHeight;
-  data.tableHeight = h1 - 100;
-}
-const handleSearch = (filterQuery) => {
+
+const handleSearch = (obj) => {
   data.pagination.current = 1;
-  data.filterQuery = filterQuery;
+  //data.filterQuery = filterQuery;
+  if (obj) {
+    data.hightSearchParams = obj;
+  }
+  else {
+    data.hightSearchParams = {}
+  }
   getQuery();
 }
 const changeDepth = (e, item) => {
@@ -777,9 +778,9 @@ const cancelNew = (e) => {
 }
 const getQuery = () => {
   let filterQuery = '';
-  if (data.filterQuery) {
-    filterQuery = data.filterQuery;
-  }
+  // if (data.filterQuery) {
+  //   filterQuery = data.filterQuery;
+  // }
   if (data.SelectKey) {
     filterQuery += '\nObjectId\teq\t' + data.SelectKey;
   }
@@ -789,12 +790,19 @@ const getQuery = () => {
     objectTypeCode: data.objectTypeCode,
     entityName: data.sObjectName,
     filterQuery: filterQuery,
-    search: data.searchVal || '',
     page: data.pagination.current,
     rows: data.pagination.pageSize,
     sort: 'CreatedOn',
     order: 'desc',
     displayColumns: 'AccessObjectTypeCode,AccessObjectName,Name,CreatedBy,CreatedOn,Depth'
+  }
+  if (data.hightSearchParams) {
+    if (data.hightSearchParams.search) {
+      d.search = data.hightSearchParams.search;
+    }
+    if (data.hightSearchParams.filterCondition) {
+      d.filterCondition = data.hightSearchParams.filterCondition;
+    }
   }
   data.dataSource = [];
   data.pagination.total = 0;
@@ -845,14 +853,39 @@ const cancelRelease = () => {
     message.error("请至少勾选一项！")
   }
 }
+const handleShowSearch = () => {
+  data.isSearchModal = true;
+};
+const loadSearchQuery = (e) => {
+  data.isSearchModal = false;
+  data.filterCondition = JSON.stringify(e);
+  getQuery();
+};
+const loadGrid = () => {
+  getQuery();
+};
+function changeHeight(h) {
+  // if(typeof h == 'number'){
+  //   formSearchHeight.value = h;
+  // }
+  // let contentHeight = contentRef.value.clientHeight;
+  // let tabsHeight = 46;
+  // let height = contentHeight - formSearchHeight.value;
+  // data.tableHeight = height;
+  // console.log('data',data.tableHeight);
+  let h1 = tablelist.value.clientHeight;
+  data.tableHeight = h1 - 45;
+  getQuery();
+}
 watch(() => route, (newVal, oldVal) => {
   if (route.path == '/lightning/o/Contentfolder/permission') {
+    data.sObjectName='RecordAccessControl';
     getQuery();
   }
 }, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
-.ContentWrap {
+.PermissionWrap {
   width: 100%;
   height: 100%;
   background: #fff;
@@ -1057,6 +1090,7 @@ watch(() => route, (newVal, oldVal) => {
       //}
     }
   }
+
 }
 
 .information-tree :deep .ant-tree-title {
@@ -1081,7 +1115,7 @@ watch(() => route, (newVal, oldVal) => {
   }
 }
 
-.ContentWrap {
+.PermissionWrap {
   .headerBar .headerLeft .icon-circle-base {
     background: rgb(223, 88, 58);
   }
@@ -1201,7 +1235,7 @@ watch(() => route, (newVal, oldVal) => {
   }
 
   :deep .ant-table-wrapper .ant-table {
-    height: calc(~'100% - 35px');
+    height: calc(~'100% - 5px');
   }
 
   .empty {
@@ -1316,7 +1350,7 @@ input[aria-hidden=true] {
   display: none !important;
 }
 
-.ContentWrap .todo-content {
+.PermissionWrap .todo-content {
   width: unset !important;
 
   .ant-row {

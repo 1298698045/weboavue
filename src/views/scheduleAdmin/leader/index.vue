@@ -38,138 +38,149 @@
                     </div>
                 </div>
             </div> -->
-            <div class="calendarRight">
-                <ListView v-if="current==0" :layoutName="layoutName" />
-                <CalendarVue v-if="current==1" @openDateNew="handleOpenDateNew" />
+            <div class="calendarRight" v-if="showComponent">
+                <ListView v-if="current == 0" :layoutName="layoutName" />
+                <CalendarVue v-if="current == 1" @openDateNew="handleOpenDateNew" />
             </div>
         </div>
         <NewSchedule v-if="isSchedule" :isShow="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule v-if="isAddSchedule" :isShow="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal" :paramsTime="paramsTime" />
+        <AddSchedule v-if="isAddSchedule" :isShow="isAddSchedule" @cancel="cancelAddSchedule"
+            :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal"
+            :paramsTime="paramsTime" />
     </div>
 </template>
 <script setup>
-    // import "@/style/oldIcon/iconfont.css";
-    import {
-        ref,
-        watch,
-        reactive,
-        toRefs,
-        onMounted,
-        getCurrentInstance,
-        onUpdated,
-        defineProps,
-        defineExpose,
-        defineEmits,
-        nextTick
-    } from "vue";
-    import "@/style/schedule/icon/iconfont.css";
-    import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
-    import ListView from "@/components/schedule/list/index.vue";
-    import CalendarVue from "@/components/leaderSchedule/LeaderCalendar.vue";
+// import "@/style/oldIcon/iconfont.css";
+import {
+    ref,
+    watch,
+    reactive,
+    toRefs,
+    onMounted,
+    getCurrentInstance,
+    onUpdated,
+    defineProps,
+    defineExpose,
+    defineEmits,
+    nextTick
+} from "vue";
+import "@/style/schedule/icon/iconfont.css";
+import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
+import ListView from "@/components/schedule/list/index.vue";
+import CalendarVue from "@/components/leaderSchedule/LeaderCalendar.vue";
 
-    import NewSchedule from "@/components/schedule/NewSchedule.vue";
-    import AddSchedule from "@/components/schedule/AddSchedule.vue";
-    import dRadioGroup from "@/components/antDefault/Dradio-group.vue"
+import NewSchedule from "@/components/schedule/NewSchedule.vue";
+import AddSchedule from "@/components/schedule/AddSchedule.vue";
+import dRadioGroup from "@/components/antDefault/Dradio-group.vue"
 
-    import { message } from "ant-design-vue";
-    import Interface from "@/utils/Interface.js";
-    const { proxy } = getCurrentInstance();
-    import { useRouter, useRoute } from "vue-router";
-    const route = useRoute();
-    const router = useRouter();
-    const data = reactive({
-        current: 1,
-        isSchedule: false,
-        isAddSchedule: false,
-        id:'',
-        paramsTime: {
-            date: "",
-            time: ""
-        },
-        objectTypeCode:'4200',
-        sObjectName:'ActivityPointer',
-        layoutName:'LeaderActivityPointer',
-        showComponent:true
-    });
-    const { showComponent, current, isSchedule, isAddSchedule, id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
-    const handleAddSchedule = () => {
-        // data.isSchedule =  true;
-        data.isAddSchedule = true;
-    }
-    // 关闭新建
-    const cancelNewSchedule = (e) => {
-        data.isSchedule = e;
-    }
-    const cancelAddSchedule = (e) => {
-        data.isAddSchedule = e;
-    };
-    const handleOpenDateNew = (e) => {
-        console.log("parent", e);
-        data.paramsTime = e;
-        data.isAddSchedule = true;
-    }
-    const changeRadioGroup = (e) => {
-        data.current = e;
-    }
-    const handleNewScheduleVal = (e) => {
-        data.isAddSchedule = false;
-    }
-  watch(() => route, (newVal, oldVal) => {
-    data.current=1;
+import { message } from "ant-design-vue";
+import Interface from "@/utils/Interface.js";
+const { proxy } = getCurrentInstance();
+import { useRouter, useRoute } from "vue-router";
+const route = useRoute();
+const router = useRouter();
+const data = reactive({
+    current: 1,
+    isSchedule: false,
+    isAddSchedule: false,
+    id: '',
+    paramsTime: {
+        date: "",
+        time: ""
+    },
+    objectTypeCode: '4200',
+    sObjectName: 'ActivityPointer',
+    layoutName: 'LeaderActivityPointer',
+    showComponent: true
+});
+const { showComponent, current, isSchedule, isAddSchedule, id, paramsTime, objectTypeCode, sObjectName, layoutName } = toRefs(data);
+const handleAddSchedule = () => {
+    // data.isSchedule =  true;
+    data.isAddSchedule = true;
+}
+// 关闭新建
+const cancelNewSchedule = (e) => {
+    data.isSchedule = e;
+}
+const cancelAddSchedule = (e) => {
+    data.isAddSchedule = e;
+};
+const handleOpenDateNew = (e) => {
+    console.log("parent", e);
+    data.paramsTime = e;
+    data.isAddSchedule = true;
+}
+const changeRadioGroup = (e) => {
+    data.current = e;
+}
+const handleNewScheduleVal = (e) => {
+    data.isAddSchedule = false;
+}
+watch(() => route, (newVal, oldVal) => {
+    data.current = 1;
     data.showComponent = false;
     nextTick(() => (data.showComponent = true));
-  }, { deep: true, immediate: true })
+}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
-    .wrappper{
-        width: 100%;
-        height: 100%;
-        .calendarBody{
-            display: flex;
-            height: calc(~"100% - 52px");
-            .leftMenuWrapper{
-                min-width: 115px;
-                width: 115px;
-                height: 100%;
-                padding: 8px 8px;
-                border-right: 1px solid #e5e6eb;
+.wrappper {
+    width: 100%;
+    height: 100%;
+
+    .calendarBody {
+        display: flex;
+        height: calc(~"100% - 52px");
+
+        .leftMenuWrapper {
+            min-width: 115px;
+            width: 115px;
+            height: 100%;
+            padding: 8px 8px;
+            border-right: 1px solid #e5e6eb;
+            background: #fff;
+
+            .leftTabMenu {
+                width: 100%;
+                height: 40px;
+                line-height: 40px;
+                display: flex;
+                align-items: center;
+                color: #4e5969;
                 background: #fff;
-                .leftTabMenu{
-                    width: 100%;
-                    height: 40px;
-                    line-height: 40px;
-                    display: flex;
-                    align-items: center;
-                    color: #4e5969;
-                    background: #fff;
-                    cursor: pointer;
-                    box-sizing: border-box;
-                    margin-bottom: 4px;
-                    border-radius: 2px;
-                    &.active{
-                        color: var(--textColor);
-                        background: #f2f3f5;
-                    }
-                    .iconfont{
-                        padding-left: 10px;
-                        font-size: 14px;
-                    }
-                    .name{
-                        padding-left: 8px;
-                    }
-                    &:hover{
-                        background: #f2f3f5;
-                    }
-                    &.active:hover{
-                        font-weight: bold;
-                    }
+                cursor: pointer;
+                box-sizing: border-box;
+                margin-bottom: 4px;
+                border-radius: 2px;
+
+                &.active {
+                    color: var(--textColor);
+                    background: #f2f3f5;
+                }
+
+                .iconfont {
+                    padding-left: 10px;
+                    font-size: 14px;
+                }
+
+                .name {
+                    padding-left: 8px;
+                }
+
+                &:hover {
+                    background: #f2f3f5;
+                }
+
+                &.active:hover {
+                    font-weight: bold;
                 }
             }
-            .calendarRight{
-                flex: 1;
-                height: 100%;
-                background: #fff;
-            }
+        }
+
+        .calendarRight {
+            flex: 1;
+            height: 100%;
+            background: #fff;
         }
     }
+}
 </style>

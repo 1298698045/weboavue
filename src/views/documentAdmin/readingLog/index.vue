@@ -38,26 +38,26 @@
           <!-- <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
               :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div> -->
           <div style="height: 100%" ref="contentRef">
-            <div class="wea-tab">
-              <a-tabs v-model:activeKey="activeKey" @change="changeTab">
-                <a-tab-pane v-for="(item, index) in data.tabs" :key="index">
-                  <template #tab>
-                    <span>
-                      {{ item.label }}
-                    </span>
-                  </template>
-                </a-tab-pane>
-                <!-- <a-tab-pane key="2" tab="待处理" force-render></a-tab-pane>
-                    <a-tab-pane key="3" tab="待阅"></a-tab-pane> -->
-              </a-tabs>
-              <div class="tabsBtn">
-                <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-                    <a-button type="primary" class="ml10">批量发布</a-button>
-                    <a-button class="ml10">批量取消发布</a-button> -->
+            <div class="wea-header">
+              <div class="wea-tab">
+                <a-tabs v-model:activeKey="activeKey" @change="changeTab">
+                  <a-tab-pane v-for="(item, index) in data.tabs" :key="index">
+                    <template #tab>
+                      <span>
+                        {{ item.label }}
+                      </span>
+                    </template>
+                  </a-tab-pane>
+                </a-tabs>
+                <div class="tabsBtn">
+                </div>
               </div>
+              <HighSearch @update-height="changeHeight" @search="handleSearch"
+                :entityApiName="data.queryParams.entityName">
+              </HighSearch>
             </div>
-            <list-form-search ref="searchRef" @search="handleSearch" :entityApiName="queryParams.entityName"
-              :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search>
+            <!-- <list-form-search ref="searchRef" @search="handleSearch" :entityApiName="queryParams.entityName"
+              :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search> -->
             <div class="wea-tabContent" :style="{ height: tableHeight + 'px' }" ref="tabContent">
               <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
               <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
@@ -68,19 +68,6 @@
         </a-col>
       </a-row>
     </div>
-    <!-- 委派 -->
-    <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal"
-      v-if="isModal" />
-    <!-- 跳转 -->
-    <Jump v-if="isJump" :isShow="isJump" :paramsData="jumpData.params" @update-status="isJump = false" />
-    <!-- 加签 -->
-    <Countersign v-if="isCountersign" :isShow="isCountersign" :paramsData="CountersignData.params"
-      @update-status="isCountersign = false" />
-    <!-- 发布 -->
-    <ReleaseFlow v-if="isRelease" :isShow="isRelease" :id="ProcessInstanceId" @cancel="cancelRelase"></ReleaseFlow>
-    <NewCategory v-if="isCategory" @cancel="cancelCategory" :isShow="isCategory" :id="treeId" ObjectTypeCode="流程" />
-    <EditFlowDefine v-if="isEditFlow" :isShow="isEditFlow" :id="id" @cancel="cancelEditFlowDefine" />
-    <AddSchedule :isShow="isAddSchedule" @cancel="cancelAddSchedule" />
   </div>
 </template>
 <script setup>
@@ -96,13 +83,7 @@ import { message } from "ant-design-vue";
 // import Dtable from "@/components/Dtable.vue";
 import Ntable from "@/components/Ntable.vue";
 import ListFormSearch from "@/components/ListFormSearch.vue";
-
-import NewCategory from "@/components/workflow/NewCategory.vue";
-import EditFlowDefine from "@/components/workflow/EditFlowDefine.vue";
-import Delegate from "@/components/workflow/Delegate.vue";
-import Jump from "@/components/workflow/Jump.vue";
-import Countersign from "@/components/workflow/Countersign.vue";
-import ReleaseFlow from "@/components/workflow/ReleaseFlow.vue"
+import HighSearch from "@/components/HighSearch.vue";
 import { useRouter, useRoute } from "vue-router";
 import useWorkAdmin from "@/utils/flow/workAdmin";
 import AddSchedule from "@/components/schedule/AddSchedule.vue";
@@ -267,36 +248,6 @@ let data = reactive({
     children: 'children', title: 'name', key: 'id'
   },
   tabs0: [
-    {
-      label: "全部",
-      count: '',
-      filterquery: '',
-    },
-    {
-      label: "流转中",
-      count: '',
-      filterquery: '\nStateCode\teq\t1',
-    },
-    {
-      label: "已完成",
-      count: '',
-      filterquery: '\nStateCode\teq\t3',
-    },
-    {
-      label: "已退回",
-      count: '',
-      filterquery: '\nStateCode\teq\t6',
-    },
-    {
-      label: "已撤销",
-      count: '',
-      filterquery: '\nStateCode\teq\t5',
-    },
-    {
-      label: "草稿",
-      count: '',
-      filterquery: '\nStateCode\teq\t0',
-    }
   ],
   tabs: [],
   //tabs: tabList,
@@ -311,8 +262,6 @@ let data = reactive({
     sort: 'CreatedOn',
     order: 'desc'
   },
-  entityType: 'A08',
-  layoutName: 'DocumentInReadLog',
   isModal: false,
   isCirculation: false,
   searchVal: "",
@@ -326,15 +275,18 @@ let data = reactive({
   ProcessInstanceId: "",
   formSearchFilterquery: "",
   SearchFields: [],
-  isAddSchedule: false
+  isAddSchedule: false,
+  entityType: 'A08',
+  layoutName: 'DocumentInReadLog',
+  hightSearchParams: {}
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
   changeHeight();
 };
 
-const { isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
-  isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields, isAddSchedule, layoutName, entityType, queryParams } = toRefs(data);
+const { layoutName, entityType, hightSearchParams, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
+  isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields, isAddSchedule, queryParams } = toRefs(data);
 //   console.log("tabs", data.tabs);
 const tabContent = ref(null);
 const contentRef = ref(null);
@@ -353,22 +305,15 @@ const onSearch = (e) => {
 }
 const onSelect = (keys) => {
   data.treeId = keys[0];
-  handleSearch(data.formSearchFilterquery);
+  handleSearch();
 };
-onMounted(() => {
-  window.addEventListener('resize', changeHeight)
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
-  getTabs();
-})
 function changeHeight(h) {
   if (typeof h == 'number') {
     formSearchHeight.value = h;
   }
-  let contentHeight = contentRef.value.clientHeight;
+  let contentHeight = document.documentElement.clientHeight - 120;
   let tabsHeight = 46;
-  let height = contentHeight - tabsHeight - formSearchHeight.value;
+  let height = contentHeight - tabsHeight;
   data.tableHeight = height;
   console.log('data', data.tableHeight);
   //console.log("gridRef", gridRef.value.loadGrid())
@@ -378,14 +323,33 @@ const cancelRelase = (e) => {
   data.isRelease = e;
 }
 const handleSearch = (filterquery) => {
-  data.queryParams.filterQuery = '';
-  //data.queryParams.filterQuery='\nCreatedBy\teq-userid';
-  data.formSearchFilterquery = filterquery;
-  if (filterquery) {
-    data.queryParams.filterQuery += filterquery;
+  data.queryParams = {
+    filterId: data.queryParams.filterId,
+    objectTypeCode: '100108',
+    entityName: 'OfficialDocumentIn',
+    sort: 'CreatedOn',
+    order: 'desc'
+  };
+  // data.formSearchFilterquery = filterquery;
+  // if (filterquery) {
+  //   data.queryParams.filterQuery += filterquery;
+  // }
+  if (obj) {
+    data.hightSearchParams = obj;
+    if (data.hightSearchParams) {
+      if (data.hightSearchParams.search) {
+        data.queryParams.search = data.hightSearchParams.search;
+      }
+      if (data.hightSearchParams.filterCondition) {
+        data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+      }
+    }
+  }
+  else {
+    data.hightSearchParams = {}
   }
   if (data.treeId) {
-    data.queryParams.filterQuery += '\nOwningBusinessUnit\tin\t' + data.treeId;
+    data.queryParams.filterQuery = '\nOwningBusinessUnit\tin\t' + data.treeId;
   }
   gridRef.value.loadGrid(data.queryParams);
 }
@@ -435,7 +399,8 @@ const getColumns = (id) => {
           sortable: true,
           formatter: function formatter(value, row, index) {
             let url = row.viewUrl;
-            return '<a style="color:#015ba7;font-size:13px;" href="' + url + '" target="_blank">' + girdFormatterValue(item.name, row) + '</a>';
+            let val = girdFormatterValue(item.name, row);
+            return '<a class="namefield" title="' + val + '" href="' + url + '" target="_blank">' + val + '</a>';
           }
         });
       }
@@ -443,7 +408,7 @@ const getColumns = (id) => {
     columns.value = columnslist;
     nextTick(() => {
       gridRef.value.loadGrid(data.queryParams);
-      searchRef.value.getSearchLayout();
+      //searchRef.value.getSearchLayout();
     })
 
   })
@@ -713,16 +678,29 @@ const gridUrl = ref(Interface.list2);
 const columns = ref([]);
 const changeTab = (e) => {
   data.activeKey = e;
-  data.queryParams.filterQuery = '';
-  //data.queryParams.filterQuery='\nCreatedBy\teq-userid';
+  data.queryParams = {
+    filterId: data.queryParams.filterId,
+    objectTypeCode: '100108',
+    entityName: 'OfficialDocumentIn',
+    sort: 'CreatedOn',
+    order: 'desc'
+  };
   let filterColumnsList = (data.tabs)[e].filterableColumns;
   data.SearchFields = filterColumnsList;
   data.queryParams.filterId = data.tabs[e].filterId || '';
-  if (data.formSearchFilterquery) {
-    data.queryParams.filterQuery += data.formSearchFilterquery;
+  // if (data.formSearchFilterquery) {
+  //   data.queryParams.filterQuery += data.formSearchFilterquery;
+  // }
+  if (data.hightSearchParams) {
+    if (data.hightSearchParams.search) {
+      data.queryParams.search = data.hightSearchParams.search;
+    }
+    if (data.hightSearchParams.filterCondition) {
+      data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+    }
   }
   if (data.treeId) {
-    data.queryParams.filterQuery += '\nOwningBusinessUnit\tin\t' + data.treeId;
+    data.queryParams.filterQuery = '\nOwningBusinessUnit\tin\t' + data.treeId;
   }
   if (e == 0 || e == 1) {
     data.queryParams.entityName = 'OfficialDocumentIn';
@@ -775,6 +753,33 @@ watch(() => route, (newVal, oldVal) => {
     }
   }
 }, { deep: true, immediate: true })
+watch(() => route, (newVal, oldVal) => {
+  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
+    if (route.path == '/OfficeDocument/read/log') {
+      //getTreeData();
+      data.queryParams = {
+        filterId: '',
+        objectTypeCode: '100108',
+        entityName: 'OfficialDocumentIn',
+        //filterQuery: '',
+        sort: 'CreatedOn',
+        order: 'desc'
+      }
+      data.entityType = 'A08';
+      data.layoutName = 'DocumentInReadLog'
+      setTimeout(function () {
+        getTabs();
+      }, 1000)
+    }
+  }
+}, { deep: true, immediate: true })
+onMounted(() => {
+  window.addEventListener('resize', changeHeight)
+  // this.$nextTick(()=>{
+  //   getTabs();
+  // })
+  getTabs();
+})
 </script>
 <style lang="less">
 @import "@/style/flow/treeList.less";
@@ -837,6 +842,40 @@ watch(() => route, (newVal, oldVal) => {
 
   .formSearch :deep .ant-form .ant-form-item {
     width: auto !important;
+  }
+
+  .wea-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    //border-bottom: 1px solid #eaeaea;
+    padding-right: 0;
+    border: 0 !important;
+  }
+
+  .todo-content .ant-row .wea-tab {
+    height: 45px !important;
+
+    :deep .ant-tabs-nav::before {
+      display: none;
+    }
+  }
+
+  .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
+    height: 45px !important;
+  }
+
+  .wea-left-tree-scroll {
+    height: calc(~'100% - 50px') !important;
+  }
+
+  :deep .namefield {
+    color: #1677ff;
+    text-decoration: none;
+    max-width: 500px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

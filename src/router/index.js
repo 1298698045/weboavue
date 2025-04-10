@@ -435,39 +435,18 @@ const staticRoutes = [
     component: () => import("../views/CampaignSms/editor.vue"),
   },
   {
-    path: "/RuleArticle",
-    name: "RuleArticle",
+    path: "/RuleArticle1",
+    name: "RuleArticle1",
     component: Layout,
     redirect: "/lightning/page/knowledge/RuleArticleMine/home",
     meta: {
-      name: "制度文件",
-      appCode:"02u90000009"
+      name: "制度文件"
     },
     children: [
       {
-        path: "/lightning/page/knowledge/RuleArticleMine/home",
-        name: "RuleArticleMyHome",
-        component: () => import("../views/knowledge/RuleArticle/myhome/index.vue"),
-        icon: "search",
-        meta: {
-          name: "我的制度",
-          icon: "search"
-        }
-      },
-      {
-        path: "/lightning/page/knowledge/RuleArticle/home",
-        name: "RuleArticleHome",
-        component: () => import("../views/knowledge/RuleArticle/home/index.vue"),
-        icon: "search",
-        meta: {
-          name: "制度台账",
-          icon: "search"
-        }
-      },
-      {
         path: "/knowledge/RuleArticle/history/home",
         component: () => import("../views/listView/index2.vue"),
-        name: "RuleArticleHistory",
+        name: "KbArticleHistory1",
         icon: "huiyicanhuiren",
         meta: {
           name: "变更记录",
@@ -480,7 +459,7 @@ const staticRoutes = [
       {
         path: "/knowledge/RuleArticle/version/home",
         component: () => import("../views/listView/index2.vue"),
-        name: "RuleArticleVersion",
+        name: "KbArticleVersion1",
         icon: "huiyicanhuiren",
         meta: {
           name: "修订记录",
@@ -492,7 +471,7 @@ const staticRoutes = [
       },
       {
         path: "/knowledge/RuleArticle/abolish/home",
-        name: "RuleArticleAbolish",
+        name: "KbArticleAbolish1",
         component: () => import("../views/listView/index2.vue"),
         icon: "huiyicanhuiren",
         meta: {
@@ -506,29 +485,18 @@ const staticRoutes = [
     ]
   },
   {
-    path: "/OfficialDocument",
-    name: "OfficialDocument",
+    path: "/OfficialDocument1",
+    name: "OfficialDocument1",
     component: Layout,
     redirect: "/lightning/page/OfficialDocument/dashboard",
     meta: {
-      name: "公文管理",
-      appCode:"02d90000083"
+      name: "公文管理"
     },
     children: [
       {
-        path: "/lightning/page/OfficialDocument/dashboard",
-        component: () => import("../views/documentAdmin/home/index.vue"),
-        name: "OfficialDocumentHome",
-        icon: "huiyicanhuiren",
-        meta: {
-          name: "公文中心",
-          icon: "huiyicanhuiren"
-        },
-      },
-      {
         path: "/lightning/o/official/doc/Oversee",
         component: () => import("../views/listView/index2.vue"),
-        name: "docOversee",
+        name: "docOversee1",
         icon: "huiyicanhuiren",
         meta: {
           name: "公文督办",
@@ -540,7 +508,7 @@ const staticRoutes = [
       },
       {
         path: "/o/ContentDocument/template/home",
-        name: "TemplateFile",
+        name: "TemplateFile1",
         component: () => import("../views/listView/index2.vue"),
         icon: "huiyicanhuiren",
         meta: {
@@ -562,85 +530,9 @@ const staticRoutes = [
     }
   },
   {
-    path: "/ContentFolderTree",
-    name: "ContentFolderTree",
-    component: Layout,
-    redirect: "/lightning/page/ContentFolderTree",
-    meta: {
-      name: "目录管理"
-    },
-    children: [
-      {
-        path: "/lightning/page/ContentFolderTree",
-        component: () => import("../views/ContentFolderTree/index.vue"),
-        name: "ContentFolderManage",
-        icon: "huiyicanhuiren",
-        meta: {
-          name: "目录管理",
-          icon: "huiyicanhuiren",
-        }
-      }
-    ]
-  },
-  {
-    path: "/Reimburse",
-    name: "Reimburse",
-    component: Layout,
-    redirect: "/lightning/page/dashboard/MyReimburse",
-    meta: {
-      name: "我的报账",
-      appCode:"02r90001800"
-    },
-    children: [
-      {
-        path: "/lightning/page/dashboard/MyReimburse",
-        component: () => import("../views/home/commonHome.vue"),
-        name: "MyReimburse",
-        icon: "huiyicanhuiren",
-        meta: {
-          name: "主页",
-          icon: "huiyicanhuiren"
-        }
-      },
-      {
-        path: "/lightning/page/ReimburseTravelMy/home",
-        name: "ReimburseTravelMy",
-        component: () => import("../views/listView/index2.vue"),
-        icon: "huiyicanhuiren",
-        meta: {
-          name: "我的差旅报销",
-          icon: "huiyicanhuiren",
-          entityType:'F05',
-          objectTypeCode:'7005',
-          entityName:'ReimburseTravelExpense',
-        },
-      },
-      {
-        path: "/lightning/page/ReimburseMine/home",
-        component: () => import("../views/reimburse/reimburseMine/index.vue"),
-        name: "ReimburseMine",
-        icon: "huiyicanhuiren",
-        meta: {
-          name: "我的报账",
-          icon: "huiyicanhuiren"
-        }
-      },
-      {
-        path: "/lightning/page/MyInvoice/home",
-        component: () => import("../views/reimburse/myInvoice/index.vue"),
-        name: "MyInvoice",
-        icon: "huiyicanhuiren",
-        meta: {
-          name: "我的发票",
-          icon: "huiyicanhuiren"
-        }
-      }
-    ]
-  },
-  {
     path: "/lightning/r/contract/view",
     name: "ContractDeatil",
-    component: () => import("../views/contract/detail/index.vue"),
+    component: () => import("../views/contract/view/index.vue"),
     meta: {
       name: "合同详情页"
     },
