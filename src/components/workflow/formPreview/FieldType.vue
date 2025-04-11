@@ -22,7 +22,7 @@
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-input v-else :disabled="disabledPermission" type="Number" v-model:value="list[field.id]" :placeholder="'请输入' + field.label"></a-input>
+                <a-input v-else :disabled="disabledPermission" type="String" @keydown="handleKeyDown" v-model:value="list[field.id]" :placeholder="'请输入' + field.label"></a-input>
             </span>
         </div>
         <div v-else-if="type=='H'">
@@ -370,7 +370,23 @@
         const val = props.list[id];
         let name = search[id].find(item=>item.ID==val)?.Name || '';
         return name;
-    })
+    });
+
+    const handleKeyDown = (e) => {
+        // 允许功能键：退格、删除、方向键、Tab等
+        const allowedKeys = [
+            'Backspace', 'Delete',
+            'ArrowLeft', 'ArrowRight',
+            'Tab', 'Home', 'End'
+        ]
+
+        // 阻止非数字字符输入
+        if (!allowedKeys.includes(e.key) &&
+            !/[0-9]/.test(e.key) &&
+            !e.ctrlKey && !e.metaKey) {
+            e.preventDefault()
+        }
+    }
 
     // 控制字段默认值可编辑/不可编辑
     const disabledPermission = computed(()=>{

@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-  import { ref, reactive, toRefs, onMounted, watch, defineProps, defineExpose } from "vue";
+  import { ref, reactive, toRefs, onMounted, watch, defineProps, defineExpose , defineEmits} from "vue";
   const props = defineProps({
     tableHeight: [String, Number],
     isCollapsed: Boolean,
@@ -19,6 +19,7 @@
   watch(()=> props.isCollapsed, (newVal,oldVal) => {
     $("#"+props.name).datagrid("reload");
   })
+  const emit = defineEmits(['onSelect']);
   const loadGrid = (queryParams) => {
     console.log('loadGrid:queryParams', queryParams)
     // const imgUrl = require("@/assets/flow/checkbox_checked.gif");
@@ -124,6 +125,9 @@
       rownumbers: true,
       onLoadSuccess: function () {
         $('#'+props.name).datagrid('resize', { height: height });
+      },
+      onSelect: function (index,row) {
+        emit("onSelect", row);
       }
     });
   }

@@ -12,8 +12,11 @@
             <tbody>
                 <tr class="rowTr" v-for="(item, index) in listData" :key="index">
                     <template v-for="(row, idx) in columns" :key="idx">
-                        <td v-if="row.fieldApiName!='Action'">
+                        <td v-if="row.fieldApiName != 'Action' && row.fieldApiName != nameField">
                             <div v-html="formatterHtml(item, row)"></div>
+                        </td>
+                        <td v-else-if="row.fieldApiName == nameField">
+                            <a class="link" :href="'#'+item.viewUrl" target="_blank" v-html="formatterHtml(item, row)"></a>
                         </td>
                         <td v-else>
                             <a-dropdown :trigger="['click']">
@@ -33,9 +36,9 @@
                 </tr>
             </tbody>
         </table>
-        <div class="pagination" v-if="total">
-            <a-pagination v-model:current="pageNumber" :total="total" />
-        </div>
+    </div>
+    <div class="pagination" v-if="total > 20">
+        <a-pagination v-model:current="pageNumber" :total="total" />
     </div>
 </template>
 <script setup>
@@ -78,12 +81,13 @@
     const data = reactive({
         listData: [],
         pageNumber: 1,
-        pageSize: 10,
+        pageSize: 20,
         actions: [],
-        total: 0
+        total: 0,
+        nameField: ""
     });
     
-    const { listData, pageNumber, pageSize, actions, total } = toRefs(data);
+    const { listData, pageNumber, pageSize, actions, total, nameField } = toRefs(data);
 
     const getActions = () => {
         let obj = {
@@ -137,7 +141,9 @@
         }
         proxy.$post(Interface.detailObj.relatedListData, d).then(res=>{
             getActions();
-            let { nodes, totalCount } = res.actions[0].returnValue;
+            let { nodes, totalCount, nameField } = res.actions[0].returnValue;
+            data.nameField = nameField;
+            console.log("nameField", data.nameField)
             data.total = totalCount;
             data.listData = nodes;
         })
@@ -172,9 +178,10 @@
 </script>
 <style lang="less" scoped>
     .tableList{
-        width: 100%;
+        width:100%;
         height: 100%;
-        overflow-y: auto;
+        /* overflow-y: auto; */
+        overflow: auto;
         table{
             width: 100%;
             border-collapse: collapse;
@@ -191,6 +198,7 @@
                         white-space: nowrap;
                         font-size: 14px;
                         color: #0b5cab;
+                        min-width: 100px;
                     }
                 }
             }
@@ -210,6 +218,7 @@
                         font-weight: normal;
                         text-align: left;
                         background: #fff;
+                        min-width: 100px;
                     }
                     .btnMenu{
                         display: inline-block;
@@ -223,6 +232,11 @@
                         text-align: center;
                         &:hover{
                             color: var(--textColor);
+                        }
+                    }
+                    a.link{
+                        &:hover{
+                            text-decoration: underline;
                         }
                     }
                 }

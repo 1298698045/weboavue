@@ -201,6 +201,8 @@
         ArrowDownOutlined,
         CheckCircleOutlined
     } from "@ant-design/icons-vue";
+    import { message } from "ant-design-vue";
+
     import Interface from "@/utils/Interface.js";
     import RadioUser from "@/components/commonModal/RadioUser.vue";
     import RadioDept from "@/components/commonModal/RadioDept.vue";

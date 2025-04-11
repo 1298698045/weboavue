@@ -1,6 +1,6 @@
 <template>
     <div class="file-list-container">
-        <a-checkbox-group v-model:value="selectedRowKeys" @change="selectFiles">
+        <a-checkbox-group v-model:value="selectedRowKeys" @change="selectFiles" v-if="listData.length">
             <div class="group-files" v-for="(parentItem, parentIdx) in listData">
                 <div class="group-head">
                     {{parentItem.name}}
@@ -54,6 +54,10 @@
                 </div>
             </div>
         </a-checkbox-group>
+        <div class="empty-common" v-else>
+            <img src="@/assets/img/OpenRoad.svg" alt="">
+            <div class="empty-desc">没有附件</div>
+        </div>
     </div>
 </template>
 
@@ -236,6 +240,19 @@
                     }
                 }
             }
+        }
+    }
+    .empty-common{
+        text-align: center;
+        margin-top: 20px;
+        img{
+            max-width: 600px;
+            max-height: 400px;
+        }
+        .empty-desc{
+            line-height: 1.25;
+            color: #444444;
+            font-size: 18px;
         }
     }
 </style>

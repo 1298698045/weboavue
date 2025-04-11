@@ -101,6 +101,7 @@ onMounted(() => {
         data.height = h - 355;
     });
 })
+defineExpose({getLayout})
 </script>
 <style lang="less" scoped>
 .detailInfo {

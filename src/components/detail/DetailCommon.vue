@@ -4,8 +4,8 @@
             <div class="primaryFieldRow">
                 <div class="fieldCol" style="flex: 1;">
                     <div class="profilePicWrapper">
-                        <div style="background-color: #3BA755;" class="forceEntityIcon">
-                            <img :src="require('@/assets/img/task_120.png')" alt="">
+                        <div class="forceEntityIcon" :style="{background:initialData?.recordThemeInfo?.primaryPalette ? '#'+initialData?.recordThemeInfo?.primaryPalette:'red'}">
+                            <img class="img" :src="Interface.pathUrl+initialData?.recordThemeInfo?.iconImageURL" alt="" />
                         </div>
                     </div>
                     <div class="media__body">
@@ -16,44 +16,39 @@
                     </div>
                 </div>
                 <div class="fieldCol actionsContainer">
-                    <!-- <div class="fh-btn-group">
-                        <div class="fh-btn">批量录入岗位职责</div>
-                        <div class="fh-btn">添加岗位职责</div>
-                        <div class="fh-btn" @click="handleEdit">编辑</div>
-                        <div class="fh-btn">复制</div>
-                        <div class="fh-btn" @click="printPostInstructions">打印岗位说明</div>
-                        <a-dropdown :trigger="['click']">
+                    <div class="fh-btn-group">
+                        <div class="fh-btn" v-for="(item, index) in btnActions.slice(0,3)"
+                            @click="handleBtnActions(item.apiName)">{{ item.label }}</div>
+                        <a-dropdown :trigger="['click']" v-if="btnActions.length > 3">
                             <div class="fh-btn fh-btn-icon">
-                                <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon" lwc-6qul4k2dv7m="" data-key="down" class="slds-icon slds-icon_x-small"><g lwc-6qul4k2dv7m=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" lwc-6qul4k2dv7m=""></path></g></svg>
+                                <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon"
+                                    lwc-6qul4k2dv7m="" data-key="down" class="slds-icon slds-icon_x-small">
+                                    <g lwc-6qul4k2dv7m="">
+                                        <path
+                                            d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
+                                            lwc-6qul4k2dv7m=""></path>
+                                    </g>
+                                </svg>
                             </div>
                             <template #overlay>
-                                <a-menu :trigger="['click']" style="padding: 10px 0;border: 1px solid #333;border-radius: 4px;">
-                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
-                                        新建备注
-                                    </a-menu-item>
-                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
-                                        撤销
-                                    </a-menu-item>
-                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
-                                        复制
-                                    </a-menu-item>
-                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
-                                        导出说明书
-                                    </a-menu-item>
-                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
-                                        下载说明书
+                                <a-menu :trigger="['click']"
+                                    style="padding: 10px 0;border: 1px solid #333;border-radius: 4px;">
+                                    <a-menu-item
+                                        style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;"
+                                        v-for="(item, index) in btnActions.slice(3)" :key="item.apiName">
+                                        {{ item.label }}
                                     </a-menu-item>
                                 </a-menu>
                             </template>
                         </a-dropdown>
-                    </div> -->
+                    </div>
                 </div>
             </div>
             <ul class="pageHeader-from">
-                <li class="listRecordItem">
-                    <div class="formLabel">名称</div>
+                <li class="listRecordItem" v-for="(item, index) in layoutItems" :key="index">
+                    <div class="formLabel">{{ item.label }}</div>
                     <div class="formVal">
-                        <a href="javascript:;" class="textUnderline">{{Name}}</a>
+                        <a href="javascript:;" class="textUnderline" :title="item.value">{{ item.value }}</a>
                     </div>
                 </li>
             </ul>
@@ -70,13 +65,58 @@
             </div>
             <div class="record-container" style="height: calc(100% - 50px);">
                 <div class="recordLayout" v-if="activeKey==0">
-                    <DetailInfo :id="id" :objectTypeCode="objectTypeCode" :entityApiName="entityApiName" />
+                    <DetailInfo ref="detailInfoRef" :id="id" :objectTypeCode="objectTypeCode" :entityApiName="entityApiName" />
                 </div>
                 <div class="recordLayout" v-if="activeKey==1">
                     <RelatedList :id="id" :objectTypeCode="objectTypeCode" :entityApiName="entityApiName" fullName="Name" />
                 </div>
                 <div class="recordLayout" v-if="activeKey==2">
-                    <FilesList  :parentId="id" :entityName="entityApiName"></FilesList>
+                    <FilesList :parentId="id" :entityName="entityApiName"></FilesList>
+                </div>
+            </div>
+        </div>
+        <div class="detailHeadFixed" v-if="isFixedHead">
+            <div class="primaryFieldRow">
+                <div class="fieldCol" style="flex: 1;">
+                    <div class="profilePicWrapper">
+                        <div style="background-color: #3BA755;" class="forceEntityIcon">
+                            <img :src="require('@/assets/img/task_120.png')" alt="">
+                        </div>
+                    </div>
+                    <div class="media__body">
+                        <h1>
+                            <div class="entityNameTitle">通用详情</div>
+                            <div class="pageHeadTitle">{{ Name }}</div>
+                        </h1>
+                    </div>
+                </div>
+                <div class="fieldCol actionsContainer">
+                    <div class="fh-btn-group">
+                        <div class="fh-btn" v-for="(item, index) in btnActions.slice(0,3)"
+                            @click="handleBtnActions(item.apiName)">{{ item.label }}</div>
+                        <a-dropdown :trigger="['click']" v-if="btnActions.length > 3">
+                            <div class="fh-btn fh-btn-icon">
+                                <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon"
+                                    lwc-6qul4k2dv7m="" data-key="down" class="slds-icon slds-icon_x-small">
+                                    <g lwc-6qul4k2dv7m="">
+                                        <path
+                                            d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
+                                            lwc-6qul4k2dv7m=""></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <template #overlay>
+                                <a-menu :trigger="['click']"
+                                    style="padding: 10px 0;border: 1px solid #333;border-radius: 4px;">
+                                    <a-menu-item
+                                        style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;"
+                                        v-for="(item, index) in btnActions.slice(3)" :key="item.apiName">
+                                        {{ item.label }}
+                                    </a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,7 +127,8 @@
   </template>
   <script setup>
     import "@/style/detailCommon.less";
-    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw } from "vue";
+
+    import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw, defineProps, watch, nextTick } from "vue";
     import {
         UnorderedListOutlined,
         DownOutlined,
@@ -100,7 +141,6 @@
     const { proxy } = getCurrentInstance();
   
     import DetailInfo from  "@/components/detail/DetailInfo.vue";
-    
     import ConfirmModal from "@/components/commonModal/Confirm.vue";
     import CommonFormModal from "@/components/listView/CommonFormModal.vue";
     import Delete from "@/components/listView/Delete.vue";
@@ -117,7 +157,15 @@
     const filterOption = (input, option) => {
         return option.label.toLowerCase().includes(input.toLowerCase());
     };
-  
+    
+    const props = defineProps({
+        id: String,
+        objectTypeCode: [String, Number],
+        entityApiName: String,
+
+    })
+    const detailInfoRef = ref(null);
+
     const data = reactive({
         tabs: [
             {
@@ -134,16 +182,45 @@
         desc: "",
         isConfirm: false,
         isCommon: false,
-        id: route.query.id,
-        objectTypeCode: route.query.objectTypeCode,
-        entityApiName: route.query.entityType,
+        id: props.id,
+        objectTypeCode: props.objectTypeCode,
+        entityApiName: props.entityApiName,
         isDelete: false,
         Name: "",
         templateName: "",
-        layoutItems: []
-    })
+        layoutItems: [],
+        fields: {},
+        btnActions: [],
+        isFixedHead: false,
+        initialData: {}
+    });
     const { tabs, activeKey, desc, isConfirm, isCommon, id, objectTypeCode, entityApiName, 
-    isDelete, Name, templateName, layoutItems } = toRefs(data);
+    isDelete, Name, templateName, layoutItems, fields, btnActions, isFixedHead, initialData } = toRefs(data);
+
+    onMounted(()=>{
+        window.addEventListener("scroll", (e) => {
+            let scrollTop = document.documentElement.scrollTop;
+            // console.log("scrollTop:", scrollTop);
+            if (scrollTop >= 50) {
+                data.isFixedHead = true;
+            } else {
+                data.isFixedHead = false;
+            }
+        })
+    })
+
+    const getMetadataInitialLoad = () => {
+        proxy.$get(Interface.listView.getMetadataInitialLoad, {
+            name: "",
+            entityType: data.entityApiName,
+            sObjectName: data.entityApiName
+        }).then(res => {
+          if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+            data.initialData = res.actions[0].returnValue;
+          }
+        })
+    }
+    getMetadataInitialLoad();
 
     const changeTabs = (e) => {
         data.activeKey = e;
@@ -210,13 +287,13 @@
             message: JSON.stringify(obj)
         }
         proxy.$post(Interface.detail, d).then(res=>{
-            let fields = res.actions[0].returnValue.fields;
-            data.fields = fields;
-            data.Name = fields.Name.displayValue;
-            getCompact();
+          let fields = res.actions[0].returnValue.fields;
+          data.fields = fields;
+          data.Name = fields.Name.displayValue;
+          getCompact();
         })
     };
-    getDetail();
+
     const getRecordActions = () => {
         let obj = {
             actions: [{
@@ -251,5 +328,25 @@
             }
         }
     };
+
+    watch(()=>props.id, (newVal, oldVal) => {
+        console.log("props", props)
+        data.id = props.id;
+        data.objectTypeCode = props.objectTypeCode;
+        data.entityApiName = props.entityApiName;
+        data.activeKey = 0;
+        getDetail();
+        nextTick(()=>{
+            detailInfoRef.value.getLayout();
+        })
+    },{immediate: true, deep: true})
   
   </script>
+  <style lang="less" scoped>
+    .detailHeadFixed{
+        width: calc(100% - 385px);
+        position: fixed;
+        top: 90px;
+        left: 385px;
+    }
+  </style>

@@ -1,72 +1,74 @@
 <template>
     <div class="wrap">
-        <div class="formTable" v-if="isLoad">
-            <table class="newTable">
-                <template v-for="(row, key) in cellData" :key="key">
-                    <tr v-if="isShowRow(row,key)" :style="setRowStyle(key)">
-                        <template v-for="(col, colKey, colIndex) in row" :key="colIndex">
-                            <td :col="colKey" :rowspan="col.rowspan || 1" :colspan="col.colspan || 1" v-if="isShowCell(key, colKey, col.rowspan, col) && col && col.field?.displayCategory!='RelatedList'" :style="setStyle(key,colKey)">
-                                <template v-if="col.v ||  col.p">
-                                    <span :style="setStyleText(key, colKey)">
-                                        {{col.v}}
-                                    </span>
-                                    <span v-if="col.p">
-                                        {{col.p.body.dataStream}}
-                                    </span>
-                                </template>
-                                <template v-else-if="col.field">
-                                    <div>
-                                        <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" :suggestions="suggestions" @loadSuggestion="getSuggestionQuery" @delSuggestion="deleteSuggestion" :stateCode="stateCode" :suggestionObj="suggestionObj" />
+        <a-spin tip="Loading..." :spinning="!isLoad">
+            <div class="formTable" v-if="isLoad">
+                <table class="newTable">
+                    <template v-for="(row, key) in cellData" :key="key">
+                        <tr v-if="isShowRow(row,key)" :style="setRowStyle(key)">
+                            <template v-for="(col, colKey, colIndex) in row" :key="colIndex">
+                                <td :col="colKey" :rowspan="col.rowspan || 1" :colspan="col.colspan || 1" v-if="isShowCell(key, colKey, col.rowspan, col) && col && col.field?.displayCategory!='RelatedList'" :style="setStyle(key,colKey)">
+                                    <template v-if="col.v ||  col.p">
+                                        <span :style="setStyleText(key, colKey)">
+                                            {{col.v}}
+                                        </span>
+                                        <span v-if="col.p">
+                                            {{col.p.body.dataStream}}
+                                        </span>
+                                    </template>
+                                    <template v-else-if="col.field">
+                                        <div>
+                                            <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" :suggestions="suggestions" @loadSuggestion="getSuggestionQuery" @delSuggestion="deleteSuggestion" :stateCode="stateCode" :suggestionObj="suggestionObj" />
+                                        </div>
+                                    </template>
+                                </td>
+                                <td v-else-if="col && col.field && col.field.displayCategory=='RelatedList'" :colspan="col.colspan" :style="setStyle(key,colKey)" style="background: #fff;padding: 10px;">
+                                    <div class="childTableOption" v-if="print!=1 && stateCode!=2">
+                                        <a-button class="ant-btn-icon ml10" @click="handleAddSubTable(col)">
+                                            <PlusOutlined />
+                                        </a-button>
+                                        <a-button :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleDelSubTable(col)">
+                                            <MinusOutlined />
+                                        </a-button>
+                                        <a-button :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleCopySubTable(col)">
+                                            <CopyOutlined />
+                                        </a-button>
+                                        <a-button class="ml10" @click="handleImportSubTable(col)">导入</a-button>
+                                        <!-- <a-button @click="handleAddSubTable(col)">添加</a-button>
+                                        <a-button class="ml10">批量添加</a-button> -->
                                     </div>
-                                </template>
-                            </td>
-                            <td v-else-if="col && col.field && col.field.displayCategory=='RelatedList'" :colspan="col.colspan" :style="setStyle(key,colKey)" style="background: #fff;padding: 10px;">
-                                <div class="childTableOption" v-if="print!=1 && stateCode!=2">
-                                    <a-button @click="handleImportSubTable(col)">导入</a-button>
-                                    <a-button class="ant-btn-icon ml10" @click="handleAddSubTable(col)">
-                                        <PlusOutlined />
-                                    </a-button>
-                                    <a-button :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleDelSubTable(col)">
-                                        <MinusOutlined />
-                                    </a-button>
-                                    <a-button :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleCopySubTable(col)">
-                                        <CopyOutlined />
-                                    </a-button>
-                                    <!-- <a-button @click="handleAddSubTable(col)">添加</a-button>
-                                    <a-button class="ml10">批量添加</a-button> -->
-                                </div>
-                                <div class="excelTableView">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 40px;" v-if="stateCode!=2">操作</td>
-                                                <!-- <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 30px;">序号</td> -->
-                                                <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 30px;text-align: center;">
-                                                    {{child.label}}
-                                                </td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <a-checkbox-group v-model:value="col.selectedList" style="width: 100%;display: contents;">
-                                                <tr v-for="(sub, subIdx) in col.subTableData" style="width: 100%;">
-                                                    <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;"  v-if="stateCode!=2">
-                                                        <a-checkbox :value="sub.key"></a-checkbox>
-                                                    </td>
-                                                    <!-- <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">{{subIdx+1}}</td> -->
-                                                    <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 24px;">
-                                                        <FieldType :type="child.type" :print="print" :field="child" :list="sub" :select="relatedObjData[col.field.id].select" :search="col.search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)" :stateCode="stateCode" />
+                                    <div class="excelTableView">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 40px;" v-if="stateCode!=2">操作</td>
+                                                    <!-- <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 30px;">序号</td> -->
+                                                    <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 30px;text-align: center;">
+                                                        {{child.label}}
                                                     </td>
                                                 </tr>
-                                            </a-checkbox-group>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </td>
-                        </template>
-                    </tr>
-                </template>
-            </table>
-        </div>
+                                            </thead>
+                                            <tbody>
+                                                <a-checkbox-group v-model:value="col.selectedList" style="width: 100%;display: contents;">
+                                                    <tr v-for="(sub, subIdx) in col.subTableData" style="width: 100%;">
+                                                        <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;"  v-if="stateCode!=2">
+                                                            <a-checkbox :value="sub.key"></a-checkbox>
+                                                        </td>
+                                                        <!-- <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">{{subIdx+1}}</td> -->
+                                                        <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 24px;">
+                                                            <FieldType :type="child.type" :print="print" :field="child" :list="sub" :select="relatedObjData[col.field.id].select" :search="col.search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)" :stateCode="stateCode" />
+                                                        </td>
+                                                    </tr>
+                                                </a-checkbox-group>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </template>
+                        </tr>
+                    </template>
+                </table>
+            </div>
+        </a-spin>
         <radio-dept
             v-if="isRadioDept"
             :isShow="isRadioDept"
@@ -84,7 +86,7 @@
         <Delete :external="false" :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="getSuggestionQuery"
             sObjectName="WFSuggestionLibrary" :recordId="suggestionId"
             objTypeCode="130" />
-        <BatchImportChild :isShow="isBatchImport" v-if="isBatchImport" :subEntityName="subEntityName" :forignFieldName="forignFieldName" :forignFieldValue="processInstanceId" @cancel="isBatchImport = false"></BatchImportChild>
+        <BatchImportChild :isShow="isBatchImport" v-if="isBatchImport" :subEntityName="subEntityName" :forignFieldName="forignFieldName" :forignFieldValue="processInstanceId" @cancel="isBatchImport = false" @success="loadSubLoad"></BatchImportChild>
     </div>
 </template>
 <script setup>
@@ -786,6 +788,7 @@
 
 
     const loadQuery = async () => {
+        data.isLoad = false;
         data.processId = props.processId;
         data.processInstanceId = props.processInstanceId;
         data.toActivityID = props.toActivityID;
@@ -1347,6 +1350,11 @@
         data.isBatchImport = true;
     };
 
+    const loadSubLoad = () => {
+        console.log("data", data.subEntityName);
+        getFlowFormRelatedList();
+    };
+
     // 添加子表行
 
     const handleAddSubTable = (col) => {
@@ -1470,7 +1478,6 @@
     const handleSave = () => {
         console.log("data.list", data.list);
         console.log("comps", data.comps);
-
         let paramsList = {};
         data.comps.forEach(item=>{
             if(item.displayCategory != "RelatedList" && item.permission != 2 && item.permission != 4){
@@ -1538,7 +1545,7 @@
         }
 
         console.log("d", JSON.stringify(obj));
-
+        data.isLoad = false;
         proxy.$post(Interface.workflow.updateRecordBatch , d).then(res=>{
             message.success("保存成功！");
             loadQuery();
@@ -1609,7 +1616,7 @@
         data.list[field.id] = val;
     }
 
-    defineExpose({handleSave});
+    defineExpose({handleSave, loadQuery});
 
 </script>
 <style lang="less" scoped>
@@ -1676,5 +1683,10 @@
                 min-width: 66px;
             }
         }
+    }
+</style>
+<style lang="less">
+    .wrap .ant-spin{
+        width: 100%;
     }
 </style>

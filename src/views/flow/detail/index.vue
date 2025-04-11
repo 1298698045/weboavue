@@ -404,7 +404,7 @@
         </div>
         <SubmitProcess ref="processRef" v-if="isProcess" :ruleLogId="ruleLogId" :processId="processId"
             :processInstanceId="processInstanceId" :toActivityID="toActivityID" :isShow="isProcess"
-            @update-status="updateStatus" :paramsData="ProcessData" />
+            @update-status="uploadProcess" :paramsData="ProcessData" />
         <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" :ruleLogId="ruleLogId"
             :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID"
             :fromActivityId="fromActivityId" @update-status="updateStatus" />
@@ -649,6 +649,11 @@
         data.isUrging = false;
         data.isReturn = false;
         data.isJump = false;
+    };
+    const uploadProcess = () => {
+        data.isProcess = false;
+        getRuleLogData();
+        flowFormRef.value.loadQuery();
     }
     const CirculationData = reactive({
         params: {}

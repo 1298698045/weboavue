@@ -120,6 +120,7 @@
         emit("cancel", false);
     }
     const handleSubmit = () => {
+        emit("cancel", false);
         emit("success", false);
     }
 </script>
