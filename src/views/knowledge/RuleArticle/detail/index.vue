@@ -20,14 +20,28 @@
             </div>
             <div class="rightBox">
                 <!-- <a-button class="ml10" @click="printForm">导出PDF</a-button> -->
-                <a-dropdown :trigger="['hover']" class="ml10">
+                <template v-for="(item, index) in actionList1" :key="index">
+                    <template v-if="Array.isArray(item)">
+                        <a-button v-for="(row, idx) in item" :key="idx" type="primary" class="ml10"
+                            @click="handleClickBtn(row.devNameOrId || row.apiName)">{{ row.label }}</a-button>
+                    </template>
+                    <a-button type="primary" class="ml10" @click="handleClickBtn(item.devNameOrId || item.apiName)"
+                        v-else>{{
+                            item.label
+                        }}</a-button>
+                </template>
+                <a-dropdown :trigger="['hover']" class="ml10" :getPopupContainer="getPopupContainer"
+                    v-if="actionList2 && actionList2.length">
                     <span class="btn-drop">
                         <UnorderedListOutlined style="color: #1D2129;" />
                     </span>
                     <template #overlay>
                         <a-menu>
-                            <a-menu-item key="1" @click="handleNotes">
+                            <!-- <a-menu-item key="1" @click="handleNotes">
                                 备注
+                            </a-menu-item> -->
+                            <a-menu-item v-for="(item, index) in actionList2" :key="index"
+                                @click="handleClickBtn(item.devNameOrId || item.apiName)"> {{ item.label }}
                             </a-menu-item>
                         </a-menu>
                     </template>
@@ -270,9 +284,12 @@ const data = reactive({
     isTxt: false,
     txtParams: {},
     objectTypeCode: 100204,
-    isNotes: false
+    sObjectName: 'Institution',
+    isNotes: false,
+    actionList1: [],
+    actionList2: []
 })
-const { isNotes, objectTypeCode, isTxt, txtParams, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData, FormData, ImageList, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
+const { sObjectName, actionList1, actionList2, isNotes, objectTypeCode, isTxt, txtParams, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData, FormData, ImageList, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
     isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
     pageCurrent } = toRefs(data);
 const changeTabs = (e) => {
@@ -742,10 +759,70 @@ const columns3 = [
 const handleNotes = () => {
     data.isNotes = true;
 };
+const getActions = () => {
+    let obj = {
+        actions: [{
+            id: "13285;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+                recordId: data.id,
+                entityApiName: data.sObjectName,
+                sections: ["PAGE"]
+            }
+        }]
+    }
+    let d = {
+        message: JSON.stringify(obj)
+    }
+    data.actionList1 = [];
+    data.actionList2 = [];
+    proxy.$post(Interface.detailObj.actions, d).then(res => {
+        if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.actions) {
+            let actionList = res.actions[0].returnValue.actions;
+            for (var i = 0; i < actionList.length; i++) {
+                let item = actionList[i];
+                // if (item.isSeparator) {
+                //   temp.push([item]);
+                // } else {
+                //   if (Array.isArray(temp[temp.length - 1])) {
+                //     temp[temp.length - 1].push(item);
+                //   } else {
+                //     temp.push(item);
+                //   }
+                // }
+                if (i <= 2) {
+                    data.actionList1.push(item);
+                }
+                else {
+                    data.actionList2.push(item);
+                }
+            }
+            console.log('actionList1:', data.actionList1);
+            console.log('actionList2:', data.actionList2);
+        }
+    })
+}
+const handleClickBtn = (devNameOrId) => {
+    if (typeof (eval(devNameOrId)) == "function") {
+        var result = eval(devNameOrId + "();");
+    } else {
+
+    }
+}
+const getPopupContainer = (triggerNode) => {
+    return triggerNode.parentNode || document.body;
+}
+// 备注
+const InstitutionNotes = () => {
+    data.isNotes = true;
+};
+window.InstitutionNotes = InstitutionNotes;
 onMounted(() => {
     if (data.id) {
         getDetail();
         getFiles();
+        getActions();
     }
 });
 </script>

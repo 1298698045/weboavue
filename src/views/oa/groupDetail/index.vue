@@ -31,17 +31,29 @@
         </div> -->
       </div>
       <div class="rightBtns">
-        <a-button class="ml10" type="primary" @click="handleAddPeople">添加成员</a-button>
+        <!-- <a-button class="ml10" type="primary" @click="handleAddPeople">添加成员</a-button>
         <a-button class="ml10" type="primary" @click="handleAddAdmin">添加管理员</a-button>
         <a-button class="ml10" type="primary" @click="handleEdit">编辑小组</a-button>
-        <a-button class="ml10" @click="handleDeleteGroup">删除小组</a-button>
-        <a-dropdown :trigger="['hover']" class="ml10">
+        <a-button class="ml10" @click="handleDeleteGroup">删除小组</a-button> -->
+        <template v-for="(item, index) in actionList1" :key="index">
+          <template v-if="Array.isArray(item)">
+            <a-button v-for="(row, idx) in item" :key="idx" type="primary" class="ml10"
+              @click="handleClickBtn(row.devNameOrId || row.apiName)">{{ row.label }}</a-button>
+          </template>
+          <a-button type="primary" class="ml10" @click="handleClickBtn(item.devNameOrId || item.apiName)" v-else>{{
+            item.label
+          }}</a-button>
+        </template>
+        <a-dropdown :trigger="['hover']" class="ml10" :getPopupContainer="getPopupContainer"
+        v-if="actionList2 && actionList2.length">
           <span class="btn-drop">
             <UnorderedListOutlined style="color: #1d2129" />
           </span>
           <template #overlay>
             <a-menu>
-              <a-menu-item key="1" @click="handleOpenNotes"> 备注 </a-menu-item>
+              <!-- <a-menu-item key="1" @click="handleOpenNotes"> 备注 </a-menu-item> -->
+              <a-menu-item v-for="(item, index) in actionList2" :key="index"
+                @click="handleClickBtn(item.devNameOrId || item.apiName)"> {{ item.label }} </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
@@ -201,7 +213,7 @@
     <!-- <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName"></common-form-modal> -->
     <add-group :isShow="isCommon" v-if="isCommon" @cancel="handleCommonCancel" :title="recordId?'编辑':'新建'" @load="submitOk" :id="recordId" type="1"></add-group>
     <update-group-image :isShow="isUpdateGroupImage" v-if="isUpdateGroupImage" @cancel="isUpdateGroupImage=false" title="更新照片" @load="submitOk" :id="recordId"></update-group-image>
-    <Delete v-if="isDelete" :isShow="isDelete" :desc="deleteDesc" :sObjectName="deleteInfo.sObjectName" :recordId="deleteInfo.recordId" :objTypeCode="deleteInfo.objectTypeCode" :external="external" @cancel="closeDelete" @ok="deleteOk" />
+    <DeleteModal v-if="isDelete" :isShow="isDelete" :desc="deleteDesc" :sObjectName="deleteInfo.sObjectName" :recordId="deleteInfo.recordId" :objTypeCode="deleteInfo.objectTypeCode" :external="external" @cancel="closeDelete" @ok="deleteOk" />
   </div>
 </template>
 <script setup>
@@ -235,7 +247,7 @@ import Notes from "@/components/commonModal/RelatedNote.vue";
 import AddGroup from "@/components/groupDetail/AddGroup.vue";
 import UpdateGroupImage from "@/components/groupDetail/UpdateGroupImage.vue";
 // 删除
-import Delete from "@/components/listView/Delete.vue";
+import DeleteModal from "@/components/listView/Delete.vue";
 // 附件列表
 import RelatedAttachment from "@/components/commonTab/RelatedAttachment.vue";
 import Interface from "@/utils/Interface.js";
@@ -272,9 +284,13 @@ const data = reactive({
   fileList:[],
   height:100,
   defaultImg:require('@/assets/img/avatar-r.png'),
-  isMultipleUser:false
+  isMultipleUser:false,
+  actionList1: [],
+  actionList2: []
 });
 const {
+  actionList1,
+  actionList2,
   isMultipleUser,
   activeKey,
   adminList,
@@ -508,8 +524,89 @@ const viewFile=(link)=>{
 const downloadFile=(link)=>{
   window.open(link);
 }
+  const getActions = () => {
+  let obj = {
+    actions: [{
+      id: "13285;a",
+      descriptor: "",
+      callingDescriptor: "UNKNOWN",
+      params: {
+        recordId: data.groudId,
+        entityApiName: data.sObjectName,
+        sections: ["PAGE"]
+      }
+    }]
+  }
+  let d = {
+    message: JSON.stringify(obj)
+  }
+  data.actionList1 = [];
+  data.actionList2 = [];
+  proxy.$post(Interface.detailObj.actions, d).then(res => {
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.actions) {
+      let actionList = res.actions[0].returnValue.actions;
+      for (var i = 0; i < actionList.length; i++) {
+        let item = actionList[i];
+        // if (item.isSeparator) {
+        //   temp.push([item]);
+        // } else {
+        //   if (Array.isArray(temp[temp.length - 1])) {
+        //     temp[temp.length - 1].push(item);
+        //   } else {
+        //     temp.push(item);
+        //   }
+        // }
+        if (i <= 2) {
+          data.actionList1.push(item);
+        }
+        else {
+          data.actionList2.push(item);
+        }
+      }
+      //let temp1 = [{ devNameOrId: 'handleEdit', label: '编辑' }, { devNameOrId: 'handleRelease', label: '发布' }, { devNameOrId: 'handleRemind', label: '提醒' }, { devNameOrId: 'handleDelete', label: '删除' }];
+      console.log('actionList1:', data.actionList1);
+      console.log('actionList2:', data.actionList2);
+    }
+  })
+}
+const handleClickBtn = (devNameOrId) => {
+  if (typeof (eval(devNameOrId)) == "function") {
+    var result = eval(devNameOrId + "();");
+  } else {
+
+  }
+}
+const getPopupContainer = (triggerNode) => {
+  return triggerNode.parentNode || document.body;
+}
+// 添加成员
+const GroupAddPeople = () => {
+    handleAddPeople();
+};
+window.GroupAddPeople=GroupAddPeople;
+// 添加管理员
+const GroupAddAdmin = () => {
+    handleAddAdmin();
+};
+window.GroupAddAdmin=GroupAddAdmin;
+// 编辑小组
+const GroupEdit = () => {
+    handleEdit();
+};
+window.GroupEdit=GroupEdit;
+// 删除小组
+const GroupDelete = () => {
+    handleDeleteGroup();
+};
+window.GroupDelete=GroupDelete;
+// 备注
+const GroupNotes = () => {
+    data.isNotes = true;
+};
+window.GroupNotes=GroupNotes;
 onMounted(() => {
   getDetail();
+  getActions();
   let h = document.documentElement.clientHeight;
   data.height=h-302;
   window.addEventListener("resize", (e) => {

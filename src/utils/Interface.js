@@ -45,6 +45,7 @@ const Interface = {
     stati: baseUrl + "/aura/workflow/report/stati",//流程效率统计
     abstract: baseUrl + "/aura/workflow/report/abstract/get",//流程统计摘要
     import: baseUrl + "/aura/flow/form/entity/import", // 流程子表数据导入
+    getTree: baseUrl + "/aura/workflow/Process/getTree", // 流程树
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",

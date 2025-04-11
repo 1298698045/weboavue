@@ -6,7 +6,7 @@
     <div class="header" style="flex: 1;">
       <div class="header-top-menu" @click.stop="handleShowApp">
         <i class="iconfont icon-yingyongzhongxin" style="margin-left: 10px;font-size: 18px;"></i>
-        <span class="text">{{moduleName}}</span>
+        <span class="text">{{ moduleName }}</span>
       </div>
       <div class="header-search">
         <div class="search-type">
@@ -18,13 +18,7 @@
         </div>
         <div class="search-split"></div>
         <div class="search-content">
-          <input
-            class="inp"
-            v-model="data.searchVal"
-            @keydown.enter="search()"
-            placeholder="请输入关键词搜索"
-            type="text"
-          />
+          <input class="inp" v-model="data.searchVal" @keydown.enter="search()" placeholder="请输入关键词搜索" type="text" />
         </div>
         <div class="search-searchIcon" @click="clearInput()">
           <!-- <SearchOutlined style="font-size: 12px" /> -->
@@ -74,7 +68,7 @@
                   </a-timeline>
                 </div>
                 <div class="flow">
-                  如有打卡异常，请 
+                  如有打卡异常，请
                   <a class="flow-link">提交考勤流程 &gt;&gt;</a>
                 </div>
                 <div class="popup-footer">
@@ -110,16 +104,13 @@
         </div>
         <div class="header-info">
           <div class="avatar" @click.stop="handleOpenInfo">
-            <img
-              class="img"
-              :src="avatarUrl?'/api'+ avatarUrl:'/src/assets/img/user/MyResume/showEmpAvatar.png'"
-              alt=""
-            />
+            <img class="img" :src="avatarUrl ? '/api' + avatarUrl : '/src/assets/img/user/MyResume/showEmpAvatar.png'"
+              alt="" />
           </div>
           <div class="info-name" @click.stop="handleOpenInfo">{{ currentAccountName }}</div>
           <div class="info-icon" @click.stop="handleOpenInfo">
             <!-- <DownOutlined style="font-size: 10px" /> -->
-            <i class="iconfont icon-xiala"  style="font-size: 12px;font-weight: 400;"></i>
+            <i class="iconfont icon-xiala" style="font-size: 12px;font-weight: 400;"></i>
           </div>
           <div class="header-info-popup" @click.stop v-if="isInfoPopup">
             <div class="row-text">
@@ -134,31 +125,35 @@
               <div v-for="item in accountList" :key="item">
                 <div class="header-account-item" @click="ChangeAccount(item)">
                   <div class="header-account-item-avatar">
-                    <img
-                    class="img"
-                    :src="item.avatarUrl?'/api'+item.avatarUrl:'/src/assets/img/user/MyResume/showEmpAvatar.png'"
-                    alt=""
-                  />
+                    <img class="img"
+                      :src="item.avatarUrl ? '/api' + item.avatarUrl : '/src/assets/img/user/MyResume/showEmpAvatar.png'"
+                      alt="" />
                   </div>
                   <div class="header-account-item-info">
-                    <span v-if="BusinessUnitId==item.BusinessUnitId" class="header-account-item-current-text">主</span>
+                    <span v-if="BusinessUnitId == item.BusinessUnitId" class="header-account-item-current-text">主</span>
                     <span class="header-account-item-username" @click.stop="handleInfo">
-                      <span :title="item.FullName">{{ item.FullName }}</span><span v-if="item.UserName" :title="item.UserName">{{ item.UserName?'/'+item.UserName:'' }}</span>
+                      <span :title="item.FullName">{{ item.FullName }}</span><span v-if="item.UserName"
+                        :title="item.UserName">{{ item.UserName ? '/' + item.UserName : '' }}</span>
                     </span>
-                    <span class="header-account-item-jobs" :title="item.jobTitle">{{item.jobTitle}}</span><span class="header-account-item-current-icon" v-if="BusinessUnitId==item.BusinessUnitId"><CheckCircleFilled /></span>
-                    <br/>
-                    <div class="header-account-item-deptName rowEllipsis"><span v-if="item.organizationIdName" :title="item.organizationIdName">{{item.organizationIdName?item.organizationIdName+'/':''}}</span><span :title="item.businessUnitIdName">{{item.businessUnitIdName}}</span></div>
+                    <span class="header-account-item-jobs" :title="item.jobTitle">{{ item.jobTitle }}</span><span
+                      class="header-account-item-current-icon" v-if="BusinessUnitId == item.BusinessUnitId">
+                      <CheckCircleFilled />
+                    </span>
+                    <br />
+                    <div class="header-account-item-deptName rowEllipsis"><span v-if="item.organizationIdName"
+                        :title="item.organizationIdName">{{ item.organizationIdName ? item.organizationIdName + '/' : ''
+                        }}</span><span :title="item.businessUnitIdName">{{ item.businessUnitIdName }}</span></div>
                   </div>
                 </div>
                 <div class="header-account-splitter"></div>
               </div>
             </div>
             <div class="header-account-seeting">
-              <div class="header-account-seeting-item"  @click="handlePersonal">
+              <div class="header-account-seeting-item" @click="handlePersonal">
                 <i class="iconfont icon-gerenzhongxin" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">应用中心</span>
               </div>
-              <div class="header-account-seeting-item"  @click="EditPassWord">
+              <div class="header-account-seeting-item" @click="EditPassWord">
                 <i class="iconfont icon-xiugaimima" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">密码修改</span>
               </div>
@@ -177,26 +172,32 @@
         </div>
       </div>
       <div class="app_popup" v-if="isShow" @click.stop>
+        <div class="appSearch">
+          <SearchOutlined class="searchIcon" />
+          <a-input placeholder="查找应用" v-model:value="data.searchText" @change="onSearch" />
+        </div>
         <div class="appList">
-          <div class="app_item" v-for="(item,index) in listApp" :style="{background:item.BgColor}" :key="index" @click="handleGoModule(item)">
+          <div class="app_item" v-for="(item, index) in listApp" :style="{ background: item.BgColor }" :key="index"
+            @click="handleGoModule(item)">
             <div class="appBox">
               <div class="iconBox">
                 <img :src="item.LogoUrl" alt="">
               </div>
-              <div class="app-item-label">{{item.Label}}</div>
+              <div class="app-item-label">{{ item.Label }}</div>
             </div>
           </div>
         </div>
       </div>
-      <NoticeMessages v-if="isNotice" :isShow="isNotice" @cancel="isNotice=false" />
+      <NoticeMessages v-if="isNotice" :isShow="isNotice" @cancel="isNotice = false" />
     </div>
-    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle" @cancel="isConfirm=false" @ok="loginOut" :id="''" />
+    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
+      @cancel="isConfirm = false" @ok="loginOut" :id="''" />
   </div>
 </template>
 <script setup>
 import "@/style/header.less";
 import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance, defineProps, defineEmits } from "vue";
-import { DownOutlined, SearchOutlined, MessageFilled, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined,CheckCircleFilled } from "@ant-design/icons-vue";
+import { DownOutlined, SearchOutlined, MessageFilled, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined, CheckCircleFilled } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
 import NoticeMessages from "@/components/NoticeMessages.vue";
 import Logo from "../header/components/logo.vue";
@@ -214,7 +215,7 @@ const handleShowApp = () => {
   isShow.value = !isShow.value;
 };
 //watch(searchVal, (newVal, oldVal) => {
-  // console.log(newVal, oldVal);
+// console.log(newVal, oldVal);
 //});
 const props = defineProps({
   listApp: Array
@@ -233,7 +234,7 @@ const moduleName = ref(store.state.moduleName);
 
 watch(() => store.state.moduleName, (newVal, oldVal) => {
   moduleName.value = newVal;
-}, {immediate: true});
+}, { immediate: true });
 
 const data = reactive({
   appList: [],
@@ -241,26 +242,29 @@ const data = reactive({
   isNotice: false,
   appCode: "02u90000110",
   currentAppName: "",
-  searchVal:route.query.searchVal,
-  accountList:[
+  searchVal: route.query.searchVal,
+  accountList: [
     // {FullName:'张三（演示账号）',JobTitle:'院长',DeptName:'院领导'},
     // {FullName:'李四（演示账号）',JobTitle:'科主任',DeptName:'信息科'}
   ],
-  currentAccountName:'',
-  BusinessUnitId:'',
-  userId:'',
-  avatarUrl:'',
-  isConfirm:false,
-  confirmText:'',
-  confirmTitle:'',
+  currentAccountName: '',
+  BusinessUnitId: '',
+  userId: '',
+  avatarUrl: '',
+  isConfirm: false,
+  confirmText: '',
+  confirmTitle: '',
+  searchText: '',
+  listAppAll: [],
+  listApp: []
 })
-const { isConfirm,confirmText,confirmTitle,userId,appList, isInfoPopup, isNotice, appCode, currentAppName,searchVal,accountList,currentAccountName,BusinessUnitId,avatarUrl } = toRefs(data);
-const ChangeAccount= (item) => {
+const { listApp, listAppAll, searchText, isConfirm, confirmText, confirmTitle, userId, appList, isInfoPopup, isNotice, appCode, currentAppName, searchVal, accountList, currentAccountName, BusinessUnitId, avatarUrl } = toRefs(data);
+const ChangeAccount = (item) => {
   data.isInfoPopup = false;
-  data.currentAccountName=item.FullName;
-  data.BusinessUnitId=item.BusinessUnitId;
-  data.userId=item.UserId;
-  data.avatarUrl=item.avatarUrl||'';
+  data.currentAccountName = item.FullName;
+  data.BusinessUnitId = item.BusinessUnitId;
+  data.userId = item.UserId;
+  data.avatarUrl = item.avatarUrl || '';
   switchUser(item);
 }
 // proxy.$get(Interface.applist,{
@@ -277,7 +281,7 @@ const ChangeAccount= (item) => {
 // })
 const getCurrentApp = () => {
   let obj = {
-    actions:[{
+    actions: [{
       id: "4105;a",
       descriptor: "",
       callingDescriptor: "UNKNOWN",
@@ -289,7 +293,7 @@ const getCurrentApp = () => {
   let d = {
     message: JSON.stringify(obj)
   }
-  proxy.$post(Interface.currentApp, d).then(res=>{
+  proxy.$post(Interface.currentApp, d).then(res => {
     // console.log("res", res);
     data.appTabs = res.actions[0].returnValue.tabs;
   })
@@ -297,26 +301,26 @@ const getCurrentApp = () => {
 const hanldeOpenNotice = () => {
   data.isNotice = true;
 }
-const handleOpenEmail= () => {
-    let url = router.resolve({
-        path:'/email',
-        name: "Email",
-        query: {
-            
-        },
-    });
-    window.open(url.href);
-    //window.location.href=url.href;
+const handleOpenEmail = () => {
+  let url = router.resolve({
+    path: '/email',
+    name: "Email",
+    query: {
+
+    },
+  });
+  window.open(url.href);
+  //window.location.href=url.href;
 }
-const handleOpenMessage= () => {
-    let url = router.resolve({
-        path:'/MessageHome',
-        name: "MessageHome",
-        query: {
-            
-        },
-    });
-    window.open(url.href);
+const handleOpenMessage = () => {
+  let url = router.resolve({
+    path: '/MessageHome',
+    name: "MessageHome",
+    query: {
+
+    },
+  });
+  window.open(url.href);
 }
 //个人信息
 const handleInfo = () => {
@@ -339,7 +343,7 @@ const handlePersonal = () => {
   })
 }
 //修改密码
-const EditPassWord=()=>{
+const EditPassWord = () => {
   data.isInfoPopup = false;
   router.push({
     path: "/workspace/ChangePassWord",
@@ -347,55 +351,55 @@ const EditPassWord=()=>{
     }
   })
 }
-const handleloginOut=()=>{
-  data.isConfirm=true;
-  data.confirmText='确定要退出登录吗？';
-  data.confirmTitle='退出登录';
+const handleloginOut = () => {
+  data.isConfirm = true;
+  data.confirmText = '确定要退出登录吗？';
+  data.confirmTitle = '退出登录';
 }
-const loginOut= () => {
-  data.isConfirm=false;
+const loginOut = () => {
+  data.isConfirm = false;
   localStorage.clear();
   router.push('/');
 }
 const getBusinessUnits = () => {
-  let userInfo=window.localStorage.getItem('userInfo');
-  if(userInfo){
-    userInfo=JSON.parse(userInfo);
-    data.currentAccountName=userInfo.fullName;
-    data.BusinessUnitId=userInfo.businessUnitId;
-    data.accountList=[
+  let userInfo = window.localStorage.getItem('userInfo');
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+    data.currentAccountName = userInfo.fullName;
+    data.BusinessUnitId = userInfo.businessUnitId;
+    data.accountList = [
       {
         BusinessUnitId: userInfo.businessUnitId,
-        EmployeeId: userInfo.EmployeeId||'',
+        EmployeeId: userInfo.EmployeeId || '',
         FullName: userInfo.fullName,
         OrganizationId: userInfo.organizationId,
         UserId: userInfo.userId,
         UserName: userInfo.userName,
-        avatarUrl: '/one/user/avatar/'+userInfo.userId,
-        businessUnitIdName: userInfo.businessUnitIdName||'暂无',
+        avatarUrl: '/one/user/avatar/' + userInfo.userId,
+        businessUnitIdName: userInfo.businessUnitIdName || '暂无',
         jobTitle: userInfo.JobTitle,
-        organizationIdName: userInfo.organizationIdName||'暂无',
+        organizationIdName: userInfo.organizationIdName || '暂无',
       }
     ]
-    data.userId=userInfo.userId;
+    data.userId = userInfo.userId;
   }
-  proxy.$post(Interface.user.getBusinessUnits, {}).then(res=>{
+  proxy.$post(Interface.user.getBusinessUnits, {}).then(res => {
     //console.log("res", res);
-    if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length){
-      data.accountList=res.actions[0].returnValue;
-      for(var i=0;i<data.accountList.length;i++){
-        if(data.BusinessUnitId==data.accountList[i].BusinessUnitId){
-          data.currentAccountName=data.accountList[i].FullName;
-          data.userId=data.accountList[i].UserId;
-          data.avatarUrl=data.accountList[i].avatarUrl;
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
+      data.accountList = res.actions[0].returnValue;
+      for (var i = 0; i < data.accountList.length; i++) {
+        if (data.BusinessUnitId == data.accountList[i].BusinessUnitId) {
+          data.currentAccountName = data.accountList[i].FullName;
+          data.userId = data.accountList[i].UserId;
+          data.avatarUrl = data.accountList[i].avatarUrl;
           window.localStorage.setItem('businessUnitName', data.accountList[i].businessUnitIdName);
         }
       }
     }
   })
 };
-const switchUser= (item) => {
-  let d={
+const switchUser = (item) => {
+  let d = {
     actions: [
       {
         id: "2919;a",
@@ -410,44 +414,48 @@ const switchUser= (item) => {
     ]
   }
   let obj = {
-      message: JSON.stringify(d)
+    message: JSON.stringify(d)
   }
-  proxy.$post(Interface.user.switchBusinessUnit,obj).then(res=>{
+  proxy.$post(Interface.user.switchBusinessUnit, obj).then(res => {
     //console.log("res", res);
-    if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
-        message.success("切换成功！");
-        localStorage.clear();
-        let data=res.actions[0].returnValue;
-        let token = data.token;
-        let userInfo=data.user?JSON.stringify(data.user):'';
-        window.localStorage.setItem('token', token);
-        window.localStorage.setItem('userInfo', userInfo);
-        store.dispatch('getModules');
-        setTimeout(function(){
-          window.location.reload();
-        },1000)
+    if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+      message.success("切换成功！");
+      localStorage.clear();
+      let data = res.actions[0].returnValue;
+      let token = data.token;
+      let userInfo = data.user ? JSON.stringify(data.user) : '';
+      window.localStorage.setItem('token', token);
+      window.localStorage.setItem('userInfo', userInfo);
+      store.dispatch('getModules');
+      setTimeout(function () {
+        window.location.reload();
+      }, 1000)
     }
-    else{
-        if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
-            message.success(res.actions[0].errorMessage);
-        }
-        else{
-            message.success("切换失败！");
-        }
+    else {
+      if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+        message.success(res.actions[0].errorMessage);
+      }
+      else {
+        message.success("切换失败！");
+      }
     }
-    
+
   })
 };
 onMounted(() => {
+  if (props.listApp) {
+    data.listApp = props.listApp;
+    data.listAppAll = props.listApp;
+  }
   getBusinessUnits();
   window.addEventListener("click", function (e) {
     isShow.value = false;
-    data.isInfoPopup  = false;
+    data.isInfoPopup = false;
   });
 });
 const handleGoModule = (item) => {
   // console.log("item", item);
-  store.commit('setModuleName',item.Label);
+  store.commit('setModuleName', item.Label);
   localStorage.setItem("moduleName", item.Label);
   emit("changeCode", item);
   // router.push({
@@ -466,104 +474,192 @@ const search = () => {
       searchVal: data.searchVal
     }
   })
-}  
-const clearInput= () => {
+}
+const clearInput = () => {
   data.searchVal = '';
   let url = router.resolve({
-      path:'/Search/SearchResult',
-      name: "SearchResult",
-      query: {
-        searchVal: data.searchVal
-      },
+    path: '/Search/SearchResult',
+    name: "SearchResult",
+    query: {
+      searchVal: data.searchVal
+    },
   });
-  window.location.href=url.href;
-}  
+  window.location.href = url.href;
+}
+const onSearch = (e) => {
+  data.listApp = data.listAppAll.filter(item => {
+    return item.Label.indexOf(data.searchText) != -1;
+  })
+}
 </script>
 <style lang="less">
 /* @import "./header.less"; */
-.ant-menu-submenu{
-  .ant-menu-submenu-title{
+.ant-menu-submenu {
+  .ant-menu-submenu-title {
     background: var(--textColor);
     box-shadow: none;
     margin: 0;
     width: 100%;
     border-radius: 0;
-    &:hover{
+
+    &:hover {
       background: #2866C3 !important;
     }
   }
 }
 </style>
-<style>
-  @import "~@/style/icon/header/iconfont.css";
-  /* @import "~@/style/icon/moduleApp/iconfont.css"; */
+<style lang="less">
+@import "~@/style/icon/header/iconfont.css";
+/* @import "~@/style/icon/moduleApp/iconfont.css"; */
 
-.ant-popover.signPlugin .ant-popover-inner{
+.ant-popover.signPlugin .ant-popover-inner {
   padding: 0 !important;
 }
-.headerFlex{
+
+.headerFlex {
   width: 100%;
   display: flex;
 }
-.headerFlex .icon-sousuo{
+
+.headerFlex .icon-sousuo {
   position: relative;
   top: 0px;
   right: 0px;
 }
-.leftLogo{
+
+.leftLogo {
   width: 197px;
 }
-.header .header-search .search-searchIcon{
+
+.header .header-search .search-searchIcon {
   margin-left: 0;
 }
-.header-account-item-current-icon{
-  color:#1055BC;
+
+.header-account-item-current-icon {
+  color: #1055BC;
   font-size: 18px;
   position: absolute;
   top: 18px;
   right: 17px;
 }
-.header-account-item-current-text{
-    margin-right: 6px;
-    color: #fff;
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    background: rgb(232, 169, 5);
-    border-radius: 3px;
-    line-height: 18px;
-    text-align: center;
-    font-size: 11px;
+
+.header-account-item-current-text {
+  margin-right: 6px;
+  color: #fff;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: rgb(232, 169, 5);
+  border-radius: 3px;
+  line-height: 18px;
+  text-align: center;
+  font-size: 11px;
 }
-.header .header-end .header-info-popup .header-account-splitter{
+
+.header .header-end .header-info-popup .header-account-splitter {
   margin: 0;
 }
-.header .header-end .header-info-popup .header-account-item .header-account-item-avatar{
+
+.header .header-end .header-info-popup .header-account-item .header-account-item-avatar {
   height: 54px;
 }
-.header .header-end .header-info-popup .header-account-item{
+
+.header .header-end .header-info-popup .header-account-item {
   height: 60px;
   padding-top: 4px;
 }
-.header .header-end .header-info-popup{
+
+.header .header-end .header-info-popup {
   right: 10px;
 }
-.header .header-end .header-info-popup .header-account-item .header-account-item-info{
+
+.header .header-end .header-info-popup .header-account-item .header-account-item-info {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.header .header-end .header-info-popup .header-account-item .header-account-item-info .header-account-item-jobs{
+
+.header .header-end .header-info-popup .header-account-item .header-account-item-info .header-account-item-jobs {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.header .header-end .header-info-popup .header-account-item .header-account-item-info .header-account-item-username{
-    position: relative;
-    top: 1px;
+
+.header .header-end .header-info-popup .header-account-item .header-account-item-info .header-account-item-username {
+  position: relative;
+  top: 1px;
 }
-.header .header-end .header-info-popup .header-account-item .header-account-item-info .header-account-item-jobs{
-    position: relative;
-    top: 1px;
+
+.header .header-end .header-info-popup .header-account-item .header-account-item-info .header-account-item-jobs {
+  position: relative;
+  top: 1px;
+}
+
+.headerFlex {
+  .header {
+    .app_popup {
+      height: 485px;
+      width: 560px;
+      box-shadow: rgba(0, 0, 0, 0.22) 0px 25.6px 57.6px 0px, rgba(0, 0, 0, 0.18) 0px 4.8px 14.4px 0px;
+      left: 8px;
+      top: 40px;
+      border-radius: 8px;
+
+      .appSearch {
+        position: relative;
+        padding: 18px 20px 8px 20px;
+
+        .ant-input {
+          border-radius: 4px !important;
+          background: #f2f2f2;
+          border: none;
+          height: 33px;
+          text-indent: 22px;
+
+          &::placeholder {
+            color: #999 !important;
+          }
+        }
+
+        .searchIcon {
+          position: absolute;
+          left: 29px;
+          top: 26px;
+          font-size: 18px;
+          z-index: 1;
+          color: #999;
+        }
+      }
+
+      .appList {
+        padding: 10px 0 0 7px;
+        .app_item {
+          margin-left: 10px;
+          margin-bottom: 10px;
+          width: 96px;
+          height: 88px;
+          border-radius: 8px;
+          background: transparent;
+
+          .app-item-label {
+            color: #252423;
+          }
+
+          .iconBox {
+            margin: 4px auto 4px;
+          }
+        }
+
+        .app_item:hover {
+          box-shadow: 0 5px 16px 0 rgba(0, 0, 0, .1);
+          border-color: #f4f4f4 !important;
+        }
+
+        .app_item:hover::after {
+          display: none;
+        }
+      }
+    }
+  }
 }
 </style>

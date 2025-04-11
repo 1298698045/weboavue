@@ -277,23 +277,68 @@ const autoExpandParent = ref(true);
 const res = require("@/localData/treedata.json");
 const gData = ref([]);
 const gDataAll = ref([]);
-proxy.$get('/localData/treedata.json', {}).then((res) => {
-  console.log("res-processTree", res);
-  let listData = res.data;
-  let formTree = (list) => {
-    list.forEach(item => {
-      if (item.children) {
-        formTree(item.children);
+const getTreeData = () => {
+  proxy.$get('/localData/treedata.json', {}).then((res) => {
+    console.log("res-processTree", res);
+    let listData = res.data;
+    let formTree = (list) => {
+      list.forEach(item => {
+        if (item.children) {
+          formTree(item.children);
+        }
+        item.key = item.id;
+        item.value = item.id;
+      })
+    }
+    formTree(listData);
+    console.log("formTree", listData)
+    gData.value = listData;
+    gDataAll.value = listData;
+  })
+  return false
+  let d = {
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          search: data.searchVal
+        },
+      },
+    ],
+  };
+  let obj = {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.workflow.getTree, obj).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.length
+    ) {
+      let listData = res.data;
+      let formTree = (list) => {
+        list.forEach(item => {
+          if (item.processs) {
+            formTree(item.processs);
+          }
+          item.quantity = item.processs.length;
+          item.children = item.processs;
+          item.key = item.id;
+          item.value = item.id;
+        })
       }
-      item.key = item.id;
-      item.value = item.id;
-    })
-  }
-  formTree(listData);
-  console.log("formTree", listData)
-  gData.value = listData;
-  gDataAll.value = listData;
-})
+      formTree(listData);
+      console.log("formTree", listData)
+      gData.value = listData;
+      gDataAll.value = listData;
+    }
+
+  })
+}
 // console.log("genData",genData,treeList)
 
 const onExpand = (keys) => {
@@ -405,9 +450,10 @@ const searchRef = ref(null);
 let formSearchHeight = ref(null);
 const gridRef = ref(null);
 const onSearch = (e) => {
-  gData.value = gDataAll.value.filter(item => {
-    return item.name.indexOf(data.searchVal) != -1;
-  })
+  // gData.value = gDataAll.value.filter(item => {
+  //   return item.name.indexOf(data.searchVal) != -1;
+  // })
+  getTreeData();
 }
 const onSelect = (keys) => {
   data.treeId = keys[0];
@@ -820,7 +866,6 @@ const handleMenuClick = () => {
 watch(() => route, (newVal, oldVal) => {
   if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
     if (route.path == '/lightning/o/workflow/doing') {
-      //getTreeData();
       data.queryParams = {
         filterId: '',
         objectTypeCode: '123',
@@ -832,6 +877,7 @@ watch(() => route, (newVal, oldVal) => {
       data.entityType = '123';
       data.layoutName = 'ToDoInstance'
       setTimeout(function () {
+        getTreeData();
         getTabs();
       }, 1000)
     }
@@ -842,6 +888,7 @@ onMounted(() => {
   // this.$nextTick(()=>{
   //   getTabs();
   // })
+  getTreeData();
   getTabs();
 })
 </script>

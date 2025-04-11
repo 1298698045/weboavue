@@ -521,6 +521,9 @@
     }
     //详情
     const handleDetail= (e) => {
+        if(!e.Id){
+            e.Id=e.id;
+        }
         emit("handleDetail", e);
     }
     // 日-切换日期

@@ -64,7 +64,7 @@
                         <a-menu-item divided>转换为子任务</a-menu-item>
                         <a-menu-item command="move">移动</a-menu-item>
                         <a-menu-item command="copy">克隆</a-menu-item> -->
-                        <a-menu-item @click="handleDelete">删除</a-menu-item>
+                        <a-menu-item @click="handleDelete" v-if="isAdmin">删除</a-menu-item>
                         <!-- <a-menu-item divided>查找字段</a-menu-item>
                         <a-menu-item >打印</a-menu-item>
                         <a-menu-item >导出 XML</a-menu-item>
@@ -104,7 +104,7 @@
 
         
         </div>
-        <div class="head-operate">
+        <div class="head-operate" v-if="isAdmin">
             <div class="head-operate-item btn"  @click="addfile">
                 <a-tooltip title="添加附件" effect="dark"  placement="bottom">
                     <a-upload v-model:file-list="fileList" :headers="headers" @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
@@ -127,7 +127,7 @@
         <div class="detail-section detail-describe">
             <div class="section-title">描述</div>
             <div class="section-body">
-                <div v-show="!editdescribe.show" @click="editdescribe.show=true">
+                <div v-show="!editdescribe.show||isAdmin" @click="editdescribe.show=true">
                     <div class="descriptioncontainer" 
                         v-if="informationdata.record.Description!=''" 
                         v-html="informationdata.record.Description">
@@ -136,7 +136,7 @@
                         <span >添加描述...</span>
                     </div>
                 </div>
-                <div class="editorcontent" v-show="editdescribe.show">
+                <div class="editorcontent" v-show="editdescribe.show&&isAdmin">
                     <!-- <Editor v-model="informationdata.record.Description"></Editor> -->
                     <TEditor ref="editorRef" mode="middle" :placeholder="'添加描述或附件文档'"  :height=250
                             @input="getEditorContent" />
@@ -151,7 +151,7 @@
             <div class="section-title">附件</div>
             <div class="section-body">
                 <!-- <fileupload :autoupload="false" :itemid="itemid" ref="fileupload" /> -->
-                <a-upload-dragger v-model:file-list="fileList" :headers="headers" @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
+                <a-upload-dragger v-if="isAdmin" v-model:file-list="fileList" :headers="headers" @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
                     <div class="uploadRow">
                         <p class="ant-upload-drag-icon">
                             <InboxOutlined />
@@ -198,7 +198,7 @@
             </div>
         </div>
         <div class="detail-section detail-related">
-            <Subtask ref="SubtaskRef" :priorities="informationdata.record.PriorityCode.priorities" :statuss="informationdata.record.StateCode.statuss" :itemid="itemid" @reload="reloadinformation()" @handleDelete="handleDelete1" />
+            <Subtask ref="SubtaskRef" :isAdmin="isAdmin" :priorities="informationdata.record.PriorityCode.priorities" :statuss="informationdata.record.StateCode.statuss" :itemid="itemid" @reload="reloadinformation()" @handleDelete="handleDelete1" />
         </div>
         <information v-if="twoarrange" :informationdata='informationdata'></information>
         <div class="detail-section detail-active">
@@ -209,7 +209,7 @@
         ⋮
     </div>
     <div class="right detail-right">
-        <information @reload="reloadinformation" :informationdata='informationdata' :showWorkflow="showWorkflow"></information>
+        <information @reload="reloadinformation" :informationdata='informationdata' :showWorkflow="showWorkflow" :isAdmin="isAdmin"></information>
     </div>
 </div>
     <movetask ref="movetask" v-if="isShowMovetask" :project="informationdata.record.RegardingObjectId" :itemid="itemid" />
@@ -323,7 +323,9 @@ const data = reactive({
         pdfParams: {},
         recordId:'',
         isTxt: false,
-        txtParams: {}
+        txtParams: {},
+        currentUserId:'',
+        isAdmin:false
   })
   const {
             id,
@@ -363,6 +365,8 @@ const data = reactive({
             isShowEditWorkflow,
             isShowMovetask,
             isShowCopytask,
+            currentUserId,
+            isAdmin
         } = toRefs(data);
         const emit = defineEmits(['reload','handleDelete']);
         const props = defineProps({
@@ -404,6 +408,9 @@ const data = reactive({
         }
         function changeIssueType(id){
             //console.log(id)
+            if(data.isAdmin){}else{
+                return false;
+            }
             data.informationdata.record['IssueType']=id
             savedetail('IssueType')
         }
@@ -531,12 +538,18 @@ const data = reactive({
                 let fields=res.actions[0].returnValue.fields;
 
                 data.informationdata.id = props.itemid;
-                data.projectid=fields.OwningBusinessUnit.value;
-                data.projectname=fields.OwningBusinessUnit.displayValue;
-                editorRef.value.content=fields.Description.value;
+                data.projectid=fields.OwningBusinessUnit?fields.OwningBusinessUnit.value:'';
+                data.projectname=fields.OwningBusinessUnit?fields.OwningBusinessUnit.displayValue:'';
+                editorRef.value.content=fields.Description?fields.Description.value:'';
+                if(fields.OwningUser.value==data.currentUserId||fields.CreatedBy.value==data.currentUserId){
+                    data.isAdmin=true;
+                }
+                else{
+                    data.isAdmin=false;
+                }
                 data.informationdata.record = {
                     Subject:fields.Subject.value,
-                    Description:fields.Description.value,
+                    Description:fields.Description?fields.Description.value:'',
                     OwningUser:{
                         Id:fields.OwningUser.value,
                         Name:fields.OwningUser.displayValue
@@ -624,6 +637,9 @@ function dragControllerDiv(){
     }
 }
 function editsubject(){
+    if(data.isAdmin){}else{
+        return false;
+    }
             data.edittitle = true
             nextTick(()=>{    
                 //refs.subject.focus()
@@ -812,6 +828,16 @@ watch(props.itemid, (newVal, oldVal) => {
     data.uploadData.parentId=props.itemid;
 }, { deep: true, immediate: true })
 onMounted(() => {
+    let userInfo = window.localStorage.getItem('userInfo');
+    if (userInfo) {
+        userInfo = JSON.parse(userInfo);
+        var userId = userInfo.userId;
+        var userName = userInfo.fullName;
+        if (userId == 'jackliu') {
+        userId = '2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+        }
+        data.currentUserId=userId.toUpperCase();
+    }
     dragControllerDiv();
     getdata();
     getFiles();

@@ -3,7 +3,7 @@
             <div class="section-title">
                 <span>子任务</span>
                 <div class="edit">
-                    <div class="hover-iconbtn" @click="newrelated">
+                    <div class="hover-iconbtn" @click="newrelated" v-if="isAdmin">
                         <a-tooltip  title="添加" effect="dark"  placement="bottom">
                             <icon  name="add" />
                         </a-tooltip>
@@ -46,7 +46,7 @@
                                     @keydown.stop="(e) => finishedit(e, item)"
                                     @blur="(e) => finishedit(27, item)"
                                     ref="relateditem"
-                                    size="mini" type="text" v-model="item.fields.summary" />
+                                    :size="'mini'" type="text" v-model="item.fields.summary" />
                                 </div>
                             </div>
                         </div>
@@ -176,7 +176,7 @@ export default {
             PriorityCodeList:[{"iconUrl":"/images/icons/priorities/highest.svg","id":"5","name":"最高","__typename":null},{"iconUrl":"/images/icons/priorities/high.svg","id":"4","name":"高","__typename":null},{"iconUrl":"/images/icons/priorities/medium.svg","id":"3","name":"中等","__typename":null},{"iconUrl":"/images/icons/priorities/low.svg","id":"2","name":"低","__typename":null},{"iconUrl":"/images/icons/priorities/lowest.svg","id":"1","name":"最低","__typename":null}],
         }
     },
-    props:['itemid','priorities','statuss'],
+    props:['itemid','priorities','statuss','isAdmin'],
     watch:{
         itemid(){
             // this.relatedlistmove = this.relatedlist||[]

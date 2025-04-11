@@ -3,7 +3,7 @@
 <div class="detail-section detail-status">
             <!-- <div class="section-title">状态</div> -->
             <div class="section-body">
-                <div class="btn statusCategoryId hover deep" :class="'statusCategoryId'+ruleForm.StateCode.content.statusCategory.id">
+                <div class="btn statusCategoryId hover deep" :style="{'pointer-events':!isAdmin?'none':'unset'}" :class="'statusCategoryId'+ruleForm.StateCode.content.statusCategory.id">
                     <choosestatus 
                         @visiblechange="visiblechange"
                         @change="savedetail"
@@ -22,7 +22,7 @@
         <el-collapse-item title="固定字段" name="1">
                         <el-descriptions title="" :column=1>
                             <el-descriptions-item label="经办人">
-                                <div v-if="!edit.OwningUser" @click="edit.OwningUser=true">
+                                <div v-if="!edit.OwningUser||!isAdmin" @click="edit.OwningUser=true">
                                     <div class="flexbox">
                                         <Userhead :popover="true" :userid="ruleForm.OwningUser.Id"/>
                                         <div>
@@ -30,7 +30,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div v-if="edit.OwningUser">
+                                <div v-if="edit.OwningUser&&isAdmin">
                                     <researchelselect 
                                     :size="'mini'"
                                     :disabled="false"
@@ -82,7 +82,7 @@
                                 </div>
                             </el-descriptions-item>
                             <el-descriptions-item label="优先级" v-if="ruleForm.PriorityCode">
-                                <div class="PriorityCodecontainer" :class="{'PriorityCodecontainer1':!edit.PriorityCode}" @click="edit.PriorityCode=true">
+                                <div class="PriorityCodecontainer" :class="{'PriorityCodecontainer1':(!edit.PriorityCode||!isAdmin)}" @click="edit.PriorityCode=true">
                                     <researchelselect 
                                     :size="'mini'"
                                     @change="savedetail"
@@ -220,7 +220,7 @@ export default {
     components:{
         researchelselect,Userhead,choosestatus
     },
-    props:['informationdata','showWorkflow'],
+    props:['informationdata','showWorkflow','isAdmin'],
     watch:{
         informationdata:{
             handler(){
@@ -286,11 +286,17 @@ export default {
             }
         },
         editfieldblur(field){
+            if(this.isAdmin){}else{
+                return false;
+            }
             setTimeout(() => {
                 this.edit[field] = false
             }, 200);
         },
         editfield(field){
+            if(this.isAdmin){}else{
+                return false;
+            }
             this.edit[field] = true
             this.$nextTick(()=>{
                 //console.log(this.$refs)

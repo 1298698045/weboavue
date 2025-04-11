@@ -122,7 +122,7 @@ defineExpose({ resetForm, getSearchLayout })
     justify-content: space-between;
     align-items: center;
     padding-right: 16px;
-    border-bottom: 1px solid #dedede !important;
+    //border-bottom: 1px solid #dedede !important;
     margin-bottom: -1px;
     height: 46px;
     flex-direction: row-reverse;
