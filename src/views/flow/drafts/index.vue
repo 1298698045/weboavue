@@ -21,27 +21,19 @@
                         </div>
                         <div class="wea-left-tree-scroll">
                             <a-tree :style="{ height: tableHeight + 'px' }" :expanded-keys="expandedKeys"
-                                :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node
-                                :fieldNames="fieldNames" @select="onSelect" @expand="onExpand">
-                                <template #switcherIcon="{ switcherCls }">
-                                    <CaretDownOutlined :class="switcherCls"
-                                        style="color: rgb(163, 163, 163); font-size: 14px">
-                                    </CaretDownOutlined>
-                                </template>
-                                <template #title="{ name, quantity }">
-                                    <!-- <span v-if="name.indexOf(searchValue) > -1">
-                      {{ name.substr(0, name.indexOf(searchValue)) }}
-                      {{
-                      name.substr(
-                      name.indexOf(searchValue) + searchValue.length
-                      )
-                      }}
-                      <span class="tree-num">{{ quantity }}</span>
-                    </span>
-                    <span v-else>{{ name }}</span> -->
-                                    <span>{{ name }}<span class="tree-num">{{ quantity }}</span></span>
-                                </template>
-                            </a-tree>
+                :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
+                @select="onSelect" @expand="onExpand">
+                <template #switcherIcon="{ switcherCls }">
+                  <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px;position: relative;top: 2px;left: 6px;">
+                  </CaretDownOutlined>
+                </template>
+                <template #title="{ name, quantity }">
+                  <span style="width: 280px;overflow: hidden;height: 30px;text-overflow: ellipsis;white-space: nowrap;display: inline-block;font-size: 14px;">
+                    {{ name }}
+                    <span class="tree-num" style="position: absolute;right: 10px;font-size: 14px;padding: 0 !important;background: transparent !important;">{{ quantity }}</span>
+                  </span>
+                </template>
+              </a-tree>
                         </div>
                     </div>
                 </a-col>
@@ -211,23 +203,49 @@ const autoExpandParent = ref(true);
 const res = require("@/localData/treedata.json");
 const gData = ref([]);
 const gDataAll = ref([]);
-proxy.$get('/localData/treedata.json', {}).then((res) => {
-    console.log("res-processTree", res);
-    let listData = res.data;
-    let formTree = (list) => {
+const getTreeData = () => {
+  let d = {
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          search: data.searchVal
+        },
+      },
+    ],
+  };
+  let obj = {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.workflow.getTree, obj).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.length
+    ) {
+      let listData = res.data;
+      let formTree = (list) => {
         list.forEach(item => {
-            if (item.children) {
-                formTree(item.children);
-            }
-            item.key = item.id;
-            item.value = item.id;
+          if (item.processs) {
+            formTree(item.processs);
+          }
+          item.quantity = item.processs.length;
+          item.children = item.processs;
+          item.key = item.id;
+          item.value = item.id;
         })
+      }
+      formTree(listData);
+      console.log("formTree", listData)
+      gData.value = listData;
+      gDataAll.value = listData;
     }
-    formTree(listData);
-    console.log("formTree", listData)
-    gData.value = listData;
-    gDataAll.value = listData;
-})
+  })
+}
 // console.log("genData",genData,treeList)
 
 const onExpand = (keys) => {
@@ -252,7 +270,7 @@ let data = reactive({
     isCollapsed: false,
     tableHeight: '',
     fieldNames: {
-        children: 'children', title: 'name', key: 'id'
+        children: 'processs', title: 'name', key: 'id'
     },
     tabs0: [
         {
@@ -339,9 +357,10 @@ const searchRef = ref(null);
 let formSearchHeight = ref(null);
 const gridRef = ref(null);
 const onSearch = (e) => {
-    gData.value = gDataAll.value.filter(item => {
-        return item.name.indexOf(data.searchVal) != -1;
-    })
+    // gData.value = gDataAll.value.filter(item => {
+    //     return item.name.indexOf(data.searchVal) != -1;
+    // })
+    getTreeData();
 }
 const onSelect = (keys) => {
     data.treeId = keys[0];
@@ -790,6 +809,7 @@ watch(() => route, (newVal, oldVal) => {
             data.entityType = '123';
             data.layoutName = 'draftWFLogs'
             setTimeout(function () {
+                getTreeData();
                 getTabs();
             }, 1000)
         }
@@ -800,6 +820,7 @@ onMounted(() => {
     // this.$nextTick(()=>{
     //   getTabs();
     // })
+    getTreeData();
     getTabs();
 })
 </script>

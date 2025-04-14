@@ -37,59 +37,16 @@
             <div class="wea-left-tree-scroll information-tree">
               <a-tree :style="{ height: tableHeight + 'px' }" :expanded-keys="expandedKeys"
                 :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
-                :selectedKeys="selectedKeys" @select="onSelect" @expand="onExpand">
+                @select="onSelect" @expand="onExpand">
                 <template #switcherIcon="{ switcherCls }">
-                  <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
+                  <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px;position: relative;top: 2px;left: 6px;">
                   </CaretDownOutlined>
                 </template>
                 <template #title="{ name, quantity }">
-                  <span>
+                  <span style="width: 280px;overflow: hidden;height: 30px;text-overflow: ellipsis;white-space: nowrap;display: inline-block;font-size: 14px;">
                     {{ name }}
-                    <span class="tree-num">
-                      <!-- <span class="tree-btn tree-add" @click.stop="handleAddLeft(id,name)">
-                                <PlusOutlined title="添加子目录" />
-                              </span>
-                              <span class="tree-btn tree-edit" @click.stop="handleEditLeft(id)">
-                                <EditOutlined title="编辑目录" />
-                              </span>
-                              <span class="tree-btn tree-delete" @click.stop="handleDeleteLeft(id)">
-                                <DeleteOutlined title="删除" />
-                              </span> -->
-                      <!-- <span class="tree-btn tree-favor" :class="{'tree-favor-active':isFavor}" @click.stop="setFavor(id,name,isFavor)">
-                                <StarOutlined title="收藏" v-if="!isFavor" />
-                                <StarFilled title="取消收藏" v-if="isFavor" />
-                              </span> -->
-                      {{ quantity }}
-                    </span>
+                    <span class="tree-num" style="position: absolute;right: 10px;font-size: 14px;padding: 0 !important;background: transparent !important;">{{ quantity }}</span>
                   </span>
-                  <!-- <a-dropdown :trigger="['contextmenu']">
-                      <span>
-                            {{ name }}
-                            <span class="tree-num">
-                              <span class="tree-btn tree-add" @click.stop="handleAddLeft(id,name)">
-                                <PlusOutlined title="添加子目录" />
-                              </span>
-                              <span class="tree-btn tree-edit" @click.stop="handleEditLeft(id)">
-                                <EditOutlined title="编辑目录" />
-                              </span>
-                              <span class="tree-btn tree-delete" @click.stop="handleDeleteLeft(id)">
-                                <DeleteOutlined title="删除" />
-                              </span>
-                              <span class="tree-btn tree-favor" :class="{'tree-favor-active':isFavor||data.leftTreeTop=='按查询种类显示'}" @click.stop="setFavor(id,name,quantity,isFavor)">
-                                <StarOutlined title="收藏" v-if="!isFavor&&data.leftTreeTop!='按查询种类显示'" />
-                                <StarFilled title="取消收藏" v-if="(isFavor||data.leftTreeTop=='按查询种类显示')" />
-                              </span>
-                              {{ quantity }}
-                            </span>
-                          </span>
-                        <template #overlay>
-                          <a-menu>
-                            <a-menu-item key="1" @click="handleAddLeft(id,name)">添加子目录</a-menu-item>
-                            <a-menu-item key="2" @click="handleEditLeft(id)">编辑目录</a-menu-item>
-                            <a-menu-item key="3" @click="handleDeleteLeft(id)">删除</a-menu-item>
-                          </a-menu>
-                        </template>
-</a-dropdown> -->
                 </template>
               </a-tree>
             </div>
@@ -236,67 +193,50 @@ const res = require("@/localData/treedata.json");
 const gData = ref([]);
 const gDataAll = ref([]);
 
-//按流程类型显示
 const getTreeData = () => {
-  gData.value = [];
-  gDataAll.value = [];
-  let url = Interface.content.folder.get;
-  // proxy.$post(url,{}).then(res=>{
-  //   if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue){
-  //     let formTree = (list) => {
-  //       list.forEach(item=>{
-  //         if(item.children){
-  //           formTree(item.children);
-  //         }
-  //         item.key = item.id;
-  //         item.value = item.id;
-  //         item.isFavor=item.isFavor||false;
-  //       })
-  //     }
-  //     let response=res.actions[0].returnValue;
-  //     formTree(response);
-  //     console.log("formTree",response);
-  //     gData.value = response;
-  //     gDataAll.value = response;
-  //   }
-  // });
-  proxy.$get('/localData/treedata.json', {}).then((res) => {
-    console.log("res-processTree", res);
-    let listData = res.data;
-    let formTree = (list) => {
-      list.forEach(item => {
-        if (item.children) {
-          formTree(item.children);
-        }
-        item.key = item.id;
-        item.value = item.id;
-      })
+  let d = {
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          search: data.searchVal
+        },
+      },
+    ],
+  };
+  let obj = {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.workflow.getTree, obj).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.length
+    ) {
+      let listData = res.data;
+      let formTree = (list) => {
+        list.forEach(item => {
+          if (item.processs) {
+            formTree(item.processs);
+          }
+          item.quantity = item.processs.length;
+          item.children = item.processs;
+          item.key = item.id;
+          item.value = item.id;
+        })
+      }
+      formTree(listData);
+      console.log("formTree", listData)
+      gData.value = listData;
+      gDataAll.value = listData;
     }
-    formTree(listData);
-    console.log("formTree", listData)
-    gData.value = listData;
-    gDataAll.value = listData;
   })
-  // proxy.$get(Interface.information.contentTree,{}).then((response)=>{
-  //     let formTree = (list) => {
-  //       list.forEach(item=>{
-  //         if(item.children){
-  //           formTree(item.children);
-  //         }
-  //         item.key = item.id;
-  //         item.value = item.id;
-  //         item.isFavor=item.isFavor||false;
-  //       })
-  //     }
-  //     formTree(response);
-  //     console.log("formTree",response)
-  //     gData.value = response;
-  //     gDataAll.value = response;
-  // })
 }
-getTreeData()
 
-//
 const getFavorite = () => {
   gData.value = [];
   gDataAll.value = [];
@@ -465,7 +405,7 @@ let data = reactive({
   isCollapsed: false,
   tableHeight: '',
   fieldNames: {
-    children: 'children', title: 'name', key: 'id'
+    children: 'processs', title: 'name', key: 'id'
   },
   tabs: [
     {
@@ -623,9 +563,10 @@ const leftTreeTopChange = (e) => {
   //console.log(e)
 }
 const onSearch = (e) => {
-  gData.value = gDataAll.value.filter(item => {
-    return item.name.indexOf(data.searchVal) !== -1;
-  })
+  // gData.value = gDataAll.value.filter(item => {
+  //   return item.name.indexOf(data.searchVal) !== -1;
+  // })
+  getTreeData();
 }
 const onSelect = (keys, { node }) => {
   //console.log(node)
@@ -1088,6 +1029,7 @@ watch(() => route, (newVal, oldVal) => {
       data.entityType = '122';
       data.layoutName = 'WFProcessInstanceSearch'
       setTimeout(function () {
+        getTreeData();
         getTabs();
       }, 1000)
     }
@@ -1103,6 +1045,7 @@ onMounted(() => {
   // this.$nextTick(()=>{
   //   getTabs();
   // })
+  getTreeData();
   getTabs();
 })
 </script>

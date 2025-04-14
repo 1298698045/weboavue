@@ -23,7 +23,7 @@
                             <div class="appcenter-card-desc">
                                 这是一行简介文字。
                             </div>
-                            <div class="appcenter-card-more" title="更多选项">
+                            <div class="appcenter-card-more">
                                 <a-dropdown :trigger="['hover']" class="ml10" :getPopupContainer="getPopupContainer">
                                     <span class="btn-drop">
                                         <EllipsisOutlined style="color: #1D2129;" />
