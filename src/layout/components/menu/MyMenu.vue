@@ -105,8 +105,10 @@ watch(()=>route.path, (newVal, oldVal)=>{
       data.appTabs = subModules.map(item=>{
         item.label = item.navAction.label;
         item.key = item.name;
-        item.icon = () => h("i", {
-          class: ["iconfont", "icon-tongxunlu1"],
+        item.icon = () => h("img", {
+          src: Interface.pathUrl + item.navAction.icon,
+          class: "dynamic-icon",
+          style: { width: '24px', height: '24px' },
         });
         return item;
       });

@@ -339,7 +339,7 @@
     data.layoutList.forEach(item => {
       item.rows.forEach(row => {
         row.attributes.forEach(col => {
-          formState[col.localId] = data.list[col.localId].value;
+          formState[col.localId] = data.list[col.localId]?.value;
           if (['O', 'Y', 'U', 'Y_MD'].includes(col.attributes.type)) {
             console.log("data.list[col.localId]", data.list[col.localId]);
             // formState[col.localId] = data.list[col.localId].value;
