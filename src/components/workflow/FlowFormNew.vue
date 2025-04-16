@@ -58,6 +58,18 @@
                                                             <FieldType :type="child.type" :print="print" :field="child" :list="sub" :select="relatedObjData[col.field.id].select" :search="col.search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)" :stateCode="stateCode" />
                                                         </td>
                                                     </tr>
+                                                    <tr v-if="col.field.isAggregate">
+                                                        <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">合计</td>
+                                                        <td :colspan="col.field.checkedColumns.length" style="border: 1px solid #5d9cec;height: 24px;padding-right: 10px;text-align: right;">
+                                                            <!--  v-for="(child, childIdx) in col.field.checkedColumns" -->
+                                                            <span style="color: red;" v-for="(child, childIdx) in col.field.checkedColumns">
+                                                                <span v-if="child.isAggregate">
+                                                                    合计{{child.label}}：{{col.aggregate[child.key]}}
+                                                                </span>
+                                                            </span>
+                                                            <!-- <span style="color: red;" v-if="childIdx == col.field.checkedColumns.length-1">123</span> -->
+                                                        </td>
+                                                    </tr>
                                                 </a-checkbox-group>
                                             </tbody>
                                         </table>
@@ -460,6 +472,29 @@
                             obj['key'] = row.key;
                             list.push(obj);
                         });
+                        console.log("list", col, list);
+                        // 处理子表-合计
+                        if(col.field.isAggregate){
+                            let aggregate = {};
+                            // if(col.field.isAggregate){
+                            //     col.field.checkedColumns.forEach(l=>{
+                            //         aggregate[l.key] = "";
+                            //     })
+                            // };
+                            // console.log("aggregate", aggregate);
+                            // col.aggregate = aggregate;
+
+                            let aggregateColumn = col.field.checkedColumns.filter(v=>v.isAggregate);
+                            console.log("aggregateColumn", aggregateColumn);
+                            aggregateColumn.forEach(v=>{
+                                aggregate[v.key] = list.reduce(
+                                    (sum, row) => sum + Number(row[v.key] || 0),
+                                    0 
+                                );
+                            });
+                            console.log("aggregate", aggregate);
+                            col.aggregate = aggregate;
+                        }
                         col.subTableData = list;
                     }
                 }
@@ -927,7 +962,11 @@
                         item.checkedColumns?.forEach(item=>{
                             rowField[item.key] = "";
                             item.id = item.key;
-                        })
+                        });
+                        console.log("item.checkedColumns", item.checkedColumns);
+                        let isAggregate = item.checkedColumns.some(v=>v.isAggregate);
+                        item.isAggregate = isAggregate;
+
                         data.cellData[row][column].subTableData.push(rowField);
 
                         // search
@@ -935,16 +974,18 @@
                             // console.log("k", k);
                             data.cellData[row][column].search[k.id] = [];
                         })
-
+                        console.log("data.cellData[row][column].subTableData", data.cellData[row][column].subTableData);
                         // 记录相关列表
                         let relatedName = item.id.split("__")[1];
                         data.relatedObjData[item.id] = {
                             relatedName: relatedName,
-                            checkedColumns: item.checkedColumns
+                            checkedColumns: item.checkedColumns,
+                            isAggregate: isAggregate,
                         }
                     }
                 }
             });
+            console.log('comps', data.comps)
             if(data.mergeData){
                 data.mergeData.forEach(item=>{
                     if(data.cellData[item.startRow] && data.cellData[item.startRow][item.startColumn]){

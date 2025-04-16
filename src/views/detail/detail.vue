@@ -16,37 +16,32 @@
                     </div>
                 </div>
                 <div class="fieldCol actionsContainer">
-                    <!-- <div class="fh-btn-group">
-                        <div class="fh-btn">批量录入岗位职责</div>
-                        <div class="fh-btn">添加岗位职责</div>
-                        <div class="fh-btn" @click="handleEdit">编辑</div>
-                        <div class="fh-btn">复制</div>
-                        <div class="fh-btn" @click="printPostInstructions">打印岗位说明</div>
-                        <a-dropdown :trigger="['click']">
+                    <div class="fh-btn-group">
+                        <div class="fh-btn" v-for="(item, index) in btnActions.slice(0,3)"
+                            @click="handleBtnActions(item.apiName)">{{ item.label }}</div>
+                        <a-dropdown :trigger="['click']" v-if="btnActions.length > 3">
                             <div class="fh-btn fh-btn-icon">
-                                <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon" lwc-6qul4k2dv7m="" data-key="down" class="slds-icon slds-icon_x-small"><g lwc-6qul4k2dv7m=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" lwc-6qul4k2dv7m=""></path></g></svg>
+                                <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon"
+                                    lwc-6qul4k2dv7m="" data-key="down" class="slds-icon slds-icon_x-small">
+                                    <g lwc-6qul4k2dv7m="">
+                                        <path
+                                            d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
+                                            lwc-6qul4k2dv7m=""></path>
+                                    </g>
+                                </svg>
                             </div>
                             <template #overlay>
-                                <a-menu :trigger="['click']" style="padding: 10px 0;border: 1px solid #333;border-radius: 4px;">
-                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
-                                        新建备注
-                                    </a-menu-item>
-                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
-                                        撤销
-                                    </a-menu-item>
-                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
-                                        复制
-                                    </a-menu-item>
-                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
-                                        导出说明书
-                                    </a-menu-item>
-                                    <a-menu-item style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;" key="1">
-                                        下载说明书
+                                <a-menu :trigger="['click']"
+                                    style="padding: 10px 0;border: 1px solid #333;border-radius: 4px;">
+                                    <a-menu-item
+                                        style="min-width: 98px;padding: 8px 12px; color:#0176d3;font-size: 12px;"
+                                        v-for="(item, index) in btnActions.slice(3)" :key="item.apiName">
+                                        {{ item.label }}
                                     </a-menu-item>
                                 </a-menu>
                             </template>
                         </a-dropdown>
-                    </div> -->
+                    </div>
                 </div>
             </div>
             <ul class="pageHeader-from">
@@ -140,10 +135,11 @@
         isDelete: false,
         Name: "",
         templateName: "",
-        layoutItems: []
+        layoutItems: [],
+        btnActions: []
     })
     const { tabs, activeKey, desc, isConfirm, isCommon, id, objectTypeCode, entityApiName, 
-    isDelete, Name, templateName, layoutItems } = toRefs(data);
+    isDelete, Name, templateName, layoutItems, btnActions } = toRefs(data);
 
     const changeTabs = (e) => {
         data.activeKey = e;
