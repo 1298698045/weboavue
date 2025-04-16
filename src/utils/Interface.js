@@ -190,6 +190,9 @@ const Interface = {
     roomList: baseUrl + "/ui.meetingroom.components/getAllCalendars",
     meeting: baseUrl + "/ui.meeting.components/getAllCalendars",
   },
+  vehicle: {
+    calendarList: baseUrl + "/ui.vehicle.components/getAllCalendars",//车辆日历
+  },
   file: {
     list: "/localData/fileAdmin/file.files.search.json",
     child: "/localData/fileAdmin/child.json",
@@ -497,5 +500,6 @@ const Interface = {
     batchAddStamp: baseUrl + "/institution/filestamp/batch" // 批量添加文件水印
   },
   commonExport: baseUrl + "/aura/data/pump/entity/export", // 通用导出
+  saveBatchRecord: baseUrl + "/aura/RecordUi/saveBatchRecord", // 批量保存记录
 };
 export default Interface;

@@ -688,7 +688,14 @@
 
         .rightBox {
             flex: 1;
-
+            flex-direction: column;
+            display: flex;
+            :deep .ant-btn {
+                margin-top: 0px;
+            }
+            :deep .ant-picker .ant-picker-input{
+                width: 96px;
+            }
             .calendarHeader {
                 width: 100%;
                 padding: 12px;
@@ -803,7 +810,7 @@
         /* background: #f2f3f5; */
         background: #fff;
         height: 32px;
-        padding-top: 1px;
+        padding-top: 0px;
         margin-left: 15px;
         box-sizing: content-box;
         .calendar-typechook{

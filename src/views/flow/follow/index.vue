@@ -106,18 +106,22 @@
               <span class="wea-left-tree-search-label alltype">全部类型</span>
               <a-input-search v-model:value="data.searchVal" placeholder="" @search="onSearch" />
             </div>
-            <div class="wea-left-tree-scroll">
+            <div class="wea-left-tree-scroll processTree">
               <a-tree :style="{ height: tableHeight + 'px' }" :expanded-keys="expandedKeys"
                 :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
                 @select="onSelect" @expand="onExpand">
                 <template #switcherIcon="{ switcherCls }">
-                  <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px;position: relative;top: 2px;left: 6px;">
+                  <CaretDownOutlined :class="switcherCls"
+                    style="color: rgb(163, 163, 163); font-size: 14px;position: relative;top: 2px;left: 6px;">
                   </CaretDownOutlined>
                 </template>
                 <template #title="{ name, quantity }">
-                  <span style="width: 280px;overflow: hidden;height: 30px;text-overflow: ellipsis;white-space: nowrap;display: inline-block;font-size: 14px;">
+                  <span :title="name"
+                    style="width: 280px;overflow: hidden;height: 30px;text-overflow: ellipsis;white-space: nowrap;display: inline-block;font-size: 14px;">
                     {{ name }}
-                    <span class="tree-num" style="position: absolute;right: 10px;font-size: 14px;padding: 0 !important;background: transparent !important;">{{ quantity }}</span>
+                    <span class="tree-num"
+                      style="position: absolute;right: 10px;font-size: 14px;padding: 0 !important;background: transparent !important;color: #c5c5c5;">{{
+                      quantity }}</span>
                   </span>
                 </template>
               </a-tree>
@@ -312,16 +316,16 @@ const getTreeData = () => {
       res.actions[0].returnValue &&
       res.actions[0].returnValue.length
     ) {
-      let listData = res.data;
+      let listData = res.actions[0].returnValue;
       let formTree = (list) => {
         list.forEach(item => {
           if (item.processs) {
             formTree(item.processs);
+            item.quantity = item.processs.length;
           }
-          item.quantity = item.processs.length;
-          item.children = item.processs;
-          item.key = item.id;
-          item.value = item.id;
+          item.id = item.categoryId || item.processId;
+          item.key = item.categoryId || item.processId;
+          item.value = item.categoryId || item.processId;
         })
       }
       formTree(listData);
@@ -932,6 +936,12 @@ onMounted(() => {
 
   .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
     height: 45px !important;
+  }
+
+  .processTree {
+    :deep .ant-tree-node-content-wrapper {
+      display: block !important;
+    }
   }
 
   :deep .namefield {

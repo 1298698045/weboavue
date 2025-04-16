@@ -640,7 +640,7 @@
         }
         data.meetingList =[];
         data.resources=[];
-        proxy.$post(Interface.meetingRoom.roomList,obj).then(res=>{
+        proxy.$post(Interface.vehicle.calendarList,obj).then(res=>{
             fullCalendarRef.value.getApi().view.calendar.changeView(data.calendarOptions.initialView);
             setTimeout(function(){
                 fullCalendarRef.value.getApi().gotoDate(new Date(data.currentDate));
