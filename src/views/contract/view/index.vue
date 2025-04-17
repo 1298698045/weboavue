@@ -22,57 +22,35 @@
             <div class="fh-btn">变更拥有人</div>
             <div class="fh-btn" @click="handleSetPlan">设置计划</div>
             <div class="fh-btn" @click="handleChangeStateCode">更改状态</div> -->
-            <template
-              v-for="(item, index) in btnActions.slice(0, 3)"
-              :key="index"
-            >
+            <template v-for="(item, index) in btnActions.slice(0, 3)" :key="index">
               <div class="fh-btn" @click="handleClickBtn(item.apiName)">
                 {{ item.label }}
               </div>
             </template>
-            <a-dropdown
-              :trigger="['hover']"
-              :getPopupContainer="getPopupContainer"
-              v-if="btnActions && btnActions.length > 3"
-            >
+            <a-dropdown :trigger="['hover']" :getPopupContainer="getPopupContainer"
+              v-if="btnActions && btnActions.length > 3">
               <div class="fh-btn fh-btn-icon">
-                <svg
-                  focusable="false"
-                  aria-hidden="true"
-                  viewBox="0 0 520 520"
-                  part="icon"
-                  lwc-6qul4k2dv7m=""
-                  data-key="down"
-                  class="slds-icon slds-icon_x-small"
-                >
+                <svg focusable="false" aria-hidden="true" viewBox="0 0 520 520" part="icon" lwc-6qul4k2dv7m=""
+                  data-key="down" class="slds-icon slds-icon_x-small">
                   <g lwc-6qul4k2dv7m="">
-                    <path
-                      d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
-                      lwc-6qul4k2dv7m=""
-                    ></path>
+                    <path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
+                      lwc-6qul4k2dv7m=""></path>
                   </g>
                 </svg>
               </div>
               <template #overlay>
-                <a-menu
-                  :trigger="['click']"
-                  style="
+                <a-menu :trigger="['click']" style="
                     padding: 10px 0;
                     border: 1px solid #333;
                     border-radius: 4px;
-                  "
-                >
-                  <a-menu-item
-                    v-for="(item, index) in btnActions.slice(3)"
-                    :key="index"
-                    @click="handleClickBtn(item.apiName)"
-                    style="
+                  ">
+                  <a-menu-item v-for="(item, index) in btnActions.slice(3)" :key="index"
+                    @click="handleClickBtn(item.apiName)" style="
                       min-width: 98px;
                       padding: 8px 12px;
                       color: #0176d3;
                       font-size: 12px;
-                    "
-                  >
+                    ">
                     {{ item.label }}
                   </a-menu-item>
                 </a-menu>
@@ -86,11 +64,7 @@
         </div>
       </div>
       <ul class="pageHeader-from" v-if="layoutItems && layoutItems.length">
-        <li
-          class="listRecordItem"
-          v-for="(item, index) in layoutItems"
-          :key="index"
-        >
+        <li class="listRecordItem" v-for="(item, index) in layoutItems" :key="index">
           <div class="formLabel">{{ item.label || "" }}</div>
           <div class="formVal">
             <a href="javascript:;" class="textUnderline">{{
@@ -105,13 +79,8 @@
     <div class="detail-main">
       <div class="uiTabBar">
         <ul class="tabs_nav">
-          <li
-            class="tabs_nav_item"
-            :class="{ active: activeKey == index }"
-            v-for="(item, index) in tabs"
-            :key="index"
-            @click="changeTabs(index)"
-          >
+          <li class="tabs_nav_item" :class="{ active: activeKey == index }" v-for="(item, index) in tabs" :key="index"
+            @click="changeTabs(index)">
             <a href="javascript:;" class="tabItemHead">
               {{ item.label }}
             </a>
@@ -123,44 +92,21 @@
           <Statistics :id="id" :fields="fields" />
         </div>
         <div class="recordLayout" v-if="activeKey == 1">
-          <DetailInfo
-            :id="id"
-            :objectTypeCode="objectTypeCode"
-            :entityApiName="entityApiName"
-          />
+          <DetailInfo :id="id" :objectTypeCode="objectTypeCode" :entityApiName="entityApiName" />
         </div>
         <div class="recordLayout" v-if="activeKey == 2">
-          <RelatedList
-            :id="id"
-            :objectTypeCode="objectTypeCode"
-            :entityApiName="entityApiName"
-            fullName="Name"
-          />
+          <RelatedList :id="id" :objectTypeCode="objectTypeCode" :entityApiName="entityApiName" fullName="Name" />
         </div>
         <div class="recordLayout" v-if="activeKey == 3">
           <FilesList :parentId="id" :entityName="entityApiName"></FilesList>
         </div>
         <div class="recordLayout" v-if="activeKey == 4">
-          <Related
-            :id="id"
-            :type="'page'"
-            :entityApiName="'ContractAudit'"
-            :RegardingObjectIdName="'ContractId'"
-            :ObjectTypeCode="'10185'"
-            :columns="columns1"
-            :title="'审计'"
-          />
+          <Related :id="id" :type="'page'" :entityApiName="'ContractAudit'" :RegardingObjectIdName="'ContractId'"
+            :ObjectTypeCode="'10185'" :columns="columns1" :title="'审计'" />
         </div>
         <div class="recordLayout" v-if="activeKey == 5">
-          <Related
-            :id="id"
-            :type="'page'"
-            :entityApiName="'Contract'"
-            :RegardingObjectIdName="'OriginatingContract'"
-            :ObjectTypeCode="'1010'"
-            :columns="columns2"
-            :title="'子合同'"
-          />
+          <Related :id="id" :type="'page'" :entityApiName="'Contract'" :RegardingObjectIdName="'OriginatingContract'"
+            :ObjectTypeCode="'1010'" :columns="columns2" :title="'子合同'" />
         </div>
         <div class="recordLayout" v-if="activeKey == 6">
           <WFForm :id="id" />
@@ -171,59 +117,18 @@
           ></iframe> -->
         </div>
         <div class="recordLayout" v-if="activeKey == 7">
-          <Comment
-            :title="'合同讨论'"
-            :id="id"
-            :RegardingObjectTypeCode="'1010'"
-          />
+          <Comment :title="'合同讨论'" :id="id" :RegardingObjectTypeCode="'1010'" />
         </div>
       </div>
     </div>
-    <ConfirmModal
-      :isShow="isConfirm"
-      v-if="isConfirm"
-      :desc="desc"
-      @cancel="isConfirm = false"
-      @ok="handleOkConfirm"
-    />
-    <common-form-modal
-      :isShow="isCommon"
-      v-if="isCommon"
-      @cancel="isCommon = false"
-      title="编辑"
-      @success="loadInfo"
-      :id="id"
-      :objectTypeCode="objectTypeCode"
-      :entityApiName="entityApiName"
-    ></common-form-modal>
-    <DeleteModal
-      :isShow="isDelete"
-      v-if="isDelete"
-      desc="是否确定要删除？"
-      :recordId="id"
-      :sObjectName="entityApiName"
-      :objTypeCode="objectTypeCode"
-      @cancel="isDelete = false"
-    />
-    <InfoNotes
-      v-if="isNotes"
-      :isShow="isNotes"
-      :id="id"
-      :objectTypeCode="objectTypeCode"
-      @cancel="isNotes = false"
-    />
-    <ContractPlan
-      v-if="isPlan"
-      :isShow="isPlan"
-      :id="id"
-      @cancel="isPlan = false"
-    />
-    <ChangeStateCode
-      v-if="isStateCode"
-      :isShow="isStateCode"
-      :id="id"
-      @cancel="isStateCode = false"
-    />
+    <ConfirmModal :isShow="isConfirm" v-if="isConfirm" :desc="desc" @cancel="isConfirm = false" @ok="handleOkConfirm" />
+    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false" title="编辑" @success="loadInfo"
+      :id="id" :objectTypeCode="objectTypeCode" :entityApiName="entityApiName"></common-form-modal>
+    <DeleteModal :isShow="isDelete" v-if="isDelete" desc="是否确定要删除？" :recordId="id" :sObjectName="entityApiName"
+      :objTypeCode="objectTypeCode" @cancel="isDelete = false" />
+    <InfoNotes v-if="isNotes" :isShow="isNotes" :id="id" :objectTypeCode="objectTypeCode" @cancel="isNotes = false" />
+    <ContractPlan v-if="isPlan" :isShow="isPlan" :id="id" @cancel="isPlan = false" />
+    <ChangeStateCode v-if="isStateCode" :isShow="isStateCode" :id="id" @cancel="isStateCode = false" />
   </div>
 </template>
 <script setup>
@@ -682,10 +587,10 @@ const ContractSetPlan = () => {
 };
 window.ContractSetPlan = ContractSetPlan;
 //终止
-const ContractStop = () => {};
+const ContractStop = () => { };
 window.ContractStop = ContractStop;
 //续签
-const ContractContinue = () => {};
+const ContractContinue = () => { };
 window.ContractContinue = ContractContinue;
 //更改状态
 const ContractChangeStateCode = () => {
@@ -693,7 +598,7 @@ const ContractChangeStateCode = () => {
 };
 window.ContractChangeStateCode = ContractChangeStateCode;
 //变更拥有人
-const ContractChangeOwner = () => {};
+const ContractChangeOwner = () => { };
 window.ContractChangeOwner = ContractChangeOwner;
 //编辑留言
 const ContractNotes = () => {
@@ -701,10 +606,10 @@ const ContractNotes = () => {
 };
 window.ContractNotes = ContractNotes;
 //更改分类
-const ContractChangeClass = () => {};
+const ContractChangeClass = () => { };
 window.ContractChangeClass = ContractChangeClass;
 //添加明细
-const ContractAddDetail = () => {};
+const ContractAddDetail = () => { };
 window.ContractAddDetail = ContractAddDetail;
 onMounted(() => {
   getStatisticsData();
@@ -728,13 +633,16 @@ onMounted(() => {
       background: #f3f3f3;
     }
   }
-  :deep .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item{
-    transition:unset !important;
+
+  :deep .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
+    transition: unset !important;
   }
+
   :deep .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:hover {
     border: 2px solid #015ba7 !important;
     padding: 6px 10px !important;
   }
+
   :deep .ant-btn {
     //border-color: #747474;
     border-radius: 4px !important;
@@ -754,7 +662,7 @@ onMounted(() => {
 
     .fh-btn {
       border-radius: 0;
-      margin-right: -1px;
+      //margin-right: -1px;
       //border-color: #747474;
     }
 
