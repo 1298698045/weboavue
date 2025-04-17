@@ -334,7 +334,23 @@
     font-size: 12px;
     line-height: 1.1;
 }
-
+.fh-btn-group{
+    display: inline-flex;
+    padding-left: 8px;
+    .fh-btn:first-child{
+        border-radius: 4px 0 0 4px;
+    }
+    .fh-btn+.fh-btn{
+        border-radius: 0;
+        border-left: 0;
+    }
+    .fh-btn:last-child:not(:first-child){
+        border-radius: 0 4px 4px 0;
+    }
+    .fh-btn:first-child:last-child{
+        border-radius: 4px;
+    }
+}
 .fh-btn{
     position: relative;
     display: inline-flex;
