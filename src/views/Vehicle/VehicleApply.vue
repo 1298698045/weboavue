@@ -38,9 +38,9 @@
                     </div>
                 </div>
             </div> -->
-            <div class="calendarRight" v-if="showComponent">
+            <div class="calendarRight">
                 <ListView v-if="current == 0" />
-                <CalendarVue v-if="current == 1 && showComponent" />
+                <CalendarVue v-if="current == 1" />
                 <MyApproval v-if="current == 2" />
             </div>
         </div>
@@ -82,9 +82,8 @@ const data = reactive({
     current: 1,
     isNewMeeting: false,
     isRepeatMeeting: false,
-    showComponent: false
 });
-const { current, isNewMeeting, isRepeatMeeting, showComponent } = toRefs(data);
+const { current, isNewMeeting, isRepeatMeeting } = toRefs(data);
 // 关闭新建
 const cancelNewMeeting = (e) => {
     data.isNewMeeting = e;
@@ -107,11 +106,6 @@ const cancelRepeatMeeting = (e) => {
 const handleRepeatMeetingVal = (e) => {
     data.isRepeatMeeting = false;
 }
-watch(() => route, (newVal, oldVal) => {
-    data.current = 1;
-    data.showComponent = false;
-    nextTick(() => (data.showComponent = true));
-}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
 .wrappper {

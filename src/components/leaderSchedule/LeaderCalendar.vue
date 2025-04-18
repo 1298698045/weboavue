@@ -52,11 +52,11 @@
                     <a-button type="primary" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button> -->
                 </div>
             </div>
-            <div class="calendarBody" ref="contentRef" v-if="showComponent">
+            <div class="calendarBody" ref="contentRef">
                 <!-- <DayCalendar v-if="calendarType==0" :currentTime="currentTime" @openDateNew="handleOpenDateNew" />
                 <WeekVue v-if="calendarType==1" :week="week" @openDateNew="handleOpenDateNew" />
                 <MonthCalendar v-if="calendarType==2" :width="width" @openDateNew="handleOpenDateNew" /> -->
-                <LeaderFullCalendar v-if="showComponent" ref="FullCalendarWrap" :calendarView="calendarView" :id="id"
+                <LeaderFullCalendar ref="FullCalendarWrap" :calendarView="calendarView" :id="id"
                     :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime"
                     :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail"
                     @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewScheduleVal" />
@@ -157,9 +157,8 @@ const data = reactive({
     isDelete: false,
     deleteDesc: '确定要删除吗？',
     external: false,
-    showComponent: true
 });
-const { activeKey, statusCurrent, searchVal, userListTree, meetingList, showComponent,
+const { activeKey, statusCurrent, searchVal, userListTree, meetingList, 
     monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, width, isSchedule, isAddSchedule,
     isShare, isImport, fileParams, paramsTime, isCollapsed, isScheduleDetail, id, startTime, endTime, objectTypeCode, sObjectName, isDelete, deleteDesc, external, calendarView } = toRefs(data);
 const colors = ["#3399ff", "#f0854e", "#61cc53", "#eb3d85"]
@@ -410,15 +409,6 @@ const handleNewScheduleVal = (e) => {
     data.isAddSchedule = false;
     onSearch();
 }
-watch(() => route, (newVal, oldVal) => {
-    data.showComponent = false;
-    nextTick(() => {
-        data.showComponent = true;
-        setTimeout(function () {
-            calendarTypeChange(data.calendarType);
-        }, 500)
-    })
-}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
 .calendarWrap {

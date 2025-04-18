@@ -48,6 +48,7 @@
     $('#'+props.name).datagrid({
       // url: '/localData/datalist.json',
       url: url,
+      loadMsg: '正在加载中，请稍候...',
       // loadFilter: function (data) {
       //   console.log("columns",columns);
       //     var data0 = { rows: [], total: 0 }

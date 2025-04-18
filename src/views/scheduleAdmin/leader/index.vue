@@ -8,7 +8,7 @@
                 <span class="headerTitle">领导日程</span>
             </div>
             <div class="headerRight">
-                <!-- <dRadioGroup :current="current" @change="changeRadioGroup" v-if="showComponent">
+                <!-- <dRadioGroup :current="current" @change="changeRadioGroup">
                     <a-radio-button :value="0">
                         <i class="iconfont icon-liebiaoshitu"></i>
                     </a-radio-button>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
             </div> -->
-            <div class="calendarRight" v-if="showComponent">
+            <div class="calendarRight">
                 <ListView v-if="current == 0" :layoutName="layoutName" />
                 <CalendarVue v-if="current == 1" @openDateNew="handleOpenDateNew" />
             </div>
@@ -91,9 +91,8 @@ const data = reactive({
     objectTypeCode: '4200',
     sObjectName: 'ActivityPointer',
     layoutName: 'LeaderActivityPointer',
-    showComponent: true
 });
-const { showComponent, current, isSchedule, isAddSchedule, id, paramsTime, objectTypeCode, sObjectName, layoutName } = toRefs(data);
+const { current, isSchedule, isAddSchedule, id, paramsTime, objectTypeCode, sObjectName, layoutName } = toRefs(data);
 const handleAddSchedule = () => {
     // data.isSchedule =  true;
     data.isAddSchedule = true;
@@ -116,11 +115,6 @@ const changeRadioGroup = (e) => {
 const handleNewScheduleVal = (e) => {
     data.isAddSchedule = false;
 }
-watch(() => route, (newVal, oldVal) => {
-    data.current = 1;
-    data.showComponent = false;
-    nextTick(() => (data.showComponent = true));
-}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
 .wrappper {

@@ -430,9 +430,6 @@ const scrollToAnchor = (event, item) => {
 const handleTabTypes = (item, index) => {
     data.typeIndex = index;
 };
-watch(() => route, (newVal, oldVal) => {
-    getProcessType();
-}, { deep: true, immediate: true })
 onMounted(() => {
     let userInfo = window.localStorage.getItem('userInfo');
     if (userInfo) {

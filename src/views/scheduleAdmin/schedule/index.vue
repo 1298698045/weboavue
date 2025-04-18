@@ -12,7 +12,7 @@
                 <a-button class="ml10" @click="exportSchedule">导出</a-button>
             </div>
         </div>
-        <div class="calendarBody" v-if="showComponent">
+        <div class="calendarBody">
             <TableCalendar />
         </div>
         <NewSchedule v-if="isSchedule" :isShow="isSchedule" @cancel="cancelNewSchedule" />
@@ -60,9 +60,8 @@ const data = reactive({
     },
     objectTypeCode: '4200',
     sObjectName: 'ActivityPointer',
-    showComponent: true
 });
-const { showComponent, current, isSchedule, isAddSchedule, fileParams, id, paramsTime, objectTypeCode, sObjectName } = toRefs(data);
+const { current, isSchedule, isAddSchedule, fileParams, id, paramsTime, objectTypeCode, sObjectName } = toRefs(data);
 
 const handleAddSchedule = () => {
     // data.isSchedule =  true;
@@ -81,10 +80,6 @@ const cancelAddSchedule = (e) => {
 const handleNewScheduleVal = (e) => {
     data.isAddSchedule = false;
 }
-watch(() => route, (newVal, oldVal) => {
-    data.showComponent = false;
-    nextTick(() => (data.showComponent = true));
-}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
 .wrappper {

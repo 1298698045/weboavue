@@ -277,11 +277,11 @@
                 <div class="btnOptions">
                 </div>
             </div>
-            <div class="calendarBody" v-if="showComponent">
+            <div class="calendarBody">
                 <!-- <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :currentDate="currentDate" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleSelectCalendar" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
                 <DayCalendar ref="DayCalendarWrap" v-if="calendarType==0" :id="id" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
                 <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" /> -->
-                <ScheduleFullCalendar v-if="showComponent" ref="FullCalendarWrap" :calendarView="calendarView" :id="id" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewScheduleVal" @getCalendarList="getCalendarList" />
+                <ScheduleFullCalendar ref="FullCalendarWrap" :calendarView="calendarView" :id="id" :currentTime="currentTime"  @openNew="handleOpenNew" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewScheduleVal" @getCalendarList="getCalendarList" />
             </div>
         </div>
         <NewCalendar :isShow="isNewCalendar" v-if="isNewCalendar" @cancel="isNewCalendar=false;" :id="CalendarId" :CalendarTypeCode="CalendarTypeCode" @selectVal="refreshScheduleVal" />
@@ -454,9 +454,8 @@
             isCalendarToggleable: false,
             isCalendarUnsubscribable: false,
         },
-        showComponent:true
     });
-    const { showComponent,CalendarActionsConfig,height2,OtherCalendarList,activeKey,MyCalendarList, PublicCalendarList,myCalendarCurrent, statusList, statusCurrent, searchVal, userListTree, userListTreeAll,meetingList,
+    const { CalendarActionsConfig,height2,OtherCalendarList,activeKey,MyCalendarList, PublicCalendarList,myCalendarCurrent, statusList, statusCurrent, searchVal, userListTree, userListTreeAll,meetingList,
          monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isSchedule, isAddSchedule,treeId,isAddCalendar,isNewCalendar,CalendarId,CalendarTypeCode,RegardingObjectTypeCode,RegardingObjectId,RegardingObjectIdName,BgColor,placement,CalendarsData,
          isShare, isImport, fileParams, paramsTime, isCollapsed,isScheduleDetail,id,startTime,endTime,objectTypeCode,sObjectName,isDelete,objectTypeCode2,sObjectName2,isDeleteCalendar,deleteDesc,external,calendarView,CurrentUserId,CurrentUserName} = toRefs(data);
     const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"];
@@ -954,17 +953,6 @@
             // getOtherCalendarList();
         })
     })
-watch(() => route, (newVal, oldVal) => {
-    data.showComponent = false;
-    data.height2=document.documentElement.clientHeight - 275;
-    nextTick(() => {
-        data.showComponent = true;
-        setTimeout(function(){
-            getOtherCalendarList();
-            calendarTypeChange(data.calendarType);
-        },500)
-    })
-}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
     .headerCalendar{

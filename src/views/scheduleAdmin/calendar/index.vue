@@ -40,7 +40,7 @@
                     </div>
                 </div>
             </div> -->
-            <div class="calendarRight" v-if="showComponent">
+            <div class="calendarRight">
                 <ListView v-if="current==0" :layoutName="layoutName" />
                 <CalendarVue v-if="current==1" @getCalendarActionsConfig="getCalendarActionsConfig" />
             </div>
@@ -111,7 +111,7 @@
             isCalendarToggleable: false,
             isCalendarUnsubscribable: false,
         },
-        showComponent:false
+        showComponent:true
     });
     const { showComponent, CalendarActionsConfig,current, isSchedule, isAddSchedule, isShare, isImport, fileParams, size,id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
     const changeRadioGroup = (e) => {

@@ -52,11 +52,11 @@
                     <a-button type="primary" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button> -->
                 </div>
             </div>
-            <div class="calendarBody" ref="contentRef" v-if="isfresh">
+            <div class="calendarBody" ref="contentRef">
                 <!-- <DayCalendar ref="DayCalendarRoomWrap" v-if="calendarType==0" :currentTime="currentTime" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
                 <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
                 <MonthCalendar ref="MonthCalendarRoomWrap" v-if="calendarType==2" :width="width" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" /> -->
-                <MeetingRoomFullCalendar ref="FullCalendarRoomWrap" v-if="isfresh" :calendarView="calendarView"
+                <MeetingRoomFullCalendar ref="FullCalendarRoomWrap" :calendarView="calendarView"
                     :id="meetingId" :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime"
                     :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail"
                     @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
@@ -187,10 +187,9 @@ const data = reactive({
     isConfirm: false,
     confirmText: '',
     confirmTitle: '',
-    isfresh: false
 });
 
-const { isfresh, isConfirm, confirmText, confirmTitle, activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
+const { isConfirm, confirmText, confirmTitle, activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
     monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, width, startTime, endTime, paramsTime,
     meetingId, isMeetingDetail, objectTypeCode, sObjectName, isDelete, deleteDesc, external, calendarView } = toRefs(data);
 const colors = ["#3399ff", "#f0854e", "#61cc53", "#eb3d85"]
@@ -337,9 +336,7 @@ const handleStatus = (item, index) => {
 }
 const onSearch = (e) => {
     data.isMeetingDetail = false;
-    data.isfresh = false;
     nextTick(() => {
-        data.isfresh = true;
         setTimeout(function () {
             calendarTypeChange(data.calendarType);
         }, 500)
@@ -550,15 +547,6 @@ const deleteOk = (id) => {
         message.error("删除失败！");
     });
 }
-watch(() => route, (newVal, oldVal) => {
-    data.isfresh = false;
-    nextTick(() => {
-        data.isfresh = true;
-        setTimeout(function () {
-            calendarTypeChange(data.calendarType);
-        }, 500)
-    })
-}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
 .CalendarRoomWrap {

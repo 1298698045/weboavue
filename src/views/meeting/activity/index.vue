@@ -38,7 +38,7 @@
                     </div>
                 </div>
             </div> -->
-            <div class="calendarRight" v-if="showComponent">
+            <div class="calendarRight">
                 <ListView :layoutName="layoutName" v-if="current == 0" />
                 <CalendarVue v-if="current == 1" />
             </div>
@@ -78,9 +78,8 @@ const data = reactive({
     current: 1,
     isNewActivity: false,
     layoutName: 'CampaignSearch',
-    showComponent: true
 });
-const { current, isNewActivity, layoutName, showComponent } = toRefs(data);
+const { current, isNewActivity, layoutName } = toRefs(data);
 // 关闭新建
 const cancelNewActivity = (e) => {
     data.isNewActivity = e;
@@ -95,11 +94,6 @@ const handleAddActivity = () => {
 const changeRadioGroup = (e) => {
     data.current = e;
 }
-watch(() => route, (newVal, oldVal) => {
-    data.current = 1;
-    data.showComponent = false;
-    nextTick(() => (data.showComponent = true));
-}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
 .wrappper {

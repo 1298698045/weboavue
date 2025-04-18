@@ -70,7 +70,7 @@
                     <a-button type="primary" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button> -->
                 </div>
             </div>
-            <div class="calendarBody" v-if="showComponent">
+            <div class="calendarBody">
                 <!-- <a-calendar :value="currentDate" :locale="locale" v-if="calendarType==2">
                     <template #headerRender>
                         <div>
@@ -147,7 +147,7 @@
 </a-calendar>
 <DayCalendar v-if="calendarType==0" :currentTime="currentTime" />
 <WeekVue v-if="calendarType==1" :week="week" /> -->
-                <ActivityFullCalendar v-if="showComponent" ref="FullCalendarWrap" :calendarView="calendarView"
+                <ActivityFullCalendar ref="FullCalendarWrap" :calendarView="calendarView"
                     :id="meetingId" :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime"
                     :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail"
                     @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
@@ -264,9 +264,8 @@ const data = reactive({
     isDelete: false,
     deleteDesc: '确定要删除吗？',
     external: false,
-    showComponent: true
 });
-const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList, showComponent,
+const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList, 
     monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime,
     meetingId, isMeetingDetail, startTime, endTime, objectTypeCode, sObjectName, isDelete, deleteDesc, external, calendarView } = toRefs(data);
 const colors = ["#3399ff", "#f0854e", "#61cc53", "#eb3d85"]
@@ -535,15 +534,6 @@ const handleDelete = (e) => {
 const cancelDelete = (e) => {
     data.isDelete = false;
 };
-watch(() => route, (newVal, oldVal) => {
-    data.showComponent = false;
-    nextTick(() => {
-        data.showComponent = true;
-        setTimeout(function () {
-            calendarTypeChange(data.calendarType);
-        }, 500)
-    })
-}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
 .calendarWrap {

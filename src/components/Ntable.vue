@@ -44,6 +44,7 @@ const loadGrid = (queryParams) => {
   var url = props.gridUrl;
   $('#' + props.name).datagrid({
     url: url,
+    loadMsg: '正在加载中，请稍候...',
     loadFilter: function (data) {
       var data0 = { rows: [], total: 0 }
       if (data) {

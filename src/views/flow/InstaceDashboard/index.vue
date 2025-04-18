@@ -194,6 +194,7 @@
                 </div>
             </div>
         </div>
+        <Loading v-if="loading" />
     </div>
 </template>
 <script setup>
@@ -219,12 +220,14 @@ import { message } from "ant-design-vue";
 import Interface from "@/utils/Interface.js";
 import * as echarts from "echarts";
 import { useRouter, useRoute } from "vue-router";
+import Loading from "@/components/Loading.vue";
 const router = useRouter();
 const route = useRoute();
 const { proxy } = getCurrentInstance();
 const chartMain = ref();
 const yearFormat = 'YYYY';
 const data = reactive({
+    loading: false,
     current: 1,
     xData: [],
     lineData: [],
@@ -267,7 +270,7 @@ const data = reactive({
     searchVal: '',
     columns: []
 });
-const { columns, searchVal, pagination, total, dataList, current, xData, xData2, lineData, lineData2, seriesData, seriesData2, listData, year, countObj, rooms, selectRoom, tabs, activeKey } = toRefs(data);
+const { columns, searchVal, pagination, total, dataList, current, xData, xData2, lineData, lineData2, seriesData, seriesData2, listData, year, countObj, rooms, selectRoom, tabs, activeKey, loading } = toRefs(data);
 var columns1 = [
     {
         title: "序号",
@@ -383,12 +386,16 @@ var columns3 = [
     }
 ];
 const changeTabs = (e, type) => {
+    data.loading = true;
     data.activeKey = e;
     data.dataList = [];
     if (type != 'pagechange') {
         data.pagination.current = 1;
     }
     getStati(type);
+    setTimeout(function () {
+    data.loading = false;
+  }, 500);
 };
 const changeYear = (e) => {
     data.year = dayjs(e, yearFormat);
@@ -970,7 +977,7 @@ onMounted(() => {
             .ant-table-tbody td {
                 padding: 6.5px 16px !important;
                 white-space: nowrap;
-                text-align: center;
+                text-align: left;
             }
 
             .ant-table-tbody .ant-table-measure-row td {
@@ -980,7 +987,7 @@ onMounted(() => {
             .ant-table-thead>tr>th {
                 background-color: #f7fbfe !important;
                 padding: 8.5px 16px !important;
-                text-align: center;
+                text-align: left;
             }
 
             .ant-table-tbody tr:hover,

@@ -3,7 +3,10 @@
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
-          <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
+          <img
+            :src="require('@/assets/img/rightMenu/morenliucheng.png')"
+            alt=""
+          />
         </div>
         <span class="headerTitle">查询流程</span>
       </div>
@@ -22,43 +25,95 @@
               <div class="wea-left-tree-select-icon">
                 <ApartmentOutlined />
               </div>
-              <a-select v-model:value="data.leftTreeTop" @change="leftTreeTopChange">
-                <a-select-option key="0" value="按查询种类显示">按查询种类显示</a-select-option>
-                <a-select-option key="1" value="按流程类型显示">按流程类型显示</a-select-option>
+              <a-select
+                v-model:value="data.leftTreeTop"
+                @change="leftTreeTopChange"
+              >
+                <a-select-option key="0" value="按查询种类显示"
+                  >按查询种类显示</a-select-option
+                >
+                <a-select-option key="1" value="按流程类型显示"
+                  >按流程类型显示</a-select-option
+                >
               </a-select>
             </div>
             <div class="wea-left-tree-search">
               <span class="wea-left-tree-search-label alltype">全部类型</span>
-              <a-input v-model:value="searchVal" placeholder="" @change="onSearch" allowClear />
+              <a-input
+                v-model:value="searchVal"
+                placeholder=""
+                @change="onSearch"
+                allowClear
+              />
               <div class="wea-left-tree-search-icon">
                 <SearchOutlined />
               </div>
             </div>
             <div class="wea-left-tree-scroll information-tree processTree">
-              <a-tree :style="{ height: tableHeight + 'px' }" :expanded-keys="expandedKeys"
-                :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
-                @select="onSelect" @expand="onExpand">
+              <a-tree
+                :style="{ height: tableHeight - 10 + 'px' }"
+                :expanded-keys="expandedKeys"
+                :auto-expand-parent="autoExpandParent"
+                :tree-data="gData"
+                block-node
+                :fieldNames="fieldNames"
+                @select="onSelect"
+                @expand="onExpand"
+              >
                 <template #switcherIcon="{ switcherCls }">
-                  <CaretDownOutlined :class="switcherCls"
-                    style="color: rgb(163, 163, 163); font-size: 14px;position: relative;top: 2px;left: 6px;">
+                  <CaretDownOutlined
+                    :class="switcherCls"
+                    style="
+                      color: rgb(163, 163, 163);
+                      font-size: 14px;
+                      position: relative;
+                      top: 2px;
+                      left: 6px;
+                    "
+                  >
                   </CaretDownOutlined>
                 </template>
                 <template #title="{ name, quantity }">
-                  <span :title="name"
-                    style="width: 280px;overflow: hidden;height: 30px;text-overflow: ellipsis;white-space: nowrap;display: inline-block;font-size: 14px;">
+                  <span
+                    :title="name"
+                    style="
+                      width: 280px;
+                      overflow: hidden;
+                      height: 30px;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                      display: inline-block;
+                      font-size: 14px;
+                    "
+                  >
                     {{ name }}
-                    <span class="tree-num"
-                      style="position: absolute;right: 10px;font-size: 14px;padding: 0 !important;background: transparent !important;color: #c5c5c5;">{{
-                      quantity }}</span>
+                    <span
+                      class="tree-num"
+                      style="
+                        position: absolute;
+                        right: 10px;
+                        font-size: 14px;
+                        padding: 0 !important;
+                        background: transparent !important;
+                        color: #c5c5c5;
+                      "
+                      >{{ quantity }}</span
+                    >
                   </span>
                 </template>
               </a-tree>
             </div>
           </div>
         </a-col>
-        <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
-          <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
-            :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
+        <a-col
+          :span="isCollapsed ? '24' : '19'"
+          class="wea-left-right-layout-right"
+        >
+          <div
+            class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
+            :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }"
+            @click="handleCollapsed"
+          ></div>
           <div style="height: 100%" ref="contentRef">
             <div class="wea-header">
               <div class="wea-tab">
@@ -66,41 +121,91 @@
                   <a-tab-pane v-for="(item, index) in data.tabs" :key="index">
                     <template #tab>
                       <span>
-                        {{ item.label }} <span v-if="item.count">({{ item.count }})</span>
+                        {{ item.label }}
+                        <span v-if="item.count">({{ item.count }})</span>
                       </span>
                     </template>
                   </a-tab-pane>
                 </a-tabs>
-                <div class="tabsBtn">
-                </div>
+                <div class="tabsBtn"></div>
               </div>
-              <HighSearch @update-height="changeHeight" @search="handleSearch"
-                :entityApiName="data.queryParams.entityName">
+              <HighSearch
+                @update-height="changeHeight"
+                @search="handleSearch"
+                :entityApiName="data.queryParams.entityName"
+              >
               </HighSearch>
             </div>
             <!-- <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch" entityApiName="Content" :SearchFields="SearchFields"></list-form-search> -->
-            <div class="wea-tabContent" :style="{ height: tableHeight + 'px' }" ref="tabContent">
+            <div
+              class="wea-tabContent"
+              :style="{ height: tableHeight + 'px' }"
+              ref="tabContent"
+            >
               <!-- <a-table :dataSource="dataSource" :columns="columns"></a-table> -->
-              <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
-                :isCollapsed="isCollapsed">
+              <Ntable
+                ref="gridRef"
+                :columns="columns"
+                :gridUrl="gridUrl"
+                :tableHeight="tableHeight"
+                :isCollapsed="isCollapsed"
+              >
               </Ntable>
             </div>
           </div>
         </a-col>
       </a-row>
     </div>
-    <NewInfo v-if="isNew" :isShow="isNew" :treeData="gData" @cancel="cancelNew"
-      :objectTypeCode="data.queryParams.objectTypeCode" :FolderId="data.SelectKey" />
-    <Delete v-if="data.isDelete" :isShow="data.isDelete" :desc="data.deleteDesc" @cancel="cancelDelete" @ok="deleteOk"
-      :sObjectName="sObjectName" :recordId="data.recordId" :objTypeCode="objectTypeCode" :external="data.external" />
-    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false"
-      :title="data.recordId ? '编辑' : '新建'" @success="deleteOk" :id="data.recordId" :objectTypeCode="objectTypeCode"
-      :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue"
-      :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
-    <NewFolder v-if="isNewFolder" :isShow="isNewFolder" :treeData="gData" @cancel="isNewFolder = false"
-      @success="deleteOk" :id="data.recordId" :ParentId="data.SelectKey" :ParentIdName="data.SelectName" />
-    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
-      @cancel="isConfirm = false" @ok="isConfirm = false" :id="CheckList" />
+    <NewInfo
+      v-if="isNew"
+      :isShow="isNew"
+      :treeData="gData"
+      @cancel="cancelNew"
+      :objectTypeCode="data.queryParams.objectTypeCode"
+      :FolderId="data.SelectKey"
+    />
+    <Delete
+      v-if="data.isDelete"
+      :isShow="data.isDelete"
+      :desc="data.deleteDesc"
+      @cancel="cancelDelete"
+      @ok="deleteOk"
+      :sObjectName="sObjectName"
+      :recordId="data.recordId"
+      :objTypeCode="objectTypeCode"
+      :external="data.external"
+    />
+    <common-form-modal
+      :isShow="isCommon"
+      v-if="isCommon"
+      @cancel="isCommon = false"
+      :title="data.recordId ? '编辑' : '新建'"
+      @success="deleteOk"
+      :id="data.recordId"
+      :objectTypeCode="objectTypeCode"
+      :entityApiName="sObjectName"
+      :relatedObjectAttributeValue="relatedObjectAttributeValue"
+      :relatedObjectAttributeName="relatedObjectAttributeName"
+    ></common-form-modal>
+    <NewFolder
+      v-if="isNewFolder"
+      :isShow="isNewFolder"
+      :treeData="gData"
+      @cancel="isNewFolder = false"
+      @success="deleteOk"
+      :id="data.recordId"
+      :ParentId="data.SelectKey"
+      :ParentIdName="data.SelectName"
+    />
+    <CommonConfirm
+      v-if="isConfirm"
+      :isShow="isConfirm"
+      :text="confirmText"
+      :title="confirmTitle"
+      @cancel="isConfirm = false"
+      @ok="isConfirm = false"
+      :id="CheckList"
+    />
   </div>
 </template>
 <script setup>
@@ -115,9 +220,18 @@ import {
   StarFilled,
   PlusOutlined,
   EditOutlined,
-  DeleteOutlined
+  DeleteOutlined,
 } from "@ant-design/icons-vue";
-import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, nextTick } from "vue";
+import {
+  ref,
+  watch,
+  reactive,
+  toRefs,
+  onMounted,
+  getCurrentInstance,
+  onUpdated,
+  nextTick,
+} from "vue";
 import Interface from "@/utils/Interface.js";
 import { message } from "ant-design-vue";
 import Ntable from "@/components/Ntable.vue";
@@ -205,7 +319,7 @@ const getTreeData = () => {
         descriptor: "",
         callingDescriptor: "UNKNOWN",
         params: {
-          search: data.searchVal
+          search: data.searchVal,
         },
       },
     ],
@@ -223,7 +337,7 @@ const getTreeData = () => {
     ) {
       let listData = res.actions[0].returnValue;
       let formTree = (list) => {
-        list.forEach(item => {
+        list.forEach((item) => {
           if (item.processs) {
             formTree(item.processs);
             item.quantity = item.processs.length;
@@ -231,161 +345,210 @@ const getTreeData = () => {
           item.id = item.categoryId || item.processId;
           item.key = item.categoryId || item.processId;
           item.value = item.categoryId || item.processId;
-        })
-      }
+        });
+      };
       formTree(listData);
-      console.log("formTree", listData)
+      console.log("formTree", listData);
+      listData.unshift({
+        categoryId: "",
+        id: "",
+        key: "",
+        name: "全部",
+        processs: [],
+        quantity: "",
+        value: "",
+      });
+      gData.value = listData;
+      gDataAll.value = listData;
+    } else {
+      let listData = [
+        {
+          categoryId: "",
+          id: "",
+          key: "",
+          name: "全部",
+          processs: [],
+          quantity: "",
+          value: "",
+        },
+      ];
       gData.value = listData;
       gDataAll.value = listData;
     }
-  })
-}
+  });
+};
 
 const getFavorite = () => {
   gData.value = [];
   gDataAll.value = [];
-  let filterQuery = '\nObjectTypeCode\teq\t5080\nCreatedBy\teq\t' + data.userId;
-  proxy.$post(Interface.list2, {
-    filterId: '',
-    objectTypeCode: '6060',
-    entityName: '',
-    filterQuery: filterQuery,
-    search: '',
-    page: 1,
-    rows: 100,
-    sort: 'CreatedOn',
-    order: 'DESC',
-    displayColumns: 'Name,ObjectId'
-  }).then(res => {
-    if (res && res.nodes && res.nodes.length) {
-      var list = [];
-      for (var i = 0; i < res.nodes.length; i++) {
-        var item = res.nodes[i];
-        for (var cell in item) {
-          if (cell != 'id' && cell != 'nameField') {
-            item[cell] = girdFormatterValue(cell, item);
+  let filterQuery = "\nObjectTypeCode\teq\t5080\nCreatedBy\teq\t" + data.userId;
+  proxy
+    .$post(Interface.list2, {
+      filterId: "",
+      objectTypeCode: "6060",
+      entityName: "",
+      filterQuery: filterQuery,
+      search: "",
+      page: 1,
+      rows: 100,
+      sort: "CreatedOn",
+      order: "DESC",
+      displayColumns: "Name,ObjectId",
+    })
+    .then((res) => {
+      if (res && res.nodes && res.nodes.length) {
+        var list = [];
+        for (var i = 0; i < res.nodes.length; i++) {
+          var item = res.nodes[i];
+          for (var cell in item) {
+            if (cell != "id" && cell != "nameField") {
+              item[cell] = girdFormatterValue(cell, item);
+            }
           }
+          list.push({
+            children: [],
+            id: item.id,
+            key: item.id,
+            name: item.Name,
+            parent: null,
+            quantity: 0,
+            text: null,
+            value: item.ObjectId,
+            isFavor: true,
+          });
         }
-        list.push({
-          children: [],
-          id: item.id,
-          key: item.id,
-          name: item.Name,
-          parent: null,
-          quantity: 0,
-          text: null,
-          value: item.ObjectId,
-          isFavor: true
-        })
+        gData.value = list;
+        gDataAll.value = list;
       }
-      gData.value = list;
-      gDataAll.value = list;
-    }
-  })
-}
+    });
+};
 //收藏选中目录
 const setFavor = (id, name, isFavor) => {
-  if (data.leftTreeTop == '按流程类型显示') {
-    let filterQuery = '\nObjectId\teq\t' + id + '\nCreatedBy\teq\t' + data.userId;
-    proxy.$post(Interface.list2, {
-      filterId: '',
-      objectTypeCode: '6060',
-      entityName: 'P9f',
-      filterQuery: filterQuery,
-      search: '',
-      page: 1,
-      rows: 10,
-      sort: 'CreatedOn',
-      order: 'DESC',
-      displayColumns: 'Name'
-    }).then(res => {
-      if (res && res.nodes && res.nodes.length) {
-        //message.success("已收藏！");
-        saveFavor(res.nodes[0].id, name, true);
-      } else {
-        saveFavor(id, name, false);
-      }
-    })
-  }
-  else {
+  if (data.leftTreeTop == "按流程类型显示") {
+    let filterQuery =
+      "\nObjectId\teq\t" + id + "\nCreatedBy\teq\t" + data.userId;
+    proxy
+      .$post(Interface.list2, {
+        filterId: "",
+        objectTypeCode: "6060",
+        entityName: "P9f",
+        filterQuery: filterQuery,
+        search: "",
+        page: 1,
+        rows: 10,
+        sort: "CreatedOn",
+        order: "DESC",
+        displayColumns: "Name",
+      })
+      .then((res) => {
+        if (res && res.nodes && res.nodes.length) {
+          //message.success("已收藏！");
+          saveFavor(res.nodes[0].id, name, true);
+        } else {
+          saveFavor(id, name, false);
+        }
+      });
+  } else {
     saveFavor(id, name, true);
   }
-}
+};
 const saveFavor = (id, name, isFavor) => {
   if (!isFavor) {
     let url = Interface.create;
     let d = {
-      actions: [{
-        id: "2919;a",
-        descriptor: "",
-        callingDescriptor: "UNKNOWN",
-        params: {
-          recordInput: {
-            allowSaveOnDuplicate: false,
-            apiName: 'FavoriteObject',
-            objTypeCode: '6060',
-            fields: {
-              Name: name,
-              ObjectId: id,
-              ObjectTypeCode: '5080',
-              CreatedBy: data.userId
-            }
-          }
-        }
-      }]
+      actions: [
+        {
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            recordInput: {
+              allowSaveOnDuplicate: false,
+              apiName: "FavoriteObject",
+              objTypeCode: "6060",
+              fields: {
+                Name: name,
+                ObjectId: id,
+                ObjectTypeCode: "5080",
+                CreatedBy: data.userId,
+              },
+            },
+          },
+        },
+      ],
     };
     // if(id){
     //     d.actions[0].params.recordId=id;
     // }
     let obj = {
-      message: JSON.stringify(d)
-    }
-    proxy.$post(url, obj).then(res => {
-      if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+      message: JSON.stringify(d),
+    };
+    proxy.$post(url, obj).then((res) => {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].state &&
+        res.actions[0].state == "SUCCESS"
+      ) {
         message.success("收藏成功！");
         leftTreeTopChange(data.leftTreeTop);
-      }
-      else {
-        if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+      } else {
+        if (
+          res &&
+          res.actions &&
+          res.actions[0] &&
+          res.actions[0].state &&
+          res.actions[0].errorMessage
+        ) {
           message.success(res.actions[0].errorMessage);
-        }
-        else {
+        } else {
           message.success("收藏失败！");
         }
       }
     });
-  }
-  else {
+  } else {
     let obj = {
-      actions: [{
-        id: "2919;a",
-        descriptor: "",
-        callingDescriptor: "UNKNOWN",
-        params: {
-          recordId: id,
-          apiName: 'FavoriteObject',
-          objTypeCode: '6060',
-        }
-      }]
+      actions: [
+        {
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            recordId: id,
+            apiName: "FavoriteObject",
+            objTypeCode: "6060",
+          },
+        },
+      ],
     };
     let d = {
-      message: JSON.stringify(obj)
+      message: JSON.stringify(obj),
     };
-    proxy.$post(Interface.delete, d).then(res => {
-      if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+    proxy.$post(Interface.delete, d).then((res) => {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].state == "SUCCESS"
+      ) {
         message.success("取消收藏成功");
         leftTreeTopChange(data.leftTreeTop);
       } else {
-        if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+        if (
+          res &&
+          res.actions &&
+          res.actions[0] &&
+          res.actions[0].errorMessage
+        ) {
           message.success(res.actions[0].errorMessage);
-        }
-        else {
+        } else {
           message.error("取消收藏失败");
         }
       }
-    })
+    });
   }
-}
+};
 const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
@@ -405,24 +568,26 @@ const onExpand = (keys) => {
 // });
 
 let data = reactive({
-  leftTreeTop: '按流程类型显示',
+  leftTreeTop: "按流程类型显示",
   isCollapsed: false,
-  tableHeight: '',
+  tableHeight: "",
   fieldNames: {
-    children: 'processs', title: 'name', key: 'id'
+    children: "processs",
+    title: "name",
+    key: "id",
   },
   tabs: [
     {
       lable: "直接参与",
-      count: ''
+      count: "",
     },
     {
       lable: "我的关注",
-      count: ''
+      count: "",
     },
     {
       lable: "共享给我",
-      count: ''
+      count: "",
     },
     // {
     //   lable: "我管理的",
@@ -435,55 +600,56 @@ let data = reactive({
   ],
   activeKey: 0,
   queryParams: {
-    filterId: '',
-    objectTypeCode: '122',
-    entityName: 'WFProcessInstance',
+    filterId: "",
+    objectTypeCode: "122",
+    entityName: "WFProcessInstance",
     //filterQuery:'\nCreatedBy\teq-userid',
-    displayColumns: 'Name,FolderId,ProcessId,CreatedBy,CreatedOn,ModifiedBy,ModifiedOn,CurrentStepName'
+    displayColumns:
+      "Name,FolderId,ProcessId,CreatedBy,CreatedOn,ModifiedBy,ModifiedOn,CurrentStepName",
   },
   isModal: false,
   isCirculation: false,
   isNew: false,
-  searchVal: '',
+  searchVal: "",
   value: "",
   isDelete: false,
-  deleteDesc: '确定要删除吗？',
-  recordId: '',
+  deleteDesc: "确定要删除吗？",
+  recordId: "",
   external: false,
-  userId: '',
+  userId: "",
   SearchFields: [
     {
-      "column": "Name",
-      "label": "标题",
-      "dataType": "S",
-      "ReferencedEntityObjectTypeCode": 0,
-      "sObjectName": "",
-      "targetApiName": "",
+      column: "Name",
+      label: "标题",
+      dataType: "S",
+      ReferencedEntityObjectTypeCode: 0,
+      sObjectName: "",
+      targetApiName: "",
     },
     {
-      "column": "CreatedOn",
-      "label": "提交时间",
-      "dataType": "F",
-      "ReferencedEntityObjectTypeCode": 0,
-      "picklistValues": [],
-      "sObjectName": "",
-      "targetApiName": "",
+      column: "CreatedOn",
+      label: "提交时间",
+      dataType: "F",
+      ReferencedEntityObjectTypeCode: 0,
+      picklistValues: [],
+      sObjectName: "",
+      targetApiName: "",
     },
     {
-      "column": "CreatedByName",
-      "label": "提交人姓名",
-      "dataType": "S",
-      "ReferencedEntityObjectTypeCode": 0,
-      "sObjectName": "",
-      "targetApiName": "",
+      column: "CreatedByName",
+      label: "提交人姓名",
+      dataType: "S",
+      ReferencedEntityObjectTypeCode: 0,
+      sObjectName: "",
+      targetApiName: "",
     },
     {
-      "column": "FromActivityName",
-      "label": "来源环节",
-      "dataType": "S",
-      "ReferencedEntityObjectTypeCode": 0,
-      "sObjectName": "",
-      "targetApiName": "",
+      column: "FromActivityName",
+      label: "来源环节",
+      dataType: "S",
+      ReferencedEntityObjectTypeCode: 0,
+      sObjectName: "",
+      targetApiName: "",
     },
     // {
     //     "column": "BusinessUnitId",
@@ -517,61 +683,91 @@ let data = reactive({
     //     "targetApiName": "",
     // },
     {
-      "column": "CreatedOn",
-      "label": "创建时间",
-      "dataType": "F",
-      "ReferencedEntityObjectTypeCode": 0,
-      "picklistValues": [],
-      "sObjectName": "",
-      "targetApiName": "",
-    }
+      column: "CreatedOn",
+      label: "创建时间",
+      dataType: "F",
+      ReferencedEntityObjectTypeCode: 0,
+      picklistValues: [],
+      sObjectName: "",
+      targetApiName: "",
+    },
   ],
   isCommon: false,
-  objectTypeCode: '100201',
-  sObjectName: 'Content',
+  objectTypeCode: "100201",
+  sObjectName: "Content",
   relatedObjectAttributeValue: {},
-  relatedObjectAttributeName: '',
-  SelectKey: '',
-  SelectName: '',
+  relatedObjectAttributeName: "",
+  SelectKey: "",
+  SelectName: "",
   selectedKeys: [],
   isNewFolder: false,
   CheckList: [],
   isConfirm: false,
-  confirmText: '',
-  confirmTitle: '',
+  confirmText: "",
+  confirmTitle: "",
   folderActionsConfig: {
     canAdd: false,
     canAdmin: false,
     canDelete: false,
-    canRead: false
+    canRead: false,
   },
-  entityType: '122',
-  layoutName: 'WFProcessInstanceSearch',
-  hightSearchParams: {}
+  entityType: "122",
+  layoutName: "WFProcessInstanceSearch",
+  hightSearchParams: {},
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
 };
-const { hightSearchParams, entityType, folderActionsConfig, CheckList, isConfirm, confirmText, confirmTitle, isNewFolder, selectedKeys, SelectName, SelectKey, relatedObjectAttributeValue, relatedObjectAttributeName, recordId, objectTypeCode, sObjectName, isCommon, isCollapsed, userId, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, isNew, value, searchVal, SearchFields, leftTreeTop } = toRefs(data);
+const {
+  hightSearchParams,
+  entityType,
+  folderActionsConfig,
+  CheckList,
+  isConfirm,
+  confirmText,
+  confirmTitle,
+  isNewFolder,
+  selectedKeys,
+  SelectName,
+  SelectKey,
+  relatedObjectAttributeValue,
+  relatedObjectAttributeName,
+  recordId,
+  objectTypeCode,
+  sObjectName,
+  isCommon,
+  isCollapsed,
+  userId,
+  tableHeight,
+  fieldNames,
+  tabs,
+  activeKey,
+  isModal,
+  isCirculation,
+  isNew,
+  value,
+  searchVal,
+  SearchFields,
+  leftTreeTop,
+} = toRefs(data);
 const tabContent = ref(null);
 const contentRef = ref(null);
 let formSearchHeight = ref(null);
 const gridRef = ref(null);
 const leftTreeTopChange = (e) => {
-  if (e == '按流程类型显示') {
+  if (e == "按流程类型显示") {
     getTreeData();
-  }
-  else {
+  } else {
     getFavorite();
   }
   //console.log(e)
-}
+};
 const onSearch = (e) => {
   // gData.value = gDataAll.value.filter(item => {
   //   return item.name.indexOf(data.searchVal) !== -1;
   // })
   getTreeData();
-}
+};
 const onSelect = (keys, { node }) => {
   //console.log(node)
 
@@ -580,8 +776,8 @@ const onSelect = (keys, { node }) => {
       canAdd: false,
       canAdmin: false,
       canDelete: false,
-      canRead: false
-    }
+      canRead: false,
+    };
     data.SelectKey = node.id;
     data.SelectName = node.name;
     data.selectedKeys = [node.id];
@@ -594,22 +790,22 @@ const onSelect = (keys, { node }) => {
 };
 
 function changeHeight(h) {
-  if (typeof h == 'number') {
+  if (typeof h == "number") {
     formSearchHeight.value = h;
   }
   let contentHeight = document.documentElement.clientHeight - 120;
   let tabsHeight = 46;
   let height = contentHeight - tabsHeight;
   data.tableHeight = height;
-  console.log('data', data.tableHeight);
+  console.log("data", data.tableHeight);
 }
 const handleSearch = (obj) => {
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '122',
-    entityName: 'WFProcessInstance',
-    sort: 'CreatedOn',
-    order: 'desc'
+    objectTypeCode: "122",
+    entityName: "WFProcessInstance",
+    sort: "CreatedOn",
+    order: "desc",
   };
   // if(filterQuery){
   //   data.queryParams.filterQuery+=filterQuery;
@@ -621,21 +817,19 @@ const handleSearch = (obj) => {
         data.queryParams.search = data.hightSearchParams.search;
       }
       if (data.hightSearchParams.filterCondition) {
-        data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+        data.queryParams.filterCondition =
+          data.hightSearchParams.filterCondition;
       }
     }
-  }
-  else {
-    data.hightSearchParams = {}
+  } else {
+    data.hightSearchParams = {};
   }
   if (data.SelectKey) {
-    data.queryParams.filterQuery = '\nProcessId\teq\t' + data.SelectKey;
+    data.queryParams.filterQuery = "\nProcessId\teq\t" + data.SelectKey;
   }
   gridRef.value.loadGrid(data.queryParams);
-}
-const handleMenuClick = () => {
-
-}
+};
+const handleMenuClick = () => {};
 const DelegateRef = ref();
 
 function handleDetail(id) {
@@ -649,9 +843,9 @@ function handleDetail(id) {
     path: "/informationDetail",
     query: {
       id: id,
-      objectTypeCode: '100201'
-    }
-  })
+      objectTypeCode: "100201",
+    },
+  });
   window.open(reUrl.href);
 }
 function handlePreview(id) {
@@ -666,9 +860,9 @@ function handlePreview(id) {
     path: "/lightning/r/Workflow/instance/detail",
     query: {
       id: id,
-      reurl: '/ui/process/instance/InstanceHome'
-    }
-  })
+      reurl: "/ui/process/instance/InstanceHome",
+    },
+  });
   window.open(reUrl.href);
 }
 function handleEdit(id, FolderId) {
@@ -685,24 +879,23 @@ function handleEdit(id, FolderId) {
       id: id,
       objectTypeCode: 100201,
       //FolderId: res.actions[0].returnValue&&res.actions[0].returnValue.fields&&res.actions[0].returnValue.fields.FolderId?res.actions[0].returnValue.fields.FolderId:''
-      FolderId: FolderId
-    }
-  })
+      FolderId: FolderId,
+    },
+  });
   window.open(reUrl.href);
 }
 function handleDelete(id) {
   data.relatedObjectAttributeValue = {};
-  data.relatedObjectAttributeName = '';
-  data.objectTypeCode = '100201';
-  data.sObjectName = 'Content';
+  data.relatedObjectAttributeName = "";
+  data.objectTypeCode = "100201";
+  data.sObjectName = "Content";
   data.recordId = id;
   data.isDelete = true;
 }
 const deleteOk = (e) => {
-  if (data.objectTypeCode == '100201') {
+  if (data.objectTypeCode == "100201") {
     gridRef.value.loadGrid(data.queryParams);
-  }
-  else {
+  } else {
     getTreeData();
   }
 };
@@ -712,7 +905,7 @@ const cancelDelete = (e) => {
 const updateStatus = (e) => {
   data.isModal = e;
   data.isCirculation = e;
-}
+};
 const formatStatus = (val, row, index) => {
   let value = girdFormatterValue("StateCode", row);
   if (value == "1" || value == "审批通过" || value == "已发布") {
@@ -727,7 +920,7 @@ const formatStatus = (val, row, index) => {
   if (value == "已退回" || value == "退回") {
     return "<span style='color:#333;'>" + value + "</span>";
   }
-}
+};
 
 window.handleDetail = handleDetail;
 window.handlePreview = handlePreview;
@@ -737,203 +930,10 @@ window.data = data;
 
 const imgUrl = require("@/assets/flow/checkbox_checked.gif");
 const gridUrl = ref(Interface.list2);
-const columns = ref(
-  [
-    {
-      field: 'ids',
-      checkbox: true
-    },
-    {
-      field: "Action",
-      title: "操作",
-      formatter: function formatter(value, row, index) {
-        var str = `
-                <div class="iconBox">
-                  <div class="popup">
-                    <div class="option-item" onclick="handlePreview('${row.id}')">查看详情</div>  
-                    
-                  </div>
-                  <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
-              `
-        return str;
-      }
-    },
-    {
-      field: 'Name', title: '标题', sortable: true,
-      formatter: function formatter(value, row, index) {
-        let val = girdFormatterValue('Name', row);
-        return `<a style="text-decoration: none;color:#1677ff;" href="javascript:void(0)" onclick="handlePreview('${row.id}')">` + val + `</a>`;
-      }
-    },
-    {
-      field: 'ProcessId',
-      title: '流程名称',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('ProcessId', row);
-      }
-    },
-    {
-      field: 'CreatedBy',
-      title: '创建人',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('CreatedBy', row);
-      }
-    }, {
-      field: 'CreatedOn',
-      title: '创建时间',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('CreatedOn', row);
-      }
-    }, {
-      field: 'CurrentStepName',
-      title: '当前步骤',
-      sortable: true,
-      formatter: function formatter(value, row, index) {
-        return girdFormatterValue('CurrentStepName', row);
-      }
-    }
-  ]
-)
-
-const changeTab = (e) => {
-  data.activeKey = e;
-  data.queryParams = {
-    filterId: data.queryParams.filterId,
-    objectTypeCode: '122',
-    entityName: 'WFProcessInstance',
-    sort: 'CreatedOn',
-    order: 'desc'
-  };
-  if (data.hightSearchParams) {
-    if (data.hightSearchParams.search) {
-      data.queryParams.search = data.hightSearchParams.search;
-    }
-    if (data.hightSearchParams.filterCondition) {
-      data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
-    }
-  }
-  if (data.SelectKey) {
-    data.queryParams.filterQuery = '\nProcessId\teq\t' + data.SelectKey;
-  }
-  getColumns(data.queryParams.filterId);
-}
-const handleNew = (e) => {
-  if (data.SelectKey) {
-    data.relatedObjectAttributeValue = {};
-    data.relatedObjectAttributeName = '';
-    data.objectTypeCode = '100201';
-    data.sObjectName = 'Content';
-    data.recordId = '';
-    data.isNew = true;
-  }
-  else {
-    message.error("必须先选中左侧目录");
-  }
-}
-const cancelNew = (e) => {
-  data.isNew = e;
-}
-const handleAddLeft = (id, name) => {
-  if (id) {
-    data.SelectKey = id;
-    data.SelectName = name;
-    data.selectedKeys = [id];
-  }
-  if (data.SelectKey) {
-    // data.relatedObjectAttributeValue={
-    //   value:data.SelectKey,
-    //   name:data.SelectName
-    // };
-    // data.relatedObjectAttributeName='ParentId';
-    data.objectTypeCode = '5080';
-    data.sObjectName = 'ContentFolder';
-    data.recordId = '';
-    // data.isCommon=true;
-    data.isNewFolder = true;
-  }
-  else {
-    message.error("必须先选中左侧目录");
-  }
-}
-const handleEditLeft = (e) => {
-  // data.relatedObjectAttributeValue={};
-  // data.relatedObjectAttributeName='';
-  data.objectTypeCode = '5080';
-  data.sObjectName = 'ContentFolder';
-  data.recordId = e;
-  // data.isCommon=true;
-  data.isNewFolder = true;
-}
-const handleDeleteLeft = (e) => {
-  data.relatedObjectAttributeValue = {};
-  data.relatedObjectAttributeName = '';
-  data.objectTypeCode = '5080';
-  data.sObjectName = 'ContentFolder';
-  data.recordId = e;
-  data.isDelete = true;
-}
-//批量发布
-const handleRelease = () => {
-  let list = gridRef.value.getCheckList();
-  if (list.length) {
-    data.CheckList = list;
-    data.isConfirm = true;
-    data.confirmText = '确定要批量发布吗？';
-    data.confirmTitle = '批量发布';
-  } else {
-    message.error("请至少勾选一项！")
-  }
-}
-//批量取消发布
-const cancelRelease = () => {
-  let list = gridRef.value.getCheckList();
-  if (list.length) {
-    data.CheckList = list;
-    data.isConfirm = true;
-    data.confirmText = '确定要批量取消发布吗？';
-    data.confirmTitle = '批量取消发布';
-  } else {
-    message.error("请至少勾选一项！")
-  }
-}
-//获取单个目录权限
-const getPrivileges = () => {
-  data.folderActionsConfig = {
-    canAdd: false,
-    canAdmin: false,
-    canDelete: false,
-    canRead: false
-  }
-  if (data.SelectKey) {
-    let url = Interface.content.folder.getPrivileges;
-    let d = {
-      actions: [{
-        id: "2919;a",
-        descriptor: "",
-        callingDescriptor: "UNKNOWN",
-        params: {
-          id: data.SelectKey,
-        }
-      }]
-    };
-    let obj = {
-      message: JSON.stringify(d)
-    }
-    proxy.$post(url, obj).then(res => {
-      if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue) {
-        data.folderActionsConfig = res.actions[0].returnValue;
-      }
-    })
-  }
-}
-//获取显示列
-const getColumns = (id) => {
-  let columnslist = [{
-    field: 'ids',
-    checkbox: true
+const columns = ref([
+  {
+    field: "ids",
+    checkbox: true,
   },
   {
     field: "Action",
@@ -946,112 +946,342 @@ const getColumns = (id) => {
                     
                   </div>
                   <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
-              `
+              `;
       return str;
-    }
-  },];
-  proxy.$get(Interface.listView.getFilterInfo, {
-    entityType: data.entityType,
-    objectTypeCode: data.queryParams.objectTypeCode,
-    search: "",
-    filterId: id
-  }).then(res => {
-    if (res && res.actions && res.actions[0]) { } else { return }
-    let fields = res.actions[0].returnValue.fields;
-    fields.forEach(item => {
-      if (item.name != 'ProcessInstanceId' && item.name != 'WFRuleLogId' && item.name != 'ExecutorIdentityName') {
-        if (item.name == 'Name') {
-          columnslist.push({
-            field: item.name,
-            title: item.label,
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              let val = girdFormatterValue('Name', row);
-              return `<a class="namefield" title="` + val + `" href="javascript:void(0)" onclick="handlePreview('${row.id}')">` + val + `</a>`;
-            }
-          });
-        }
-        else {
-          columnslist.push({
-            field: item.name,
-            title: item.label,
-            sortable: true,
-            formatter: function formatter(value, row, index) {
-              return girdFormatterValue(item.name, row);
-            }
-          });
-        }
-      }
-    })
-    columns.value = columnslist;
-    nextTick(() => {
-      gridRef.value.loadGrid(data.queryParams);
-      //searchRef.value.getSearchLayout();
-    })
+    },
+  },
+  {
+    field: "Name",
+    title: "标题",
+    sortable: true,
+    formatter: function formatter(value, row, index) {
+      let val = girdFormatterValue("Name", row);
+      return (
+        `<a style="text-decoration: none;color:#1677ff;" href="javascript:void(0)" onclick="handlePreview('${row.id}')">` +
+        val +
+        `</a>`
+      );
+    },
+  },
+  {
+    field: "ProcessId",
+    title: "流程名称",
+    sortable: true,
+    formatter: function formatter(value, row, index) {
+      return girdFormatterValue("ProcessId", row);
+    },
+  },
+  {
+    field: "CreatedBy",
+    title: "创建人",
+    sortable: true,
+    formatter: function formatter(value, row, index) {
+      return girdFormatterValue("CreatedBy", row);
+    },
+  },
+  {
+    field: "CreatedOn",
+    title: "创建时间",
+    sortable: true,
+    formatter: function formatter(value, row, index) {
+      return girdFormatterValue("CreatedOn", row);
+    },
+  },
+  {
+    field: "CurrentStepName",
+    title: "当前步骤",
+    sortable: true,
+    formatter: function formatter(value, row, index) {
+      return girdFormatterValue("CurrentStepName", row);
+    },
+  },
+]);
 
-  })
-}
+const changeTab = (e) => {
+  data.activeKey = e;
+  data.queryParams = {
+    filterId: data.queryParams.filterId,
+    objectTypeCode: "122",
+    entityName: "WFProcessInstance",
+    sort: "CreatedOn",
+    order: "desc",
+  };
+  if (data.hightSearchParams) {
+    if (data.hightSearchParams.search) {
+      data.queryParams.search = data.hightSearchParams.search;
+    }
+    if (data.hightSearchParams.filterCondition) {
+      data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+    }
+  }
+  if (data.SelectKey) {
+    data.queryParams.filterQuery = "\nProcessId\teq\t" + data.SelectKey;
+  }
+  getColumns(data.queryParams.filterId);
+};
+const handleNew = (e) => {
+  if (data.SelectKey) {
+    data.relatedObjectAttributeValue = {};
+    data.relatedObjectAttributeName = "";
+    data.objectTypeCode = "100201";
+    data.sObjectName = "Content";
+    data.recordId = "";
+    data.isNew = true;
+  } else {
+    message.error("必须先选中左侧目录");
+  }
+};
+const cancelNew = (e) => {
+  data.isNew = e;
+};
+const handleAddLeft = (id, name) => {
+  if (id) {
+    data.SelectKey = id;
+    data.SelectName = name;
+    data.selectedKeys = [id];
+  }
+  if (data.SelectKey) {
+    // data.relatedObjectAttributeValue={
+    //   value:data.SelectKey,
+    //   name:data.SelectName
+    // };
+    // data.relatedObjectAttributeName='ParentId';
+    data.objectTypeCode = "5080";
+    data.sObjectName = "ContentFolder";
+    data.recordId = "";
+    // data.isCommon=true;
+    data.isNewFolder = true;
+  } else {
+    message.error("必须先选中左侧目录");
+  }
+};
+const handleEditLeft = (e) => {
+  // data.relatedObjectAttributeValue={};
+  // data.relatedObjectAttributeName='';
+  data.objectTypeCode = "5080";
+  data.sObjectName = "ContentFolder";
+  data.recordId = e;
+  // data.isCommon=true;
+  data.isNewFolder = true;
+};
+const handleDeleteLeft = (e) => {
+  data.relatedObjectAttributeValue = {};
+  data.relatedObjectAttributeName = "";
+  data.objectTypeCode = "5080";
+  data.sObjectName = "ContentFolder";
+  data.recordId = e;
+  data.isDelete = true;
+};
+//批量发布
+const handleRelease = () => {
+  let list = gridRef.value.getCheckList();
+  if (list.length) {
+    data.CheckList = list;
+    data.isConfirm = true;
+    data.confirmText = "确定要批量发布吗？";
+    data.confirmTitle = "批量发布";
+  } else {
+    message.error("请至少勾选一项！");
+  }
+};
+//批量取消发布
+const cancelRelease = () => {
+  let list = gridRef.value.getCheckList();
+  if (list.length) {
+    data.CheckList = list;
+    data.isConfirm = true;
+    data.confirmText = "确定要批量取消发布吗？";
+    data.confirmTitle = "批量取消发布";
+  } else {
+    message.error("请至少勾选一项！");
+  }
+};
+//获取单个目录权限
+const getPrivileges = () => {
+  data.folderActionsConfig = {
+    canAdd: false,
+    canAdmin: false,
+    canDelete: false,
+    canRead: false,
+  };
+  if (data.SelectKey) {
+    let url = Interface.content.folder.getPrivileges;
+    let d = {
+      actions: [
+        {
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            id: data.SelectKey,
+          },
+        },
+      ],
+    };
+    let obj = {
+      message: JSON.stringify(d),
+    };
+    proxy.$post(url, obj).then((res) => {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].returnValue &&
+        res.actions[0].returnValue
+      ) {
+        data.folderActionsConfig = res.actions[0].returnValue;
+      }
+    });
+  }
+};
+//获取显示列
+const getColumns = (id) => {
+  let columnslist = [
+    {
+      field: "ids",
+      checkbox: true,
+    },
+    {
+      field: "Action",
+      title: "操作",
+      formatter: function formatter(value, row, index) {
+        var str = `
+                <div class="iconBox">
+                  <div class="popup">
+                    <div class="option-item" onclick="handlePreview('${row.id}')">查看详情</div>  
+                    
+                  </div>
+                  <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
+              `;
+        return str;
+      },
+    },
+  ];
+  proxy
+    .$get(Interface.listView.getFilterInfo, {
+      entityType: data.entityType,
+      objectTypeCode: data.queryParams.objectTypeCode,
+      search: "",
+      filterId: id,
+    })
+    .then((res) => {
+      if (res && res.actions && res.actions[0]) {
+      } else {
+        return;
+      }
+      let fields = res.actions[0].returnValue.fields;
+      fields.forEach((item) => {
+        if (
+          item.name != "ProcessInstanceId" &&
+          item.name != "WFRuleLogId" &&
+          item.name != "ExecutorIdentityName"
+        ) {
+          if (item.name == "Name") {
+            columnslist.push({
+              field: item.name,
+              title: item.label,
+              sortable: true,
+              formatter: function formatter(value, row, index) {
+                let val = girdFormatterValue("Name", row);
+                return (
+                  `<a class="namefield" title="` +
+                  val +
+                  `" href="javascript:void(0)" onclick="handlePreview('${row.id}')">` +
+                  val +
+                  `</a>`
+                );
+              },
+            });
+          } else {
+            columnslist.push({
+              field: item.name,
+              title: item.label,
+              sortable: true,
+              formatter: function formatter(value, row, index) {
+                return girdFormatterValue(item.name, row);
+              },
+            });
+          }
+        }
+      });
+      columns.value = columnslist;
+      nextTick(() => {
+        gridRef.value.loadGrid(data.queryParams);
+        //searchRef.value.getSearchLayout();
+      });
+    });
+};
 
 // 获取tabs
 const getTabs = () => {
-  proxy.$get(Interface.getTabs, {
-    entityName: data.queryParams.entityName,
-    layoutName: data.layoutName
-  }).then(res => {
-    //console.log("tabs", res)
-    if (res && res.tabs && res.tabs.length) {
-      let list = res.tabs;
-      list.forEach(item => {
-        item.label = item.title || item.name;
-        item.filterId = item.filter.filterId;
-        item.filterquery = item.filterquery || '';
-      })
-      data.tabs = list;
-    }
-    else {
-      //data.tabs=data.tabs0;
-    }
-
-    let filterColumnsList = (data.tabs)[0].filterableColumns;
-    data.SearchFields = filterColumnsList;
-    data.queryParams.filterId = data.tabs[0].filterId || '';
-    getColumns(data.queryParams.filterId);
-  })
-}
-watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/ui/process/instance/InstanceHome') {
-      //getTreeData();
-      data.queryParams = {
-        filterId: '',
-        objectTypeCode: '122',
-        entityName: 'WFProcessInstance',
-        //filterQuery: '',
-        sort: 'CreatedOn',
-        order: 'desc'
+  proxy
+    .$get(Interface.getTabs, {
+      entityName: data.queryParams.entityName,
+      layoutName: data.layoutName,
+    })
+    .then((res) => {
+      //console.log("tabs", res)
+      if (res && res.tabs && res.tabs.length) {
+        let list = res.tabs;
+        list.forEach((item) => {
+          item.label = item.title || item.name;
+          item.filterId = item.filter.filterId;
+          item.filterquery = item.filterquery || "";
+        });
+        data.tabs = list;
+      } else {
+        //data.tabs=data.tabs0;
       }
-      data.entityType = '122';
-      data.layoutName = 'WFProcessInstanceSearch'
-      setTimeout(function () {
-        getTreeData();
-        getTabs();
-      }, 1000)
+
+      let filterColumnsList = data.tabs[0].filterableColumns;
+      data.SearchFields = filterColumnsList;
+      data.queryParams.filterId = data.tabs[0].filterId || "";
+      getColumns(data.queryParams.filterId);
+    });
+};
+watch(
+  () => route,
+  (newVal, oldVal) => {
+    if (
+      gridRef &&
+      gridRef.value &&
+      gridRef.value.loadGrid != "undefined" &&
+      !route.params.sObjectName
+    ) {
+      if (route.path == "/ui/process/instance/InstanceHome") {
+        //getTreeData();
+        data.queryParams = {
+          filterId: "",
+          objectTypeCode: "122",
+          entityName: "WFProcessInstance",
+          //filterQuery: '',
+          sort: "CreatedOn",
+          order: "desc",
+        };
+        data.entityType = "122";
+        data.layoutName = "WFProcessInstanceSearch";
+        setTimeout(function () {
+          getTreeData();
+          getTabs();
+        }, 1000);
+      }
     }
-  }
-}, { deep: true, immediate: true })
+  },
+  { deep: true, immediate: true }
+);
 onMounted(() => {
-  let userInfo = window.localStorage.getItem('userInfo');
+  let userInfo = window.localStorage.getItem("userInfo");
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
     data.userId = userInfo.userId;
   }
-  window.addEventListener('resize', changeHeight)
+  window.addEventListener("resize", changeHeight);
   // this.$nextTick(()=>{
   //   getTabs();
   // })
   getTreeData();
   getTabs();
-})
+});
 </script>
 <style lang="less" scoped>
 .WFProcessInstanceSearch {
@@ -1161,7 +1391,7 @@ onMounted(() => {
               width: 100%;
             }
 
-            .ant-tree-title>span {
+            .ant-tree-title > span {
               width: 100%;
               display: flex;
               justify-content: space-between;
@@ -1285,7 +1515,13 @@ onMounted(() => {
     }
   }
 
-  .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
+  .todo-content
+    .ant-row
+    .wea-tab
+    :deep
+    .ant-tabs
+    .ant-tabs-nav
+    .ant-tabs-nav-wrap {
     height: 45px !important;
   }
 
@@ -1376,7 +1612,7 @@ onMounted(() => {
   }
 
   .wea-left-tree-scroll {
-    height: calc(~'100% - 167px') !important;
+    height: calc(~"100% - 167px") !important;
   }
 
   :deep .ant-tabs .ant-tabs-tab {

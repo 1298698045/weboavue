@@ -41,7 +41,7 @@
             </div> -->
             <div class="calendarRight" v-if="showComponent">
                 <ListView v-if="current == 0" />
-                <CalendarVue v-if="current == 1 && showComponent" />
+                <CalendarVue v-if="current == 1" />
                 <MyApproval v-if="current == 2" />
             </div>
         </div>
@@ -83,7 +83,7 @@ const data = reactive({
     current: 1,
     isNewMeeting: false,
     isRepeatMeeting: false,
-    showComponent: false
+    showComponent: true
 });
 const { current, isNewMeeting, isRepeatMeeting, showComponent } = toRefs(data);
 // 关闭新建
@@ -108,15 +108,17 @@ const cancelRepeatMeeting = (e) => {
 const handleRepeatMeetingVal = (e) => {
     data.isRepeatMeeting = false;
 }
-watch(() => route, (newVal, oldVal) => {
-    data.current = 1;
-    data.showComponent = false;
-    nextTick(() => {
-        setTimeout(function () {
-            data.showComponent = true;
-        }, 500)
-    })
-}, { deep: true, immediate: true })
+// watch(() => route, (newVal, oldVal) => {
+//     if (route.path == '/lightning/page/RoomReservation/home') {
+//         data.current = 1;
+//         data.showComponent = false;
+//         nextTick(() => {
+//             setTimeout(function () {
+//                 data.showComponent = true;
+//             }, 500)
+//         })
+//     }
+// }, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
 .wrappper {

@@ -52,11 +52,11 @@
                     <a-button type="primary" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button> -->
                 </div>
             </div>
-            <div class="calendarBody" ref="contentRef" v-if="showComponent">
+            <div class="calendarBody" ref="contentRef">
                 <!-- <DayCalendar ref="DayCalendarWrap" v-if="calendarType==0" :currentTime="currentTime" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
                 <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
                 <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :width="width" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" /> -->
-                <VehicleFullCalendar v-if="showComponent" ref="FullCalendarWrap" :calendarView="calendarView"
+                <VehicleFullCalendar ref="FullCalendarWrap" :calendarView="calendarView"
                     :id="meetingId" :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime"
                     :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail"
                     @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
@@ -181,10 +181,9 @@ const data = reactive({
     isDelete: false,
     deleteDesc: '确定要删除吗？',
     external: false,
-    showComponent: false
 });
 
-const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList, showComponent,
+const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
     monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, width, startTime, endTime, paramsTime,
     meetingId, isMeetingDetail, objectTypeCode, sObjectName, isDelete, deleteDesc, external, calendarView } = toRefs(data);
 const colors = ["#3399ff", "#f0854e", "#61cc53", "#eb3d85"]
@@ -513,15 +512,6 @@ const handleDelete = (e) => {
 const cancelDelete = (e) => {
     data.isDelete = false;
 };
-watch(() => route, (newVal, oldVal) => {
-    data.showComponent = false;
-    nextTick(() => {
-        data.showComponent = true;
-        setTimeout(function () {
-            calendarTypeChange(data.calendarType);
-        }, 500)
-    })
-}, { deep: true, immediate: true })
 </script>
 <style lang="less" scoped>
 .calendarWrap {

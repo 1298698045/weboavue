@@ -84,7 +84,7 @@
                     </span> -->
                 </div>
                 <div class="rightTab">
-                    <a-tabs v-model:activeKey="activeKey" @change="changeRightTab" v-if="showComponent">
+                    <a-tabs v-model:activeKey="activeKey" @change="changeRightTab">
                         <a-tab-pane key="1" tab="全部人员"></a-tab-pane>
                         <a-tab-pane key="2" tab="同部门" v-if="typeCurrent==0"></a-tab-pane>
                         <a-tab-pane key="3" tab="我的下属" v-if="typeCurrent==0"></a-tab-pane>
@@ -407,9 +407,8 @@
         searchTreeVal:'',
         BusinessUnitId:'',
         currentUserId:'',
-        showComponent:true
     })
-    const { showComponent,currentUserId,BusinessUnitId,activeKey, deptTreeData, pageNumber, pageSize, listData,
+    const { currentUserId,BusinessUnitId,activeKey, deptTreeData, pageNumber, pageSize, listData,
         searchVal, total, leftTabCurrent, typeCurrent, groupList, isLeft, sortField,treeId,searchTreeVal,deptTreeDataAll,groupListAll} = toRefs(data);
     const choiceSort = (name, id) => {
         data.sortField = {
@@ -496,10 +495,8 @@
         })
     }
     const onSearch = (e) => {
-        //data.showComponent=false;
         data.pageNumber=1;
         data.activeKey='1';
-        //nextTick(() => (data.showComponent = true));
         getQuery();
     }
     const onSearchTree = (e) => {
