@@ -258,6 +258,7 @@
                         Name: fields[key]?.displayValue
                     }]
                 }
+                
                 try{
                     if(type=='UC' || type=='UCS'){
                         // console.log('props.ruleLogId', props.ruleLogId);
@@ -270,6 +271,14 @@
                         }
                         data.suggestionObj[key] = fields[key];
                         console.log("data.suggestionObj", data.suggestionObj);
+                    }else if(type=='L' || type=='LT' || type=='DT'){
+                        let options = toRaw(data.select[key].values);
+                        // console.log("options", options, fields[key].value);
+                        let row = options.find(l=>l.value == fields[key].value);
+                        // console.log("row", row);
+                        if(row){
+                            data.list[key] = row.label;
+                        }
                     }else{
                         data.list[key] = fields[key]?.value;
                     }
@@ -337,7 +346,7 @@
             const results = await Promise.all(requests);
             let keys = Object.keys(data.relatedObjData);
             results.forEach((item, index)=>{
-                let pickList = item.actions[0].returnValue;
+                let pickList = item.actions[0].returnValue.picklistFieldValues;
                 data.relatedObjData[keys[index]]['select'] = pickList;
             });
             // console.log("data.relatedObjData:", data.relatedObjData);
@@ -513,7 +522,7 @@
             message: JSON.stringify(d)
         }
         proxy.$post(Interface.pickListValues, obj).then((res) => {
-            let picklistFieldValues = res.actions[0].returnValue;
+            let { picklistFieldValues, picklistFieldControllers } = res.actions[0].returnValue;
             data.select = picklistFieldValues;
         })
     }
@@ -943,6 +952,7 @@
         return style;
     }
 
+    
     const setStyle = (row, col) => {
         // console.log("style", data.cellData[row][col].style);
         let style = {};
@@ -950,16 +960,24 @@
             let styleData = data.cellData[row][col].style;
             for(let styleName in styleData){
                 if(styleName=='fs'){
-                    // style.fontSize = styleData[styleName] + "px";
+                    style.fontSize = styleData[styleName] + "px";
                 }
                 if(styleName == 'bg'){
-                    style.background = styleData[styleName].rgb;
+                    style.background = styleData[styleName]?.rgb;
                 }
                 if(styleName == 'cl'){
                     style.color = styleData[styleName]?.rgb;
                 }
                 if(styleName=='bd'){
-                    style.border = "1px solid #000";
+                    // style.border = "1px solid #000";
+
+                    let { b, l, r, t } = styleData[styleName];
+
+                    style.borderBottom = '1px solid ' + b?.cl?.rgb;
+                    style.borderTop = '1px solid ' + t?.cl?.rgb;
+                    style.borderLeft = '1px solid ' + l?.cl?.rgb;
+                    style.borderRight = '1px solid ' + r?.cl?.rgb;
+
                     style.width = '90px';
                     let layout = data.comps[Number(row)]?.layout;
                     // style.width = data.columns[layout.column].defaultWidth + 'px';
@@ -1291,12 +1309,15 @@
         if(empty){
             isBook = false;
         }
+        let isP = temp.some(b => b && b.p); // 判断是否有文本p
+        if(isP){
+            isBook = true;
+        }
         // if(empty && index < data.maxRowNum){
         //     isBook = true;
         // }
         return isBook;  
     };
-
     // 添加子表行
 
     const handleAddSubTable = (col) => {

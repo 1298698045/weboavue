@@ -7,7 +7,7 @@
                         <tr v-if="isShowRow(row,key)" :style="setRowStyle(key)">
                             <template v-for="(col, colKey, colIndex) in row" :key="colIndex">
                                 <td :col="colKey" :rowspan="col.rowspan || 1" :colspan="col.colspan || 1" v-if="isShowCell(key, colKey, col.rowspan, col) && col && col.field?.displayCategory!='RelatedList'" :style="setStyle(key,colKey)">
-                                    <template v-if="col.v ||  col.p">
+                                    <template v-if="col.v || col.p">
                                         <span :style="setStyleText(key, colKey)">
                                             {{col.v}}
                                         </span>
@@ -370,7 +370,7 @@
             const results = await Promise.all(requests);
             let keys = Object.keys(data.relatedObjData);
             results.forEach((item, index)=>{
-                let pickList = item.actions[0].returnValue;
+                let pickList = item.actions[0].returnValue.picklistFieldValues;
                 data.relatedObjData[keys[index]]['select'] = pickList;
             });
             // console.log("data.relatedObjData:", data.relatedObjData);
@@ -569,7 +569,7 @@
             message: JSON.stringify(d)
         }
         proxy.$post(Interface.pickListValues, obj).then((res) => {
-            let picklistFieldValues = res.actions[0].returnValue;
+            let { picklistFieldValues, picklistFieldControllers } = res.actions[0].returnValue;
             data.select = picklistFieldValues;
         })
     }
@@ -1034,16 +1034,24 @@
             let styleData = data.cellData[row][col].style;
             for(let styleName in styleData){
                 if(styleName=='fs'){
-                    // style.fontSize = styleData[styleName] + "px";
+                    style.fontSize = styleData[styleName] + "px";
                 }
                 if(styleName == 'bg'){
-                    style.background = styleData[styleName].rgb;
+                    style.background = styleData[styleName]?.rgb;
                 }
                 if(styleName == 'cl'){
                     style.color = styleData[styleName]?.rgb;
                 }
                 if(styleName=='bd'){
-                    style.border = "1px solid #000";
+                    // style.border = "1px solid #000";
+
+                    let { b, l, r, t } = styleData[styleName];
+
+                    style.borderBottom = '1px solid ' + b?.cl?.rgb;
+                    style.borderTop = '1px solid ' + t?.cl?.rgb;
+                    style.borderLeft = '1px solid ' + l?.cl?.rgb;
+                    style.borderRight = '1px solid ' + r?.cl?.rgb;
+
                     style.width = '90px';
                     let layout = data.comps[Number(row)]?.layout;
                     // style.width = data.columns[layout.column].defaultWidth + 'px';
@@ -1375,6 +1383,10 @@
         if(empty){
             isBook = false;
         }
+        let isP = temp.some(b => b && b.p); // 判断是否有文本p
+        if(isP){
+            isBook = true;
+        }
         // if(empty && index < data.maxRowNum){
         //     isBook = true;
         // }
@@ -1532,6 +1544,7 @@
         let isRequired = false;
         for(let i = 0; i < data.comps.length; i++){
             const item = data.comps[i];
+            console.log("item", item);
             if(item.required == true && item.id in paramsList && (paramsList[item.id] == '' || paramsList[item.id] == null || paramsList[item.id] == undefined)){
                 // message.error(`${item.label}不能为空!`)
                 requireds.push(item.label);
@@ -1547,6 +1560,9 @@
                     dom[0].classList.remove("required");
                 }
             }
+            if(['O', 'Y', 'U', 'Y_MD'].includes(item.type) && paramsList[item.id] == ''){
+                delete paramsList[item.id];
+            }
         }
         
         if(isRequired){
@@ -1558,7 +1574,9 @@
         }
 
         let relatedList = saveRelated();
-
+        // console.log("relatedList", relatedList);
+        // console.log("paramsList", paramsList);
+        // return false;
         let obj = {
           actions:[{
               id: "2919;a",
@@ -1631,6 +1649,10 @@
                         item.checkedColumns.forEach(v=>{
                             if(v.permission != 2 && v.permission != 4){
                                 paramsRow[v.id] = row[v.id];
+                            }
+                            console.log("v", v);
+                            if(['O', 'Y', 'U', 'Y_MD'].includes(v.type) && paramsRow[v.id] == ""){
+                                delete paramsRow[v.id];
                             }
                         });
                         // console.log("paramsRow", paramsRow);
