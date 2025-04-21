@@ -100,7 +100,7 @@
     const modelContentRef = ref(null);
     const isModal = ref(true);
     const labelCol = ref({ style: { width: '100px' } });
-    const emit = defineEmits(['update-status']);
+    const emit = defineEmits(['update-status','success']);
     const columns = [
         {
             title: "姓名",
@@ -290,7 +290,12 @@
         };
 
         proxy.$post(Interface.workflow.disagree, d).then(res=>{
-
+            if(res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
+                message.success("审批拒绝成功！");
+                emit("success",false);
+            }else {
+                message.error("审批拒绝失败！");
+            }
         })
     }
 

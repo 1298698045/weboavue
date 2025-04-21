@@ -404,10 +404,10 @@
         </div>
         <SubmitProcess ref="processRef" v-if="isProcess" :ruleLogId="ruleLogId" :processId="processId"
             :processInstanceId="processInstanceId" :toActivityID="toActivityID" :isShow="isProcess"
-            @update-status="uploadProcess" :paramsData="ProcessData" />
+            @update-status="updateStatus" @success="uploadProcess" :paramsData="ProcessData" />
         <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" :ruleLogId="ruleLogId"
             :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID"
-            :fromActivityId="fromActivityId" @update-status="updateStatus" />
+            :fromActivityId="fromActivityId" @update-status="updateStatus"  @success="uploadProcess" />
         <circulation-modal ref="circulationRef" :processInstanceId="processInstanceId"
             :processInstanceName="processInstanceName" @update-status="updateStatus" v-if="isCirculation"
             :isShow="isCirculation"></circulation-modal>
@@ -652,6 +652,7 @@
     };
     const uploadProcess = () => {
         data.isProcess = false;
+        data.isRejection = false;
         getRuleLogData();
         flowFormRef.value.loadQuery();
     }

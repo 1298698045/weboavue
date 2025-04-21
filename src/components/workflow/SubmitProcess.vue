@@ -145,7 +145,7 @@
     });
     const isModal = ref(true);
     const labelCol = ref({ style: { width: '100px' } });
-    const emit = defineEmits(['update-status']);
+    const emit = defineEmits(['update-status','success']);
     
     const formState = reactive({
         operationType: 1,
@@ -510,7 +510,7 @@
         proxy.$post(Interface.workflow.agree, d).then(res=>{
             if(res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS'){
                 message.success("提交流转成功！");
-                emit("update-status",false);
+                emit("success",false);
             }else {
                 message.error("提交流转失败！");
             }

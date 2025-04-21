@@ -146,6 +146,9 @@
                         {{ sug.UserName }} <span>{{ sug.Comment }}</span>
                     </div>
                 </div>
+                <div class="signImg" v-if="suggestionObj[field.id] && suggestionObj[field.id].length">
+                    <img :src="Interface.pathUrl+list[field.id].sinatureUrl" alt="">
+                </div>
             </span>
             <span v-else>
                 <span class="valText" v-if="field?.permission == 4">
@@ -594,8 +597,8 @@
         } */
         .signImg{
             img{
-                max-width: 120px;
-                max-height: 56px;
+                width: 120px;
+                height: 56px;
             }
         }
     }

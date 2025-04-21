@@ -265,7 +265,10 @@
                         // console.log('fields[key]', fields[key]);
                         let currentUserRow = fields[key].find(v=>v.RecId == props.ruleLogId);
                         if(currentUserRow){
-                            data.list[key] = currentUserRow.Comment;
+                            data.list[key] = {
+                                Comment: currentUserRow.Comment,
+                                sinatureUrl: currentUserRow.sinatureUrl
+                            };
                         }else {
                             data.list[key] = "";
                         }
