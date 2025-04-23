@@ -380,19 +380,6 @@ const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
 };
-// watch(searchValue, (value) => {
-//   const expanded = dataList
-//     .map((item) => {
-//       if (item.title.indexOf(value) > -1) {
-//         return getParentKey(item.key, gData.value);
-//       }
-//       return null;
-//     })
-//     .filter((item, i, self) => item && self.indexOf(item) === i);
-//   expandedKeys.value = expanded;
-//   searchValue.value = value;
-//   autoExpandParent.value = true;
-// });
 
 let data = reactive({
   isCollapsed: false,
@@ -421,66 +408,6 @@ let data = reactive({
       "sObjectName": "",
       "targetApiName": "",
     },
-    // {
-    //     "column": "Name",
-    //     "label": "记录对象",
-    //     "dataType": "S",
-    //     "ReferencedEntityObjectTypeCode": 0,
-    //     "sObjectName": "",
-    //     "targetApiName": "",
-    // },
-    // {
-    //     "column": "AccessObjectTypeCode",
-    //     "label": "角色",
-    //     "dataType": "L",
-    //     "ReferencedEntityObjectTypeCode": 100201,
-    //     "picklistValues": [
-    //     {
-    //         "label": "用户",
-    //         "value": "8"
-    //     },
-    //     {
-    //         "label": "角色",
-    //         "value": "1036"
-    //     },
-    //     {
-    //         "label": "小组",
-    //         "value": "9"
-    //     },
-    //     {
-    //         "label": "部门",
-    //         "value": "10"
-    //     }
-    //     ],
-    //     "sObjectName": "",
-    //     "targetApiName": "",
-    // },
-    // {
-    //     "column": "Depth",
-    //     "label": "权限",
-    //     "dataType": "L",
-    //     "ReferencedEntityObjectTypeCode": 100201,
-    //     "picklistValues": [
-    //     {
-    //         "label": "读",
-    //         "value": "2"
-    //     },
-    //     {
-    //         "label": "读/写",
-    //         "value": "4"
-    //     },
-    //     {
-    //         "label": "读/写/删",
-    //         "value": "8"
-    //     },
-    //     {
-    //         "label": "管理（读/写/删/移动）",
-    //         "value": "16"
-    //     },
-    //     ],
-    //     "sObjectName": "",
-    //     "targetApiName": "",
-    // },
     {
       "column": "ReaderId",
       "label": "阅读人",
@@ -490,28 +417,6 @@ let data = reactive({
       "sObjectName": "SystemUser",
       "targetApiName": "SystemUser",
     },
-    // {
-    //     "column": "StatusCode",
-    //     "label": "状态",
-    //     "dataType": "L",
-    //     "ReferencedEntityObjectTypeCode": 100201,
-    //     "picklistValues": [
-    //     {
-    //         "label": "草稿",
-    //         "value": "0"
-    //     },
-    //     {
-    //         "label": "已发布",
-    //         "value": "1"
-    //     },
-    //     {
-    //         "label": "审批未通过",
-    //         "value": "2"
-    //     }
-    //     ],
-    //     "sObjectName": "",
-    //     "targetApiName": "",
-    // },
     {
       "column": "ReadOn",
       "label": "阅读时间",
@@ -626,16 +531,7 @@ const onSelect = (keys, { node }) => {
   data.pagination.current = 1;
   getQuery();
 };
-onMounted(() => {
-  let userInfo = window.localStorage.getItem('userInfo');
-  if (userInfo) {
-    userInfo = JSON.parse(userInfo);
-    data.userId = userInfo.userId;
-  }
-  data.pagination.current = 1;
-  getQuery();
-  window.addEventListener('resize', changeHeight)
-})
+
 function changeHeight(h) {
   // if(typeof h == 'number'){
   //   formSearchHeight.value = h;
@@ -710,11 +606,6 @@ const handleTableChange = (pag, filters, sorter) => {
 //新建权限
 const handleNew = (e) => {
   if (data.selectedKeys && data.selectedKeys.length) {
-    // data.relatedObjectAttributeValue={};
-    // data.relatedObjectAttributeName='';
-    // data.objectTypeCode='100201';
-    // data.sObjectName='Content';
-    // data.recordId='';
     data.isNew = true;
   }
   else {
@@ -726,14 +617,6 @@ const cancelNew = (e) => {
   refreshData();
 }
 const getQuery = () => {
-  // let filterQuery='';
-  // if(data.filterQuery){
-  //   filterQuery=data.filterQuery;
-  // }
-  // if(data.SelectKey)
-  // {
-  //   filterQuery+='\nObjectId\teq\t'+data.SelectKey;
-  // }
   let url = Interface.list2;
   let d = {
     filterId: '',
@@ -799,12 +682,17 @@ const cancelRelease = () => {
     message.error("请至少勾选一项！")
   }
 }
-watch(() => route, (newVal, oldVal) => {
-  if (route.path == '/lightning/o/Document/readlog/home') {
-    data.sObjectName='RecordReadLog';
-    getQuery();
+
+onMounted(() => {
+  let userInfo = window.localStorage.getItem('userInfo');
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+    data.userId = userInfo.userId;
   }
-}, { deep: true, immediate: true })
+  data.pagination.current = 1;
+  getQuery();
+  window.addEventListener('resize', changeHeight)
+})
 </script>
 <style lang="less" scoped>
 .ReadLogWrap {

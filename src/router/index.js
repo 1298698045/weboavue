@@ -430,9 +430,14 @@ const staticRoutes = [
     ]
   },
   {
-    path: "/CampaignSms/editor",
+    path: "/lightning/r/CampaignSms/new",
     name: "CampaignSmsEditor",
     component: () => import("../views/CampaignSms/editor.vue"),
+  },
+  {
+    path: "/lightning/r/CampaignSms/upload",
+    name: "CampaignSmsUpload",
+    component: () => import("../views/CampaignSms/upload.vue"),
   },
   {
     path: "/RuleArticle1",

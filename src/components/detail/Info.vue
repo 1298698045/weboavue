@@ -33,7 +33,7 @@
                                 v-if="ApproveList&&(ApproveList.length==index+1)" />
                             <CheckCircleOutlined style="font-size: 16px;color: green;" v-else /> -->
                             <div class="avatar">
-                                {{ activity.CreatedByName.slice(0, 2) }}
+                                {{ activity.ExecutorIdentityName.slice(0, 2) }}
                                 <span class="status">
                                     <ClockCircleOutlined style="font-size: 16px;color: #1677ff;"
                                         v-if="ApproveList&&(ApproveList.length==index+1)" />

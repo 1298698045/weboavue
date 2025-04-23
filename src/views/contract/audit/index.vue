@@ -8,16 +8,10 @@
                 <span class="headerTitle">合同审计</span>
             </div>
             <div class="headerRight">
-                <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
-                <!-- <a-button type="primary" class="ml10" @click="handleNewForm">新建合同审批单</a-button> -->
                 <a-button type="primary" class="ml10" @click="handleNew">新增审计合同</a-button>
                 <a-button type="primary" class="ml10">批量删除</a-button>
                 <a-button type="primary" class="ml10">审计抽查</a-button>
                 <a-button type="primary" class="ml10">生成审计报告</a-button>
-                <!-- <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
-            @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false">
-            <a-button class="ml10" type="primary">上传</a-button>
-          </a-upload> -->
             </div>
         </div>
         <div class="todo-content">
@@ -664,27 +658,6 @@ const handleSubmit = () => {
         console.log('error', err);
     });
 }
-watch(() => route, (newVal, oldVal) => {
-    if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-        if (route.path == '/lightning/page/contract/audit/home') {
-            //getTreeData();
-            data.queryParams = {
-                filterId: '',
-                objectTypeCode: '10185',
-                entityName: 'ContractAudit',
-                //filterQuery: '',
-                search: '',
-                sort: 'CreatedOn',
-                order: 'desc'
-            }
-            data.entityType = 'C85';
-            data.layoutName = 'ContractAudit';
-            setTimeout(function () {
-                getTabs();
-            }, 1000)
-        }
-    }
-}, { deep: true, immediate: true })
 onMounted(() => {
     changeHeight();
     data.top = (document.documentElement.clientHeight - 565) / 2;

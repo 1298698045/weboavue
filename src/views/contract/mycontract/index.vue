@@ -9,11 +9,7 @@
       </div>
       <div class="headerRight">
         <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-        <!-- <a-button type="primary" class="ml10" @click="handleNewForm">新建合同单</a-button> -->
-        <!-- <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
-          @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false">
-          <a-button class="ml10" type="primary">上传</a-button>
-        </a-upload> -->
+       
       </div>
     </div>
     <div class="todo-content">
@@ -477,27 +473,7 @@ const getStatistics = () => {
     data.statistics = res.data.listData.Table[0];
   });
 };
-watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/_ui/contract/home/my') {
-      //getTreeData();
-      data.queryParams = {
-        filterId: '',
-        objectTypeCode: '1010',
-        entityName: 'Contract',
-        //filterQuery: '',
-        search: '',
-        sort: 'CreatedOn',
-        order: 'desc'
-      }
-      data.entityType = '800';
-      data.layoutName = 'myContract';
-      setTimeout(function () {
-        getTabs();
-      }, 1000)
-    }
-  }
-}, { deep: true, immediate: true })
+
 onMounted(() => {
   changeHeight();
   //data.top = (document.documentElement.clientHeight - 565) / 2;

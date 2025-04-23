@@ -15,25 +15,7 @@
           >收藏</a-button
         >
         <a-button class="ml10 ml11" @click="batchPrintForm">批量打印</a-button>
-        <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-        <a-dropdown :trigger="['hover']" placement="bottomRight">
-          <a-button type="primary" class="rightIconBtn" style="margin-right: 50px;">
-            <i class="iconfont icon-anniuxiala"></i>
-          </a-button>
-          <template #overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">
-                批量提交
-              </a-menu-item>
-              <a-menu-item key="2">
-                批量关注
-              </a-menu-item>
-              <a-menu-item key="3">
-                批量转发
-              </a-menu-item>
-            </a-menu>
-          </template>
-</a-dropdown>-->
+        
         <MoreBtn
           :isMenu="isMenu"
           @change="handleClickMenu"
@@ -61,48 +43,6 @@
                 </span>
                 <span>取消督办</span>
               </li>
-              <!-- <li class="moreMenuItem">
-                <span class="more-menu-icon">
-                  <i class="iconfont icon-sousuoanniu"></i>
-                </span>
-                <span>搜索</span>
-              </li>
-              <li class="moreMenuItem">
-                <span class="more-menu-icon">
-                  <i class="iconfont icon-piliangtijiao"></i>
-                </span>
-                <span>批量提交</span>
-              </li>
-              <li class="moreMenuItem">
-                <span class="more-menu-icon">
-                  <i class="iconfont icon-piliangguanzhu"></i>
-                </span>
-                <span>批量关注</span>
-              </li>
-              <li class="moreMenuItem">
-                <span class="more-menu-icon">
-                  <i class="iconfont icon-piliangzhuanfa"></i>
-                </span>
-                <span>批量转发</span>
-              </li>
-              <li class="moreMenuItem">
-                <span class="more-menu-icon">
-                  <i class="iconfont icon-quanbuyidu"></i>
-                </span>
-                <span>全部已读</span>
-              </li>
-              <li class="moreMenuItem">
-                <span class="more-menu-icon">
-                  <i class="iconfont icon-xianshiliedingzhi"></i>
-                </span>
-                <span>显示列定制</span>
-              </li>
-              <li class="moreMenuItem">
-                <span class="more-menu-icon">
-                  <i class="iconfont icon-morenpaixushezhi"></i>
-                </span>
-                <span>默认排序设置</span>
-              </li> -->
             </ul>
           </div>
         </MoreBtn>
@@ -465,31 +405,11 @@ const getTreeData = () => {
       };
       formTree(listData);
       console.log("formTree", listData);
-      listData.unshift({
-        categoryId: "",
-        id: "",
-        key: "",
-        name: "全部",
-        processs: [],
-        quantity: "",
-        value: "",
-      });
       gData.value = listData;
       gDataAll.value = listData;
     } else {
-      let listData = [
-        {
-          categoryId: "",
-          id: "",
-          key: "",
-          name: "全部",
-          processs: [],
-          quantity: "",
-          value: "",
-        },
-      ];
-      gData.value = listData;
-      gDataAll.value = listData;
+      gData.value = [];
+      gDataAll.value = [];
     }
   });
 };
@@ -1192,41 +1112,10 @@ const handleClickMenu = (e) => {
   data.isMenu = e;
 };
 const handleMenuClick = () => {};
-watch(
-  () => route,
-  (newVal, oldVal) => {
-    if (
-      gridRef &&
-      gridRef.value &&
-      gridRef.value.loadGrid != "undefined" &&
-      !route.params.sObjectName
-    ) {
-      if (route.path == "/lightning/workflow/mine") {
-        //getTreeData();
-        data.queryParams = {
-          filterId: "",
-          objectTypeCode: "122",
-          entityName: "WFProcessInstance",
-          //filterQuery: '',
-          sort: "CreatedOn",
-          order: "desc",
-        };
-        data.entityType = "122";
-        data.layoutName = "myWorkflowInstance";
-        setTimeout(function () {
-          getTreeData();
-          getTabs();
-        }, 1000);
-      }
-    }
-  },
-  { deep: true, immediate: true }
-);
+
 onMounted(() => {
   window.addEventListener("resize", changeHeight);
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
+  
   getTreeData();
   getTabs();
 });

@@ -475,30 +475,8 @@ const getStatistics = () => {
         data.statistics = res.data.listData.Table[0];
     })
 };
-watch(() => route, (newVal, oldVal) => {
-    if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-        if (route.path == '/lightning/o/Contract/Invoice') {
-            //window.location.reload();
-            //getTreeData();
-            data.queryParams = {
-                filterId: '',
-                objectTypeCode: '1090',
-                entityName: 'Invoice',
-                search: '',
-                sort: 'CreatedOn',
-                order: 'desc'
-            }
-            data.entityType = 'I0E';
-            data.layoutName = 'invoiceOwner';
-            setTimeout(function () {
-                getTabs();
-            }, 1000)
-        }
-    }
-}, { deep: true, immediate: true })
 onMounted(() => {
     changeHeight();
-    //data.top = (document.documentElement.clientHeight - 565) / 2;
     window.addEventListener('resize', changeHeight)
     getTabs();
     getStatistics();

@@ -13,33 +13,7 @@
             </div>
         </div>
         <div class="calendarBody">
-            <!-- <div class="leftMenuWrapper">
-                <div class="leftTabMenu" :class="{'active':current==0}" @click="current=0">
-                    <div class="menuIcon">
-                        <i class="iconfont icon-rililiebiao"></i>
-                    </div>
-                    <div class="name">
-                        列表
-                    </div>
-                </div>
-                <div class="leftTabMenu" :class="{'active':current==1}" @click="current=1">
-                    <div class="menuIcon">
-                        <i class="iconfont icon-rili1"></i>
-                    </div>
-                    <div class="name">
-                        日历
-                    </div>
-                </div>
-                <div class="leftTabMenu" :class="{'active':current==2}" @click="current=2">
-                    <div class="menuIcon">
-                        <i class="iconfont icon-wodeshenpi"></i>
-                    </div>
-                    <div class="name">
-                        我的审批
-                    </div>
-                </div>
-            </div> -->
-            <div class="calendarRight" v-if="showComponent">
+            <div class="calendarRight">
                 <ListView v-if="current == 0" />
                 <CalendarVue v-if="current == 1" />
                 <MyApproval v-if="current == 2" />
@@ -50,7 +24,6 @@
     </div>
 </template>
 <script setup>
-// import "@/style/oldIcon/iconfont.css";
 import {
     ref,
     watch,
@@ -108,17 +81,7 @@ const cancelRepeatMeeting = (e) => {
 const handleRepeatMeetingVal = (e) => {
     data.isRepeatMeeting = false;
 }
-// watch(() => route, (newVal, oldVal) => {
-//     if (route.path == '/lightning/page/RoomReservation/home') {
-//         data.current = 1;
-//         data.showComponent = false;
-//         nextTick(() => {
-//             setTimeout(function () {
-//                 data.showComponent = true;
-//             }, 500)
-//         })
-//     }
-// }, { deep: true, immediate: true })
+
 </script>
 <style lang="less" scoped>
 .wrappper {

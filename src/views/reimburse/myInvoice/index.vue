@@ -312,12 +312,6 @@ const getTabs = () => {
   })
 }
 function handleTo(viewUrl) {
-  // router.push({
-  //   path: "/detail",
-  //   query: {
-  //     id: id
-  //   }
-  // });
   window.open(viewUrl)
 }
 window.handleTo = handleTo;
@@ -385,31 +379,10 @@ const handleDetail = (id, InvoiceType) => {
   data.isDetail = true;
 }
 window.handleDetail = handleDetail;
-watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/lightning/page/MyInvoice/home') {
-      //getTreeData();
-      data.queryParams = {
-        filterId: '',
-        objectTypeCode: '1090',
-        entityName: 'Invoice',
-        //filterQuery: '',
-        sort: 'CreatedOn',
-        order: 'desc'
-      }
-      data.entityType = 'I0E';
-      data.layoutName = 'MyInvoice'
-      setTimeout(function () {
-        getTabs();
-      }, 1000)
-    }
-  }
-}, { deep: true, immediate: true })
+
 onMounted(() => {
   window.addEventListener('resize', changeHeight)
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
+  
   getTabs();
 })
 </script>

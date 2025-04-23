@@ -490,15 +490,7 @@
       tofolder(node.id,node.name)
     }
   };
-  onMounted(()=>{
-    let userInfo=window.localStorage.getItem('userInfo');
-    if(userInfo){
-        userInfo=JSON.parse(userInfo);
-        data.userId=userInfo.userId;
-    }
-    window.addEventListener('resize',changeHeight)
-    tofolder('','')
-  })
+  
   function changeHeight(h){
     if(typeof h == 'number'){
       formSearchHeight.value = h;
@@ -682,13 +674,6 @@ const getArticle=(id)=>{
                       if(cell!='id'&&cell!='nameField'&&cell!='ContentId'&&cell!='SubjectId'){
                           item[cell]=girdFormatterValue(cell,item);
                       }
-                      // if(cell=='ContentId'||cell=='SubjectId'){
-                      //   item[cell+'Value']=item[cell].lookupValue.value;
-                      //   item[cell]=girdFormatterValue(cell,item);
-                      // }
-                      // if(cell=='CreatedOn'||cell=='ModifiedOn'){
-                      //     item[cell]=item[cell]?dayjs(item[cell]).format("YYYY-MM-DD HH:mm"):'';
-                      // }
                   }
                   list.push(item)
               }
@@ -710,11 +695,16 @@ const getArticle=(id)=>{
       data.BreadCrumbList=[];
     }
   }
-  watch(() => route, (newVal, oldVal) => {
-    if (route.path == '/lightning/page/article/new') {
-      tofolder('','')
+
+  onMounted(()=>{
+    let userInfo=window.localStorage.getItem('userInfo');
+    if(userInfo){
+        userInfo=JSON.parse(userInfo);
+        data.userId=userInfo.userId;
     }
-  }, { deep: true, immediate: true })
+    window.addEventListener('resize',changeHeight)
+    tofolder('','')
+  })
   </script>
   <style lang="less" scoped>
   .NewKbArticleWrap {

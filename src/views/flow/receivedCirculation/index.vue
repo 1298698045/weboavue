@@ -373,31 +373,11 @@ const getTreeData = () => {
       };
       formTree(listData);
       console.log("formTree", listData);
-      listData.unshift({
-        categoryId: "",
-        id: "",
-        key: "",
-        name: "全部",
-        processs: [],
-        quantity: "",
-        value: "",
-      });
       gData.value = listData;
       gDataAll.value = listData;
     } else {
-      let listData = [
-        {
-          categoryId: "",
-          id: "",
-          key: "",
-          name: "全部",
-          processs: [],
-          quantity: "",
-          value: "",
-        },
-      ];
-      gData.value = listData;
-      gDataAll.value = listData;
+      gData.value = [];
+      gDataAll.value = [];
     }
   });
 };
@@ -407,19 +387,6 @@ const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
 };
-// watch(searchValue, (value) => {
-//   const expanded = dataList
-//     .map((item) => {
-//       if (item.title.indexOf(value) > -1) {
-//         return getParentKey(item.key, gData.value);
-//       }
-//       return null;
-//     })
-//     .filter((item, i, self) => item && self.indexOf(item) === i);
-//   expandedKeys.value = expanded;
-//   searchValue.value = value;
-//   autoExpandParent.value = true;
-// });
 
 let data = reactive({
   isCollapsed: false,
@@ -973,41 +940,10 @@ const handleEdit = (id) => {
   window.open(url.href);
 };
 window.handleEdit = handleEdit;
-watch(
-  () => route,
-  (newVal, oldVal) => {
-    if (
-      gridRef &&
-      gridRef.value &&
-      gridRef.value.loadGrid != "undefined" &&
-      !route.params.sObjectName
-    ) {
-      if (route.path == "/lightning/page/workflow/forward/home") {
-        //getTreeData();
-        data.queryParams = {
-          filterId: "",
-          objectTypeCode: "147",
-          entityName: "WFInstanceFoward",
-          //filterQuery: '',
-          sort: "CreatedOn",
-          order: "desc",
-        };
-        data.entityType = "147";
-        data.layoutName = "WFInstanceForward";
-        setTimeout(function () {
-          getTreeData();
-          getTabs();
-        }, 1000);
-      }
-    }
-  },
-  { deep: true, immediate: true }
-);
+
 onMounted(() => {
   window.addEventListener("resize", changeHeight);
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
+  
   getTreeData();
   getTabs();
 });

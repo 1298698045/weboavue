@@ -13,27 +13,7 @@
     </div>
     <div class="todo-content">
       <a-row>
-        <!-- <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">
-            <div class="wea-left-tree">
-              <div class="wea-left-tree-search">
-                <a-input-search v-model:value="data.searchVal" placeholder="" @search="onSearch" />
-              </div>
-              <div class="wea-left-tree-scroll">
-                <a-tree :style="{height: tableHeight+'px'}" :expanded-keys="expandedKeys"
-                  :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
-                  @select="onSelect"
-                  @expand="onExpand">
-                  <template #switcherIcon="{ switcherCls }">
-                    <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
-                    </CaretDownOutlined>
-                  </template>
-<template v-slot:title="{ name, data, isLeaf, text, quantity }">
-                    <span>{{ name }}<span class="tree-num">{{ quantity }}</span></span>
-                  </template>
-</a-tree>
-</div>
-</div>
-</a-col> -->
+        
         <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
           <!-- <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
               :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div> -->
@@ -174,60 +154,11 @@ const autoExpandParent = ref(true);
 const res = require("@/localData/treedata.json");
 const gData = ref([]);
 const gDataAll = ref([]);
-// proxy.$get('/localData/treedata.json', {}).then((res) => {
-//   console.log("res-processTree", res);
-//   let listData = res.data;
-//   let formTree = (list) => {
-//     list.forEach(item => {
-//       if (item.children) {
-//         formTree(item.children);
-//       }
-//       item.key = item.id;
-//       item.value = item.id;
-//     })
-//   }
-//   formTree(listData);
-//   console.log("formTree", listData)
-//   gData.value = listData;
-//   gDataAll.value = listData;
-// })
-// proxy.$get(Interface.documentAdmin.tree,{
-//     entity: "docouttype"
-// }).then((res)=>{
-//     let listData = formTreeData(res.rows,'id','pid');
-//     let formTree = (list) => {
-//         list.forEach(item => {
-//         if (item.children) {
-//             formTree(item.children);
-//         }
-//         item.key = item.id;
-//         item.value = item.id;
-//         item.name = item.text;
-//         })
-//     }
-//     formTree(listData);
-//     gData.value = listData;
-//     gDataAll.value = listData;
-// })
-// console.log("genData",genData,treeList)
 
 const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
 };
-// watch(searchValue, (value) => {
-//   const expanded = dataList
-//     .map((item) => {
-//       if (item.title.indexOf(value) > -1) {
-//         return getParentKey(item.key, gData.value);
-//       }
-//       return null;
-//     })
-//     .filter((item, i, self) => item && self.indexOf(item) === i);
-//   expandedKeys.value = expanded;
-//   searchValue.value = value;
-//   autoExpandParent.value = true;
-// });
 
 let data = reactive({
   isCollapsed: true,
@@ -579,31 +510,10 @@ const cancelCategory = (e) => {
 const cancelEditFlowDefine = (e) => {
   data.isEditFlow = e;
 }
-watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/lightning/page/OfficeDocumentOut/mine/home') {
-      //getTreeData();
-      data.queryParams = {
-        filterId: '',
-        objectTypeCode: '100109',
-        entityName: 'OfficialDocumentOut',
-        //filterQuery: '',
-        sort: 'CreatedOn',
-        order: 'desc'
-      }
-      data.entityType = 'A09';
-      data.layoutName = 'DocumentOutMine'
-      setTimeout(function () {
-        getTabs();
-      }, 1000)
-    }
-  }
-}, { deep: true, immediate: true })
+
 onMounted(() => {
   window.addEventListener('resize', changeHeight)
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
+  
   getTabs();
 })
 </script>

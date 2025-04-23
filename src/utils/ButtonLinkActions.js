@@ -49,22 +49,28 @@ const EditKnowledgeMapDetail=(id)=>{
     window.open(url.href);
 }
 //新建短信发送
-const NewCampaignSms =()=>{
+const CampaignSmsNew =()=>{
     let url = router.resolve({
         name: "CampaignSmsEditor",
-        query: {
-        id: '',
-        },
+        query: {},
     });
     window.open(url.href);
 }
 //编辑短信发送
-const EditCampaignSms =(id)=>{
+const CampaignSmsEdit =(id)=>{
     let url = router.resolve({
         name: "CampaignSmsEditor",
         query: {
         id: id,
         },
+    });
+    window.open(url.href);
+}
+//短信上传文件发送
+const CampaignSmsUpload =()=>{
+    let url = router.resolve({
+        name: "CampaignSmsUpload",
+        query: {},
     });
     window.open(url.href);
 }
@@ -94,8 +100,9 @@ export const getActionFunc=()=>{
     window.AddKnowledgeMap=AddKnowledgeMap;
     window.EditKnowledgeMap=EditKnowledgeMap;
     window.EditKnowledgeMapDetail=EditKnowledgeMapDetail;
-    window.NewCampaignSms=NewCampaignSms;
-    window.EditCampaignSms=EditCampaignSms;
+    window.CampaignSmsNew=CampaignSmsNew;
+    window.CampaignSmsEdit=CampaignSmsEdit;
+    window.CampaignSmsUpload=CampaignSmsUpload;
     window.ViewRuleArticleDetail=ViewRuleArticleDetail;
     window.newSuggestion=window.New;
     window.editSuggestion=window.Edit;

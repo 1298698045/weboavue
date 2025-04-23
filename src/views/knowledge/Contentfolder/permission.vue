@@ -687,17 +687,6 @@ const onSelect = (keys, { node }) => {
   data.pagination.current = 1;
   getQuery();
 };
-onMounted(() => {
-  let userInfo = window.localStorage.getItem('userInfo');
-  if (userInfo) {
-    userInfo = JSON.parse(userInfo);
-    data.userId = userInfo.userId;
-  }
-  data.pagination.current = 1;
-  //getQuery();
-  changeHeight();
-  window.addEventListener('resize', changeHeight)
-})
 
 const handleSearch = (obj) => {
   data.pagination.current = 1;
@@ -877,12 +866,17 @@ function changeHeight(h) {
   data.tableHeight = h1 - 45;
   getQuery();
 }
-watch(() => route, (newVal, oldVal) => {
-  if (route.path == '/lightning/o/Contentfolder/permission') {
-    data.sObjectName='RecordAccessControl';
-    getQuery();
+onMounted(() => {
+  let userInfo = window.localStorage.getItem('userInfo');
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+    data.userId = userInfo.userId;
   }
-}, { deep: true, immediate: true })
+  data.pagination.current = 1;
+  //getQuery();
+  changeHeight();
+  window.addEventListener('resize', changeHeight)
+})
 </script>
 <style lang="less" scoped>
 .PermissionWrap {

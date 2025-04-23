@@ -825,27 +825,8 @@ const sizeChange = (current, size) => {
     handleTableChange(current, size)
 }
 function changeHeight(h) {
-    // let contentHeight = document.documentElement.clientHeight - 120;
-    // let tabsHeight = 46;
-    // data.height = 500;
+    
 }
-watch(() => route, (newVal, oldVal) => {
-    if (route.path == '/contract/report/dashboard') {
-        data.queryParams = {
-            filterId: '',
-            objectTypeCode: '1010',
-            entityName: 'Contract',
-            search: '',
-            sort: 'CreatedOn',
-            order: 'desc'
-        }
-        data.entityType = '800';
-        data.layoutName = 'ContractDashboard';
-        setTimeout(function () {
-            getTabs();
-        }, 1000)
-    }
-}, { deep: true, immediate: true })
 onMounted(() => {
     getTabs();
 });

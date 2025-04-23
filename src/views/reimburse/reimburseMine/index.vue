@@ -535,32 +535,10 @@ const getDeptList = () => {
     }
   })
 };
-watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/lightning/page/ReimburseMine/home') {
-      //getTreeData();
-      data.queryParams = {
-        filterId: '',
-        objectTypeCode: '7001',
-        entityName: 'ReimburseBill',
-        //filterQuery: '',
-        sort: 'CreatedOn',
-        order: 'desc'
-      }
-      data.entityType = 'F01';
-      data.layoutName = 'mineReimburseBill';
-      setTimeout(function () {
-        getTabs();
-      }, 1000)
-    }
-  }
-}, { deep: true, immediate: true })
+
 onMounted(() => {
   data.top = (document.documentElement.clientHeight - 565) / 2;
-  window.addEventListener('resize', changeHeight)
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
+  window.addEventListener('resize', changeHeight);
   getTabs();
 })
 </script>

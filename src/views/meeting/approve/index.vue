@@ -350,9 +350,6 @@
   };
   onMounted(() => {
     window.addEventListener('resize', changeHeight)
-    // this.$nextTick(()=>{
-    //   getTabs();
-    // })
     getTabs();
   })
   function changeHeight(h) {

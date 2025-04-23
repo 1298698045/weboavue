@@ -349,10 +349,7 @@
     handleSearch(data.formSearchFilterquery);
   };
   onMounted(() => {
-    window.addEventListener('resize', changeHeight)
-    // this.$nextTick(()=>{
-    //   getTabs();
-    // })
+    window.addEventListener('resize', changeHeight);
     getTabs();
   })
   function changeHeight(h) {

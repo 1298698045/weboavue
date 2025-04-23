@@ -588,14 +588,6 @@ const getUserInfo = () => {
     }
   }
 };
-getUserInfo();
-onMounted(() => {
-  console.log("contentRef.value.clientHeight", contentRef.value.clientHeight);
-  data.tableHeight = contentRef.value.clientHeight - 260 + "px";
-  window.addEventListener("resize", () => {
-    data.tableHeight = contentRef.value.clientHeight - 260 + "px";
-  });
-});
 data.breadcrumbList[0] = {
   name: data.menus[0].name,
   srchType: data.menus[0].srchType,
@@ -807,7 +799,7 @@ const handleTableChange = (page, pageSize) => {
 const sizeChange = (current, size) => {
   handleTableChange(current, size)
 }
-getQuery();
+
 const handleMenuClick = (item, index) => {
   data.leftCurrent = index;
   data.folderPicker = item.folderPicker;
@@ -1312,11 +1304,14 @@ const handleSort = (dataIndex, sortOrder) => {
   // data.pagination.pageSize=10;
   getQuery();
 }
-watch(() => route, (newVal, oldVal) => {
-  if (route.path == '/lightning/o/ContentDocument/home') {
-    getQuery();
-  }
-}, { deep: true, immediate: true })
+onMounted(() => {
+  getUserInfo();
+  getQuery();
+  data.tableHeight = contentRef.value.clientHeight - 260 + "px";
+  window.addEventListener("resize", () => {
+    data.tableHeight = contentRef.value.clientHeight - 260 + "px";
+  });
+});
 </script>
 <style lang="less" scoped>
 .wrapper {

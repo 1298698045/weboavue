@@ -10,10 +10,6 @@
       <div class="headerRight">
         <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
         <a-button type="primary" class="ml10" @click="handleNewForm">新建合同审批单</a-button>
-        <!-- <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
-          @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false">
-          <a-button class="ml10" type="primary">上传</a-button>
-        </a-upload> -->
       </div>
     </div>
     <div class="todo-content">
@@ -563,11 +559,7 @@ const getStatistics = () => {
 };
 // 获取部门
 const getDeptList = () => {
-  // proxy.$get(Interface.businessunitList,{}).then(res=>{
-  //     formState.BusinessUnitList = res.businessUnits;
-  //     formState.Title = data.rowRecord.name + ' ' + res.businessUnits[0].name;
-  //     formState.BusinessUnitId =  res.businessUnits[0].id;
-  // })
+ 
   const now = new Date();
   const nowtime = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
   let userInfo = window.localStorage.getItem('userInfo');
@@ -634,27 +626,6 @@ const handleSubmit = () => {
     console.log('error', err);
   });
 }
-watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/lightning/page/contract/approve/home') {
-      //getTreeData();
-      data.queryParams = {
-        filterId: '',
-        objectTypeCode: '122',
-        entityName: 'WFProcessInstance',
-        //filterQuery: '',
-        search: '',
-        sort: 'CreatedOn',
-        order: 'desc'
-      }
-      data.entityType = '122';
-      data.layoutName = 'contractWorkflow';
-      setTimeout(function () {
-        getTabs();
-      }, 1000)
-    }
-  }
-}, { deep: true, immediate: true })
 onMounted(() => {
   changeHeight();
   data.top = (document.documentElement.clientHeight - 565) / 2;

@@ -535,32 +535,10 @@ const getDeptList = () => {
     }
   })
 };
-watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/lightning/page/ReimburseTravelMy/home') {
-      //getTreeData();
-      data.queryParams = {
-        filterId: '',
-        objectTypeCode: '7005',
-        entityName: 'ReimburseTravelExpense',
-        //filterQuery: '',
-        sort: 'CreatedOn',
-        order: 'desc'
-      }
-      data.entityType = 'F05';
-      data.layoutName = 'myReimburseTravelExpense';
-      setTimeout(function () {
-        getTabs();
-      }, 1000)
-    }
-  }
-}, { deep: true, immediate: true })
+
 onMounted(() => {
   data.top = (document.documentElement.clientHeight - 565) / 2;
-  window.addEventListener('resize', changeHeight)
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
+  window.addEventListener('resize', changeHeight);
   getTabs();
 })
 </script>

@@ -58,37 +58,8 @@
                         <StarOutlined title="收藏" v-if="!isFavor" />
                         <StarFilled title="取消收藏" v-if="isFavor" />
                       </span>
-                      <!-- {{ quantity }} -->
                     </span>
                   </span>
-                  <!-- <a-dropdown :trigger="['contextmenu']">
-                      <span>
-                            {{ name }}
-                            <span class="tree-num">
-                              <span class="tree-btn tree-add" @click.stop="handleAddLeft(id,name)">
-                                <PlusOutlined title="添加子目录" />
-                              </span>
-                              <span class="tree-btn tree-edit" @click.stop="handleEditLeft(id)">
-                                <EditOutlined title="编辑目录" />
-                              </span>
-                              <span class="tree-btn tree-delete" @click.stop="handleDeleteLeft(id)">
-                                <DeleteOutlined title="删除" />
-                              </span>
-                              <span class="tree-btn tree-favor" :class="{'tree-favor-active':isFavor||data.leftTreeTop=='我的收藏'}" @click.stop="setFavor(id,name,quantity,isFavor)">
-                                <StarOutlined title="收藏" v-if="!isFavor&&data.leftTreeTop!='我的收藏'" />
-                                <StarFilled title="取消收藏" v-if="(isFavor||data.leftTreeTop=='我的收藏')" />
-                              </span>
-                              {{ quantity }}
-                            </span>
-                          </span>
-                        <template #overlay>
-                          <a-menu>
-                            <a-menu-item key="1" @click="handleAddLeft(id,name)">添加子目录</a-menu-item>
-                            <a-menu-item key="2" @click="handleEditLeft(id)">编辑目录</a-menu-item>
-                            <a-menu-item key="3" @click="handleDeleteLeft(id)">删除</a-menu-item>
-                          </a-menu>
-                        </template>
-</a-dropdown> -->
                 </template>
               </a-tree>
             </div>
@@ -613,11 +584,7 @@ const getPrivileges = () => {
     })
   }
 }
-watch(() => route, (newVal, oldVal) => {
-  if (route.path == '/lightning/page/ContentFolderTree') {
-    getTreeData();
-  }
-}, { deep: true, immediate: true })
+
 onMounted(() => {
   let userInfo = window.localStorage.getItem('userInfo');
   if (userInfo) {

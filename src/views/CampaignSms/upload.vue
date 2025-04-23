@@ -187,184 +187,91 @@
                   </div>
                 </div>
                 <div class="sectionRow">
-                  <div class="sectionItem">
+                  <div class="sectionItem sectionItem1">
                     <a-form-item
-                      name="QueryList1"
-                      label="单位通讯"
-                      :rules="[{ required: true, message: '请选择单位' }]"
+                      name="QueryList"
+                      label="录入号码"
+                      :rules="[{ required: true, message: '请录入号码' }]"
                       :autoLink="false"
                     >
-                      <!-- <div class="flex">
-                        <a-input
-                          v-model:value="data.searchVal"
-                          placeholder="请输入搜索字符"
-                        ></a-input>
-                        <a-button type="link" @click="handleAddPeople(1)"
-                          >添加人员</a-button
-                        >
-                      </div> -->
-                      <div class="flex">
-                        <div class="peopleBox">
-                          <a-table
-                            :row-selection="data.rowSelectionConfig"
-                            size="small"
-                            :pagination="false"
-                            :scroll="{ y: 200 }"
-                            style="height: 100%"
-                            :dataSource="data.listData1"
-                            :columns="columns"
-                          >
-                            <template #bodyCell="{ column, index }">
-                              <template v-if="column.key === 'operation'">
-                                <span
-                                  title="向上移动"
-                                  class="iconTop"
-                                  @click="arrowup(1, index)"
-                                >
-                                  <ArrowUpOutlined />
-                                </span>
-                                <span
-                                  title="向下移动"
-                                  class="iconTop"
-                                  @click="arrowdown(1, index)"
-                                >
-                                  <ArrowDownOutlined />
-                                </span>
-                                <span
-                                  title="删除"
-                                  class="iconTop"
-                                  @click="arrowDelete(1, index)"
-                                >
-                                  <DeleteOutlined />
-                                </span>
-                              </template>
-                            </template>
-                          </a-table>
-                        </div>
-                        <a-button
-                          :icon="h(PlusOutlined)"
-                          type="link"
-                          @click="handleAddPeople(1)"
-                          >添加人员</a-button
-                        >
-                      </div>
+                      <a-textarea
+                        v-model:value="formState.QueryList"
+                        :rows="6"
+                        class="ContentViewTemplateName"
+                      ></a-textarea>
+                      <div class="messageInfo">注意：一行一个号码</div>
                     </a-form-item>
                   </div>
                 </div>
                 <div class="sectionRow">
                   <div class="sectionItem">
                     <a-form-item
-                      name="QueryList2"
-                      label="个人通讯"
-                      :rules="[{ required: true, message: '请选择个人' }]"
+                      name="QueryList"
+                      label="上传文件"
+                      :rules="[{ required: true, message: '请选择文件' }]"
                       :autoLink="false"
                     >
-                      <!-- <div class="flex">
-                        <a-input
-                          v-model:value="data.searchVal2"
-                          placeholder="请输入搜索字符"
-                        ></a-input>
-                        <a-button type="link" @click="handleAddPeople(2)"
-                          >添加人员</a-button
-                        >
-                      </div> -->
                       <div class="flex">
-                        <div class="peopleBox">
-                          <a-table
-                            :row-selection="data.rowSelectionConfig2"
-                            size="small"
-                            :pagination="false"
-                            :scroll="{ y: 200 }"
-                            style="height: 100%"
-                            :dataSource="data.listData2"
-                            :columns="columns"
+                        <div class="uploadPanel">
+                          <a-upload-dragger
+                            v-show="fileList.length == 0"
+                            accept=".xlsx,.xls"
+                            list-type="picture-card"
+                            v-model:file-list="fileList"
+                            :headers="headers"
+                            @change="changeFiles"
+                            :data="uploadData"
+                            :action="Interface.CampaignSms.upload"
+                            :showUploadList="false"
+                            name="file"
+                            :before-upload="beforeUpload"
                           >
-                            <template #bodyCell="{ column, index }">
-                              <template v-if="column.key === 'operation'">
-                                <span
-                                  title="向上移动"
-                                  class="iconTop"
-                                  @click="arrowup(2, index)"
+                            <div class="uploadRow">
+                              <p class="ant-upload-drag-icon">
+                                <InboxOutlined />
+                              </p>
+                              <p class="ant-upload-text">
+                                将文件拖到此处，或点击上传
+                              </p>
+                            </div>
+                          </a-upload-dragger>
+                          <div class="inboxFileList">
+                            <div
+                              class="inboxFileItem"
+                              v-for="(item, index) in fileList"
+                              :key="index"
+                            >
+                              <div class="leftImg">
+                                <img src="/src/assets/img/filetype/Excel.png" />
+                              </div>
+                              <div class="rightFileInfo">
+                                <div class="fileName rowEllipsis">
+                                  {{ item.name }}
+                                </div>
+                                <div class="fileSize">
+                                  {{ item.size ? (item.size / 1024).toFixed(2) : 0 }}kb
+                                </div>
+                                <div
+                                  class="fileOptionShow"
+                                  :title="item.name || ''"
                                 >
-                                  <ArrowUpOutlined />
-                                </span>
-                                <span
-                                  title="向下移动"
-                                  class="iconTop"
-                                  @click="arrowdown(2, index)"
-                                >
-                                  <ArrowDownOutlined />
-                                </span>
-                                <span
-                                  title="删除"
-                                  class="iconTop"
-                                  @click="arrowDelete(2, index)"
-                                >
-                                  <DeleteOutlined />
-                                </span>
-                              </template>
-                            </template>
-                          </a-table>
+                                  <div class="btns">
+                                    <a-tooltip title="删除" placement="top">
+                                      <a-button
+                                        type="text"
+                                        :icon="h(CloseOutlined)"
+                                        @click="deleteFile(index)"
+                                      ></a-button>
+                                    </a-tooltip>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <a-button
-                          type="link"
-                          @click="handleAddPeople(2)"
-                          :icon="h(PlusOutlined)"
-                          >添加人员</a-button
+                        <a-button type="link" @click="handleDownLoadTemplate"
+                          >下载模板</a-button
                         >
-                      </div>
-                    </a-form-item>
-                  </div>
-                </div>
-
-                <div class="sectionRow">
-                  <div class="sectionItem">
-                    <a-form-item
-                      name="QueryList3"
-                      label="分组"
-                      :autoLink="false"
-                    >
-                      <div class="selectBox">
-                        <a-transfer
-                          v-model:target-keys="targetKeys"
-                          v-model:selected-keys="selectedKeys"
-                          :data-source="listData3"
-                          :list-style="{
-                            width: '260px',
-                            height: '300px',
-                          }"
-                          :locale="{
-                            itemUnit: '',
-                            itemsUnit: '',
-                            notFoundContent: '列表为空',
-                            searchPlaceholder: '请输入搜索内容',
-                          }"
-                          show-search
-                          :titles="['可选小组', '已选小组']"
-                          :render="(item) => item.title"
-                          :disabled="disabled"
-                          @change="handleChange"
-                          @selectChange="handleSelectChange"
-                          @scroll="handleScroll"
-                        />
-                        <div class="sortBox">
-                          <a-button
-                            size="small"
-                            @click="selectedKeys.length && handleMoveUp()"
-                            :type="
-                              selectedKeys.length > 0 ? 'primary' : 'default'
-                            "
-                            ><UpOutlined
-                          /></a-button>
-                          <a-button
-                            size="small"
-                            @click="selectedKeys.length && handleMoveDown()"
-                            :type="
-                              selectedKeys.length > 0 ? 'primary' : 'default'
-                            "
-                            ><DownOutlined
-                          /></a-button>
-                        </div>
                       </div>
                     </a-form-item>
                   </div>
@@ -483,6 +390,8 @@ import {
   SearchOutlined,
   ArrowUpOutlined,
   ArrowDownOutlined,
+  InboxOutlined,
+  CloseOutlined,
 } from "@ant-design/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 import Related from "@/components/detail/Related.vue";
@@ -531,6 +440,7 @@ const columns = [
 ];
 const dataSource = ref([]);
 const columnsList = toRaw(columns);
+const token = localStorage.getItem("token");
 const data = reactive({
   tabs: [
     {
@@ -568,7 +478,7 @@ const data = reactive({
   isConfirm: false,
   confirmText: "",
   confirmTitle: "",
-  title: "新建短信发送",
+  title: "上传文件发送",
   FieldList: [],
   FieldListAll: [],
   SelectFieldId: "",
@@ -586,8 +496,21 @@ const data = reactive({
   recordId: "",
   recordId2: "",
   isCommon: false,
+  fileList: [],
+  uploadData: {},
+  headers: {
+    Authorization: token,
+    Token: token,
+  },
+  uploadId: "",
+  receivers: [],
 });
 const {
+  receivers,
+  uploadId,
+  headers,
+  uploadData,
+  fileList,
   isCommon,
   recordId2,
   recordId,
@@ -711,9 +634,7 @@ const getDetail = () => {
       //     ? htmlDecode(fields.Message.value)
       //     : "";
       formState.Message =
-        fields.Message && fields.Message.value
-          ? fields.Message.value
-          : "";
+        fields.Message && fields.Message.value ? fields.Message.value : "";
       formState.CreatedBy =
         fields.CreatedBy && fields.CreatedBy.value
           ? fields.CreatedBy.value
@@ -953,53 +874,15 @@ const handleSave = () => {
     message.error("模板内容不能为空！");
     return;
   }
-  if (data.listData1 && data.listData1.length) {
+  if (
+    (data.fileList && data.fileList.length) ||
+    (formState.QueryList && formState.QueryList.length)
+  ) {
   } else {
-    message.error("单位通讯不能为空！");
-    return;
-  }
-  if (data.listData2 && data.listData2.length) {
-  } else {
-    message.error("个人通讯不能为空！");
+    message.error("请上传文件或者手动录入号码！");
     return;
   }
   let url = Interface.CampaignSms.send;
-  let groups = [];
-  let receivers = [];
-  console.log(data.targetKeys)
-  if (data.targetKeys && data.targetKeys.length) {
-    for (var i = 0; i < data.targetKeys.length; i++) {
-      let item = data.targetKeys[i];
-      for (var j = 0; j < data.listData3.length; j++) {
-        if (item == data.listData3[j].id) {
-          groups.push({
-            id: data.listData3[j].id,
-            name: data.listData3[j].title,
-          });
-        }
-      }
-    }
-  }
-  if (data.listData1 && data.listData1.length) {
-    for (var i = 0; i < data.listData1.length; i++) {
-      let item = data.listData1[i];
-      receivers.push({
-        id: item.id,
-        name: item.name,
-        phone: item.phone || "",
-      });
-    }
-  }
-  if (data.listData2 && data.listData2.length) {
-    for (var i = 0; i < data.listData2.length; i++) {
-      let item = data.listData2[i];
-      receivers.push({
-        id: item.id,
-        name: item.name,
-        phone: item.phone || "",
-      });
-    }
-  }
   let d = {
     actions: [
       {
@@ -1014,14 +897,30 @@ const handleSave = () => {
             ? dayjs(formState.ScheduleOn).format("YYYY-MM-DD HH:mm:ss")
             : null,
           suffix: formState.Suffix,
-          receiveObjects: {
-            groups: groups,
-            receivers: receivers,
-          },
         },
       },
     ],
   };
+  if (data.fileList && data.fileList.length) {
+    if (data.uploadId) {
+      d.actions[0].params.id = data.uploadId;
+    } else if (data.receivers && data.receivers.length) {
+      d.actions[0].params.receiveObjects = { receivers: data.receivers };
+    }
+  } else if (formState.QueryList && formState.QueryList.length) {
+    let receivers = [];
+    let list = formState.QueryList.split("\n");
+    if (list && list.length) {
+      for (var i = 0; i < list.length; i++) {
+        receivers.push({
+          id: "",
+          name: "",
+          phone: list[i] || "",
+        });
+      }
+    }
+    d.actions[0].params.receiveObjects = { receivers: receivers };
+  }
   let obj = {
     message: JSON.stringify(d),
   };
@@ -1255,6 +1154,37 @@ const TemplateChange = (e) => {
   formState.Message = data.templateList[e].Description;
   data.recordId = data.templateList[e].id;
 };
+const handleDownLoadTemplate = () => {
+  let url = "/api/aura/general/template/export?entityName=CampaignSmsQueue";
+  window.open(url);
+};
+const beforeUpload = (file, fileList) => {
+  const totalFiles = data.fileList.length + fileList.length;
+  if (totalFiles > 1) {
+    message.error("最多只能上传1个文件");
+    return false;
+  }
+};
+const changeFiles = (e) => {
+  console.log("changeFiles", e);
+  if (e.file.status == "done") {
+    message.success("上传成功！");
+    if (
+      e.file.response &&
+      e.file.response.actions &&
+      e.file.response.actions[0] &&
+      e.file.response.actions[0].returnValue
+    ) {
+      data.uploadId = e.file.response.actions[0].returnValue.valueId || "";
+      if (!data.uploadId && e.file.response.actions[0].returnValue.length) {
+        data.receivers = e.file.response.actions[0].returnValue;
+      }
+    }
+  }
+};
+const deleteFile = (index) => {
+  data.fileList.splice(index, 1);
+};
 onMounted(() => {
   let userInfo = window.localStorage.getItem("userInfo");
   let userId = "";
@@ -1264,17 +1194,10 @@ onMounted(() => {
     userId = userInfo.userId;
     userName = userInfo.fullName;
   }
-  getGroup();
   getTemplate();
-  if (data.id) {
-    data.title = "编辑短信发送";
-    getDetail();
-  } else {
-    data.title = "新建短信发送";
-    formState.CreatedByName = userName;
-    formState.CreatedBy = userId;
-    formState.Suffix = window.localStorage.getItem("businessUnitName") || "";
-  }
+  formState.CreatedByName = userName;
+  formState.CreatedBy = userId;
+  formState.Suffix = window.localStorage.getItem("businessUnitName") || "";
   // let h = document.documentElement.clientHeight;
   // data.height = 300;
   // data.isEditor = true;
@@ -2033,10 +1956,93 @@ onMounted(() => {
   :deep .ant-radio-group {
     min-width: 200px;
   }
-  .messageInfo{
+  .messageInfo {
     font-size: 13px;
     color: red;
     margin-top: 5px;
+  }
+  .uploadPanel {
+    width: 100%;
+    .ant-upload-drag-icon {
+      margin-bottom: 6px;
+    }
+    .ant-upload-text {
+      font-size: 16px;
+    }
+    .inboxFileList {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 5px;
+
+      .ant-btn.ant-btn-text,
+      .ant-btn.ant-btn-text:hover {
+        color: #000 !important;
+      }
+
+      .inboxFileItem {
+        width: 100% !important;
+        border-radius: 2px;
+        background: #f2f3f5;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-right: 0px;
+        margin-bottom: 16px;
+        cursor: pointer;
+        display: flex;
+        overflow: hidden;
+        position: relative;
+
+        .leftImg {
+          width: 32px;
+          height: 32px;
+          position: relative;
+          top: 5px;
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+
+        .rightFileInfo {
+          flex: 1;
+          margin-left: 14px;
+          overflow: hidden;
+          color: #1d2129;
+
+          .fileSize {
+            color: #4e5969;
+            padding-top: 4px;
+          }
+
+          .fileOptionShow {
+            position: absolute;
+            width: calc(~"100% - 36px");
+            height: 100%;
+            left: 42px;
+            top: 0;
+            background: rgba(242, 243, 245, 0.8);
+            display: none;
+
+            .btns {
+              display: flex;
+              align-items: center;
+              height: 100%;
+              justify-content: flex-end;
+              padding-right: 20px;
+              box-sizing: border-box;
+            }
+          }
+        }
+
+        &:hover .fileOptionShow {
+          display: block;
+        }
+      }
+    }
+  }
+  :deep .ant-upload-drag {
+    height: auto;
   }
 }
 </style>

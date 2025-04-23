@@ -429,19 +429,6 @@ const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
 };
-// watch(searchValue, (value) => {
-//   const expanded = dataList
-//     .map((item) => {
-//       if (item.title.indexOf(value) > -1) {
-//         return getParentKey(item.key, gData.value);
-//       }
-//       return null;
-//     })
-//     .filter((item, i, self) => item && self.indexOf(item) === i);
-//   expandedKeys.value = expanded;
-//   searchValue.value = value;
-//   autoExpandParent.value = true;
-// });
 
 let data = reactive({
   leftTreeTop: "全部目录",
@@ -453,26 +440,7 @@ let data = reactive({
     key: "id",
   },
   tabs: [
-    // {
-    //   lable: "我创建",
-    //   count: "",
-    // },
-    // {
-    //   lable: "部门的",
-    //   count: "",
-    // },
-    // {
-    //   lable: "全部",
-    //   count: "",
-    // },
-    // {
-    //   lable: "我管理的",
-    //   count: 16
-    // },
-    // {
-    //   lable: "待审批",
-    //   count: 0
-    // }
+    
   ],
   activeKey: 0,
   entityType: '090',
@@ -645,22 +613,7 @@ const getTreeData = () => {
       gDataAll.value = response;
     }
   });
-  // proxy.$get(Interface.information.contentTree,{}).then((response)=>{
-  //     let formTree = (list) => {
-  //       list.forEach(item=>{
-  //         if(item.children){
-  //           formTree(item.children);
-  //         }
-  //         item.key = item.id;
-  //         item.value = item.id;
-  //         item.isFavor=item.isFavor||false;
-  //       })
-  //     }
-  //     formTree(response);
-  //     console.log("formTree",response)
-  //     gData.value = response;
-  //     gDataAll.value = response;
-  // })
+  
 };
 const leftTreeTopChange = (e) => {
   if (e == "全部目录") {
@@ -728,18 +681,7 @@ const handleSearch = (obj) => {
     //filterQuery: "\nCreatedBy\teq-userid",
     //displayColumns:"Title,FolderId,StateCode,BusinessUnitId,ReadCount,ApprovedBy,ApprovedOn,CreatedBy,CreatedOn,ModifiedBy,ModifiedOn",
   };
-  // if (data.activeKey == 0) {
-  //   data.queryParams.filterQuery = "\nCreatedBy\teq-userid";
-  // } else if (data.activeKey == 1) {
-  //   data.queryParams.filterQuery = "\nBusinessUnitId\teq-businessunitid";
-  // } else if (data.activeKey == 2) {
-  //   data.queryParams.filterQuery = "";
-  // } else if (data.activeKey == 3) {
-  // }
-  // if (filterQuery) {
-  //   data.queryParams.filterQuery += filterQuery;
-  // }
-  //console.log(obj,1111)
+  
   if (obj) {
     data.hightSearchParams = obj;
     if (data.hightSearchParams) {
@@ -1265,37 +1207,6 @@ const getPrivileges = () => {
   }
 };
 
-
-watch(
-  () => route,
-  (newVal, oldVal) => {
-    if (
-      gridRef &&
-      gridRef.value &&
-      gridRef.value.loadGrid != "undefined" &&
-      !route.params.sObjectName
-    ) {
-      if (route.path == "/lightning/o/Content/home") {
-        getTreeData();
-        data.queryParams = {
-          filterId: '',
-          objectTypeCode: '100201',
-          entityName: 'Content',
-          //filterQuery: '',
-          search: '',
-          sort: 'CreatedOn',
-          order: 'desc'
-        }
-        data.entityType = '090';
-        data.layoutName = 'myContent';
-        setTimeout(function () {
-          getTabs();
-        }, 1000)
-      }
-    }
-  },
-  { deep: true, immediate: true }
-);
 onMounted(() => {
   let userInfo = window.localStorage.getItem("userInfo");
   if (userInfo) {

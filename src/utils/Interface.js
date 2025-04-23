@@ -501,5 +501,9 @@ const Interface = {
   },
   commonExport: baseUrl + "/aura/data/pump/entity/export", // 通用导出
   saveBatchRecord: baseUrl + "/aura/RecordUi/saveBatchRecord", // 批量保存记录
+  CampaignSms: {
+    upload: baseUrl + "/campaignsms/receiver/upload", // 短信人员导入
+    send: baseUrl + "/campaignsms/message/send", // 短信发送提交
+  }
 };
 export default Interface;

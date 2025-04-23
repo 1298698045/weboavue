@@ -110,16 +110,7 @@
             <div class="panel-btn"></div>
           </div>
           <div class="room">
-            <!-- <div class="roomHead">
-                            <div class="roomTitle">会议室：</div>
-                            <div class="roomCheck">
-                                <div class="roomCheckItem" :class="{ 'active': item.checkbox == true }"
-                                    @click="handleSelectRoom(item)" v-for="(item, index) in rooms" :key="index">
-                                    {{ item.Name }}
-                                </div>
-                                <div class="roomCheckItem default" @click="clearRoomSelect">清除选择</div>
-                            </div>
-                        </div> -->
+           
             <div class="roomBody">
               <div
                 id="canvas"
@@ -163,37 +154,7 @@
                 </a-tab-pane>
               </a-tabs>
             </div>
-            <!-- <table class="roomTable" v-if="activeKey == 0">
-                            <thead>
-                                <tr>
-                                    <th>会议室</th>
-                                    <th v-for="(item, index) in xData" :key="index">{{ item }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(item, index) in seriesData" :key="index">
-                                    <td>{{ item.name || '' }}</td>
-                                    <td v-for="(row, idx) in item.data" :key="idx">{{ row || 0 }}</td>
-                                </tr>
-                            </tbody>
-                        </table> -->
-            <!-- <table class="roomTable" v-if="activeKey==1">
-                                <thead>
-                                    <tr>
-                                        <th>姓名</th>
-                                        <th v-for="(item,index) in xData2" :key="index">{{item}}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(item,index) in seriesData2" :key="index">
-                                        <td>{{item.name||''}}</td>
-                                        <td v-for="(row,idx) in item.data" :key="idx">
-                                            <span v-if="idx==1">{{row||''}}</span>
-                                            <span v-else>{{row||0}}</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table> -->
+            
             <div class="roomTable">
               <a-table
                 :columns="columns"
@@ -720,17 +681,9 @@ const handleTableChange = (page, pageSize) => {
 const sizeChange = (current, size) => {
   handleTableChange(current, size);
 };
-watch(
-  () => route,
-  (newVal, oldVal) => {
-    if (route.path == "/lightning/o/Meeting/report") {
-      changeTabs(data.activeKey);
-    }
-  },
-  { deep: true, immediate: true }
-);
+
 onMounted(() => {
-  //changeTabs(0);
+  changeTabs(data.activeKey);
 });
 </script>
 <style lang="less" scoped>

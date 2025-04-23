@@ -29,16 +29,6 @@
                   </CaretDownOutlined>
                 </template>
                 <template v-slot:title="{ name }">
-                  <!-- <span v-if="name.indexOf(searchValue) > -1">
-                    {{ name.substr(0, name.indexOf(searchValue)) }}
-                    {{
-                    name.substr(
-                    name.indexOf(searchValue) + searchValue.length
-                    )
-                    }}
-                    <span class="tree-num">{{ quantity }}</span>
-                  </span>
-                  <span v-else>{{ name }}</span> -->
                   <span>{{ name }}</span>
                 </template>
               </a-tree>
@@ -191,19 +181,6 @@ const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
 };
-// watch(searchValue, (value) => {
-//   const expanded = dataList
-//     .map((item) => {
-//       if (item.title.indexOf(value) > -1) {
-//         return getParentKey(item.key, gData.value);
-//       }
-//       return null;
-//     })
-//     .filter((item, i, self) => item && self.indexOf(item) === i);
-//   expandedKeys.value = expanded;
-//   searchValue.value = value;
-//   autoExpandParent.value = true;
-// });
 
 let data = reactive({
   isCollapsed: false,
@@ -338,38 +315,9 @@ const getTreeData = () => {
       gDataAll.value = response;
     }
   });
-  // proxy.$get(Interface.information.contentTree,{}).then((response)=>{
-  //     let formTree = (list) => {
-  //       list.forEach(item=>{
-  //         if(item.children){
-  //           formTree(item.children);
-  //         }
-  //         item.key = item.id;
-  //         item.value = item.id;
-  //         item.isFavor=item.isFavor||false;
-  //       })
-  //     }
-  //     formTree(response);
-  //     console.log("formTree",response)
-  //     gData.value = response;
-  //     gDataAll.value = response;
-  // })
+  
 }
 const onSearch = (e) => {
-  // gData.value = gDataAll.value.filter(item => {
-  //   if (item.name.indexOf(data.searchVal) != -1) {
-  //     return item;
-  //   }
-  //   else {
-  //     if (item.children && item.children.length) {
-  //       for (var i = 0; i < item.children.length; i++) {
-  //         if (item.children[i].name.indexOf(data.searchVal) != -1) {
-  //           return item.children[i];
-  //         }
-  //       }
-  //     }
-  //   }
-  // })
   getTreeData();
 }
 const onSelect = (keys) => {
@@ -505,13 +453,6 @@ const getTabs = () => {
 // getTabs();
 
 function handleTo(id) {
-  // console.log("id", id);
-  // router.push({
-  //   path: "/detail",
-  //   query: {
-  //     id: id
-  //   }
-  // });
   let url = router.resolve({
     path: '/knowledge/RuleArticle/detail',
     name: "RuleArticleDetail",
@@ -630,26 +571,7 @@ window.handleVersion = handleVersion;
 const clearCheckList = () => {
   gridRef.value.clearCheckList();
 }
-watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    if (route.path == '/lightning/page/knowledge/RuleArticle/home') {
-      getTreeData();
-      data.queryParams = {
-        filterId: '',
-        objectTypeCode: '100204',
-        entityName: 'Institution',
-        //filterQuery: '',
-        sort: 'CreatedOn',
-        order: 'desc'
-      }
-      data.entityType = '092';
-      data.layoutName = 'RuleArticleHome'
-      setTimeout(function () {
-        getTabs();
-      }, 1000)
-    }
-  }
-}, { deep: true, immediate: true })
+
 onMounted(() => {
   window.addEventListener('resize', changeHeight)
   getTreeData()

@@ -11,10 +11,7 @@
         <span class="headerTitle">查询流程</span>
       </div>
       <div class="headerRight">
-        <!-- <a-button type="primary" class="ml10" @click="handleAddLeft('')" :disabled="!folderActionsConfig.canAdd">新建目录</a-button>
-            <a-button type="primary" class="ml10" @click="handleNew" :disabled="!folderActionsConfig.canAdd">新建文章</a-button>
-            <a-button type="primary" class="ml10" @click="handleRelease">批量发布</a-button>
-            <a-button class="ml10" @click="cancelRelease">批量取消发布</a-button> -->
+        
       </div>
     </div>
     <div class="todo-content">
@@ -349,31 +346,11 @@ const getTreeData = () => {
       };
       formTree(listData);
       console.log("formTree", listData);
-      listData.unshift({
-        categoryId: "",
-        id: "",
-        key: "",
-        name: "全部",
-        processs: [],
-        quantity: "",
-        value: "",
-      });
       gData.value = listData;
       gDataAll.value = listData;
     } else {
-      let listData = [
-        {
-          categoryId: "",
-          id: "",
-          key: "",
-          name: "全部",
-          processs: [],
-          quantity: "",
-          value: "",
-        },
-      ];
-      gData.value = listData;
-      gDataAll.value = listData;
+      gData.value = [];
+      gDataAll.value = [];
     }
   });
 };
@@ -553,19 +530,6 @@ const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
 };
-// watch(searchValue, (value) => {
-//   const expanded = dataList
-//     .map((item) => {
-//       if (item.title.indexOf(value) > -1) {
-//         return getParentKey(item.key, gData.value);
-//       }
-//       return null;
-//     })
-//     .filter((item, i, self) => item && self.indexOf(item) === i);
-//   expandedKeys.value = expanded;
-//   searchValue.value = value;
-//   autoExpandParent.value = true;
-// });
 
 let data = reactive({
   leftTreeTop: "按流程类型显示",
@@ -589,14 +553,7 @@ let data = reactive({
       lable: "共享给我",
       count: "",
     },
-    // {
-    //   lable: "我管理的",
-    //   count: 16
-    // },
-    // {
-    //   lable: "待审批",
-    //   count: 0
-    // }
+    
   ],
   activeKey: 0,
   queryParams: {
@@ -651,37 +608,6 @@ let data = reactive({
       sObjectName: "",
       targetApiName: "",
     },
-    // {
-    //     "column": "BusinessUnitId",
-    //     "label": "部门",
-    //     "dataType": "O",
-    //     "ReferencedEntityObjectTypeCode": 10,
-    //     "picklistValues": [],
-    //     "sObjectName": "BusinessUnit",
-    //     "targetApiName": "BusinessUnit",
-    // },
-    // {
-    //     "column": "StatusCode",
-    //     "label": "状态",
-    //     "dataType": "L",
-    //     "ReferencedEntityObjectTypeCode": 100201,
-    //     "picklistValues": [
-    //     {
-    //         "label": "草稿",
-    //         "value": "0"
-    //     },
-    //     {
-    //         "label": "已发布",
-    //         "value": "1"
-    //     },
-    //     {
-    //         "label": "审批未通过",
-    //         "value": "2"
-    //     }
-    //     ],
-    //     "sObjectName": "",
-    //     "targetApiName": "",
-    // },
     {
       column: "CreatedOn",
       label: "创建时间",
@@ -833,12 +759,6 @@ const handleMenuClick = () => {};
 const DelegateRef = ref();
 
 function handleDetail(id) {
-  // router.push({
-  //   path:"/informationDetail",
-  //   query: {
-  //     id: id
-  //   }
-  // });
   let reUrl = router.resolve({
     path: "/informationDetail",
     query: {
@@ -849,13 +769,6 @@ function handleDetail(id) {
   window.open(reUrl.href);
 }
 function handlePreview(id) {
-  // router.push({
-  //     path:"/lightning/r/Content/view",
-  //     query: {
-  //       id: id,
-  //       objectTypeCode:'100201'
-  //     }
-  // });
   let reUrl = router.resolve({
     path: "/lightning/r/Workflow/instance/detail",
     query: {
@@ -866,19 +779,11 @@ function handlePreview(id) {
   window.open(reUrl.href);
 }
 function handleEdit(id, FolderId) {
-  // router.push({
-  //     path:"/content/visualEditor",
-  //     query: {
-  //       id: id
-  //     }
-  // });
-
   let reUrl = router.resolve({
     name: "visualEditor",
     query: {
       id: id,
       objectTypeCode: 100201,
-      //FolderId: res.actions[0].returnValue&&res.actions[0].returnValue.fields&&res.actions[0].returnValue.fields.FolderId?res.actions[0].returnValue.fields.FolderId:''
       FolderId: FolderId,
     },
   });
@@ -1239,36 +1144,6 @@ const getTabs = () => {
       getColumns(data.queryParams.filterId);
     });
 };
-watch(
-  () => route,
-  (newVal, oldVal) => {
-    if (
-      gridRef &&
-      gridRef.value &&
-      gridRef.value.loadGrid != "undefined" &&
-      !route.params.sObjectName
-    ) {
-      if (route.path == "/ui/process/instance/InstanceHome") {
-        //getTreeData();
-        data.queryParams = {
-          filterId: "",
-          objectTypeCode: "122",
-          entityName: "WFProcessInstance",
-          //filterQuery: '',
-          sort: "CreatedOn",
-          order: "desc",
-        };
-        data.entityType = "122";
-        data.layoutName = "WFProcessInstanceSearch";
-        setTimeout(function () {
-          getTreeData();
-          getTabs();
-        }, 1000);
-      }
-    }
-  },
-  { deep: true, immediate: true }
-);
 onMounted(() => {
   let userInfo = window.localStorage.getItem("userInfo");
   if (userInfo) {
@@ -1276,9 +1151,7 @@ onMounted(() => {
     data.userId = userInfo.userId;
   }
   window.addEventListener("resize", changeHeight);
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
+  
   getTreeData();
   getTabs();
 });

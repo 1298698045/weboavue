@@ -12,11 +12,6 @@
         <a-button type="primary" class="ml10" v-if="layoutName == 'ContractAudit'">批量删除</a-button>
         <a-button type="primary" class="ml10" v-if="layoutName == 'ContractAudit'">审计抽查</a-button>
         <a-button type="primary" class="ml10" v-if="layoutName == 'ContractAudit'">生成审计报告</a-button>
-        <!-- <a-button type="primary" class="ml10" @click="handleNewForm">新建合同单</a-button> -->
-        <!-- <a-upload accept="pdf/*" :before-upload="beforeUpload" v-model:file-list="fileList" :headers="headers"
-          @change="changeFiles" :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false">
-          <a-button class="ml10" type="primary">上传</a-button>
-        </a-upload> -->
       </div>
     </div>
     <div class="todo-content">
@@ -560,11 +555,6 @@ const loadPage = () => {
     //getStatistics();
   }, 1000)
 }
-watch(() => route, (newVal, oldVal) => {
-  if (gridRef && gridRef.value && gridRef.value.loadGrid != 'undefined' && !route.params.sObjectName) {
-    loadPage();
-  }
-}, { deep: true, immediate: true })
 onMounted(() => {
   changeHeight();
   data.top = (document.documentElement.clientHeight - 565) / 2;

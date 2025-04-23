@@ -12,74 +12,6 @@
       </div>
       <div class="headerRight todo-head-right">
         <a-button class="ml10" @click="batchPrintForm">批量打印</a-button>
-        <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button>
-        <a-dropdown :trigger="['hover']" placement="bottomRight">
-          <a-button type="primary" class="rightIconBtn" style="margin-right: 50px;">
-            <i class="iconfont icon-anniuxiala"></i>
-          </a-button>
-          <template #overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">
-                批量提交
-              </a-menu-item>
-              <a-menu-item key="2">
-                批量关注
-              </a-menu-item>
-              <a-menu-item key="3">
-                批量转发
-              </a-menu-item>
-            </a-menu>
-          </template>
-</a-dropdown>
-<MoreBtn :isMenu="isMenu" @change="handleClickMenu" @mouseover="isMenu=true" @mouseleave="isMenu=false">
-  <div class="moreMenu">
-    <div class="menu-icon-background"></div>
-    <ul>
-      <li class="moreMenuItem">
-        <span class="more-menu-icon">
-          <i class="iconfont icon-sousuoanniu"></i>
-        </span>
-        <span>搜索</span>
-      </li>
-      <li class="moreMenuItem">
-        <span class="more-menu-icon">
-          <i class="iconfont icon-piliangtijiao"></i>
-        </span>
-        <span>批量提交</span>
-      </li>
-      <li class="moreMenuItem">
-        <span class="more-menu-icon">
-          <i class="iconfont icon-piliangguanzhu"></i>
-        </span>
-        <span>批量关注</span>
-      </li>
-      <li class="moreMenuItem">
-        <span class="more-menu-icon">
-          <i class="iconfont icon-piliangzhuanfa"></i>
-        </span>
-        <span>批量转发</span>
-      </li>
-      <li class="moreMenuItem">
-        <span class="more-menu-icon">
-          <i class="iconfont icon-quanbuyidu"></i>
-        </span>
-        <span>全部已读</span>
-      </li>
-      <li class="moreMenuItem">
-        <span class="more-menu-icon">
-          <i class="iconfont icon-xianshiliedingzhi"></i>
-        </span>
-        <span>显示列定制</span>
-      </li>
-      <li class="moreMenuItem">
-        <span class="more-menu-icon">
-          <i class="iconfont icon-morenpaixushezhi"></i>
-        </span>
-        <span>默认排序设置</span>
-      </li>
-    </ul>
-  </div>
-</MoreBtn> -->
       </div>
     </div>
     <div class="todo-content">
@@ -446,96 +378,14 @@ const getTreeData = () => {
       };
       formTree(listData);
       console.log("formTree", listData);
-      listData.unshift({
-        categoryId: "",
-        id: "",
-        key: "",
-        name: "全部",
-        processs: [],
-        quantity: "",
-        value: "",
-      });
       gData.value = listData;
       gDataAll.value = listData;
     } else {
-      let listData = [
-        {
-          categoryId: "",
-          id: "",
-          key: "",
-          name: "全部",
-          processs: [],
-          quantity: "",
-          value: "",
-        },
-      ];
-      gData.value = listData;
-      gDataAll.value = listData;
+      gData.value = [];
+      gDataAll.value = [];
     }
   });
-  // let res = {
-  //   "actions": [
-  //     {
-  //       "state": "SUCCESS",
-  //       "id": null,
-  //       "returnValue": [
-  //         {
-  //           "categoryId": "147F7714-937C-4A19-9004-BC9FA695D5A6",
-  //           "name": "123",
-  //           "processs": [
-  //             {
-  //               "processId": "7726A9E2-40DC-4B04-A358-0269A35E3901",
-  //               "name": "09 院长办公会决议实施登记表",
-  //               "position": 1
-  //             }
-  //           ]
-  //         },
-  //         {
-  //           "categoryId": "052A625B-9FC8-4B6A-9FEA-2891DC7B0056",
-  //           "name": "年度考核",
-  //           "processs": [
-  //             {
-  //               "processId": "5C06C7C1-4000-4951-87AD-8101F4AF2C05",
-  //               "name": "01 实行聘用制事业单位工作人员年度(聘期)考核登记表",
-  //               "position": 1
-  //             }
-  //           ]
-  //         },
-  //         {
-  //           "categoryId": "2E20F9A3-CC48-4B6C-BCC6-977B55509D1A",
-  //           "name": "H测试分类",
-  //           "processs": []
-  //         }
-  //       ],
-  //       "errorMessage": "",
-  //       "error": []
-  //     }
-  //   ]
-  // }
-  // if (
-  //   res &&
-  //   res.actions &&
-  //   res.actions[0] &&
-  //   res.actions[0].returnValue &&
-  //   res.actions[0].returnValue.length
-  // ) {
-  //   let listData = res.actions[0].returnValue;
-  //   let formTree = (list) => {
-  //     list.forEach(item => {
-  //       if (item.processs) {
-  //         formTree(item.processs);
-  //         item.quantity = item.processs.length;
-  //       }
-  //       item.id = item.categoryId || item.processId;
-  //       item.key = item.categoryId || item.processId;
-  //       item.value = item.categoryId || item.processId;
-  //     })
-  //   }
-  //   formTree(listData);
-  //   console.log("formTree", listData)
-  //   gData.value = listData;
-  //   gDataAll.value = listData;
-  // }
+
 };
 // console.log("genData",genData,treeList)
 
@@ -543,19 +393,6 @@ const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
 };
-// watch(searchValue, (value) => {
-//   const expanded = dataList
-//     .map((item) => {
-//       if (item.title.indexOf(value) > -1) {
-//         return getParentKey(item.key, gData.value);
-//       }
-//       return null;
-//     })
-//     .filter((item, i, self) => item && self.indexOf(item) === i);
-//   expandedKeys.value = expanded;
-//   searchValue.value = value;
-//   autoExpandParent.value = true;
-// });
 
 let data = reactive({
   isCollapsed: false,
@@ -1222,41 +1059,10 @@ const handleClickMenu = (e) => {
   data.isMenu = true;
 };
 const handleMenuClick = () => {};
-watch(
-  () => route,
-  (newVal, oldVal) => {
-    if (
-      gridRef &&
-      gridRef.value &&
-      gridRef.value.loadGrid != "undefined" &&
-      !route.params.sObjectName
-    ) {
-      if (route.path == "/lightning/worflow/instance/list") {
-        //getTreeData();
-        data.queryParams = {
-          filterId: "",
-          objectTypeCode: "122",
-          entityName: "WFProcessInstance",
-          //filterQuery: '',
-          sort: "CreatedOn",
-          order: "desc",
-        };
-        data.entityType = "122";
-        data.layoutName = "instanceManager";
-        setTimeout(function () {
-          getTreeData();
-          getTabs();
-        }, 1000);
-      }
-    }
-  },
-  { deep: true, immediate: true }
-);
+
 onMounted(() => {
   window.addEventListener("resize", changeHeight);
-  // this.$nextTick(()=>{
-  //   getTabs();
-  // })
+  
   getTreeData();
   getTabs();
 });
