@@ -461,6 +461,7 @@ const Interface = {
   uploadAvatar: baseUrl + "/avatar/upload", //通用头像上传
   viewAvatar: baseUrl + "/avatar", //头像查看
   uploadFiles: baseUrl + "/file/attachment/upload", //通用附件上传
+  replaceFiles: baseUrl + "/file/attachment/replace",
   getFiles: baseUrl + "/file/attachment/getFiles", //通用获取附件
   deleteFiles: baseUrl + "/file/attachment/deleteFiles", //通用删除附件
   album: {

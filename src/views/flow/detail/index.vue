@@ -244,16 +244,22 @@
                                                                 <DownOutlined style="font-size: 12px;" @click.stop />
                                                                 <template #overlay>
                                                                     <a-menu>
-                                                                        <a-menu-item v-if="attachPerm.read">
+                                                                        <a-menu-item v-if="attachPerm.read" key="1">
                                                                             <a href="javascript:;"
                                                                                 @click="openZW(row)">查看</a>
                                                                         </a-menu-item>
-                                                                        <a-menu-item v-if="attachPerm.delete">
+                                                                        <a-menu-item v-if="attachPerm.delete" key="2">
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
-                                                                                cancel-text="取消" @confirm="confirm"
-                                                                                @cancel="cancel">
+                                                                                cancel-text="取消" >
                                                                                 <a href="javascript:;">删除</a>
                                                                             </a-popconfirm>
+                                                                        </a-menu-item>
+                                                                        <a-menu-item v-if="attachPerm.add" key="3">
+                                                                            <a-upload name="files" :headers="headers" v-model:file-list="fileList"
+                                                                                :data="{entityName: 'WFProcessInstance',fileId: item.id}" :action="Interface.replaceFiles" :showUploadList="false"
+                                                                                @change="changeFiles">
+                                                                                <a href="javascript:;" style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
+                                                                            </a-upload>
                                                                         </a-menu-item>
                                                                     </a-menu>
                                                                 </template>
@@ -308,17 +314,23 @@
                                                             <a-dropdown trigger="click">
                                                                 <DownOutlined style="font-size: 12px;" />
                                                                 <template #overlay>
-                                                                    <a-menu>
-                                                                        <a-menu-item v-if="attachPerm.read">
+                                                                    <a-menu style="width: 120px;">
+                                                                        <a-menu-item v-if="attachPerm.read" key="1">
                                                                             <a href="javascript:;"
                                                                                 @click.stop="openZW(item)">查看</a>
                                                                         </a-menu-item>
-                                                                        <a-menu-item v-if="attachPerm.delete">
+                                                                        <a-menu-item v-if="attachPerm.delete" key="2">
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
-                                                                                cancel-text="取消" @confirm="confirm"
-                                                                                @cancel="cancel">
+                                                                                cancel-text="取消" >
                                                                                 <a href="javascript:;">删除</a>
                                                                             </a-popconfirm>
+                                                                        </a-menu-item>
+                                                                        <a-menu-item v-if="attachPerm.add" key="3">
+                                                                            <a-upload name="files" :headers="headers" v-model:file-list="fileList"
+                                                                                :data="{entityName: 'WFProcessInstance',fileId: item.id}" :action="Interface.replaceFiles" :showUploadList="false"
+                                                                                @change="changeFiles">
+                                                                                <a href="javascript:;" style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
+                                                                            </a-upload>
                                                                         </a-menu-item>
                                                                     </a-menu>
                                                                 </template>
@@ -565,7 +577,11 @@
         ImageList: [],
         pdfParams: {},
         isPdf: false,
-        print: route.query.print || 0
+        print: route.query.print || 0,
+        replaceUploadData: {
+            entityName: "WFProcessInstance",
+            fileId: ""
+        }
     })
     const { isEdit, Title, objectTypeCode, sObjectName, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData,
         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
@@ -636,6 +652,7 @@
     }
 
     const handleSubmitProcess = () => {
+        flowFormRef.value.handleSave('submit');
         data.isProcess = true;
     }
     const handleRejection = () => {

@@ -29,7 +29,7 @@
                             </div>
                             <div class="sectionRow">
                                 <a-form-item label="模板文件:">
-                                    <a-button type="link">下载模板</a-button>请下载模版文件，填入数据后导入!
+                                    <a-button type="link" @click="handleDownTemplate">下载模板</a-button>请下载模版文件，填入数据后导入!
                                 </a-form-item>
                             </div>
                             <div class="sectionTitle">说明</div>
@@ -122,7 +122,18 @@
     const handleSubmit = () => {
         emit("cancel", false);
         emit("success", false);
-    }
+    };
+
+
+    const handleDownTemplate = () => {
+        let url = "/api/aura/general/template/export?entityName="+props.subEntityName;
+        console.log("url", url);
+        const a = document.createElement("a");
+        a.setAttribute("href", url);
+        document.body.appendChild(a);
+        a.click();
+    };
+
 </script>
 <style lang="less" scoped>
     @import url('@/style/modal.less');

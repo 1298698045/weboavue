@@ -176,10 +176,11 @@
         recordData: {},
         fromActivityId: "",
         isMultipleUser: false,
-        listData: []
+        listData: [],
+        isFinal: ""
     })
     const { activeKey,height,isRadioUser,selectedRowKeys,pagination, splitType, 
-        activityId, addPeople, recordData, fromActivityId, isMultipleUser, listData } = toRefs(data);
+        activityId, addPeople, recordData, fromActivityId, isMultipleUser, listData, isFinal } = toRefs(data);
     const columns = [
         {
             title: "姓名",
@@ -296,9 +297,10 @@
         };
         proxy.$post(Interface.workflow.getTransitions, d).then(res=>{
             console.log("getTransitions", res);
-            let { splitType, transitions, fromActivityId } = res.actions[0].returnValue;
+            let { splitType, transitions, fromActivityId, isFinal } = res.actions[0].returnValue;
             data.fromActivityId = fromActivityId;
             data.splitType = splitType;
+            data.isFinal = isFinal;
             data.listData = transitions.map(item=>{
                 // item = JSON.parse(JSON.stringify(item));
                 const newItem = { ...item };
@@ -312,9 +314,11 @@
             });
 
             if(splitType!=2){
-                data.activityId = transitions[0].ToActivityId;
-                getPermission(data.activityId, 0);
-                getParticipators(0);
+                if(transitions && transitions.length){
+                    data.activityId = transitions[0].ToActivityId;
+                    getPermission(data.activityId, 0);
+                    getParticipators(0);
+                }
             }else {
                 data.listData.forEach((item,index)=>{
                     let activityId = item.ToActivityId;
@@ -433,57 +437,59 @@
 
     const handleSubmit = () => {
         let transitions = [];
-        if(data.splitType==2){
-            let isNodeSelect = data.listData.some(item=>item.isMatched==true);
-            if(isNodeSelect){
-                data.listData.forEach(item=>{
-                    if(item.isMatched && item.selectPeoples.length == 0){
-                        message.error('请选择节点下的办理人员!');
-                        throw error("请选择人员!");
-                    }
-                })
-            }
-            if(!isNodeSelect){
-                message.error('请选择节点!');
-                return false;
-            }
-
-        }else {
-            if(data.activityId==""){
-                message.error('请选择节点!');
-                return false;
-            };
-            let isPeople = data.listData.some(item=>item.selectPeoples.length > 0);
-            if(!isPeople){
-                message.error('请选择节点下的办理人员!');
-                return false;
-            }
-        }
-
-        // console.log("data.transitions2:", data.listData);
-
-        data.listData.forEach(item=>{
-            if((item.isMatched && data.splitType == 2) || (item.ToActivityId == data.activityId && data.splitType != 2)){
-
-                const list = item.peopleList.filter(self=>{
-                    return item.selectPeoples.find(row=>{
-                        return self.key == row;
+        if(data.isFinal != 1){
+            if(data.splitType==2){
+                let isNodeSelect = data.listData.some(item=>item.isMatched==true);
+                if(isNodeSelect){
+                    data.listData.forEach(item=>{
+                        if(item.isMatched && item.selectPeoples.length == 0){
+                            message.error('请选择节点下的办理人员!');
+                            throw error("请选择人员!");
+                        }
                     })
-                });
-
-                let toUsers = list.map(row=>{
-                    let { businessUnitIdName, key, organizationIdName, ...rest } = row;
-                    return rest;
-                });
-                let nodeObj = {
-                    ruleId: item.ID,
-                    toActivityId: item.ToActivityId,
-                    toActivityName: item.To.name,
-                    toUsers: toUsers
+                }
+                if(!isNodeSelect){
+                    message.error('请选择节点!');
+                    return false;
+                }
+    
+            }else {
+                if(data.activityId==""){
+                    message.error('请选择节点!');
+                    return false;
                 };
-                transitions.push(nodeObj);
+                let isPeople = data.listData.some(item=>item.selectPeoples.length > 0);
+                if(!isPeople){
+                    message.error('请选择节点下的办理人员!');
+                    return false;
+                }
             }
-        })
+    
+            // console.log("data.transitions2:", data.listData);
+    
+            data.listData.forEach(item=>{
+                if((item.isMatched && data.splitType == 2) || (item.ToActivityId == data.activityId && data.splitType != 2)){
+    
+                    const list = item.peopleList.filter(self=>{
+                        return item.selectPeoples.find(row=>{
+                            return self.key == row;
+                        })
+                    });
+    
+                    let toUsers = list.map(row=>{
+                        let { businessUnitIdName, key, organizationIdName, ...rest } = row;
+                        return rest;
+                    });
+                    let nodeObj = {
+                        ruleId: item.ID,
+                        toActivityId: item.ToActivityId,
+                        toActivityName: item.To.name,
+                        toUsers: toUsers
+                    };
+                    transitions.push(nodeObj);
+                }
+            })
+        }
 
         let obj = {
             actions:[{

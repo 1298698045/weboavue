@@ -17,7 +17,7 @@
                                     </template>
                                     <template v-else-if="col.field">
                                         <div>
-                                            <FieldType :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" :suggestions="suggestions" @loadSuggestion="getSuggestionQuery" @delSuggestion="deleteSuggestion" :stateCode="stateCode" :suggestionObj="suggestionObj" />
+                                            <FieldType :ruleLogId="ruleLogId" :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" :suggestions="suggestions" @loadSuggestion="getSuggestionQuery" @delSuggestion="deleteSuggestion" :stateCode="stateCode" :suggestionObj="suggestionObj" />
                                         </div>
                                     </template>
                                 </td>
@@ -295,17 +295,15 @@
                         // console.log('fields[key]', fields[key]);
                         let currentUserRow = fields[key].find(v=>v.RecId == props.ruleLogId);
                         if(currentUserRow){
-                            data.list[key] = {
-                                Comment: currentUserRow.Comment,
-                                sinatureUrl: currentUserRow.sinatureUrl
-                            };
+                            data.list[key] = currentUserRow.Comment;
                         }else {
                             data.list[key] = "";
                         }
-                        let otherSuggestions = fields[key].filter(v=>v.RecId != props.ruleLogId);
-                        console.log("otherSuggestions", otherSuggestions);
-                        data.suggestionObj[key] = otherSuggestions;
-                        console.log("suggestionObj", suggestionObj);
+                        // let otherSuggestions = fields[key].filter(v=>v.RecId != props.ruleLogId);
+                        // console.log("otherSuggestions", otherSuggestions);
+                        // data.suggestionObj[key] = otherSuggestions;
+                        data.suggestionObj[key] = fields[key];
+                        console.log("data.suggestionObj", data.suggestionObj);
                     }else{
                         data.list[key] = fields[key]?.value;
                     }
@@ -313,7 +311,8 @@
 
                 }
             }
-            // console.log("list", data.list);
+            console.log("list", data.list);
+
         }
             
     }
@@ -1531,7 +1530,7 @@
         
     }
 
-    const handleSave = () => {
+    const handleSave = (type = '') => {
         console.log("data.list", data.list);
         console.log("comps", data.comps);
         let paramsList = {};
@@ -1566,6 +1565,12 @@
             if(['O', 'Y', 'U', 'Y_MD'].includes(item.type) && paramsList[item.id] == ''){
                 delete paramsList[item.id];
             }
+            // 意见
+            // if(['UC','UCS'].includes(item.type)){
+            //     if(item.id in paramsList){
+            //         paramsList[item.id] = paramsList[item.id].Comment;
+            //     }
+            // }
         }
         
         if(isRequired){
@@ -1609,7 +1614,11 @@
         console.log("d", JSON.stringify(obj));
         data.isLoad = false;
         proxy.$post(Interface.workflow.updateRecordBatch , d).then(res=>{
-            message.success("保存成功！");
+            if(type == "submit"){
+
+            }else {
+                message.success("保存成功！");
+            }
             loadQuery();
         })
     };

@@ -1,5 +1,5 @@
 <template>
-    <div class="filed">
+    <div class="filed" :name="field.id" :label="field.label">
         <span class="required" v-if="print!=1 && field?.required">*</span>
         <div v-if="type=='S'">
             <span class="valText" v-if="print==1">
@@ -140,14 +140,19 @@
         </div>
         <div v-else-if="type=='z' || type=='UC' || type=='UCS'">
             <span class="valText" v-if="print==1">
-                {{ list[field.id] }}
+                <!-- {{ list[field.id] }} -->
                 <div class="suggestion">
                     <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
-                        {{ sug.UserName }} <span>{{ sug.Comment }}</span>
+                        <span v-if="sug?.Comment">
+                            <span>{{ sug.Comment }}</span>
+                            <div class="signImg">
+                                <img :src="Interface.pathUrl+sug.sinatureUrl" alt="">
+                            </div>
+                            <div class="sign-info">
+                                [ {{sug.UserName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                            </div>
+                        </span>
                     </div>
-                </div>
-                <div class="signImg" v-if="suggestionObj[field.id] && suggestionObj[field.id].length">
-                    <img :src="Interface.pathUrl+list[field.id].sinatureUrl" alt="">
                 </div>
             </span>
             <span v-else>
@@ -612,6 +617,7 @@
                 height: 30px;
                 line-height: 30px;
                 padding: 0 10px;
+                text-align: left;
                 &:hover{
                     background: #f4f4f4;
                     cursor: pointer;

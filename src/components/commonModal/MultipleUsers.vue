@@ -37,7 +37,7 @@
                                             <div class="user-info">
                                                 <div class="info-row">
                                                     <span>{{item.name}}</span>
-                                                    <span>{{item.businessUnitIdName}}</span>
+                                                    <span>{{item.employeeId}}</span>
                                                 </div>
                                                 <div class="info-row">
                                                     <span>{{item.organizationIdName}}</span>-
@@ -94,7 +94,7 @@
                                                     <div class="user-info">
                                                         <div class="info-row">
                                                             <span>{{item.name}}</span>
-                                                            <span>{{item.businessUnitIdName}}</span>
+                                                            <span>{{item.employeeId}}</span>
                                                         </div>
                                                         <div class="info-row">
                                                             <span>{{item.organizationIdName}}</span>-
@@ -153,7 +153,7 @@
                                         <div class="user-info">
                                             <div class="info-row">
                                                 <span>{{item.name}}</span>
-                                                <span>{{item.businessUnitIdName}}</span>
+                                                <span>{{item.employeeId}}</span>
                                             </div>
                                             <div class="info-row">
                                                 <span>{{item.organizationIdName}}</span>-
@@ -285,6 +285,7 @@
                 item.name = item.FullName.textValue;
                 item.businessUnitIdName = item.BusinessUnitIdName.textValue || '';
                 item.organizationIdName = item.OrganizationId.lookupValue.displayName || '';
+                item.employeeId = item.EmployeeId.textValue;
                 return item;
             });
         })
@@ -297,6 +298,7 @@
             data.userList = list.map(item=>{
                 item.id = item.UserId;
                 item.name = item.FullName;
+                item.employeeId = item.EmployeeId;
                 return item;
             });
         })
@@ -320,6 +322,7 @@
                 item.name = item.FullName.textValue;
                 item.businessUnitIdName = item.BusinessUnitIdName.textValue || '';
                 item.organizationIdName = item.OrganizationId.lookupValue.displayName || '';
+                item.employeeId = item.EmployeeId.textValue || '';
                 return item;
             });
         })
@@ -331,6 +334,7 @@
             data.userList = list.map(item=>{
                 item.id = item.UserId;
                 item.name = item.FullName;
+                item.employeeId = item.EmployeeId || '';
                 return item;
             });
         })
@@ -468,6 +472,7 @@
                 item.name = item.FullName.textValue;
                 item.businessUnitIdName = item.BusinessUnitIdName.textValue || '';
                 item.organizationIdName = item.OrganizationId.lookupValue.displayName || '';
+                item.employeeId = item.EmployeeId.textValue|| '';
                 return item;
             });
         })
@@ -515,6 +520,7 @@
             data.userList = list.map(item=>{
                 item.id = item.UserId;
                 item.name = item.FullName;
+                item.employeeId = item.EmployeeId;
                 return item;
             });
         })
@@ -561,6 +567,7 @@
             data.userList = list.map(item=>{
                 item.id = item.UserId;
                 item.name = item.FullName;
+                item.employeeId = item.EmployeeId;
                 return item;
             });
         })

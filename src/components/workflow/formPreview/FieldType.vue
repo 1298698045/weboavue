@@ -1,16 +1,18 @@
 <template>
-    <div class="filed" :name="field.id">
-        <span class="required" v-if="print!=1 && field?.required && field?.permission != 2 && field?.permission != 4 && stateCode != 2">*</span>
+    <div class="filed" :name="field.id" :label="field.label">
+        <span class="required"
+            v-if="print!=1 && field?.required && field?.permission != 2 && field?.permission != 4 && stateCode != 2">*</span>
         <div v-if="type=='S'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-input v-else :disabled="disabledPermission" :placeholder="'请输入' + field.label" v-model:value="list[field.id]" style="min-width: 100px;"></a-input>
+                <a-input v-else :disabled="disabledPermission" :placeholder="'请输入' + field.label"
+                    v-model:value="list[field.id]" style="min-width: 100px;"></a-input>
             </span>
         </div>
         <div v-else-if="type=='N'">
@@ -18,11 +20,12 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-input v-else :disabled="disabledPermission" type="String" @keydown="handleKeyDown" v-model:value="list[field.id]" :placeholder="'请输入' + field.label"></a-input>
+                <a-input v-else :disabled="disabledPermission" type="String" @keydown="handleKeyDown"
+                    v-model:value="list[field.id]" :placeholder="'请输入' + field.label"></a-input>
             </span>
         </div>
         <div v-else-if="type=='H'">
@@ -30,11 +33,12 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-input v-else :disabled="disabledPermission" type="Number" v-model:value="list[field.id]" maxlength="11" :placeholder="'请输入' + field.label"></a-input>
+                <a-input v-else :disabled="disabledPermission" type="Number" v-model:value="list[field.id]"
+                    maxlength="11" :placeholder="'请输入' + field.label"></a-input>
             </span>
         </div>
         <div v-else-if="type=='6'">
@@ -42,11 +46,12 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-input v-else :disabled="disabledPermission" type="password" v-model:value="list[field.id]" :placeholder="'请输入' + field.label"></a-input>
+                <a-input v-else :disabled="disabledPermission" type="password" v-model:value="list[field.id]"
+                    :placeholder="'请输入' + field.label"></a-input>
             </span>
         </div>
         <div v-else-if="type=='P'">
@@ -54,13 +59,15 @@
                 {{ list[field.id] }}
             </span>
             <div v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
                 <div v-else style="width: 150px;display: flex;">
-                    <a-slider :disabled="disabledPermission" style="flex: 1;" v-model:value="inputValue1" :min="1" :max="100" />
-                    <a-input-number :disabled="disabledPermission" v-model:value="inputValue1" :min="1" :max="100" style="width: 50px;margin-left: 16px" />
+                    <a-slider :disabled="disabledPermission" style="flex: 1;" v-model:value="inputValue1" :min="1"
+                        :max="100" />
+                    <a-input-number :disabled="disabledPermission" v-model:value="inputValue1" :min="1" :max="100"
+                        style="width: 50px;margin-left: 16px" />
                 </div>
             </div>
         </div>
@@ -69,12 +76,14 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-select v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" v-model:value="list[field.id]" :placeholder="'请选择' + field.label">
-                    <a-select-option v-for="(option, optionIdx) in select[field.id] && select[field.id].values" :key="optionIdx" :value="option.value">{{option.label}}</a-select-option>
+                <a-select v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;"
+                    v-model:value="list[field.id]" :placeholder="'请选择' + field.label">
+                    <a-select-option v-for="(option, optionIdx) in select[field.id] && select[field.id].values"
+                        :key="optionIdx" :value="option.value">{{option.label}}</a-select-option>
                 </a-select>
             </span>
         </div>
@@ -83,11 +92,12 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" valueFormat="YYYY-MM-DD" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
+                <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;"
+                    valueFormat="YYYY-MM-DD" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
             </span>
         </div>
         <div v-else-if="type=='F'">
@@ -95,11 +105,13 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" valueFormat="YYYY-MM-DD hh:mm:ss" show-time v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
+                <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;"
+                    valueFormat="YYYY-MM-DD hh:mm:ss" show-time v-model:value="list[field.id]"
+                    :placeholder="'请选择' + field.label" />
             </span>
         </div>
         <div v-else-if="type=='Year'">
@@ -107,11 +119,12 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" picker="year" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
+                <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" picker="year"
+                    v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
             </span>
         </div>
         <div v-else-if="type=='Month'||type=='Y_M'">
@@ -119,11 +132,12 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" picker="month" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
+                <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;"
+                    picker="month" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
             </span>
         </div>
         <div v-else-if="type=='X' || type=='J'">
@@ -131,37 +145,63 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-textarea  v-else :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" :rows="2" />
+                <a-textarea v-else :disabled="disabledPermission" v-model:value="list[field.id]"
+                    :placeholder="'请输入' + field.label" :rows="2" />
             </span>
         </div>
         <div v-else-if="type=='z' || type=='UC' || type=='UCS'">
             <span class="valText" v-if="print==1">
-                {{ list[field.id] }}
+                <!-- {{ list[field.id] }} -->
+                <div class="suggestion">
+                    <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
+                        <span v-if="sug?.Comment">
+                            <span>{{ sug.Comment }}</span>
+                            <div class="signImg">
+                                <img :src="Interface.pathUrl+sug.sinatureUrl" alt="">
+                            </div>
+                            <div class="sign-info">
+                                [ {{sug.UserName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                            </div>
+                        </span>
+                    </div>
+                </div>
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
-                    {{ list[field.id].Comment }}
-                    <div class="signImg" v-if="list[field.id].Comment">
-                        <img :src="Interface.pathUrl+list[field.id].sinatureUrl" alt="">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                    <!-- {{ list[field.id] }} -->
+                    <div class="suggestion">
+                        <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
+                            <span v-if="sug?.Comment">
+                                <span>{{ sug.Comment }}</span>
+                                <div class="signImg">
+                                    <img :src="Interface.pathUrl+sug.sinatureUrl" alt="">
+                                </div>
+                                <div class="sign-info">
+                                    [ {{sug.UserName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                </div>
+                            </span>
+                        </div>
                     </div>
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
                 <template v-else>
-                    <a-textarea :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" :rows="4" />
+                    <a-textarea :disabled="disabledPermission" v-model:value="list[field.id]"
+                        :placeholder="'请输入' + field.label" :rows="4" />
                     <div>
                         <a-popover placement="right">
                             <a-button type="link">选意见</a-button>
                             <template #content>
                                 <div class="suggestionWrap">
                                     <div class="suggestion-list">
-                                        <div class="suggestion-item" v-for="(option, optionIdx) in suggestions" :key="optionIdx" @click="selectSuggestion(option, field)">
+                                        <div class="suggestion-item" v-for="(option, optionIdx) in suggestions"
+                                            :key="optionIdx" @click="selectSuggestion(option, field)">
                                             {{option.name}}
                                             <span class="del-icon" @click.stop="handleDeleteSuggestion(option)">
-                                                <DeleteOutlined/>
+                                                <DeleteOutlined />
                                             </span>
                                             <!-- <a-popconfirm title="确认删除当前意见?" ok-text="确认" cancel-text="取消" @confirm="handleDeleteSuggestion(option)">
                                             </a-popconfirm> -->
@@ -170,7 +210,8 @@
                                     <div class="suggestion-footer">
                                         <span class="label">创建意见</span>
                                         <div class="add-form">
-                                            <a-input class="suggestion-inp" placeholder="请输入新的意见" v-model:value="suggestionVal"></a-input>
+                                            <a-input class="suggestion-inp" placeholder="请输入新的意见"
+                                                v-model:value="suggestionVal"></a-input>
                                             <a-button size="small" type="primary" @click="handleSubmit">保存</a-button>
                                         </div>
                                         <!-- <a-button size="small" type="primary">创建意见</a-button> -->
@@ -178,12 +219,27 @@
                                 </div>
                             </template>
                         </a-popover>
-                        <div class="signImg">
-                            <img :src="Interface.pathUrl+list[field.id].sinatureUrl" alt="">
+                        <div class="signImg" style="text-align: left;">
+                            <img :src="Interface.pathUrl+'/api/one/signature/'+userInfo.userId" alt="">
+                        </div>
+                        <div>
+                            <div v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
+                                <div class="sign-info" v-if="sug.RecId == ruleLogId">
+                                    [ {{sug.UserName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                </div>
+                            </div>
                         </div>
                         <div class="suggestion">
                             <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
-                                {{ sug.UserName }} <span>{{ sug.Comment }}</span>
+                                <div v-if="sug.RecId != ruleLogId">
+                                    <span>{{ sug.Comment }}</span>
+                                    <div class="signImg">
+                                        <img :src="Interface.pathUrl + sug.sinatureUrl" alt="">
+                                    </div>
+                                    <div class="sign-info">
+                                        [ {{sug.UserName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -195,7 +251,7 @@
                 {{ list[field.id] ? '是' : '否' }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] ? '是' : '否' }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -217,52 +273,39 @@
             </a-radio-group>
         </div>
         <div v-else-if="type=='Q'">
-            <a-transfer
-                v-model:target-keys="targetKeys"
-                v-model:selected-keys="selectedKeys"
-                :data-source="mockData"
-                :titles="['Source', 'Target']"
-                :render="item => item.title"
-                :disabled="disabled"
-                @change="handleChange"
-                @selectChange="handleSelectChange"
-                @scroll="handleScroll"
-            />
+            <a-transfer v-model:target-keys="targetKeys" v-model:selected-keys="selectedKeys" :data-source="mockData"
+                :titles="['Source', 'Target']" :render="item => item.title" :disabled="disabled" @change="handleChange"
+                @selectChange="handleSelectChange" @scroll="handleScroll" />
         </div>
         <div class="searchLook" v-else-if="type=='U' || type=='O' || type=='Y' || type=='Y_MD'">
             <span class="valText" v-if="print==1">
                 {{ computedName }}
             </span>
             <div v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ computedName }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
                 <template v-else>
-                    <a-select style="min-width: 150px;width: 100%;" :disabled="disabledPermission" showSearch v-model:value="list[field.id]" :placeholder="'请选择' + field.label" @search="(e)=>searchlookup(e, field)" @dropdownVisibleChange="(e)=>{searchlookup('', field, e)}"
+                    <a-select style="min-width: 150px;width: 100%;" :disabled="disabledPermission" showSearch
+                        v-model:value="list[field.id]" :placeholder="'请选择' + field.label"
+                        @search="(e)=>searchlookup(e, field)" @dropdownVisibleChange="(e)=>{searchlookup('', field, e)}"
                         @change="(e)=>changeSearchField(e, field)" allowClear>
                         <template #suffixIcon></template>
-                        <a-select-option v-for="(option, optionIdx) in search[field.id]" :key="optionIdx" :value="option.ID">
+                        <a-select-option v-for="(option, optionIdx) in search[field.id]" :key="optionIdx"
+                            :value="option.ID">
                             {{ option.Name }}
                         </a-select-option>
                     </a-select>
                     <div class="searchIcon" v-if="stateCode!=2">
-                        <SearchOutlined
-                          class="ant-select-suffix"
-                          @click="handleOpenLook"
-                        />
+                        <SearchOutlined class="ant-select-suffix" @click="handleOpenLook" />
                     </div>
                 </template>
             </div>
         </div>
         <div class="uploadPhoto" v-else-if="type=='I'">
-            <a-upload
-                v-model:file-list="fileList"
-                name="file"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                :headers="headers"
-                @change="handleChange"
-            >
+            <a-upload v-model:file-list="fileList" name="file" action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers" @change="handleChange">
                 <a-button>
                     上传图片
                 </a-button>
@@ -276,17 +319,9 @@
             <!-- <InputColor /> -->
         </div>
         <div v-else-if="type=='LT'">
-            <a-tree-select
-                v-model:value="value"
-                show-search
-                style="width: 100%"
-                :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                :placeholder="'请选择' + field.label"
-                allow-clear
-                tree-default-expand-all
-                :tree-data="treeData"
-                tree-node-filter-prop="label"
-            >
+            <a-tree-select v-model:value="value" show-search style="width: 100%"
+                :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" :placeholder="'请选择' + field.label"
+                allow-clear tree-default-expand-all :tree-data="treeData" tree-node-filter-prop="label">
                 <template #title="{ value: val, label }">
                     <b v-if="val === 'parent 1-1'" style="color: #08c">sss</b>
                     <template v-else>{{ label }}</template>
@@ -298,11 +333,12 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-input v-else :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" style="min-width: 100px;"></a-input>
+                <a-input v-else :disabled="disabledPermission" v-model:value="list[field.id]"
+                    :placeholder="'请输入' + field.label" style="min-width: 100px;"></a-input>
             </span>
         </div>
     </div>
@@ -347,11 +383,13 @@
         print: [String, Number],
         suggestions: Array,
         stateCode: String,
-        suggestionObj: Object
+        suggestionObj: Object,
+        ruleLogId: String
     });
-    
 
-    const emit = defineEmits(['openlook','setValue','lookup','select','suggestion','loadSuggestion','delSuggestion']);
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    const emit = defineEmits(['openlook', 'setValue', 'lookup', 'select', 'suggestion', 'loadSuggestion', 'delSuggestion']);
 
     // const formState = reactive({
 
@@ -367,11 +405,11 @@
     // };
 
 
-    const computedName = computed(()=>{
+    const computedName = computed(() => {
         const id = props.field.id;
         const search = props.search;
         const val = props.list[id];
-        let name = search[id].find(item=>item.ID==val)?.Name || '';
+        let name = search[id].find(item => item.ID == val)?.Name || '';
         return name;
     });
 
@@ -392,10 +430,10 @@
     }
 
     // 控制字段默认值可编辑/不可编辑
-    const disabledPermission = computed(()=>{
+    const disabledPermission = computed(() => {
         const permission = props.field.permission;
         let isDisabled = permission == 16 ? true : false;
-        if(props.stateCode == 2){
+        if (props.stateCode == 2) {
             isDisabled = true;
         }
         return isDisabled;
@@ -405,34 +443,34 @@
             label: 'root 1',
             value: 'root 1',
             children: [
-            {
-                label: 'parent 1',
-                value: 'parent 1',
-                children: [
                 {
-                    label: 'parent 1-0',
-                    value: 'parent 1-0',
+                    label: 'parent 1',
+                    value: 'parent 1',
                     children: [
-                    {
-                        label: 'my leaf',
-                        value: 'leaf1',
-                    },
-                    {
-                        label: 'your leaf',
-                        value: 'leaf2',
-                    },
+                        {
+                            label: 'parent 1-0',
+                            value: 'parent 1-0',
+                            children: [
+                                {
+                                    label: 'my leaf',
+                                    value: 'leaf1',
+                                },
+                                {
+                                    label: 'your leaf',
+                                    value: 'leaf2',
+                                },
+                            ],
+                        },
+                        {
+                            label: 'parent 1-1',
+                            value: 'parent 1-1',
+                        },
                     ],
                 },
                 {
-                    label: 'parent 1-1',
-                    value: 'parent 1-1',
+                    label: 'parent 2',
+                    value: 'parent 2',
                 },
-                ],
-            },
-            {
-                label: 'parent 2',
-                value: 'parent 2',
-            },
             ],
         },
     ]);
@@ -469,32 +507,32 @@
                 value: 'zhejiang',
                 label: 'Zhejiang',
                 children: [
-                {
-                    value: 'hangzhou',
-                    label: 'Hangzhou',
-                    children: [
                     {
-                        value: 'xihu',
-                        label: 'West Lake',
+                        value: 'hangzhou',
+                        label: 'Hangzhou',
+                        children: [
+                            {
+                                value: 'xihu',
+                                label: 'West Lake',
+                            },
+                        ],
                     },
-                    ],
-                },
                 ],
             },
             {
                 value: 'jiangsu',
                 label: 'Jiangsu',
                 children: [
-                {
-                    value: 'nanjing',
-                    label: 'Nanjing',
-                    children: [
                     {
-                        value: 'zhonghuamen',
-                        label: 'Zhong Hua Men',
+                        value: 'nanjing',
+                        label: 'Nanjing',
+                        children: [
+                            {
+                                value: 'zhonghuamen',
+                                label: 'Zhong Hua Men',
+                            },
+                        ],
                     },
-                    ],
-                },
                 ],
             },
         ],
@@ -521,19 +559,19 @@
         suggestionVal: ""
     });
     const { fileList, options, inputValue1, suggestions, suggestionVal } = toRefs(data);
-    watch(()=>props.suggestions, (newVal, oldVal)=>{
+    watch(() => props.suggestions, (newVal, oldVal) => {
         data.suggestions = props.suggestions;
     });
 
     const handleOpenLook = () => {
-        if(props.field?.permission == 16){
+        if (props.field?.permission == 16) {
             return false;
         }
         emit('openlook', props.field);
     }
 
-    const searchlookup = (search, field, isBook=true) => {
-        if(isBook){
+    const searchlookup = (search, field, isBook = true) => {
+        if (isBook) {
             emit("lookup", search, field);
         }
     };
@@ -546,12 +584,12 @@
         let targetApiName;
         console.log("props.attributes", props.attributes);
         console.log("field", field);
-        let findRow = props.attributes.find(item=>field.id == item.name);
+        let findRow = props.attributes.find(item => field.id == item.name);
         console.log("findRow", findRow);
 
         targetApiName = findRow.referencedEntity.EntityName;
         let obj = {
-            actions:[{
+            actions: [{
                 id: "6129;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
@@ -581,9 +619,9 @@
         proxy.$post(Interface.lookup, d).then((res) => {
             let list = res.actions[0].returnValue.lookupResults.records;
             let arr = [];
-            list.forEach(item=>{
-                let isBook = data.options.some(row=>row.ID==item.fields.Id.value);
-                if(!isBook){
+            list.forEach(item => {
+                let isBook = data.options.some(row => row.ID == item.fields.Id.value);
+                if (!isBook) {
                     arr.push({
                         ID: item.fields.Id.value,
                         Name: item.fields.Name.value
@@ -602,27 +640,27 @@
 
     const handleSubmit = () => {
         let obj = {
-            actions:[{
+            actions: [{
                 id: "2919;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                  recordInput: {
-                    allowSaveOnDuplicate: false,
-                    apiName: 'WFSuggestionLibrary',
-                    objTypeCode: 130,
-                    fields: {
-                        Name: data.suggestionVal
+                    recordInput: {
+                        allowSaveOnDuplicate: false,
+                        apiName: 'WFSuggestionLibrary',
+                        objTypeCode: 130,
+                        fields: {
+                            Name: data.suggestionVal
+                        }
                     }
-                  }
                 }
             }]
         };
         let d = {
             message: JSON.stringify(obj)
         };
-        proxy.$post(Interface.create, d).then(res=>{
-            if(res && res.actions && res.actions[0].state == 'SUCCESS'){
+        proxy.$post(Interface.create, d).then(res => {
+            if (res && res.actions && res.actions[0].state == 'SUCCESS') {
                 data.suggestionVal = "";
                 message.success("创建成功!");
                 emit("loadSuggestion", true);
@@ -636,7 +674,7 @@
 
 </script>
 <style lang="less" scoped>
-    .filed{
+    .filed {
         padding: 5px;
         /* min-width: 100px; */
         font-size: 14px !important;
@@ -645,73 +683,93 @@
         color: #333 !important;
         overflow: hidden;
         display: flex;
-        .searchLook{
+
+        .searchLook {
             position: relative;
-            .searchIcon{
+
+            .searchIcon {
                 position: absolute;
                 right: 6px;
                 top: 8px;
                 z-index: 999;
             }
         }
-        .required{
+
+        .required {
             /* position: absolute;
             top: 12px;
             left: 10px;
             z-index: 99; */
         }
+
         /* >div{
             flex: 1;
         } */
-        .signImg{
-            img{
+        .signImg {
+            img {
                 width: 120px;
                 height: 56px;
             }
         }
     }
-    .suggestionWrap{
+
+    .suggestionWrap {
         width: 200px;
-        .suggestion-list{
+
+        .suggestion-list {
             min-height: 100px;
             max-height: 400px;
             overflow-y: auto;
-            .suggestion-item{
+
+            .suggestion-item {
                 min-height: 30px;
                 /* line-height: 30px; */
                 padding: 0 10px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                &:hover{
+                text-align: left;
+                &:hover {
                     background: #f4f4f4;
                     cursor: pointer;
                 }
-                .del-icon{
+
+                .del-icon {
                     color: red;
                 }
             }
         }
-        .suggestion-footer{
+
+        .suggestion-footer {
             border-top: 1px solid #e2e3e5;
             padding: 5px 10px;
-            .label{
+
+            .label {
                 font-size: 12px;
                 color: #666;
             }
-            .add-form{
+
+            .add-form {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                .suggestion-inp{
+
+                .suggestion-inp {
                     margin-right: 10px;
                 }
             }
         }
     }
-    .filed.required{
-        .ant-select, .ant-input, .ant-picker{
+
+    .filed.required {
+
+        .ant-select,
+        .ant-input,
+        .ant-picker {
             border: 1px solid red !important;
         }
+    }
+    .suggestion-item{
+        text-align: left;
     }
 </style>
