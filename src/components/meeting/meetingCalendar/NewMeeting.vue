@@ -49,7 +49,7 @@ import MeetingNotice from "@/components/meeting/meetingCalendar/MeetingNotice.vu
 import AttendUser from "@/components/meeting/meetingCalendar/AttendUser.vue"
 //import AttendUser from "@/components/meeting/Participants.vue"
 // 基本信息
-import ConfigForm from "@/components/meeting/InfoConfigForm2.vue";
+import ConfigForm from "@/components/meeting/InfoConfigForm.vue";
 // 会议议题
 import Topics from "@/components/meeting/meetingCalendar/Topics.vue";
 // 会议参会人员列表

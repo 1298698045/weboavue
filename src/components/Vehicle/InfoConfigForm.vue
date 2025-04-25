@@ -206,27 +206,27 @@
                                             <a-button :icon="h(EditOutlined)" />
                                         </div>
                                         <div class="rVal">
-                                            <input type="text" v-model="formState.Subject" class="title"
+                                            <input type="text" v-model="formState.name" class="title"
                                                 placeholder="添加标题">
                                         </div>
-                                        <div class="lIcon">
+                                        <div class="lIcon lIcon1">
                                             <LockOutlined />
                                         </div>
                                     </div>
                                 </a-form-item>
-                                <a-form-item name="OwningUser">
+                                <a-form-item name="AppUserId">
                                     <div class="formRow">
-                                        <div class="lIcon">
+                                        <div class="lIcon lIcon1">
                                             <UserAddOutlined />
                                         </div>
                                         <div class="rVal">
-                                            <a-select mode="single" allowClear v-model:value="formState.OwningUser.Id"
+                                            <a-select mode="single" allowClear v-model:value="formState.AppUserId.Id"
                                                 :default-active-first-option="false" :filter-option="false" showSearch
-                                                @search="(e) => { searchlookup(e, '8', 'OwningUser'); }"
-                                                @dropdownVisibleChange="(e) => { searchlookup('', '8', 'OwningUser'); }"
-                                                :placeholder="'选择预约人'">
+                                                @search="(e) => { searchlookup(e, '8', 'AppUserId'); }"
+                                                @dropdownVisibleChange="(e) => { searchlookup('', '8', 'AppUserId'); }"
+                                                :placeholder="'选择用车人'">
                                                 <template #suffixIcon></template>
-                                                <a-select-option v-for="(option, optionIdx) in OwningUser"
+                                                <a-select-option v-for="(option, optionIdx) in AppUserId"
                                                     :key="optionIdx" :value="option.ID">
                                                     <a-avatar :size="37">
                                                         <template #icon>
@@ -239,13 +239,13 @@
                                             </a-select>
                                             <div class="selectIcon">
                                                 <SearchOutlined class="ant-select-suffix"
-                                                    @click="handleOpenLook('8', 'OwningUser')" />
+                                                    @click="handleOpenLook('8', 'AppUserId')" />
                                             </div>
                                         </div>
                                     </div>
                                 </a-form-item>
                                 <div class="formRow" style="align-items: self-start;">
-                                    <div class="lIcon">
+                                    <div class="lIcon lIcon1">
                                         <ClockCircleOutlined />
                                     </div>
                                     <div class="timeBox">
@@ -258,10 +258,10 @@
                                                 <a-time-picker v-model:value="formState.StartDateTime_time"
                                                     :valueFormat="hourFormat" format="HH:mm" />
                                             </div>
-                                            <div class="switch">
+                                            <!-- <div class="switch">
                                                 <a-switch v-model:checked="formState.IsAllDayEvent" />
                                                 <span class="text">全天</span>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <div class="rowTime">
                                             <div class="date">
@@ -272,7 +272,7 @@
                                                 <a-time-picker v-model:value="formState.EndDateTime_time"
                                                     :valueFormat="hourFormat" format="HH:mm" />
                                             </div>
-                                            <div class="groupContainer">
+                                            <!-- <div class="groupContainer">
                                                 <a-dropdown>
                                                     <div class="groupBtn show">
                                                         <span class="icon">
@@ -302,24 +302,24 @@
                                                         </a-menu>
                                                     </template>
                                                 </a-dropdown>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
-                                <a-form-item name="RoomId">
+                                <a-form-item name="VehicleId">
                                     <div class="formRow">
-                                        <div class="lIcon">
+                                        <div class="lIcon lIcon1">
                                             <HomeOutlined v-if="props.objectTypeCode == '5000'" />
                                             <CarOutlined v-if="props.objectTypeCode == '20503'" />
                                         </div>
                                         <div class="rVal">
-                                            <a-select mode="single" allowClear v-model:value="formState.RoomId.Id"
+                                            <a-select mode="single" allowClear v-model:value="formState.VehicleId.Id"
                                                 :default-active-first-option="false" :filter-option="false" showSearch
-                                                @search="(e) => { searchlookup(e, '20034', 'RoomId'); }"
-                                                @dropdownVisibleChange="(e) => { searchlookup('', '20034', 'RoomId'); }"
-                                                :placeholder="props.objectTypeCode=='5000'?'请选择会议室':'请选择车辆'">
+                                                @search="(e) => { searchlookup(e, '20034', 'VehicleId'); }"
+                                                @dropdownVisibleChange="(e) => { searchlookup('', '20034', 'VehicleId'); }"
+                                                :placeholder="'请选择车辆'">
                                                 <template #suffixIcon></template>
-                                                <a-select-option v-for="(option, optionIdx) in RoomId" :key="optionIdx"
+                                                <a-select-option v-for="(option, optionIdx) in VehicleId" :key="optionIdx"
                                                     :value="option.ID">
                                                     <a-avatar :size="37">
                                                         <template #icon>
@@ -333,24 +333,34 @@
                                             </a-select>
                                             <div class="selectIcon">
                                                 <SearchOutlined class="ant-select-suffix"
-                                                    @click="handleOpenLook('20034', 'RoomId')" />
+                                                    @click="handleOpenLook('20034', 'VehicleId')" />
                                             </div>
                                         </div>
                                     </div>
                                 </a-form-item>
-                                <a-form-item name="Location">
+                                <a-form-item name="StartFrom">
                                     <div class="formRow">
-                                        <div class="lIcon">
+                                        <div class="lIcon lIcon1">
                                             <EnvironmentOutlined />
                                         </div>
-                                        <div class="rVal">
-                                            <input type="text" v-model="formState.Location" placeholder="输入位置">
+                                        <div class="rVal rVal1">
+                                            <input type="text" v-model="formState.StartFrom" placeholder="开始地点">
+                                        </div>
+                                    </div>
+                                </a-form-item>
+                                <a-form-item name="Destination">
+                                    <div class="formRow">
+                                        <div class="lIcon lIcon1">
+                                            <EnvironmentOutlined />
+                                        </div>
+                                        <div class="rVal rVal1">
+                                            <input type="text" v-model="formState.Destination" placeholder="去往地点">
                                         </div>
                                     </div>
                                 </a-form-item>
                                 <!-- <a-form-item name="MeetingSummary">
                                         <div class="formRow" style="align-items: self-start;">
-                                            <div class="lIcon">
+                                            <div class="lIcon lIcon1">
                                                 <FormOutlined />
                                             </div>
                                             <div class="rVal rVal2">
@@ -361,11 +371,11 @@
                                     </a-form-item> -->
                                 <a-form-item name="Description">
                                     <div class="formRow" style="align-items: self-start;">
-                                        <div class="lIcon">
+                                        <div class="lIcon lIcon1">
                                             <FormOutlined />
                                         </div>
                                         <div class="rVal rVal2">
-                                            <TEditor ref="editorRef2" mode="middle" :placeholder="'备注'" :height=height2
+                                            <TEditor ref="editorRef2" mode="middle" :placeholder="'用车事由'" :height=height2
                                                 @input="getEditorContent2" />
                                         </div>
                                     </div>
@@ -435,7 +445,7 @@ import {
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import TEditor from "@/components/TEditor.vue";
-import DayCalendar from "@/components/meeting/AddMeetingDayModal.vue";
+import DayCalendar from "@/components/Vehicle/AddVehicleDayModal.vue";
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
 const { proxy } = getCurrentInstance();
@@ -460,8 +470,8 @@ const editorRef = ref();
 const editorRef2 = ref();
 const data = reactive({
     title: "新建",
-    height: document.documentElement.clientHeight - 220,
-    height2: document.documentElement.clientHeight - 505,
+    height: document.documentElement.clientHeight - 165,
+    height2: document.documentElement.clientHeight - 450,
     menuTimes: [
         '不要提醒我', '在事件发生时', '5 分钟 钱', '30分钟 前', '1小时 前',
         '2小时 前', '12小时 前', '1天 前', '1周 前', '添加电子邮件提醒'
@@ -492,8 +502,8 @@ const data = reactive({
             label: "紫色类别"
         }
     ],
-    OwningUser: [],
-    RoomId: [],
+    AppUserId: [],
+    VehicleId: [],
     calendarItem: {},
     isRadioUser: false,
     RecurrenceType: '不重复',
@@ -524,22 +534,23 @@ const {
     title,
     height,
     height2,
-    menuTimes, categoryList, OwningUser, RoomId, isRadioUser, RecurrenceType, RecurrenceTypeList
+    menuTimes, categoryList, AppUserId, VehicleId, isRadioUser, RecurrenceType, RecurrenceTypeList
 } = toRefs(data);
 const formState = reactive({
     RegardingObjectTypeCode: 20290,
     RegardingObjectId: {},
-    Subject: '',
+    name: '',
     StartDateTime: '',
     StartDateTime_time: '',
     ScheduledStart: '',
     ScheduledEnd: '',
     EndDateTime: '',
     EndDateTime_time: '',
-    OwningUser: {},
-    RoomId: {},
+    AppUserId: {},
+    VehicleId: {},
     IsAllDayEvent: false,
-    Location: '',
+    StartFrom: '',
+    Destination:'',
     Description: '',
     MeetingSummary: '',
     CalendarType: '',
@@ -692,12 +703,14 @@ const searchlookup = (search, Lktp, fieldApiName) => {
             }
         }
         if(props.objectTypeCode=='20503'){
-            filterQuery+="\nResourceTypeCode\teq\t1";
+            //filterQuery+="\nStatusCode\teq\t1";
         }
         let entityName='SystemUser';
         let displayColumns='FullName,OrganizationId,BusinessUnitId,EmployeeId';
         if (Lktp == '20034') {
-            entityName='ResourceOrg';
+            // entityName='ResourceOrg';
+            entityName='Vehicle';
+            Lktp='20501';
             displayColumns='Name';
         }
         let d = {
@@ -741,18 +754,20 @@ const calendarGetData = () => {
     //console.log("props1", props.paramsTime);
     data.calendarItem = {
         Id: props.id || '001',
-        Subject: formState.Subject,
-        What: formState.Description,
-        OwningUserName: formState.OwningUser ? formState.OwningUser.Name : '',
+        name: formState.name,
+        Description: formState.Description,
+        AppUserIdName: formState.AppUserId ? formState.AppUserId.Name : '',
         StartDateTime: formState.StartDateTime + ' ' + formState.StartDateTime_time,
         EndDateTime: formState.EndDateTime + ' ' + formState.EndDateTime_time,
         IsAllDayEvent: formState.IsAllDayEvent,
         IsPrivate: formState.IsPrivate,
-        IsRecurrence2: false,
-        Where: formState.RoomId ? formState.RoomId.Name : (formState.Location || ''),
+        Where: formState.VehicleId ? formState.VehicleId.Name : (formState.StartFrom || ''),
         sobjectType: "Event",
         Telephone: formState.Telephone || '',
         StatusCodeName: formState.StatusCodeName || '',
+        vehicleIdName: formState.AppUserId&&formState.AppUserId.Name?formState.AppUserId.Name:'',
+        startFrom: formState.StartFrom,
+        destination: formState.Destination,
     }
     nextTick(() => {
         if (typeof DayCalendarWrap != 'undefined' && DayCalendarWrap && DayCalendarWrap.value) {
@@ -780,17 +795,17 @@ const calendarDayChange = (e) => {
     }
 }
 onMounted(() => {
-    data.height = document.documentElement.clientHeight - 220;
-    if (document.documentElement.clientHeight - 505 > 100) {
-        data.height2 = document.documentElement.clientHeight - 505;
+    data.height = document.documentElement.clientHeight - 165;
+    if (document.documentElement.clientHeight - 450 > 100) {
+        data.height2 = document.documentElement.clientHeight - 450;
     }
     else {
         data.height2 = 100;
     }
     window.addEventListener("resize", (e) => {
-        data.height = document.documentElement.clientHeight - 220;
-        if (document.documentElement.clientHeight - 505 > 100) {
-            data.height2 = document.documentElement.clientHeight - 505;
+        data.height = document.documentElement.clientHeight - 165;
+        if (document.documentElement.clientHeight - 450 > 100) {
+            data.height2 = document.documentElement.clientHeight - 450;
         }
         else {
             data.height2 = 100;
@@ -817,14 +832,15 @@ const getDetail = () => {
     proxy.$post(Interface.detail, obj).then(res => {
         if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
             let fields = res.actions[0].returnValue.fields;
-            formState.Location = fields.Location && fields.Location.value ? fields.Location.value : '';
-            formState.Subject = fields.Name && fields.Name.value ? fields.Name.value : '';
+            formState.StartFrom = fields.StartFrom && fields.StartFrom.value ? fields.StartFrom.value : '';
+            formState.Destination=fields.Destination && fields.Destination.value ? fields.Destination.value : '';
+            formState.name = fields.Name && fields.Name.value ? fields.Name.value : '';
             formState.Description = fields.Description && fields.Description.value ? fields.Description.value : '';
             formState.MeetingSummary = fields.MeetingSummary && fields.MeetingSummary.value ? fields.MeetingSummary.value : '';
-            formState.StartDateTime = fields.ScheduledStart && fields.ScheduledStart.value ? dayjs(fields.ScheduledStart.value).format("YYYY-MM-DD") : '';
-            formState.StartDateTime_time = fields.ScheduledStart && fields.ScheduledStart.value ? dayjs(fields.ScheduledStart.value).format("HH:mm") : '';
-            formState.EndDateTime = fields.ScheduledEnd && fields.ScheduledEnd.value ? dayjs(fields.ScheduledEnd.value).format("YYYY-MM-DD") : '';
-            formState.EndDateTime_time = fields.ScheduledEnd && fields.ScheduledEnd.value ? dayjs(fields.ScheduledEnd.value).format("HH:mm") : '';
+            formState.StartDateTime = fields.StartTime && fields.StartTime.value ? dayjs(fields.StartTime.value).format("YYYY-MM-DD") : '';
+            formState.StartDateTime_time = fields.StartTime && fields.StartTime.value ? dayjs(fields.StartTime.value).format("HH:mm") : '';
+            formState.EndDateTime = fields.EndTime && fields.EndTime.value ? dayjs(fields.EndTime.value).format("YYYY-MM-DD") : '';
+            formState.EndDateTime_time = fields.EndTime && fields.EndTime.value ? dayjs(fields.EndTime.value).format("HH:mm") : '';
 
             if (props.paramsTime.end && props.paramsTime.end != props.paramsTime.time) {
                 formState.StartDateTime = props.paramsTime.date;
@@ -837,29 +853,29 @@ const getDetail = () => {
             formState.CalendarType = fields.CalendarType && fields.CalendarType.value ? fields.CalendarType.value : '';
             formState.IsAllDayEvent = fields.IsAllDayEvent ? fields.IsAllDayEvent.value : '';
 
-            if (fields.OwningUser && fields.OwningUser.value) {
-                let OwningUserName = fields.OwningUser.displayValue || '';
-                let OwningUserId = fields.OwningUser.value;
-                formState.OwningUser = { Id: OwningUserId, Name: OwningUserName };
-                data.OwningUser.push({
-                    ID: OwningUserId,
-                    Name: OwningUserName
+            if (fields.AppUserId && fields.AppUserId.value) {
+                let AppUserIdName = fields.AppUserId.displayValue || '';
+                let AppUserIdId = fields.AppUserId.value;
+                formState.AppUserId = { Id: AppUserIdId, Name: AppUserIdName };
+                data.AppUserId.push({
+                    ID: AppUserIdId,
+                    Name: AppUserIdName
                 });
             }
-            searchlookup('', '8', 'OwningUser');
+            searchlookup('', '8', 'AppUserId');
 
-            if (fields.RoomId && fields.RoomId.value) {
-                let RoomIdName = fields.RoomId.displayValue || '';
-                let RoomIdValue = fields.RoomId.value;
-                formState.RoomId = { Id: RoomIdValue, Name: RoomIdName };
-                data.RoomId.push({
-                    ID: RoomIdValue,
-                    Name: RoomIdName
+            if (fields.VehicleId && fields.VehicleId.value) {
+                let VehicleIdName = fields.VehicleId.displayValue || '';
+                let VehicleIdValue = fields.VehicleId.value;
+                formState.VehicleId = { Id: VehicleIdValue, Name: VehicleIdName };
+                data.VehicleId.push({
+                    ID: VehicleIdValue,
+                    Name: VehicleIdName
                 });
             }
             formState.Telephone = fields.Telephone ? fields.Telephone.value : '';
             formState.StatusCodeName = fields.StatusCode ? fields.StatusCode.displayValue : '';
-            searchlookup('', '20034', 'RoomId');
+            searchlookup('', '20034', 'VehicleId');
 
             calendarGetData();
         }
@@ -872,20 +888,20 @@ if (props.id) {
 }
 else {
     if (props.paramsTime && props.paramsTime.resourceId) {
-        data.RoomId.push({
+        data.VehicleId.push({
             ID: props.paramsTime.resourceId,
             Name: props.paramsTime.resourceName
         });
-        formState.RoomId.Id = props.paramsTime.resourceId;
+        formState.VehicleId.Id = props.paramsTime.resourceId;
     }
     let userInfo = window.localStorage.getItem('userInfo');
     if (userInfo) {
         userInfo = JSON.parse(userInfo);
-        data.OwningUser.push({
+        data.AppUserId.push({
             ID: userInfo.userId,
             Name: userInfo.fullName
         });
-        formState.OwningUser.Id = userInfo.userId;
+        formState.AppUserId.Id = userInfo.userId;
     }
     calendarGetData();
 }
@@ -906,40 +922,15 @@ const handleSubmit = () => {
                         apiName: props.entityApiName,
                         objTypeCode: props.objectTypeCode,
                         fields: {
-                            Name: formState.Subject,
-                            ScheduledStart: formState.StartDateTime + ' ' + formState.StartDateTime_time,
-                            ScheduledStartTime: formState.StartDateTime_time,
-                            ScheduledEnd: formState.EndDateTime + ' ' + formState.EndDateTime_time,
-                            ScheduledEndTime: formState.EndDateTime_time,
-                            Location: formState.Location,
-                            // Telephone:'',
-                            // IsPublic:false,
-                            // AllowInviteeCheckin:false,
-                            // Attachs:'',
-                            // ReminderTime:"",
-                            // ReminderTimeTime:'',
-                            // InviteQty:'',
-                            // AcceptQty:'',
-                            // SpeakQty:'',
-                            // layTableCheckbox:false,
-                            // MeetingService_Name_1:'',
-                            // MeetingItem_SortNumber_1:'',
-                            // MeetingItem_Name_1:'',
-                            // MeetingItem_ScheduledMeeting_1:'',
-                            // MeetingType:'',
-                            // StateCode:'',
+                            Name: formState.name,
+                            StartTime: formState.StartDateTime + ' ' + formState.StartDateTime_time,
+                            EndTime: formState.EndDateTime + ' ' + formState.EndDateTime_time,
+                            StartFrom: formState.StartFrom,
+                            Destination:formState.Destination,
                             StatusCode: 1,
-                            //MeetingSummary:formState.MeetingSummary,
                             Description: formState.Description,
-                            RoomId: formState.RoomId.Id,
-                            // OwningBusinessUnit:'',
-                            // ContactUser:'',
-                            // HostName:'',
-                            // MeetingMgrId:'',
-                            OwningUser: formState.OwningUser.Id,
-                            // MeetingService_HandleBy_1:'',
-                            // MeetingItem_ApplyBy_1:'',
-                            // MeetingItem_OwningBusinessUnit_1:''
+                            VehicleId: formState.VehicleId.Id,
+                            AppUserId: formState.AppUserId.Id,
                         }
                     }
                 }
@@ -974,13 +965,13 @@ const getUserData = (params) => {
     //console.log("params:", params);
     data.isRadioUser = false;
     if (params.id) {
-        let index = data.OwningUser.findIndex(item => item.ID == params.id);
+        let index = data.AppUserId.findIndex(item => item.ID == params.id);
         if (index == -1 && params.id) {
-            data.OwningUser.push({
+            data.AppUserId.push({
                 ID: params.id,
                 Name: params.name
             });
-            formState.OwningUser.Id = params.id;
+            formState.AppUserId.Id = params.id;
         }
         if (index >= 0) {
             message.error("不能重复添加！");
@@ -1216,24 +1207,33 @@ defineExpose({ clearForm, handleSubmit })
                     margin-right: 9px;
                     text-align: center;
                 }
-
+.lIcon1{
+    padding-top: 5px;
+}
                 .rVal {
                     flex: 1;
                     height: 32px;
                     border-bottom: 1px solid #e0e0e0;
                     height: auto;
                 }
-
+                .rVal1 {
+                    height: 32px !important;
+                }
                 .rVal2 {
                     border-bottom: none;
+                    margin-top: 4px;
                 }
 
                 .timeBox {
+                    display: flex;
+                        align-items: center;
+                        margin-top: 3px;
+                        margin-bottom: 6px;
                     .rowTime {
                         display: flex;
                         align-items: center;
                         margin-bottom: 10px;
-
+margin-right: 10px;
                         .date {
                             width: 142px;
                         }

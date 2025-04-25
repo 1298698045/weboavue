@@ -125,6 +125,7 @@ const Interface = {
     allUser: baseUrl + "/one/organization/querUsers", //查询所有用户
     changePwd: baseUrl + "/one/user/changepwd", //修改登录密码
     getUserInfo: baseUrl + "/one/user/getUserInfo", // 获取个人信息详细
+    messageList: baseUrl + "/message/mine/list", // 消息通知
   },
   saveRecord: "/localData/entity.saverecord.json",
   // 通讯录

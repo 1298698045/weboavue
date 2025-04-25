@@ -253,19 +253,10 @@ const getDetail = () => {
   proxy.$post(Interface.detail, obj).then(res => {
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
       let fields = res.actions[0].returnValue.fields;
-      let url = fields.AvatarUrl && fields.AvatarUrl.value ? fields.AvatarUrl.value : '';
-      // if(url){
-      //   data.avatarUrl='/'+Interface.viewAvatar+'/SystemUser/'+props.id;
-      // }
-      // else{
-      //   data.avatarUrl=require('@/assets/img/user/MyResume/showEmpAvatar.png');
-      // }
       data.avatarUrl = '/api/one/user/avatar/' + data.userId;
     }
-
   })
 };
-getDetail();
 // 保存
 const handleSave = (type) => {
   data.activeKey = 0;
@@ -273,55 +264,6 @@ const handleSave = (type) => {
   if (PersonalInfoEditRef && PersonalInfoEditRef.value && PersonalInfoEditRef.value.handleSubmit != 'undefined' && type != 1) {
     PersonalInfoEditRef.value.handleSubmit();
   }
-  return
-  let url = Interface.create;
-  let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordInput: {
-          allowSaveOnDuplicate: false,
-          apiName: data.sObjectName,
-          objTypeCode: data.objectTypeCode,
-          fields: {
-            Name: formState.Name,
-
-          }
-        }
-      }
-    }]
-  };
-  if (data.id) {
-    url = Interface.edit;
-    d.actions[0].params.recordId = data.id;
-    d.actions[0].params.recordInput.fields.ModifiedBy = data.userId;
-  }
-  let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
-    //formRef.value.resetFields();
-    if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
-      message.success("保存成功！");
-      //getDetail();
-      let url = router.resolve({
-        name: "ChangePassWord",
-        query: {
-        },
-      });
-      window.location.href = url.href;
-    }
-    else {
-      if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
-        message.success(res.actions[0].errorMessage);
-      }
-      else {
-        message.success("保存失败！");
-      }
-    }
-  });
 }
 const handleEdit = () => {
   data.activeKey = -1;
@@ -331,8 +273,14 @@ const closeEdit = () => {
   data.activeKey = 0;
   data.title = '个人信息查看';
 }
+const getPopupContainer = (triggerNode) => {
+  return triggerNode.parentNode || document.body;
+}
+const handleChangeAvatar = () => {
+  data.isUpdateAvatar = true;
+}
 watch(() => route.query.id, (newVal, oldVal) => {
-  getDetail();
+  data.avatarUrl = '/api/one/user/avatar/' + route.query.id;
 })
 onMounted(() => {
   let userInfo = window.localStorage.getItem('userInfo');
@@ -344,7 +292,7 @@ onMounted(() => {
       data.userId = '2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
     }
   }
-  getDetail();
+  data.avatarUrl = '/api/one/user/avatar/' + data.userId;
   let h = document.documentElement.clientHeight;
   data.height = h - 300;
   window.addEventListener("resize", () => {
@@ -352,12 +300,6 @@ onMounted(() => {
     data.height = h - 300;
   })
 })
-const getPopupContainer = (triggerNode) => {
-  return triggerNode.parentNode || document.body;
-}
-const handleChangeAvatar = () => {
-  data.isUpdateAvatar = true;
-}
 </script>
 <style lang="less" scoped>
 .PersonalInfoWrap {

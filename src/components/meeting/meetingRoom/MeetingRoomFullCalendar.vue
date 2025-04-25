@@ -278,7 +278,6 @@ const data = reactive({
   loading: false,
   height: "",
   weekList: [],
-  meetingList: {},
   times: [
     "06:00",
     "07:00",
@@ -555,7 +554,6 @@ const weeks = toRaw(["周日", "周一", "周二", "周三", "周四", "周五",
 const {
   height,
   weekList,
-  meetingList,
   times,
   currentDate,
   paramsTime,
@@ -845,7 +843,6 @@ const getQuery = () => {
   let obj = {
     message: JSON.stringify(d),
   };
-  data.meetingList = [];
   data.resources = [];
   if (
     document.getElementsByClassName("fc-scrollgrid-sync-inner") &&
@@ -921,8 +918,6 @@ const getQuery = () => {
           fullCalendarRef.value.getApi().view.calendar.addEvent(event);
         });
       });
-      data.meetingList = obj;
-      //console.log(data.calendarOptions.resources,data.calendarOptions.events)
     }
     setTimeout(function () {
       fullCalendarRef.value.getApi().gotoDate(new Date(data.currentDate));

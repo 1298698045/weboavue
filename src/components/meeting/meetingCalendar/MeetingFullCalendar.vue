@@ -276,7 +276,6 @@ const data = reactive({
   loading: false,
   height: "",
   weekList: [],
-  meetingList: {},
   times: [
     "06:00",
     "07:00",
@@ -447,7 +446,6 @@ const weeks = toRaw(["周日", "周一", "周二", "周三", "周四", "周五",
 const {
   height,
   weekList,
-  meetingList,
   times,
   currentDate,
   paramsTime,
@@ -726,7 +724,6 @@ const getQuery = () => {
   let obj = {
     message: JSON.stringify(d),
   };
-  data.meetingList = [];
   proxy.$post(Interface.meeting.getall, obj).then((res) => {
     fullCalendarRef.value
       .getApi()
@@ -794,7 +791,6 @@ const getQuery = () => {
         };
         data.calendarOptions.events.push(event);
       });
-      data.meetingList = obj;
     }
   });
   setTimeout(function () {
