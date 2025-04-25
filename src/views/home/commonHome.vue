@@ -52,10 +52,22 @@
 
     data.dashboardId = route.query.id;
 
+    const handleStorageEvent = (event) => {
+        if (event.key === 'REFRESH_LIST') {
+            portalRef.value.getQuery();
+        }
+    }
+
     watch(()=>route.query.id, (newVal, oldVal)=>{
         store.commit("initializeFromRoute", route.query.id);
         portalRef.value.getQuery();
     }, {deep: true});
+
+    onMounted(()=>{
+        window.addEventListener("storage", handleStorageEvent);
+    })
+
+
 
 </script>
 

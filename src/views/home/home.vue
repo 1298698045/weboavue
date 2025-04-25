@@ -1,7 +1,7 @@
 <template>
     <div class="dashboardHome">
         <main class="weapp-de-workspace">
-            <ProtalGridLayout :themeType="themeType" :dashboardId="route.query.id" />
+            <ProtalGridLayout ref="portalRef" :themeType="themeType" :dashboardId="route.query.id" />
         </main>
     </div>
 </template>
@@ -36,7 +36,7 @@
     store.commit("initializeFromRoute", route.query.id);
 
     const router = useRouter();
-
+    const portalRef = ref(null);
     const data = reactive({
         layoutData: [],
         isFullScreen: false,
@@ -47,6 +47,14 @@
     const { layoutData, isFullScreen, themeType, dashboardId } = toRefs(data);
 
     data.dashboardId = route.query.id;
+    const handleStorageEvent = (event) => {
+        if (event.key === 'REFRESH_LIST') {
+            portalRef.value.getQuery();
+        }
+    }
+    onMounted(()=>{
+        window.addEventListener("storage", handleStorageEvent);
+    })
 
 </script>
 

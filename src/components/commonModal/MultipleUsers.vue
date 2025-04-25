@@ -435,16 +435,17 @@
     const getTreeDept = () => {
         proxy.$get(Interface.deptTree, {}).then(res => {
             let listData = res.actions[0].returnValue;
-            data.deptList = listData;
-            let rows = listData.map(item=>{
-                item.key = item.id;
-                item.children = [];
-                return item;
-            });
-            data.deptTreeList = formTreeData(rows, 'id', 'parentId');
+            // data.deptList = listData;
+            // let rows = listData.map(item=>{
+            //     item.key = item.id;
+            //     item.children = [];
+            //     return item;
+            // });
+            // data.deptTreeList = formTreeData(rows, 'id', 'parentId');
+            data.deptTreeList = listData;
             let deptId = data.deptTreeList[0].id;
             data.deptIdCurrent = deptId;
-            getDeptUser(deptId)
+            getDeptUser(deptId);
         });
     };
 
@@ -771,6 +772,7 @@
         display: flex;
         overflow: hidden;
         .tree-container{
+            min-width: 30%;
             height: 100%;
             overflow: auto;
         }

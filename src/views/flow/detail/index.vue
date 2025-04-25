@@ -84,7 +84,7 @@
                             <FlowFormNew :print="print" ref="flowFormRef" v-if="processId!=''&&toActivityID!=''"
                                 :processId="processId" :processInstanceId="processInstanceId"
                                 :toActivityID="toActivityID" @btnPermission="getBtnPermission"
-                                @attachPermission="getAttachPermission" :stateCode="stateCode" :ruleLogId="ruleLogId" />
+                                @attachPermission="getAttachPermission" :stateCode="stateCode" :ruleLogId="ruleLogId" @openSubmit="openSubmit" />
                         </div>
                         <!-- <div class="reqWrap">
                             <div class="reqHead">
@@ -416,14 +416,14 @@
         </div>
         <SubmitProcess ref="processRef" v-if="isProcess" :ruleLogId="ruleLogId" :processId="processId"
             :processInstanceId="processInstanceId" :toActivityID="toActivityID" :isShow="isProcess"
-            @update-status="updateStatus" @success="uploadProcess" :paramsData="ProcessData" />
+            @update-status="updateStatus" @success="updateProcess" :paramsData="ProcessData" />
         <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" :ruleLogId="ruleLogId"
             :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID"
-            :fromActivityId="fromActivityId" @update-status="updateStatus"  @success="uploadProcess" />
+            :fromActivityId="fromActivityId" @update-status="updateStatus"  @success="updateProcess" />
         <circulation-modal ref="circulationRef" :processInstanceId="processInstanceId"
             :processInstanceName="processInstanceName" @update-status="updateStatus" v-if="isCirculation"
             :isShow="isCirculation"></circulation-modal>
-        <Delegate ref="DelegateRef" :ruleLogId="ruleLogId" @update-status="updateStatus"
+        <Delegate ref="DelegateRef" :ruleLogId="ruleLogId" @update-status="updateProcess"
             :paramsData="DelegateData.params" :isShow="isModal" v-if="isModal" />
         <Urging ref="UrgingRef" :processInstanceId="processInstanceId" @update-status="updateStatus" v-if="isUrging"
             :paramsData="UrgingData.params" :isShow="isUrging" />
@@ -440,11 +440,11 @@
             @ok="deleteFlow"></Delete>
         <Return v-if="isReturn" :isShow="isReturn" :ruleLogId="ruleLogId" :processId="processId"
             :processInstanceId="processInstanceId" :processInstanceName="processInstanceName"
-            :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus" @ok="initLoad">
+            :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus" @ok="updateProcess">
         </Return>
         <Jump v-if="isJump" :isShow="isJump" :ruleLogId="ruleLogId" :processId="processId"
             :processInstanceId="processInstanceId" :processInstanceName="processInstanceName"
-            :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus" @ok="initLoad">
+            :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus" @ok="updateProcess">
         </Jump>
         <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
         <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
@@ -495,6 +495,8 @@
     import { message } from "ant-design-vue";
     const route = useRoute();
     const router = useRouter();
+    import { useStore } from "vuex";
+    let store = useStore();
 
     const flowFormRef = ref(null);
     const token = localStorage.getItem("token");
@@ -513,7 +515,7 @@
                 label: "附件信息"
             },
             {
-                label: "基本信息"
+                label: "实例信息"
             },
             {
                 label: "流转信息"
@@ -653,8 +655,13 @@
 
     const handleSubmitProcess = () => {
         flowFormRef.value.handleSave('submit');
+        // data.isProcess = true;
+    };
+
+    const openSubmit = (e) => {
         data.isProcess = true;
-    }
+    };
+
     const handleRejection = () => {
         data.isRejection = true;
     }
@@ -667,11 +674,15 @@
         data.isReturn = false;
         data.isJump = false;
     };
-    const uploadProcess = () => {
+    const updateProcess = () => {
         data.isProcess = false;
         data.isRejection = false;
+        data.isJump = false;
+        data.isModal = false;
         getRuleLogData();
         flowFormRef.value.loadQuery();
+        // store.commit("setNeedsRefresh", true);
+        localStorage.setItem('REFRESH_LIST', Date.now());
     }
     const CirculationData = reactive({
         params: {}
@@ -741,6 +752,7 @@
             if (res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                 message.success("撤销成功！");
                 data.isConfirm = false;
+                updateProcess();
             } else {
                 message.error("撤销失败！");
             }
@@ -766,6 +778,7 @@
             if (res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
                 message.success("删除成功！");
                 data.isDelete = false;
+                window.close();
             } else {
                 message.error("删除失败！");
             }

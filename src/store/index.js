@@ -20,6 +20,8 @@ export default createStore({
     dynamicRoutes: JSON.parse(localStorage.getItem("dynamic_routes")) || [],
     searchList: {}, // 高级搜索
     searchOptions: {}, // 高级搜索
+
+    needsRefresh: false, // 流程状态刷新列表
   },
   mutations: {
     setCollapsed(state, val) {
@@ -56,6 +58,9 @@ export default createStore({
     },
     setSearchOptions(state, val){
       state.searchOptions = val;
+    },
+    setNeedsRefresh(state, val){
+      state.needsRefresh = val;
     }
   },
   actions: {

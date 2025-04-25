@@ -23,16 +23,16 @@
                                 </td>
                                 <td v-else-if="col && col.field && col.field.displayCategory=='RelatedList'" :colspan="col.colspan" :style="setStyle(key,colKey)" style="background: #fff;padding: 10px;">
                                     <div class="childTableOption" v-if="print!=1 && stateCode!=2">
-                                        <a-button class="ant-btn-icon ml10" @click="handleAddSubTable(col)">
+                                        <a-button class="ant-btn-icon ml10" v-if="col.field.isNew" @click="handleAddSubTable(col)">
                                             <PlusOutlined />
                                         </a-button>
-                                        <a-button :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleDelSubTable(col)">
+                                        <a-button v-if="col.field.isDelete" :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleDelSubTable(col)">
                                             <MinusOutlined />
                                         </a-button>
-                                        <a-button :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleCopySubTable(col)">
+                                        <a-button v-if="col.field.isNew" :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleCopySubTable(col)">
                                             <CopyOutlined />
                                         </a-button>
-                                        <a-button class="ml10" @click="handleImportSubTable(col)">导入</a-button>
+                                        <a-button class="ml10" v-if="col.field.isNew" @click="handleImportSubTable(col)">导入</a-button>
                                         <!-- <a-button @click="handleAddSubTable(col)">添加</a-button>
                                         <a-button class="ml10">批量添加</a-button> -->
                                     </div>
@@ -133,7 +133,7 @@
     import { useRoute, useRouter } from "vue-router";
     const router = useRouter();
     const route = useRoute();
-    const emit = defineEmits(["btnPermission", "attachPermission"]);
+    const emit = defineEmits(["btnPermission", "attachPermission","openSubmit"]);
     const props = defineProps({
         ruleLogId: String,
         processId: String,
@@ -805,14 +805,18 @@
                     col.field.permission = permission;
                 } else if(col.field && col.field.displayCategory == 'RelatedList'){
                     let relatedName = col.field.id.split('__')[1];
-                    let { fieldPermissions } = data.relatedListEntityPermissions.find(v=>v.name==relatedName);
+                    let { fieldPermissions, isDelete, isNew, isRequired } = data.relatedListEntityPermissions.find(v=>v.name==relatedName);
+                    // 处理子表按钮权限
+                    col.field.isDelete = isDelete;
+                    col.field.isNew = isNew;
+                    col.field.isRequired = isRequired;
                     col.field.checkedColumns.forEach(column=>{
                         column.permission = searchCorrelationFieldPerm(fieldPermissions, column.key);
                     })
                 }
             }
         });
-        // console.log("data.cellData", data.cellData);
+        console.log("data.cellData", data.cellData);
     };
 
     const searchCorrelationFieldPerm = (fieldPermissions, field) => {
@@ -1583,6 +1587,12 @@
         if(data.deleteRelatedData.length){
             deleteRelted();
         }
+        // if(type == "submit"){
+        //     const isSubRequired = verifySubTableRequired();
+        //     if(!isSubRequired){
+        //         return false;
+        //     }
+        // }
 
         let relatedList = saveRelated();
         // console.log("relatedList", relatedList);
@@ -1618,12 +1628,39 @@
         data.isLoad = false;
         proxy.$post(Interface.workflow.updateRecordBatch , d).then(res=>{
             if(type == "submit"){
-
+                const isSubRequired = verifySubTableRequired();
+                if(isSubRequired){
+                    emit("openSubmit", true);
+                }
             }else {
                 message.success("保存成功！");
             }
             loadQuery();
         })
+    };
+
+    // 校验子表必填项列表数据
+    const verifySubTableRequired = () => {
+        let errorText = "";
+        let isBook = true;
+        data.cellData.forEach(item=>{
+            for(let key in item){
+                if(item[key]?.field?.displayCategory == 'RelatedList'){
+                    let { field, subTableData } = item[key];
+                    let relatedName = field.id.split("__")[1];
+                    if(field.isRequired){
+                        if(subTableData.length == 0){
+                            isBook = false;
+                            errorText += field.label + "列表数据不能为空！";
+                        }
+                    }
+                }
+            }
+        });
+        if(errorText){
+            message.error(errorText);
+        };
+        return isBook;
     };
 
     const saveRelated = () => {

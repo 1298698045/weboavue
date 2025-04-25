@@ -13,13 +13,26 @@
                         <a-tab-pane :key="index" :tab="item.name" v-for="(item,index) in tabs"></a-tab-pane>
                     </a-tabs>
                     <div class="search">
-                        <a-input placeholder="请输入关键字搜索"></a-input>
+                        <a-input v-model:value="searchVal" placeholder="请输入关键字搜索" @change="handleSearch"></a-input>
                     </div>
                 </div>
-                <div class="modalCenter" :style="{ height: height + 'px!important' }">
+                <div class="modalCenter">
+                    <div class="tabContainer" v-if="currentTab==0">
+                        <ul class="userBox">
+                            <li class="userItem" v-for="(item,index) in userList" :key="index" @click="handleSelectRow(item.id,item.FullName, item.BusinessUnitIdName)">
+                                <div class="avatar"></div>
+                                <div class="info">
+                                    <div>
+                                        <span class="name">{{item.FullName}}</span>/{{item.UserName}}/{{ item.EmployeeNo }}
+                                    </div>
+                                    <p class="dept">{{item.BusinessUnitIdName}}</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="tabContainer" v-if="currentTab==1">
                         <ul class="userBox">
-                            <li class="userItem" v-for="(item,index) in sameDeptUserList" :key="index" @click="handleSelectRow(item.SystemUserId,item.FullName, item.BusinessUnitIdName)">
+                            <li class="userItem" v-for="(item,index) in sameDeptUserList" :key="index" @click="handleSelectRow(item.id,item.FullName, item.BusinessUnitIdName)">
                                 <div class="avatar"></div>
                                 <div class="info">
                                     <div>
@@ -30,8 +43,21 @@
                             </li>
                         </ul>
                         <div class="pageWrap">
-                            <a-pagination v-model:current="currentPage" :total="50" :show-total="total => `共 ${total} 条`" />
+                            <a-pagination v-model:current="pageNumber" :pageSize="pageSize" :total="total" :show-total="total => `共 ${total} 条`" @change="getSameDeptUser" />
                         </div>
+                    </div>
+                    <div class="tabContainer" v-if="currentTab==2">
+                        <ul class="userBox">
+                            <li class="userItem" v-for="(item,index) in subordinates" :key="index" @click="handleSelectRow(item.id,item.FullName, item.BusinessUnitIdName)">
+                                <div class="avatar"></div>
+                                <div class="info">
+                                    <div>
+                                        <span class="name">{{item.FullName}}</span>/{{item.UserName}}/{{ item.EmployeeNo }}
+                                    </div>
+                                    <p class="dept">{{item.BusinessUnitIdName}}</p>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                     <div class="tabContainer" v-if="currentTab==3">
                         <div class="deptTreeBox">
@@ -72,13 +98,13 @@
                             </div>
                             <div class="rightUserList">
                                 <ul class="userBox rightUserList">
-                                    <li class="userItem" v-for="(item,index) in groupUserList" :key="index" @click="handleSelectRow(item.id,item.RegardingObjectIdName.textValue, item.BusinessUnitId.lookupValue.displayName)">
+                                    <li class="userItem" v-for="(item,index) in groupUserList" :key="index" @click="handleSelectRow(item.id,item.FullName.textValue, item.BusinessUnitIdName.textValue)">
                                         <div class="avatar"></div>
                                         <div class="info">
                                             <div>
-                                                <span class="name">{{item.RegardingObjectIdName.textValue}}</span>
+                                                <span class="name">{{item.FullName.textValue}}</span>/{{item.UserName.textValue}}/{{ item.EmployeeId.textValue }}
                                             </div>
-                                            <p class="dept">{{item.BusinessUnitId.lookupValue.displayName}}</p>
+                                            <p class="dept">{{item.BusinessUnitIdName.textValue}}</p>
                                         </div>
                                     </li>
                                 </ul>
@@ -116,6 +142,23 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="tabContainer" v-if="currentTab==-1">
+                        <ul class="userBox">
+                            <li class="userItem" v-for="(item,index) in searchUserList" :key="index" @click="handleSelectRow(item.id,item.FullName.textValue, item.BusinessUnitIdName.textValue)">
+                                <div class="avatar"></div>
+                                <div class="info">
+                                    <div>
+                                        <span class="name">{{item.FullName.textValue}}</span>/{{item.UserName.textValue}}/{{ item.EmployeeId.textValue }}
+                                    </div>
+                                    <p class="dept">{{item.BusinessUnitIdName.textValue}}</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="pageWrap">
+                            <a-pagination v-model:current="pageNumber" :pageSize="pageSize" :total="pageTotal" @change="serachAllUser" :show-total="total => `共 ${total} 条`" />
+                        </div>
+                    </div>
                 </div>
             </div>
             <template #footer>
@@ -147,7 +190,7 @@
     }
 
     const data = reactive({
-        currentTab: 1,
+        currentTab: 0,
         deptTreeList: [],
         deptList: [],
         selectData: {},
@@ -164,7 +207,11 @@
         pageSize: 20,
         pageTotal: 0,
         roleIdCurrent: "",
-        height: document.documentElement.clientHeight - 400,
+        searchVal: "",
+        searchUserList: [],
+        total: 0,
+        subordinates: [],
+        userList: []
     })
     const tabs = toRaw([
         {
@@ -194,15 +241,59 @@
     ])
     const { currentTab, deptTreeList, deptList, selectData, sameDeptUserList, 
         roleList, deptUserList, groupList, groupUserList, deptIdCurrent, groupIdCurrent, currentPage,
-         roleUserList, pageNumber, pageSize, pageTotal, roleIdCurrent,height } = toRefs(data);
+         roleUserList, pageNumber, pageSize, pageTotal, roleIdCurrent, searchVal, searchUserList, total, subordinates, userList } = toRefs(data);
 
+    // 获取同部门
     const getSameDeptUser = () => {
-        proxy.$get(Interface.user.mybusinessUser,{}).then(res=>{
-            // console.log("res",res);
-            data.sameDeptUserList = res.listData;
+        let d = {
+            filterId: "",
+            entityType: "SystemUser",
+            displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
+            filterQuery: "\nBusinessUnitId\teq-businessunitid",
+            page: data.currentPage,
+            rows: data.pageSize
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            let nodes = res.nodes;
+            data.total = res.totalCount;
+            data.sameDeptUserList = nodes.map(item=>{
+                item.FullName = item.FullName.textValue;
+                item.UserName = item.UserName.textValue;
+                item.BusinessUnitIdName = item.BusinessUnitIdName.textValue || '';
+                item.OrganizationIdName = item.OrganizationId.lookupValue.displayName || '';
+                item.EmployeeNo = item.EmployeeId.textValue || '';
+                return item;
+            });
         })
     }
-    getSameDeptUser();
+    // getSameDeptUser();
+
+
+    // 获取我的下属
+    const getSubordinates = () => {
+        proxy.$get(Interface.user.getSubordinates, {}).then(res=>{
+            let list = res.actions[0].returnValue;
+            data.subordinates = list.map(item=>{
+                item.id = item.UserId;
+                item.BusinessUnitIdName = item.businessUnitIdName;
+                return item;
+            });
+        })
+    }
+
+    // 最近使用
+    const getLatestUsers = () => {
+        proxy.$get(Interface.user.getLatestUsers, {}).then(res=>{
+            let list = res.actions[0].returnValue;
+            data.userList = list.map(item=>{
+                item.id = item.UserId;
+                item.BusinessUnitIdName = item.businessUnitIdName;
+                return item;
+            });
+        })
+    };
+    getLatestUsers();
+
 
     // 角色
     const getRoleList = () => {
@@ -222,6 +313,15 @@
         console.log("e",e);
         data.pageNumber = 1;
         switch(e){
+            case 0:
+                getLatestUsers();
+                break;
+            case 1:
+                getSameDeptUser();
+                break;
+            case 2:
+                getSubordinates();
+                break;
             case 3:
                 getTreeDept();
                 break;
@@ -240,7 +340,6 @@
             data.deptList = listData;
             let rows = listData.map(item=>{
                 item.key = item.id;
-                item.children = [];
                 return item;
             });
             data.deptTreeList = formTreeData(rows, 'id', 'parentId');
@@ -284,7 +383,7 @@
             filterId: "",
             entityType: "SystemUser",
             displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
-            filterQuery: "\nBusinessUnitId\teq\t" + data.deptIdCurrent,
+            // filterQuery: "\nBusinessUnitId\teq\t" + data.deptIdCurrent,
             page: data.pageNumber,
             rows: data.pageSize
         };
@@ -300,7 +399,7 @@
         let d = {
             filterId: "",
             entityType: "Group",
-            filterQuery: "\nIsPublic\teq\ttrue"
+            filterQuery: ""
         };
         proxy.$get(Interface.list2, d).then(res=>{
             let nodes = res.nodes;
@@ -322,9 +421,9 @@
     const getGroupUser = () => {
         let d = {
             filterId: "",
-            entityType: "GroupMembership",
-            displayColumns: "id,RegardingObjectIdName,BusinessUnitId",
-            filterQuery: "\nGroupId\teq\t" + data.groupIdCurrent,
+            entityType: "SystemUser",
+            displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
+            // filterQuery: "\nGroupId\teq\t" + data.groupIdCurrent,
             page: data.pageNumber,
             rows: data.pageSize,
         };
@@ -344,7 +443,7 @@
             filterId: "",
             entityType: "SystemUser",
             displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
-            filterQuery: "\nDefaultRoleId\teq\t" + data.roleIdCurrent,
+            // filterQuery: "\nRoleId\teq\t" + data.roleIdCurrent,
             page: data.pageNumber,
             rows: data.pageSize
         };
@@ -389,12 +488,31 @@
                 getRoleUser();
                 break;
         }
+    };
+
+    const serachAllUser = (e) => {
+        let d = {
+            filterId: "",
+            entityType: "SystemUser",
+            displayColumns: "id,Name,FullName,UserName,EmployeeId,BusinessUnitIdName,OrganizationId",
+            search: data.searchVal,
+            page: data.pageNumber,
+            rows: data.pageSize
+        };
+        proxy.$get(Interface.list2, d).then(res=>{
+            data.pageTotal = res.totalCount;
+            let nodes = res.nodes;
+            data.searchUserList = nodes;
+        })
     }
-    onMounted(() => {
-        window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 400;
-        });
-    }); 
+
+    const handleSearch = (e) => {
+        data.currentTab = -1;
+        data.pageNumber = 1;
+        serachAllUser();
+    };
+    
+
 </script>
 <style lang="less" scoped>
     @import url('@/style/modal.less');
@@ -474,9 +592,6 @@
             bottom: 0;
             padding: 10px 0;
             text-align: center;
-        }
-        :deep .ant-tree-title{
-            white-space: nowrap;
         }
     }
 </style>

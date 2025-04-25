@@ -270,6 +270,9 @@ console.log("tabList", tabList);
 const route = useRoute();
 const router = useRouter();
 
+import { useStore } from "vuex";
+let store = useStore();
+
 const x = 3;
 const y = 2;
 const z = 1;
@@ -957,12 +960,20 @@ const handleClickMenu = (e) => {
   data.isMenu = true;
 };
 const handleMenuClick = () => {};
+
+const handleStorageEvent = (event) => {
+  if (event.key === 'REFRESH_LIST') {
+    getTabs(); // 触发组件内数据刷新
+  }
+}
+
 onMounted(() => {
   window.addEventListener("resize", changeHeight);
-  
+  window.addEventListener("storage", handleStorageEvent);
   getTreeData();
   getTabs();
 });
+
 </script>
 <style lang="less">
 @import "@/style/flow/treeList.less";
