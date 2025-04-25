@@ -1,13 +1,13 @@
 <template>
     <div class="filed" :name="field.id" :label="field.label">
         <span class="required"
-            v-if="print!=1 && field?.required && field?.permission != 2 && field?.permission != 4 && stateCode != 2">*</span>
+            v-if="print!=1 && field?.required && field?.permission != 2 && field?.permission != 4 && stateCode != 2 && field?.permission != ''">*</span>
         <div v-if="type=='S'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -20,7 +20,7 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -33,7 +33,7 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -46,7 +46,7 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -59,7 +59,7 @@
                 {{ list[field.id] }}
             </span>
             <div v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -76,7 +76,7 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -92,7 +92,7 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -105,7 +105,7 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -119,7 +119,7 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -132,7 +132,7 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -145,7 +145,7 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -164,14 +164,14 @@
                                 <img :src="Interface.pathUrl+sug.sinatureUrl" alt="">
                             </div>
                             <div class="sign-info">
-                                [ {{sug.UserName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
                             </div>
                         </span>
                     </div>
                 </div>
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     <!-- {{ list[field.id] }} -->
                     <div class="suggestion">
                         <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
@@ -181,7 +181,7 @@
                                     <img :src="Interface.pathUrl+sug.sinatureUrl" alt="">
                                 </div>
                                 <div class="sign-info">
-                                    [ {{sug.UserName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                    [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
                                 </div>
                             </span>
                         </div>
@@ -225,7 +225,7 @@
                         <div>
                             <div v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
                                 <div class="sign-info" v-if="sug.RecId == ruleLogId">
-                                    [ {{sug.UserName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                    [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
                                 </div>
                             </div>
                         </div>
@@ -237,7 +237,7 @@
                                         <img :src="Interface.pathUrl + sug.sinatureUrl" alt="">
                                     </div>
                                     <div class="sign-info">
-                                        [ {{sug.UserName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                        [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
                                     </div>
                                 </div>
                             </div>
@@ -251,7 +251,7 @@
                 {{ list[field.id] ? '是' : '否' }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] ? '是' : '否' }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -282,7 +282,7 @@
                 {{ computedName }}
             </span>
             <div v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ computedName }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
@@ -333,7 +333,7 @@
                 {{ list[field.id] }}
             </span>
             <span v-else>
-                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>

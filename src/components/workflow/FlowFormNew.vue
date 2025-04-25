@@ -794,7 +794,7 @@
         handleFormPerm();
     }
 
-    // permission 2:不可见 4:只读 8/0:读写 16: 显示默认值且不可修改 32: 显示默认值且可修改
+    // permission 2/0:不可见 4:只读 8:读写 16: 显示默认值且不可修改 32: 显示默认值且可修改
     const handleFormPerm = () => {
         data.cellData.forEach(item=>{
             for(let key in item){
@@ -1547,7 +1547,7 @@
         for(let i = 0; i < data.comps.length; i++){
             const item = data.comps[i];
             console.log("item", item);
-            if(item.required == true && item.id in paramsList && (paramsList[item.id] == '' || paramsList[item.id] == null || paramsList[item.id] == undefined)){
+            if(item.required == true && item.permission != 2 && item.permission != "" && item.permission != 0 && item.permission != 4 && item.id in paramsList && (paramsList[item.id] == '' || paramsList[item.id] == null || paramsList[item.id] == undefined)){
                 // message.error(`${item.label}不能为空!`)
                 requireds.push(item.label);
                 isRequired = true;
@@ -1563,6 +1563,9 @@
                 }
             }
             if(['O', 'Y', 'U', 'Y_MD'].includes(item.type) && paramsList[item.id] == ''){
+                delete paramsList[item.id];
+            }
+            if(item.permission == 2 || item.permission == "" || item.permission == 0 || item.permission == 4){
                 delete paramsList[item.id];
             }
             // 意见

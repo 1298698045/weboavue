@@ -149,7 +149,7 @@
                                 <img :src="Interface.pathUrl+sug.sinatureUrl" alt="">
                             </div>
                             <div class="sign-info">
-                                [ {{sug.UserName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
                             </div>
                         </span>
                     </div>
