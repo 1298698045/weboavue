@@ -130,7 +130,7 @@
                                     d="M10 11.481c-2.76 0-5-2.234-5-4.99C5 3.734 7.24 1.5 10 1.5s5 2.234 5 4.99a4.996 4.996 0 0 1-5 4.991Zm-9 7.987c0-3.307 2.5-6.989 7.5-6.989l3 .021c5 0 7.5 3.66 7.5 6.968V21c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2v-1.532ZM18 9a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2h-4Zm3 4a1 1 0 1 0 0 2h1a1 1 0 1 0 0-2h-1Z"
                                     fill="currentColor"></path>
                             </svg></span><span class="navbarMenu-content">通讯录</span></div>
-                    <div class="navbarMenu" data-tip="tip-mail" @click="handleTo('/email')"><span
+                    <div class="navbarMenu" data-tip="tip-mail" @click="handleTo('/email/0')"><span
                             class="universe-icon navbarMenu-icon navbarMenu-icon-active"><svg width="1em" height="1em"
                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1 5a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5Z"

@@ -76,12 +76,12 @@ const staticRoutes = [
     component: () => import("../views/detail/detail.vue"),
   },
   {
-    path: "/email",
+    path: "/email/0",
     name: "Email",
     component: () => import("../views/email/home/index.vue"),
   },
   {
-    path: "/email/write",
+    path: "/email/0/write",
     name: "WriteEmail",
     component: () => import("../views/email/writeEmail/index.vue"),
   },

@@ -126,6 +126,7 @@ const Interface = {
     changePwd: baseUrl + "/one/user/changepwd", //修改登录密码
     getUserInfo: baseUrl + "/one/user/getUserInfo", // 获取个人信息详细
     messageList: baseUrl + "/message/mine/list", // 消息通知
+    statistic: baseUrl + "/userwork/statistic", // 用户个人中心统计
   },
   saveRecord: "/localData/entity.saverecord.json",
   // 通讯录

@@ -383,7 +383,7 @@ const cancelDelete = (e) => {
 //发送邮件
 const openSendEmail= (item) => {
         let url = router.resolve({
-            path:'/email',
+            path:'/email/0',
             name: "Email",
             query: {
                 Id:item.id,

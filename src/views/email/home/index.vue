@@ -969,7 +969,6 @@ const getModuleAppList = () => {
             }
         }
         if(data.ltags=='draft'){
-            //window.location.href = '/email/writeEmail.html?emailId='+item.id+'&isDraft=1'
             data.ltagsRecord=data.ltags;
             //data.ltagsData={name:'',id:'',body:item.content||''};
             data.recordId=item.id;
@@ -994,7 +993,7 @@ const getModuleAppList = () => {
     }
     const openWriteEmail= () => {
         // let url = router.resolve({
-        //     path:'/email/write',
+        //     path:'/email/0/write',
         //     name: "WriteEmail",
         //     query: {
                 
@@ -1359,7 +1358,7 @@ onMounted(() => {
             data.currentUserName=userInfo.fullName;
             getUserInfo(userInfo.userId);
         }
-        if(route.query.Id){
+        if(route.query.type){
             openWriteEmail();
         }
         window.addEventListener("click", function (e) {

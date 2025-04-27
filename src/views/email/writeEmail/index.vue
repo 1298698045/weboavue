@@ -862,7 +862,7 @@
     const cancelWriteEmail= () => {
         emit("cancel", props.ltags);
         // let url = router.resolve({
-        //     path:'/email',
+        //     path:'/email/0',
         //     name: "Email",
         //     query: {
                 

@@ -735,7 +735,7 @@
     //发送邮件
     const openSendEmail= (item) => {
         // let url = router.resolve({
-        //     path:'/email/write',
+        //     path:'/email/0/write',
         //     name: "WriteEmail",
         //     query: {
         //         Id:item.id,
@@ -744,7 +744,7 @@
         //     },
         // });
         let url = router.resolve({
-            path:'/email',
+            path:'/email/0',
             name: "Email",
             query: {
                 Id:item.id,

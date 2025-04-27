@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper personalCenterWrap">
-    <div class="appcenter-header-wrap">
+    <!-- <div class="appcenter-header-wrap">
       <a-input-search
         v-model:value="searchVal"
         placeholder="搜索"
@@ -8,9 +8,9 @@
         @search="onSearch"
         allowClear
       />
-    </div>
+    </div> -->
     <div class="workplace_content-wrap">
-      <div class="workplace_content-section common">
+      <!-- <div class="workplace_content-section common">
         <div class="list-layout-wrap appcenter-list-layout-item-4">
           <template
             v-if="
@@ -22,10 +22,7 @@
             <div
               class="appcenter-card-wrap"
               @click.stop="handleDetail(item)"
-              v-for="(item, index) in objData.favouriteApplicationLinks.slice(
-                0,
-                4
-              )"
+              v-for="(item, index) in objData.favouriteApplicationLinks"
               :key="index"
             >
               <div class="appcenter-avatar-wrap">
@@ -84,7 +81,7 @@
             <div class="appcenter-add-right"><span>添加常用</span></div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="workplace_content-section">
         <div class="workplace-app-title">全部应用</div>
       </div>
@@ -383,7 +380,7 @@ onMounted(() => {
 const handleDetail = (item) => {
   if (item.Label == "邮件") {
     let url = router.resolve({
-      path: "/email",
+      path: "/email/0",
       name: "Email",
       query: {},
     });
@@ -416,13 +413,18 @@ const getPopupContainer = (triggerNode) => {
 <style lang="less">
 .personalCenterWrap {
   height: 100%;
-
+.appcenter-recommend-name-withouttag{
+  color: #242424;
+  font-weight: bolder;
+}
   .appcenter-card-wrap:nth-child(5n),
   .common_card-wrap:nth-child(5n),
   .common_card-wrap {
     margin-right: 0px;
   }
-
+  .workplace_content-section{
+    justify-content: flex-start;
+  }
   .workplace_content-section.common {
     margin-top: 20px;
     margin-bottom: 10px;
@@ -431,6 +433,7 @@ const getPopupContainer = (triggerNode) => {
   .workplace-app-title {
     max-width: 100%;
     margin-top: 0;
+    justify-content: flex-start;
   }
 
   .category-list-wrap {
@@ -438,7 +441,10 @@ const getPopupContainer = (triggerNode) => {
   }
 
   .list-layout-wrap {
-    max-width: 100%;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    max-width: 100% !important;
   }
 
   .appcenter-header-wrap {
@@ -450,10 +456,11 @@ const getPopupContainer = (triggerNode) => {
 
   .app-list-section {
     padding: 0 38px;
+    justify-content: flex-start;
+    
   }
 
   .appcenter-card-wrap {
-    width: 19%;
     height: 116px;
     margin-right: 19px;
     position: relative;
@@ -461,7 +468,9 @@ const getPopupContainer = (triggerNode) => {
     display: block;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.14);
     background-color: #fff;
-
+    width: calc((100% - 76px) / 5); // 这里的10px = (分布个数5-1)*间隙5px, 可以根据实际的分布个数和间隙区调整
+    min-width: calc((100% - 76px) / 5); // 加入这两个后每个item的宽度就生效了
+    max-width: calc((100% - 76px) / 5); // 加入这两个后每个item的宽度就生效了
     .appcenter-listapp-wrap {
       margin-left: 58px;
       line-height: 42px;
@@ -533,6 +542,24 @@ const getPopupContainer = (triggerNode) => {
     .appcenter-card-more {
       display: block;
     }
+  }
+  .category-list-section{
+    position: relative;
+  }
+  .workplace-app-title{
+    margin-bottom: 0;
+  }
+  .app-list-section .app-list-layout{
+    margin-top: 6px;
+  }
+  .appcenter-header-wrap{
+    padding-top: 0;
+  }
+  .workplace_content-wrap{
+    height: calc(~'100% - 0px');
+  }
+  .workplace_content-section{
+    margin-top: 10px;
   }
 }
 </style>

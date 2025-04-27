@@ -57,7 +57,7 @@
           </div>
         </div>
         <div class="tabContainer containerForm" v-if="data.activeKey == 0">
-          <PersonalInfoView :id="userId" :avatarUrl="avatarUrl" />
+          <PersonalInfoView ref="PersonalInfoViewRef" :id="userId" :avatarUrl="avatarUrl" />
         </div>
         <div class="tabContainer containerForm" v-if="data.activeKey == 1">
           <!-- <PersonalSalaryView :id="userId" :avatarUrl="avatarUrl" /> -->
@@ -235,27 +235,31 @@ const changeTabs = (e) => {
   data.activeKey = e;
 };
 const getDetail = () => {
-  let d = {
-    actions: [{
-      id: "4270;a",
-      descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordId: data.userId,
-        apiName: 'SystemUser',
-        objTypeCode: 8
-      }
-    }]
-  };
-  let obj = {
-    message: JSON.stringify(d)
+  // let d = {
+  //   actions: [{
+  //     id: "4270;a",
+  //     descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+  //     callingDescriptor: "UNKNOWN",
+  //     params: {
+  //       recordId: data.userId,
+  //       apiName: 'SystemUser',
+  //       objTypeCode: 8
+  //     }
+  //   }]
+  // };
+  // let obj = {
+  //   message: JSON.stringify(d)
+  // }
+  // proxy.$post(Interface.detail, obj).then(res => {
+  //   if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
+  //     let fields = res.actions[0].returnValue.fields;
+  //     data.avatarUrl = '/api/one/user/avatar/' + data.userId;
+  //   }
+  // })
+  data.avatarUrl = '/api/one/user/avatar/' + data.userId;
+  if (PersonalInfoViewRef && PersonalInfoViewRef.value && PersonalInfoViewRef.value.getData != 'undefined' && type != 1) {
+    PersonalInfoViewRef.value.getData();
   }
-  proxy.$post(Interface.detail, obj).then(res => {
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
-      let fields = res.actions[0].returnValue.fields;
-      data.avatarUrl = '/api/one/user/avatar/' + data.userId;
-    }
-  })
 };
 // 保存
 const handleSave = (type) => {

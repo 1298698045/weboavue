@@ -434,9 +434,11 @@ const getData = () => {
 };
 const handleOpenEmail = () => {
   let url = router.resolve({
-    path: "/email",
+    path: "/email/0",
     name: "Email",
-    query: {},
+    query: {
+      type: 1,
+    },
   });
   window.open(url.href);
 };
@@ -455,6 +457,21 @@ const handleOpenSchedule = () => {
   });
   window.open(url.href);
 };
+const getStatistic = () => {
+  proxy.$get(Interface.user.statistic, null).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].state == "SUCCESS"
+    ) {
+      getDetail();
+    } else {
+      message.error("统计失败！");
+    }
+  });
+};
+defineExpose({ getData });
 onMounted(() => {
   let item = {
     id: props.id,
@@ -473,7 +490,7 @@ onMounted(() => {
     let h = document.documentElement.clientHeight;
     data.height = h;
   });
-  getDetail();
+  getStatistic();
   getData();
 });
 </script>

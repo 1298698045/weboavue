@@ -444,7 +444,7 @@ const getPickerList = () => {
     message: JSON.stringify(d)
   }
   proxy.$post(Interface.pickListValues, obj).then((res) => {
-    let picklistFieldValues = res.actions[0].returnValue;
+    let picklistFieldValues = res.actions[0].returnValue.picklistFieldValues;
     data.selectFixed = JSON.parse(JSON.stringify(picklistFieldValues));
     data.select = picklistFieldValues;
     // let picklistFieldMap = res.actions[0].returnValue.picklistFieldMap;

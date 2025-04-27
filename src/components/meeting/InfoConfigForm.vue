@@ -891,6 +891,31 @@ else {
 }
 
 const handleSubmit = () => {
+    if(!formState.Subject){
+        message.error('请输入标题')
+        return false
+    }
+    if(!formState.OwningUser.Id){
+        message.error('请选择预约人')
+        return false
+    }
+    if(!formState.RoomId.Id){
+        message.error('请选择会议室')
+        return false
+    }
+    if(formState.StartDateTime&&formState.StartDateTime_time&&formState.EndDateTime&&formState.EndDateTime_time){
+        let ScheduledStart=formState.StartDateTime + ' ' + formState.StartDateTime_time;
+        let ScheduledEnd=formState.EndDateTime + ' ' + formState.EndDateTime_time;
+        ScheduledStart=(new Date(ScheduledStart)).getTime();
+        ScheduledEnd=(new Date(ScheduledEnd)).getTime();
+        if(ScheduledStart>ScheduledEnd){
+            message.error('结束时间必须大于开始时间！')
+            return false
+        }
+    }else{
+        message.error('开始、结束日期和时间必须填写完整！')
+        return false
+    }
     formRef.value.validate().then(() => {
         // console.log("values", formState, toRaw(formState));
         let url = Interface.create;
