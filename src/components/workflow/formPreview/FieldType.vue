@@ -81,7 +81,7 @@
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
                 <a-select v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;"
-                    v-model:value="list[field.id]" :placeholder="'请选择' + field.label">
+                    v-model:value="list[field.id]" :placeholder="'请选择' + field.label" @change="(e)=>{Controllerchange(e, field)}">
                     <a-select-option v-for="(option, optionIdx) in select[field.id] && select[field.id].values"
                         :key="optionIdx" :value="option.value">{{option.label}}</a-select-option>
                 </a-select>
@@ -389,7 +389,7 @@
 
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-    const emit = defineEmits(['openlook', 'setValue', 'lookup', 'select', 'suggestion', 'loadSuggestion', 'delSuggestion']);
+    const emit = defineEmits(['openlook', 'setValue', 'lookup', 'select', 'suggestion', 'loadSuggestion', 'delSuggestion', 'controller']);
 
     // const formState = reactive({
 
@@ -580,6 +580,11 @@
         emit("select", e, field);
     }
 
+    // 字段依赖
+    const Controllerchange = (e, field) => {
+        emit("controller", e, field)
+    };
+
     const searchlookup_old = (search, field) => {
         let targetApiName;
         console.log("props.attributes", props.attributes);
@@ -700,6 +705,9 @@
             top: 12px;
             left: 10px;
             z-index: 99; */
+            display: flex;
+            align-items: center;
+            margin-right: 2px;
         }
 
         /* >div{

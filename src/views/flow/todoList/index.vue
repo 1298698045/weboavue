@@ -865,13 +865,13 @@ const cancelFavor = (id) => {
 const batchPrintForm = () => {
   //data.ProcessInstanceId=id;
   let list = gridRef.value.getCheckList();
-  //console.log("checklist", list);
+  console.log("checklist", list);
   if (list.length) {
+    let processInstanceIds = list.map(item=>item.ProcessInstanceId.lookupValue.value);
     let url = router.resolve({
-      path: "/lightning/workflow/WFFormPrint",
-      name: "WFFormPrint",
+      name: "WFFormBatchPrint",
       query: {
-        id: "",
+        ids: processInstanceIds.join(","),
       },
     });
     window.open(url.href);

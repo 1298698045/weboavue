@@ -133,7 +133,7 @@
         queryParams1: {
             filterId: '0D6089D0-05C5-4472-A802-AC4285DCF305',
             objectTypeCode: '123',
-            entityName: 'WFInstanceFoward',
+            entityName: 'WFInstanceForward',
             filterQuery: '\nProcessInstanceId\teq\t' + props.processInstanceId,
             displayColumns: 'CreatedOn,CreatedBy,ReceiverId,IsRead',
             sort: 'CreatedOn',

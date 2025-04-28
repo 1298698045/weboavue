@@ -321,6 +321,11 @@ const staticRoutes = [
     component: () => import("../views/flow/WFFormPrint/index.vue"),
   },
   {
+    path: "/lightning/workflow/WFFormBatchPrint",
+    name: "WFFormBatchPrint",
+    component: () => import("../views/flow/WFFormPrint/batchPrint.vue"),
+  },
+  {
     path: "/jgfiles/samples/OpenAndSave",
     name: "OpenAndSave",
     component: () => import("../jgfiles/samples/index.vue"),

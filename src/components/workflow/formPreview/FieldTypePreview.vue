@@ -641,4 +641,7 @@
             }
         }
     }
+    .suggestion-item{
+        text-align: left;
+    }
 </style>

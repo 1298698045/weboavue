@@ -6,7 +6,9 @@
                     <template v-for="(row, key) in cellData" :key="key">
                         <tr v-if="isShowRow(row,key)" :style="setRowStyle(key)">
                             <template v-for="(col, colKey, colIndex) in row" :key="colIndex">
-                                <td :col="colKey" :rowspan="col.rowspan || 1" :colspan="col.colspan || 1" v-if="isShowCell(key, colKey, col.rowspan, col) && col && col.field?.displayCategory!='RelatedList'" :style="setStyle(key,colKey)">
+                                <td :col="colKey" :rowspan="col.rowspan || 1" :colspan="col.colspan || 1"
+                                    v-if="isShowCell(key, colKey, col.rowspan, col) && col && col.field?.displayCategory!='RelatedList'"
+                                    :style="setStyle(key,colKey)">
                                     <template v-if="col.v || col.p">
                                         <span :style="setStyleText(key, colKey)">
                                             {{col.v}}
@@ -17,22 +19,37 @@
                                     </template>
                                     <template v-else-if="col.field">
                                         <div>
-                                            <FieldType :ruleLogId="ruleLogId" :type="col.field.type" :print="print" :field="col.field" :entityApiName="entityApiName" :list="list" :select="select" :search="search" :attributes="attributes" @setValue="handleSetValue" @openlook="handleOpenLook" @lookup="searchlookup" @select="selectLookup" @suggestion="changeSuggestion" :suggestions="suggestions" @loadSuggestion="getSuggestionQuery" @delSuggestion="deleteSuggestion" :stateCode="stateCode" :suggestionObj="suggestionObj" />
+                                            <FieldType :ruleLogId="ruleLogId" :type="col.field.type" :print="print"
+                                                :field="col.field" :entityApiName="entityApiName" :list="list"
+                                                :select="select" :search="search" :attributes="attributes"
+                                                @setValue="handleSetValue" @openlook="handleOpenLook"
+                                                @lookup="searchlookup" @select="selectLookup"
+                                                @suggestion="changeSuggestion" :suggestions="suggestions"
+                                                @loadSuggestion="getSuggestionQuery" @delSuggestion="deleteSuggestion"
+                                                :stateCode="stateCode" :suggestionObj="suggestionObj" @controller="selectController" />
                                         </div>
                                     </template>
                                 </td>
-                                <td v-else-if="col && col.field && col.field.displayCategory=='RelatedList'" :colspan="col.colspan" :style="setStyle(key,colKey)" style="background: #fff;padding: 10px;">
+                                <td v-else-if="col && col.field && col.field.displayCategory=='RelatedList'"
+                                    :colspan="col.colspan" :style="setStyle(key,colKey)"
+                                    style="background: #fff;padding: 10px;">
                                     <div class="childTableOption" v-if="print!=1 && stateCode!=2">
-                                        <a-button class="ant-btn-icon ml10" v-if="col.field.isNew" @click="handleAddSubTable(col)">
+                                        <a-button class="ant-btn-icon ml10" v-if="col.field.isNew"
+                                            @click="handleAddSubTable(col)">
                                             <PlusOutlined />
                                         </a-button>
-                                        <a-button v-if="col.field.isDelete" :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleDelSubTable(col)">
+                                        <a-button v-if="col.field.isDelete"
+                                            :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10"
+                                            @click="handleDelSubTable(col)">
                                             <MinusOutlined />
                                         </a-button>
-                                        <a-button v-if="col.field.isNew" :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10" @click="handleCopySubTable(col)">
+                                        <a-button v-if="col.field.isNew"
+                                            :disabled="col.selectedList.length ? false : true" class="ant-btn-icon ml10"
+                                            @click="handleCopySubTable(col)">
                                             <CopyOutlined />
                                         </a-button>
-                                        <a-button class="ml10" v-if="col.field.isNew" @click="handleImportSubTable(col)">导入</a-button>
+                                        <a-button class="ml10" v-if="col.field.isNew"
+                                            @click="handleImportSubTable(col)">导入</a-button>
                                         <!-- <a-button @click="handleAddSubTable(col)">添加</a-button>
                                         <a-button class="ml10">批量添加</a-button> -->
                                     </div>
@@ -40,29 +57,44 @@
                                         <table>
                                             <thead>
                                                 <tr>
-                                                    <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 40px;" v-if="stateCode!=2">操作</td>
+                                                    <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;width: 40px;"
+                                                        v-if="stateCode!=2">操作</td>
                                                     <!-- <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 30px;">序号</td> -->
-                                                    <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 30px;text-align: center;">
+                                                    <td v-for="(child, childIdx) in col.field.checkedColumns"
+                                                        style="border: 1px solid #5d9cec;height: 30px;text-align: center;">
                                                         {{child.label}}
                                                     </td>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <a-checkbox-group v-model:value="col.selectedList" style="width: 100%;display: contents;">
+                                                <a-checkbox-group v-model:value="col.selectedList"
+                                                    style="width: 100%;display: contents;">
                                                     <tr v-for="(sub, subIdx) in col.subTableData" style="width: 100%;">
-                                                        <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;"  v-if="stateCode!=2">
+                                                        <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;"
+                                                            v-if="stateCode!=2">
                                                             <a-checkbox :value="sub.key"></a-checkbox>
                                                         </td>
                                                         <!-- <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">{{subIdx+1}}</td> -->
-                                                        <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 24px;">
-                                                            <FieldType :type="child.type" :print="print" :field="child" :list="sub" :select="relatedObjData[col.field.id].select" :search="col.search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)" :stateCode="stateCode" />
+                                                        <td v-for="(child, childIdx) in col.field.checkedColumns"
+                                                            style="border: 1px solid #5d9cec;height: 24px;">
+                                                            <FieldType :type="child.type" :print="print" :field="child"
+                                                                :list="sub"
+                                                                :select="relatedObjData[col.field.id].select"
+                                                                :search="col.search"
+                                                                @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}"
+                                                                @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)"
+                                                                :stateCode="stateCode" @controller="(e, field)=>{selectControllerChildren(e, field, col.field, sub)}" />
                                                         </td>
                                                     </tr>
                                                     <tr v-if="col.field.isAggregate">
-                                                        <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">合计</td>
-                                                        <td :colspan="col.field.checkedColumns.length" style="border: 1px solid #5d9cec;height: 24px;padding-right: 10px;text-align: right;">
+                                                        <td
+                                                            style="border: 1px solid #5d9cec;height: 24px;text-align: center;">
+                                                            合计</td>
+                                                        <td :colspan="col.field.checkedColumns.length"
+                                                            style="border: 1px solid #5d9cec;height: 24px;padding-right: 10px;text-align: right;">
                                                             <!--  v-for="(child, childIdx) in col.field.checkedColumns" -->
-                                                            <span style="color: red;" v-for="(child, childIdx) in col.field.checkedColumns">
+                                                            <span style="color: red;"
+                                                                v-for="(child, childIdx) in col.field.checkedColumns">
                                                                 <span v-if="child.isAggregate">
                                                                     合计{{child.label}}：{{col.aggregate[child.key]}}
                                                                 </span>
@@ -81,24 +113,17 @@
                 </table>
             </div>
         </a-spin>
-        <radio-dept
-            v-if="isRadioDept"
-            :isShow="isRadioDept"
-            @cancel="cancelDeptModal"
-            @selectVal="handleDeptParams"
-        />
-          <radio-user
-            v-if="isRadioUser"
-            :isShow="isRadioUser"
-            @cancel="cancelUserModal"
-            @selectVal="handleUserParams"
-            :localId="fieldData.name"
-          ></radio-user>
-        <Lookup-filter v-if="isLookup" :isShow="isLookup" :field="fieldData.name" :entityApiName="entityApiName" :lookEntityApiName="lookEntityApiName" :lookObjectTypeCode="lookObjectTypeCode" :objectTypeCode="objTypeCode" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
-        <Delete :external="false" :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false" @ok="getSuggestionQuery"
-            sObjectName="WFSuggestionLibrary" :recordId="suggestionId"
-            objTypeCode="130" />
-        <BatchImportChild :isShow="isBatchImport" v-if="isBatchImport" :subEntityName="subEntityName" :forignFieldName="forignFieldName" :forignFieldValue="processInstanceId" @cancel="isBatchImport = false" @success="loadSubLoad"></BatchImportChild>
+        <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
+        <radio-user v-if="isRadioUser" :isShow="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams"
+            :localId="fieldData.name"></radio-user>
+        <Lookup-filter v-if="isLookup" :isShow="isLookup" :field="fieldData.name" :entityApiName="entityApiName"
+            :lookEntityApiName="lookEntityApiName" :lookObjectTypeCode="lookObjectTypeCode"
+            :objectTypeCode="objTypeCode" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
+        <Delete :external="false" :isShow="isDelete" :desc="deleteDesc" @cancel="isDelete=false"
+            @ok="getSuggestionQuery" sObjectName="WFSuggestionLibrary" :recordId="suggestionId" objTypeCode="130" />
+        <BatchImportChild :isShow="isBatchImport" v-if="isBatchImport" :subEntityName="subEntityName"
+            :forignFieldName="forignFieldName" :forignFieldValue="processInstanceId" @cancel="isBatchImport = false"
+            @success="loadSubLoad"></BatchImportChild>
     </div>
 </template>
 <script setup>
@@ -133,7 +158,7 @@
     import { useRoute, useRouter } from "vue-router";
     const router = useRouter();
     const route = useRoute();
-    const emit = defineEmits(["btnPermission", "attachPermission","openSubmit"]);
+    const emit = defineEmits(["btnPermission", "attachPermission", "openSubmit"]);
     const props = defineProps({
         ruleLogId: String,
         processId: String,
@@ -165,6 +190,7 @@
         objectTypeCode: "",
         list: {},
         select: {},
+        selectFixed: {},
         search: {},
         columns: [],
         comps: [],
@@ -192,23 +218,24 @@
         suggestionObj: {},
         isBatchImport: false,
         subEntityName: "",
-        forignFieldName: ""
+        forignFieldName: "",
+        picklistFieldMap: {}
     });
-    const { entityId, layoutData, rowCount, columnCount, cellData, mergeData, rows, mergeRowColData, 
+    const { entityId, layoutData, rowCount, columnCount, cellData, mergeData, rows, mergeRowColData,
         isRadioUser, isRadioDept, isLookup, fieldData, entityApiName, lookEntityApiName, lookObjectTypeCode, objectTypeCode, columns, comps, ruleId,
-        processId, entityLayoutId, select, isLoad, entityObjectId, attributes, list, search, processInstanceId, objTypeCode, isSub,
+        processId, entityLayoutId, select, selectFixed, isLoad, entityObjectId, attributes, list, search, processInstanceId, objTypeCode, isSub,
         subRecordFieldData, relatedObjData, relatedEntityInfoList, toActivityID, deleteRelatedData,
         masterEntityPermission, relatedListEntityPermissions, maxRowNum, suggestions, isDelete, deleteDesc,
-        suggestionId, suggestionObj, isBatchImport, subEntityName, forignFieldName
-     } = toRefs(data);
+        suggestionId, suggestionObj, isBatchImport, subEntityName, forignFieldName, picklistFieldMap
+    } = toRefs(data);
 
-     const handleSetValue = (field, value) => {
+    const handleSetValue = (field, value) => {
         console.log("e", field, value);
         data.list[field] = value;
         console.log('data.list', data.list);
-     }
+    }
 
-    
+
     const getRuleLogData = async () => {
         let obj = {
             actions: [{
@@ -225,7 +252,7 @@
             message: JSON.stringify(obj)
         }
         let res = await proxy.$post(Interface.detail, d);
-        if(res && res.actions && res.actions[0].returnValue){
+        if (res && res.actions && res.actions[0].returnValue) {
             let { ProcessId, ProcessInstanceId, ToActivityID } = res.actions && res.actions[0].returnValue.fields;
             data.processId = ProcessId.value;
             data.processInstanceId = ProcessInstanceId.value;
@@ -249,7 +276,7 @@
         }
         let res = await proxy.$post(Interface.workflow.getProcessDefinitionInfo, d);
         console.log("getProcessDefinitionInfo-res", res);
-        if(res && res.actions && res.actions[0].returnValue){
+        if (res && res.actions && res.actions[0].returnValue) {
             let { entityLayoutId, templateId, templateName, entityType } = res.actions[0].returnValue;
             data.entityLayoutId = entityLayoutId;
             data.entityObjectId = templateId;
@@ -275,28 +302,28 @@
         }
         let res = await proxy.$post(Interface.detail, d);
         // console.log("getFlowFormDetail", res);
-        if(res && res.actions && res.actions[0] && res.actions[0].returnValue){
+        if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
             let fields = res.actions[0].returnValue.fields;
             // console.log("data.comps", data.comps);
             console.log("data.list", data.list, fields)
-            for(let key in data.list){
-                let type = data.comps.find(item=>item.id == key).type;
+            for (let key in data.list) {
+                let type = data.comps.find(item => item.id == key)?.type;
                 // console.log("type:",type);
 
-                if(type=='U' || type=='O' || type=='Y' || type=='Y_MD'){
+                if (type == 'U' || type == 'O' || type == 'Y' || type == 'Y_MD') {
                     data.search[key] = [{
                         ID: fields[key]?.value,
                         Name: fields[key]?.displayValue
                     }]
-                } 
-                try{
-                    if(type=='UC' || type=='UCS'){
+                }
+                try {
+                    if (type == 'UC' || type == 'UCS') {
                         // console.log('props.ruleLogId', props.ruleLogId);
                         // console.log('fields[key]', fields[key]);
-                        let currentUserRow = fields[key].find(v=>v.RecId == props.ruleLogId);
-                        if(currentUserRow){
+                        let currentUserRow = fields[key].find(v => v.RecId == props.ruleLogId);
+                        if (currentUserRow) {
                             data.list[key] = currentUserRow.Comment;
-                        }else {
+                        } else {
                             data.list[key] = "";
                         }
                         // let otherSuggestions = fields[key].filter(v=>v.RecId != props.ruleLogId);
@@ -304,23 +331,23 @@
                         // data.suggestionObj[key] = otherSuggestions;
                         data.suggestionObj[key] = fields[key];
                         console.log("data.suggestionObj", data.suggestionObj);
-                    }else{
+                    } else {
                         data.list[key] = fields[key]?.value;
                     }
-                }catch(err){
+                } catch (err) {
 
                 }
             }
             console.log("list", data.list);
 
         }
-            
+
     }
 
     // 获取主对象相关列表
     const getRelatedObjects = async () => {
         let obj = {
-            actions:[{
+            actions: [{
                 id: "4270;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
@@ -339,9 +366,9 @@
 
 
         let relatedEntityInfoList = [];
-        for(let key in data.relatedObjData){
+        for (let key in data.relatedObjData) {
             let name = data.relatedObjData[key].relatedName;
-            let entityRow = relatedEntityList.find(item=>item.relatedEntity==name);
+            let entityRow = relatedEntityList.find(item => item.relatedEntity == name);
             entityRow.checkedColumns = data.relatedObjData[key].checkedColumns;
             relatedEntityInfoList.push(entityRow);
         };
@@ -352,7 +379,7 @@
     const getRelatedPicks = async () => {
         const requests = data.relatedEntityInfoList.map(item => {
             let obj = {
-                actions:[{
+                actions: [{
                     id: "2320;a",
                     descriptor: "",
                     callingDescriptor: "UNKNOWN",
@@ -368,15 +395,25 @@
             return proxy.$post(Interface.pickListValues, d);
         });
 
-        try{
+        try {
             const results = await Promise.all(requests);
             let keys = Object.keys(data.relatedObjData);
-            results.forEach((item, index)=>{
+            results.forEach((item, index) => {
                 let pickList = item.actions[0].returnValue.picklistFieldValues;
+                let picklistFieldControllers = item.actions[0].returnValue.picklistFieldControllers;
                 data.relatedObjData[keys[index]]['select'] = pickList;
+                data.relatedObjData[keys[index]]['selectFixed'] = JSON.parse(JSON.stringify(pickList));
+                data.relatedObjData[keys[index]]['picklistFieldMap'] = {};
+                for (let i = 0; i < picklistFieldControllers.length; i++) {
+                    let item = picklistFieldControllers[i];
+                    if (!data.relatedObjData[keys[index]].picklistFieldMap[item.ControllerName]) {
+                        data.relatedObjData[keys[index]].picklistFieldMap[item.ControllerName] = [];
+                    }
+                    data.relatedObjData[keys[index]]['picklistFieldMap'][item.ControllerName].push(item.DependentName);
+                };
             });
             // console.log("data.relatedObjData:", data.relatedObjData);
-        }catch{
+        } catch {
 
         }
     };
@@ -389,15 +426,15 @@
             return proxy.$post(Interface.objFieldData, d);
         });
 
-        try{
+        try {
             const results = await Promise.all(requests);
             let keys = Object.keys(data.relatedObjData);
-            results.forEach((item, index)=>{
+            results.forEach((item, index) => {
                 let attributes = item.attributes;
                 data.relatedObjData[keys[index]]['attributes'] = attributes;
             });
             // console.log("data.relatedObjData-attributes:", data.relatedObjData);
-        }catch{
+        } catch {
 
         }
     }
@@ -406,9 +443,9 @@
 
         // console.log("relatedEntityInfoList", data.relatedEntityInfoList);
 
-        let requests = data.relatedEntityInfoList.map(item=>{
-            let filterQuery = item.relatedEntityJoinField+'\teq\t'+data.processInstanceId;
-            let displayColumns = item.checkedColumns.map(row=>row.key).join(',');
+        let requests = data.relatedEntityInfoList.map(item => {
+            let filterQuery = item.relatedEntityJoinField + '\teq\t' + data.processInstanceId;
+            let displayColumns = item.checkedColumns.map(row => row.key).join(',');
             let d = {
                 filterId: "",
                 // displayColumns: displayColumns,
@@ -421,52 +458,52 @@
             return proxy.$post(Interface.list2, d);
         })
 
-        try{
+        try {
             let results = await Promise.all(requests);
             // console.log("relatedObjData-nodes", data.relatedObjData);
             // console.log("results-nodes:", results);
-    
+
             let keys = Object.keys(data.relatedObjData);
-            results.forEach((item, index)=>{
+            results.forEach((item, index) => {
                 let list = [];
-                item.nodes.forEach((row, idx)=>{
+                item.nodes.forEach((row, idx) => {
                     let obj = {};
-                    for(let key in row){
-                        if(row[key].__typeName){
+                    for (let key in row) {
+                        if (row[key].__typeName) {
                             obj[key] = formNodesValueObj(key, row);
-                        }else {
+                        } else {
                             obj[key] = row[key];
                         }
                     }
-                    obj['key'] = idx+1;
+                    obj['key'] = idx + 1;
                     list.push(obj);
                 });
                 // console.log("listlist", list);
                 data.relatedObjData[keys[index]]['list'] = list;
             });
             // console.log('data.relatedObjDatadata.relatedObjData', data.relatedObjData);
-    
-            data.cellData.forEach(item=>{
-                for(let key in item){
+
+            data.cellData.forEach(item => {
+                for (let key in item) {
                     let col = item[key];
-                    if(col.field?.displayCategory == 'RelatedList'){
-                        let keys = col.field.checkedColumns.map(row=>row.key);
+                    if (col.field?.displayCategory == 'RelatedList') {
+                        let keys = col.field.checkedColumns.map(row => row.key);
                         let relatedName = col.field.id;
                         let list = [];
-                        data.relatedObjData[relatedName].list.forEach((row, index)=>{
+                        data.relatedObjData[relatedName].list.forEach((row, index) => {
                             let obj = {};
-                            for(let field of keys){
-                                if(Object.prototype.toString.call(row[field]) == '[object Object]'){
-                                    if(col.search[field]?.length==0){
+                            for (let field of keys) {
+                                if (Object.prototype.toString.call(row[field]) == '[object Object]') {
+                                    if (col.search[field]?.length == 0) {
                                         col.search[field] = [row[field]];
-                                    }else if(col.search[field]?.length > 0){
-                                        let isBook = col.search[field].some(l=>l.ID==row[field].ID);
-                                        if(!isBook){
+                                    } else if (col.search[field]?.length > 0) {
+                                        let isBook = col.search[field].some(l => l.ID == row[field].ID);
+                                        if (!isBook) {
                                             col.search[field].push(row[field]);
                                         }
                                     }
                                     obj[field] = row[field].ID;
-                                }else {
+                                } else {
                                     obj[field] = row[field];
                                 }
                             };
@@ -476,7 +513,7 @@
                         });
                         console.log("list", col, list);
                         // 处理子表-合计
-                        if(col.field.isAggregate){
+                        if (col.field.isAggregate) {
                             let aggregate = {};
                             // if(col.field.isAggregate){
                             //     col.field.checkedColumns.forEach(l=>{
@@ -486,12 +523,12 @@
                             // console.log("aggregate", aggregate);
                             // col.aggregate = aggregate;
 
-                            let aggregateColumn = col.field.checkedColumns.filter(v=>v.isAggregate);
+                            let aggregateColumn = col.field.checkedColumns.filter(v => v.isAggregate);
                             console.log("aggregateColumn", aggregateColumn);
-                            aggregateColumn.forEach(v=>{
+                            aggregateColumn.forEach(v => {
                                 aggregate[v.key] = list.reduce(
                                     (sum, row) => sum + Number(row[v.key] || 0),
-                                    0 
+                                    0
                                 );
                             });
                             console.log("aggregate", aggregate);
@@ -501,16 +538,16 @@
                     }
                 }
             });
-    
+
             // console.log("data.cellData:", data.cellData);
-        }catch(err){
+        } catch (err) {
             console.log("err");
         }
-        
+
     }
 
     const getProcessData = async () => {
-        
+
         let obj = {
             actions: [{
                 id: "4270;a",
@@ -526,7 +563,7 @@
             message: JSON.stringify(obj)
         }
         let res = await proxy.$post(Interface.detail, d);
-        if(res && res.actions && res.actions[0].returnValue){
+        if (res && res.actions && res.actions[0].returnValue) {
             let { EntityLayoutId, EntityObjectId } = res.actions && res.actions[0].returnValue.fields;
             data.entityLayoutId = EntityLayoutId.value;
             data.entityObjectId = EntityObjectId.value;
@@ -549,7 +586,7 @@
             message: JSON.stringify(obj)
         }
         let res = await proxy.$post(Interface.detail, d);
-        if(res && res.actions && res.actions[0].returnValue){
+        if (res && res.actions && res.actions[0].returnValue) {
             console.log("entity", res);
         }
 
@@ -557,7 +594,7 @@
 
     const getPickList = () => {
         let d = {
-            actions:[{
+            actions: [{
                 id: "2320;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
@@ -573,8 +610,92 @@
         proxy.$post(Interface.pickListValues, obj).then((res) => {
             let { picklistFieldValues, picklistFieldControllers } = res.actions[0].returnValue;
             data.select = picklistFieldValues;
+            data.selectFixed = JSON.parse(JSON.stringify(picklistFieldValues));
+            let picklistFieldMap = picklistFieldControllers;
+            for (let i = 0; i < picklistFieldMap.length; i++) {
+                let item = picklistFieldMap[i];
+                if (!data.picklistFieldMap[item.ControllerName]) {
+                    data.picklistFieldMap[item.ControllerName] = [];
+                }
+                data.picklistFieldMap[item.ControllerName].push(item.DependentName);
+                Controllerchange(data.list[item.ControllerName], item.ControllerName, data.picklistFieldMap[item.ControllerName], data.select, data.selectFixed, data.list);
+            };
+            console.log("picklistFieldMap:", data.picklistFieldMap);
         })
-    }
+    };
+
+    // const Controllerchange = (val, Controller, Dependents) => {
+    //     if (Dependents) {
+    //         for (let i = 0; i < Dependents.length; i++) {
+    //             let Dependent = Dependents[i];
+    //             let textVal;
+    //             for (let key in data.select[Dependent].controllerValues) {
+    //                 if (val == data.select[Dependent].controllerValues[key]) {
+    //                     textVal = key;
+    //                 }
+    //             };
+    //             var isDependent = false;
+    //             if (data.selectFixed[Dependent] && data.selectFixed[Dependent].values) {
+    //                 data.select[Dependent].values = [];
+    //                 data.selectFixed[Dependent].values.map(item => {
+    //                     if (item.validFor.length && item.validFor.some(row => row == data.selectFixed[Dependent].controllerValues[textVal])) {
+    //                         data.select[Dependent].values.push(item);
+    //                         if (data.list[Dependent] == item.value) {
+    //                             isDependent = true;
+    //                         }
+    //                     }
+    //                 });
+
+    //             }
+    //             if (isDependent == false) {
+    //                 data.list[Dependent] = '';
+    //             }
+    //         }
+    //     }
+
+    // };
+    const Controllerchange = (val, Controller, Dependents, select, selectFixed, list) => {
+        console.log("val, Controller, Dependents, select, selectFixed, list", val, Controller, Dependents, select, selectFixed, list);
+        if (Dependents) {
+            for (let i = 0; i < Dependents.length; i++) {
+                let Dependent = Dependents[i];
+                let textVal;
+                for (let key in select[Dependent].controllerValues) {
+                    if (val == select[Dependent].controllerValues[key]) {
+                        textVal = key;
+                    }
+                };
+                var isDependent = false;
+                if (selectFixed[Dependent] && selectFixed[Dependent].values) {
+                    select[Dependent].values = [];
+                    selectFixed[Dependent].values.map(item => {
+                        if (item.validFor.length && item.validFor.some(row => row == selectFixed[Dependent].controllerValues[textVal])) {
+                            select[Dependent].values.push(item);
+                            if (list[Dependent] == item.value) {
+                                isDependent = true;
+                            }
+                        }
+                    });
+
+                }
+                if (isDependent == false) {
+                    list[Dependent] = '';
+                }
+            }
+        }
+
+    };
+
+    const selectController = (e, field) => {
+        let ControllerName = field.id;
+        Controllerchange(e, ControllerName, data.picklistFieldMap[ControllerName], data.select, data.selectFixed, data.list);
+    };
+
+    const selectControllerChildren = (e, field, parentItem, sub) => {
+        let ControllerName = field.id;
+        let { select, selectFixed, picklistFieldMap } = data.relatedObjData[parentItem.id];
+        Controllerchange(e, ControllerName, picklistFieldMap[ControllerName], select, selectFixed, sub);
+    };
 
 
     const getAttributes = async () => {
@@ -587,10 +708,10 @@
     const selectLookup = (value, field) => {
         console.log('comps', data.comps);
         // console.log(value, field);
-        let findRow = data.attributes.find(item=>field.id == item.name);
+        let findRow = data.attributes.find(item => field.id == item.name);
         // console.log("findRow", findRow);
         let obj = {
-            actions:[{
+            actions: [{
                 id: "2919;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
@@ -607,17 +728,17 @@
             message: JSON.stringify(obj)
         }
         // console.log("obj", obj);
-        proxy.$post(Interface.getMapFieldValues, d).then(res=>{
+        proxy.$post(Interface.getMapFieldValues, d).then(res => {
             console.log("getMapFieldValues-res", res);
             let returnValue = res.actions[0].returnValue;
-            
-            for(let key in returnValue){
-                const row = data.comps.find(item=>item.id == key);
+
+            for (let key in returnValue) {
+                const row = data.comps.find(item => item.id == key);
                 const type = row.type;
-                if(type=='U' || type=='O' || type=='Y' || type=='Y_MD'){
+                if (type == 'U' || type == 'O' || type == 'Y' || type == 'Y_MD') {
                     const { value, displayValue } = returnValue[key];
-                    const isExist = data.search[key].some(v=>v.ID == value);
-                    if(!isExist){
+                    const isExist = data.search[key].some(v => v.ID == value);
+                    if (!isExist) {
                         let obj = {
                             ID: value,
                             Name: displayValue
@@ -632,12 +753,12 @@
 
     const searchlookup = (search, field) => {
         let targetApiName;
-        let findRow = data.attributes.find(item=>field.id == item.name);
+        let findRow = data.attributes.find(item => field.id == item.name);
         // console.log("findRow", findRow);
 
         targetApiName = findRow.referencedEntity.EntityName;
         let obj = {
-            actions:[{
+            actions: [{
                 id: "6129;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
@@ -668,19 +789,19 @@
         proxy.$post(Interface.lookup, d).then((res) => {
             let list = res.actions[0].returnValue.lookupResults.records;
             let arr = [];
-            list.forEach(item=>{
+            list.forEach(item => {
                 arr.push({
                     ID: item.fields.Id.value,
                     Name: item.fields.Name.value
                 })
             });
 
-            if(data.search[field.id].length == 0){
+            if (data.search[field.id].length == 0) {
                 data.search[field.id] = arr;
-            }else {
-                arr.forEach(item=>{
-                    let isBook = data.search[field.id].some(row=>row.ID==item.ID);
-                    if(!isBook){
+            } else {
+                arr.forEach(item => {
+                    let isBook = data.search[field.id].some(row => row.ID == item.ID);
+                    if (!isBook) {
                         data.search[field.id].push(item);
                     }
                 });
@@ -702,11 +823,11 @@
         let targetApiName;
 
         let attributes = data.relatedObjData[col.field.id].attributes;
-        let findRow = attributes.find(item=>field.id == item.name);
+        let findRow = attributes.find(item => field.id == item.name);
         console.log("findRow", findRow);
         targetApiName = findRow.referencedEntity.EntityName;
         let obj = {
-            actions:[{
+            actions: [{
                 id: "6129;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
@@ -737,31 +858,31 @@
         proxy.$post(Interface.lookup, d).then((res) => {
             let list = res.actions[0].returnValue.lookupResults.records;
             let arr = [];
-            list.forEach(item=>{
+            list.forEach(item => {
                 arr.push({
                     ID: item.fields.Id.value,
                     Name: item.fields.Name.value
                 })
             });
             // console.log("arr", arr);
-            data.cellData.forEach(item=>{
-                for(let key in item){
+            data.cellData.forEach(item => {
+                for (let key in item) {
                     let { name, subIdx } = subRecordFieldData;
                     let { id } = subRecordFieldData.data;
-                    if(item[key].field?.id == name){
-                        if(item[key].search[id].length == 0){
+                    if (item[key].field?.id == name) {
+                        if (item[key].search[id].length == 0) {
                             item[key].search[id] = arr;
-                        }else {
-                            arr.forEach(selfItem=>{
-                                let isBook = item[key].search[id].some(row=>row.ID==selfItem.ID);
-                                if(!isBook){
+                        } else {
+                            arr.forEach(selfItem => {
+                                let isBook = item[key].search[id].some(row => row.ID == selfItem.ID);
+                                if (!isBook) {
                                     item[key].search[id].push(selfItem);
                                 }
                             });
                             // item[key].search[id] = item[key].search[id].concat(arr);
                         }
                     }
-                }    
+                }
             })
         })
     };
@@ -769,7 +890,7 @@
     // 获取权限
     const getPermission = async () => {
         let obj = {
-            actions:[{
+            actions: [{
                 id: "562;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
@@ -790,27 +911,27 @@
         data.masterEntityPermission = masterEntityPermission;
         data.relatedListEntityPermissions = relatedListEntityPermissions;
         emit("btnPermission", flowPermission);
-		emit("attachPermission", attachPermission);
+        emit("attachPermission", attachPermission);
         handleFormPerm();
     }
 
     // permission 2/0:不可见 4:只读 8:读写 16: 显示默认值且不可修改 32: 显示默认值且可修改
     const handleFormPerm = () => {
-        data.cellData.forEach(item=>{
-            for(let key in item){
+        data.cellData.forEach(item => {
+            for (let key in item) {
                 let col = item[key];
-                if(col.field && col.field.displayCategory != 'RelatedList'){
+                if (col.field && col.field.displayCategory != 'RelatedList') {
                     let id = col.field.id;
                     let permission = searchCorrelationFieldPerm(data.masterEntityPermission.fieldPermissions, id);
                     col.field.permission = permission;
-                } else if(col.field && col.field.displayCategory == 'RelatedList'){
+                } else if (col.field && col.field.displayCategory == 'RelatedList') {
                     let relatedName = col.field.id.split('__')[1];
-                    let { fieldPermissions, isDelete, isNew, isRequired } = data.relatedListEntityPermissions.find(v=>v.name==relatedName);
+                    let { fieldPermissions, isDelete, isNew, isRequired } = data.relatedListEntityPermissions.find(v => v.name == relatedName);
                     // 处理子表按钮权限
                     col.field.isDelete = isDelete;
                     col.field.isNew = isNew;
                     col.field.isRequired = isRequired;
-                    col.field.checkedColumns.forEach(column=>{
+                    col.field.checkedColumns.forEach(column => {
                         column.permission = searchCorrelationFieldPerm(fieldPermissions, column.key);
                     })
                 }
@@ -820,7 +941,7 @@
     };
 
     const searchCorrelationFieldPerm = (fieldPermissions, field) => {
-        let row = fieldPermissions.find(item=>{
+        let row = fieldPermissions.find(item => {
             return item.name == field;
         });
         let permission = row?.permission || '';
@@ -838,10 +959,12 @@
         // await getProcessData();
         // await getEntityData();
         await getDetail();
-        getPickList();
+
+        // getPickList();
         await getAttributes();
         await getFlowFormDetail();
-        
+        getPickList();
+
         await getRelatedObjects();
         await getRelatedPicks();
         await getRelatedAttrs();
@@ -860,17 +983,17 @@
             filterQuery: "CreatedBy\eq-userid"
         }
         const res = await proxy.$get(Interface.list2, d);
-        data.suggestions = res.nodes.map(item=>{
+        data.suggestions = res.nodes.map(item => {
             item.name = item.Name.textValue;
             return item;
         })
     };
-    
+
     const deleteSuggestion = (id) => {
         data.suggestionId = id;
         data.isDelete = true;
     }
-    
+
     const getDetail = async () => {
         let obj = {
             actions: [{
@@ -892,16 +1015,16 @@
             let univerLayoutData = JSON.parse(LayoutData.value);
             data.layoutData = univerLayoutData;
 
-            let { cells, columnCount, columns, rowCount, rows, mergeData }  = univerLayoutData.formLayout.pageLayouts[0].workbook;
+            let { cells, columnCount, columns, rowCount, rows, mergeData } = univerLayoutData.formLayout.pageLayouts[0].workbook;
             data.rowCount = rowCount;
             data.columnCount = columnCount;
             data.mergeData = mergeData;
             data.rows = rows;
             data.columns = columns;
             console.log("mergeData:", mergeData);
-            if(mergeData.length){
-                mergeData.forEach(item=>{
-                    if(item.startRow!=item.endRow){
+            if (mergeData.length) {
+                mergeData.forEach(item => {
+                    if (item.startRow != item.endRow) {
                         data.mergeRowColData[item.startRow] = item;
                     }
                     data.mergeRowKeyData[item.startRow] = item;
@@ -909,31 +1032,31 @@
             }
             let comps = univerLayoutData.formLayout.pageLayouts[0].comps;
             data.comps = comps;
-            comps.forEach(item=>{
-              if(item.displayCategory!="RelatedList"){
-                  let { row, column } = item.layout;
-                  let style = {};
-                  if(data.cellData[row]){
-                      data.cellData[row][column] = {
-                          v: item.label
-                      }
-                  }else {
-                      data.cellData[row] = {
-                          [column]: {
-                              v: item.label,
-                          }
-                      }
-                  }
-                data.list[item.name] = "";
-              }
-              
+            comps.forEach(item => {
+                if (item.displayCategory != "RelatedList") {
+                    let { row, column } = item.layout;
+                    let style = {};
+                    if (data.cellData[row]) {
+                        data.cellData[row][column] = {
+                            v: item.label
+                        }
+                    } else {
+                        data.cellData[row] = {
+                            [column]: {
+                                v: item.label,
+                            }
+                        }
+                    }
+                    data.list[item.name] = "";
+                }
+
             });
 
             data.cellData = JSON.parse(JSON.stringify(cells));
 
             // 获取最大行数
             let maxRowNum = 0;
-            cells.forEach((item, index)=>{
+            cells.forEach((item, index) => {
                 let temp = [];
                 for (let key in item) {
                     if (item.hasOwnProperty(key)) {
@@ -941,7 +1064,7 @@
                     }
                 };
                 let isVal = temp.some(b => b && b.v || b.field);
-                if(isVal){
+                if (isVal) {
                     maxRowNum = index;
                 }
             });
@@ -951,32 +1074,32 @@
 
             // console.log("comps", comps);
             // 处理子表
-            comps.forEach(item=>{
+            comps.forEach(item => {
                 let { row, column } = item.layout;
                 let style = {};
-                if(data.cellData?.[row]?.[column]){
+                if (data.cellData?.[row]?.[column]) {
                     data.cellData[row][column].v = "";
                     data.cellData[row][column].field = item;
                     data.cellData[row][column].subTableData = [];
                     data.cellData[row][column].selectedList = [];
-                    if(item.displayCategory=='RelatedList'){
+                    if (item.displayCategory == 'RelatedList') {
                         data.cellData[row][column].search = {};
                         console.log("data.cellData[row][column]", data.cellData[row][column]);
                         let rowField = {
                             key: 1
                         };
-                        item.checkedColumns?.forEach(item=>{
+                        item.checkedColumns?.forEach(item => {
                             rowField[item.key] = "";
                             item.id = item.key;
                         });
                         console.log("item.checkedColumns", item.checkedColumns);
-                        let isAggregate = item.checkedColumns.some(v=>v.isAggregate);
+                        let isAggregate = item.checkedColumns.some(v => v.isAggregate);
                         item.isAggregate = isAggregate;
 
                         data.cellData[row][column].subTableData.push(rowField);
 
                         // search
-                        data.cellData[row][column].field.checkedColumns.forEach(k=>{
+                        data.cellData[row][column].field.checkedColumns.forEach(k => {
                             // console.log("k", k);
                             data.cellData[row][column].search[k.id] = [];
                         })
@@ -992,26 +1115,26 @@
                 }
             });
             console.log('comps', data.comps)
-            if(data.mergeData){
-                data.mergeData.forEach(item=>{
-                    if(data.cellData[item.startRow] && data.cellData[item.startRow][item.startColumn]){
+            if (data.mergeData) {
+                data.mergeData.forEach(item => {
+                    if (data.cellData[item.startRow] && data.cellData[item.startRow][item.startColumn]) {
                         data.cellData[item.startRow][item.startColumn].colspan = item.endColumn - item.startColumn + 1;
                         data.cellData[item.startRow][item.startColumn].rowspan = item.endRow - item.startRow + 1;
-                        if(item.endColumn){
+                        if (item.endColumn) {
                             let num = item.endColumn - item.startColumn;
-                            for(let i = 0; i < num; i++){
-                                let deleteNum = item.endColumn-i;
+                            for (let i = 0; i < num; i++) {
+                                let deleteNum = item.endColumn - i;
                                 data.cellData[item.startRow][deleteNum].skip = true;
                                 // delete data.cellData[item.startRow][deleteNum];
                             };
                         }
 
                         // 处理合并行
-                        if(item.startColumn == item.endColumn && item.endRow - item.startRow > 0){
+                        if (item.startColumn == item.endColumn && item.endRow - item.startRow > 0) {
                             let num = item.endRow - item.startRow;
                             console.log("num", num);
-                            for(let i = 0; i < num; i++){
-                                let deleteRow = item.endRow-i;
+                            for (let i = 0; i < num; i++) {
+                                let deleteRow = item.endRow - i;
                                 data.cellData[deleteRow][item.startColumn].skip = true;
                                 // delete data.cellData[deleteRow][item.startColumn];
                             }
@@ -1027,7 +1150,7 @@
 
     const setRowStyle = (key) => {
         let style = {};
-        if(data.rows[key] && data.rows[key].h){
+        if (data.rows[key] && data.rows[key].h) {
             style.height = data.rows[key].h + "px"
         }
         return style;
@@ -1036,19 +1159,19 @@
     const setStyle = (row, col) => {
         // console.log("style", data.cellData[row][col].style);
         let style = {};
-        if(data.cellData[row][col].style){
+        if (data.cellData[row][col].style) {
             let styleData = data.cellData[row][col].style;
-            for(let styleName in styleData){
-                if(styleName=='fs'){
+            for (let styleName in styleData) {
+                if (styleName == 'fs') {
                     style.fontSize = styleData[styleName] + "px";
                 }
-                if(styleName == 'bg'){
+                if (styleName == 'bg') {
                     style.background = styleData[styleName]?.rgb;
                 }
-                if(styleName == 'cl'){
+                if (styleName == 'cl') {
                     style.color = styleData[styleName]?.rgb;
                 }
-                if(styleName=='bd'){
+                if (styleName == 'bd') {
                     // style.border = "1px solid #000";
 
                     let { b, l, r, t } = styleData[styleName];
@@ -1062,27 +1185,27 @@
                     let layout = data.comps[Number(row)]?.layout;
                     // style.width = data.columns[layout.column].defaultWidth + 'px';
                 }
-                if(styleName=='ht'){
+                if (styleName == 'ht') {
                     style.textAlign = styleData[styleName] == 1 ? "left" : styleData[styleName] == 2 ? "center" : styleData[styleName] == 3 ? "right" : "";
                 }
-                if(styleName=='pd'){
-                    if(styleData[styleName]){
+                if (styleName == 'pd') {
+                    if (styleData[styleName]) {
                         let { b, l, r, t } = styleData[styleName];
-                        style.paddingTop = t+'px';
-                        style.paddingRight = r+'px';
-                        style.paddingBottom = b+'px';
-                        style.paddingLeft = l+'px';
+                        style.paddingTop = t + 'px';
+                        style.paddingRight = r + 'px';
+                        style.paddingBottom = b + 'px';
+                        style.paddingLeft = l + 'px';
                     }
                 }
-                if(styleName=='ff'){
+                if (styleName == 'ff') {
                     style.fontFamily = styleData[styleName];
                 }
-                if(styleName=='tr'){
-                    if(styleData[styleName]?.a == 0 && styleData[styleName].v == 1){
+                if (styleName == 'tr') {
+                    if (styleData[styleName]?.a == 0 && styleData[styleName].v == 1) {
                         style.writingMode = "vertical-rl";
                     }
                 }
-                if(styleName == 'bl' && styleData[styleName] == 1){
+                if (styleName == 'bl' && styleData[styleName] == 1) {
                     style.fontWeight = "bold";
                 }
             }
@@ -1092,23 +1215,23 @@
 
     const setStyleText = (row, col) => {
         let style = {};
-        if(data.cellData[row][col].style){
+        if (data.cellData[row][col].style) {
             let styleData = data.cellData[row][col].style;
-            for(let styleName in styleData){
-                if(styleName == 'ul'){
+            for (let styleName in styleData) {
+                if (styleName == 'ul') {
                     let { cl, s } = styleData[styleName];
-                    if(s == 1){
+                    if (s == 1) {
                         style.borderBottom = "1px solid " + cl.rgb;
                     }
                 }
-                if(styleName == 'st' && styleData[styleName] != null){
+                if (styleName == 'st' && styleData[styleName] != null) {
                     let { s } = styleData[styleName];
-                    if(s == 1){
+                    if (s == 1) {
                         style.textDecoration = "line-through";
                     }
                 }
-                if(styleName == 'it'){
-                    if(styleData[styleName] == 1){
+                if (styleName == 'it') {
+                    if (styleData[styleName] == 1) {
                         style.fontStyle = "italic";
                     }
                 }
@@ -1120,17 +1243,17 @@
     const isShowCell = (key, colKey, col) => {
         // console.log("data.cellData", data.cellData);
         let isBook = true;
-        if(key == 0){
+        if (key == 0) {
             isBook = false;
         }
-        if(colKey == 0){
+        if (colKey == 0) {
             isBook = false;
         }
-        if(colKey == data.columnCount-1){
+        if (colKey == data.columnCount - 1) {
             isBook = false;
         }
         // 处理合并行跳过
-        if(data.cellData[key][colKey]?.skip){
+        if (data.cellData[key][colKey]?.skip) {
             isBook = false;
         }
         return isBook;
@@ -1140,23 +1263,23 @@
     let ranges = [];
     const shouldRenderCell = (rowKey, colKey, rowspan, col) => {
         let n = true;
-        if(data.mergeRowKeyData[rowKey]){
+        if (data.mergeRowKeyData[rowKey]) {
             // console.log('mergeRowKeyData[rowKey]', data.mergeRowKeyData[rowKey]);
-            n = isInRange(colKey, data.mergeRowKeyData[rowKey].startColumn, data.mergeRowKeyData[rowKey].endColumn+1);
+            n = isInRange(colKey, data.mergeRowKeyData[rowKey].startColumn, data.mergeRowKeyData[rowKey].endColumn + 1);
             // console.log("data.mergeRowKeyData", data.mergeRowKeyData[rowKey], rowKey, colKey, n, data.mergeRowKeyData[rowKey].startColumn, data.mergeRowKeyData[rowKey].endColumn );
         } else {
             n = false;
         }
-        if(data.mergeRowColData[rowKey]){
+        if (data.mergeRowColData[rowKey]) {
             // 处理合并行
-            let startRow =  data.mergeRowColData[rowKey].startRow;
-            let endRow =  data.mergeRowColData[rowKey].endRow;
-            if(startRow != endRow){
+            let startRow = data.mergeRowColData[rowKey].startRow;
+            let endRow = data.mergeRowColData[rowKey].endRow;
+            if (startRow != endRow) {
                 // console.log("startRow", startRow, endRow);
-                let min = startRow+1;
+                let min = startRow + 1;
                 let max = endRow;
-                for(let i = min; i <= endRow; i++){
-                    if(ranges.indexOf(i)==-1){
+                for (let i = min; i <= endRow; i++) {
+                    if (ranges.indexOf(i) == -1) {
                         ranges.push(i);
                     }
                 }
@@ -1165,12 +1288,12 @@
         // console.log("ranges", ranges, rowKey, ranges.indexOf(rowKey));
 
         // 处理合并行 - 第二行的列
-        if(ranges.indexOf(rowKey)!=-1){
-            if(colKey==1){
+        if (ranges.indexOf(rowKey) != -1) {
+            if (colKey == 1) {
                 n = true;
             }
         }
-        if(col.v=='' && !col.field){
+        if (col.v == '' && !col.field) {
             n = true;
         }
         return !n;
@@ -1189,9 +1312,9 @@
             data.isRadioUser = true;
         } else if (type == 'O') {
             data.isRadioDept = true;
-        }else {
+        } else {
             // console.log("data", data.attributes);
-            let { EntityName, EntityObjectTypeCode } = data.attributes.find(item=>item.name == e.id).referencedEntity;
+            let { EntityName, EntityObjectTypeCode } = data.attributes.find(item => item.name == e.id).referencedEntity;
             console.log("EntityName, EntityObjectTypeCode", EntityName, EntityObjectTypeCode);
             data.lookEntityApiName = EntityName;
             data.lookObjectTypeCode = EntityObjectTypeCode;
@@ -1217,9 +1340,9 @@
             data.isRadioUser = true;
         } else if (type == 'O') {
             data.isRadioDept = true;
-        }else {
+        } else {
             let attributes = data.relatedObjData[field.id].attributes;
-            let { EntityName, EntityObjectTypeCode } = attributes.find(item=>item.name == e.id).referencedEntity;
+            let { EntityName, EntityObjectTypeCode } = attributes.find(item => item.name == e.id).referencedEntity;
             // console.log("EntityName, EntityObjectTypeCode", EntityName, EntityObjectTypeCode);
             data.lookEntityApiName = EntityName;
             data.lookObjectTypeCode = EntityObjectTypeCode;
@@ -1238,41 +1361,41 @@
             ID: e.id,
             Name: e.name
         }
-        
+
         // 处理子表
-        if(!data.isSub){
+        if (!data.isSub) {
             let { name } = data.fieldData;
-            if(data.search[name] == undefined){
+            if (data.search[name] == undefined) {
                 // console.log("1123", data.search[name])
                 data.search[name] = [
                     newData
                 ]
-            }else {
-                let isBook = data.search[name].some(item=>item.ID==newData.ID);
-                if(!isBook){
+            } else {
+                let isBook = data.search[name].some(item => item.ID == newData.ID);
+                if (!isBook) {
                     data.search[name].push(newData);
                 }
             }
             data.list[name] = newData.ID;
-        }else {
+        } else {
             // console.log("sublist", data.subRecordFieldData);
             // console.log("dada", data.cellData);
-            data.cellData.forEach(item=>{
-                for(let key in item){
+            data.cellData.forEach(item => {
+                for (let key in item) {
                     let { name, subIdx } = data.subRecordFieldData;
                     let { id } = data.subRecordFieldData.data;
-                    if(item[key].field?.id == name){
-                        if(item[key].search[id].length == 0){
+                    if (item[key].field?.id == name) {
+                        if (item[key].search[id].length == 0) {
                             item[key].search[id] = [newData];
-                        }else {
-                            let isBook = item[key].search[id].some(row=>row.ID==newData.ID);
-                            if(!isBook){
+                        } else {
+                            let isBook = item[key].search[id].some(row => row.ID == newData.ID);
+                            if (!isBook) {
                                 item[key].search[id].push(newData);
                             }
                         }
                         item[key].subTableData[subIdx][id] = newData.ID;
                     }
-                }    
+                }
             })
         }
         // console.log("search", data.search);
@@ -1288,37 +1411,37 @@
         // console.log("handleDeptParams:", e);
         // console.log("fieldData:", data.fieldData);
         let newData = e;
-        if(!data.isSub){
+        if (!data.isSub) {
             let { name } = data.fieldData;
             console.log("data.search[name]", data.search[name]);
-            if(data.search[name] == undefined){
+            if (data.search[name] == undefined) {
                 data.search[name] = [
                     newData
                 ]
-            }else {
-                let isBook = data.search[name].some(item=>item.ID==newData.ID);
-                if(!isBook){
+            } else {
+                let isBook = data.search[name].some(item => item.ID == newData.ID);
+                if (!isBook) {
                     data.search[name].push(newData);
                 }
             }
             data.list[name] = newData.ID;
-        }else {
-            data.cellData.forEach(item=>{
-                for(let key in item){
+        } else {
+            data.cellData.forEach(item => {
+                for (let key in item) {
                     let { name, subIdx } = data.subRecordFieldData;
                     let { id } = data.subRecordFieldData.data;
-                    if(item[key].field?.id == name){
-                        if(item[key].search[id].length == 0){
+                    if (item[key].field?.id == name) {
+                        if (item[key].search[id].length == 0) {
                             item[key].search[id] = [newData];
-                        }else {
-                            let isBook = item[key].search[id].some(row=>row.ID==newData.ID);
-                            if(!isBook){
+                        } else {
+                            let isBook = item[key].search[id].some(row => row.ID == newData.ID);
+                            if (!isBook) {
                                 item[key].search[id].push(newData);
                             }
                         }
                         item[key].subTableData[subIdx][id] = newData.ID;
                     }
-                }    
+                }
             })
         }
 
@@ -1332,37 +1455,37 @@
             ID: e.id,
             Name: e.Name
         }
-        if(!data.isSub){
+        if (!data.isSub) {
             let { name } = data.fieldData;
             console.log("data.search[name]", data.search[name]);
-            if(data.search[name] == undefined){
+            if (data.search[name] == undefined) {
                 data.search[name] = [
                     newData
                 ]
-            }else {
-                let isBook = data.search[name].some(item=>item.ID==newData.ID);
-                if(!isBook){
+            } else {
+                let isBook = data.search[name].some(item => item.ID == newData.ID);
+                if (!isBook) {
                     data.search[name].push(newData);
                 }
             }
             data.list[name] = newData.ID;
-        }else {
-            data.cellData.forEach(item=>{
-                for(let key in item){
+        } else {
+            data.cellData.forEach(item => {
+                for (let key in item) {
                     let { name, subIdx } = data.subRecordFieldData;
                     let { id } = data.subRecordFieldData.data;
-                    if(item[key].field?.id == name){
-                        if(item[key].search[id].length == 0){
+                    if (item[key].field?.id == name) {
+                        if (item[key].search[id].length == 0) {
                             item[key].search[id] = [newData];
-                        }else {
-                            let isBook = item[key].search[id].some(row=>row.ID==newData.ID);
-                            if(!isBook){
+                        } else {
+                            let isBook = item[key].search[id].some(row => row.ID == newData.ID);
+                            if (!isBook) {
                                 item[key].search[id].push(newData);
                             }
                         }
                         item[key].subTableData[subIdx][id] = newData.ID;
                     }
-                }    
+                }
             })
         }
 
@@ -1371,7 +1494,7 @@
 
     const isRowShow = (row, key) => {
         let show = true;
-        if(row==undefined){
+        if (row == undefined) {
             show = false;
         }
         return show;
@@ -1385,18 +1508,18 @@
                 temp.push(row[key]);
             }
         };
-        let empty = temp.every(b => b && b.v == '' && b.field==undefined);
-        if(empty){
+        let empty = temp.every(b => b && b.v == '' && b.field == undefined);
+        if (empty) {
             isBook = false;
         }
         let isP = temp.some(b => b && b.p); // 判断是否有文本p
-        if(isP){
+        if (isP) {
             isBook = true;
         }
         // if(empty && index < data.maxRowNum){
         //     isBook = true;
         // }
-        return isBook;  
+        return isBook;
     };
 
     // 导入子表
@@ -1404,7 +1527,7 @@
         console.log("col", col, data.relatedObjData, data.relatedEntityInfoList, data.processInstanceId);
         let { relatedName } = data.relatedObjData[col.field.id];
         data.subEntityName = relatedName;
-        let row = data.relatedEntityInfoList.find(item=>item.relatedEntity == relatedName);
+        let row = data.relatedEntityInfoList.find(item => item.relatedEntity == relatedName);
         data.forignFieldName = row.relatedEntityJoinField;
         data.isBatchImport = true;
     };
@@ -1421,21 +1544,21 @@
         let row = {
             key: col.subTableData.length + 1
         };
-        col.field.checkedColumns.forEach(item=>{
+        col.field.checkedColumns.forEach(item => {
             row[item.key] = "";
         })
         col.subTableData.push(row);
     };
 
     const handleDelSubTable = (col) => {
-        
+
         // console.log('col.subTableData', col, col.subTableData, col.selectedList);
 
         let relatedName = col.field.id.split("__")[1];
 
         // let  = data.relatedObjData[id];
 
-        let { relatedEntity, relatedEntityObjectTypeCode } = data.relatedEntityInfoList.find(item=>item.relatedEntity == relatedName);
+        let { relatedEntity, relatedEntityObjectTypeCode } = data.relatedEntityInfoList.find(item => item.relatedEntity == relatedName);
 
         // console.log("relatedEntity, relatedEntityObjectTypeCode", relatedEntity, relatedEntityObjectTypeCode);
 
@@ -1443,12 +1566,12 @@
         for (let i = col.subTableData.length - 1; i >= 0; i--) {
             let item = col.subTableData[i]
             if (col.selectedList.indexOf(col.subTableData[i].key) !== -1) {
-                if(item.id){
+                if (item.id) {
                     item.relatedEntity = relatedEntity;
                     item.relatedEntityObjectTypeCode = relatedEntityObjectTypeCode;
                     deleteRelatedData.push(item);
                     col.subTableData.splice(i, 1);
-                }else {
+                } else {
                     col.subTableData.splice(i, 1);
                 }
             }
@@ -1462,12 +1585,12 @@
     };
 
     const deleteRelted = async () => {
-        let requests = data.deleteRelatedData.map(item=>{
+        let requests = data.deleteRelatedData.map(item => {
             let obj = {
                 actions: [{
-                id: "2919;a",
-                descriptor: "",
-                callingDescriptor: "UNKNOWN",
+                    id: "2919;a",
+                    descriptor: "",
+                    callingDescriptor: "UNKNOWN",
                     params: {
                         recordId: item.id,
                         apiName: item.relatedEntity,
@@ -1480,7 +1603,7 @@
             };
             return proxy.$post(Interface.delete, d);
         });
-        
+
         const results = await Promise.all(requests);
         // console.log("results", results);
         data.deleteRelatedData = [];
@@ -1489,15 +1612,15 @@
 
     const handleCopySubTable = (col) => {
         console.log("col", col);
-        let list = col.subTableData.filter(item=>{
-            return col.selectedList.find(row=>{
+        let list = col.subTableData.filter(item => {
+            return col.selectedList.find(row => {
                 return item.key == row;
             })
         });
         const copyData = JSON.parse(JSON.stringify(list));
-        copyData.forEach(item=>{
+        copyData.forEach(item => {
             item.id = '';
-            item.key = item.key+new Date().getTime();
+            item.key = item.key + new Date().getTime();
             col.subTableData.push(item);
         });
         console.log("col.subTableData", col.subTableData);
@@ -1506,20 +1629,20 @@
     const handleSave_old = () => {
         // console.log("保存", data.list);
         let d = {
-          actions:[{
-              id: "2919;a",
-              descriptor: "",
-              callingDescriptor: "UNKNOWN",
-              params: {
-                  recordId: data.processInstanceId,
-                  recordInput:{
-                      allowSaveOnDuplicate: false,
-                      apiName: data.entityApiName,
-                      objTypeCode: data.objTypeCode,
-                      fields: data.list
-                  }
-              }
-          }]
+            actions: [{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    recordId: data.processInstanceId,
+                    recordInput: {
+                        allowSaveOnDuplicate: false,
+                        apiName: data.entityApiName,
+                        objTypeCode: data.objTypeCode,
+                        fields: data.list
+                    }
+                }
+            }]
         };
         let obj = {
             message: JSON.stringify(d)
@@ -1531,15 +1654,15 @@
 
         // console.log("cellData:", data.cellData);
         // saveRelated();
-        
+
     }
 
     const handleSave = (type = '') => {
         console.log("data.list", data.list);
         console.log("comps", data.comps);
         let paramsList = {};
-        data.comps.forEach(item=>{
-            if(item.displayCategory != "RelatedList" && item.permission != 2 && item.permission != 4){
+        data.comps.forEach(item => {
+            if (item.displayCategory != "RelatedList" && item.permission != 2 && item.permission != 4) {
                 paramsList[item.id] = data.list[item.id];
             }
         });
@@ -1548,28 +1671,28 @@
         // return false;
         const requireds = [];
         let isRequired = false;
-        for(let i = 0; i < data.comps.length; i++){
+        for (let i = 0; i < data.comps.length; i++) {
             const item = data.comps[i];
             console.log("item", item);
-            if(item.required == true && item.permission != 2 && item.permission != "" && item.permission != 0 && item.permission != 4 && item.id in paramsList && (paramsList[item.id] == '' || paramsList[item.id] == null || paramsList[item.id] == undefined)){
+            if (item.required == true && item.permission != 2 && item.permission != "" && item.permission != 0 && item.permission != 4 && item.id in paramsList && (paramsList[item.id] == '' || paramsList[item.id] == null || paramsList[item.id] == undefined)) {
                 // message.error(`${item.label}不能为空!`)
                 requireds.push(item.label);
                 isRequired = true;
                 let dom = document.getElementsByName(item.id);
-                if(dom && dom.length > 0){
+                if (dom && dom.length > 0) {
                     dom[0].classList.add("required");
                 }
                 // break;
-            }else {
+            } else {
                 let dom = document.getElementsByName(item.id);
-                if(dom && dom.length > 0){
+                if (dom && dom.length > 0) {
                     dom[0].classList.remove("required");
                 }
             }
-            if(['O', 'Y', 'U', 'Y_MD'].includes(item.type) && paramsList[item.id] == ''){
+            if (['O', 'Y', 'U', 'Y_MD'].includes(item.type) && paramsList[item.id] == '') {
                 delete paramsList[item.id];
             }
-            if(item.permission == 2 || item.permission == "" || item.permission == 0 || item.permission == 4){
+            if (item.permission == 2 || item.permission == "" || item.permission == 0 || item.permission == 4) {
                 delete paramsList[item.id];
             }
             // 意见
@@ -1579,12 +1702,12 @@
             //     }
             // }
         }
-        
-        if(isRequired){
+
+        if (isRequired) {
             message.error(`请输入必填项!`)
             return false;
         };
-        if(data.deleteRelatedData.length){
+        if (data.deleteRelatedData.length) {
             deleteRelted();
         }
         // if(type == "submit"){
@@ -1594,30 +1717,35 @@
         //     }
         // }
 
+        const isSubFields = verifySubFieldsRequired();
+        if(!isSubFields){
+            message.error("请检查子表必填项！");
+            return false;
+        }
         let relatedList = saveRelated();
         // console.log("relatedList", relatedList);
         // console.log("paramsList", paramsList);
         // return false;
         let obj = {
-          actions:[{
-              id: "2919;a",
-              descriptor: "",
-              callingDescriptor: "UNKNOWN",
-              params: {
-                processId: props.processId,
-                ruleLogId: props.ruleLogId,
-                master: {
-                    recordId: data.processInstanceId,
-                    recordInput:{
-                        allowSaveOnDuplicate: false,
-                        apiName: data.entityApiName,
-                        objTypeCode: data.objTypeCode,
-                        fields: paramsList
-                    }
-                },
-                relatedList: relatedList
-              }
-          }]
+            actions: [{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    processId: props.processId,
+                    ruleLogId: props.ruleLogId,
+                    master: {
+                        recordId: data.processInstanceId,
+                        recordInput: {
+                            allowSaveOnDuplicate: false,
+                            apiName: data.entityApiName,
+                            objTypeCode: data.objTypeCode,
+                            fields: paramsList
+                        }
+                    },
+                    relatedList: relatedList
+                }
+            }]
         };
 
         let d = {
@@ -1626,13 +1754,13 @@
 
         console.log("d", JSON.stringify(obj));
         data.isLoad = false;
-        proxy.$post(Interface.workflow.updateRecordBatch , d).then(res=>{
-            if(type == "submit"){
+        proxy.$post(Interface.workflow.updateRecordBatch, d).then(res => {
+            if (type == "submit") {
                 const isSubRequired = verifySubTableRequired();
-                if(isSubRequired){
+                if (isSubRequired) {
                     emit("openSubmit", true);
                 }
-            }else {
+            } else {
                 message.success("保存成功！");
             }
             loadQuery();
@@ -1643,13 +1771,13 @@
     const verifySubTableRequired = () => {
         let errorText = "";
         let isBook = true;
-        data.cellData.forEach(item=>{
-            for(let key in item){
-                if(item[key]?.field?.displayCategory == 'RelatedList'){
+        data.cellData.forEach(item => {
+            for (let key in item) {
+                if (item[key]?.field?.displayCategory == 'RelatedList') {
                     let { field, subTableData } = item[key];
                     let relatedName = field.id.split("__")[1];
-                    if(field.isRequired){
-                        if(subTableData.length == 0){
+                    if (field.isRequired) {
+                        if (subTableData.length == 0) {
                             isBook = false;
                             errorText += field.label + "列表数据不能为空！";
                         }
@@ -1657,17 +1785,42 @@
                 }
             }
         });
-        if(errorText){
+        if (errorText) {
             message.error(errorText);
         };
         return isBook;
     };
 
+    // 校验子表字段必填项数据
+    const verifySubFieldsRequired = () => {
+        let isBook = true;
+        data.cellData.forEach(item => {
+            for (let key in item) {
+                if (item[key]?.field?.displayCategory == 'RelatedList') {
+                    let { field, subTableData } = item[key];
+                    let requiredNames = field.checkedColumns.filter(v=>v.required).map(l=>l.filterColumn);
+                    // console.log("requiredNames", requiredNames);
+                    // console.log("subTableData", subTableData);
+                    subTableData.forEach(row=>{
+                        for(let k in row){
+                            if(requiredNames.includes(k) && row[k] === ''){
+                                isBook = false;
+                            }
+                        }
+                    })
+
+                }
+            }
+        });
+        // console.log("isBook", isBook);
+        return isBook;
+    }
+
     const saveRelated = () => {
         let relatedObj = {};
-        data.cellData.forEach(item=>{
-            for(let key in item){
-                if(item[key]?.field?.displayCategory == 'RelatedList'){
+        data.cellData.forEach(item => {
+            for (let key in item) {
+                if (item[key]?.field?.displayCategory == 'RelatedList') {
                     let { field, subTableData } = item[key];
                     let relatedName = field.id.split("__")[1];
                     relatedObj[field.id] = {
@@ -1680,30 +1833,30 @@
         });
         console.log("relatedObj", relatedObj);
         let relatedList = [];
-        for(let key in relatedObj){
+        for (let key in relatedObj) {
             let relatedName = relatedObj[key].relatedName;
             let list = relatedObj[key].list;
-            let newList = list.map(item=>{
+            let newList = list.map(item => {
                 const { key, ...rest } = item;
                 return rest;
             });
-            data.relatedEntityInfoList.forEach(item=>{
-                if(item.relatedEntity == relatedName){
+            data.relatedEntityInfoList.forEach(item => {
+                if (item.relatedEntity == relatedName) {
                     // relatedList.push({
                     //     relatedEntity: item.relatedEntity,
                     //     relatedEntityObjectTypeCode: item.relatedEntityObjectTypeCode,
                     //     list: newList
                     // });
-                    newList.forEach(row=>{
+                    newList.forEach(row => {
                         let paramsRow = {
                             // id: row.id
                         };
-                        item.checkedColumns.forEach(v=>{
-                            if(v.permission != 2 && v.permission != 4){
+                        item.checkedColumns.forEach(v => {
+                            if (v.permission != 2 && v.permission != 4) {
                                 paramsRow[v.id] = row[v.id];
                             }
                             console.log("v", v);
-                            if(['O', 'Y', 'U', 'Y_MD'].includes(v.type) && paramsRow[v.id] == ""){
+                            if (['O', 'Y', 'U', 'Y_MD'].includes(v.type) && paramsRow[v.id] == "") {
                                 delete paramsRow[v.id];
                             }
                         });
@@ -1731,21 +1884,23 @@
         data.list[field.id] = val;
     }
 
-    defineExpose({handleSave, loadQuery});
+    defineExpose({ handleSave, loadQuery });
 
 </script>
 <style lang="less" scoped>
-    @media print{
-        .childTableOption{
+    @media print {
+        .childTableOption {
             display: none !important;
         }
     }
-    .wrap{
+
+    .wrap {
         width: 100%;
         /* height: 100vh; */
         /* overflow: auto; */
         background: #fff;
-        .formTable{
+
+        .formTable {
             width: 95%;
             /* min-height: calc(100vh - 130px); */
             /* margin: 65px auto; */
@@ -1755,11 +1910,13 @@
             /* background: #e7ecf3; */
             /* box-shadow: 0 0 14px 0 hsla(0, 0%, 83.9%, .5); */
         }
-        table{
+
+        table {
             width: 794px;
             border-collapse: collapse;
-            tr{
-                td{
+
+            tr {
+                td {
                     /* width: 90px;
                     height: 30px; */
                     /* border: 1px solid #dedede; */
@@ -1767,41 +1924,48 @@
                 }
             }
         }
-        .childTableOption{
+
+        .childTableOption {
             display: flex;
             justify-content: flex-end;
             align-items: center;
             margin-bottom: 10px;
         }
-        .table{
+
+        .table {
             width: 794px;
             table-layout: fixed;
-            td{
+
+            td {
                 overflow: auto;
             }
         }
-        .excelTableView{
+
+        .excelTableView {
             width: 100%;
             overflow: auto;
-            table{
+
+            table {
                 width: 100%;
-                td{
+
+                td {
                     overflow: hidden;
                     color: #333 !important;
                 }
             }
         }
     }
-    table.newTable{
-        tr{
-            td{
+
+    table.newTable {
+        tr {
+            td {
                 min-width: 66px;
             }
         }
     }
 </style>
 <style lang="less">
-    .wrap .ant-spin{
+    .wrap .ant-spin {
         width: 100%;
     }
 </style>
