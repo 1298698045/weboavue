@@ -870,6 +870,7 @@ const getQuery = () => {
     ) {
       let roomList = res.actions[0].returnValue;
       let obj = {};
+      data.calendarOptions.events = [];
       roomList.forEach((item, index) => {
         let roomitem = item.meetingRoom;
         roomitem.id = item.meetingRoom ? item.meetingRoom.Id : "";
@@ -906,16 +907,7 @@ const getQuery = () => {
             borderColor: colors[remainder], // 该事件的边框颜色
             textColor: "#FFF", // 该事件的文字颜色
           };
-          if (
-            fullCalendarRef.value.getApi().view.calendar.getEventById(item1.Id)
-          ) {
-            fullCalendarRef.value
-              .getApi()
-              .view.calendar.getEventById(item1.Id)
-              .remove();
-          }
-          // data.calendarOptions.events.push(event);
-          fullCalendarRef.value.getApi().view.calendar.addEvent(event);
+          data.calendarOptions.events.push(event);
         });
       });
     }

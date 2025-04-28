@@ -849,6 +849,7 @@ const getQuery = () => {
     ) {
       let vehicleList = res.actions[0].returnValue;
       let obj = {};
+      data.calendarOptions.events = [];
       vehicleList.forEach((item, index) => {
         let vehicleItem = {
           id: item.vehicle ? item.vehicle.valueId : "",
@@ -888,16 +889,7 @@ const getQuery = () => {
             borderColor: colors[remainder], // 该事件的边框颜色
             textColor: "#FFF", // 该事件的文字颜色
           };
-          if (
-            fullCalendarRef.value.getApi().view.calendar.getEventById(item1.id)
-          ) {
-            fullCalendarRef.value
-              .getApi()
-              .view.calendar.getEventById(item1.id)
-              .remove();
-          }
-          // data.calendarOptions.events.push(event);
-          fullCalendarRef.value.getApi().view.calendar.addEvent(event);
+          data.calendarOptions.events.push(event);
         });
       });
     }
