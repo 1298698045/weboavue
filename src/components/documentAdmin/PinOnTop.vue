@@ -14,8 +14,8 @@
                             <!-- <a-input type="checkbox" v-model:checked="formState.IsTop" class="switchItem"></a-input> -->
                             <a-switch v-model:checked="formState.IsTop" class="switchItem" />
                         </a-form-item>
-                        <a-form-item label="置顶截止：" name="RestTime" class="RestTime" v-if="formState.IsTop">
-                            <a-date-picker v-model:value="formState.RestTime" valueFormat="YYYY-MM-DD HH:mm:ss"
+                        <a-form-item label="置顶截止：" name="EndTopDate" class="EndTopDate" v-if="formState.IsTop">
+                            <a-date-picker v-model:value="formState.EndTopDate" valueFormat="YYYY-MM-DD HH:mm:ss"
                                 show-time placeholder="置顶截至时间" />
                         </a-form-item>
 
@@ -86,7 +86,7 @@ const handleSubmit = () => {
                     objTypeCode: 100201,
                     fields: {
                         IsTop: formState.IsTop ? 1 : 0,
-                        EndTopDate: formState.RestTime || '',
+                        EndTopDate: formState.EndTopDate || null,
                     }
                 }
             }
@@ -124,9 +124,9 @@ const formState = reactive({
     Description: "",
     BusinessUnitList: [],
     IsTop: true,
-    RestTime: '',
-    RestTime1: '',
-    RestTime2: ''
+    EndTopDate: null,
+    EndTopDate1: '',
+    EndTopDate2: ''
 })
 const PinOnTopRef = ref(null);
 const getData = () => {
@@ -149,7 +149,7 @@ const getData = () => {
         if (res && res.actions && res.actions[0]) {
             let record = res.actions[0].returnValue.fields;
             formState.IsTop = record.IsTop ? record.IsTop.value * 1 == 1 ? true : false : '';
-            formState.RestTime = record.EndTopDate ? dayjs(record.EndTopDate.value).format("YYYY-MM-DD HH:mm:ss") : '';
+            formState.EndTopDate = record.EndTopDate&&record.EndTopDate.value ? dayjs(record.EndTopDate.value).format("YYYY-MM-DD HH:mm:ss") : null;
         }
     })
 }
@@ -164,12 +164,12 @@ const setTop = computed(() => ({
 }));
 const changeRangeDate = (e) => {
     if (e && e.length) {
-        formState.RestTime = e.join(',');
-        formState.RestTime1 = e[0];
-        formState.RestTime2 = e[1];
+        formState.EndTopDate = e.join(',');
+        formState.EndTopDate1 = e[0];
+        formState.EndTopDate2 = e[1];
     }
     else {
-        formState.RestTime = '';
+        formState.EndTopDate = null;
     }
 }
 defineExpose({ isModal })

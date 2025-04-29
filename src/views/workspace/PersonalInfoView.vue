@@ -45,7 +45,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="profile-name">
+                    <!-- <div class="profile-name">
                       <label>账号类型：</label>{{ "主账号" }}
                     </div>
                     <div class="profile-name">
@@ -54,9 +54,10 @@
                     <div class="profile-name"><label>下属：</label>{{ 6 }}</div>
                     <div class="profile-name">
                       <label>状态：</label>{{ "正式" }}
-                    </div>
+                    </div> -->
                     <div class="profile-name">
-                      <label>最后登录日期：</label>{{ "2024-11-21" }}
+                      <label>最后登录日期：</label
+                      >{{ UserInfo.LoginOn || "暂无" }}
                     </div>
                   </div>
                   <div class="profile-message-rightmessage">
@@ -283,6 +284,7 @@ import ImageView from "@/components/file/ImageView.vue";
 const { proxy } = getCurrentInstance();
 const PersonnelLst = ref();
 import { useRouter, useRoute } from "vue-router";
+import dayjs from "dayjs";
 const route = useRoute();
 const router = useRouter();
 const props = defineProps({
@@ -316,6 +318,7 @@ const data = reactive({
   list: {},
   defaultImg: require("@/assets/img/user/MyResume/showEmpAvatar.png"),
   photoParams: {},
+  UserInfo: {},
 });
 const {
   photoParams,
@@ -335,6 +338,7 @@ const {
   listDataDetail,
   ParentSubjectName,
   Description,
+  UserInfo,
 } = toRefs(data);
 
 const getDetail = () => {
@@ -428,6 +432,10 @@ const getData = () => {
       let { layout, record } = res.actions[0].returnValue;
       data.layoutList = layout.sections;
       data.list = JSON.parse(JSON.stringify(record.fields));
+      data.UserInfo.LoginOn =
+        data.list && data.list.LastLogin && data.list.LastLogin.value
+          ? dayjs(data.list.LastLogin.value).format("YYYY-MM-DD")
+          : "";
     }
   });
   data.detailviewloading = false;
@@ -471,6 +479,30 @@ const getStatistic = () => {
     }
   });
 };
+const getUserInfo = (id) => {
+  let d = {
+    actions: [
+      {
+        state: "",
+        id: "",
+        params: {
+          id: props.id,
+        },
+      },
+    ],
+  };
+  let obj = {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.user.getUserInfo, obj).then((res) => {
+    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+      data.UserInfo = res.actions[0].returnValue;
+      data.UserInfo.LoginOn = data.UserInfo.LoginOn
+        ? dayjs(data.UserInfo.LoginOn).format("YYYY-MM-DD")
+        : "";
+    }
+  });
+};
 defineExpose({ getData });
 onMounted(() => {
   let item = {
@@ -490,6 +522,7 @@ onMounted(() => {
     let h = document.documentElement.clientHeight;
     data.height = h;
   });
+  getUserInfo();
   getStatistic();
   getData();
 });
@@ -777,7 +810,8 @@ onMounted(() => {
   }
   .panel .panel-bd .profile-name {
     font-size: 12px;
-    color: #000;
+    //color: #000;
+    color: #868686;
     padding-left: 18px;
     height: 36px;
     label {

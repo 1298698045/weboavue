@@ -3,12 +3,18 @@
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
-          <img :src="require('@/assets/img/rightMenu/morenliucheng.png')" alt="">
+          <img
+            :src="require('@/assets/img/rightMenu/morenliucheng.png')"
+            alt=""
+          />
         </div>
         <span class="headerTitle">请示报告</span>
       </div>
       <div class="headerRight">
         <!-- <a-button type="primary" class="ml10" @click="handleNew">新建</a-button> -->
+        <a-button type="primary" class="ml10" @click="batchArchived"
+          >批量归档</a-button
+        >
       </div>
     </div>
     <div class="todo-content">
@@ -16,26 +22,46 @@
         <a-col span="5" class="wea-left-right-layout-left" v-if="!isCollapsed">
           <div class="wea-left-tree">
             <div class="wea-left-tree-search">
-              <a-input-search v-model:value="data.searchVal" placeholder="" @search="onSearch" />
+              <a-input-search
+                v-model:value="data.searchVal"
+                placeholder=""
+                @search="onSearch"
+              />
             </div>
             <div class="wea-left-tree-scroll">
-              <a-tree :style="{ height: tableHeight + 'px' }" :expanded-keys="expandedKeys"
-                :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
-                @select="onSelect" @expand="onExpand">
+              <a-tree
+                :style="{ height: tableHeight + 'px' }"
+                :expanded-keys="expandedKeys"
+                :auto-expand-parent="autoExpandParent"
+                :tree-data="gData"
+                block-node
+                :fieldNames="fieldNames"
+                @select="onSelect"
+                @expand="onExpand"
+              >
                 <template #switcherIcon="{ switcherCls }">
-                  <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
+                  <CaretDownOutlined
+                    :class="switcherCls"
+                    style="color: rgb(163, 163, 163); font-size: 14px"
+                  >
                   </CaretDownOutlined>
                 </template>
-                <template v-slot:title="{ name, quantity }">
-                  <span>{{ name }}<span class="tree-num">{{ quantity }}</span></span>
+                <template v-slot:title="{ name }">
+                  <span>{{ name }}</span>
                 </template>
               </a-tree>
             </div>
           </div>
         </a-col>
-        <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
-          <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
-            :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
+        <a-col
+          :span="isCollapsed ? '24' : '19'"
+          class="wea-left-right-layout-right"
+        >
+          <div
+            class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
+            :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }"
+            @click="handleCollapsed"
+          ></div>
           <div style="height: 100%" ref="contentRef">
             <div class="wea-header">
               <div class="wea-tab">
@@ -48,19 +74,30 @@
                     </template>
                   </a-tab-pane>
                 </a-tabs>
-                <div class="tabsBtn">
-                </div>
+                <div class="tabsBtn"></div>
               </div>
-              <HighSearch @update-height="changeHeight" @search="handleSearch"
-                :entityApiName="data.queryParams.entityName">
+              <HighSearch
+                @update-height="changeHeight"
+                @search="handleSearch"
+                :entityApiName="data.queryParams.entityName"
+              >
               </HighSearch>
             </div>
             <!-- <list-form-search ref="searchRef" @search="handleSearch" entityApiName="OfficialRequestReport"
               :SearchFields="SearchFields" @update-height="changeHeight"></list-form-search> -->
-            <div class="wea-tabContent" :style="{ height: tableHeight + 'px' }" ref="tabContent">
+            <div
+              class="wea-tabContent"
+              :style="{ height: tableHeight + 'px' }"
+              ref="tabContent"
+            >
               <!-- <Dtable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight" :isCollapsed="isCollapsed"></Dtable> -->
-              <Ntable ref="gridRef" :columns="columns" :gridUrl="gridUrl" :tableHeight="tableHeight"
-                :isCollapsed="isCollapsed">
+              <Ntable
+                ref="gridRef"
+                :columns="columns"
+                :gridUrl="gridUrl"
+                :tableHeight="tableHeight"
+                :isCollapsed="isCollapsed"
+              >
               </Ntable>
             </div>
           </div>
@@ -68,17 +105,56 @@
       </a-row>
     </div>
     <!-- 委派 -->
-    <Delegate ref="DelegateRef" @update-status="updateStatus" :paramsData="DelegateData.params" :isShow="isModal"
-      v-if="isModal" />
+    <Delegate
+      ref="DelegateRef"
+      @update-status="updateStatus"
+      :paramsData="DelegateData.params"
+      :isShow="isModal"
+      v-if="isModal"
+    />
     <!-- 跳转 -->
-    <Jump v-if="isJump" :isShow="isJump" :paramsData="jumpData.params" @update-status="isJump = false" />
+    <Jump
+      v-if="isJump"
+      :isShow="isJump"
+      :paramsData="jumpData.params"
+      @update-status="isJump = false"
+    />
     <!-- 加签 -->
-    <Countersign v-if="isCountersign" :isShow="isCountersign" :paramsData="CountersignData.params"
-      @update-status="isCountersign = false" />
+    <Countersign
+      v-if="isCountersign"
+      :isShow="isCountersign"
+      :paramsData="CountersignData.params"
+      @update-status="isCountersign = false"
+    />
     <!-- 发布 -->
-    <ReleaseFlow v-if="isRelease" :isShow="isRelease" :id="ProcessInstanceId" @cancel="cancelRelase"></ReleaseFlow>
-    <NewCategory v-if="isCategory" @cancel="cancelCategory" :isShow="isCategory" :id="treeId" ObjectTypeCode="流程" />
-    <EditFlowDefine v-if="isEditFlow" :isShow="isEditFlow" :id="id" @cancel="cancelEditFlowDefine" />
+    <ReleaseFlow
+      v-if="isRelease"
+      :isShow="isRelease"
+      :id="ProcessInstanceId"
+      @cancel="cancelRelase"
+    ></ReleaseFlow>
+    <NewCategory
+      v-if="isCategory"
+      @cancel="cancelCategory"
+      :isShow="isCategory"
+      :id="treeId"
+      ObjectTypeCode="流程"
+    />
+    <EditFlowDefine
+      v-if="isEditFlow"
+      :isShow="isEditFlow"
+      :id="id"
+      @cancel="cancelEditFlowDefine"
+    />
+    <CommonConfirm
+      v-if="isConfirm"
+      :isShow="isConfirm"
+      :text="confirmText"
+      :title="confirmTitle"
+      @cancel="isConfirm = false"
+      @ok="confirmOk"
+      :id="CheckList"
+    />
   </div>
 </template>
 <script setup>
@@ -86,9 +162,18 @@ import {
   UnorderedListOutlined,
   DownOutlined,
   CaretDownOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons-vue";
-import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated, nextTick } from "vue";
+import {
+  ref,
+  watch,
+  reactive,
+  toRefs,
+  onMounted,
+  getCurrentInstance,
+  onUpdated,
+  nextTick,
+} from "vue";
 import Interface from "@/utils/Interface.js";
 import { message } from "ant-design-vue";
 // import Dtable from "@/components/Dtable.vue";
@@ -100,7 +185,8 @@ import EditFlowDefine from "@/components/workflow/EditFlowDefine.vue";
 import Delegate from "@/components/workflow/Delegate.vue";
 import Jump from "@/components/workflow/Jump.vue";
 import Countersign from "@/components/workflow/Countersign.vue";
-import ReleaseFlow from "@/components/workflow/ReleaseFlow.vue"
+import ReleaseFlow from "@/components/workflow/ReleaseFlow.vue";
+import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 import { useRouter, useRoute } from "vue-router";
 import useWorkAdmin from "@/utils/flow/workAdmin";
 import { formTreeData, girdFormatterValue } from "@/utils/common.js";
@@ -176,7 +262,7 @@ const gDataAll = ref([]);
 
 //处理树
 const formTree = (list) => {
-  list.forEach(item => {
+  list.forEach((item) => {
     if (item.children) {
       formTree(item.children);
     }
@@ -184,24 +270,29 @@ const formTree = (list) => {
     item.id = item.businessUnitId;
     item.key = item.businessUnitId;
     item.text = item.name;
-  })
-  return list
-}
+  });
+  return list;
+};
 // 组织结构
 const getDeptTreeData = () => {
-  proxy.$get(Interface.deptTree, {
-    //entity: "organizationtree"
-  }).then(res => {
-    let list = [];
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-      list = res.actions[0].returnValue;
-    } else { return false }
-    list = formTree(list);
-    gData.value = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
-    gDataAll.value = list;
-    //console.log("deptTreeData", data.deptTreeData);
-  })
-}
+  proxy
+    .$get(Interface.deptTree, {
+      //entity: "organizationtree"
+    })
+    .then((res) => {
+      let list = [];
+      if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+        list = res.actions[0].returnValue;
+      } else {
+        return false;
+      }
+      //list = formTree(list);
+      //gData.value = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
+      gData.value = list;
+      gDataAll.value = list;
+      //console.log("deptTreeData", data.deptTreeData);
+    });
+};
 getDeptTreeData();
 // console.log("genData",genData,treeList)
 
@@ -225,54 +316,25 @@ const onExpand = (keys) => {
 
 let data = reactive({
   isCollapsed: false,
-  tableHeight: '',
+  tableHeight: "",
   fieldNames: {
-    children: 'children', title: 'name', key: 'id'
+    children: "children",
+    title: "name",
+    key: "id",
   },
-  tabs0: [
-    {
-      label: "全部",
-      count: '',
-      filterquery: '',
-    },
-    {
-      label: "流转中",
-      count: '',
-      filterquery: '\nStateCode\teq\t1',
-    },
-    {
-      label: "已完成",
-      count: '',
-      filterquery: '\nStateCode\teq\t3',
-    },
-    {
-      label: "已退回",
-      count: '',
-      filterquery: '\nStateCode\teq\t6',
-    },
-    {
-      label: "已撤销",
-      count: '',
-      filterquery: '\nStateCode\teq\t5',
-    },
-    {
-      label: "草稿",
-      count: '',
-      filterquery: '\nStateCode\teq\t0',
-    }
-  ],
+  tabs0: [],
   tabs: [],
   //tabs: tabList,
   activeKey: 0,
   queryParams: {
-    filterId: '',
-    objectTypeCode: '100119',
-    entityName: 'OfficialRequestReport',
-    filterQuery: '',
+    filterId: "",
+    objectTypeCode: 100119,
+    entityName: "OfficialRequestReport",
+    //filterQuery: '',
     //filterQuery:'\nCreatedBy\teq-userid',
     //displayColumns:'ProcessInstanceNumber,Name,ProcessId,StateCode,ExpiredOn,AttachQty,CreatedBy,CurrentStepName,CreatedOn,BusinessUnitId,ModifiedOn,Priority,ProcessInstanceId,WFRuleLogId,ExecutorIdentityName',
-    sort: 'CreatedOn',
-    order: 'desc'
+    sort: "CreatedOn",
+    order: "desc",
   },
   isModal: false,
   isCirculation: false,
@@ -287,17 +349,45 @@ let data = reactive({
   ProcessInstanceId: "",
   formSearchFilterquery: "",
   SearchFields: [],
-  layoutName: 'OfficialRequestReport',
-  entityType: '09A',
-  hightSearchParams: {}
+  layoutName: "OfficialRequestReport",
+  entityType: "09A",
+  hightSearchParams: {},
+  CheckList: [],
+  isConfirm: false,
+  confirmText: "",
+  confirmTitle: "",
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
   changeHeight();
 };
 
-const { layoutName, entityType, hightSearchParams, isCollapsed, tableHeight, fieldNames, tabs, activeKey, isModal, isCirculation, searchVal,
-  isCategory, treeId, isEditFlow, id, isJump, isCountersign, isRelease, ProcessInstanceId, SearchFields } = toRefs(data);
+const {
+  CheckList,
+  isConfirm,
+  confirmText,
+  confirmTitle,
+  layoutName,
+  entityType,
+  hightSearchParams,
+  isCollapsed,
+  tableHeight,
+  fieldNames,
+  tabs,
+  activeKey,
+  isModal,
+  isCirculation,
+  searchVal,
+  isCategory,
+  treeId,
+  isEditFlow,
+  id,
+  isJump,
+  isCountersign,
+  isRelease,
+  ProcessInstanceId,
+  SearchFields,
+} = toRefs(data);
 //   console.log("tabs", data.tabs);
 const tabContent = ref(null);
 const contentRef = ref(null);
@@ -308,38 +398,38 @@ const onSearch = (e) => {
   //   gData.value = gDataAll.value.filter(item=>{
   //     return item.name.indexOf(data.searchVal) != -1;
   //   })
-  let list = gDataAll.value.filter(item => {
+  let list = gDataAll.value.filter((item) => {
     return item.text.indexOf(data.searchVal) !== -1;
-  })
+  });
   list = formTree(list);
-  gData.value = formTreeData(list, 'businessUnitId', 'parentBusinessUnitId');
-}
+  gData.value = formTreeData(list, "businessUnitId", "parentBusinessUnitId");
+};
 const onSelect = (keys) => {
   data.treeId = keys[0];
   handleSearch();
 };
 function changeHeight(h) {
-  if (typeof h == 'number') {
+  if (typeof h == "number") {
     formSearchHeight.value = h;
   }
   let contentHeight = document.documentElement.clientHeight - 120;
   let tabsHeight = 46;
   let height = contentHeight - tabsHeight;
   data.tableHeight = height;
-  console.log('data', data.tableHeight);
+  console.log("data", data.tableHeight);
   //console.log("gridRef", gridRef.value.loadGrid())
   //handleSearch();
 }
 const cancelRelase = (e) => {
   data.isRelease = e;
-}
+};
 const handleSearch = (obj) => {
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '100119',
-    entityName: 'OfficialRequestReport',
-    sort: 'CreatedOn',
-    order: 'desc'
+    objectTypeCode: "100119",
+    entityName: "OfficialRequestReport",
+    sort: "CreatedOn",
+    order: "desc",
   };
   // data.formSearchFilterquery = filterquery;
   // if (filterquery) {
@@ -352,110 +442,122 @@ const handleSearch = (obj) => {
         data.queryParams.search = data.hightSearchParams.search;
       }
       if (data.hightSearchParams.filterCondition) {
-        data.queryParams.filterCondition = data.hightSearchParams.filterCondition;
+        data.queryParams.filterCondition =
+          data.hightSearchParams.filterCondition;
       }
     }
-  }
-  else {
-    data.hightSearchParams = {}
+  } else {
+    data.hightSearchParams = {};
   }
   if (data.treeId) {
-    data.queryParams.filterQuery = '\nOwningBusinessUnit\tin\t' + data.treeId;
+    data.queryParams.filterQuery = "\nOwningBusinessUnit\tin\t" + data.treeId;
   }
   gridRef.value.loadGrid(data.queryParams);
-}
+};
 //获取显示列
 const getColumns = (id) => {
-  let columnslist = [{
-    field: 'ids',
-    checkbox: true
-  },
-  {
-    field: "Action",
-    title: "操作",
-    formatter: function formatter(value, row, index) {
-      var str = `
+  let columnslist = [
+    {
+      field: "ids",
+      checkbox: true,
+    },
+    {
+      field: "Action",
+      title: "操作",
+      formatter: function formatter(value, row, index) {
+        var str = `
                   <div class="iconBox">
               <div class="popup">
               <div class="option-item" id=${row.id} onclick="handleTo('${row.viewUrl}')">查看</div>
               </div>
               <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation" data-v-69a58868=""><path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474" data-v-69a58868=""></path></svg></div>
-          `
-      return str;
-    }
-  },];
-  proxy.$get(Interface.listView.getFilterInfo, {
-    entityType: data.entityType,
-    objectTypeCode: data.queryParams.objectTypeCode,
-    search: "",
-    filterId: id
-  }).then(res => {
-    if (res && res.actions && res.actions[0]) { } else { return }
-    let fields = res.actions[0].returnValue.fields;
-    fields.forEach(item => {
-      if (item.name != 'Name') {
-        columnslist.push({
-          field: item.name,
-          title: item.label,
-          sortable: true,
-          formatter: function formatter(value, row, index) {
-            return girdFormatterValue(item.name, row);
-          }
-        });
-      }
-      else {
-        columnslist.push({
-          field: item.name,
-          title: item.label,
-          sortable: true,
-          formatter: function formatter(value, row, index) {
-            let url = row.viewUrl;
-            let val = girdFormatterValue(item.name, row);
-            return '<a class="namefield" title="' + val + '" href="' + url + '" target="_blank">' + val + '</a>';
-          }
-        });
-      }
+          `;
+        return str;
+      },
+    },
+  ];
+  proxy
+    .$get(Interface.listView.getFilterInfo, {
+      entityType: data.entityType,
+      objectTypeCode: data.queryParams.objectTypeCode,
+      search: "",
+      filterId: id,
     })
-    columns.value = columnslist;
-    nextTick(() => {
-      gridRef.value.loadGrid(data.queryParams);
-      //searchRef.value.getSearchLayout();
-    })
-
-  })
-}
+    .then((res) => {
+      if (res && res.actions && res.actions[0]) {
+      } else {
+        return;
+      }
+      let fields = res.actions[0].returnValue.fields;
+      fields.forEach((item) => {
+        if (item.name != "Name") {
+          columnslist.push({
+            field: item.name,
+            title: item.label,
+            sortable: true,
+            formatter: function formatter(value, row, index) {
+              return girdFormatterValue(item.name, row);
+            },
+          });
+        } else {
+          columnslist.push({
+            field: item.name,
+            title: item.label,
+            sortable: true,
+            formatter: function formatter(value, row, index) {
+              let url = row.viewUrl;
+              let val = girdFormatterValue(item.name, row);
+              return (
+                '<a class="namefield" title="' +
+                val +
+                '" href="' +
+                url +
+                '" target="_blank">' +
+                val +
+                "</a>"
+              );
+            },
+          });
+        }
+      });
+      columns.value = columnslist;
+      nextTick(() => {
+        gridRef.value.loadGrid(data.queryParams);
+        //searchRef.value.getSearchLayout();
+      });
+    });
+};
 
 // 获取tabs
 const getTabs = () => {
-  proxy.$get(Interface.getTabs, {
-    entityName: data.queryParams.entityName,
-    layoutName: data.layoutName
-  }).then(res => {
-    //console.log("tabs", res)
-    if (res && res.tabs && res.tabs.length) {
-      let list = res.tabs;
-      list.forEach(item => {
-        item.label = item.title;
-        item.filterId = item.filter.filterId;
-        item.filterquery = item.filterquery || '';
-      })
-      data.tabs = list;
-    }
-    else {
-      //data.tabs=data.tabs0;
-    }
+  proxy
+    .$get(Interface.getTabs, {
+      entityName: data.queryParams.entityName,
+      layoutName: data.layoutName,
+    })
+    .then((res) => {
+      //console.log("tabs", res)
+      if (res && res.tabs && res.tabs.length) {
+        let list = res.tabs;
+        list.forEach((item) => {
+          item.label = item.title;
+          item.filterId = item.filter.filterId;
+          item.filterquery = item.filterquery || "";
+        });
+        data.tabs = list;
+      } else {
+        //data.tabs=data.tabs0;
+      }
 
-    let filterColumnsList = (data.tabs)[0].filterableColumns;
-    data.SearchFields = filterColumnsList;
-    data.queryParams.filterId = data.tabs[0].filterId || '';
-    getColumns(data.queryParams.filterId);
-  })
-}
+      let filterColumnsList = data.tabs[0].filterableColumns;
+      data.SearchFields = filterColumnsList;
+      data.queryParams.filterId = data.tabs[0].filterId || "";
+      getColumns(data.queryParams.filterId);
+    });
+};
 // getTabs();
 
-const handleMenuClick = () => {
-
-}
+const handleMenuClick = () => {};
 const DelegateRef = ref();
 
 function handleTo(viewUrl) {
@@ -465,63 +567,83 @@ function handleTo(viewUrl) {
   //     id: id
   //   }
   // });
-  window.open(viewUrl)
+  window.open(viewUrl);
 }
 const EditFlow = (id) => {
   console.log("id", id);
   data.id = id;
   data.isEditFlow = true;
-}
+};
 const DelegateData = reactive({
-  params: {}
-})
+  params: {},
+});
 const CirculationData = reactive({
-  params: {}
-})
+  params: {},
+});
 const jumpData = reactive({
-  params: {}
-})
+  params: {},
+});
 const CountersignData = reactive({
-  params: {}
-})
+  params: {},
+});
 const updateStatus = (e) => {
   data.isModal = e;
   data.isCirculation = e;
-}
+};
 // 委派
-function DelegateFn(InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName) {
+function DelegateFn(
+  InstanceId,
+  RuleLogId,
+  InstanceIdName,
+  ExecutorIdentityName
+) {
   // console.log("RuleLogId",RuleLogId, DelegateRef);
   DelegateData.params = {
-    InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName
-  }
-  console.log(DelegateData.params)
+    InstanceId,
+    RuleLogId,
+    InstanceIdName,
+    ExecutorIdentityName,
+  };
+  console.log(DelegateData.params);
   data.isModal = true;
 }
-function CirculationFn(InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName) {
+function CirculationFn(
+  InstanceId,
+  RuleLogId,
+  InstanceIdName,
+  ExecutorIdentityName
+) {
   CirculationData.params = {
-    InstanceId, RuleLogId, InstanceIdName, ExecutorIdentityName
-  }
+    InstanceId,
+    RuleLogId,
+    InstanceIdName,
+    ExecutorIdentityName,
+  };
   data.isCirculation = true;
 }
 // 跳转
 function handleJump(ProcessId, ProcessIdName, ProcessInstanceId) {
   jumpData.params = {
-    ProcessId, ProcessIdName, ProcessInstanceId
-  }
+    ProcessId,
+    ProcessIdName,
+    ProcessInstanceId,
+  };
   data.isJump = true;
 }
 // 加签
 function handleCountersign(ProcessId, ProcessIdName, ProcessInstanceId) {
   CountersignData.params = {
-    ProcessId, ProcessIdName, ProcessInstanceId
-  }
+    ProcessId,
+    ProcessIdName,
+    ProcessInstanceId,
+  };
   data.isCountersign = true;
 }
 // 发布
 const handleRelase = (ProcessInstanceId) => {
   data.ProcessInstanceId = ProcessInstanceId;
   data.isRelease = true;
-}
+};
 window.handleRelase = handleRelase;
 window.handleJump = handleJump;
 window.handleCountersign = handleCountersign;
@@ -537,14 +659,14 @@ const changeTab = (e) => {
   data.activeKey = e;
   data.queryParams = {
     filterId: data.queryParams.filterId,
-    objectTypeCode: '100119',
-    entityName: 'OfficialRequestReport',
-    sort: 'CreatedOn',
-    order: 'desc'
+    objectTypeCode: "100119",
+    entityName: "OfficialRequestReport",
+    sort: "CreatedOn",
+    order: "desc",
   };
-  let filterColumnsList = (data.tabs)[e].filterableColumns;
+  let filterColumnsList = data.tabs[e].filterableColumns;
   data.SearchFields = filterColumnsList;
-  data.queryParams.filterId = data.tabs[e].filterId || '';
+  data.queryParams.filterId = data.tabs[e].filterId || "";
   // if (data.formSearchFilterquery) {
   //   data.queryParams.filterQuery += data.formSearchFilterquery;
   // }
@@ -557,33 +679,103 @@ const changeTab = (e) => {
     }
   }
   if (data.treeId) {
-    data.queryParams.filterQuery = '\nOwningBusinessUnit\tin\t' + data.treeId;
+    data.queryParams.filterQuery = "\nOwningBusinessUnit\tin\t" + data.treeId;
   }
   getColumns(data.queryParams.filterId);
-}
+};
 // 添加分类
 const handleAddCategory = (key) => {
   console.log("key:", key);
   data.isCategory = true;
-}
+};
 // 编辑
 const handleEditCategory = (key) => {
   console.log("key:", key);
   data.treeId = key;
   data.isCategory = true;
-}
+};
 const cancelCategory = (e) => {
   data.isCategory = e;
 };
 const cancelEditFlowDefine = (e) => {
   data.isEditFlow = e;
-}
-
+};
+const batchArchived = () => {
+  let list = gridRef.value.getCheckList();
+  if (list.length) {
+    data.CheckList = list;
+    data.isConfirm = true;
+    data.confirmText = "确定要批量归档吗？";
+    data.confirmTitle = "批量归档";
+  } else {
+    message.error("请至少勾选一项！");
+  }
+};
+const confirmOk = () => {
+  if (data.confirmTitle == "批量归档") {
+    let url = Interface.saveBatchRecord;
+    let records = [];
+    let list = gridRef.value.getCheckList();
+    for (var i = 0; i < list.length; i++) {
+      let item = {
+        recordId: "",
+        recordInput: {
+          allowSaveOnDuplicate: false,
+          apiName: "OfficialRequestReport",
+          objTypeCode: 100119,
+          fields: {
+            IsArchived: true,
+          },
+        },
+      };
+      if (list[i].id) {
+        item.recordId = list[i].id;
+      }
+      records.push(item);
+    }
+    let d = {
+      actions: [
+        {
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          records: records,
+        },
+      ],
+    };
+    let obj = {
+      message: JSON.stringify(d),
+    };
+    proxy.$post(url, obj).then((res) => {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].state &&
+        res.actions[0].state == "SUCCESS"
+      ) {
+        data.isConfirm = false;
+        message.success("归档成功！");
+        handleSearch();
+      } else {
+        if (
+          res &&
+          res.actions &&
+          res.actions[0] &&
+          res.actions[0].errorMessage
+        ) {
+          message.error(res.actions[0].errorMessage);
+        } else {
+          message.error("归档失败！");
+        }
+      }
+    });
+  }
+};
 onMounted(() => {
-  window.addEventListener('resize', changeHeight)
-  
+  window.addEventListener("resize", changeHeight);
   getTabs();
-})
+});
 </script>
 <style lang="less">
 @import "@/style/flow/treeList.less";
@@ -605,7 +797,11 @@ onMounted(() => {
 }
 
 .documentAdmin {
-  .todo-content .ant-row .wea-left-right-layout-left .wea-left-tree .wea-left-tree-search {
+  .todo-content
+    .ant-row
+    .wea-left-right-layout-left
+    .wea-left-tree
+    .wea-left-tree-search {
     padding-left: 14px;
   }
 
@@ -624,7 +820,12 @@ onMounted(() => {
     border-color: #d9d9d9;
   }
 
-  .ant-row .wea-left-right-layout-left .wea-left-tree .wea-left-tree-scroll .ant-tree-treenode:hover .tree-num {
+  .ant-row
+    .wea-left-right-layout-left
+    .wea-left-tree
+    .wea-left-tree-scroll
+    .ant-tree-treenode:hover
+    .tree-num {
     display: none;
   }
 
@@ -645,12 +846,18 @@ onMounted(() => {
     }
   }
 
-  .todo-content .ant-row .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
+  .todo-content
+    .ant-row
+    .wea-tab
+    :deep
+    .ant-tabs
+    .ant-tabs-nav
+    .ant-tabs-nav-wrap {
     height: 45px !important;
   }
 
   .wea-left-tree-scroll {
-    height: calc(~'100% - 50px') !important;
+    height: calc(~"100% - 50px") !important;
   }
 
   :deep .namefield {

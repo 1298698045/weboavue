@@ -520,11 +520,15 @@ const handleAddLeft = (id, name) => {
     data.objectTypeCode = '5080';
     data.sObjectName = 'ContentFolder';
     data.recordId = '';
-    // data.isCommon=true;
     data.isNewFolder = true;
   }
   else {
-    message.error("必须先选中父目录");
+    data.objectTypeCode = '5080';
+    data.sObjectName = 'ContentFolder';
+    data.recordId = '';
+    data.isNewFolder = true;
+    data.SelectKey=null;
+    //message.error("必须先选中父目录");
   }
 }
 const handleEditLeft = (e) => {
@@ -965,6 +969,9 @@ onMounted(() => {
   .alltype{
     padding-left: 20px !important;
     min-width: 63px !important;
+  }
+  :deep .ant-tree .ant-tree-treenode .ant-tree-node-content-wrapper{
+    display: inline-block !important;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="850px" style="top:10px;" :maskClosable="false" @cancel="handleCancel"
+    <a-modal v-model:open="props.isShow" width="1000px" style="top:10px;" :maskClosable="false" @cancel="handleCancel"
       @ok="handleSubmit">
       <template #title>
         <div>
@@ -682,7 +682,7 @@ const getTreeData = () => {
       descriptor: "",
       callingDescriptor: "UNKNOWN",
       params: {
-        id: '00000000-0000-0000-0000-000000002000'
+        //id: '00000000-0000-0000-0000-000000002000'
       }
     }]
   };
@@ -869,6 +869,7 @@ const handleSubmit = () => {
                 StateCode: formState.StateCode,
                 KeyWords: formState.KeyWords.join(',') || '',
                 IsPublic: formState.IsPublic ? 1 : 0,
+                XNML: formState.IsPublic ? '所有人可查看' : '',
                 CoverDisplay: formState.CoverDisplay,
                 //Title: "",
                 FolderId: formState.FolderId
@@ -1604,6 +1605,12 @@ input[aria-hidden="true"] {
       border: 1px solid #d9d9d9 !important;
       border-radius: 6px !important;
     }
+  }
+  .deleteIcon{
+    padding-top: 1px;
+  }
+  .filterWrap .ant-form .formItem{
+    margin-right: 10px;
   }
 }
 </style>

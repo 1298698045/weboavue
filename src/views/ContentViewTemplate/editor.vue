@@ -2,7 +2,7 @@
   <div class="ContentViewTemplateEditorWrap">
     <div class="preview-header">
       <div class="icon-circle-base">
-        <img :src="require('@/assets/img/rightMenu/youcemoren.png')" alt="">
+        <img :src="require('@/assets/img/rightMenu/youcemoren.png')" alt="" />
       </div>
       <div class="leftBox">
         <div class="title">
@@ -21,7 +21,9 @@
         <!-- <a-button class="ml10" @click="changeStatus">更改状态</a-button> -->
         <!-- <a-button class="ml10" @click="handlePreview">预览</a-button> -->
         <!-- <a-button class="ml10" @click="handleRemind">提醒</a-button> -->
-        <a-button type="primary" class="ml10" @click="handleSave">保存</a-button>
+        <a-button type="primary" class="ml10" @click="handleSave"
+          >保存</a-button
+        >
         <a-button class="ml10" @click="closeEditor">关闭</a-button>
         <!-- <a-button type="primary" class="ml10" @click="handleSubmit">发布</a-button>
           <a-button class="ml10" @click="closeEditor">关闭</a-button> -->
@@ -62,8 +64,15 @@
                 <div class="sectionTitle">基本信息</div>
                 <div class="sectionRow">
                   <div class="sectionItem">
-                    <a-form-item name="Name" label="模板名称" :rules="[{ required: true, message: '模板名称不能为空' }]">
-                      <a-input v-model:value="formState.Name" class="ContentViewTemplateName"></a-input>
+                    <a-form-item
+                      name="Name"
+                      label="模板名称"
+                      :rules="[{ required: true, message: '模板名称不能为空' }]"
+                    >
+                      <a-input
+                        v-model:value="formState.Name"
+                        class="ContentViewTemplateName"
+                      ></a-input>
                     </a-form-item>
                   </div>
                 </div>
@@ -72,39 +81,96 @@
                 <div class="sectionTitle">模板内容</div>
                 <div class="sectionRow">
                   <div class="sectionItem sectionItem1">
-                    <a-form-item name="Content" label="" :rules="[{ required: true, message: '模板内容不能为空' }]">
+                    <a-form-item
+                      name="Content"
+                      label=""
+                      :rules="[{ required: true, message: '模板内容不能为空' }]"
+                    >
                       <div class="ContentViewTemplateContent">
-                        <Editor v-if="isEditor" :mode="'doc'" placeholder="" ref="editorRef" :height="height"
-                          @input="getContent" />
+                        <Editor
+                          v-if="isEditor"
+                          :mode="'doc'"
+                          placeholder=""
+                          ref="editorRef"
+                          :height="height"
+                          @input="getContent"
+                        />
                         <div class="wea-doc-mould-rich-text-right-list">
-                          <div class="special-field-wrapper " style="width: 180px; box-sizing: border-box;">
-                            <div style="border-left: 1px solid rgb(228, 228, 228);">
-                              <div style="padding: 4px 7px 6px; border-bottom: 1px solid rgb(228, 228, 228);">
-                                <div class="wea-input-focus ">
+                          <div
+                            class="special-field-wrapper"
+                            style="width: 180px; box-sizing: border-box"
+                          >
+                            <div
+                              style="border-left: 1px solid rgb(228, 228, 228)"
+                            >
+                              <div
+                                style="
+                                  padding: 4px 7px 6px;
+                                  border-bottom: 1px solid rgb(228, 228, 228);
+                                "
+                              >
+                                <div class="wea-input-focus">
                                   <span class="ant-input-wrapper">
-                                    <a-input placeholder="输入变量关键字搜索" @change="onSearch" v-model:value="searchVal"
-                                      allowClear class="ant-input" type="text" value="" />
+                                    <a-input
+                                      placeholder="输入变量关键字搜索"
+                                      @change="onSearch"
+                                      v-model:value="searchVal"
+                                      allowClear
+                                      class="ant-input"
+                                      type="text"
+                                      value=""
+                                    />
                                   </span>
-                                  <button type="button"
-                                    class="ant-btn ant-btn-ghost ant-btn-icon-only  wea-input-focus-btn">
+                                  <button
+                                    type="button"
+                                    class="ant-btn ant-btn-ghost ant-btn-icon-only wea-input-focus-btn"
+                                  >
                                     <SearchOutlined />
                                   </button>
-                                  <span class="placeHolder-tip" id="weaInputSearch_1"></span>
+                                  <span
+                                    class="placeHolder-tip"
+                                    id="weaInputSearch_1"
+                                  ></span>
                                 </div>
                               </div>
-                              <div class="special-field-wrapper-single ">
-                                <div class="wea-new-scroll " style="height: 497px;">
-                                  <div class="clipper  baron" style="overflow: hidden;">
-                                    <div class="scroller  "
-                                      style="overflow-y: scroll; box-sizing: border-box; margin: 0px; border: 0px;">
-                                      <ul style="padding: 7px 0px;">
-                                        <li class="special-field-item text-overflow" v-for="(item, index) in FieldList"
-                                          :name="item.name" :key="index" :class="{ 'actived': SelectFieldId == item.id }"
-                                          @click="SelectField(item)">{{ item.label || '' }}</li>
+                              <div class="special-field-wrapper-single">
+                                <div
+                                  class="wea-new-scroll"
+                                  style="height: 497px"
+                                >
+                                  <div
+                                    class="clipper baron"
+                                    style="overflow: hidden"
+                                  >
+                                    <div
+                                      class="scroller"
+                                      style="
+                                        overflow-y: scroll;
+                                        box-sizing: border-box;
+                                        margin: 0px;
+                                        border: 0px;
+                                      "
+                                    >
+                                      <ul style="padding: 7px 0px">
+                                        <li
+                                          class="special-field-item text-overflow"
+                                          v-for="(item, index) in FieldList"
+                                          :name="item.name"
+                                          :key="index"
+                                          :class="{
+                                            actived: SelectFieldId == item.id,
+                                          }"
+                                          @click="SelectField(item)"
+                                        >
+                                          {{ item.label || "" }}
+                                        </li>
                                       </ul>
                                     </div>
-                                    <div class="track ">
-                                      <div class="bar" style="height: 143px; top: 0px;"></div>
+                                    <div class="track">
+                                      <div
+                                        class="bar"
+                                        style="height: 143px; top: 0px"
+                                      ></div>
                                     </div>
                                   </div>
                                 </div>
@@ -122,19 +188,69 @@
         </div>
       </div>
     </div>
-    <InfoNotes v-if="isNotes" :isShow="isNotes" :id="id" :objectTypeCode="objectTypeCode" @cancel="cancelNotes" />
-    <ChangeStatus :isShow="isStatus" v-if="isStatus" :id="id" :objectTypeCode="objectTypeCode" @cancel="cancelStatus" />
-    <InfoRemind v-if="isRemind" :isShow="isRemind" :id="id" @cancel="cancelRemind" :RegardingObjectIdName="detail.Title"
-      :RegardingObjectTypeCode="objectTypeCode" />
-    <InfoAddClass v-if="isAddClass" :isShow="isAddClass" :id="id" :objectTypeCode="objectTypeCode"
-      @cancel="cancelAddClass" />
-    <RadioUser v-if="isRadioUser" :isShow="isRadioUser" @cancel="cancleRadio" @selectVal="handleSelectUser" />
-    <RelaseInfo v-if="isRelaseInfo" :isShow="isRelaseInfo" :objectTypeCode="objectTypeCode" :id="id"
-      :FolderId="FolderId" @cancel="cancelRelaseInfo" />
-    <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk"
-      :sObjectName="sObjectName" :recordId="id" :objTypeCode="objectTypeCode" :external="external" />
-    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
-      @cancel="isConfirm = false" @ok="isConfirm = false" :id="id" />
+    <InfoNotes
+      v-if="isNotes"
+      :isShow="isNotes"
+      :id="id"
+      :objectTypeCode="objectTypeCode"
+      @cancel="cancelNotes"
+    />
+    <ChangeStatus
+      :isShow="isStatus"
+      v-if="isStatus"
+      :id="id"
+      :objectTypeCode="objectTypeCode"
+      @cancel="cancelStatus"
+    />
+    <InfoRemind
+      v-if="isRemind"
+      :isShow="isRemind"
+      :id="id"
+      @cancel="cancelRemind"
+      :RegardingObjectIdName="detail.Title"
+      :RegardingObjectTypeCode="objectTypeCode"
+    />
+    <InfoAddClass
+      v-if="isAddClass"
+      :isShow="isAddClass"
+      :id="id"
+      :objectTypeCode="objectTypeCode"
+      @cancel="cancelAddClass"
+    />
+    <RadioUser
+      v-if="isRadioUser"
+      :isShow="isRadioUser"
+      @cancel="cancleRadio"
+      @selectVal="handleSelectUser"
+    />
+    <RelaseInfo
+      v-if="isRelaseInfo"
+      :isShow="isRelaseInfo"
+      :objectTypeCode="objectTypeCode"
+      :id="id"
+      :FolderId="FolderId"
+      @cancel="cancelRelaseInfo"
+    />
+    <Delete
+      :isShow="isDelete"
+      v-if="isDelete"
+      :desc="deleteDesc"
+      @cancel="cancelDelete"
+      @ok="deleteOk"
+      :sObjectName="sObjectName"
+      :recordId="id"
+      :objTypeCode="objectTypeCode"
+      :external="external"
+    />
+    <CommonConfirm
+      v-if="isConfirm"
+      :isShow="isConfirm"
+      :text="confirmText"
+      :title="confirmTitle"
+      @cancel="isConfirm = false"
+      @ok="isConfirm = false"
+      :id="id"
+    />
   </div>
 </template>
 <script setup>
@@ -146,14 +262,15 @@ import {
   getCurrentInstance,
   defineEmits,
   toRaw,
+  nextTick,
 } from "vue";
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
-import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
-dayjs.locale('zh-cn');
-import calendar from 'dayjs/plugin/calendar';
-import weekday from 'dayjs/plugin/weekday';
-import localeData from 'dayjs/plugin/localeData';
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+import locale from "ant-design-vue/es/date-picker/locale/zh_CN";
+dayjs.locale("zh-cn");
+import calendar from "dayjs/plugin/calendar";
+import weekday from "dayjs/plugin/weekday";
+import localeData from "dayjs/plugin/localeData";
 
 dayjs.extend(calendar);
 dayjs.extend(weekday);
@@ -173,7 +290,7 @@ import {
   ProfileOutlined,
   CarryOutOutlined,
   PaperClipOutlined,
-  SearchOutlined
+  SearchOutlined,
 } from "@ant-design/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 import Related from "@/components/detail/Related.vue";
@@ -212,8 +329,8 @@ const data = reactive({
   ],
   activeKey: 0,
   id: route.query.id,
-  objectTypeCode: '5081',
-  sObjectName: 'ContentViewTemplate',
+  objectTypeCode: "5081",
+  sObjectName: "ContentViewTemplate",
   detail: {},
   isNotes: false,
   isStatus: false,
@@ -222,24 +339,24 @@ const data = reactive({
   isUserModal: false,
   fileCategorys: [],
   files: [],
-  content: '',
+  content: "",
   isDelete: false,
-  deleteDesc: '确定要删除吗？',
+  deleteDesc: "确定要删除吗？",
   external: false,
   isRelaseInfo: false,
   isEditor: false,
   height: 0,
-  FolderId: route.query.FolderId || '',
+  FolderId: route.query.FolderId || "",
   isRadioUser: false,
   IsReply: false,
   isConfirm: false,
-  confirmText: '',
-  confirmTitle: '',
-  title: '新建显示模板',
+  confirmText: "",
+  confirmTitle: "",
+  title: "新建显示模板",
   FieldList: [],
   FieldListAll: [],
-  SelectFieldId: '',
-  searchVal: ''
+  SelectFieldId: "",
+  searchVal: "",
 });
 const {
   tabs,
@@ -264,7 +381,15 @@ const {
   height,
   FolderId,
   isRadioUser,
-  IsReply, isConfirm, confirmText, confirmTitle, title, FieldList, FieldListAll, SelectFieldId, searchVal
+  IsReply,
+  isConfirm,
+  confirmText,
+  confirmTitle,
+  title,
+  FieldList,
+  FieldListAll,
+  SelectFieldId,
+  searchVal,
 } = toRefs(data);
 const ReadRecordLst = ref();
 const DetailInfoEditRef = ref(null);
@@ -276,11 +401,11 @@ const refreshData = (e) => {
   if (ReadRecordLst.value && ReadRecordLst.value.getQuery) {
     ReadRecordLst.value.getQuery();
   }
-}
+};
 const formRef = ref();
 const formState = reactive({
-  Name: '',
-  Content: ''
+  Name: "",
+  Content: "",
 });
 const defaultContent = `<p>&nbsp;</p>
 <div align="center">
@@ -301,7 +426,7 @@ const defaultContent = `<p>&nbsp;</p>
 <p style="height: 1px; line-height: 1px; text-indent: 2em; font-size: 0px; border-top-color: rgb(191, 191, 191); border-bottom-color: rgb(216, 216, 216); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
 
 <div>
-<p style="line-height: 1.75em; text-indent: 2em;">{{Content}}</p>
+<p style="line-height: 1.75em; text-indent: 2em;">{{ContentBody}}</p>
 
 <p style="text-align: right;"><span style="font-size: 12px;">该文档最后由 {{CreatedBy}}&nbsp; 更新于 {{ModifiedOn}}。</span></p>
 </div>
@@ -313,52 +438,54 @@ const defaultContent = `<p>&nbsp;</p>
 const SelectField = (item) => {
   data.SelectFieldId = item.id;
   if (editorRef && editorRef.value) {
-    const realStr = '{{' + item.name + '}}';
+    const realStr = "{{" + item.name + "}}";
     tinymce.activeEditor.insertContent(realStr);
   }
-}
+};
 //获取对象字段
 const getFieldList = () => {
   data.FieldList = [];
   data.FieldListAll = [];
-  let filterQuery = '\nEntityId\teq\tbbda8bc8-3e50-48ec-a4a8-68c86a5bd81a';
-  proxy.$post(Interface.list2, {
-    filterId: '',
-    objectTypeCode: '100001',
-    entityName: 'Attribute',
-    filterQuery: filterQuery,
-    search: '',
-    page: 1,
-    rows: 100,
-    sort: 'ColumnNumber',
-    order: 'asc',
-    displayColumns: 'Name,DisplayName'
-  }).then(res => {
-    if (res && res.nodes && res.nodes.length) {
-      var list = [];
-      for (var i = 0; i < res.nodes.length; i++) {
-        var item = res.nodes[i];
-        for (var cell in item) {
-          if (cell != 'id' && cell != 'nameField') {
-            item[cell] = girdFormatterValue(cell, item);
+  let filterQuery = "\nEntityId\teq\tbbda8bc8-3e50-48ec-a4a8-68c86a5bd81a";
+  proxy
+    .$post(Interface.list2, {
+      filterId: "",
+      objectTypeCode: "100001",
+      entityName: "Attribute",
+      filterQuery: filterQuery,
+      search: "",
+      page: 1,
+      rows: 100,
+      sort: "ColumnNumber",
+      order: "asc",
+      displayColumns: "Name,DisplayName",
+    })
+    .then((res) => {
+      if (res && res.nodes && res.nodes.length) {
+        var list = [];
+        for (var i = 0; i < res.nodes.length; i++) {
+          var item = res.nodes[i];
+          for (var cell in item) {
+            if (cell != "id" && cell != "nameField") {
+              item[cell] = girdFormatterValue(cell, item);
+            }
           }
+          list.push({
+            id: item.id,
+            name: item.Name,
+            label: item.DisplayName,
+          });
         }
-        list.push({
-          id: item.id,
-          name: item.Name,
-          label: item.DisplayName,
-        })
+        data.FieldList = list;
+        data.FieldListAll = list;
       }
-      data.FieldList = list;
-      data.FieldListAll = list;
-    }
-  })
-}
+    });
+};
 const onSearch = (e) => {
-  data.FieldList = data.FieldListAll.filter(item => {
+  data.FieldList = data.FieldListAll.filter((item) => {
     return item.label.indexOf(data.searchVal) !== -1;
-  })
-}
+  });
+};
 //转义
 const escapeHtml = (str) => {
   return str
@@ -367,47 +494,55 @@ const escapeHtml = (str) => {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-}
+};
 //反转义
 const htmlDecode = (input) => {
-  var e = document.createElement('div');
+  var e = document.createElement("div");
   e.innerHTML = input;
   return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-}
+};
 const getDetail = () => {
   let d = {
-    actions: [{
-      id: "4270;a",
-      descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordId: data.id,
-        apiName: data.sObjectName,
-        objTypeCode: data.objectTypeCode
-      }
-    }]
+    actions: [
+      {
+        id: "4270;a",
+        descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordId: data.id,
+          apiName: data.sObjectName,
+          objTypeCode: data.objectTypeCode,
+        },
+      },
+    ],
   };
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(Interface.detail, obj).then(res => {
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.detail, obj).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.fields
+    ) {
       let fields = res.actions[0].returnValue.fields;
       formState.Name = fields.Name.value;
-      formState.Content = fields.Body.value ? htmlDecode(fields.Body.value) : '';
+      formState.Content = fields.Body.value
+        ? htmlDecode(fields.Body.value)
+        : "";
     }
     if (editorRef && editorRef.value) {
       if (formState.Content) {
         editorRef.value.content = formState.Content;
-      }
-      else {
+      } else {
         formState.Content = defaultContent;
         editorRef.value.content = formState.Content;
       }
     }
-  })
+  });
 };
-//getDetail();
 const getFileClass = () => {
   proxy
     .$get(Interface.information.attachmentCategory, {
@@ -458,23 +593,22 @@ const handleEdit = () => {
       id: data.id,
       objectTypeCode: data.objectTypeCode,
       //FolderId: res.actions[0].returnValue&&res.actions[0].returnValue.fields&&res.actions[0].returnValue.fields.FolderId?res.actions[0].returnValue.fields.FolderId:''
-      FolderId: data.FolderId || '',
-    }
-  })
+      FolderId: data.FolderId || "",
+    },
+  });
   window.open(reUrl.href);
-}
+};
 const handleDelete = (e) => {
   data.isDelete = true;
-}
+};
 const deleteOk = (e) => {
-  let path = '/lightning/o/Content/home';
-  if (data.objectTypeCode == '100202') {
-    path = '/lightning/o/ContentNotice/home'
+  let path = "/lightning/o/Content/home";
+  if (data.objectTypeCode == "100202") {
+    path = "/lightning/o/ContentNotice/home";
   }
   router.push({
     path: path,
-    query: {
-    }
+    query: {},
   });
 };
 const cancelDelete = (e) => {
@@ -506,69 +640,75 @@ const handleAddClass = () => {
 const getContent = (e) => {
   //console.log('e', e);
   formState.Content = e;
-}
+};
 const handleInvitation = () => {
   data.isRadioUser = true;
-}
+};
 // 关闭发布弹窗
 const cancleRadio = (e) => {
   data.isRadioUser = e;
-}
+};
 const cancelRelaseInfo = (e) => {
   data.isRelaseInfo = false;
-}
+};
 const handleSelectUser = (params) => {
   console.log("params", params);
-  proxy.$get(Interface.information.invite, {
-    userIds: params.ID,
-    contentid: ""
-  }).then(res => {
-    message.success(res.msg);
-    data.isRadioUser = false;
-  })
-}
+  proxy
+    .$get(Interface.information.invite, {
+      userIds: params.ID,
+      contentid: "",
+    })
+    .then((res) => {
+      message.success(res.msg);
+      data.isRadioUser = false;
+    });
+};
 
 // 保存
 const handleSave = (type) => {
-  if (formState.Name) { } else {
+  if (formState.Name) {
+  } else {
     message.error("模板名称不能为空！");
-    return
+    return;
   }
-  if (formState.Content) { } else {
+  if (formState.Content) {
+  } else {
     message.error("模板内容不能为空！");
-    return
+    return;
   }
-  let userInfo = window.localStorage.getItem('userInfo');
-  let userId = '';
-  let userName = '';
+  let userInfo = window.localStorage.getItem("userInfo");
+  let userId = "";
+  let userName = "";
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
     userId = userInfo.userId;
     userName = userInfo.fullName;
-    if (userId == 'jackliu') {
-      userId = '2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+    if (userId == "jackliu") {
+      userId = "2EC00CF2-A484-4136-8FEF-E2A2719C5ED6";
     }
   }
   let url = Interface.create;
   let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordInput: {
-          allowSaveOnDuplicate: false,
-          apiName: data.sObjectName,
-          objTypeCode: data.objectTypeCode,
-          fields: {
-            Name: formState.Name,
-            Body: formState.Content ? escapeHtml(formState.Content) : '',
-            OwningUser: userId,
-            CreatedBy: userId,
-          }
-        }
-      }
-    }]
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordInput: {
+            allowSaveOnDuplicate: false,
+            apiName: data.sObjectName,
+            objTypeCode: data.objectTypeCode,
+            fields: {
+              Name: formState.Name,
+              Body: formState.Content ? escapeHtml(formState.Content) : "",
+              OwningUser: userId,
+              CreatedBy: userId,
+            },
+          },
+        },
+      },
+    ],
   };
   if (data.id) {
     url = Interface.edit;
@@ -576,13 +716,18 @@ const handleSave = (type) => {
     d.actions[0].params.recordInput.fields.ModifiedBy = userId;
   }
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(url, obj).then((res) => {
     //formRef.value.resetFields();
-    if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].state &&
+      res.actions[0].state == "SUCCESS"
+    ) {
       message.success("保存成功！");
-      //getDetail();
       // let url = router.resolve({
       //   name: "ContentViewTemplateEditor",
       //   query: {
@@ -591,32 +736,35 @@ const handleSave = (type) => {
       // });
       let url = router.resolve({
         path: "/lightning/o/ContentViewTemplate",
-        query: {
-        },
+        query: {},
       });
       window.location.href = url.href;
-      data.title = '编辑显示模板';
-      data.id = res.actions[0].returnValue.id || data.id || '';
-    }
-    else {
-      if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+      data.title = "编辑显示模板";
+      data.id = res.actions[0].returnValue.id || data.id || "";
+    } else {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].state &&
+        res.actions[0].errorMessage
+      ) {
         message.success(res.actions[0].errorMessage);
-      }
-      else {
+      } else {
         message.success("保存失败！");
       }
     }
   });
-}
+};
 //发布
 const handleSubmit = () => {
   handleSave();
   data.isRelaseInfo = true;
-}
+};
 //关闭
 const closeEditor = () => {
   window.close();
-}
+};
 // 查看详情
 const handleDetail = () => {
   let reUrl = router.resolve({
@@ -624,40 +772,47 @@ const handleDetail = () => {
     query: {
       id: data.id,
       objectTypeCode: data.objectTypeCode,
-      FolderId: data.FolderId
-    }
-  })
+      FolderId: data.FolderId,
+    },
+  });
   window.open(reUrl.href);
-}
-onMounted(() => {
-  getDetail();
-  getFieldList();
+};
+const getData = () => {
   if (data.id) {
-    data.title = '编辑显示模板';
+    data.title = "编辑显示模板";
+    getDetail();
   } else {
-    data.title = '新建显示模板';
+    data.title = "新建显示模板";
+    if (editorRef && editorRef.value) {
+      formState.Content = defaultContent;
+      editorRef.value.content = formState.Content;
+    }
   }
+};
+const changeHeight = () => {
   let h = document.documentElement.clientHeight;
   data.height = h - 260;
-  data.isEditor = true;
+  data.isEditor = false;
+  setTimeout(function () {
+    data.isEditor = true;
+    nextTick(() => {
+      getData();
+    });
+  }, 500);
+};
+onMounted(() => {
+  getFieldList();
+  changeHeight();
   window.addEventListener("resize", () => {
-    data.isEditor = false;
-    let h = document.documentElement.clientHeight;
-    data.height = h - 260;
-    setTimeout(function () {
-      data.isEditor = true;
-      setTimeout(function () {
-        getDetail()
-      }, 100)
-    }, 200)
-  })
-})
+    changeHeight();
+  });
+});
 //取消发布
 const handleCancelRelease = () => {
   data.isConfirm = true;
-  data.confirmText = '确定要取消发布吗？'
-  data.confirmTitle = '取消发布'
-}
+  data.confirmText = "确定要取消发布吗？";
+  data.confirmTitle = "取消发布";
+};
 </script>
 <style lang="less" scoped>
 .ContentViewTemplateEditorWrap {
@@ -735,7 +890,6 @@ const handleCancelRelease = () => {
         margin-right: 24px !important;
       }
     }
-
   }
 
   .detail-scroll {
@@ -785,10 +939,10 @@ const handleCancelRelease = () => {
             bottom: 0;
             display: inline-block;
             position: absolute;
-            height: calc(~'100% + 0px');
+            height: calc(~"100% + 0px");
           }
 
-          .wea-doc-mould-rich-text-right-list .special-field-wrapper>div {
+          .wea-doc-mould-rich-text-right-list .special-field-wrapper > div {
             height: 100%;
           }
 
@@ -826,7 +980,7 @@ const handleCancelRelease = () => {
             height: 100%;
           }
 
-          .wea-input-focus .ant-input-wrapper>input {
+          .wea-input-focus .ant-input-wrapper > input {
             width: 100%;
             display: inline-block;
             //padding-right: 45px;
@@ -840,7 +994,7 @@ const handleCancelRelease = () => {
             font-size: 12px;
           }
 
-          .wea-input-focus>.wea-input-focus-btn {
+          .wea-input-focus > .wea-input-focus-btn {
             position: absolute;
             top: 2px;
             right: 2px;
@@ -855,7 +1009,7 @@ const handleCancelRelease = () => {
             z-index: 2;
           }
 
-          .wea-input-focus>.wea-input-focus-btn .anticon-search {
+          .wea-input-focus > .wea-input-focus-btn .anticon-search {
             display: inline-block;
             font-style: normal;
             vertical-align: baseline;
@@ -869,7 +1023,7 @@ const handleCancelRelease = () => {
             font-size: 14px !important;
           }
 
-          .wea-input-focus>.wea-input-focus-btn .anticon-search {
+          .wea-input-focus > .wea-input-focus-btn .anticon-search {
             color: #b2b2b2;
             font-size: 12px;
           }
@@ -878,7 +1032,7 @@ const handleCancelRelease = () => {
             display: inline-block;
             width: 100%;
             padding-bottom: 4px;
-            height: calc(~'100% - 36px');
+            height: calc(~"100% - 36px");
             overflow-y: auto;
             overflow-x: hidden;
           }
@@ -915,7 +1069,6 @@ const handleCancelRelease = () => {
           .special-field-wrapper .special-field-item.actived {
             background-color: #e9f7fe;
           }
-
         }
       }
 
@@ -1120,26 +1273,38 @@ const handleCancelRelease = () => {
   background: #fff;
 }
 
-:where(.css-dev-only-do-not-override-kqecok).ant-collapse>.ant-collapse-item {
+:where(.css-dev-only-do-not-override-kqecok).ant-collapse > .ant-collapse-item {
   border-bottom: none !important;
   background: #f3f2f2;
   margin-bottom: 8px;
 }
 
-:deep :where(.css-dev-only-do-not-override-kqecok).ant-collapse .ant-collapse-content {
+:deep
+  :where(.css-dev-only-do-not-override-kqecok).ant-collapse
+  .ant-collapse-content {
   border-top: none !important;
 }
 
-:deep :where(.css-dev-only-do-not-override-kqecok).ant-collapse>.ant-collapse-item>.ant-collapse-header {
+:deep
+  :where(.css-dev-only-do-not-override-kqecok).ant-collapse
+  > .ant-collapse-item
+  > .ant-collapse-header {
   padding: 6px 16px !important;
 }
 
-:deep :where(.css-dev-only-do-not-override-kqecok).ant-collapse .ant-collapse-content>.ant-collapse-content-box {
+:deep
+  :where(.css-dev-only-do-not-override-kqecok).ant-collapse
+  .ant-collapse-content
+  > .ant-collapse-content-box {
   padding: 0 !important;
 }
 
-:deep :where(.css-dev-only-do-not-override-kqecok).ant-collapse>.ant-collapse-item:last-child,
-:where(.css-dev-only-do-not-override-kqecok).ant-collapse>.ant-collapse-item:last-child>.ant-collapse-header {
+:deep
+  :where(.css-dev-only-do-not-override-kqecok).ant-collapse
+  > .ant-collapse-item:last-child,
+:where(.css-dev-only-do-not-override-kqecok).ant-collapse
+  > .ant-collapse-item:last-child
+  > .ant-collapse-header {
   border-radius: 0 !important;
 }
 
@@ -1196,7 +1361,7 @@ const handleCancelRelease = () => {
 }
 
 .ContentViewTemplateEditorWrap .detail-scroll {
-  height: calc(~"100% - 45px");
+  height: calc(~"100% - 30px");
 }
 
 .ContentViewTemplateEditorWrap .detailContent {
@@ -1310,12 +1475,11 @@ const handleCancelRelease = () => {
   }
 
   :deep .tox-tinymce {
-    width: calc(~'100% - 180px') !important;
+    width: calc(~"100% - 180px") !important;
     border: none;
     border-radius: 0;
 
     .tox-editor-container {
-
       //background: #f0f2f6;
       .tox-toolbar__primary {
         //display: flex;

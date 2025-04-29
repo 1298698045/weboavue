@@ -1594,5 +1594,8 @@ onMounted(() => {
       }
     }
   }
+  :deep .ant-tree .ant-tree-treenode .ant-tree-node-content-wrapper{
+    display: inline-block !important;
+  }
 }
 </style>

@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <div class="panel" :style="{ height: (height - 330 > 300 ? height - 330 : 300) + 'px' }">
+    <div class="panel" :style="{ 'min-height': (height - 330 > 300 ? height - 330 : 300) + 'px' }">
       <div class="panel-head">
         <div class="panel-title">会议议题</div>
         <div class="panel-btn">

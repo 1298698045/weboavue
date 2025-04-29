@@ -434,7 +434,7 @@ let data = reactive({
   queryParams: {
     filterId: "",
     objectTypeCode: "147",
-    entityName: "WFInstanceFoward",
+    entityName: "WFInstanceForward",
     filterQuery: "",
     //displayColumns:'ProcessInstanceNumber,Name,ProcessId,StateCode,ExpiredOn,AttachQty,CreatedBy,CurrentStepName,CreatedOn,BusinessUnitId,ModifiedOn,Priority,ProcessInstanceId,WFRuleLogId,ExecutorIdentityName',
     sort: "CreatedOn",
@@ -539,7 +539,7 @@ const handleSearch = (obj) => {
   data.queryParams = {
     filterId: data.queryParams.filterId,
     objectTypeCode: "147",
-    entityName: "WFInstanceFoward",
+    entityName: "WFInstanceForward",
     sort: "CreatedOn",
     order: "desc",
   };
@@ -888,7 +888,7 @@ const changeTab = (e) => {
   data.queryParams = {
     filterId: data.queryParams.filterId,
     objectTypeCode: "147",
-    entityName: "WFInstanceFoward",
+    entityName: "WFInstanceForward",
     sort: "CreatedOn",
     order: "desc",
   };

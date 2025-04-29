@@ -157,11 +157,10 @@
                 <i class="iconfont icon-xiugaimima" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">密码修改</span>
               </div>
-              <div class="header-account-seeting-item">
-                <!-- <ScheduleOutlined class="icon" /> -->
+              <!-- <div class="header-account-seeting-item">
                 <i class="iconfont icon-zhutizhongxin" style="font-size: 18px;"></i>
                 <span class="header-account-seeting-title">主题中心</span>
-              </div>
+              </div> -->
               <div class="header-account-seeting-item" @click="handleloginOut">
                 <!-- <ScheduleOutlined class="icon" /> -->
                 <i class="iconfont icon-tuichu" style="font-size: 18px;"></i>

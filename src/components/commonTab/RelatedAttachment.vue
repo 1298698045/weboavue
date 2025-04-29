@@ -22,7 +22,7 @@
             </template>
             <template v-if="column.key === 'fileExtension'">
               <div class="fileExtensionTdImg">
-                <img :src="'/src/assets' + record.icon" />
+                <img :src="record.icon" />
                 <span>{{ record.fileExtension || '' }}</span>
               </div>
             </template>
@@ -147,7 +147,7 @@ const data = reactive({
     })
   },
   total: 0,
-  tableHeight: document.documentElement.clientHeight - 325,
+  tableHeight: document.documentElement.clientHeight - 315,
   recordId: '',
   objectTypeCode: '1001',
   sObjectName: 'RelatedAttachment',
@@ -383,7 +383,7 @@ onMounted(() => {
     height: calc(~'100% - 115px') !important;
   }
 
-  .ant-table-body {
+  :deep .ant-table-body {
     height: 100% !important;
 
     td {

@@ -51,6 +51,7 @@
     SwapRightOutlined,
     ArrowUpOutlined,
     ArrowDownOutlined,
+    DeleteOutlined
   } from "@ant-design/icons-vue";
   import Interface from "@/utils/Interface.js";
   import { girdFormatterValue } from "@/utils/common.js";

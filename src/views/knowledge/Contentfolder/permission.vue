@@ -23,7 +23,7 @@
               </div>
             </div>
             <div class="wea-left-tree-scroll information-tree">
-              <a-tree :checkable="true" :style="{ height: tableHeight + 'px' }" :expanded-keys="expandedKeys"
+              <a-tree :checkable="false" :style="{ height: tableHeight + 'px' }" :expanded-keys="expandedKeys"
                 :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
                 :selectedKeys="selectedKeys" @select="onSelect" @expand="onExpand">
                 <template #switcherIcon="{ switcherCls }">
@@ -113,7 +113,7 @@
     <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
       @cancel="isConfirm = false" @ok="isConfirm = false" :id="CheckList" />
     <NewDepth :isShow="isNew" v-if="isNew" @cancel="cancelNew" :id="data.SelectKey" :ObjectTypeCode="'5080'"
-      :ObjectName="data.SelectName" @load="refreshData" />
+      :ObjectName="data.SelectName" @load="refreshData" :name="data.SelectName" />
   </div>
 </template>
 <script setup>
@@ -1333,6 +1333,9 @@ onMounted(() => {
         color: #fff;
       }
     }
+  }
+  :deep .ant-table-body {
+    height: 100% !important;
   }
 }
 

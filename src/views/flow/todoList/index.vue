@@ -12,7 +12,25 @@
       </div>
       <div class="headerRight todo-head-right">
         <a-button class="ml10" @click="batchPrintForm">批量打印</a-button>
-        <a-button class="ml10" @click="batchCirculation">批量传阅</a-button>
+        <a-button class="ml10 ml11" @click="batchCirculation">批量传阅</a-button>
+        <MoreBtn
+          :isMenu="isMenu"
+          @change="handleClickMenu"
+          @mouseover="isMenu = true"
+          @mouseleave="isMenu = false"
+        >
+          <div class="moreMenu">
+            <div class="menu-icon-background"></div>
+            <ul>
+              <li class="moreMenuItem" @click="exportData">
+                <span class="more-menu-icon">
+                  <i class="iconfont icon-piliangtijiao"></i>
+                </span>
+                <span>导出</span>
+              </li>
+            </ul>
+          </div>
+        </MoreBtn>
       </div>
     </div>
     <div class="todo-content">
@@ -224,6 +242,8 @@
       @update-status="isFavor = false"
       :id="ProcessInstanceId"
     />
+    <export-field :isShow="isExportModal" v-if="isExportModal" @cancel="isExportModal=false" :sObjectName="data.queryParams.entityName"
+      :recordId="data.queryParams.filterId" :search="data.queryParams.search" :filterCondition="data.queryParams.filterCondition"></export-field>
   </div>
 </template>
 <script setup>
@@ -265,6 +285,7 @@ import Supervised from "@/components/workflow/Supervised.vue";
 import Favor from "@/components/workflow/Favor.vue";
 import "@/style/flow/icon/iconfont.css";
 import MoreBtn from "@/components/antDefault/MoreBtn.vue";
+import ExportField from "@/components/listView/ExportField.vue";
 const { tabList } = useWorkAdmin();
 console.log("tabList", tabList);
 const route = useRoute();
@@ -467,6 +488,7 @@ let data = reactive({
   entityType: "123",
   layoutName: "ToDoInstance",
   hightSearchParams: {},
+    isExportModal: false,
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
@@ -474,6 +496,7 @@ const handleCollapsed = () => {
 };
 
 const {
+  isExportModal,
   hightSearchParams,
   entityType,
   layoutName,
@@ -578,7 +601,7 @@ const getColumns = (id) => {
       field: "Action",
       title: "操作",
       formatter: function formatter(value, row, index) {
-        var ProcessInstanceId = row.ProcessInstanceId.lookupValue.value;
+        var ProcessInstanceId = row.ProcessInstanceId?row.ProcessInstanceId.lookupValue.value:'';
         var ProcessIdName = row.ProcessInstanceId.lookupValue.displayName;
         var ProcessId = row.ProcessId ? row.ProcessId.lookupValue.value : "";
         var WFRuleLogId = row.WFRuleLogId ? row.WFRuleLogId.textValue : "";
@@ -637,7 +660,6 @@ const getColumns = (id) => {
               sortable: true,
               formatter: function formatter(value, row, index) {
                 let result = girdFormatterValue(item.name, row);
-                // var ProcessInstanceId = row.ProcessInstanceId?row.ProcessInstanceId.textValue:'';
                 let ProcessInstanceId = row.id;
                 return (
                   '<a class="namefield" title="' +
@@ -966,7 +988,10 @@ const handleStorageEvent = (event) => {
     getTabs(); // 触发组件内数据刷新
   }
 }
-
+//导出
+const exportData=()=>{
+  data.isExportModal=true;
+}
 onMounted(() => {
   window.addEventListener("resize", changeHeight);
   window.addEventListener("storage", handleStorageEvent);
@@ -1058,5 +1083,8 @@ onMounted(() => {
     position: relative;
     top: 1px;
   }
+}
+.ml11 {
+  margin-right: 25px;
 }
 </style>

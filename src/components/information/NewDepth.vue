@@ -141,6 +141,7 @@
     const props = defineProps({
         isShow: Boolean,
         id: String,
+        name:String,
         ObjectTypeCode:String,
         ObjectName:String
     });
@@ -197,7 +198,7 @@
     onMounted(() => {
         if(props.ObjectTypeCode=='5080'){
             if(props.ObjectName){
-                data.title='新增权限记录'
+                data.title='新增 '+(props.name||'')+' 权限记录'
             }
         }else if(props.ObjectTypeCode=='100103'){
             //console.log(props.ObjectName)
@@ -328,8 +329,11 @@
             for (var i = 0; i < res.nodes.length; i++) {
                 var item = res.nodes[i];
                 for(var cell in item){
-                    if(cell!='id'&&cell!='nameField'&&cell!='ImageUrls'){
+                    if(cell!='id'&&cell!='nameField'&&cell!='ImageUrls'&&cell!='AccessObjectTypeCode'){
                         item[cell]=girdFormatterValue(cell,item);
+                    }
+                    if(cell=='AccessObjectTypeCode'){
+                        item[cell]=item[cell]?item[cell].value:'';
                     }
                     if(cell=='ImageUrls'){
                         item[cell]=girdFormatterValue(cell,item)||require('@/assets/img/avatar-r.png');
