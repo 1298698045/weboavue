@@ -21,10 +21,16 @@
                                     :value="row.id">{{row.name}}</a-select-option>
                             </a-select>
                         </a-form-item>
-                        <a-form-item label="加签类型">
+                        <!-- <a-form-item label="加签类型">
                             <a-radio-group v-model:value="formState.insertType" name="radioGroup">
                                 <a-radio value="51">仅签字不流转</a-radio>
                                 <a-radio value="52">需要流转</a-radio>
+                              </a-radio-group>
+                        </a-form-item> -->
+                        <a-form-item label="加签办理方式">
+                            <a-radio-group v-model:value="formState.insertHandleCode" name="radioGroup">
+                                <a-radio :value="1">仅办理不流转</a-radio>
+                                <a-radio :value="2">逐级审批</a-radio>
                               </a-radio-group>
                         </a-form-item>
                         <a-form-item label="办理人员：">
@@ -106,10 +112,11 @@
         ProcessName: "",
         toActivityId: "",
         Remark: "",
-        insertType: "51",
+        // insertType: "51",
         description: "",
         deadline: "",
-        toActivityName: ""
+        toActivityName: "",
+        insertHandleCode: 1
     });
 
 
@@ -284,10 +291,11 @@
             const transitions = [
                 {
                     deadline: formState.deadline,
-                    insertType: formState.insertType,
+                    // insertType: formState.insertType,
                     toActivityId: formState.toActivityId,
                     toActivityName: formState.toActivityName,
-                    toUsers: toUsers
+                    toUsers: toUsers,
+                    insertHandleCode: formState.insertHandleCode
                 }
             ];
             let obj = {

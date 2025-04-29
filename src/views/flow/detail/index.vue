@@ -365,7 +365,7 @@
                     </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey==5">
-                    <Info @handleUrging="handleUrging" :id="id" :processInstanceId="processInstanceId" />
+                    <Info @handleUrging="handleUrging" :id="id" :processInstanceId="processInstanceId" :processId="processId" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==6">
                     <read-record :id="id" :processInstanceId="processInstanceId" />
