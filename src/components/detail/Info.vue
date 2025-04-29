@@ -63,7 +63,7 @@
                         <a-form-item label="按操作者过滤">
                             <a-select style="width: 200px" :allowClear="true" v-model:value="searchForm.ToIdentityId"
                                 :default-active-first-option="false" :filter-option="false" showSearch
-                                @dropdownVisibleChange="(e)=>searchlookup(e, 'ToIdentityId')">
+                                @dropdownVisibleChange="(e)=>searchlookup('', 'ToIdentityId')" @search="(e)=>searchlookup(e,'ToIdentityId')">
                                 <a-select-option v-for="(item, index) in search.ToIdentityId" :value="item.ID">{{ item.Name }}</a-select-option>
                                 <template #suffixIcon>
                                     <SearchOutlined @click.stop="handleOpenLook('ToIdentityId')" />
@@ -413,7 +413,7 @@
                     fieldApiName: "ToIdentityId",
                     pageParam: 1,
                     pageSize: 25,
-                    q: "",
+                    q: search,
                     searchType: "Recent",
                     targetApiName: "SystemUser",
                     body: {

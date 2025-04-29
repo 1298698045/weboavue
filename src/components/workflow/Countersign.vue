@@ -295,7 +295,6 @@
                     toActivityId: formState.toActivityId,
                     toActivityName: formState.toActivityName,
                     toUsers: toUsers,
-                    insertHandleCode: formState.insertHandleCode
                 }
             ];
             let obj = {
@@ -310,6 +309,7 @@
                         fromActivityId: props.toActivityID,
                         fromActivityName: props.processInstanceName,
                         description: formState.description,
+                        insertHandleCode: formState.insertHandleCode,
                         transitions: transitions,
                         // toUsers: toUsers,
                     }
