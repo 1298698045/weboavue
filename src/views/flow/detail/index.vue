@@ -56,9 +56,6 @@
                             <!-- <a-menu-item key="4" @click="printForm">
                                 打印审批单
                             </a-menu-item> -->
-                            <a-menu-item key="5" @click="printForm">
-                                PDF
-                            </a-menu-item>
                             <a-menu-item key="8" v-if="btnPerm.cancel" @click="handleRevoke">
                                 撤销
                             </a-menu-item>
@@ -70,6 +67,9 @@
                             </a-menu-item>
                             <a-menu-item key="4" @click="printForm">
                                 打印审批单
+                            </a-menu-item>
+                            <a-menu-item key="5" @click="printForm">
+                                导出PDF
                             </a-menu-item>
                         </a-menu>
                     </template>
@@ -84,7 +84,8 @@
                             <FlowFormNew :print="print" ref="flowFormRef" v-if="processId!=''&&toActivityID!=''"
                                 :processId="processId" :processInstanceId="processInstanceId"
                                 :toActivityID="toActivityID" @btnPermission="getBtnPermission"
-                                @attachPermission="getAttachPermission" :stateCode="stateCode" :ruleLogId="ruleLogId" @openSubmit="openSubmit" />
+                                @attachPermission="getAttachPermission" :stateCode="stateCode" :ruleLogId="ruleLogId"
+                                @openSubmit="openSubmit" />
                         </div>
                         <!-- <div class="reqWrap">
                             <div class="reqHead">
@@ -231,7 +232,8 @@
                                                                 <a href="javascript:;" v-if="attachPerm.read"
                                                                     @click="openZW(row)">查看</a>
                                                                 ·
-                                                                <a href="javascript:;" @click.stop="downloadFile(row)">下载</a>
+                                                                <a href="javascript:;"
+                                                                    @click.stop="downloadFile(row)">下载</a>
                                                             </p>
                                                             <p class="time">
                                                                 <span>{{row.CreatedOn}}&nbsp;·</span>
@@ -250,15 +252,19 @@
                                                                         </a-menu-item>
                                                                         <a-menu-item v-if="attachPerm.delete" key="2">
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
-                                                                                cancel-text="取消" >
+                                                                                cancel-text="取消">
                                                                                 <a href="javascript:;">删除</a>
                                                                             </a-popconfirm>
                                                                         </a-menu-item>
                                                                         <a-menu-item v-if="attachPerm.add" key="3">
-                                                                            <a-upload name="files" :headers="headers" v-model:file-list="fileList"
-                                                                                :data="{entityName: 'WFProcessInstance',fileId: item.id}" :action="Interface.replaceFiles" :showUploadList="false"
+                                                                            <a-upload name="files" :headers="headers"
+                                                                                v-model:file-list="fileList"
+                                                                                :data="{entityName: 'WFProcessInstance',fileId: item.id}"
+                                                                                :action="Interface.replaceFiles"
+                                                                                :showUploadList="false"
                                                                                 @change="changeFiles">
-                                                                                <a href="javascript:;" style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
+                                                                                <a href="javascript:;"
+                                                                                    style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
                                                                             </a-upload>
                                                                         </a-menu-item>
                                                                     </a-menu>
@@ -321,15 +327,19 @@
                                                                         </a-menu-item>
                                                                         <a-menu-item v-if="attachPerm.delete" key="2">
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
-                                                                                cancel-text="取消" >
+                                                                                cancel-text="取消">
                                                                                 <a href="javascript:;">删除</a>
                                                                             </a-popconfirm>
                                                                         </a-menu-item>
                                                                         <a-menu-item v-if="attachPerm.add" key="3">
-                                                                            <a-upload name="files" :headers="headers" v-model:file-list="fileList"
-                                                                                :data="{entityName: 'WFProcessInstance',fileId: item.id}" :action="Interface.replaceFiles" :showUploadList="false"
+                                                                            <a-upload name="files" :headers="headers"
+                                                                                v-model:file-list="fileList"
+                                                                                :data="{entityName: 'WFProcessInstance',fileId: item.id}"
+                                                                                :action="Interface.replaceFiles"
+                                                                                :showUploadList="false"
                                                                                 @change="changeFiles">
-                                                                                <a href="javascript:;" style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
+                                                                                <a href="javascript:;"
+                                                                                    style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
                                                                             </a-upload>
                                                                         </a-menu-item>
                                                                     </a-menu>
@@ -365,7 +375,8 @@
                     </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey==5">
-                    <Info @handleUrging="handleUrging" :id="id" :processInstanceId="processInstanceId" :processId="processId" />
+                    <Info @handleUrging="handleUrging" :id="id" :processInstanceId="processInstanceId"
+                        :processId="processId" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==6">
                     <read-record :id="id" :processInstanceId="processInstanceId" />
@@ -419,7 +430,7 @@
             @update-status="updateStatus" @success="updateProcess" :paramsData="ProcessData" />
         <ApprovalRejection ref="rejectionRef" v-if="isRejection" :isShow="isRejection" :ruleLogId="ruleLogId"
             :processId="processId" :processInstanceId="processInstanceId" :toActivityID="toActivityID"
-            :fromActivityId="fromActivityId" @update-status="updateStatus"  @success="updateProcess" />
+            :fromActivityId="fromActivityId" @update-status="updateStatus" @success="updateProcess" />
         <circulation-modal ref="circulationRef" :processInstanceId="processInstanceId"
             :processInstanceName="processInstanceName" @update-status="updateStatus" v-if="isCirculation"
             :isShow="isCirculation"></circulation-modal>
@@ -440,11 +451,13 @@
             @ok="deleteFlow"></Delete>
         <Return v-if="isReturn" :isShow="isReturn" :ruleLogId="ruleLogId" :processId="processId"
             :processInstanceId="processInstanceId" :processInstanceName="processInstanceName"
-            :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus" @ok="updateProcess">
+            :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus"
+            @ok="updateProcess">
         </Return>
         <Jump v-if="isJump" :isShow="isJump" :ruleLogId="ruleLogId" :processId="processId"
             :processInstanceId="processInstanceId" :processInstanceName="processInstanceName"
-            :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus" @ok="updateProcess">
+            :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus"
+            @ok="updateProcess">
         </Jump>
         <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
         <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
@@ -1087,6 +1100,7 @@
                             margin-left: 10px;
                             width: calc(100% - 80px);
                             overflow-wrap: break-word;
+
                             .link {
                                 a {
                                     color: #3399ff;
