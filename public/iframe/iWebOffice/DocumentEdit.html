@@ -1,0 +1,1623 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <title>金格科技-iWebOffice2015智能文档中间件示例程序</title>
+ <meta http-equiv="X-UA-Compatible" content="IE=9" />
+ <script src="kg-chrome-plugin/extension/content_scripts.js"></script>
+ <script src="js/jquery-1.4.2.min.js"></script>
+ <script src="js/WebOffice.js"></script>
+ <script type="text/javascript">
+ $(function(){
+    var isNotLoad = true;/**公共方法**/	
+	$(".tableAll").click(function(){
+        if(isNotLoad){
+            isNotLoad = false;	 
+			  var noneY = $(this).next().css("display");
+			  $(".tableAll").next().css("display","none");
+			  $(".tableAll").find('td:eq(0)').css({'background-color':'#E6DBEC'});
+			  $(".tableAll").find('span:eq(0)').html('+');
+				  if( noneY== 'none'){
+					  var s = $(this).find('td:eq(0)').html();                
+					  $(this).find('td:eq(0)').html(s.replace("+", "-")) ;                              
+					  $(this).find('td:eq(0)').css({'background-color':'#FFFFFF'});
+		              $(this).next().slideToggle(function(){isNotLoad = true;});
+				  }else{
+					  isNotLoad = true;
+				  }
+            }
+	});
+	var hide = false;	//下拉
+	$("#disPlayNone").click(function(){
+		 if(hide){
+			 $('#showTD').width('204px');
+			 $(this).siblings().css("display", "")
+			 hide = false;
+		 }else{	
+			 $('#showTD').width('25px');
+			 $(this).siblings().css("display", "none")
+			 hide = true;
+		 }
+	});		
+})
+</script>
+<link rel='stylesheet' type='text/css' href='css/iWebProduct.css' />
+
+
+<!-- 以下为2015主要方法 -->
+<script type="text/javascript">
+ 	var WebOffice = new WebOffice2015(); //创建WebOffice对象
+	
+</script>
+<script type="text/javascript">
+	var mServerUrl = '';
+	var mFileType='';
+	var username='';
+	var FileName='';
+	var RecordID='';
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = location.search.substr(1).match(reg);
+		if (r != null) return unescape(decodeURI(r[2])); return "";
+	}
+	function Load(){
+		document.getElementById("Author").value=getQueryString('UserName')||'';
+		document.getElementById("Subject").value=getQueryString('FileName')||'';
+		document.getElementById("Author1").value=getQueryString('UserName')||'';
+		document.getElementById("Subject1").value=getQueryString('FileName')||'';
+
+		mServerUrl = 'http://' + window.location.host + "/#";
+		mFileType=getQueryString('FileType')?'.'+getQueryString('FileType'):'';
+		username=getQueryString('UserName')||'';
+		FileName=getQueryString('FileName')||'';
+	    RecordID=getQueryString('RecordID')||'';
+
+		// mServerUrl='http://demo.kinggrid.com:80/iWebOffice2015/OfficeServer';
+		// mFileType='.doc';
+		// username='OA管理员';
+		// FileName='测试';
+	    // RecordID='08EADF28-7880-482F-A0E6-2CF725F635C0';
+		console.log('mServerUrl:',mServerUrl);
+		console.log('mFileType:',mFileType);
+		console.log('username:',username);
+		console.log('FileName:',FileName);
+		console.log('RecordID:',RecordID);
+	try{
+			WebOffice.WebUrl= mServerUrl;             //WebUrl:系统服务器路径，与服务器文件交互操作，如保存、打开文档，重要文件
+			WebOffice.RecordID=RecordID;            //RecordID:本文档记录编号
+		    WebOffice.FileName=FileName;            //FileName:文档名称
+		    WebOffice.FileType= mFileType;            //FileType:文档类型  .doc  .xls  
+			WebOffice.UserName=username||'';            //UserName:操作用户名，痕迹保留需要
+		    WebOffice.AppendMenu("1","打开本地文件(&L)");    //多次给文件菜单添加
+		    WebOffice.AppendMenu("2","保存本地文件(&S)");
+			WebOffice.AppendMenu("3","-");
+			WebOffice.AppendMenu("4","打印预览(&C)");
+			WebOffice.AppendMenu("5","退出打印预览(&E)");
+			WebOffice.AppendMenu("6","全屏还原(&Q)");
+			WebOffice.AddCustomMenu();                       //一次性多次添加包含二次菜单
+			//WebOffice.WebSetSkin(0xCC99CC, 0xCC99CC, 0xCC99CC, 0xFFFFFF, 0xAD8DAD, 0x663366);                        //设置皮肤
+		    WebOffice.Skin('purple');                          //设置皮肤：紫色
+			WebOffice.HookEnabled();
+		    WebOffice.SetCaption();
+		    WebOffice.SetUser(username);
+		    
+			WebOffice.ChangeLanguage(0x804);                 //英文：0x409，简体中文(0x804)，繁体中文（台湾）(0x404)葡萄牙语0xd04
+			WebOffice.ShowOpenProgress(false);
+			WebOffice.obj.FuncExtModule.ShowWindow = false;                  
+			//WebOffice.UpdateSignature(true);               	/*设置没有安装Office360签章时，控件中打开文档后是否进行验章及刷章工作*/
+			
+			//alert(mServerUrl);
+			//WebOffice.obj.WebSetCabLocation("http://192.168.0.81:8080/iWebOffice2015_ppapi/iWebOffice2015.zip");
+			
+			//WebOffice.obj.WebSetVendor(true);                       //当电脑同时安装WPS和Office软件时，true设置控件中加载WPS打开文档，false设置控件中加载Office打开文档
+			
+			//alert("111");
+			
+			WebOffice.obj.SetEnableBtn = true;
+		    WebOffice.ShowMenuBar(true);//显示菜单栏
+		    WebOffice.ShowToolBars(true);//显示工具栏
+			
+			WebOffice.ShowCustomToolbar(false); //显示自定义工具栏
+			
+			WebOffice.AddToolButton();   //添加自定义工具栏按钮
+			WebOffice.AddToolbar();
+			
+			//WebSetRibbonUIXML();  ////设置OFFICE2007的选项卡显示
+			
+			WebOffice.ModifyReview(); //设置接受修订、拒绝修订禁用
+			
+			//WebOffice.obj.FullWindowStyle = 1;                          //全屏窗口风格
+			
+			if (browser == "chrome") {
+				//金格浏览器关闭网页选项卡时，弹出提示对话框，只针对金格浏览器使用
+				//window.Setting.setCloseTabItemAsk("文档未保存，是否要关闭网页？");
+			}
+			
+			var colse_begin=new Date().getTime();
+			
+			if(WebOffice.WebOpen()){                             //打开该文档    交互OfficeServer  调出文档OPTION="LOADFILE"
+			    
+			username = WebOffice.WebObject.ActiveDocument.Application.UserName;
+			WebOffice.UserName= username;            //UserName:操作用户名，痕迹保留需要
+			//var selection = WebOffice.WebObject.ActiveDocument.Application.Selection;    //调用VBA设置默认字体
+			//selection.Font.Name= "仿宋";  //字体
+			//selection.Font.Size = "16";   //字体大小
+			//selection.Font.Bold = true;  //设置粗体
+				
+				WebOffice.setEditType("1");         //EditType:编辑类型  方式一   WebOpen之后
+			   // WebOffice.IsModify(0);                           //获取当前文档状态
+				WebOffice.VBASetUserName(WebOffice.UserName);    //设置用户名
+				
+				//WebOffice.obj.Style.ShowCustomToolbar = true; //显示自定义工具栏
+			    //WebOffice.AddToolbar();//打开文档时显示手写签批工具栏
+			  //var close_time=new Date().getTime()-colse_begin;
+			 //alert("打开文档共耗时:["+close_time+"]毫秒");
+		    }
+			
+ 	  }catch(e){
+		if(WebOffice&&WebOffice.obj&& WebOffice.obj.FuncExtModule){
+			WebOffice.obj.FuncExtModule.alert(e.description);
+		}
+ 	  }
+	  //console.log(WebOffice)
+ 	}
+	
+	 window.onload=function(){
+		Load();
+	 }
+	
+	 //作用：保存文档
+	function SaveDocument(){
+		//alert(WebOffice.WebSave());
+		//alert(WebOffice.obj.IsModify(1));
+		WebOffice.WebObject.ActiveDocument.Application.UserName = username;
+	  if (WebOffice.WebSave()){    //交互OfficeServer的OPTION="SAVEFILE"
+	     document.getElementById("iWebOfficeForm").submit();
+	     //alert("222");
+		 //var filePathDown = WebOffice.WebObject.FileSystem.GetSpecialFolderPath(0x1a)+"\\WebOffice";
+		//var filePathUp = WebOffice.WebObject.FileSystem.GetSpecialFolderPath(0x1a)+"\\WebOffice\\Up";
+		//alert(filePathDown);
+		//var res = WebOffice.WebObject.FileSystem.ClearDirectory(filePathDown);
+	    //var ret = WebOffice.WebObject.FileSystem.ClearDirectory(filePathUp);
+		//alert(res);
+		 return true;
+	  }else{
+	     StatusMsg(WebOffice.Status);
+	     return false;
+	  }
+	}
+	
+	 //作用：返回列表
+	function CloseDocument(){
+		
+		/*x="浏览器将关闭，当前文档是否要保存？";
+        y=confirm(x);
+		if(y==true){
+			SaveDocument();
+			WebOffice.WebClose();
+		}else{
+			WebOffice.WebClose();
+		}*/
+	   //alert(username);
+	   WebOffice.WebObject.ActiveDocument.Application.UserName = username;
+	    WebOffice.WebClose();
+		//var filePathDown = WebOffice.WebObject.FileSystem.GetSpecialFolderPath(0x1a)+"\\WebOffice";
+		//var filePathUp = WebOffice.WebObject.FileSystem.GetSpecialFolderPath(0x1a)+"\\WebOffice\\Up";
+		//var res = WebOffice.WebObject.FileSystem.ClearDirectory(filePathDown);
+	    //var ret = WebOffice.WebObject.FileSystem.ClearDirectory(filePathUp);
+
+		window.opener.location.reload();	
+		
+		window.close();
+	}
+ 	
+ 	
+ 	//设置页面中的状态值
+ 	function StatusMsg(mValue){
+ 	   try{
+	   document.getElementById('state').innerHTML = mValue;
+	   }catch(e){
+	     return false;
+	   }
+	}
+	
+	//作用：获取文档Txt正文
+	function WebGetWordContent(){
+	  try{
+	    WebOffice.obj.FuncExtModule.alert(WebOffice.WebObject.ActiveDocument.Content.Text);
+	  }catch(e){alert(e.description);}
+	}
+	
+	//作用:图片章
+	function WebOpenSignature(){
+		
+	
+		
+    var FunExt = WebOffice.obj.FuncExtModule;
+		FunExt.SetServerType(1);
+    	//FunExt.WebUrl = WebOffice.WebUrl;
+		FunExt.WebUrl = "http://10.200.100.23:8089/iWebOffice2009_2015/OfficeServer.jsp"
+		//FunExt.Alert("" + FunExt.WebUrl);
+		
+    	FunExt.FileName = WebOffice.FileName;
+    	FunExt.FileType = WebOffice.FileType;
+    	FunExt.RecordID = WebOffice.RecordID;
+    	FunExt.Template = WebOffice.Template;
+    	FunExt.UserName = WebOffice.UserName;
+		FunExt.FileType = WebOffice.FileType;
+		//alert(WebOffice.WebObject.ActiveDocument.Name);
+		FunExt.SetDocument(WebOffice.obj.ActiveDocument.Name);
+		FunExt.WebOpenSignature();
+		//FunExt.WebOpenSignature("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=");
+    }
+	
+	
+	//作用：写Word内容
+	function WebSetWordContent(){
+	  var mText=window.prompt("请输入内容:","测试内容");
+	  if (mText==null){
+	     return (false);
+	  }else{
+	     WebOffice.WebObject.ActiveDocument.Application.Selection.Range.Text= mText+"\n";
+	  }
+	}
+
+	//作用：获取文档页数
+	function WebDocumentPageCount(){
+	    if (WebOffice.FileType==".doc"||WebOffice.FileType==".docx"||WebOffice.FileType==".wps"||WebOffice.FileType==".wpsx"){
+			if(WebOffice.blnIE()){
+				var intPageTotal = WebOffice.WebObject.ActiveDocument.BuiltInDocumentProperties.Item(14);
+			}else{
+				intPageTotal = WebOffice.WebObject.ActiveDocument.BuiltInDocumentProperties.Item(14).Value;
+				//intPageTotal = WebOffice.WebObject.ActiveDocument.BuiltInDocumentProperties.Item(14);
+			}
+		//intPageTotal = WebOffice.WebObject.ActiveDocument.BuiltInDocumentProperties.Item(14);	
+		//intPageTotal = WebOffice.blnIE()?intPageTotal:intPageTotal.Value();
+		//alert(intPageTotal);
+		WebOffice.obj.FuncExtModule.alert("文档页数： "+ intPageTotal);
+	    }
+	    if (WebOffice.FileType==".wps"){
+			var intPageTotal = WebOffice.WebObject.ActiveDocument.PagesCount();
+			WebOffice.obj.FuncExtModule.alert("文档页总数："+intPageTotal);
+	    }
+		
+		//alert(WebOffice.WebObject.ActiveDocument.InlineShapes.Count);
+	}
+	
+	//作用：显示或隐藏痕迹[隐藏痕迹时修改文档没有痕迹保留]  true表示隐藏痕迹  false表示显示痕迹
+	function ShowRevision(mValue){
+	  if (mValue){
+	     WebOffice.WebShow(true);
+	     StatusMsg("显示痕迹...");
+	  }else{
+	     WebOffice.WebShow(false);
+	     StatusMsg("隐藏痕迹...");
+	  }
+	}
+	
+	
+	
+	
+	//接受文档中全部痕迹
+	function WebAcceptAllRevisions(){
+	  WebOffice.WebAcceptAllRevisions();
+	  /*WebOffice.WebObject.ActiveDocument.Application.ActiveDocument.AcceptAllRevisions();
+	  var mCount = WebOffice.WebObject.ActiveDocument.Application.ActiveDocument.Revisions.Count;
+	  if(mCount>0){
+	    return false;
+	  }else{
+	    return true;
+	  }*/
+	}
+	
+		//作用：VBA套红
+	function WebInsertVBA(){
+		//画线
+		try{
+		var object=WebOffice.WebObject.ActiveDocument;
+		var myl=object.Shapes.AddLine(100,60,305,60);
+		var myl1=object.Shapes.AddLine(326,60,520,60);
+	   	var myRange=WebOffice.WebObject.ActiveDocument.Range(0,0);
+		myRange.Select();
+		var mtext="★";
+		WebOffice.WebObject.ActiveDocument.Application.Selection.Range.InsertAfter (mtext+"\n");
+	   	var myRange=WebOffice.WebObject.ActiveDocument.Paragraphs.Item(1).Range;
+	   	myRange.ParagraphFormat.LineSpacingRule =1.5;
+	   	myRange.font.ColorIndex=6;
+	   	myRange.ParagraphFormat.Alignment=1;
+	   	myRange=WebOffice.WebObject.ActiveDocument.Range(0,0);
+		myRange.Select();
+		mtext="金格发[２０１２]１５４号";
+		WebOffice.WebObject.ActiveDocument.Application.Selection.Range.InsertAfter (mtext+"\n");
+		myRange=WebOffice.WebObject.ActiveDocument.Paragraphs.Item(1).Range;
+		myRange.ParagraphFormat.LineSpacingRule =1.5;
+		myRange.ParagraphFormat.Alignment=1;
+		myRange.font.ColorIndex=1;
+		mtext="金格电子政务文件";
+		WebOffice.WebObject.ActiveDocument.Application.Selection.Range.InsertAfter (mtext+"\n");
+		myRange=WebOffice.WebObject.ActiveDocument.Paragraphs.Item(1).Range;
+		myRange.ParagraphFormat.LineSpacingRule =1.5;
+		myRange.Font.ColorIndex=6;
+		myRange.Font.Name="仿宋_GB2312";
+		myRange.font.Bold=true;
+		myRange.Font.Size=50;
+		myRange.ParagraphFormat.Alignment=1;
+		WebOffice.WebObject.ActiveDocument.PageSetup.LeftMargin=70;
+		WebOffice.WebObject.ActiveDocument.PageSetup.RightMargin=70;
+		WebOffice.WebObject.ActiveDocument.PageSetup.TopMargin=70;
+		WebOffice.WebObject.ActiveDocument.PageSetup.BottomMargin=70;
+		}catch(e){
+		 WebOffice.obj.FuncExtModule.alert(e);
+		}
+	}
+
+	//作用：设置书签值  vbmName:标签名称，vbmValue:标签值   标签名称注意大小写
+	function SetBookmarks(){
+		try{
+			var mText=window.prompt("请输入书签名称和书签值，以','隔开。","例如：book1,book2");
+			var mValue = mText.split(",");
+			BookMarkName = mValue[0];
+			BookMarkValue = mValue[1];
+			WebOffice.WebSetBookmarks(mValue[0],mValue[1]);
+			StatusMsg("设置成功");
+			return true;
+		}catch(e){
+			StatusMsg("书签不存在");
+			return false;
+		}
+	}
+	//打开书签窗口
+	function WebOpenBookMarks(){	
+			WebOffice.WebOpenBookMarks();
+		 }
+	//添加书签
+	function WebAddBookMarks(){//书签名称，书签值
+		WebOffice.WebAddBookMarks("JK","KingGrid");
+	}
+	 //定位书签
+	function WebFindBookMarks(){
+		WebOffice.WebFindBookMarks("JK");
+	 }
+	 //删除书签
+	function WebDelBookMarks(){//书签名称，
+	    WebOffice.WebDelBookMarks("JK");//删除书签
+	 }
+         
+	function DelFile(){
+	   var mFileName = WebOffice.FilePath+WebOffice.FileName;
+       WebOffice.Close(); 
+       WebOffice.WebDelFile(mFileName);
+	}
+	
+	//作用：用Excel求和
+	function WebGetExcelContent(){
+		
+	  if(!WebOffice.WebObject.ActiveDocument.Application.Sheets.Item(1).ProtectContents){
+		  WebOffice.WebObject.ExitExcelEditMode();
+		  WebOffice.WebObject.Activate(true);  
+		  WebOffice.WebObject.ActiveDocument.Application.Sheets.Item(1).Select();
+		  WebOffice.WebObject.ActiveDocument.Application.Range("C5").Select();
+		  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "126";
+		  WebOffice.WebObject.ActiveDocument.Application.Range("C6").Select();
+		  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "446";
+		  WebOffice.WebObject.ActiveDocument.Application.Range("C7").Select();
+		  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "556";
+		  WebOffice.WebObject.ActiveDocument.Application.Range("C5:C8").Select();
+		  WebOffice.WebObject.ActiveDocument.Application.Range("C8").Activate();
+		  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "=SUM(R[-3]C:R[-1]C)";
+		  WebOffice.WebObject.ActiveDocument.Application.Range("D8").Select();
+		  WebOffice.WebObject.ActiveDocument.application.sendkeys("{ESC}");
+		  WebOffice.obj.FuncExtModule.alert(WebOffice.WebObject.ActiveDocument.Application.Range("C8").Text);
+	  }
+	
+	}
+	
+		//作用：保护工作表单元 IE浏览器
+	function WebSheetsLock(){
+	  WebOffice.WebObject.ActiveDocument.Application.Range("A1").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "产品";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("B1").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "价格";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("C1").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "详细说明";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("D1").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "库存";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("A2").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "书签";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("A3").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "毛笔";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("A4").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "钢笔";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("A5").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "尺子";
+	
+	  WebOffice.WebObject.ActiveDocument.Application.Range("B2").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "0.5";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("C2").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "樱花";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("D2").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "300";
+	
+	  WebOffice.WebObject.ActiveDocument.Application.Range("B3").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "2";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("C3").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "狼毫";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("D3").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "50";
+	
+	  WebOffice.WebObject.ActiveDocument.Application.Range("B4").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "3";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("C4").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "蓝色";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("D4").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "90";
+	
+	  WebOffice.WebObject.ActiveDocument.Application.Range("B5").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "1";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("C5").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "20cm";
+	  WebOffice.WebObject.ActiveDocument.Application.Range("D5").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "40";
+	
+	  //保护工作表
+	  WebOffice.WebObject.ActiveDocument.Application.Range("B2:D5").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.Selection.Locked = false;
+	  WebOffice.WebObject.ActiveDocument.Application.Selection.FormulaHidden = false;
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveSheet.Protect(true,true,true);
+	  StatusMsg("已经保护工作表，只有B2-D5单元格可以修改。");
+	}
+	
+	//作用：用Excel求和 非IE
+	function WebGetExcelContent_NotIE(){
+		//alert("excel求和");
+	  if(!WebOffice.WebObject.ActiveDocument.Application.Sheets.pm_Item(1).ProtectContents){
+		 
+		  WebOffice.WebObject.ExitExcelEditMode();
+		  WebOffice.WebObject.Activate(true);  
+		  //alert("1111");
+		  WebOffice.WebObject.ActiveDocument.Application.Sheets.pm_Item(1).Select();
+		   //alert("2222");
+		  WebOffice.WebObject.ActiveDocument.Application.pm_Range("C5").Select();
+		  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "126";
+		  WebOffice.WebObject.ActiveDocument.Application.pm_Range("C6").Select();
+		  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "446";
+		  WebOffice.WebObject.ActiveDocument.Application.pm_Range("C7").Select();
+		  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "556";
+		  WebOffice.WebObject.ActiveDocument.Application.pm_Range("C5:C8").Select();
+		  WebOffice.WebObject.ActiveDocument.Application.pm_Range("C8").Activate();
+		  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "=SUM(R[-3]C:R[-1]C)";
+		  WebOffice.WebObject.ActiveDocument.Application.pm_Range("D8").Select();
+		  WebOffice.WebObject.ActiveDocument.application.sendkeys("{ESC}");
+		  StatusMsg(WebOffice.WebObject.ActiveDocument.Application.pm_Range("C8").Text);
+		   //alert("22333");
+	  }
+	
+	}
+	
+		//作用：保护工作表单元 非IE
+	function WebSheetsLock_NotIE(){
+		//alert("SheetLock");
+		 if(!WebOffice.WebObject.ActiveDocument.Application.Sheets.pm_Item(1).ProtectContents){
+			
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("A1").Select();
+	  //alert("11111");
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "产品";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("B1").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "价格";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("C1").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "详细说明";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("D1").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "库存";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("A2").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "书签";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("A3").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "毛笔";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("A4").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "钢笔";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("A5").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "尺子";
+	
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("B2").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "0.5";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("C2").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "樱花";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("D2").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "300";
+	
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("B3").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "2";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("C3").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "狼毫";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("D3").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "50";
+	
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("B4").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "3";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("C4").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "蓝色";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("D4").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "90";
+	
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("B5").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "1";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("C5").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "20cm";
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("D5").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveCell.FormulaR1C1 = "40";
+	
+	  
+	  //保护工作表
+	  WebOffice.WebObject.ActiveDocument.Application.pm_Range("B2:D5").Select();
+	  WebOffice.WebObject.ActiveDocument.Application.Selection.Locked = false;
+	  WebOffice.WebObject.ActiveDocument.Application.Selection.FormulaHidden = false;
+	  WebOffice.WebObject.ActiveDocument.Application.ActiveSheet.Protect(true,true,true);
+	  StatusMsg("已经保护工作表，只有B2-D5单元格可以修改。");
+		 }
+	}
+	
+	
+	//根据当空打开的文档类型保存文档
+	function WebOpenLocal(){
+		//WebOffice.ShowOpenProgress(true);
+	   //WebOffice.obj.FuncExtModule.alert("webopenlocal");
+	   WebOffice.WebOpenLocal();
+	   //WebOffice.WebDelFile(WebOffice.FilePath+WebOffice.FileName);
+	   //WebOffice.FileType = WebOffice.WebGetDocSuffix();
+	   //WebOffice.FileName = WebOffice.FileName.substring(0,WebOffice.FileName.lastIndexOf("."))+WebOffice.FileType;
+	   //document.getElementById('FileType').value = WebOffice.FileType;
+	}
+	////word转PDF加载超阅打开签章，流版签
+	function WordtoPDFSign(){
+			var FilePath = WebOffice.getFilePath();
+			var file = FilePath +  "test.pdf";
+			//WebOffice.obj.FuncExtModule.alert(file);
+			//WebOffice.SaveAsPdf(FilePath + "test.pdf");
+			WebOffice.SaveAsPdf(file);
+			WebOffice.WebSave();
+			WebOffice.WebClose();
+			//WebOffice.obj.FuncExtModule.alert(WebOffice.obj);
+			//var res = WebOffice.obj.CreateNew("{7017318C-BC50-4DAF-9E4A-10AC8364C364}");
+			WebOffice.CreateNewOFD();
+			//WebOffice.obj.FuncExtModule.alert(res);
+			
+			//WebOffice.obj.ActiveDocument.WebOpenLocalFile(file);   //调用超阅控件方法打开ofd文档，true：只读打开文档，false: 可写方式打开文档
+			
+	}
+	
+	//word转OFD加载超阅打开签章，流版签
+	function wordToOFDSign(){
+		var FilePath = WebOffice.getFilePath();
+			WebOffice.obj.FuncExtModule.alert(FilePath +  "test.ofd");
+			WebOffice.SaveAsPdf(FilePath + "test.ofd");
+}
+	
+	//调用模板
+	function WebUseTemplate(fileName){
+	    var currFilePath;
+	    if(WebOffice.WebAcceptAllRevisions()){//清除正文痕迹的目的是为了避免痕迹状态下出现内容异常问题。
+	       currFilePath = WebOffice.getFilePath(); //获取2015特殊路径
+	       WebOffice.WebSaveLocalFile(currFilePath+WebOffice.iWebOfficeTempName);//将当前文档保存下来
+		   //alert("1111");
+		   if(WebOffice.DownloadToFile(fileName,currFilePath)){//下载服务器指定的文件
+			  //alert(currFilePath+fileName);
+			  //WebOffice.WebOpenLocalFile(currFilePath+fileName);//打开该文件
+			  WebOffice.OpenLocalFile(currFilePath+fileName);//打开该文件
+	          //WebOffice.obj.FuncExtModule.alert(currFilePath+WebOffice.iWebOfficeTempName);
+			  //WebOffice.VBAInsertFile("Content",currFilePath+WebOffice.iWebOfficeTempName);
+			  if(!WebOffice.VBAInsertFile("Content",currFilePath+WebOffice.iWebOfficeTempName)){//插入文档
+	           StatusMsg("插入文档失败"); 
+	           return false;
+	          }
+	          StatusMsg("模板套红成功"); 
+	          return true; 
+	       }
+	       StatusMsg("下载文档失败"); 
+	       return false;
+	    }
+	    StatusMsg("清除正文痕迹失败，套红中止"); 
+	}
+	//手写签批
+	function HandWriting(){
+	 	var penColor=document.getElementById("PenColor").value;
+	 	var penWidth=document.getElementById("PenWidth").value;
+	 	WebOffice.HandWriting(penColor,penWidth);
+	}
+	function getEditVersion(){
+		var getVersion=WebOffice.getEditVersion(); //获取当前编辑器软件版本
+		
+		if (getVersion == "YozoWP.exe" || getVersion == "YozoSS.exe")  //如果是永中office,隐藏手写功能等
+		{
+		    document.getElementById("handWriting1").style.display='none';
+		    document.getElementById("handWriting2").style.display='none';
+		    document.getElementById("expendFunction").style.display='none';
+		    document.getElementById("enableCopy1").style.display='none';
+		    document.getElementById("enableCopy2").style.display='none';
+		    document.getElementById("OpenBookMarks").style.display='none';
+		    document.getElementById("areaProtect").style.display='none';
+		    document.getElementById("areaUnprotect").style.display='none';
+		    
+		}else if(getVersion == "WINWORD.EXE" || getVersion == "wps.exe") {
+			
+			//WebOffice.ShowWritingUser(true);
+		
+		}
+		
+	}
+	//全屏
+	function FullSize(mValue){
+		WebOffice.FullSize(mValue);
+		//WebOffice.obj.FuncExtModule.alert("111");
+		//WebOffice.obj.FuncExtModule.WebSetProtect(true,"123");
+	}
+	//添加区域保护
+	function WebAreaProtect(){	
+		//var mText = window.prompt("请输入书签名称", "KingGrid","");
+		var mText = "KingGrid";
+		if(mText!=null)	WebOffice.WebAreaProtect(mText);
+	}
+	//取消区域保护
+	function WebAreaUnprotect(){
+		//var mText = window.prompt("请输入书签名称", "KingGrid","");
+		var mText = "KingGrid";
+		if(mText!=null) WebOffice.WebAreaUnprotect(mText);
+	}
+	//执行宏命令
+	function WebRunMacro(){		
+		window.open("MacroForm.htm",'','height=250px,width=450px,top=300,left=350,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+		
+	}
+	
+	//插入文档水印
+	function AddWaterMark(WaterMarkNmae){
+		try {
+				//插入水印前需更改视图样式为页眉视图
+				WebOffice.WebObject.ActiveDocument.ActiveWindow.ActivePane.View.SeekView = 9; //wdSeekCurrentPageHeader
+				//由于一个文档中只允许添加一个水印，因此在添加水印之前，需检测文档中是否存在水印，如果存在，则先删除
+				AddDelWaterMark(WaterMarkNmae);
+
+				var selection = WebOffice.WebObject.ActiveDocument.Application.Selection;
+				//设置插入水印，语法：表达式.AddTextEffect(预设文字效果【0..49】, 文字内容, 字体名, 字体大小, 是否粗体, 是否斜体, 左侧位置, 顶部位置)
+				selection.HeaderFooter.Shapes.AddTextEffect(0, '金格科技', '宋体', 36, false, false, 0, 0).Select();
+				
+				var shapeRange = selection.ShapeRange;
+				//alert(WaterMarkNmae);
+				shapeRange.Name = WaterMarkNmae;  //水印对象名
+				//alert(WaterMarkNmae);
+				selection.HeaderFooter.Shapes.AddTextEffect(0, WaterMarkNmae, '宋体', 36, false, false, 0, 0).Select();
+				shapeRange.TextEffect.NormalizedHeight = false //文字效果
+				shapeRange.Line.Visible = false;					//线条是否可见
+				shapeRange.Fill.Visible = true;						//填充是否可见
+				shapeRange.Fill.Solid();									//填充类型（本例为纯色）
+				shapeRange.Fill.ForeColor.RGB = 0x0000FF; //设定填充的颜色RGB值
+				shapeRange.Fill.Transparency = 0.5;				//设置透明度50%
+				shapeRange.Rotation = 45;									//设置旋转角度
+				shapeRange.LockAspectRatio = true;				//锁定纵横比
+				//shapeRange.Height = WebOffice.WebObject.ActiveDocument.Application.CentimetersToPoints(2); //高度
+				//shapeRange.Width = WebOffice.WebObject.ActiveDocument.Application.CentimetersToPoints(16); //宽度
+				shapeRange.Height = 2 * 72;
+				shapeRange.Width = 8 * 72;
+				shapeRange.WrapFormat.AllowOverlap = true;	//是否允许重叠
+				shapeRange.WrapFormat.Side = 3; 		//是否设置文字环绕(wdWrapNone)
+				shapeRange.WrapFormat.type = 3;			//设置折回样式（本例设为不折回）
+				//设置水平位置与纵向页边距关联 wdRelativeVerticalPositionMargin
+				shapeRange.RelativeHorizontalPosition = 0;
+				//设置垂直位置与横向页边距关联 wdRelativeVerticalPositionMargin
+				shapeRange.RelativeVerticalPosition = 0;
+				//水平居中  wdShapeCenter
+				shapeRange.Left = -999995;
+				//垂直居中
+				shapeRange.Top = -999995;
+				//恢复视图样式到原来样式
+				WebOffice.WebObject.ActiveDocument.ActiveWindow.ActivePane.View.SeekView = 0; //wdSeekMainDocument
+
+				StatusMsg("水印添加成功！");
+				return true;
+  		}catch(e) {
+				StatusMsg("水印添加失败！");
+				return false;
+			}
+	}
+	//添加水印时清理存在水印
+	function AddDelWaterMark(WaterMarkNmae) {
+		var selection = WebOffice.WebObject.ActiveDocument.Application.Selection;
+		//查找文档中是否存在名称为【WaterMarkObjectName】的水印对象，如果存在，则删除
+		if (selection.HeaderFooter.Shapes.Count > 0){
+			for (var i = 1; i <= selection.HeaderFooter.Shapes.Count; i++){
+				if (selection.HeaderFooter.Shapes.Item(i).Name = WaterMarkNmae){
+					//alert(WaterMarkNmae);
+					selection.HeaderFooter.Shapes.Item(i).Delete();
+					break;
+				}
+			}
+		}
+	}
+	//删除水印
+	function DelWaterMark(WaterMarkNmae) {
+		WebOffice.WebObject.ActiveDocument.ActiveWindow.ActivePane.View.SeekView = 9;
+		var selection = WebOffice.WebObject.ActiveDocument.Application.Selection;
+		//查找文档中是否存在名称为【WaterMarkObjectName】的水印对象，如果存在，则删除
+		if (selection.HeaderFooter.Shapes.Count > 0){
+			for (var i = 1; i <= selection.HeaderFooter.Shapes.Count; i++){
+				if (selection.HeaderFooter.Shapes.Item(i).Name = WaterMarkNmae){
+					selection.HeaderFooter.Shapes.Item(i).Delete();
+					break;
+				}
+			}
+		}
+		WebOffice.WebObject.ActiveDocument.ActiveWindow.ActivePane.View.SeekView = 0;
+		StatusMsg("水印删除成功！");
+	}
+
+	
+	//文档插入水印
+function WebWaterMark(){
+	//WebOffice.WebObject.Activate(true);
+	//WebOffice.obj.FuncExtModule.alert("" + WebOffice.FileType);
+	WebOffice.WebObject.FuncExtModule.FileType = WebOffice.FileType;      //设置文档类型
+	WebOffice.WebObject.FuncExtModule.SetDocument(WebOffice.WebObject.ActiveDocument); //设置文档对象
+	var ret  = WebOffice.obj.FuncExtModule.WebWaterMark("金格科技", "宋体", 0x000000, 45, 0.5,45);
+	
+	//WebOffice.obj.FuncExtModule.alert("warter: " + ret);
+}
+
+function WebDeleteWaterMark(){
+	
+	WebOffice.WebObject.FuncExtModule.FileType = WebOffice.FileType;      //设置文档类型
+	WebOffice.WebObject.FuncExtModule.SetDocument(WebOffice.WebObject.ActiveDocument); //设置文档对象
+	
+	var ret  = WebOffice.obj.FuncExtModule.WebWaterMark("", "宋体", 0x0000ff, 36, 0.6,60);  //设置水印为空，即删除水印
+	
+	
+	//alert(ret);
+}
+	
+
+//设置OFFICE2007的选项卡显示
+function WebSetRibbonUIXML(){
+	//alert("RibbonUIXML");
+  WebOffice.obj.FuncExtModule.RibbonUIXML = '' +
+  '<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui">' +
+  '<commands>'+
+  '   <command idMso="ReviewDeleteCommentsMenu" enabled="true" />' +
+  //'   <command idMso="ModifyReview" enabled="true" />' +
+  '   <command idMso="ReviewAcceptChangeMenu" enabled="false" />' +
+  '   <command idMso="ReviewRejectChangeMenu" enabled="false" />' +
+  '   <command idMso="FilePrintQuick" enabled="false" />' +
+  '   <command idMso="ConflictsAccept" enabled="false" />' +
+  '   <command idMso="ConflictsReject" enabled="false" />' +
+  
+'</commands>'+
+  '  <ribbon startFromScratch="false">'+                    //不显示所有选项卡控制 false显示选项卡；true不显示选项卡
+  '    <tabs>'+
+  '      <tab idMso="TabReviewWord" visible="true">' +     //关闭审阅工具栏
+  '      </tab>'+
+  '      <tab idMso="TabInsert" visible="true">' +         //关闭插入工具栏
+  '      </tab>'+
+  '      <tab idMso="TabHome" visible="true">' +           //关闭开始工具栏
+  '      </tab>'+
+  '    </tabs>' +
+  '  </ribbon>' +
+  '</customUI>';
+//alert("WebSetRibbonUIXML");
+/*
+    最常用的内置选项卡名称
+    选项卡名称      idMso（Excel）      idMso（Word）       idMso（Access）
+    开始            TabHome             TabHome             TabHomeAccess
+    插入            TabInsert           TabInsert           （none）
+    页面布局        TabPageLayoutExcel  TabPageLayoutWord   （none）
+    公式            TabFormulas         （none）            （none）
+    数据            TabData             （none）            （none）
+    视图            TabReview           TabReviewWord       （none）
+    创建            （none）            （none）            TabCreate
+    外部数据        （none）            （none）            TabExternalData
+    数据库工具      （none）            （none）            TabDatabaseTools
+*/
+
+/*
+    iWebOffice控件的RibbonUIXML属性，是基于OFFICE2007的RibbonX的应用。关于RibbonX的相关资料，需要自己另行查询。
+*/
+}	
+
+	//隐藏控件
+function disPlay(){
+	
+	document.getElementById("2015id").style.display='none';
+}
+//显示控件
+function disPlay1(){
+	
+	document.getElementById("2015id").style.display='block';
+}
+
+//隐藏控件
+function disPlay2(){
+	WebOffice.obj.HidePlugin(2);
+	WebOffice.obj.FuncExtModule.alert("控件已隐藏，显示背景");
+}
+
+
+//判断文档是否修改  
+function DocIsModify()
+{
+	WebOffice.VisibleToolsButton();
+	
+	if(WebOffice.IsModify(1) == true )
+		{
+			alert("文件已修改");
+		}
+		else{
+			alert("文件无修改");
+		}
+}
+
+	var x,y;
+	function onUnload(){
+		//SaveDocument();
+		//alert(username);
+		WebOffice.WebObject.ActiveDocument.Application.UserName = username;
+		
+		WebOffice.WebClose();
+		/*x="浏览器将关闭，当前文档是否要保存？";
+        y=confirm(x);
+		if(y==true){
+			SaveDocument();
+			WebOffice.WebClose();
+		}else{
+			WebOffice.WebClose();
+		}
+		//WebOffice.WebClose();*/
+	}
+	//chrome浏览器下执行浏览器关闭前事件
+	/*window.onbeforeunload=function(){
+		MyonUnload();
+		return x;
+	} */
+
+	//判断编辑器
+function GetEditer(){
+  if(WebOffice.obj.WebApplication(".doc")){     //WORD
+    WebOffice.obj.FuncExtModule.alert("存在WORD编辑器");
+  }
+  if(WebOffice.obj.WebApplication(".xls")){     //EXCEL
+    WebOffice.obj.FuncExtModule.alert("存在EXCEL编辑器");
+  }
+  if(WebOffice.obj.WebApplication(".wps")){     //金山WPS
+    WebOffice.obj.FuncExtModule.alert("存在WPS编辑器");
+  }
+  if(WebOffice.obj.WebApplication(".et")){      //金山表格
+    WebOffice.obj.FuncExtModule.alert("存在ET编辑器");
+  }
+  //参数还可以是".ppt"、".vso"......
+}
+
+//判断文档是否存在
+function WebFileExists(){
+	//alert("123");
+	//WebOffice.obj.FuncExtModule.alert(WebOffice.obj.FuncExtModule.WebFileExists("D:\\1.docx"));
+	//alert(WebOffice.obj.FileSystem.FilePathExists("D:\\123.docx"));
+	var ret = WebOffice.obj.FileSystem.FilePathExists("D:\\123.docx");
+	WebOffice.obj.FuncExtModule.alert("" + ret);
+}
+//判断文件目录是否存在
+function DirectoryExists(){
+	//alert("123");
+	
+	//WebOffice.obj.FuncExtModule.alert(WebOffice.obj.FileSystem.DirectoryExists("C:\\Program Files (x86)\\Microsoft Office"));
+	WebOffice.obj.FuncExtModule.alert("" + WebOffice.obj.FileSystem.DirectoryExists("C:\\Program Files\\Microsoft Office"));
+}
+	
+function test()
+{
+	 WebOffice.setObj(document.getElementById('WebOffice2015obj'));//给2015对象赋值
+	 //alert(WebOffice.obj.CreateNew("Word.Document"));
+	 alert("333");
+	 Load();
+	 WebOffice.CreateFile();
+}
+
+//获取文档字节大小
+function WebLocalFileSize(){
+	var ret = WebOffice.obj.FuncExtModule.WebLocalFileSize();
+	
+	WebOffice.obj.FuncExtModule.alert(ret);
+	
+}
+//获取当前页面路径
+function HrefLocation()
+{
+	var ret = WebOffice.obj.HrefLocation; 
+	WebOffice.obj.FuncExtModule.alert("当前页面的路径： " + ret);
+}
+
+function WebApplication()
+{
+	var ret = WebOffice.obj.WebApplication(".doc"); 
+	//alert(ret);
+	if(ret)
+	{
+		WebOffice.obj.FuncExtModule.alert("控件支持打开doc格式文档!");
+	}
+}
+
+function TestPrint()
+	{
+		//获取Office360签章对象
+		var Office360Object = WebOffice.obj.Office360Object;
+		//获取Office签章对象
+		var OfficeObject = WebOffice.obj.OfficeObject;
+		//alert(WebOffice.obj.Office360Object);
+		//alert(OfficeObject);
+		try{
+			if(OfficeObject){
+				OfficeObject.ActiveDocument = WebOffice.obj.ActiveDocument;      //设置Office签章活动文档对象
+				OfficeObject.InitSignatureItems();                               //当签章数据发生变化时，请重新执行该方法
+				//WebOffice.obj.FuncExtModule.alert(OfficeObject.SignatureCount);  
+				OfficeObject.PrintCreate();              //取消Office签章打印控制
+				OfficeObject.ReleaseActiveDocument();        //释放office签章活动文档
+			}
+			if(Office360Object){
+				Office360Object.Action_Do(7);				
+				Office360Object.PrintCreate();                               //取消Office360签章打印控制
+				//var varNameList = Office360Object.LocalPrinterNameList();  ///获取本机打印机列表：字符串，\r\n区分
+				//alert("打印机名称:\r\n" + varNameList);     
+				//var nRet = varNameList.split("\\r\\n");                    //截取字符串，获取每个打印机名称
+				//alert("打印机名称0:\r\n" + nRet[0]);
+				//alert("打印机名称1:\r\n" + nRet[1]);
+				//alert("打印机名称3:\r\n" + nRet[2]);
+			
+				//var printer = "Adobe PDF";
+				//WebOffice.WebObject.ActiveDocument.Application.ActivePrinter = printer; //设置默认打印机 VBA代码
+			}
+		
+		}catch(e)
+		{
+			alert(e.description);
+		}
+		//这里调用打印的接口
+		WebOffice.WebObject.ActiveDocument.Application.ActivePrinter = "Microsoft XPS Document Writer"; //设置默认打印机 VBA代码
+		var mAPIObj = WebOffice.WebObject.ActiveDocument.Application.Dialogs.Item(88);
+		//mAPIObj.NumCopies = Copies;
+		mAPIObj.Execute();
+		//WebOffice.PrintByCopies(1, false);       //直接静默打印文档
+		//Office360Object.SilentPrintDocument(1,5,1,false,"Microsoft XPS Document Writer",true,false,"E:\\test.xps",false);
+		 
+		
+		try{
+			if(OfficeObject){
+				
+				OfficeObject.PrintRelease();
+				
+				OfficeObject.ReleaseActiveDocument();        //释放office签章活动文档
+				
+			}
+			if(Office360Object)
+			{
+				//alert("333");
+				Office360Object.PrintRelease();
+			}
+				
+				
+		}catch(e)
+		{
+			alert(e.description);
+		}
+	}
+
+</script>
+<script language="javascript" for="WebOffice2015" event="OnReady()">
+   WebOffice.setObj(document.getElementById('WebOffice2015'));//给2015对象赋值
+   //alert("onready");
+   //WebOffice.obj.WebCreateProcess();   //调用控件方法创建空白word进程
+   Load();//避免页面加载完，控件还没有加载情况  
+   //解决计算机显示125%，44版本chrome中加载控件，控件窗体显示错位
+   if(version.indexOf("44.0")==0)
+		{
+			//不启用插件内部的DPI调整
+			iWebOffice.SwitchDPI(1);
+		}
+</script>
+<script language="javascript" for="WebOffice2015" event="OnRightClickedWhenAnnotate()">
+   WebOffice.ShowToolBars(true);//停止签批时显示工具栏
+   WebOffice.ShowMenuBar(true);//停止签批时显示菜单栏
+</script>
+<script language="JavaScript" for=WebOffice2015 event="OnFullSizeBefore(bVal)">
+WebOffice.obj.FuncExtModule.alert("OnFullSizeBefore事件响应成功");
+    if(bVal == true){
+    	var getVersion=WebOffice.getEditVersion();
+    	if(getVersion == "WINWORD.EXE" || getVersion == "wps.exe") {
+			WebOffice.ShowCustomToolbar(false);//显示手写签批工具栏
+		}
+    }
+    /* 是否修改 以及 全屏停止 03
+    if(WebOffice.obj.FullSize == true && WebOffice.obj.IsModify(1))
+	{
+		if(WebOffice.obj.FileSystem.KGMessageBox("文件已修改，且没有保存，是否停止还原全屏？","提示",4,0))
+			WebOffice.obj.bStopFullSize = true;
+	}
+	*/
+</script>
+<script language="JavaScript" for=WebOffice2015 event="OnFullSizeAfter(bVal)">
+    if(bVal == false){
+    	WebOffice.ShowCustomToolbar(false);	//隐藏控件的手写签批工具栏
+    }
+</script>
+
+<script language="javascript" for=WebOffice2015 event="OnRecvStart(nTotleBytes)">
+    nSendTotleBytes = nTotleBytes;
+    nSendedSumBytes = 0;
+</script>
+<script language="javascript" for=WebOffice2015 event="OnRecving(nRecvedBytes)">
+    nSendedSumBytes += nRecvedBytes;
+</script>
+<script language="javascript" for=WebOffice2015 event="OnRecvEnd(bSucess)">
+
+</script>
+<script language="javascript" for=WebOffice2015 event="OnSendStart(nTotleBytes)">
+    nSendTotleBytes = nTotleBytes;
+    nSendedSumBytes = 0;
+</script>
+<script language="javascript" for=WebOffice2015 event="OnSending(nSendedBytes)">
+    nSendedSumBytes += nSendedBytes;
+</script>
+<script language="javascript" for=WebOffice2015 event="OnSendEnd(bSucess)">
+    if (bSucess){
+        if(WebOffice.sendMode == "LoadImage"){
+          var httpclient = WebOffice.WebObject.Http;
+          WebOffice.hiddenSaveLocal(httpclient,WebOffice,false,false,WebOffice.ImageName);
+          WebOffice.InsertImageByBookMark();
+          WebOffice.ImageName = null;
+          WebOffice.BookMark = null;
+          StatusMsg("插入图片成功");
+          return
+	     } 
+	      StatusMsg("插入图片失败"); 
+    }
+</script>
+<script language="JavaScript" for=WebOffice2015 event="OnCommand(ID, Caption, bCancel)">
+   //WebOffice.obj.FuncExtModule.alert("OnCommand_IE_ID =   " + ID);
+   switch(ID){
+	    case 1:WebOpenLocal();break;//打开本地文件
+	    case 2:WebOffice.WebSaveLocal();break;//另存本地文件
+		case 4:WebOffice.PrintPreview();break;//启用
+		case 5:WebOffice.PrintPreviewExit();WebOffice.ShowField();break;//启用
+		case 6:WebOffice.FullSize(false);break;//全屏还原
+		case 17:WebOffice.SaveEnabled(true);StatusMsg("启用保存");break;//启用保存
+		case 18:WebOffice.SaveEnabled(false);StatusMsg("关闭保存");break;//关闭保存
+		case 19:WebOffice.PrintEnabled(true);StatusMsg("启用打印");break;//启用打印
+		case 20:WebOffice.PrintEnabled(false);StatusMsg("关闭打印");break;//关闭打印
+		case 22:WebOffice.ChangeLanguage(2052);StatusMsg("简体中文");break;//简件中文
+		case 23:WebOffice.ChangeLanguage(1028);StatusMsg("繁体中文(TW)");break;//繁体中文
+		case 24:WebOffice.ChangeLanguage(3076);StatusMsg("繁体中文(HK)");break;//繁体中文
+		case 25:WebOffice.ChangeLanguage(1033);StatusMsg("英文");break;//英文
+		case 26:WebOffice.ChangeLanguage(3332);StatusMsg("葡萄牙语");break;//葡萄牙语
+		case 301:WebOffice.HandWriting("255","4");StatusMsg("手写签批");break;//手写签批
+		case 302:WebOffice.StopHandWriting();StatusMsg("停止手写签批");break;//停止手写签批
+		case 303:WebOffice.TextWriting();StatusMsg("文字签名");break;//文字签名
+		case 304:WebOffice.ShapeWriting();StatusMsg("图形签批");break;//图形签批
+		case 305:WebOffice.RemoveLastWriting();StatusMsg("取消上一次签批");break;//取消上一次签批
+		case 306:WebOffice.ShowWritingUser(false,WebOffice.UserName);StatusMsg("显示签批用户");break;//显示签批用户
+		default:;return;  
+  }   
+</script>
+
+<script language="javascript" for=WebOffice2015 event="OnOLECommand(OLEFlag, bCancel)">
+    if (OLEFlag == 1) {
+		
+        WebOffice.WebObject.ShowDialog(0);
+    }
+    else if (OLEFlag == 2) {
+        //alert(2);
+		var exts;
+        exts =   "Word Files(*.doc;*.docx;*.docm;*.dot;*.dotx;*.dotm;*.rtf)|*.doc;*.docx;*.docm;*.dot;*.dotx;*.dotm;*.rtf";
+        exts += "|Excel Files(*.xls;*.xlsx;*.xlsm;*.xlt;*.xltx;*.xltm)|*.xls;*.xlsx;*.xlsm;*.xlt;*.xltx;*.xltm";
+        exts += "|PowerPoint Files(*.ppt;*.pptx;*.pptm;*.pot;*.potx;*.potm)|*.ppt;*.pptx;*.pptm;*.pot;*.potx;*.potm";
+        exts += "|Project Files(*.mpp;*.mpt)|*.mpp;*.mpt";
+        exts += "|Visio Files(*.vsd;*.vdx;*.vss;*.vsx;*.vst;*.vtx;*.vsw;*.vdw;*.vsdx;*.vssx;*.vstx;*.vsdm;*.vssm;*.vstm)|*.vsd;*.vdx;*.vss;*.vsx;*.vst;*.vtx;*.vsw;*.vdw;*.vsdx;*.vssx;*.vstx;*.vsdm;*.vssm;*.vstm";
+        exts += "|All File(*.*)|*.*";
+        exts += "||";
+        WebOffice.WebObject.ShowDialog(1, exts, 0);
+    }
+    else if (OLEFlag == 4) {
+		alert("ctr+S");
+        WebOffice.WebObject.ShowDialog(2);
+    }
+    else if (OLEFlag == 8) {
+		alert("8");
+        WebOffice.WebObject.ShowDialog(3);
+    }
+    else if (OLEFlag == 16) {
+		//alert(16);
+		WebOffice.WebObject.ShowDialog(4);
+    }
+    else if (OLEFlag == 32) {
+        WebOffice.WebObject.ShowDialog(5);
+    }
+    else if (OLEFlag == 64) {
+        WebOffice.WebObject.ShowDialog(6);
+    }
+    else if (OLEFlag == 128) {
+        WebOffice.WebObject.PrintPreview();
+    }
+</script>
+
+<script language="JavaScript" for=WebOffice2015 event="OnExitPrintPreview()">
+    alert("OnExitPrintPreview");
+	//WebOffice.obj.Application.ActiveWindow.View.ShowDrawings = true;
+</script>
+
+<script language="javascript" for=WebOffice2015 event="OnQuit()">
+//DelFile();
+</script>
+
+
+<!--以下是多浏览器的事件方法 -->
+<script >
+function OnReady(){
+ WebOffice.setObj(document.getElementById('WebOffice2015'));//给2015对象赋值
+ //WebOffice.obj.WebCreateProcess();   //调用控件方法创建空白word进程
+ //Load();//避免页面加载完，控件还没有加载情况
+ //setTimeout(function(){Load();}, 10);
+ 
+ window.onload = function(){Load();} //IE和谷歌可以直接调用Load方法，火狐要在页面加载完后去调用
+
+ }
+//停止签批时显示工具栏和菜单栏
+function OnRightClickedWhenAnnotate(){
+	WebOffice.ShowToolBars(true);
+    WebOffice.ShowMenuBar(true);
+}
+//全屏显示控件的手写签批工具栏
+function OnFullSizeBefore(bVal){
+	 WebOffice.obj.FuncExtModule.alert("OnFullSizeBefore事件响应成功");
+	 if(bVal == true){
+    	var getVersion=WebOffice.getEditVersion();
+    	if(getVersion == "WINWORD.EXE" || getVersion == "wps.exe") {
+			WebOffice.ShowCustomToolbar(false);//显示手写签批工具栏
+		}	
+    }
+}
+//退出全屏隐藏控件的手写签批工具栏
+function OnFullSizeAfter(bVal){
+	WebOffice.obj.FuncExtModule.alert("OnFullSizeAfter事件响应成功");
+	if(bVal == false){
+    	WebOffice.ShowCustomToolbar(false);	
+    }
+}
+//上传下载回调用事件
+function OnSendStart(nTotleBytes){
+ nSendTotleBytes = nTotleBytes;nSendedSumBytes = 0;
+}
+function OnSending(nSendedBytes){
+        nSendedSumBytes += nSendedBytes;
+}
+//异步上传
+function OnSendEnd() {
+    if(WebOffice.sendMode == "LoadImage"){
+    	var httpclient = WebOffice.WebObject.Http;
+    	WebOffice.hiddenSaveLocal(httpclient,WebOffice,false,false,WebOffice.ImageName);
+     	WebOffice.InsertImageByBookMark();
+        WebOffice.ImageName = null;
+        WebOffice.BookMark = null;
+        StatusMsg("插入图片成功");
+        return;
+	} 
+	StatusMsg("插入图片失败"); 
+}
+function OnRecvStart(nTotleBytes){
+    nSendTotleBytes = nTotleBytes;nSendedSumBytes = 0;
+}
+function OnRecving(nRecvedBytes){
+   nSendedSumBytes += nRecvedBytes;
+}
+//异步下载
+function OnRecvEnd() {
+}
+function OnCommand(ID, Caption, bCancel){
+	//WebOffice.obj.FuncExtModule.alert("oncommand_function_ID =  " + ID);
+   switch(ID){
+	    case 1:WebOpenLocal();break;//打开本地文件
+	    case 2:WebOffice.WebSaveLocal();break;//另存本地文件
+		case 4:WebOffice.PrintPreview();break;//启用
+		case 5:WebOffice.PrintPreviewExit();WebOffice.ShowField();break;//启用
+		case 6:WebOffice.FullSize(false);break;//全屏还原
+		case 17:WebOffice.SaveEnabled(true);StatusMsg("启用保存");break;//启用保存
+		case 18:WebOffice.SaveEnabled(false);StatusMsg("关闭保存");break;//关闭保存
+		case 19:WebOffice.PrintEnabled(true);StatusMsg("启用打印");break;//启用打印
+		case 20:WebOffice.PrintEnabled(false);StatusMsg("关闭打印");break;//关闭打印
+		case 301:WebOffice.HandWriting("255","4");StatusMsg("手写签批");break;//手写签批
+		case 302:WebOffice.StopHandWriting();StatusMsg("停止手写签批");break;//停止手写签批
+		case 303:WebOffice.TextWriting();StatusMsg("文字签名");break;//文字签名
+		case 304:WebOffice.ShapeWriting();StatusMsg("图形签批");break;//图形签批
+		case 305:WebOffice.RemoveLastWriting();StatusMsg("取消上一次签批");break;//取消上一次签批
+		case 306:WebOffice.ShowWritingUser(false,WebOffice.UserName);StatusMsg("显示签批用户");break;//显示签批用户
+		default:;return;  
+  }   
+}
+
+function OnOLECommand(OLEFlag, bCancel)
+	{
+		//WebOffice.obj.FuncExtModule.alert(OLEFlag);
+	if (OLEFlag == 1) {
+			WebOffice.WebObject.ShowDialog(0);
+		}
+		else if (OLEFlag == 2) {
+			var exts;
+			exts =   "Word Files(*.doc;*.docx;*.docm;*.dot;*.dotx;*.dotm;*.rtf)|*.doc;*.docx;*.docm;*.dot;*.dotx;*.dotm;*.rtf";
+			exts += "|Excel Files(*.xls;*.xlsx;*.xlsm;*.xlt;*.xltx;*.xltm)|*.xls;*.xlsx;*.xlsm;*.xlt;*.xltx;*.xltm";
+			exts += "|PowerPoint Files(*.ppt;*.pptx;*.pptm;*.pot;*.potx;*.potm)|*.ppt;*.pptx;*.pptm;*.pot;*.potx;*.potm";
+			exts += "|Project Files(*.mpp;*.mpt)|*.mpp;*.mpt";
+			exts += "|Visio Files(*.vsd;*.vdx;*.vss;*.vsx;*.vst;*.vtx;*.vsw;*.vdw;*.vsdx;*.vssx;*.vstx;*.vsdm;*.vssm;*.vstm)|*.vsd;*.vdx;*.vss;*.vsx;*.vst;*.vtx;*.vsw;*.vdw;*.vsdx;*.vssx;*.vstx;*.vsdm;*.vssm;*.vstm";
+			exts += "|All File(*.*)|*.*";
+			exts += "||";
+			WebOffice.WebObject.ShowDialog(1, exts, 0);
+		}
+		else if (OLEFlag == 4) {
+			
+			WebOffice.WebObject.ShowDialog(2);
+		}
+		else if (OLEFlag == 8) {
+		
+			WebOffice.WebObject.ShowDialog(3);
+		}
+		else if (OLEFlag == 16) {
+			//alert("16");
+			WebOffice.WebOpenPrint();
+		}
+		else if (OLEFlag == 32) {
+			iWebOffice.ShowDialog(5);
+		}
+		else if (OLEFlag == 64) {
+			WebOffice.WebObject.ShowDialog(6);
+		}
+		else if (OLEFlag == 128) {
+			WebOffice.WebObject.PrintPreview();
+		}	
+	}
+	
+	function OnExitPrintPreview()
+	{
+		WebOffice.obj.FuncExtModule.alert("OnExitPrintPreview");
+	//WebOffice.obj.Application.ActiveWindow.View.ShowDrawings = true;
+	}
+
+</script>
+<!--End以下是多浏览器的事件方法 -->
+
+<style>
+	.InputLine2{
+		border-bottom: 1px solid #000;
+	}
+	.title,.InputLine2{
+		background: transparent;
+		color: #000;
+	}
+	.title a:link{
+		color: #000;
+	}
+	.warningtext{
+		font-size:13px;
+		color:red;
+		margin: 0px 20px 5px;
+	}
+	.btn_input{
+		cursor: pointer;
+	}
+	.title1{
+		height:34px;
+	}
+	.title2{
+		text-align: right;
+		padding-right: 10px;
+	}
+	#showTD{
+		display: none;
+	}
+	#showtr{
+		height: calc(100% - 100px);
+	}
+</style>
+
+<!--End 为2015主要方法 -->
+
+
+</head>
+<body  style="overflow-y:hidden;overflow-x:hidden" onUnload="onUnload()">
+<table id="maintable"  cellspacing='0' cellpadding='0' >
+ <!-- head -->
+ <!-- <tr><td colspan="2"  height="61px"><table cellspacing='0' cellpadding='0' cellspacing='0' cellpadding='0'  id="header"><tr ><td ><img src="css/logo.jpg"/></td><td><span>　iWebOffice2015</span> 在线管理中间件示例程序</td></tr></table></td></tr>  -->
+ <tr><td class="title title1">
+    <span>标题：<input disabled type=text name="Subject1" id="Subject1"   onchange=" document.getElementById('Subject').value = this.value;" value="" class="InputLine2"  onblur="if(this.value.length>20){this.value='请输入主题';StatusMsg('主题不能超过50个字');}"/> </span>
+	<span>作者：<input disabled type=text onchange=" document.getElementById('Author').value = this.value;" name="Author1"  id="Author1" value="" class="InputLine2" onblur="if(this.value.length>8){this.value='体验用户';StatusMsg('作者不能超过8个字');}" /></span>
+ </td>
+ <td class="title title2">
+	<select name="dropOpenType" id="dropOpenType" style="height: 23px;color:#000;cursor: pointer;">
+		<option selected="selected" value="0">新建文档</option>
+	   <option  value="1">Word文档</option>
+	   <option value="2">Excel文档</option>
+   </select>
+	<input type="button" class="btn_shuaxin" value="应用模板" />
+    <input type="button" class="btn_sjbd" value="电子签章" />
+	<input type="button" class="btn_input" value="刷新" />
+	<input type="button" class="btn_input" value="重新载入" />
+	<input type="button" class="btn_input" value="打印" />
+	<input type="button" class="btn_input" value="另存为本地" />
+	<input type="button" class="btn_input" value="另存为本地PDF" />
+	<input type="button" class="btn_input" value="文字批注" />
+	<input type="button" class="btn_input" value="显示痕迹">
+	<input type="button" class="btn_input" value="隐藏痕迹">
+	<input type="button" class="btn_input" value="接受修订"/>
+	<input type="button" class="btn_input" onclick="javascript: SaveDocument()" value="保存" />
+	<input type="button" class="btn_input" onclick="javascript: CloseDocument()" value="关闭" />
+</td>
+ </tr> 
+ <tr><td style="height: 30px;" colspan="2">
+	<p class="warningtext">不公开、机要、秘密、机密、绝密等不予公开的文件，禁止通过任何渠道公开，并禁止通过互联网渠道以任何诸如电子档、截图、拍照等形式传播，未经允许擅自公开或传播将予严肃处理。</p>
+</td></tr>
+ <!-- end head -->
+ 
+ <!-- showList -->
+ <tr><td id="showtr" colspan="2"  valign="top">
+  <table id="functionBox" border="0">
+    <tr>
+     <td  id="showTD" width="204px" height="30px"  valign="top">
+       <table id="functionTable"   cellspacing='4' cellpadding='0'  >    
+        <tr  id="disPlayNone"><td height="30px" class="tableFather" >    功能列表&lt;  </td></tr>
+         <!--tr id="handWriting2" class="<%=mDisabled+mWord%>" class="test"><td valign="middle" class="tableFather">
+		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle">签批　　<span>+</span></td></tr></table>
+	       <div id="read8"  class="hideDiv">
+			 <table id="readT8" width="100%" cellspacing='0' cellpadding='0'>
+				<tr><td class="dot-size"><a href="#"  onClick="HandWriting();">手写签名</a></td></tr>
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.StopHandWriting();">停止签批</a></td></tr>
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.TextWriting();">文字签名</a></td></tr>
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.ShapeWriting();">图形签名</a></td></tr>
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.RemoveLastWriting();">返回上一次</a></td></tr>
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.ShowWritingUser(false,WebOffice.UserName);">显示当前用户签批</a></td></tr>
+ 			 </table>
+		  </div>
+		  </td></tr-->  
+        <tr  class="test"><td valign="middle" class="tableFather">
+  		  <table class="tableAll" cellspacing='0' style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 文件　　<span>+</span></td></tr></table>
+	       <div id="read0"  class="hideDiv" >
+				<table id="readT0"   width="100%" cellspacing='0' cellpadding='0'><!-- 文档阅读功能子菜单 -->
+					<!--tr><td class="dot-size"><a href="#" onClick="WordtoPDFSign()">Word转PDF签章</a></td></tr-->
+					<!--tr><td class="dot-size"><a href="#" onClick="WordtoOFDSign()">Word转OFD签章</a></td></tr-->
+					<tr <%=mEditType.equalsIgnoreCase("0")?"class=\"disabled\"":""%>><td class="dot-size"><a href="#" onclick='WebOffice.CreateFile();'>新建文件</a></td></tr>
+					<tr <%=mEditType.equalsIgnoreCase("0")?"class=\"disabled\"":""%>><td class="dot-size"><a href="#" onclick="WebOpenLocal();">打开本地文件</a></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="WebOffice.WebSaveLocal();">另存为</a>  <!--true禁止,false启用--></td></tr>
+					<tr <%=mEditType.equalsIgnoreCase("0")?"class=\"disabled\"":""%>><td   class="dot-size"><a href="#" onClick="WebOffice.WebPageSetup()">页面设置</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="WebOffice.WebOpenPrint()">打印文档</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="TestPrint()">静默打印</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="WebOffice.obj.FuncExtModule.alert('当前控件版本为：'+WebOffice.Version());">显示版本</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="WebOffice.Close()">关闭文档</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="WebOffice.WebObject.Activate(true)">激活文档</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="DocIsModify()">文档是否修改</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="GetEditer()">文档编辑器</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="WebOffice.obj.FuncExtModule.alert(WebOffice.WebObject.ISPGFDoc);">IsPGFDoc</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="HrefLocation()">当前页面路径</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="WebApplication()">文档打开类型</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="WebFileExists()">文档是否存在</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#" onClick="DirectoryExists()">文件目录是否存</a> <!--true显示,false隐藏--></td></tr>
+					<tr><td class="dot-size"><a href="#"  onclick="WebOffice.WebSetProtect(true,'123')">保护文档</a></td></tr>
+				<tr><td class="dot-size"><a href="#" onclick="WebOffice.WebSetProtect(false,'123')">解除保护</a></td></tr>
+				 </table><!--END 文档阅读功能子菜单 -->
+		   </div>
+		  </td></tr> 
+		 <tr class="<%=mDisabled+mWord%>" class="test" ><td valign="middle" class="tableFather">
+		   <table class="tableAll" cellspacing='0' style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 插入　　<span>+</span></td></tr></table>
+	       <div id="read1"  class="hideDiv">
+				       <table id="readT1" width="100%" cellspacing='0' cellpadding='0'><!-- 文档制功能子菜单 -->
+					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size" ><a href="#" <%=mDisabled%>  onClick="WebOffice.WebInsertImage('image','GoldgridLogo.jpg');">插入远程图片</a></td></tr>
+					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"  ><a href="#" <%=mDisabled%>  onClick="WebOpenSignature();">图片章</a></td></tr>
+					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"  ><a href="#" <%=mDisabled%>  onClick="WebGetWordContent();">取Word内容</a></td></tr>
+					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"  ><a href="#" <%=mDisabled%> onClick="WebSetWordContent();">写Word内容</a></td></tr>
+					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#" <%=mDisabled%>   onClick="WebOffice.WebObject.ActiveDocument.ActiveWindow.ActivePane.View.SeekView=9;">插入页眉</a></td></tr>
+					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#" <%=mDisabled%> onClick="WebOffice.WebPageCode()">插入页码</a></td></tr>
+					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebDocumentPageCount();">文档页数</a></td></tr>	
+					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebInsertVBA();">VBA套红定稿</a></td></tr>
+							  <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebWaterMark();">插入水印</a></td></tr>
+							  <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebDeleteWaterMark();">删除水印</a></td></tr>
+							  <!--tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebOffice.WebSetEndnotes('金格测试iWebOffice2020','添加自定义信息的尾注参考文献添加自定义信息的尾注1234567890asdfghjkl');">科大讯飞插入正文</a></td></tr>
+							   <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebLocalFileSize()">文档字节大小</a></td></tr-->
+					    </table><!--END 文档控制功能子菜单 -->
+		  </div>
+		  </td></tr>
+		 		 
+		 <tr  class="test" ><td valign="middle" class="tableFather">
+		   <table class="tableAll" cellspacing='0' style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 插入　　<span>+</span></td></tr></table>
+	       <div id="read8"  class="hideDiv">
+				       <table id="readT8" width="100%" cellspacing='0' cellpadding='0'><!-- 文档制功能子菜单 -->
+						<tr  class="<%=mDisabled+mExcel%>"><td class="dot-size"><a href="#"   onClick="WebGetExcelContent();">用Excel求和</a></td></tr>
+					    <tr  class="<%=mDisabled+mExcel%>"><td class="dot-size"><a href="#"  onClick="WebSheetsLock();">锁定工作表</a></td></tr>
+						<!--tr  class="<%=mDisabled+mExcel%>"><td class="dot-size"  ><a href="#"  onClick="WebOpenSignature();">图片章</a></td></tr-->
+					    </table><!--END 文档控制功能子菜单 -->
+		  </div>
+		  </td></tr>		 
+		 
+		 <tr  class="<%=mDisabled+mWord%>" class="test" ><td valign="middle" class="tableFather">
+		   <table class="tableAll" cellspacing='0' style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 痕迹　　<span>+</span></td></tr></table>
+	       <div id="read2"  class="hideDiv">
+				       <table id="readT2" width="100%" cellspacing='0' cellpadding='0'><!-- 文档制功能子菜单 -->
+					          <tr  class="<%=mDisabled+mWord%>" style="height:30px"><td class="dot-size"><a href="#" style="height:30px" <%=mDisabled%> onClick="ShowRevision(true)">显示痕迹</a></td></tr>
+					          <tr  class="<%=mDisabled+mWord%>" style="height:30px"><td class="dot-size"><a href="#" style="height:30px" <%=mDisabled%> onClick="ShowRevision(false)">隐藏痕迹</a></td></tr>
+					          <tr  class="<%=mDisabled+mWord%>" style="height:30px"><td class="dot-size"><a href="#" style="height:30px" <%=mDisabled%> onClick="WebAcceptAllRevisions()">清除痕迹</a></td></tr>
+							  <!--tr  class="<%=mDisabled+mWord%>" style="height:30px"><td class="dot-size"><a href="#" style="height:30px" <%=mDisabled%> onClick="WebOffice.ClearMarks()">清除Rounded痕迹</a></td></tr--> 							  
+					    </table><!--END 文档控制功能子菜单 -->
+		  </div>
+		  </td></tr>		  
+		  <tr class="test"><td valign="middle" class="tableFather">
+		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 视图　　<span>+</span></td></tr></table>
+	       <div id="read3"  class="hideDiv">
+			 <table id="readT3" width="100%" cellspacing='0' cellpadding='0'><!-- 附加功能示例子菜单 -->
+	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowTitleBar(true)">显示标题栏</a></td></tr>
+	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowTitleBar(false)">隐藏标题栏</a></td></tr>
+	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowMenuBar(true);">显示菜单栏</a></td></tr>
+	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowMenuBar(false);">隐藏菜单栏</a></td></tr>
+	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowToolBars(true)">显示工具栏</a></td></tr>
+	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowToolBars(false)">隐藏工具栏</a></td></tr>
+	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowStatusBar(true)">显示状态栏</a></td></tr>
+	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowStatusBar(false)">隐藏状态栏</a></td></tr>
+	          <tr><td class="dot-size"><a href="#"  onclick="FullSize(true)">全屏切换</a></td></tr>
+			  <!--tr><td class="dot-size"><a href="#"  onclick="disPlay1()">显示控件</a></td></tr>
+			  <tr><td class="dot-size"><a href="#"  onclick="disPlay()">隐藏控件</a></td></tr-->
+			  <tr><td class="dot-size"><a href="#"  onclick="WebOffice.obj.HidePlugin(0)">隐藏控件hide</a></td></tr>
+			   <tr><td class="dot-size"><a href="#"  onclick="WebOffice.obj.HidePlugin(1)">显示控件hide</a></td></tr>
+			   <!--tr><td class="dot-size"><a href="#"  onclick="disPlay2()">隐藏控件2显示背景</a></td></tr-->
+ 			 </table><!--END 附加功能示例能子菜单 -->
+		  </div>
+		  </td>
+		  </tr>  
+       		 <tr class="<%=mDisabled%>" class="test"><td valign="middle" class="tableFather">
+		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 权限　　<span>+</span></td></tr></table>
+	       <div id="read4"  class="hideDiv">
+			 <table id="readT4" width="100%" cellspacing='0' cellpadding='0'><!-- 附加功能示例子菜单 -->
+				<tr><td class="dot-size"><a href="#"  onclick="WebOffice.WebSetProtect(true,'123')">保护文档</a></td></tr>
+				<tr><td class="dot-size"><a href="#" onclick="WebOffice.WebSetProtect(false,'123')">解除保护</a></td></tr>
+				<tr id="enableCopy1"><td class="dot-size"><a href="#" onclick="WebOffice.WebEnableCopy(true)">允许拷贝</a></td></tr>
+				<tr id="enableCopy2"><td class="dot-size"><a href="#" onclick="WebOffice.WebEnableCopy(false)">禁止拷贝</a></td></tr>
+				<tr id="areaProtect"><td class="dot-size"><a href="#" onclick="WebAreaProtect()">添加区域保护</a></td></tr>
+				<tr id="areaUnprotect"><td class="dot-size"><a href="#" onclick="WebAreaUnprotect()">取消区域保护</a></td></tr>
+ 			 </table><!--END 附加功能示例能子菜单 -->
+		  </div>
+		  </td></tr>
+		   <tr class="<%=mDisabled+mWord%>" class="test" ><td valign="middle" class="tableFather">
+		   <table class="tableAll" cellspacing='0' style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 模板　　<span>+</span></td></tr></table>
+	       <div id="read5"  class="hideDiv">
+				       <table id="readT5" width="100%" cellspacing='0' cellpadding='0'><!-- 文档制功能子菜单 -->
+					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#" <%=mDisabled%> onClick="WebUseTemplate('Temone.docx')">模板套红一</a></td></tr>
+					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#" <%=mDisabled%> onClick="WebUseTemplate('Temtwo.doc')">模板套红二</a></td></tr>
+					    </table><!--END 文档控制功能子菜单 -->
+		  </div>
+		  </td></tr>
+		  	        
+ 		  <tr class="<%=mDisabled+mWord%>" class="test" ><td valign="middle" class="tableFather">
+		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 书签　　<span>+</span></td></tr></table>
+	       <div id="read6"  class="hideDiv">
+			 <table id="readT6" width="100%" cellspacing='0' cellpadding='0'><!-- 附加功能示例子菜单 -->
+				<tr><td class="dot-size"><a href="#"  onClick="SetBookmarks();">书签填充</a></td></tr>
+				<tr id="OpenBookMarks"><td class="dot-size"><a href="#"  onClick="WebOpenBookMarks();">打开书签窗体</a></td></tr>
+				<tr><td class="dot-size"><a href="#"  onClick="WebAddBookMarks();">添加书签</a></td></tr>
+ 			    <tr><td class="dot-size"><a href="#"  onClick="WebFindBookMarks();">定位书签</a></td></tr>
+ 			 <!--    <tr><td class="dot-size"><a href="#"  onClick="WebDelBookMarks();">删除书签</a></td></tr> -->
+ 			 </table><!--END 附加功能示例能子菜单 -->
+		  </div>
+		  
+		  </td></tr>   
+ 		  <tr class="test" ><td valign="middle" class="tableFather">
+		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 皮肤　　<span>+</span></td></tr></table>
+	       <div id="read7"  class="hideDiv">
+			 <table id="readT7" width="100%" cellspacing='0' cellpadding='0'><!-- 附加功能示例子菜单 -->
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.Skin('purple');">　紫色</a></td></tr>
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.Skin('black');">　黑色</a></td></tr>
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.Skin('white');">　银色</a></td></tr>
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.Skin('blue');">　蓝色</a></td></tr>
+ 			    <tr><td class="dot-size"><a href="#"  onClick="WebOffice.Skin('yellow');">　金黄色</a></td></tr>
+ 			 
+ 			 </table><!--END 附加功能示例能子菜单 -->
+		  </div>
+		  </td></tr>  
+		  
+    <tr id="expendFunction" class="<%=mDisabled+mWord%>" class="test" ><td valign="middle" class="tableFather">
+		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 扩展功能　　<span>+</span></td></tr></table>
+	       <div id="read9"  class="hideDiv">
+			 <table id="readT9" width="100%" cellspacing='0' cellpadding='0'><!-- 附加功能示例子菜单 -->
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.WebSavePDF();">保存为PDF </a></td></tr>
+				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.WebSaveHtml();">保存为本地html</a></td></tr>
+ 			 	<!--tr class="<%=mDisabled+mWord+mWPS%>"><td class="dot-size"><a href="#"  onClick="WebRunMacro();">运行宏</a></td></tr -->
+ 			 </table><!--END 附加功能示例能子菜单 -->
+		  </div>
+		  </td></tr> 
+		  <tr><td>&nbsp;</td></tr>     
+        		   	<tr>
+					<td style="border: 0">&nbsp;
+					<form id="iWebOfficeForm"   method="post" action="DocumentSave.jsp" >
+					    <input type="hidden" name="RecordID" value="<%=mRecordID%>"/>
+					    <input type="hidden" name="Template" value="<%=mTemplate%>"/>
+					    <input type="hidden" id="FileType" name="FileType" value="<%=mFileType%>"/>
+					    <input type="hidden" name="EditType" value="<%=mEditType%>"/>
+					    <input type="hidden" name="HTMLPath" value="<%=mHTMLPath%>"/>
+					    <input type="hidden" id="Subject" name="Subject" value="<%=mSubject%>"/>
+					    <input type="hidden" id="Author" name="Author" value="<%=mAuthor%>"/> 
+					    <input type="hidden" name="FileDate" value="<%=mFileDate%>"/>
+                   </form></td>
+				  </tr>
+       </table>
+
+     </td>
+     <td id="activeBox">        
+      <table id="activeTable">
+        <!--tr id="handWriting1" class="<%=mDisabled+mWord%>">
+     	<td class="handWriting" style="width:8%">手写批注颜色:</font></td>
+		  	<td style="width:7%"><select id="PenColor">
+		  		<option value="255"  selected="selected">红色</option>
+		  		<option value="16711680"  >蓝色</option>
+		  		<option value="65535"  >黄色</option>
+		  		<option value="0"  >黑色</option>
+		  		<option value="32768"  >绿色</option>
+		  	</select></td>
+     <td class="handWriting" style="width:8%">手写批注笔宽:</td>
+		  	<td style="width:7%"><select id="PenWidth">
+		  		<option value="1">一线</option>
+		  		<option value="2">二线</option>
+		  		<option value="3">三线</option>
+		  		<option value="4" selected="selected">四线</option>
+		  		<option value="5">五线</option>
+		  		<option value="6">六线</option>
+		  		<option value="7">七线</option>
+		  		<option value="8">八线</option>
+		  	</select>
+	 </td>	 
+	 <td style="width:10%"><input type="button" value="手写签批" class="hand2" onclick="HandWriting();"/></td>
+	 <td style="width:10%"><input type="button" value="停止签批" class="hand2" onclick="WebOffice.StopHandWriting();"/></td>
+	 <td style="width:10%"><input type="button" value="返回上一次" class="hand2" onclick="WebOffice.RemoveLastWriting();"/></td>
+	 <td class="handhint" style="width:40%"></>温馨提示:鼠标右健可停止签批!</td>
+	</tr-->
+        <tr>
+		<td id = "2015id" colspan="8" id="activeTd" >&nbsp;
+		<script src="js/iWebOffice2015.js"></script>
+		</td>
+	    </tr>
+	    <!-- <tr>
+			<td colspan="6" style="text-align: left;height: 10px;" class="statue">状态：<span id="state"></span></td>
+			<td colspan="2" style="text-align: right;">时间：<%=mFileDate%></td>
+		</tr> -->
+	   </table>
+     </td>
+    </tr>
+  </table>
+ </td></tr>
+ <!-- end showList -->
+  
+ <!-- footer -->
+ <!-- <tr ><td colspan="2" height="30px"  class="footer"><table><tr><td style="text-align:center;">江西金格科技股份有限公司 版权所有</td></tr></table></td></tr> -->
+ <!-- end footer --> 
+</table>
+</body> 
+</html>
+ <script language="javascript">
+ self.moveTo(0,0);
+ self.resizeTo(screen.availWidth,screen.availHeight);
+ init();
+ function init(){
+   document.getElementById('WebOffice2015').height =document.documentElement.clientHeight- 160 +"px";
+   var functionTableLength = getHeight('showTD')-document.getElementById("functionTable").rows.length*32;
+   for(var i =0;i<document.getElementById("functionTable").rows.length-3;i++){
+       try{
+        var readivLength = document.getElementById("readT"+i).rows.length*30;
+      
+	    if(readivLength+30 < functionTableLength){
+	      document.getElementById('readT'+i).style.height =  readivLength+ 8 + "px";
+	      document.getElementById('read'+i).style.height =  readivLength+ 8 + "px";
+	    }else{
+	        document.getElementById('readT'+i).style.height =  functionTableLength-50 + "px";
+	        document.getElementById('read'+i).style.height =  functionTableLength -50 + "px";
+	    }
+	   }catch(e){
+         continue;
+        }
+    }
+    $("tr").remove(".disabled");
+  }
+  //获取id的高度
+  function  getHeight(id){
+    return document.getElementById(id).offsetHeight; 
+  }
+ </script>

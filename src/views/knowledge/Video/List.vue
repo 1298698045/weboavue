@@ -1,5 +1,5 @@
 <template>
-  <div class="addressBook AlbumWrap">
+  <div class="addressBook VideoListWrap">
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base" style="background: #217346">
@@ -865,7 +865,7 @@ onMounted(() => {
     }
   }
 }
-.AlbumWrap {
+.VideoListWrap {
   .AlbumName {
     display: flex;
     align-items: center;
@@ -995,7 +995,7 @@ onMounted(() => {
     margin-left: 25px;
   }
 }
-.AlbumWrap {
+.VideoListWrap {
   .content-item {
     position: relative;
   }
@@ -1013,6 +1013,9 @@ onMounted(() => {
     .content-item-iconBox {
       display: block;
     }
+  }
+  :deep .ant-tree-node-content-wrapper{
+    height: 42px;
   }
 }
 </style>

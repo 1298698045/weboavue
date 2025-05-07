@@ -11,8 +11,25 @@
         <span class="headerTitle">事务管理</span>
       </div>
       <div class="headerRight todo-head-right">
-        <a-button class="ml10" @click="batchPrintForm">批量打印</a-button>
-        <a-button class="ml10" @click="exportData">导出</a-button>
+        <a-button class="ml10 ml11" @click="batchPrintForm">批量打印</a-button>
+
+        <MoreBtn
+          :isMenu="isMenu"
+          @click="isMenu = true"
+          @mouseleave="isMenu = false"
+        >
+          <div class="moreMenu">
+            <div class="menu-icon-background"></div>
+            <ul>
+              <li class="moreMenuItem" @click="exportData">
+                <span class="more-menu-icon">
+                  <i class="iconfont icon-piliangtijiao"></i>
+                </span>
+                <span>导出</span>
+              </li>
+            </ul>
+          </div>
+        </MoreBtn>
       </div>
     </div>
     <div class="todo-content">
@@ -231,8 +248,15 @@
       @update-status="isFavor = false"
       :id="ProcessInstanceId"
     />
-    <export-field :isShow="isExportModal" v-if="isExportModal" @cancel="isExportModal=false" :sObjectName="data.queryParams.entityName"
-      :recordId="data.queryParams.filterId" :search="data.queryParams.search" :filterCondition="data.queryParams.filterCondition"></export-field>
+    <export-field
+      :isShow="isExportModal"
+      v-if="isExportModal"
+      @cancel="isExportModal = false"
+      :sObjectName="data.queryParams.entityName"
+      :recordId="data.queryParams.filterId"
+      :search="data.queryParams.search"
+      :filterCondition="data.queryParams.filterCondition"
+    ></export-field>
   </div>
 </template>
 <script setup>
@@ -389,7 +413,6 @@ const getTreeData = () => {
       gDataAll.value = [];
     }
   });
-
 };
 // console.log("genData",genData,treeList)
 
@@ -479,7 +502,7 @@ let data = reactive({
   entityType: "122",
   layoutName: "instanceManager",
   hightSearchParams: {},
-  isExportModal:false
+  isExportModal: false,
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
@@ -972,11 +995,11 @@ const batchPrintForm = () => {
   let list = gridRef.value.getCheckList();
   //console.log("checklist", list);
   if (list.length) {
+    let processInstanceIds = list.map(item=>item.ProcessInstanceId.value);
     let url = router.resolve({
-      path: "/lightning/workflow/WFFormPrint",
-      name: "WFFormPrint",
+      name: "WFFormBatchPrint",
       query: {
-        id: "",
+        ids: processInstanceIds.join(","),
       },
     });
     window.open(url.href);
@@ -1066,12 +1089,12 @@ const handleClickMenu = (e) => {
 };
 const handleMenuClick = () => {};
 //导出
-const exportData=()=>{
-  data.isExportModal=true;
-}
+const exportData = () => {
+  data.isExportModal = true;
+};
 onMounted(() => {
   window.addEventListener("resize", changeHeight);
-  
+
   getTreeData();
   getTabs();
 });
@@ -1158,6 +1181,17 @@ onMounted(() => {
     border-radius: 4px;
     position: relative;
     top: 1px;
+  }
+}
+.todoList {
+  :deep .moreMenuBox.active {
+    .icon-mulugengduo {
+      position: relative;
+      top: -1px;
+    }
+  }
+  .ml11 {
+    margin-right: 35px;
   }
 }
 </style>

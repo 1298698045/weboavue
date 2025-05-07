@@ -13,10 +13,10 @@
       <div class="headerRight todo-head-right">
         <a-button class="ml10" @click="batchPrintForm">批量打印</a-button>
         <a-button class="ml10 ml11" @click="batchCirculation">批量传阅</a-button>
+
         <MoreBtn
           :isMenu="isMenu"
-          @change="handleClickMenu"
-          @mouseover="isMenu = true"
+          @click="isMenu = true"
           @mouseleave="isMenu = false"
         >
           <div class="moreMenu">
@@ -1084,7 +1084,15 @@ onMounted(() => {
     top: 1px;
   }
 }
-.ml11 {
-  margin-right: 25px;
+.todoList {
+  :deep .moreMenuBox.active {
+    .icon-mulugengduo {
+      position: relative;
+      top: -1px;
+    }
+  }
+  .ml11 {
+    margin-right: 35px;
+  }
 }
 </style>

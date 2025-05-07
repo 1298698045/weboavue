@@ -4,16 +4,32 @@
       <div class="panel-head">
         <div class="panel-title">附件</div>
         <div class="panel-btn">
-          <span style="color: red;">（单个附件不能超过40M，不支持exe和js脚本文件上传）</span>
-          <a-upload v-model:file-list="fileList" :headers="headers" @change="changeFiles" :data="uploadData"
-            :action="Interface.uploadFiles" :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
+          <span style="color: red"
+            >（单个附件不能超过40M，不支持exe和js脚本文件上传）</span
+          >
+          <a-upload
+            v-model:file-list="fileList"
+            :headers="headers"
+            @change="changeFiles"
+            :data="uploadData"
+            :action="Interface.uploadFiles"
+            :showUploadList="false"
+            multiple
+            name="files"
+            :before-upload="beforeUpload"
+          >
             <a-button class="ml10" type="primary">上传文件</a-button>
           </a-upload>
         </div>
       </div>
       <div class="panel-bd panel-bd1">
-        <a-table :columns="columns" :dataSource="listData" :scroll="{ y: tableHeight }" :pagination="false"
-          @change="handleTableChange">
+        <a-table
+          :columns="columns"
+          :dataSource="listData"
+          :scroll="{ y: tableHeight }"
+          :pagination="false"
+          @change="handleTableChange"
+        >
           <template #bodyCell="{ column, index, record }">
             <template v-if="column.key === 'index'">
               <div>
@@ -23,39 +39,100 @@
             <template v-if="column.key === 'fileExtension'">
               <div class="fileExtensionTdImg">
                 <img :src="record.icon" />
-                <span>{{ record.fileExtension || '' }}</span>
+                <span>{{ record.fileExtension || "" }}</span>
               </div>
             </template>
             <template v-if="column.key === 'name'">
-              <div @click="handlePreviewFile(record)" class="filename">{{ record.name }}</div>
+              <div @click="handlePreviewFile(record)" class="filename">
+                {{ record.name }}
+              </div>
             </template>
             <template v-if="column.key === 'action'">
               <div class="iconBox">
                 <div class="popup">
-                  <div class="option-item" @click="handlePreviewFile(record)" :num="index">查看</div>
-                  <div class="option-item" @click="handleDelete(record)" :num="index">删除</div>
-                  <div class="option-item" @click="downloadFile(record)" :num="index">下载</div>
+                  <div
+                    class="option-item"
+                    @click="handlePreviewFile(record)"
+                    :num="index"
+                  >
+                    查看
+                  </div>
+                  <div
+                    class="option-item"
+                    @click="handleDelete(record)"
+                    :num="index"
+                  >
+                    删除
+                  </div>
+                  <div
+                    class="option-item"
+                    @click="downloadFile(record)"
+                    :num="index"
+                  >
+                    下载
+                  </div>
                 </div>
-                <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation">
-                  <path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474">
-                  </path>
+                <svg
+                  class="moreaction"
+                  width="15"
+                  height="20"
+                  viewBox="0 0 520 520"
+                  fill="none"
+                  role="presentation"
+                >
+                  <path
+                    d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
+                    fill="#747474"
+                  ></path>
                 </svg>
               </div>
             </template>
           </template>
         </a-table>
         <div class="pageWrap">
-          <a-pagination show-size-changer show-quick-jumper :pageSizeOptions="pagination.pageSizeOptions"
-            :pageSize="pagination.pageSize" @showSizeChange="sizeChange" @change="handleTableChange"
-            v-model:current="pagination.current" :total="pagination.total" :show-total="total => `共 ${total} 条`" />
+          <a-pagination
+            show-size-changer
+            show-quick-jumper
+            :pageSizeOptions="pagination.pageSizeOptions"
+            :pageSize="pagination.pageSize"
+            @showSizeChange="sizeChange"
+            @change="handleTableChange"
+            v-model:current="pagination.current"
+            :total="pagination.total"
+            :show-total="(total) => `共 ${total} 条`"
+          />
         </div>
       </div>
     </div>
-    <Delete :isShow="isDelete" v-if="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onRefresh"
-      :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
-    <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
-    <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
-    <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
+    <Delete
+      :isShow="isDelete"
+      v-if="isDelete"
+      :desc="deleteDesc"
+      @cancel="cancelDelete"
+      @ok="onRefresh"
+      :sObjectName="sObjectName"
+      :recordId="recordId"
+      :objTypeCode="objectTypeCode"
+      :external="external"
+    />
+    <ImageView
+      v-if="isPhoto"
+      :isShow="isPhoto"
+      :photoParams="photoParams"
+      @cancel="isPhoto = false"
+    />
+    <PdfView
+      v-if="isPdf"
+      :isShow="isPdf"
+      :pdfParams="pdfParams"
+      @cancel="isPdf = false"
+    />
+    <TxtView
+      v-if="isTxt"
+      :isShow="isTxt"
+      :txtParams="txtParams"
+      @cancel="isTxt = false"
+    />
   </div>
 </template>
 <script setup>
@@ -66,10 +143,10 @@ import {
   onMounted,
   getCurrentInstance,
   defineEmits,
-  defineProps
+  defineProps,
 } from "vue";
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
 import Interface from "@/utils/Interface.js";
 import { message } from "ant-design-vue";
 import Delete from "@/components/listView/Delete.vue";
@@ -94,7 +171,7 @@ var columns = [
   {
     title: "名称",
     dataIndex: "name",
-    key: "name"
+    key: "name",
   },
   {
     title: "大小",
@@ -123,7 +200,7 @@ var columns = [
 const props = defineProps({
   id: String,
   entityName: String,
-  type: String
+  type: String,
 });
 
 const emit = defineEmits(["load"]);
@@ -140,19 +217,19 @@ const data = reactive({
     total: 0,
     pageSize: 10,
     current: 1,
-    pageSizeOptions: ['10', '20', '50', '100', '200'],
+    pageSizeOptions: ["10", "20", "50", "100", "200"],
     defaultPageSize: 10,
-    showTotal: ((total) => {
-      return `共${total}条`
-    })
+    showTotal: (total) => {
+      return `共${total}条`;
+    },
   },
   total: 0,
   tableHeight: document.documentElement.clientHeight - 315,
-  recordId: '',
-  objectTypeCode: '1001',
-  sObjectName: 'RelatedAttachment',
+  recordId: "",
+  objectTypeCode: "1001",
+  sObjectName: "RelatedAttachment",
   isDelete: false,
-  deleteDesc: '确定要删除吗？',
+  deleteDesc: "确定要删除吗？",
   external: false,
   height: document.documentElement.clientHeight - 137,
   isPhoto: false,
@@ -160,46 +237,83 @@ const data = reactive({
   isPdf: false,
   pdfParams: {},
   uploadData: {
-    parentId: '',
-    entityName: ''
+    parentId: "",
+    entityName: "",
   },
   headers: {
     Authorization: token,
     Token: token,
   },
   isTxt: false,
-  txtParams: {}
+  txtParams: {},
 });
-const { isTxt, txtParams, uploadData, headers, pdfParams, isPdf, photoParams, ImageList, isPhoto, listData, fileList, height, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, deleteDesc, external } = toRefs(data);
+const {
+  isTxt,
+  txtParams,
+  uploadData,
+  headers,
+  pdfParams,
+  isPdf,
+  photoParams,
+  ImageList,
+  isPhoto,
+  listData,
+  fileList,
+  height,
+  pagination,
+  tableHeight,
+  recordId,
+  objectTypeCode,
+  sObjectName,
+  isDelete,
+  deleteDesc,
+  external,
+} = toRefs(data);
 //获取附件
 const getQuery = () => {
   let url = Interface.getFiles;
   let d = {
     parentId: props.id,
     page: data.pagination.current,
-    rows: data.pagination.pageSize
-  }
-  proxy.$post(url, d).then(res => {
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
+    rows: data.pagination.pageSize,
+  };
+  proxy.$post(url, d).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.length
+    ) {
       data.total = res.actions[0].returnValue.length || 0;
       data.pagination.total = res.actions[0].returnValue.length || 0;
       data.listData = res.actions[0].returnValue;
       data.listData.forEach((item) => {
         let size = item.fileSize;
-        size = size ? (size * 1 / 1024).toFixed(2) : 0;
-        size = size + 'kb';
+        size = size ? ((size * 1) / 1024).toFixed(2) : 0;
+        size = size + "kb";
         item.size = size;
-        item.createdOn = item.createdOn ? dayjs(item.createdOn).format("YYYY-MM-DD hh:mm") : ''
+        item.createdOn = item.createdOn
+          ? dayjs(item.createdOn).format("YYYY-MM-DD hh:mm")
+          : "";
       });
       data.ImageList = data.listData.filter((item) => {
-        return (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png');
+        return (
+          item.fileExtension == "jpg" ||
+          item.fileExtension == "jpeg" ||
+          item.fileExtension == "png"
+        );
       });
     }
-  })
+  });
 };
 //预览附件
 const handlePreviewFile = (item) => {
-  if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
+  if (
+    item.fileExtension == "jpg" ||
+    item.fileExtension == "jpeg" ||
+    item.fileExtension == "png"
+  ) {
     let index = 0;
     for (var i = 0; i < data.ImageList.length; i++) {
       let ite = data.ImageList[i];
@@ -211,33 +325,56 @@ const handlePreviewFile = (item) => {
       id: item.id,
       item: item,
       imageList: data.ImageList,
-      index: index
+      index: index,
     };
     data.isPhoto = true;
-  } else if (item.fileExtension == 'pdf') {
+  } else if (item.fileExtension == "pdf") {
     data.pdfParams = {
       id: item.id,
       name: item.name,
       index: 0,
       viewUrl: item.viewUrl,
-      downloadUrl: item.downloadUrl
+      downloadUrl: item.downloadUrl,
     };
     data.isPdf = true;
-  }
-  else if (item.fileExtension == 'txt') {
+  } else if (item.fileExtension == "txt") {
     data.txtParams = {
       name: item.name,
       viewUrl: item.viewUrl,
-      downloadUrl: item.downloadUrl
+      downloadUrl: item.downloadUrl,
     };
     data.isTxt = true;
-  }
-  else if (item.fileExtension == 'docx' || item.fileExtension == 'pptx' || item.fileExtension == 'xlsx' || item.fileExtension == 'doc' || item.fileExtension == 'ppt' || item.fileExtension == 'xls') {
+  } else if (
+    item.fileExtension == "docx" ||
+    item.fileExtension == "pptx" ||
+    item.fileExtension == "xlsx" ||
+    item.fileExtension == "doc" ||
+    item.fileExtension == "ppt" ||
+    item.fileExtension == "xls"
+  ) {
+    //downloadFile(item);
+    openControlViewFile(
+      item.id,
+      item.link,
+      item.fileExtension,
+      item.viewUrl,
+      item.name
+    );
+  } else {
     downloadFile(item);
   }
-  else {
-    downloadFile(item);
+};
+//预览office文件
+const openControlViewFile = (id, url, type, link, name) => {
+  let userInfo = window.localStorage.getItem("userInfo");
+  var userId = "";
+  var userName = "";
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+    userId = userInfo.userId;
+    userName = userInfo.fullName;
   }
+  window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + userName);
 };
 //下载附件
 const downloadFile = (item) => {
@@ -254,42 +391,42 @@ const handleTableChange = (page, pageSize) => {
   data.pagination.current = page;
   data.pagination.pageSize = pageSize;
   getQuery();
-}
+};
 const sizeChange = (current, size) => {
-  handleTableChange(current, size)
-}
+  handleTableChange(current, size);
+};
 //删除
 const handleDelete = (item) => {
   data.recordId = item.id;
   data.isDelete = true;
-}
+};
 //删除关闭
 const cancelDelete = (e) => {
   data.isDelete = false;
 };
 const beforeUpload = (e) => {
   console.log("beforeUpload", e);
-}
+};
 const changeFiles = (e) => {
   if (e.file.status == "done") {
     message.success("上传成功！");
     onRefresh();
   }
-}
+};
 //组件高度
 const changeHeight = () => {
   let h = document.documentElement.clientHeight;
   //弹窗引用组件时高度
-  if (props.type == 'modal') {
+  if (props.type == "modal") {
     data.tableHeight = h - 470;
     data.height = h - 285;
   }
   //详情页引用组件时高度
-  if (props.type == 'group') {
+  if (props.type == "group") {
     data.tableHeight = h - 540;
     data.height = h - 355;
   }
-}
+};
 onMounted(() => {
   data.uploadData.entityName = props.entityName;
   data.uploadData.parentId = props.id;
@@ -298,7 +435,7 @@ onMounted(() => {
     changeHeight();
   });
   getQuery();
-})
+});
 </script>
 <style lang="less" scoped>
 .RelatedAttachmentWrap {
@@ -368,7 +505,6 @@ onMounted(() => {
       width: max-content;
       min-width: 88px;
     }
-
   }
 
   .ant-table-wrapper,
@@ -380,7 +516,7 @@ onMounted(() => {
   }
 
   .panel-bd1 {
-    height: calc(~'100% - 115px') !important;
+    height: calc(~"100% - 115px") !important;
   }
 
   :deep .ant-table-body {
@@ -418,16 +554,21 @@ onMounted(() => {
   }
 
   .ant-table-wrapper {
-    .ant-table-thead>tr>th {
+    .ant-table-thead > tr > th {
       background-color: #f7fbfe !important;
       padding: 8.5px 16px !important;
     }
   }
-
   //解决aria-hidden属性报错
-  input[aria-hidden=true] {
+  input[aria-hidden="true"] {
     display: none !important;
+  }
+  :deep .ant-table-wrapper,
+  :deep .ant-spin-nested-loading,
+  :deep .ant-spin-nested-loading .ant-spin-container,
+  :deep .ant-table-wrapper .ant-table,
+  :deep .ant-table-wrapper .ant-table-container {
+    height: 100% !important;
   }
 }
 </style>
-

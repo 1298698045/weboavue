@@ -44,6 +44,13 @@
                 placeholder="请输入目录名称"
               />
             </a-form-item>
+            <a-form-item label="显示顺序" name="DisplayOrder">
+              <a-input
+                type="number"
+                v-model:value="formState.DisplayOrder"
+                placeholder="请输入显示顺序"
+              />
+            </a-form-item>
             <a-form-item label="禁止文档重名" name="NoRepeat">
               <a-switch v-model:checked="formState.NoRepeat" />
             </a-form-item>
@@ -115,6 +122,7 @@ const formState = reactive({
   Name: "",
   NoRepeat: false,
   IsInherit: false,
+  DisplayOrder: 1000,
 });
 const handleSubmit = () => {
   formRef.value
@@ -132,6 +140,7 @@ const handleSubmit = () => {
               IsInherit: formState.IsInherit,
               ParentId: formState.ParentId,
               Name: formState.Name,
+              DisplayOrder: formState.DisplayOrder,
             },
           },
         ],
@@ -149,6 +158,7 @@ const handleSubmit = () => {
               NoRepeat: formState.NoRepeat,
               IsInherit: formState.IsInherit,
               ParentId: formState.ParentId,
+              DisplayOrder: formState.DisplayOrder,
             },
           },
         };
@@ -214,6 +224,9 @@ const getDetail = () => {
         : "";
       formState.IsInherit = record.IsInherit ? record.IsInherit.value : false;
       formState.NoRepeat = record.NoRepeat ? record.NoRepeat.value : false;
+      formState.DisplayOrder = record.DisplayOrder
+        ? record.DisplayOrder.value
+        : "";
     }
   });
 };
@@ -251,7 +264,9 @@ onMounted(() => {
 
 .NewFolderWrap {
   :deep .ant-form-item-label {
-    text-align: left;
+    text-align: right;
+    position: relative;
+    left: -16px;
   }
 
   .modalCenter {

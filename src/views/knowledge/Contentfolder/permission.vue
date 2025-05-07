@@ -3,12 +3,14 @@
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
-          <img :src="require('@/assets/img/rightMenu/youcemoren.png')" alt="">
+          <img :src="require('@/assets/img/rightMenu/youcemoren.png')" alt="" />
         </div>
         <span class="headerTitle">权限管控</span>
       </div>
       <div class="headerRight">
-        <a-button type="primary" class="ml10" @click="handleNew">新建权限</a-button>
+        <a-button type="primary" class="ml10" @click="handleNew"
+          >新建权限</a-button
+        >
       </div>
     </div>
     <div class="todo-content">
@@ -17,17 +19,34 @@
           <div class="wea-left-tree">
             <div class="wea-left-tree-search">
               <span class="wea-left-tree-search-label alltype">全部类型</span>
-              <a-input v-model:value="searchVal" placeholder="" @change="onSearch" allowClear />
+              <a-input
+                v-model:value="searchVal"
+                placeholder=""
+                @change="onSearch"
+                allowClear
+              />
               <div class="wea-left-tree-search-icon">
                 <SearchOutlined />
               </div>
             </div>
             <div class="wea-left-tree-scroll information-tree">
-              <a-tree :checkable="false" :style="{ height: tableHeight + 'px' }" :expanded-keys="expandedKeys"
-                :auto-expand-parent="autoExpandParent" :tree-data="gData" block-node :fieldNames="fieldNames"
-                :selectedKeys="selectedKeys" @select="onSelect" @expand="onExpand">
+              <a-tree
+                :checkable="false"
+                :style="{ height: tableHeight + 'px' }"
+                :expanded-keys="expandedKeys"
+                :auto-expand-parent="autoExpandParent"
+                :tree-data="gData"
+                block-node
+                :fieldNames="fieldNames"
+                :selectedKeys="selectedKeys"
+                @select="onSelect"
+                @expand="onExpand"
+              >
                 <template #switcherIcon="{ switcherCls }">
-                  <CaretDownOutlined :class="switcherCls" style="color: rgb(163, 163, 163); font-size: 14px">
+                  <CaretDownOutlined
+                    :class="switcherCls"
+                    style="color: rgb(163, 163, 163); font-size: 14px"
+                  >
                   </CaretDownOutlined>
                 </template>
                 <template #title="{ name }">
@@ -37,20 +56,36 @@
             </div>
           </div>
         </a-col>
-        <a-col :span="isCollapsed ? '24' : '19'" class="wea-left-right-layout-right">
-          <div class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
-            :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }" @click="handleCollapsed"></div>
+        <a-col
+          :span="isCollapsed ? '24' : '19'"
+          class="wea-left-right-layout-right"
+        >
+          <div
+            class="wea-left-right-layout-btn wea-left-right-layout-btn-show"
+            :class="{ 'wea-left-right-layout-btn-hide': isCollapsed }"
+            @click="handleCollapsed"
+          ></div>
           <div style="height: 100%" ref="contentRef">
             <!-- <list-form-search ref="searchRef" @update-height="changeHeight" @search="handleSearch"
               :entityApiName="sObjectName" :SearchFields="SearchFields"></list-form-search> -->
-              <HighSearch @update-height="changeHeight" @search="handleSearch" :entityApiName="sObjectName"></HighSearch>
+            <HighSearch
+              @update-height="changeHeight"
+              @search="handleSearch"
+              :entityApiName="sObjectName"
+            ></HighSearch>
             <div class="tableWrap" ref="tablelist">
               <div class="empty" v-if="!dataSource.length">
                 <img src="/src/assets/img/empty.png" alt="" />
                 <p class="emptyDesc">当前暂无数据</p>
               </div>
-              <a-table v-if="dataSource.length" :scroll="{ y: tableHeight }" :dataSource="dataSource" :columns="columns"
-                :pagination="data.pagination" @change="handleTableChange">
+              <a-table
+                v-if="dataSource.length"
+                :scroll="{ y: tableHeight }"
+                :dataSource="dataSource"
+                :columns="columns"
+                :pagination="data.pagination"
+                @change="handleTableChange"
+              >
                 <template #bodyCell="{ column, index, record }">
                   <template v-if="column.key === 'index'">
                     <div>
@@ -59,12 +94,17 @@
                   </template>
                   <template v-if="column.key === 'AccessObjectTypeCode'">
                     <div v-if="record.AccessObjectTypeCode * 1 == 8">用户</div>
-                    <div v-if="record.AccessObjectTypeCode * 1 == 1036">角色</div>
+                    <div v-if="record.AccessObjectTypeCode * 1 == 1036">
+                      角色
+                    </div>
                     <div v-if="record.AccessObjectTypeCode * 1 == 9">小组</div>
                     <div v-if="record.AccessObjectTypeCode * 1 == 10">部门</div>
                   </template>
                   <template v-if="column.key === 'AccessObjectName'">
-                    <div :title="record.AccessObjectName" class="AccessObjectName">
+                    <div
+                      :title="record.AccessObjectName"
+                      class="AccessObjectName"
+                    >
                       {{ record.AccessObjectName }}
                     </div>
                   </template>
@@ -75,22 +115,49 @@
                   </template>
                   <template v-if="column.key === 'Depth'">
                     <div>
-                      <a-select v-model:value="record.Depth" placeholder="请选择权限"
-                        @change="(e) => { changeDepth(e, record) }">
-                        <a-select-option v-for="(item, index) in DepthList" :value="item.value" :key="index">{{
-                          item.label }}</a-select-option>
+                      <a-select
+                        v-model:value="record.Depth"
+                        placeholder="请选择权限"
+                        @change="
+                          (e) => {
+                            changeDepth(e, record);
+                          }
+                        "
+                      >
+                        <a-select-option
+                          v-for="(item, index) in DepthList"
+                          :value="item.value"
+                          :key="index"
+                          >{{ item.label }}</a-select-option
+                        >
                       </a-select>
                     </div>
                   </template>
                   <div v-if="column.key == 'Action'">
                     <div class="iconBox">
                       <div class="popup">
-                        <div class="option-item" @click="handleDelete(record.id)" :num="index">删除</div>
+                        <div
+                          class="option-item"
+                          @click="handleDelete(record.id)"
+                          :num="index"
+                        >
+                          删除
+                        </div>
                       </div>
-                      <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none"
-                        role="presentation" data-v-69a58868="">
-                        <path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
-                          fill="#747474" data-v-69a58868=""></path>
+                      <svg
+                        class="moreaction"
+                        width="15"
+                        height="20"
+                        viewBox="0 0 520 520"
+                        fill="none"
+                        role="presentation"
+                        data-v-69a58868=""
+                      >
+                        <path
+                          d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
+                          fill="#747474"
+                          data-v-69a58868=""
+                        ></path>
                       </svg>
                     </div>
                   </div>
@@ -101,19 +168,58 @@
         </a-col>
       </a-row>
     </div>
-    <Delete v-if="data.isDelete" :isShow="data.isDelete" :desc="data.deleteDesc" @cancel="cancelDelete"
-      @ok="refreshData" :sObjectName="sObjectName" :recordId="data.recordId" :objTypeCode="objectTypeCode"
-      :external="data.external" />
-    <common-form-modal :isShow="isCommon" v-if="isCommon" @cancel="isCommon = false"
-      :title="data.recordId ? '编辑' : '新建'" @success="refreshData" :id="data.recordId" :objectTypeCode="objectTypeCode"
-      :entityApiName="sObjectName" :relatedObjectAttributeValue="relatedObjectAttributeValue"
-      :relatedObjectAttributeName="relatedObjectAttributeName"></common-form-modal>
-    <NewFolder v-if="isNewFolder" :isShow="isNewFolder" :treeData="gData" @cancel="isNewFolder = false"
-      @success="refreshData" :id="data.recordId" :ParentId="data.SelectKey" :ParentIdName="data.SelectName" />
-    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
-      @cancel="isConfirm = false" @ok="isConfirm = false" :id="CheckList" />
-    <NewDepth :isShow="isNew" v-if="isNew" @cancel="cancelNew" :id="data.SelectKey" :ObjectTypeCode="'5080'"
-      :ObjectName="data.SelectName" @load="refreshData" :name="data.SelectName" />
+    <Delete
+      v-if="data.isDelete"
+      :isShow="data.isDelete"
+      :desc="data.deleteDesc"
+      @cancel="cancelDelete"
+      @ok="refreshData"
+      :sObjectName="sObjectName"
+      :recordId="data.recordId"
+      :objTypeCode="objectTypeCode"
+      :external="data.external"
+    />
+    <common-form-modal
+      :isShow="isCommon"
+      v-if="isCommon"
+      @cancel="isCommon = false"
+      :title="data.recordId ? '编辑' : '新建'"
+      @success="refreshData"
+      :id="data.recordId"
+      :objectTypeCode="objectTypeCode"
+      :entityApiName="sObjectName"
+      :relatedObjectAttributeValue="relatedObjectAttributeValue"
+      :relatedObjectAttributeName="relatedObjectAttributeName"
+    ></common-form-modal>
+    <NewFolder
+      v-if="isNewFolder"
+      :isShow="isNewFolder"
+      :treeData="gData"
+      @cancel="isNewFolder = false"
+      @success="refreshData"
+      :id="data.recordId"
+      :ParentId="data.SelectKey"
+      :ParentIdName="data.SelectName"
+    />
+    <CommonConfirm
+      v-if="isConfirm"
+      :isShow="isConfirm"
+      :text="confirmText"
+      :title="confirmTitle"
+      @cancel="isConfirm = false"
+      @ok="isConfirm = false"
+      :id="CheckList"
+    />
+    <NewDepth
+      :isShow="isNew"
+      v-if="isNew"
+      @cancel="cancelNew"
+      :id="data.SelectKey"
+      :ObjectTypeCode="'5080'"
+      :ObjectName="data.SelectName"
+      @load="refreshData"
+      :name="data.SelectName"
+    />
   </div>
 </template>
 <script setup>
@@ -128,16 +234,24 @@ import {
   StarFilled,
   PlusOutlined,
   EditOutlined,
-  DeleteOutlined
+  DeleteOutlined,
 } from "@ant-design/icons-vue";
-import { ref, watch, reactive, toRefs, onMounted, getCurrentInstance, onUpdated } from "vue";
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
-import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
-dayjs.locale('zh-cn');
-import calendar from 'dayjs/plugin/calendar';
-import weekday from 'dayjs/plugin/weekday';
-import localeData from 'dayjs/plugin/localeData';
+import {
+  ref,
+  watch,
+  reactive,
+  toRefs,
+  onMounted,
+  getCurrentInstance,
+  onUpdated,
+} from "vue";
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+import locale from "ant-design-vue/es/date-picker/locale/zh_CN";
+dayjs.locale("zh-cn");
+import calendar from "dayjs/plugin/calendar";
+import weekday from "dayjs/plugin/weekday";
+import localeData from "dayjs/plugin/localeData";
 dayjs.extend(calendar);
 dayjs.extend(weekday);
 dayjs.extend(localeData);
@@ -226,143 +340,171 @@ const gDataAll = ref([]);
 const getFavorite = () => {
   gData.value = [];
   gDataAll.value = [];
-  let filterQuery = '\nObjectTypeCode\teq\t5080\nOwningUser\teq\t' + data.userId;
-  proxy.$post(Interface.list2, {
-    filterId: '',
-    objectTypeCode: '6060',
-    entityName: '',
-    filterQuery: filterQuery,
-    search: '',
-    page: 1,
-    rows: 100,
-    sort: 'CreatedOn',
-    order: 'DESC',
-    displayColumns: 'Name,ObjectId'
-  }).then(res => {
-    if (res && res.nodes && res.nodes.length) {
-      var list = [];
-      for (var i = 0; i < res.nodes.length; i++) {
-        var item = res.nodes[i];
-        for (var cell in item) {
-          if (cell != 'id' && cell != 'nameField') {
-            item[cell] = girdFormatterValue(cell, item);
+  let filterQuery =
+    "\nObjectTypeCode\teq\t5080\nOwningUser\teq\t" + data.userId;
+  proxy
+    .$post(Interface.list2, {
+      filterId: "",
+      objectTypeCode: "6060",
+      entityName: "",
+      filterQuery: filterQuery,
+      search: "",
+      page: 1,
+      rows: 100,
+      sort: "CreatedOn",
+      order: "DESC",
+      displayColumns: "Name,ObjectId",
+    })
+    .then((res) => {
+      if (res && res.nodes && res.nodes.length) {
+        var list = [];
+        for (var i = 0; i < res.nodes.length; i++) {
+          var item = res.nodes[i];
+          for (var cell in item) {
+            if (cell != "id" && cell != "nameField") {
+              item[cell] = girdFormatterValue(cell, item);
+            }
           }
+          list.push({
+            children: [],
+            id: item.id,
+            key: item.id,
+            name: item.Name,
+            parent: null,
+            quantity: 0,
+            text: null,
+            value: item.ObjectId,
+            isFavor: item.isFavor || false,
+          });
         }
-        list.push({
-          children: [],
-          id: item.id,
-          key: item.id,
-          name: item.Name,
-          parent: null,
-          quantity: 0,
-          text: null,
-          value: item.ObjectId,
-          isFavor: item.isFavor || false
-        })
+        gData.value = list;
+        gDataAll.value = list;
       }
-      gData.value = list;
-      gDataAll.value = list;
-    }
-  })
-}
+    });
+};
 //收藏选中目录
 const setFavor = (id, name, isFavor) => {
   if (id) {
-    let filterQuery = '\nObjectId\teq\t' + id + '\nOwningUser\teq\t' + data.userId;
-    proxy.$post(Interface.list2, {
-      filterId: '',
-      objectTypeCode: '6060',
-      entityName: 'P9f',
-      filterQuery: filterQuery,
-      search: '',
-      page: 1,
-      rows: 10,
-      sort: 'CreatedOn',
-      order: 'DESC',
-      displayColumns: 'Name'
-    }).then(res => {
-      if (res && res.nodes && res.nodes.length) {
-        message.success("已收藏！");
-      } else {
-        saveFavor(id, name, isFavor);
-      }
-    })
+    let filterQuery =
+      "\nObjectId\teq\t" + id + "\nOwningUser\teq\t" + data.userId;
+    proxy
+      .$post(Interface.list2, {
+        filterId: "",
+        objectTypeCode: "6060",
+        entityName: "P9f",
+        filterQuery: filterQuery,
+        search: "",
+        page: 1,
+        rows: 10,
+        sort: "CreatedOn",
+        order: "DESC",
+        displayColumns: "Name",
+      })
+      .then((res) => {
+        if (res && res.nodes && res.nodes.length) {
+          message.success("已收藏！");
+        } else {
+          saveFavor(id, name, isFavor);
+        }
+      });
   }
-}
+};
 const saveFavor = (id, name, isFavor) => {
   if (!isFavor) {
     let url = Interface.edit;
     let d = {
-      actions: [{
-        id: "2919;a",
-        descriptor: "",
-        callingDescriptor: "UNKNOWN",
-        params: {
-          recordInput: {
-            allowSaveOnDuplicate: false,
-            apiName: 'FavoriteObject',
-            objTypeCode: '6060',
-            fields: {
-              Name: name,
-              ObjectId: id,
-              ObjectTypeCode: '5080',
-              //URL:'',
-              OwningUser: data.userId
-            }
-          }
-        }
-      }]
+      actions: [
+        {
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            recordInput: {
+              allowSaveOnDuplicate: false,
+              apiName: "FavoriteObject",
+              objTypeCode: "6060",
+              fields: {
+                Name: name,
+                ObjectId: id,
+                ObjectTypeCode: "5080",
+                //URL:'',
+                OwningUser: data.userId,
+              },
+            },
+          },
+        },
+      ],
     };
     // if(id){
     //     d.actions[0].params.recordId=id;
     // }
     let obj = {
-      message: JSON.stringify(d)
-    }
-    proxy.$post(url, obj).then(res => {
-      if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+      message: JSON.stringify(d),
+    };
+    proxy.$post(url, obj).then((res) => {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].state &&
+        res.actions[0].state == "SUCCESS"
+      ) {
         message.success("收藏成功！");
-      }
-      else {
-        if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+      } else {
+        if (
+          res &&
+          res.actions &&
+          res.actions[0] &&
+          res.actions[0].state &&
+          res.actions[0].errorMessage
+        ) {
           message.error(res.actions[0].errorMessage);
-        }
-        else {
+        } else {
           message.error("收藏失败！");
         }
       }
     });
-  }
-  else {
+  } else {
     let obj = {
-      actions: [{
-        id: "2919;a",
-        descriptor: "",
-        callingDescriptor: "UNKNOWN",
-        params: {
-          recordId: id,
-          apiName: 'FavoriteObject',
-          objTypeCode: '6060',
-        }
-      }]
+      actions: [
+        {
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            recordId: id,
+            apiName: "FavoriteObject",
+            objTypeCode: "6060",
+          },
+        },
+      ],
     };
     let d = {
-      message: JSON.stringify(obj)
+      message: JSON.stringify(obj),
     };
-    proxy.$post(Interface.delete, d).then(res => {
-      if (res && res.actions && res.actions[0] && res.actions[0].state == 'SUCCESS') {
+    proxy.$post(Interface.delete, d).then((res) => {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].state == "SUCCESS"
+      ) {
         message.success("取消收藏成功");
       } else {
-        if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+        if (
+          res &&
+          res.actions &&
+          res.actions[0] &&
+          res.actions[0].errorMessage
+        ) {
           message.error(res.actions[0].errorMessage);
-        }
-        else {
+        } else {
           message.error("取消收藏失败");
         }
       }
-    })
+    });
   }
-}
+};
 const onExpand = (keys) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
@@ -385,29 +527,31 @@ let data = reactive({
   isCollapsed: false,
   tableHeight: 0,
   fieldNames: {
-    children: 'children', title: 'name', key: 'id'
+    children: "children",
+    title: "name",
+    key: "id",
   },
   activeKey: 0,
-  filterQuery: '',
+  filterQuery: "",
   isModal: false,
   isCirculation: false,
   isNew: false,
-  searchVal: '',
-  search: '',
+  searchVal: "",
+  search: "",
   value: "",
   isDelete: false,
-  deleteDesc: '确定要删除吗？',
-  recordId: '',
+  deleteDesc: "确定要删除吗？",
+  recordId: "",
   external: false,
-  userId: '',
+  userId: "",
   SearchFields: [
     {
-      "column": "AccessObjectName",
-      "label": "授权对象名称",
-      "dataType": "S",
-      "ReferencedEntityObjectTypeCode": 0,
-      "sObjectName": "",
-      "targetApiName": "",
+      column: "AccessObjectName",
+      label: "授权对象名称",
+      dataType: "S",
+      ReferencedEntityObjectTypeCode: 0,
+      sObjectName: "",
+      targetApiName: "",
     },
     // {
     //     "column": "Name",
@@ -418,56 +562,56 @@ let data = reactive({
     //     "targetApiName": "",
     // },
     {
-      "column": "AccessObjectTypeCode",
-      "label": "角色",
-      "dataType": "L",
-      "ReferencedEntityObjectTypeCode": 100201,
-      "picklistValues": [
+      column: "AccessObjectTypeCode",
+      label: "角色",
+      dataType: "L",
+      ReferencedEntityObjectTypeCode: 100201,
+      picklistValues: [
         {
-          "label": "用户",
-          "value": "8"
+          label: "用户",
+          value: "8",
         },
         {
-          "label": "角色",
-          "value": "1036"
+          label: "角色",
+          value: "1036",
         },
         {
-          "label": "小组",
-          "value": "9"
+          label: "小组",
+          value: "9",
         },
         {
-          "label": "部门",
-          "value": "10"
-        }
+          label: "部门",
+          value: "10",
+        },
       ],
-      "sObjectName": "",
-      "targetApiName": "",
+      sObjectName: "",
+      targetApiName: "",
     },
     {
-      "column": "Depth",
-      "label": "权限",
-      "dataType": "L",
-      "ReferencedEntityObjectTypeCode": 100201,
-      "picklistValues": [
+      column: "Depth",
+      label: "权限",
+      dataType: "L",
+      ReferencedEntityObjectTypeCode: 100201,
+      picklistValues: [
         {
-          "label": "读",
-          "value": "2"
+          label: "读",
+          value: "2",
         },
         {
-          "label": "读/写",
-          "value": "4"
+          label: "读/写",
+          value: "4",
         },
         {
-          "label": "读/写/删",
-          "value": "8"
+          label: "读/写/删",
+          value: "8",
         },
         {
-          "label": "管理（读/写/删/移动）",
-          "value": "16"
+          label: "管理（读/写/删/移动）",
+          value: "16",
         },
       ],
-      "sObjectName": "",
-      "targetApiName": "",
+      sObjectName: "",
+      targetApiName: "",
     },
     // {
     //     "column": "CreatedBy",
@@ -501,38 +645,38 @@ let data = reactive({
     //     "targetApiName": "",
     // },
     {
-      "column": "CreatedOn",
-      "label": "创建时间",
-      "dataType": "F",
-      "ReferencedEntityObjectTypeCode": 0,
-      "picklistValues": [],
-      "sObjectName": "",
-      "targetApiName": "",
-    }
+      column: "CreatedOn",
+      label: "创建时间",
+      dataType: "F",
+      ReferencedEntityObjectTypeCode: 0,
+      picklistValues: [],
+      sObjectName: "",
+      targetApiName: "",
+    },
   ],
   isCommon: false,
-  objectTypeCode: '6061',
-  sObjectName: 'RecordAccessControl',
+  objectTypeCode: "6061",
+  sObjectName: "RecordAccessControl",
   relatedObjectAttributeValue: {},
-  relatedObjectAttributeName: '',
-  SelectKey: '',
-  SelectName: '',
+  relatedObjectAttributeName: "",
+  SelectKey: "",
+  SelectName: "",
   selectedKeys: [],
   isNewFolder: false,
   CheckList: [],
   isConfirm: false,
-  confirmText: '',
-  confirmTitle: '',
+  confirmText: "",
+  confirmTitle: "",
   pagination: {
     hideOnSinglePage: false,
     showSizeChanger: true,
     showQuickJumper: true,
-    total: 0,//数据总数
+    total: 0, //数据总数
     pageSize: 15,
     current: 1,
-    showTotal: ((total) => {
-      return `共${total}条`
-    })
+    showTotal: (total) => {
+      return `共${total}条`;
+    },
   },
   columns: [
     {
@@ -556,7 +700,7 @@ let data = reactive({
     {
       title: "授权对象",
       dataIndex: "AccessObjectName",
-      key: "AccessObjectName"
+      key: "AccessObjectName",
     },
     {
       title: "权限",
@@ -590,17 +734,49 @@ let data = reactive({
   ],
   dataSource: [],
   DepthList: [
-    { label: '读', value: '2', },
-    { label: '读/写', value: '4', },
-    { label: '读/写/删', value: '8', },
-    { label: '管理（读/写/删/移动）', value: '16', },
+    { label: "读", value: "2" },
+    { label: "读/写", value: "4" },
+    { label: "读/写/删", value: "8" },
+    { label: "管理（读/写/删/移动）", value: "16" },
   ],
-  hightSearchParams: {}
+  hightSearchParams: {},
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
 };
-const { hightSearchParams, search, DepthList, dataSource, columns, pagination, CheckList, isConfirm, confirmText, confirmTitle, isNewFolder, selectedKeys, SelectName, SelectKey, relatedObjectAttributeValue, relatedObjectAttributeName, recordId, objectTypeCode, sObjectName, isCommon, isCollapsed, userId, tableHeight, fieldNames, activeKey, isModal, isCirculation, isNew, value, searchVal, SearchFields } = toRefs(data);
+const {
+  hightSearchParams,
+  search,
+  DepthList,
+  dataSource,
+  columns,
+  pagination,
+  CheckList,
+  isConfirm,
+  confirmText,
+  confirmTitle,
+  isNewFolder,
+  selectedKeys,
+  SelectName,
+  SelectKey,
+  relatedObjectAttributeValue,
+  relatedObjectAttributeName,
+  recordId,
+  objectTypeCode,
+  sObjectName,
+  isCommon,
+  isCollapsed,
+  userId,
+  tableHeight,
+  fieldNames,
+  activeKey,
+  isModal,
+  isCirculation,
+  isNew,
+  value,
+  searchVal,
+  SearchFields,
+} = toRefs(data);
 const tabContent = ref(null);
 const contentRef = ref(null);
 let formSearchHeight = ref(null);
@@ -611,30 +787,32 @@ const getTreeData = () => {
   gDataAll.value = [];
   let url = Interface.content.folder.get;
   let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        search: data.searchVal
-      }
-    }]
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          search: data.searchVal,
+        },
+      },
+    ],
   };
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(url, obj).then((res) => {
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
       let formTree = (list) => {
-        list.forEach(item => {
+        list.forEach((item) => {
           if (item.children) {
             formTree(item.children);
           }
           item.key = item.id;
           item.value = item.id;
           item.isFavor = item.isFavor || false;
-        })
-      }
+        });
+      };
       let response = res.actions[0].returnValue;
       formTree(response);
       console.log("formTree", response);
@@ -658,7 +836,7 @@ const getTreeData = () => {
   //     gData.value = response;
   //     gDataAll.value = response;
   // })
-}
+};
 getTreeData();
 const onSearch = (e) => {
   // gData.value = gDataAll.value.filter(item => {
@@ -676,65 +854,82 @@ const onSearch = (e) => {
   //   }
   // })
   getTreeData();
-}
+};
 const onSelect = (keys, { node }) => {
   //console.log(node)
   if (keys && keys.length) {
     data.SelectKey = node.id;
     data.SelectName = node.name;
     data.selectedKeys = [node.id];
+    let subNodes = findSubNodes(node.children);
+    if (subNodes&&subNodes.length) {
+      subNodes.unshift(node.id);
+      subNodes = subNodes.join(",");
+      data.SelectKey = subNodes;
+    }
   }
   data.pagination.current = 1;
   getQuery();
 };
-
+const findSubNodes = (children) => {
+  let subNodes = [];
+  children.forEach((node) => {
+    if (node.id) {
+      subNodes.push(node.id);
+      if (node.children && node.children.length > 0) {
+        subNodes = subNodes.concat(findSubNodes(node.children)); // 递归查找所有子节点
+      }
+    }
+  });
+  return subNodes;
+};
 const handleSearch = (obj) => {
   data.pagination.current = 1;
   //data.filterQuery = filterQuery;
   if (obj) {
     data.hightSearchParams = obj;
-  }
-  else {
-    data.hightSearchParams = {}
+  } else {
+    data.hightSearchParams = {};
   }
   getQuery();
-}
+};
 const changeDepth = (e, item) => {
   let url = Interface.edit;
   let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordId: item.id,
-        recordInput: {
-          allowSaveOnDuplicate: false,
-          apiName: 'RecordAccessControl',
-          objTypeCode: '6061',
-          fields: {
-            Depth: item.Depth,
-          }
-        }
-      }
-    }]
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordId: item.id,
+          recordInput: {
+            allowSaveOnDuplicate: false,
+            apiName: "RecordAccessControl",
+            objTypeCode: "6061",
+            fields: {
+              Depth: item.Depth,
+            },
+          },
+        },
+      },
+    ],
   };
   let obj = {
-    message: JSON.stringify(d)
-  }
+    message: JSON.stringify(d),
+  };
   proxy.$post(url, obj).then((res) => {
     message.success("设置成功！");
-
   });
-}
+};
 const handleDelete = (id) => {
   data.relatedObjectAttributeValue = {};
-  data.relatedObjectAttributeName = '';
-  data.objectTypeCode = '6061';
-  data.sObjectName = 'RecordAccessControl';
+  data.relatedObjectAttributeName = "";
+  data.objectTypeCode = "6061";
+  data.sObjectName = "RecordAccessControl";
   data.recordId = id;
   data.isDelete = true;
-}
+};
 const refreshData = (e) => {
   getQuery();
 };
@@ -745,7 +940,7 @@ const cancelDelete = (e) => {
 const handleTableChange = (pag, filters, sorter) => {
   data.pagination.current = pag.current;
   getQuery();
-}
+};
 
 //新建权限
 const handleNew = (e) => {
@@ -756,35 +951,35 @@ const handleNew = (e) => {
     // data.sObjectName='Content';
     // data.recordId='';
     data.isNew = true;
-  }
-  else {
+  } else {
     message.error("必须先选中左侧目录");
   }
-}
+};
 const cancelNew = (e) => {
   data.isNew = e;
   refreshData();
-}
+};
 const getQuery = () => {
-  let filterQuery = '';
+  //let filterQuery = "";
   // if (data.filterQuery) {
   //   filterQuery = data.filterQuery;
   // }
-  if (data.SelectKey) {
-    filterQuery += '\nObjectId\teq\t' + data.SelectKey;
-  }
+  //if (data.SelectKey) {
+  //filterQuery += "\nObjectId\tin\t" + data.SelectKey;
+  //}
   let url = Interface.list2;
   let d = {
-    filterId: '',
+    filterId: "",
     objectTypeCode: data.objectTypeCode,
     entityName: data.sObjectName,
-    filterQuery: filterQuery,
+    //filterQuery: filterQuery,
     page: data.pagination.current,
     rows: data.pagination.pageSize,
-    sort: 'CreatedOn',
-    order: 'desc',
-    displayColumns: 'AccessObjectTypeCode,AccessObjectName,Name,CreatedBy,CreatedOn,Depth'
-  }
+    sort: "CreatedOn",
+    order: "desc",
+    displayColumns:
+      "AccessObjectTypeCode,AccessObjectName,Name,CreatedBy,CreatedOn,Depth",
+  };
   if (data.hightSearchParams) {
     if (data.hightSearchParams.search) {
       d.search = data.hightSearchParams.search;
@@ -793,55 +988,90 @@ const getQuery = () => {
       d.filterCondition = data.hightSearchParams.filterCondition;
     }
   }
+  if (data.SelectKey) {
+    if (!d.filterCondition) {
+      d.filterCondition = [
+        {
+          attribute: "ObjectId",
+          column: "ObjectId",
+          label: "记录",
+          operator: "eq",
+          logical: "AND",
+          picklistValues: [],
+          isEditable: false,
+          operands: [],
+        },
+      ];
+    } else {
+      d.filterCondition=JSON.parse(d.filterCondition);
+      d.filterCondition.push({
+        attribute: "ObjectId",
+        column: "ObjectId",
+        label: "记录",
+        operator: "eq",
+        logical: "AND",
+        picklistValues: [],
+        isEditable: false,
+        operands: [],
+      });
+    }
+    let ids = data.SelectKey.split(",");
+    for (var i = 0; i < ids.length; i++) {
+      d.filterCondition[d.filterCondition.length - 1].operands.push(ids[i]);
+    }
+  }
+  d.filterCondition=JSON.stringify(d.filterCondition);
   data.dataSource = [];
   data.pagination.total = 0;
-  proxy.$post(url, d).then(res => {
+  proxy.$post(url, d).then((res) => {
     let list = [];
     if (res && res.nodes) {
       data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
       for (var i = 0; i < res.nodes.length; i++) {
         var item = res.nodes[i];
         for (var cell in item) {
-          if (cell != 'id' && cell != 'nameField' && cell != 'Depth') {
+          if (cell != "id" && cell != "nameField" && cell != "Depth") {
             item[cell] = girdFormatterValue(cell, item);
           }
-          if (cell == 'Depth') {
-            item[cell] = item[cell] ? item[cell].value : '';
+          if (cell == "Depth") {
+            item[cell] = item[cell] ? item[cell].value : "";
           }
-          if (cell == 'CreatedOn') {
-            item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
+          if (cell == "CreatedOn") {
+            item[cell] = item[cell]
+              ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm")
+              : "";
           }
         }
-        list.push(item)
+        list.push(item);
       }
     }
     data.dataSource = list;
-  })
-}
+  });
+};
 //批量发布
 const handleRelease = () => {
   let list = gridRef.value.getCheckList();
   if (list.length) {
     data.CheckList = list;
     data.isConfirm = true;
-    data.confirmText = '确定要批量发布吗？';
-    data.confirmTitle = '批量发布';
+    data.confirmText = "确定要批量发布吗？";
+    data.confirmTitle = "批量发布";
   } else {
-    message.error("请至少勾选一项！")
+    message.error("请至少勾选一项！");
   }
-}
+};
 //批量取消发布
 const cancelRelease = () => {
   let list = gridRef.value.getCheckList();
   if (list.length) {
     data.CheckList = list;
     data.isConfirm = true;
-    data.confirmText = '确定要批量取消发布吗？';
-    data.confirmTitle = '批量取消发布';
+    data.confirmText = "确定要批量取消发布吗？";
+    data.confirmTitle = "批量取消发布";
   } else {
-    message.error("请至少勾选一项！")
+    message.error("请至少勾选一项！");
   }
-}
+};
 const handleShowSearch = () => {
   data.isSearchModal = true;
 };
@@ -867,7 +1097,7 @@ function changeHeight(h) {
   getQuery();
 }
 onMounted(() => {
-  let userInfo = window.localStorage.getItem('userInfo');
+  let userInfo = window.localStorage.getItem("userInfo");
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
     data.userId = userInfo.userId;
@@ -875,8 +1105,8 @@ onMounted(() => {
   data.pagination.current = 1;
   //getQuery();
   changeHeight();
-  window.addEventListener('resize', changeHeight)
-})
+  window.addEventListener("resize", changeHeight);
+});
 </script>
 <style lang="less" scoped>
 .PermissionWrap {
@@ -986,7 +1216,7 @@ onMounted(() => {
               width: 100%;
             }
 
-            .ant-tree-title>span {
+            .ant-tree-title > span {
               width: 100%;
               display: flex;
               justify-content: space-between;
@@ -1084,7 +1314,6 @@ onMounted(() => {
       //}
     }
   }
-
 }
 
 .information-tree :deep .ant-tree-title {
@@ -1166,7 +1395,7 @@ onMounted(() => {
   }
 
   .wea-left-tree-scroll {
-    height: calc(~'100% - 100px') !important;
+    height: calc(~"100% - 100px") !important;
   }
 
   :deep .ant-tabs .ant-tabs-tab {
@@ -1189,7 +1418,7 @@ onMounted(() => {
     padding-left: 10px !important;
   }
 
-  :deep .ant-tree .ant-tree-checkbox+span {
+  :deep .ant-tree .ant-tree-checkbox + span {
     line-height: 30px;
   }
 
@@ -1209,27 +1438,27 @@ onMounted(() => {
   }
 
   .tableWrap {
-    height: calc(~'100% - 100px');
+    height: calc(~"100% - 100px");
   }
 
   :deep .ant-table-wrapper {
-    height: calc(~'100% - 0px');
+    height: calc(~"100% - 0px");
 
     .ant-table-container {
-      height: calc(~'100% - 0px');
+      height: calc(~"100% - 0px");
     }
   }
 
   :deep .ant-spin-nested-loading {
-    height: calc(~'100% - 0px');
+    height: calc(~"100% - 0px");
 
     .ant-spin-container {
-      height: calc(~'100% - 0px');
+      height: calc(~"100% - 0px");
     }
   }
 
   :deep .ant-table-wrapper .ant-table {
-    height: calc(~'100% - 5px');
+    height: calc(~"100% - 5px");
   }
 
   .empty {
@@ -1291,7 +1520,7 @@ onMounted(() => {
     width: 255px;
   }
 
-  :deep .ant-table-wrapper .ant-table-thead>tr>th {
+  :deep .ant-table-wrapper .ant-table-thead > tr > th {
     background-color: #f7fbfe !important;
     padding: 8.5px 16px !important;
   }
@@ -1343,7 +1572,7 @@ onMounted(() => {
   display: block !important;
 }
 
-input[aria-hidden=true] {
+input[aria-hidden="true"] {
   display: none !important;
 }
 
@@ -1361,7 +1590,6 @@ input[aria-hidden=true] {
           width: unset !important;
         }
       }
-
     }
   }
 }

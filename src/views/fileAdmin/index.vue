@@ -862,18 +862,32 @@ const RunKGBrowser = (url) => {
     );
   }
 };
-const openControlViewFile = (url, type, link, name) => {
-  var abc = isSupportOfficePlug();
-  if (!abc) {
-    if (
-      (url && url.indexOf("/jgfiles/samples") != -1) ||
-      (link && link.indexOf("/jgfiles/samples") != -1)
-    ) {
-      RunKGBrowser(url);
-    } else {
-    }
-  } else {
+const openControlViewFile = (id,url, type, link, name) => {
+  // var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
+  // var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
+  // var iTop = 0; //获得窗口的垂直位置;
+  // var iLeft = 0; //获得窗口的水平位置;
+  let userInfo = window.localStorage.getItem('userInfo');
+  var userId = '';
+  var userName = '';
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+    userId = userInfo.userId;
+    userName = userInfo.fullName;
   }
+  window.open("/#/lightning/r/office/view?id=" + id + "&FileType=" + type + "&FileName=" + name + "&UserName=" + userName);
+  // window.open("/#/lightning/r/office/view?id=" + id + "&FileType=" + type + "&FileName=" + name + "&UserName=" + userName, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
+  // var abc = isSupportOfficePlug();
+  // if (!abc) {
+  //   if (
+  //     (url && url.indexOf("/jgfiles/samples") != -1) ||
+  //     (link && link.indexOf("/jgfiles/samples") != -1)
+  //   ) {
+  //     RunKGBrowser(url);
+  //   } else {
+  //   }
+  // } else {
+  // }
 };
 const handleOpenFile = (item) => {
   console.log("item", item);
@@ -914,13 +928,23 @@ const handleOpenFile = (item) => {
             downloadUrl: item.downloadUrl
         };
         data.isTxt = true;
+    } else if (
+      item.fileExtension == "docx" ||
+      item.fileExtension == "pptx" ||
+      item.fileExtension == "xlsx" ||
+      item.fileExtension == "doc" ||
+      item.fileExtension == "ppt" ||
+      item.fileExtension == "xls"
+    ) {
+      openControlViewFile(
+        item.id,
+        item.link,
+        item.fileExtension,
+        item.viewUrl,
+        item.name
+      );
+      //handleDownLoadFile(item);
     } else {
-      // openControlViewFile(
-      //   item.link,
-      //   item.fileExtension,
-      //   item.viewLink,
-      //   item.name + "." + item.fileExtension
-      // );
       handleDownLoadFile(item);
     }
   }

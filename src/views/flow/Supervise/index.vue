@@ -895,11 +895,11 @@ const batchPrintForm = () => {
   let list = gridRef.value.getCheckList();
   //console.log("checklist", list);
   if (list.length) {
+    let processInstanceIds = list.map(item=>item.ProcessInstanceId.value);
     let url = router.resolve({
-      path: "/lightning/workflow/WFFormPrint",
-      name: "WFFormPrint",
+      name: "WFFormBatchPrint",
       query: {
-        id: "",
+        ids: processInstanceIds.join(","),
       },
     });
     window.open(url.href);

@@ -11,8 +11,7 @@
         <span class="headerTitle">草稿</span>
       </div>
       <div class="headerRight todo-head-right">
-        <a-button class="ml10" @click="batchPrintForm">批量打印</a-button>
-        <a-button class="ml10" @click="batchCirculation">批量传阅</a-button>
+        <a-button class="ml10" @click="batchDelete">批量删除</a-button>
       </div>
     </div>
     <div class="todo-content">
@@ -183,15 +182,15 @@
       :external="true"
     />
     <!-- 撤销、结束、取消督办、取消收藏 -->
-    <CommonConfirm
+    <!-- <CommonConfirm
       v-if="isConfirm"
       :isShow="isConfirm"
       :text="confirmText"
       :title="confirmTitle"
       @cancel="isConfirm = false"
-      @ok="isConfirm = false"
+      @ok="handleConfirm"
       :id="ProcessInstanceId"
-    />
+    /> -->
     <!-- 传阅 -->
     <circulation-modal
       ref="circulationRef"
@@ -224,6 +223,14 @@
       @cancel="isFavor = false"
       @update-status="isFavor = false"
       :id="ProcessInstanceId"
+    />
+    <ConfirmModal
+      :isShow="isConfirm"
+      v-if="isConfirm"
+      :desc="confirmText"
+      :title="confirmTitle"
+      @cancel="isConfirm = false"
+      @ok="handleOkConfirm"
     />
   </div>
 </template>
@@ -259,7 +266,8 @@ import { useRouter, useRoute } from "vue-router";
 import useWorkAdmin from "@/utils/flow/workAdmin";
 import { girdFormatterValue } from "@/utils/common.js";
 import Delete from "@/components/listView/Delete.vue";
-import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+// import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+import ConfirmModal from "@/components/commonModal/Confirm.vue";
 import CirculationModal from "@/components/workflow/CirculationModal.vue";
 import Urging from "@/components/workflow/Urging.vue";
 import Supervised from "@/components/workflow/Supervised.vue";
@@ -854,17 +862,72 @@ const cancelFavor = (id) => {
   data.confirmText = "确定要取消收藏吗？";
   data.confirmTitle = "取消收藏";
 };
+//批量删除
+const batchDelete = () => {
+  let list = gridRef.value.getCheckList();
+  if (list.length) {
+    data.isConfirm = true;
+    data.confirmText = "确定要批量删除选中流程吗？";
+    data.confirmTitle = "批量删除";
+  } else {
+    message.error("请至少勾选一项！");
+  }
+};
+//弹窗确认操作
+const handleOkConfirm = () => {
+  if (data.confirmTitle == "批量删除") {
+    let end = false;
+    let list = gridRef.value.getCheckList();
+    for (var i = 0; i < list.length; i++) {
+      if (i == list.length - 1) {
+        end = true;
+      }
+      batchDeleteFlow(list[i].id, end);
+    }
+  }
+};
+// 批量删除流程
+const batchDeleteFlow = (id, end) => {
+  let isSuccess = true;
+  let obj = {
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          id: id,
+        },
+      },
+    ],
+  };
+  let d = {
+    message: JSON.stringify(obj),
+  };
+  proxy.$post(Interface.workflow.delete, d).then((res) => {
+    if (res.actions && res.actions[0] && res.actions[0].state == "SUCCESS") {
+      if (end && isSuccess) {
+        data.isConfirm = false;
+        message.success("删除成功！");
+        handleSearch();
+      }
+    } else {
+      isSuccess = false;
+      message.error("删除失败！");
+    }
+  });
+};
 //批量打印
 const batchPrintForm = () => {
   //data.ProcessInstanceId=id;
   let list = gridRef.value.getCheckList();
   //console.log("checklist", list);
   if (list.length) {
+    let processInstanceIds = list.map(item=>item.ProcessInstanceId.lookupValue.value);
     let url = router.resolve({
-      path: "/lightning/workflow/WFFormPrint",
-      name: "WFFormPrint",
+      name: "WFFormBatchPrint",
       query: {
-        id: "",
+        ids: processInstanceIds.join(","),
       },
     });
     window.open(url.href);
@@ -993,7 +1056,7 @@ const deleteFlow = (e) => {
 };
 onMounted(() => {
   window.addEventListener("resize", changeHeight);
-  
+
   getTreeData();
   getTabs();
 });

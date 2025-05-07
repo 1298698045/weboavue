@@ -913,6 +913,7 @@
   }
   
   const New = () => {
+    data.listId = '';
     data.isCommon = true;
   }
   window.New = New;

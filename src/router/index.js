@@ -547,6 +547,11 @@ const staticRoutes = [
       name: "合同详情页"
     },
   },
+  {
+    path: "/lightning/r/office/view",
+    name: "OfficeView",
+    component: () => import("../views/fileAdmin/officeView.vue"),
+  },
 ];
 
 const router = createRouter({

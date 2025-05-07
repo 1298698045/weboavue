@@ -13,10 +13,10 @@
       <div class="headerRight todo-head-right">
         <a-button class="ml10" @click="batchPrintForm">批量打印</a-button>
         <a-button class="ml10 ml11" @click="batchCirculation">批量传阅</a-button>
+
         <MoreBtn
           :isMenu="isMenu"
-          @change="handleClickMenu"
-          @mouseover="isMenu = true"
+          @click="isMenu = true"
           @mouseleave="isMenu = false"
         >
           <div class="moreMenu">
@@ -910,11 +910,11 @@ const batchPrintForm = () => {
   let list = gridRef.value.getCheckList();
   //console.log("checklist", list);
   if (list.length) {
+    let processInstanceIds = list.map(item=>item.ProcessInstanceId.lookupValue.value);
     let url = router.resolve({
-      path: "/lightning/workflow/WFFormPrint",
-      name: "WFFormPrint",
+      name: "WFFormBatchPrint",
       query: {
-        id: "",
+        ids: processInstanceIds.join(","),
       },
     });
     window.open(url.href);
@@ -1099,7 +1099,15 @@ onMounted(() => {
     top: 1px;
   }
 }
-.ml11 {
-  margin-right: 25px;
+.todoList {
+  :deep .moreMenuBox.active {
+    .icon-mulugengduo {
+      position: relative;
+      top: -1px;
+    }
+  }
+  .ml11 {
+    margin-right: 35px;
+  }
 }
 </style>
