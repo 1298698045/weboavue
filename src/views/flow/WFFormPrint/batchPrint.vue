@@ -80,8 +80,13 @@
         data.formList = temp;
     }
     const loadQuery = async () => {
-        if (route.query.ids) {
-            data.ids = route.query.ids.split(',');
+        // if (route.query.ids) {
+        //     data.ids = route.query.ids.split(',');
+        //     await handleFormList();
+        // }
+        const ids = localStorage.getItem("batchPrintIds");
+        if (ids) {
+            data.ids = ids.split(',');
             await handleFormList();
         }
     }
@@ -89,7 +94,7 @@
 
     onMounted(() => {
 
-    })
+    });
 
     const handlePrint = () => {
         window.print();

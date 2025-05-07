@@ -20,8 +20,9 @@ export default createStore({
     dynamicRoutes: JSON.parse(localStorage.getItem("dynamic_routes")) || [],
     searchList: {}, // 高级搜索
     searchOptions: {}, // 高级搜索
-
     needsRefresh: false, // 流程状态刷新列表
+
+    batchPrints: "", // 批量打印
   },
   mutations: {
     setCollapsed(state, val) {
@@ -46,21 +47,24 @@ export default createStore({
     setSubModules(state, subModules) {
       state.subModules = subModules;
     },
-    setAppCode(state, code){
+    setAppCode(state, code) {
       state.appCode = code;
     },
     setDynamicRoutes(state, routes) {
       state.dynamicRoutes = routes;
       localStorage.setItem("dynamic_routes", JSON.stringify(routes));
     },
-    setSearchList(state, val){
+    setSearchList(state, val) {
       state.searchList = val;
     },
-    setSearchOptions(state, val){
+    setSearchOptions(state, val) {
       state.searchOptions = val;
     },
-    setNeedsRefresh(state, val){
+    setNeedsRefresh(state, val) {
       state.needsRefresh = val;
+    },
+    setBatchPrint(state, val) {
+      state.batchPrints = val;
     }
   },
   actions: {
@@ -124,7 +128,7 @@ export default createStore({
     //           };
     //           let obj = routesMapping[developerName] && routesMapping[developerName][tab.name];
     //           let componentPath;
-              
+
     //           let splitPaths = subPath.split("/");
     //           if (splitPaths.length == 4 && subPath.indexOf("/lightning/o/") != -1) {
     //             componentPath = () => import("../views/listView/index.vue");
@@ -167,10 +171,10 @@ export default createStore({
         let modules = res.actions[0].returnValue.apps;
         commit('setModules', modules);
         localStorage.setItem("modules", JSON.stringify(modules));
-        
+
         // 收集所有动态路由
         const allDynamicRoutes = [];
-        
+
         modules.forEach(module => {
           let path = module.StartUrl.startsWith("/") ? module.StartUrl : "/" + module.StartUrl;
           if (path.indexOf('?') != -1) {
@@ -185,7 +189,7 @@ export default createStore({
             },
             children: []
           };
-          
+
           let developerName = module.Name;
           if (module.tabs && module.tabs.length > 0) {
             module.tabs.forEach(tab => {
@@ -193,22 +197,22 @@ export default createStore({
               if (subPath.indexOf('?') != -1) {
                 subPath = subPath.split('?')[0];
               };
-              
+
               let obj = routesMapping[developerName] && routesMapping[developerName][tab.name];
               let componentPath;
-              
+
               let splitPaths = subPath.split("/");
               if (splitPaths.length == 4 && subPath.indexOf("/lightning/o/") != -1) {
                 componentPath = () => import("../views/listView/index.vue");
                 subPath = subPath.replace(/\/o\/[^/]+$/, '/o/:sObjectName');
-              } else if(splitPaths.length == 5 && subPath.indexOf("/page/dashboard/") != -1){
+              } else if (splitPaths.length == 5 && subPath.indexOf("/page/dashboard/") != -1) {
                 // 处理通用门户
                 componentPath = () => import("../views/home/commonHome.vue");
                 subPath = subPath.replace(/\/dashboard\/[^/]+$/, '/dashboard/:sObjectName');
               } else {
                 componentPath = obj || (() => import("@/views/NotFound.vue"));
               }
-    
+
               parentRoute.children.push({
                 path: subPath,
                 name: tab.name,
@@ -222,26 +226,26 @@ export default createStore({
               });
             });
           }
-          
+
           // 添加到路由
           router.addRoute(parentRoute);
           // 保存路由配置
           allDynamicRoutes.push(parentRoute);
         });
-        
+
         // 保存所有动态路由配置
-        allDynamicRoutes.forEach(item=>{
+        allDynamicRoutes.forEach(item => {
           console.log("item.component", item.component);
           item.component = String(item.component);
-          if(item.children && item.children.length){
-            item.children.forEach(row=>{
+          if (item.children && item.children.length) {
+            item.children.forEach(row => {
               row.component = String(row.component);
             })
           }
         })
         console.log("allDynamicRoutes", allDynamicRoutes);
         commit('setDynamicRoutes', allDynamicRoutes);
-        
+
         localStorage.setItem("appCode", modules[0].AppCode);
         commit('setModuleName', modules[0].Label);
         commit('setAppCode', modules[0].AppCode);

@@ -1,8 +1,9 @@
 <template>
-    <grid-layout :layout.sync="layout" :col-num="12" :row-width="85" :row-height="36" :is-draggable="true" :is-resizable="true"
+    <grid-layout :layout.sync="layout" :col-num="48" :row-height="10" :is-draggable="true" :is-resizable="true"
         :is-mirrored="false" :vertical-compact="true" :margin="[10, 10]" :use-css-transforms="true">
-        <grid-item v-for="(item, index) in layout" :num="index" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key="item.i"
-            :minH="2" drag-allow-from=".card-header" :isDraggable="false" drag-ignore-from=".no-drag" :isResizable="false">
+        <grid-item v-for="(item, index) in layout" :num="index" :x="item.x" :y="item.y" :w="item.w" :h="item.h"
+            :i="item.i" :key="item.i" :minH="2" drag-allow-from=".card-header" :isDraggable="false"
+            drag-ignore-from=".no-drag" :isResizable="false">
             <div class="gridItemWrapper" v-if="item.componentType == 'list'">
                 <ListCom :item="item" :themeType="themeType" />
             </div>
@@ -297,7 +298,7 @@
         let d = {
             message: JSON.stringify(obj)
         }
-        proxy.$post(Interface.portal.layoutList, d).then(res=>{
+        proxy.$post(Interface.portal.layoutList, d).then(res => {
             let layoutList = [];
             if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
                 let { attributes, dashboardMetadata, picklistColors, components, theme } = res.actions[0].returnValue;
@@ -326,11 +327,11 @@
         })
     };
 
-    watch(()=>props.dashboardId, (newVal, oldVal)=>{
-        if(props.dashboardId){
+    watch(() => props.dashboardId, (newVal, oldVal) => {
+        if (props.dashboardId) {
             getQuery();
         }
-    },{immediate: true});
+    }, { immediate: true });
 
     defineExpose({ getQuery });
 
@@ -364,32 +365,37 @@
         -webkit-user-select: none;
         user-select: none;
     }
-    .widgetItem{
+
+    .widgetItem {
         width: 100%;
         height: 100%;
         background: #fff;
         border-radius: 12px;
-        box-shadow: rgba(0,0,0,0.058823529411764705) 0px 3px 6px 2px;
+        box-shadow: rgba(0, 0, 0, 0.058823529411764705) 0px 3px 6px 2px;
         overflow: hidden;
     }
-    .gridItemWrapper{
+
+    .gridItemWrapper {
         width: 100%;
         height: 100%;
         border: 1px solid transparent;
     }
-    .vue-grid-item.active{
-        .gridItemWrapper{
+
+    .vue-grid-item.active {
+        .gridItemWrapper {
             border: 1px solid #5d9cec;
         }
     }
-    .weapp-ebde-toolbar{
+
+    .weapp-ebde-toolbar {
         position: absolute;
         bottom: 0;
         right: 0;
         z-index: 9999999;
         display: flex;
         cursor: pointer;
-        &>span{
+
+        &>span {
             width: 22px;
             height: 22px;
             background: #5d9cec;
