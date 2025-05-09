@@ -22,8 +22,8 @@ export const routesMapping = {
         wftask: () => import("../views/NotFound.vue"),
         WFInstance: () => import("../views/flow/workAdmin/index.vue"),
         wfdefinition: () => import("../views/flow/seeting/index.vue"),
-        WorkflowSuperviselist:() => import("../views/flow/Supervise/index.vue"),
-        WorkflowDelegate:() => import("../views/flow/agentTask/index.vue"),
+        WorkflowSuperviselist: () => import("../views/flow/Supervise/index.vue"),
+        WorkflowDelegate: () => import("../views/flow/agentTask/index.vue"),
         WorkflowDraft: () => import("../views/flow/drafts/index.vue"),
         WorkflowForwardRead: () => import("../views/flow/receivedCirculation/index.vue")
     },
@@ -62,7 +62,7 @@ export const routesMapping = {
         Addresslist: () => import("../views/oa/addressBook/index.vue"),
         BusinessUnitAddresslist: () => import("../views/oa/deptAddressBook/index.vue"),
         PersonalContact: () => import("../views/oa/myAddressBook/index.vue"),
-        CollaborationGroup:  () => import("../views/oa/group/index.vue"),
+        CollaborationGroup: () => import("../views/oa/group/index.vue"),
         // CampaignSms: {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true
@@ -84,7 +84,7 @@ export const routesMapping = {
         album: () => import("../views/knowledge/Album/index.vue"),
         ContentFolderPermission: () => import("../views/knowledge/Contentfolder/permission.vue"),
         QuestionAnswer: () => import("../views/knowledge/QuestionAnswer/index.vue"),
-        DocumentReadLog: ()=>import("../views/knowledge/ReadLog/index.vue"),
+        DocumentReadLog: () => import("../views/knowledge/ReadLog/index.vue"),
         // ContentViewTemplate: {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true
@@ -199,13 +199,14 @@ export const routesMapping = {
         ProjectReport: () => import("../views/NotFound.vue")
     },
     // 系统报表
-    // report: {
-    //     CommonReportHome: () => import("../views/report/home/index.vue"),
-    //     report: () => import("../views/report/home/index.vue"),
-    //     Dashboard: () => import("../views/NotFound.vue"),
-    //     ReportIndicatorData: () => import("../views/NotFound.vue"),
-    //     ReportIndicator: () => import("../views/NotFound.vue")
-    // },
+    report: {
+        // CommonReportHome: () => import("../views/report/home/index.vue"),
+        report: () => import("../views/report/home/index.vue"),
+        // Dashboard: () => import("../views/NotFound.vue"),
+        // ReportIndicatorData: () => import("../views/NotFound.vue"),
+        // ReportIndicator: () => import("../views/NotFound.vue")
+        WFFormSearch: () => import("../views/flow/formSearch/index.vue"),
+    },
     // 科研成果
     ResearchResult: {
         // ProjectPaper: {

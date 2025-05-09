@@ -5,8 +5,8 @@
                 <a-input-search v-model:value="searchVal" placeholder="请输入名称" @change="onSearch" />
             </div>
             <div class="categoryTree-scroll">
-                <a-tree style="height: 100%;" :tree-data="categoryTree" block-node :checkStrictly="true"
-                    :fieldNames="fieldNames" :load-data="onLoadData" @select="selectCategoryTree">
+                <a-tree :tree-data="categoryTree" block-node :checkStrictly="true" :fieldNames="fieldNames"
+                    :load-data="onLoadData" @select="selectCategoryTree">
                     <!-- @expand="expandTree" @dblclick="onDoubleClick" -->
                 </a-tree>
             </div>
@@ -387,7 +387,7 @@
         isCollapsed: false,
         tableHeight: '',
         queryParams: {
-            entityType: "EntityForm",
+            entityType: "",
             objectTypeCode: '',
             search: "",
             filterId: ""
@@ -593,6 +593,7 @@
             data.sObjectName = node.Name;
             data.entityType = node.Name;
             data.objectTypeCode = node.ObjectTypeCode;
+            data.queryParams.entityType = node.Name;
             nextTick(() => {
                 changeHeight();
                 initLoad();
@@ -1067,6 +1068,7 @@
 
         .categoryTree-scroll {
             height: calc(100% - 48px);
+            overflow-y: auto;
         }
 
     }

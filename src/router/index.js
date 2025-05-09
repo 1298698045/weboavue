@@ -64,7 +64,7 @@ const staticRoutes = [
       }
     ]
   },
-  
+
   {
     path: "/lightning/r/group/view",
     name: "GroupDetail",
@@ -461,9 +461,9 @@ const staticRoutes = [
         meta: {
           name: "变更记录",
           icon: "huiyicanhuiren",
-          entityType:'093',
-          objectTypeCode:'100207',
-          entityName:'InstitutionHistory',
+          entityType: '093',
+          objectTypeCode: '100207',
+          entityName: 'InstitutionHistory',
         },
       },
       {
@@ -474,9 +474,9 @@ const staticRoutes = [
         meta: {
           name: "修订记录",
           icon: "huiyicanhuiren",
-          entityType:'K30',
-          objectTypeCode:'3030',
-          entityName:'KbArticleVersion',
+          entityType: 'K30',
+          objectTypeCode: '3030',
+          entityName: 'KbArticleVersion',
         },
       },
       {
@@ -487,9 +487,9 @@ const staticRoutes = [
         meta: {
           name: "废止记录",
           icon: "huiyicanhuiren",
-          entityType:'K31',
-          objectTypeCode:'3031',
-          entityName:'KbArticleAbolish',
+          entityType: 'K31',
+          objectTypeCode: '3031',
+          entityName: 'KbArticleAbolish',
         },
       }
     ]
@@ -511,9 +511,9 @@ const staticRoutes = [
         meta: {
           name: "公文督办",
           icon: "huiyicanhuiren",
-          entityType:'A10',
-          objectTypeCode:'100110',
-          entityName:'OfficialNoticeIn',
+          entityType: 'A10',
+          objectTypeCode: '100110',
+          entityName: 'OfficialNoticeIn',
         },
       },
       {
@@ -524,9 +524,9 @@ const staticRoutes = [
         meta: {
           name: "正文模板",
           icon: "huiyicanhuiren",
-          entityType:'063',
-          objectTypeCode:'100105',
-          entityName:'TemplateFile',
+          entityType: '063',
+          objectTypeCode: '100105',
+          entityName: 'TemplateFile',
         },
       }
     ]
@@ -564,33 +564,33 @@ const router = createRouter({
 function restoreRoutes() {
   const savedRoutes = JSON.parse(localStorage.getItem('savedRoutes'));
   // console.log("savedRoutes", savedRoutes);
-  if(savedRoutes){
-      const parentRouteExists = router.hasRoute(savedRoutes.name);
-      let parentRoute;
-      if (!parentRouteExists) {
-          parentRoute = {
-              path: savedRoutes.path,
-              name: savedRoutes.name,
-              component: () => import("@/layout/index.vue"),
-              meta: savedRoutes.meta,
-              children: [],
-          };
-          router.addRoute(parentRoute);
-      }
-      if(savedRoutes.children.length){
-          savedRoutes.children.forEach(item=>{
-              const newRoute = {
-                  path: item.path,
-                  name: item.name,
-                  component: eval(item.component),
-                  meta: item.meta,
-                  children: [],
-              };
-              router.addRoute(savedRoutes.name, {
-                  ...newRoute
-              })
-          })
-      }
+  if (savedRoutes) {
+    const parentRouteExists = router.hasRoute(savedRoutes.name);
+    let parentRoute;
+    if (!parentRouteExists) {
+      parentRoute = {
+        path: savedRoutes.path,
+        name: savedRoutes.name,
+        component: () => import("@/layout/index.vue"),
+        meta: savedRoutes.meta,
+        children: [],
+      };
+      router.addRoute(parentRoute);
+    }
+    if (savedRoutes.children.length) {
+      savedRoutes.children.forEach(item => {
+        const newRoute = {
+          path: item.path,
+          name: item.name,
+          component: eval(item.component),
+          meta: item.meta,
+          children: [],
+        };
+        router.addRoute(savedRoutes.name, {
+          ...newRoute
+        })
+      })
+    }
 
   };
   // console.log("router", router.getRoutes())
@@ -606,7 +606,7 @@ function restoreRoutes2() {
         const parentRoute = {
           path: route.path,
           name: route.name,
-          component:  () => import("@/layout/index.vue"),
+          component: () => import("@/layout/index.vue"),
           meta: route.meta || {}
         };
         router.addRoute(parentRoute);
@@ -655,29 +655,29 @@ if (localStorage.getItem('savedRoutes')) {
 // 恢复动态路由
 if (store.state.dynamicRoutes.length > 0) {
   store.state.dynamicRoutes.forEach(route => {
-      //   console.log("route", route);
-      if (!router.hasRoute(route.name)) {
-          if (route.children && route.children.length) {
-              route.children.forEach(row => {
-                  row.component = eval(row.component)
-              })
-          }
-          const newRoute = {
-              path: route.path,
-              name: route.name,
-              component: eval(route.component),
-              meta: route.meta,
-              children: route.children,
-          };
-          router.addRoute(newRoute);
+    //   console.log("route", route);
+    if (!router.hasRoute(route.name)) {
+      if (route.children && route.children.length) {
+        route.children.forEach(row => {
+          row.component = eval(row.component)
+        })
       }
+      const newRoute = {
+        path: route.path,
+        name: route.name,
+        component: eval(route.component),
+        meta: route.meta,
+        children: route.children,
+      };
+      router.addRoute(newRoute);
+    }
   });
 }
 
-router.beforeEach((to, from, next)=>{
+router.beforeEach((to, from, next) => {
   const route = router.resolve(to.path);
-  if(route.matched.length > 0){
-    if(to.meta.name == '通用列表1' || to.meta.name == "DashboardHome"){
+  if (route.matched.length > 0) {
+    if (to.meta.name == '通用列表1' || to.meta.name == "DashboardHome") {
       // debugger
       console.log("to", to, from, next);
       console.log(localStorage.getItem("appCode"))
@@ -688,14 +688,14 @@ router.beforeEach((to, from, next)=>{
         name: to.params.sObjectName,
         meta: {
           ...to.meta,
-          appCode:  localStorage.getItem("appCode"),
+          appCode: localStorage.getItem("appCode"),
           moduleName: localStorage.getItem("moduleName"),
         }
       });
     } else {
       next();
     }
-  }else {
+  } else {
     // localStorage.clear();
     // next({name: 'Login'});
     next();
