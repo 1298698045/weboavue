@@ -30,9 +30,10 @@
         </div>
       </div>
       <div class="header-end">
-        <div class="header-toobar-plugin signPlugin" title="考勤打卡">
+        <div class="header-toobar-plugin signPlugin">
           <a-popover overlayClassName="signPlugin" trigger="click">
             <template #title>
+              <div class="action-hover-point"></div>
               <div class="popup-header">
                 <!-- <ScheduleOutlined style="font-size: 16px;color:var(--textColor)" /> -->
                 <i class="iconfont icon-kaoqin" style="font-size: 18px;color:var(--textColor);margin-right: 10px;"></i>
@@ -77,7 +78,7 @@
                     <i class="iconfont icon-tongji" style="color: #b3b3b3;"></i>
                     <span class="checkTitle text-elli">考勤统计</span>
                   </div>
-                  <a-tooltip>
+                  <a-tooltip :overlayClassName="'header-tooltip'">
                     <template #title>当前所在考勤组：默认考勤组</template>
                     <!-- <InfoCircleOutlined style="font-size: 16px" /> -->
                     <i class="iconfont icon-tishi" style="color: #b3b3b3;"></i>
@@ -86,21 +87,91 @@
               </div>
             </template>
             <!-- <ScheduleOutlined style="font-size: 16px" /> -->
-            <i class="iconfont icon-kaoqin" style="font-size: 16px"></i>
-            <span>考勤</span>
+            <a-tooltip :overlayClassName="'header-tooltip'">
+              <template #title>考勤打卡</template>
+              <i class="iconfont icon-kaoqin" style="font-size: 16px"></i>
+              <span>考勤</span>
+            </a-tooltip>
           </a-popover>
         </div>
-        <div class="header-toobar-plugin" @click="handleOpenEmail" title="邮箱">
+        <div class="header-toobar-plugin" @click="handleOpenEmail">
           <!-- <MessageFilled style="font-size: 18px;" /> -->
-          <i class="iconfont icon-youjian" style="font-size: 18px;"></i>
+          <a-tooltip :overlayClassName="'header-tooltip'">
+            <template #title>邮箱</template>
+            <i class="iconfont icon-youjian" style="font-size: 18px;"></i>
+          </a-tooltip>
         </div>
-        <div class="header-toobar-plugin MessageOut" @click="handleOpenMessage" title="消息" style="margin-left: 8px;">
-          <MessageFilled style="font-size: 16px;" />
+        <div class="header-toobar-plugin MessageOut" @click="handleOpenMessage" style="margin-left: 8px;">
+          <a-tooltip :overlayClassName="'header-tooltip'">
+            <template #title>消息</template>
+            <MessageFilled style="font-size: 16px;" />
+          </a-tooltip>
           <!-- <i class="iconfont icon-消息" style="font-size: 18px;"></i> -->
         </div>
-        <div class="header-toobar-plugin" @click="hanldeOpenNotice" title="通知">
+        <div class="header-toobar-plugin header-toobar-plugin-favor" style="margin-left: 8px;">
+          <a-tooltip class="favorLeft" :overlayClassName="'header-tooltip'">
+            <template #title>收藏</template>
+            <StarFilled />
+          </a-tooltip>
+          <a-tooltip class="favorRight" :overlayClassName="'header-tooltip'">
+              <template #title>收藏夹列表</template>
+              <a-dropdown :overlayClassName="'FavorList'" :trigger="['click']">
+                        <CaretDownFilled />
+                        <template #overlay>
+                            <a-menu>
+                                <div class="action-hover-point"></div>
+                                <span class="actionLabel">我的收藏夹</span>
+                                <a-menu-item v-for="(item,index) in FavorList" :key="index">
+                                    <div class="menu-row" @click="selectFavor(item)">
+                                        <span v-if="index==0" style="background-color: #06A59A" class="actionIcon" data-aura-rendered-by="33:2958;a"><span data-aura-rendered-by="36:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="34:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/lead_120.png" alt=""></span></span>
+                                        <span v-if="index==1" style="background-color: #FF5D2D" class="actionIcon" data-aura-rendered-by="46:2958;a"><span data-aura-rendered-by="49:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="47:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/opportunity_120.png" alt=""></span></span>
+                                        <span v-if="index==2" style="background-color: #06A59A" class="actionIcon" data-aura-rendered-by="59:2958;a"><span data-aura-rendered-by="62:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="60:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/report_120.png" alt=""></span></span>
+                                        <span v-if="index==3" style="background-color: #06A59A" class="actionIcon" data-aura-rendered-by="72:2958;a"><span data-aura-rendered-by="75:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="73:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/report_120.png" alt=""></span></span>
+                                        <span v-if="index==4" style="background-color: #f77e75" class="actionIcon" data-aura-rendered-by="85:2958;a"><span data-aura-rendered-by="88:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="86:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/custom/custom15_120.png" alt=""></span></span>
+                                        <span class="menuText">
+                                          <p class="favorname">{{item.name}}</p>
+                                          <p class="favordesc">{{item.desc}}</p>
+                                        </span>
+                                    </div>
+                                </a-menu-item>
+                                <div class="favoraction" @click="handleEditFavor"><EditFilled />编辑收藏夹</div>
+                            </a-menu>
+                        </template>
+                    </a-dropdown>
+            </a-tooltip>
+        </div>
+        <div class="header-toobar-plugin header-toobar-plugin-action" style="margin-left: 8px;">
+          <a-dropdown :overlayClassName="'OverallAction'" :trigger="['click']">
+              <a-tooltip :overlayClassName="'header-tooltip'">
+                <template #title>全局操作</template>
+                <PlusSquareFilled class="OverallActionIcon" />
+              </a-tooltip>
+              <template #overlay>
+                  <a-menu>
+                      <div class="action-hover-point"></div>
+                      <span class="actionLabel">全局操作</span>
+                      <a-menu-item v-for="(item,index) in ActionList" :key="index">
+                          <div class="menu-row" @click="selectAction(item)">
+                              <span v-if="index==0" style="background-color: #06A59A" class="actionIcon" data-aura-rendered-by="33:2958;a"><span data-aura-rendered-by="36:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="34:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/log_a_call_120.png" alt=""></span></span>
+                              <span v-if="index==1" style="background-color: #CB65FF" class="actionIcon" data-aura-rendered-by="46:2958;a"><span data-aura-rendered-by="49:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="47:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_event_120.png" alt=""></span></span>
+                              <span v-if="index==2" style="background-color: #3BA755" class="actionIcon" data-aura-rendered-by="59:2958;a"><span data-aura-rendered-by="62:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="60:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_task_120.png" alt=""></span></span>
+                              <span v-if="index==3" style="background-color: #9602C7" class="actionIcon" data-aura-rendered-by="72:2958;a"><span data-aura-rendered-by="75:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="73:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_contact_120.png" alt=""></span></span>
+                              <span v-if="index==4" style="background-color: #FF5D2D" class="actionIcon" data-aura-rendered-by="85:2958;a"><span data-aura-rendered-by="88:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="86:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_opportunity_120.png" alt=""></span></span>
+                              <span v-if="index==5" style="background-color: #FF538A" class="actionIcon" data-aura-rendered-by="98:2958;a"><span data-aura-rendered-by="101:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="99:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_case_120.png" alt=""></span></span>
+                              <span v-if="index==6" style="background-color: #939393" class="actionIcon" data-aura-rendered-by="111:2958;a"><span data-aura-rendered-by="114:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="112:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/email_120.png" alt=""></span></span>
+                              <span class="menuText">{{item.name}}</span>
+                          </div>
+                      </a-menu-item>
+                  </a-menu>
+              </template>
+          </a-dropdown>
+        </div>
+        <div class="header-toobar-plugin" @click="hanldeOpenNotice">
           <!-- <MessageFilled style="font-size: 18px;" /> -->
-          <i class="iconfont icon-xiaoxizhongxin" style="font-size: 18px;"></i>
+          <a-tooltip :overlayClassName="'header-tooltip'">
+            <template #title>通知</template>
+            <i class="iconfont icon-xiaoxizhongxin" style="font-size: 18px;"></i>
+          </a-tooltip>
         </div>
         <div class="header-info">
           <div class="avatar" @click.stop="handleOpenInfo">
@@ -113,6 +184,7 @@
             <i class="iconfont icon-xiala" style="font-size: 12px;font-weight: 400;"></i>
           </div>
           <div class="header-info-popup" @click.stop v-if="isInfoPopup">
+            <div class="action-hover-point"></div>
             <div class="row-text">
               主次账号切换
             </div>
@@ -171,6 +243,7 @@
         </div>
       </div>
       <div class="app_popup" v-if="isShow" @click.stop>
+        <div class="action-hover-point"></div>
         <div class="appSearch">
           <SearchOutlined class="searchIcon" />
           <a-input placeholder="查找应用" v-model:value="data.searchText" @change="onSearch" />
@@ -196,7 +269,7 @@
 <script setup>
 import "@/style/header.less";
 import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance, defineProps, defineEmits } from "vue";
-import { DownOutlined, SearchOutlined, MessageFilled, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined, CheckCircleFilled } from "@ant-design/icons-vue";
+import { DownOutlined, SearchOutlined, MessageFilled, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined, CheckCircleFilled, PlusSquareFilled, StarFilled, CaretDownFilled, EditFilled } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
 import NoticeMessages from "@/components/NoticeMessages.vue";
 import Logo from "../header/components/logo.vue";
@@ -255,9 +328,25 @@ const data = reactive({
   confirmTitle: '',
   searchText: '',
   listAppAll: [],
-  listApp: []
+  listApp: [],
+  ActionList:[
+    {name:'记录电话'},
+    {name:'新建事件'},
+    {name:'新建任务'},
+    {name:'新建联系人'},
+    {name:'新建业务机会'},
+    {name:'新建个案'},
+    {name:'电子邮件'}
+  ],
+  FavorList:[
+    {name:'任务测试',desc:'潜在客户'},
+    {name:'最近查看',desc:'业务机会'},
+    {name:'商业机会',desc:'报表'},
+    {name:'商业机会矩阵',desc:'报表'},
+    {name:'天天',desc:'员工档案'},
+  ],
 })
-const { listApp, listAppAll, searchText, isConfirm, confirmText, confirmTitle, userId, appList, isInfoPopup, isNotice, appCode, currentAppName, searchVal, accountList, currentAccountName, BusinessUnitId, avatarUrl } = toRefs(data);
+const { FavorList, ActionList, listApp, listAppAll, searchText, isConfirm, confirmText, confirmTitle, userId, appList, isInfoPopup, isNotice, appCode, currentAppName, searchVal, accountList, currentAccountName, BusinessUnitId, avatarUrl } = toRefs(data);
 const ChangeAccount = (item) => {
   data.isInfoPopup = false;
   data.currentAccountName = item.FullName;
@@ -465,6 +554,15 @@ const handleGoModule = (item) => {
 const handleOpenInfo = () => {
   data.isInfoPopup = !data.isInfoPopup;
 }
+const selectAction = (item) =>{
+  
+}
+const selectFavor = (item) =>{
+  
+}
+const handleEditFavor = () =>{
+
+}
 const search = () => {
   //window.open('https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=' + data.searchVal);
   router.push({
@@ -659,6 +757,226 @@ const onSearch = (e) => {
         }
       }
     }
+  }
+}
+.ant-dropdown.OverallAction {
+  top: 50px !important;
+  left: unset !important;
+  right: 170px !important;
+  .ant-dropdown-menu{
+    padding: 8px 2px !important;
+    position: relative;
+    width: 174px;
+  }
+  .action-hover-point{
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    background-color: #fff;
+    transform: rotate(45deg);
+    top: -8px;
+    right: 18px;
+    z-index: 1;
+    border-top:1px solid #ccc;
+    border-left:1px solid #ccc;
+  }
+  .actionLabel{
+    font-size: 12px;
+    padding: 4px 12px;
+    color: #181818;
+    display: block;
+  }
+  .ant-dropdown-menu-item{
+    font-size: 12px;
+    line-height: 30px;
+    color: #181818;
+  }
+  .actionIcon{
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    margin-right: 12px;
+    border-radius: 5px;
+    position: relative;
+    top: 3px;
+    .uiImage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: inherit;
+    }
+    img{
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+.header-toobar-plugin{
+  .OverallActionIcon{
+    font-size: 20px;
+    svg{
+      border-radius: 7px;
+    }
+  }
+}
+.header-toobar-plugin-favor{
+   margin: 0 6px !important;
+  .favorLeft{
+    border: 1px solid #ccc;
+    padding: 4px 5px !important;
+    margin-right: -1px;
+    border-radius: 4px 0 0 4px;
+    font-size: 16px;
+  }
+  .favorRight{
+    border: 1px solid #ccc;
+    padding: 5px 1px !important;
+    border-radius: 0 4px 4px 0;
+    font-size: 14px;
+  }
+}
+.header-toobar-plugin-action{
+  margin: 0 6px 0 6px !important;
+}
+.ant-dropdown.FavorList {
+  top: 52px !important;
+  left: unset !important;
+  right: 90px !important;
+  .ant-dropdown-menu{
+    position: relative;
+    width: 320px;
+  }
+  .action-hover-point{
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    background-color: #fff;
+    transform: rotate(45deg);
+    top: -8px;
+    right: 135px;
+    z-index: 1;
+    border-top:1px solid #ccc;
+    border-left:1px solid #ccc;
+  }
+  .actionLabel{
+    font-size: 12px;
+    padding: 12px 22px 2px;
+    color: #444;
+    display: block;
+  }
+  .ant-dropdown-menu-item{
+    font-size: 12px;
+    line-height: 30px;
+    color: #181818;
+    margin: 8px 10px !important;
+  }
+  .actionIcon{
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    margin-right: 10px;
+    border-radius: 5px;
+    position: relative;
+    top: 3px;
+    .uiImage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: inherit;
+    }
+    img{
+      width: 24px;
+      height: 24px;
+    }
+  }
+  .menu-row{
+    display: flex;
+    align-items: center;
+    .favorname{
+      color: #181818;
+      font-size: 13px;
+      line-height: 20px;
+    }
+    .favordesc{
+      color: #666;
+      font-size: 12px;
+      line-height: 18px;
+    }
+  }
+  .favoraction{
+    background: #f3f3f3;
+    padding: 10px 18px;
+    color: rgba(11, 92, 171, 1);
+    font-size: 13px;
+    border-top: 1px solid #ccc;
+    border-radius: 0 0 8px 8px;
+    cursor: pointer;
+    .anticon{
+      font-size: 16px;
+      margin-right: 12px;
+      color: rgba(11, 92, 171, 1);
+    }
+  }
+}
+.header .header-end .header-info-popup{
+  top: 55px;
+  border-top:1px solid #d9d9d9;
+  border-radius: 4px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  .action-hover-point{
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    background-color: #fff;
+    transform: rotate(45deg);
+    top: -8px;
+    right: 50px;
+    z-index: 1;
+    border-top:1px solid #d9d9d9;
+    border-left:1px solid #d9d9d9;
+  }
+  .row-text{
+    padding-bottom: 6px;
+  }
+}
+.ant-popover.signPlugin{
+  border-radius: 4px;
+  .action-hover-point{
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    background-color: #fff;
+    transform: rotate(45deg);
+    top: -8px;
+    right: 150px;
+    z-index: 1;
+    border-top:1px solid #d9d9d9;
+    border-left:1px solid #d9d9d9;
+  }
+}
+.headerFlex .header .app_popup {
+  top: 50px;
+  overflow: visible;
+  .action-hover-point{
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    background-color: #fff;
+    transform: rotate(45deg);
+    top: -8px;
+    left: 30px;
+    z-index: 999;
+    border-top:1px solid #d9d9d9;
+    border-left:1px solid #d9d9d9;
+  }
+  .appList{
+    overflow: auto;
+    max-height: calc(~'100% - 60px');
+  }
+}
+.ant-tooltip.header-tooltip{
+  .ant-tooltip-inner{
+    padding: 9px 8px;
   }
 }
 </style>

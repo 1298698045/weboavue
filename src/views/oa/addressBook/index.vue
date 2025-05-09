@@ -620,7 +620,7 @@
                         item.OrganizationIdName=item.organizationIdName||'';
                         item.pinyin=item.Pinyin||'';
                         item.id=item.UserId||'';
-                        item.avatarUrl=Interface.pathUrl+':9091/api/one/user/avatar/'+item.id;
+                        item.avatarUrl=Interface.pathUrl+'/api/one/user/avatar/'+item.id;
                         var isPinyin = list2.some(function (v) {
                             if(item.pinyin){
                                 return v.pinyin == (item.pinyin.textValue).slice(0, 1)
@@ -661,7 +661,7 @@
                         item.MobilePhone=item.MobilePhone?item.MobilePhone.textValue:(item.mobilePhone?item.mobilePhone.textValue:'');
                         item.EMailAddress=item.EMailAddress?item.EMailAddress.textValue:(item.InternalEMailAddress?item.InternalEMailAddress.textValue:'');
                         item.pinyin=item.Pinyin?item.Pinyin.textValue:'';
-                        item.avatarUrl=Interface.pathUrl+':9091/api/one/user/avatar/'+item.id;
+                        item.avatarUrl=Interface.pathUrl+'/api/one/user/avatar/'+item.id;
                         var isPinyin = list.some(function (v) {
                             if(item.pinyin){
                                 return v.pinyin == (item.pinyin.textValue).slice(0, 1)

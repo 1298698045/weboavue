@@ -290,6 +290,38 @@
                                                             </a-menu>
                                                         </template>
                                                     </a-dropdown>
+                                                    <a-dropdown>
+                                    <div class="groupBtn show" style="margin-left: 10px;">
+                                        <span class="icon">
+                                            <!-- <TagOutlined /> -->
+                                            <Icon name="Tag" fill="#808080" width="16" hight="20" />
+                                            <!-- <Icon name="Tag" fill="rgb(0, 120, 212)" width="16" hight="20" v-if="formState.CalendarType*1==0" />
+                                            <Icon name="Tag" fill="rgb(14, 122, 11)" width="16" hight="20" v-if="formState.CalendarType*1==1" /> -->
+                                        </span>
+                                        <span class="text">{{CalendarType||'分类'}}</span>
+                                        <span class="arrowIcon">
+                                            <DownOutlined />
+                                        </span>
+                                    </div>
+                                    <template #overlay>
+                                        <a-menu>
+                                            <a-menu-item v-for="(item,index) in CalendarTypeList" :key="index">
+                                                <div class="menu-row" @click="selectOption('CalendarType',item.value)" :class="{'selectOptionActive':formState.CalendarType==item.value}">
+                                                    <span class="icon">
+                                                        <template v-if="formState.CalendarType==item.value">
+                                                            <CheckOutlined />
+                                                        </template>
+                                                    </span>
+                                                    <!-- <span class="icon">
+                                                        <Icon name="Tag" fill="rgb(0, 120, 212)" width="16" hight="20" v-if="item.value*1==0" />
+                                                        <Icon name="Tag" fill="rgb(14, 122, 11)" width="16" hight="20" v-if="item.value*1==1" />
+                                                    </span> -->
+                                                    <span class="menuText">{{item.label}}</span>
+                                                </div>
+                                            </a-menu-item>
+                                        </a-menu>
+                                    </template>
+                                </a-dropdown>
                                                 </div>
                                             </div>
                                         </div>
@@ -727,6 +759,7 @@
                 DayCalendarWrap.value.getQuery(data.calendarItem);
             }
         })
+        selectOption('CalendarType',(props.calendarType?props.calendarType:'0'));
     }
     const calendarDayChange=(e)=>{
         formState.StartDateTime = e.date;

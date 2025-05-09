@@ -46,7 +46,7 @@
             </div>
         </div>
         <NewSchedule :isShow="isSchedule" v-if="isSchedule" @cancel="cancelNewSchedule" />
-        <AddSchedule :isShow="isAddSchedule" v-if="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal" :paramsTime="paramsTime" />
+        <AddSchedule :isShow="isAddSchedule" :calendarType="calendarType" v-if="isAddSchedule" @cancel="cancelAddSchedule" :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" :id="id" @selectVal="handleNewScheduleVal" :paramsTime="paramsTime" />
         <ImportSchedule :isShow="isImport" v-if="isImport"  @cancel="cancelImport" />
         <ShareCalendar :isShow="isShare" v-if="isShare"  @cancel="cancelShare" :fileParams="fileParams" />
     </div>
@@ -111,9 +111,10 @@
             isCalendarToggleable: false,
             isCalendarUnsubscribable: false,
         },
-        showComponent:true
+        showComponent:true,
+        calendarType:''
     });
-    const { showComponent, CalendarActionsConfig,current, isSchedule, isAddSchedule, isShare, isImport, fileParams, size,id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
+    const { calendarType, showComponent, CalendarActionsConfig,current, isSchedule, isAddSchedule, isShare, isImport, fileParams, size,id,paramsTime,objectTypeCode,sObjectName,layoutName } = toRefs(data);
     const changeRadioGroup = (e) => {
         data.current = e;
     }
@@ -148,7 +149,8 @@
     }
     const getCalendarActionsConfig=(e)=>{
         if(e){
-            data.CalendarActionsConfig=e;
+            data.CalendarActionsConfig=e.CalendarActionsConfig;
+            data.calendarType=e.calendarType;
         }
     }
     watch(() => route, (newVal, oldVal) => {

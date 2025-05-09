@@ -355,7 +355,7 @@ const handlePreviewFile = (item) => {
     //downloadFile(item);
     openControlViewFile(
       item.id,
-      item.link,
+      item.createdByName,
       item.fileExtension,
       item.viewUrl,
       item.name
@@ -365,16 +365,13 @@ const handlePreviewFile = (item) => {
   }
 };
 //预览office文件
-const openControlViewFile = (id, url, type, link, name) => {
-  let userInfo = window.localStorage.getItem("userInfo");
-  var userId = "";
-  var userName = "";
-  if (userInfo) {
-    userInfo = JSON.parse(userInfo);
-    userId = userInfo.userId;
-    userName = userInfo.fullName;
-  }
-  window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + userName);
+const openControlViewFile = (id, username, type, link, name) => {
+  var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
+  var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
+  var iTop = 0; //获得窗口的垂直位置;
+  var iLeft = 0; //获得窗口的水平位置;
+  //window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username);
+  window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
 };
 //下载附件
 const downloadFile = (item) => {

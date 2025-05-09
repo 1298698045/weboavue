@@ -227,7 +227,8 @@
                 params: {
                     startDateTime: data.startDateTime,
                     endDateTime: data.endDateTime,
-                    calendarType: "day",
+                    queryType: "day",
+                    calendarType: '',
                     queryEvents: true,
                 }
             }]

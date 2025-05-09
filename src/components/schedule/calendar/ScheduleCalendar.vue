@@ -238,7 +238,7 @@
                 <div class="form">
                     <div class="formItem">
                         <span class="label">日程类型：</span>
-                        <a-select v-model:value="formState.type" style="width: 200px;" @change="calendarTypeChange(calendarType);">
+                        <a-select v-model:value="formState.type" style="width: 200px;" @change="(e)=>{formState.type=e;calendarTypeChange(calendarType);}">
                             <a-select-option value="0">工作安排</a-select-option>
                             <a-select-option value="1">个人</a-select-option>
                         </a-select>
@@ -635,7 +635,8 @@
         if(data.CalendarsData&&data.CalendarsData.length){
             data.CalendarActionsConfig=data.CalendarsData[0].calendar.CalendarActionsConfig;
         }
-        emit("getCalendarActionsConfig", data.CalendarActionsConfig);
+        let d={CalendarActionsConfig:data.CalendarActionsConfig,calendarType:formState.type}
+        emit("getCalendarActionsConfig", d);
     }
     const getMyCalendarList= () => {
         // let filterQuery='\nPrimaryUserId\teq\t'+data.CurrentUserId;
@@ -949,8 +950,8 @@
             data.CurrentUserName=userInfo.userName;
         }
         nextTick(()=>{
-            // calendarTypeChange(data.calendarType);
-            // getOtherCalendarList();
+            calendarTypeChange(data.calendarType);
+            getOtherCalendarList();
         })
     })
 </script>

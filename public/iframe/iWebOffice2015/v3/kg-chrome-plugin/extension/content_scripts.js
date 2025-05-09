@@ -36,7 +36,7 @@ function _unsupportedIterableToArray(r, a) {
  * 基础 url
  */
 window.__iWebOffice2015__baseUrl = ".";
-var isChromeExtension = chrome && chrome.runtime;
+var isChromeExtension = typeof(chrome)!='undefined' && chrome && chrome.runtime;
 var baseUrl = isChromeExtension ? chrome.runtime.getURL("./middleware/") : "".concat(window.__iWebOffice2015__baseUrl, "/kg-chrome-plugin/middleware/");
 
 /**

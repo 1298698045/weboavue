@@ -55,7 +55,7 @@ if ((window.ActiveXObject!=undefined) || (window.ActiveXObject!=null) ||"ActiveX
 	
 	//32位控件
 	if(window.navigator.platform == "Win32") 
-		str += ' CLASSID="CLSID:D89F482C-5045-4DB5-8C53-D2C9EE71D025"  codebase="iWebOffice2015.cab#version=0,,0,0"';
+		str += ' CLASSID="CLSID:D89F482C-5045-4DB5-8C53-D2C9EE71D025"  codebase="iWebOffice2015.cab#version=12,7,0,826"';
 	//64位控件
 	if (window.navigator.platform == "Win64")
 		str += ' CLASSID="CLSID:D89F482C-5045-4DB5-8C53-D2C9EE71D024"  codebase="iWebOffice2015.cab#version=12,7,0,826"';

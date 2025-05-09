@@ -472,7 +472,8 @@
                 "params": {
                     "startDateTime": daydate,
                     "endDateTime": daydate,
-                    "calendarType": 'day',
+                    "queryType": 'day',
+                    "calendarType": '',
                     "queryEvents": true
                 }
 

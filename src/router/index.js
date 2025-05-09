@@ -549,8 +549,13 @@ const staticRoutes = [
   },
   {
     path: "/lightning/r/office/view",
-    name: "OfficeView",
-    component: () => import("../views/fileAdmin/officeView.vue"),
+    name: "iWebOffice2015_v3",
+    component: () => import("../views/iWebOffice2015/v3/index.vue"),
+  },
+  {
+    path: "/lightning/r/office/view2",
+    name: "iWebOffice2015_v5",
+    component: () => import("../views/iWebOffice2015/v5/index.vue"),
   },
 ];
 

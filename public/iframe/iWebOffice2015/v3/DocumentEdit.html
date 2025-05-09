@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
  <title>金格科技-iWebOffice2015智能文档中间件示例程序</title>
- <meta http-equiv="X-UA-Compatible" content="IE=9" />
- <script src="kg-chrome-plugin/extension/content_scripts.js"></script>
+ <meta http-equiv="X-UA-Compatible" content="webkit" />
  <script src="js/jquery-1.4.2.min.js"></script>
+ <script src="js/newpolyfill.js"></script>
+ <script src="kg-chrome-plugin/extension/content_scripts.js"></script>
  <script src="js/WebOffice.js"></script>
  <script type="text/javascript">
  $(function(){
@@ -42,7 +43,6 @@
 </script>
 <link rel='stylesheet' type='text/css' href='css/iWebProduct.css' />
 
-
 <!-- 以下为2015主要方法 -->
 <script type="text/javascript">
  	var WebOffice = new WebOffice2015(); //创建WebOffice对象
@@ -60,17 +60,17 @@
 		if (r != null) return unescape(decodeURI(r[2])); return "";
 	}
 	function Load(){
+		WebOffice.setObj(document.getElementById('WebOffice2015'));
 		document.getElementById("Author").value=getQueryString('UserName')||'';
 		document.getElementById("Subject").value=getQueryString('FileName')||'';
 		document.getElementById("Author1").value=getQueryString('UserName')||'';
 		document.getElementById("Subject1").value=getQueryString('FileName')||'';
 
-		mServerUrl = 'http://' + window.location.host + "/#";
 		mFileType=getQueryString('FileType')?'.'+getQueryString('FileType'):'';
 		username=getQueryString('UserName')||'';
 		FileName=getQueryString('FileName')||'';
 	    RecordID=getQueryString('RecordID')||'';
-
+		mServerUrl = 'http://' + window.location.host + '/api/file/preview/';
 		// mServerUrl='http://demo.kinggrid.com:80/iWebOffice2015/OfficeServer';
 		// mFileType='.doc';
 		// username='OA管理员';
@@ -130,6 +130,8 @@
 			if (browser == "chrome") {
 				//金格浏览器关闭网页选项卡时，弹出提示对话框，只针对金格浏览器使用
 				//window.Setting.setCloseTabItemAsk("文档未保存，是否要关闭网页？");
+				// var MyCookie ="JSESSIONID="+ window.localStorage.getItem('token');
+				// WebOffice.INetSetCookie(mServerUrl, MyCookie);
 			}
 			
 			var colse_begin=new Date().getTime();
@@ -151,11 +153,17 @@
 			    //WebOffice.AddToolbar();//打开文档时显示手写签批工具栏
 			  //var close_time=new Date().getTime()-colse_begin;
 			 //alert("打开文档共耗时:["+close_time+"]毫秒");
-		    }
+		    }else{
+				WebOffice.CreateFile();
+			}
 			
  	  }catch(e){
-		if(WebOffice&&WebOffice.obj&& WebOffice.obj.FuncExtModule){
-			WebOffice.obj.FuncExtModule.alert(e.description);
+		console.log(e);
+		if(WebOffice&&WebOffice.obj){
+			if(WebOffice.obj.FuncExtModule){
+				WebOffice.obj.FuncExtModule.alert(e.description);
+			}
+			WebOffice.CreateFile();
 		}
  	  }
 	  //console.log(WebOffice)
@@ -164,7 +172,97 @@
 	 window.onload=function(){
 		Load();
 	 }
-	
+	 //保存文档
+	 function CallSave() {
+		$('#activeBox').hide()
+		if (!WebOffice.WebSave()) {
+			setTimeout(function(){
+				alert("保存正文失败！");
+				StatusMsg(WebOffice.Status);
+				$('#activeBox').show()
+				Load();
+			},500)
+			return false;
+		} else {
+			setTimeout(function(){
+				alert("保存正文成功！");
+				StatusMsg(WebOffice.Status);
+				$('#activeBox').show()
+				Load();
+			},500)
+		}
+	}
+	//新建文档
+	function linkDisabled(isindex) {
+            $('#activeBox').hide()
+            var mFlag = window.confirm("您确定新建空白文档吗？保存后原有文档将被覆盖！");
+            if (mFlag) {
+				$('#activeBox').show()
+                var fileType = $("#dropOpenType").val();
+                if (fileType == "3") {
+                   
+                } else {
+                    if (isindex == 0) {
+                        var sourceTypeId = $("input[name='FileType']").val();
+						//WebOffice.setObj(document.getElementById('WebOffice2015'));
+                        if (fileType == "1" || fileType == null) {
+                            $("input[name='FileType']").val(".doc");
+                            WebOffice.FileType = ".doc";
+                        } else if (fileType == "2") {
+                            $("input[name='FileType']").val(".xls");
+                            WebOffice.FileType = ".xls";
+                        }
+                        //} else if (fileType == "3") {
+                        //    $("input[name='FileType']").val(".ppt");
+                        //    WebOffice.FileType = ".ppt";
+                        //}
+                        $("#dropOpenType").val(0);
+						WebOffice.AppendMenu("1","打开本地文件(&L)");    //多次给文件菜单添加
+						WebOffice.AppendMenu("2","保存本地文件(&S)");
+						WebOffice.AppendMenu("3","-");
+						WebOffice.AppendMenu("4","打印预览(&C)");
+						WebOffice.AppendMenu("5","退出打印预览(&E)");
+						WebOffice.AppendMenu("6","全屏还原(&Q)");
+						WebOffice.AddCustomMenu();                       //一次性多次添加包含二次菜单
+						//WebOffice.WebSetSkin(0xCC99CC, 0xCC99CC, 0xCC99CC, 0xFFFFFF, 0xAD8DAD, 0x663366);                        //设置皮肤
+						WebOffice.Skin('purple');                          //设置皮肤：紫色
+						WebOffice.HookEnabled();
+						WebOffice.SetCaption();
+						WebOffice.SetUser(username);
+						
+						WebOffice.ChangeLanguage(0x804);                 //英文：0x409，简体中文(0x804)，繁体中文（台湾）(0x404)葡萄牙语0xd04
+						WebOffice.ShowOpenProgress(false);
+						WebOffice.obj.FuncExtModule.ShowWindow = false;                  
+						//WebOffice.UpdateSignature(true);               	/*设置没有安装Office360签章时，控件中打开文档后是否进行验章及刷章工作*/
+						
+						//alert(mServerUrl);
+						//WebOffice.obj.WebSetCabLocation("http://192.168.0.81:8080/iWebOffice2015_ppapi/iWebOffice2015.zip");
+						
+						//WebOffice.obj.WebSetVendor(true);                       //当电脑同时安装WPS和Office软件时，true设置控件中加载WPS打开文档，false设置控件中加载Office打开文档
+						
+						//alert("111");
+						
+						WebOffice.obj.SetEnableBtn = true;
+						WebOffice.ShowMenuBar(true);//显示菜单栏
+						WebOffice.ShowToolBars(true);//显示工具栏
+						
+						WebOffice.ShowCustomToolbar(false); //显示自定义工具栏
+						
+						WebOffice.AddToolButton();   //添加自定义工具栏按钮
+						WebOffice.AddToolbar();
+						
+						//WebSetRibbonUIXML();  ////设置OFFICE2007的选项卡显示
+						
+						WebOffice.ModifyReview(); //设置接受修订、拒绝修订禁用
+						WebOffice.CreateFile();
+                    }
+                }
+                //$('#activeBox').show()
+            }
+            else {
+                //$('#activeBox').show()
+            }
+        }
 	 //作用：保存文档
 	function SaveDocument(){
 		//alert(WebOffice.WebSave());
@@ -230,8 +328,6 @@
 	//作用:图片章
 	function WebOpenSignature(){
 		
-	
-		
     var FunExt = WebOffice.obj.FuncExtModule;
 		FunExt.SetServerType(1);
     	//FunExt.WebUrl = WebOffice.WebUrl;
@@ -293,9 +389,6 @@
 	     StatusMsg("隐藏痕迹...");
 	  }
 	}
-	
-	
-	
 	
 	//接受文档中全部痕迹
 	function WebAcceptAllRevisions(){
@@ -1148,7 +1241,6 @@ WebOffice.obj.FuncExtModule.alert("OnFullSizeBefore事件响应成功");
 //DelFile();
 </script>
 
-
 <!--以下是多浏览器的事件方法 -->
 <script >
 function OnReady(){
@@ -1280,11 +1372,16 @@ function OnOLECommand(OLEFlag, bCancel)
 	}
 
 </script>
-<!--End以下是多浏览器的事件方法 -->
+<!--End 多浏览器的事件方法 -->
 
+<!--End 2015主要方法 -->
 <style>
 	.InputLine2{
 		border-bottom: 1px solid #000;
+		width: 200px;
+		overflow: hidden !important;
+		display: inline-block;
+		text-overflow: ellipsis;
 	}
 	.title,.InputLine2{
 		background: transparent;
@@ -1296,13 +1393,16 @@ function OnOLECommand(OLEFlag, bCancel)
 	.warningtext{
 		font-size:13px;
 		color:red;
-		margin: 0px 20px 5px;
+		margin: 0px 15px 3px;
 	}
 	.btn_input{
 		cursor: pointer;
 	}
 	.title1{
 		height:34px;
+	}
+	.title1 span{
+		padding-left: 20px;
 	}
 	.title2{
 		text-align: right;
@@ -1314,39 +1414,40 @@ function OnOLECommand(OLEFlag, bCancel)
 	#showtr{
 		height: calc(100% - 100px);
 	}
+	#activeTable{
+		height: 100%;
+	}
+	#WebOffice2015{
+		height: 100%;
+	}
 </style>
-
-<!--End 为2015主要方法 -->
-
-
 </head>
 <body  style="overflow-y:hidden;overflow-x:hidden" onUnload="onUnload()">
 <table id="maintable"  cellspacing='0' cellpadding='0' >
  <!-- head -->
- <!-- <tr><td colspan="2"  height="61px"><table cellspacing='0' cellpadding='0' cellspacing='0' cellpadding='0'  id="header"><tr ><td ><img src="css/logo.jpg"/></td><td><span>　iWebOffice2015</span> 在线管理中间件示例程序</td></tr></table></td></tr>  -->
  <tr><td class="title title1">
     <span>标题：<input disabled type=text name="Subject1" id="Subject1"   onchange=" document.getElementById('Subject').value = this.value;" value="" class="InputLine2"  onblur="if(this.value.length>20){this.value='请输入主题';StatusMsg('主题不能超过50个字');}"/> </span>
 	<span>作者：<input disabled type=text onchange=" document.getElementById('Author').value = this.value;" name="Author1"  id="Author1" value="" class="InputLine2" onblur="if(this.value.length>8){this.value='体验用户';StatusMsg('作者不能超过8个字');}" /></span>
  </td>
  <td class="title title2">
-	<select name="dropOpenType" id="dropOpenType" style="height: 23px;color:#000;cursor: pointer;">
-		<option selected="selected" value="0">新建文档</option>
-	   <option  value="1">Word文档</option>
+	<select name="dropOpenType" id="dropOpenType" style="height: 23px;color:#000;cursor: pointer;" onchange="linkDisabled(0)">
+	   <option selected="selected" value="0">新建文档</option>
+	   <option value="1">Word文档</option>
 	   <option value="2">Excel文档</option>
    </select>
-	<input type="button" class="btn_shuaxin" value="应用模板" />
-    <input type="button" class="btn_sjbd" value="电子签章" />
-	<input type="button" class="btn_input" value="刷新" />
-	<input type="button" class="btn_input" value="重新载入" />
-	<input type="button" class="btn_input" value="打印" />
-	<input type="button" class="btn_input" value="另存为本地" />
-	<input type="button" class="btn_input" value="另存为本地PDF" />
-	<input type="button" class="btn_input" value="文字批注" />
-	<input type="button" class="btn_input" value="显示痕迹">
-	<input type="button" class="btn_input" value="隐藏痕迹">
-	<input type="button" class="btn_input" value="接受修订"/>
-	<input type="button" class="btn_input" onclick="javascript: SaveDocument()" value="保存" />
-	<input type="button" class="btn_input" onclick="javascript: CloseDocument()" value="关闭" />
+	<input type="button" class="btn_input" onclick="WebUseTemplate('Temtwo.doc')" value="应用模板" />
+    <input type="button" class="btn_input" onclick="WebOffice.TextWriting()" value="电子签章" />
+	<input type="button" class="btn_input" onclick="Load()" value="刷新" />
+	<input type="button" class="btn_input" onclick="Load()" value="重新载入" />
+	<input type="button" class="btn_input" onclick="WebOffice.WebOpenPrint()" value="打印" />
+	<input type="button" class="btn_input" onclick="WebOffice.WebSaveLocal()" value="另存为本地" />
+	<input type="button" class="btn_input" onclick="WebOffice.WebSavePDF()" value="另存为本地PDF" />
+	<input type="button" class="btn_input" onclick="HandWriting()" value="文字批注" />
+	<input type="button" class="btn_input" onclick="ShowRevision(true)" value="显示痕迹">
+	<input type="button" class="btn_input" onclick="ShowRevision(false)" value="隐藏痕迹">
+	<input type="button" class="btn_input" onclick="WebOffice.ModifyReview()" value="接受修订"/>
+	<input type="button" class="btn_input" onclick="CallSave()" value="保存" />
+	<!-- <input type="button" class="btn_input" onclick="CloseDocument()" value="关闭" /> -->
 </td>
  </tr> 
  <tr><td style="height: 30px;" colspan="2">
@@ -1354,224 +1455,31 @@ function OnOLECommand(OLEFlag, bCancel)
 </td></tr>
  <!-- end head -->
  
- <!-- showList -->
  <tr><td id="showtr" colspan="2"  valign="top">
-  <table id="functionBox" border="0">
+  <table id="functionBox">
     <tr>
      <td  id="showTD" width="204px" height="30px"  valign="top">
-       <table id="functionTable"   cellspacing='4' cellpadding='0'  >    
-        <tr  id="disPlayNone"><td height="30px" class="tableFather" >    功能列表&lt;  </td></tr>
-         <!--tr id="handWriting2" class="<%=mDisabled+mWord%>" class="test"><td valign="middle" class="tableFather">
-		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle">签批　　<span>+</span></td></tr></table>
-	       <div id="read8"  class="hideDiv">
-			 <table id="readT8" width="100%" cellspacing='0' cellpadding='0'>
-				<tr><td class="dot-size"><a href="#"  onClick="HandWriting();">手写签名</a></td></tr>
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.StopHandWriting();">停止签批</a></td></tr>
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.TextWriting();">文字签名</a></td></tr>
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.ShapeWriting();">图形签名</a></td></tr>
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.RemoveLastWriting();">返回上一次</a></td></tr>
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.ShowWritingUser(false,WebOffice.UserName);">显示当前用户签批</a></td></tr>
- 			 </table>
-		  </div>
-		  </td></tr-->  
-        <tr  class="test"><td valign="middle" class="tableFather">
-  		  <table class="tableAll" cellspacing='0' style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 文件　　<span>+</span></td></tr></table>
-	       <div id="read0"  class="hideDiv" >
-				<table id="readT0"   width="100%" cellspacing='0' cellpadding='0'><!-- 文档阅读功能子菜单 -->
-					<!--tr><td class="dot-size"><a href="#" onClick="WordtoPDFSign()">Word转PDF签章</a></td></tr-->
-					<!--tr><td class="dot-size"><a href="#" onClick="WordtoOFDSign()">Word转OFD签章</a></td></tr-->
-					<tr <%=mEditType.equalsIgnoreCase("0")?"class=\"disabled\"":""%>><td class="dot-size"><a href="#" onclick='WebOffice.CreateFile();'>新建文件</a></td></tr>
-					<tr <%=mEditType.equalsIgnoreCase("0")?"class=\"disabled\"":""%>><td class="dot-size"><a href="#" onclick="WebOpenLocal();">打开本地文件</a></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="WebOffice.WebSaveLocal();">另存为</a>  <!--true禁止,false启用--></td></tr>
-					<tr <%=mEditType.equalsIgnoreCase("0")?"class=\"disabled\"":""%>><td   class="dot-size"><a href="#" onClick="WebOffice.WebPageSetup()">页面设置</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="WebOffice.WebOpenPrint()">打印文档</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="TestPrint()">静默打印</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="WebOffice.obj.FuncExtModule.alert('当前控件版本为：'+WebOffice.Version());">显示版本</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="WebOffice.Close()">关闭文档</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="WebOffice.WebObject.Activate(true)">激活文档</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="DocIsModify()">文档是否修改</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="GetEditer()">文档编辑器</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="WebOffice.obj.FuncExtModule.alert(WebOffice.WebObject.ISPGFDoc);">IsPGFDoc</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="HrefLocation()">当前页面路径</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="WebApplication()">文档打开类型</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="WebFileExists()">文档是否存在</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#" onClick="DirectoryExists()">文件目录是否存</a> <!--true显示,false隐藏--></td></tr>
-					<tr><td class="dot-size"><a href="#"  onclick="WebOffice.WebSetProtect(true,'123')">保护文档</a></td></tr>
-				<tr><td class="dot-size"><a href="#" onclick="WebOffice.WebSetProtect(false,'123')">解除保护</a></td></tr>
-				 </table><!--END 文档阅读功能子菜单 -->
-		   </div>
-		  </td></tr> 
-		 <tr class="<%=mDisabled+mWord%>" class="test" ><td valign="middle" class="tableFather">
-		   <table class="tableAll" cellspacing='0' style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 插入　　<span>+</span></td></tr></table>
-	       <div id="read1"  class="hideDiv">
-				       <table id="readT1" width="100%" cellspacing='0' cellpadding='0'><!-- 文档制功能子菜单 -->
-					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size" ><a href="#" <%=mDisabled%>  onClick="WebOffice.WebInsertImage('image','GoldgridLogo.jpg');">插入远程图片</a></td></tr>
-					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"  ><a href="#" <%=mDisabled%>  onClick="WebOpenSignature();">图片章</a></td></tr>
-					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"  ><a href="#" <%=mDisabled%>  onClick="WebGetWordContent();">取Word内容</a></td></tr>
-					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"  ><a href="#" <%=mDisabled%> onClick="WebSetWordContent();">写Word内容</a></td></tr>
-					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#" <%=mDisabled%>   onClick="WebOffice.WebObject.ActiveDocument.ActiveWindow.ActivePane.View.SeekView=9;">插入页眉</a></td></tr>
-					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#" <%=mDisabled%> onClick="WebOffice.WebPageCode()">插入页码</a></td></tr>
-					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebDocumentPageCount();">文档页数</a></td></tr>	
-					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebInsertVBA();">VBA套红定稿</a></td></tr>
-							  <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebWaterMark();">插入水印</a></td></tr>
-							  <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebDeleteWaterMark();">删除水印</a></td></tr>
-							  <!--tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebOffice.WebSetEndnotes('金格测试iWebOffice2020','添加自定义信息的尾注参考文献添加自定义信息的尾注1234567890asdfghjkl');">科大讯飞插入正文</a></td></tr>
-							   <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#"  onclick="WebLocalFileSize()">文档字节大小</a></td></tr-->
-					    </table><!--END 文档控制功能子菜单 -->
-		  </div>
-		  </td></tr>
-		 		 
-		 <tr  class="test" ><td valign="middle" class="tableFather">
-		   <table class="tableAll" cellspacing='0' style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 插入　　<span>+</span></td></tr></table>
-	       <div id="read8"  class="hideDiv">
-				       <table id="readT8" width="100%" cellspacing='0' cellpadding='0'><!-- 文档制功能子菜单 -->
-						<tr  class="<%=mDisabled+mExcel%>"><td class="dot-size"><a href="#"   onClick="WebGetExcelContent();">用Excel求和</a></td></tr>
-					    <tr  class="<%=mDisabled+mExcel%>"><td class="dot-size"><a href="#"  onClick="WebSheetsLock();">锁定工作表</a></td></tr>
-						<!--tr  class="<%=mDisabled+mExcel%>"><td class="dot-size"  ><a href="#"  onClick="WebOpenSignature();">图片章</a></td></tr-->
-					    </table><!--END 文档控制功能子菜单 -->
-		  </div>
-		  </td></tr>		 
-		 
-		 <tr  class="<%=mDisabled+mWord%>" class="test" ><td valign="middle" class="tableFather">
-		   <table class="tableAll" cellspacing='0' style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 痕迹　　<span>+</span></td></tr></table>
-	       <div id="read2"  class="hideDiv">
-				       <table id="readT2" width="100%" cellspacing='0' cellpadding='0'><!-- 文档制功能子菜单 -->
-					          <tr  class="<%=mDisabled+mWord%>" style="height:30px"><td class="dot-size"><a href="#" style="height:30px" <%=mDisabled%> onClick="ShowRevision(true)">显示痕迹</a></td></tr>
-					          <tr  class="<%=mDisabled+mWord%>" style="height:30px"><td class="dot-size"><a href="#" style="height:30px" <%=mDisabled%> onClick="ShowRevision(false)">隐藏痕迹</a></td></tr>
-					          <tr  class="<%=mDisabled+mWord%>" style="height:30px"><td class="dot-size"><a href="#" style="height:30px" <%=mDisabled%> onClick="WebAcceptAllRevisions()">清除痕迹</a></td></tr>
-							  <!--tr  class="<%=mDisabled+mWord%>" style="height:30px"><td class="dot-size"><a href="#" style="height:30px" <%=mDisabled%> onClick="WebOffice.ClearMarks()">清除Rounded痕迹</a></td></tr--> 							  
-					    </table><!--END 文档控制功能子菜单 -->
-		  </div>
-		  </td></tr>		  
-		  <tr class="test"><td valign="middle" class="tableFather">
-		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 视图　　<span>+</span></td></tr></table>
-	       <div id="read3"  class="hideDiv">
-			 <table id="readT3" width="100%" cellspacing='0' cellpadding='0'><!-- 附加功能示例子菜单 -->
-	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowTitleBar(true)">显示标题栏</a></td></tr>
-	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowTitleBar(false)">隐藏标题栏</a></td></tr>
-	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowMenuBar(true);">显示菜单栏</a></td></tr>
-	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowMenuBar(false);">隐藏菜单栏</a></td></tr>
-	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowToolBars(true)">显示工具栏</a></td></tr>
-	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowToolBars(false)">隐藏工具栏</a></td></tr>
-	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowStatusBar(true)">显示状态栏</a></td></tr>
-	          <tr><td class="dot-size"><a href="#"  onclick="WebOffice.ShowStatusBar(false)">隐藏状态栏</a></td></tr>
-	          <tr><td class="dot-size"><a href="#"  onclick="FullSize(true)">全屏切换</a></td></tr>
-			  <!--tr><td class="dot-size"><a href="#"  onclick="disPlay1()">显示控件</a></td></tr>
-			  <tr><td class="dot-size"><a href="#"  onclick="disPlay()">隐藏控件</a></td></tr-->
-			  <tr><td class="dot-size"><a href="#"  onclick="WebOffice.obj.HidePlugin(0)">隐藏控件hide</a></td></tr>
-			   <tr><td class="dot-size"><a href="#"  onclick="WebOffice.obj.HidePlugin(1)">显示控件hide</a></td></tr>
-			   <!--tr><td class="dot-size"><a href="#"  onclick="disPlay2()">隐藏控件2显示背景</a></td></tr-->
- 			 </table><!--END 附加功能示例能子菜单 -->
-		  </div>
-		  </td>
-		  </tr>  
-       		 <tr class="<%=mDisabled%>" class="test"><td valign="middle" class="tableFather">
-		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 权限　　<span>+</span></td></tr></table>
-	       <div id="read4"  class="hideDiv">
-			 <table id="readT4" width="100%" cellspacing='0' cellpadding='0'><!-- 附加功能示例子菜单 -->
-				<tr><td class="dot-size"><a href="#"  onclick="WebOffice.WebSetProtect(true,'123')">保护文档</a></td></tr>
-				<tr><td class="dot-size"><a href="#" onclick="WebOffice.WebSetProtect(false,'123')">解除保护</a></td></tr>
-				<tr id="enableCopy1"><td class="dot-size"><a href="#" onclick="WebOffice.WebEnableCopy(true)">允许拷贝</a></td></tr>
-				<tr id="enableCopy2"><td class="dot-size"><a href="#" onclick="WebOffice.WebEnableCopy(false)">禁止拷贝</a></td></tr>
-				<tr id="areaProtect"><td class="dot-size"><a href="#" onclick="WebAreaProtect()">添加区域保护</a></td></tr>
-				<tr id="areaUnprotect"><td class="dot-size"><a href="#" onclick="WebAreaUnprotect()">取消区域保护</a></td></tr>
- 			 </table><!--END 附加功能示例能子菜单 -->
-		  </div>
-		  </td></tr>
-		   <tr class="<%=mDisabled+mWord%>" class="test" ><td valign="middle" class="tableFather">
-		   <table class="tableAll" cellspacing='0' style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 模板　　<span>+</span></td></tr></table>
-	       <div id="read5"  class="hideDiv">
-				       <table id="readT5" width="100%" cellspacing='0' cellpadding='0'><!-- 文档制功能子菜单 -->
-					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#" <%=mDisabled%> onClick="WebUseTemplate('Temone.docx')">模板套红一</a></td></tr>
-					          <tr  class="<%=mDisabled+mWord%>"><td class="dot-size"><a href="#" <%=mDisabled%> onClick="WebUseTemplate('Temtwo.doc')">模板套红二</a></td></tr>
-					    </table><!--END 文档控制功能子菜单 -->
-		  </div>
-		  </td></tr>
-		  	        
- 		  <tr class="<%=mDisabled+mWord%>" class="test" ><td valign="middle" class="tableFather">
-		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 书签　　<span>+</span></td></tr></table>
-	       <div id="read6"  class="hideDiv">
-			 <table id="readT6" width="100%" cellspacing='0' cellpadding='0'><!-- 附加功能示例子菜单 -->
-				<tr><td class="dot-size"><a href="#"  onClick="SetBookmarks();">书签填充</a></td></tr>
-				<tr id="OpenBookMarks"><td class="dot-size"><a href="#"  onClick="WebOpenBookMarks();">打开书签窗体</a></td></tr>
-				<tr><td class="dot-size"><a href="#"  onClick="WebAddBookMarks();">添加书签</a></td></tr>
- 			    <tr><td class="dot-size"><a href="#"  onClick="WebFindBookMarks();">定位书签</a></td></tr>
- 			 <!--    <tr><td class="dot-size"><a href="#"  onClick="WebDelBookMarks();">删除书签</a></td></tr> -->
- 			 </table><!--END 附加功能示例能子菜单 -->
-		  </div>
-		  
-		  </td></tr>   
- 		  <tr class="test" ><td valign="middle" class="tableFather">
-		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 皮肤　　<span>+</span></td></tr></table>
-	       <div id="read7"  class="hideDiv">
-			 <table id="readT7" width="100%" cellspacing='0' cellpadding='0'><!-- 附加功能示例子菜单 -->
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.Skin('purple');">　紫色</a></td></tr>
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.Skin('black');">　黑色</a></td></tr>
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.Skin('white');">　银色</a></td></tr>
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.Skin('blue');">　蓝色</a></td></tr>
- 			    <tr><td class="dot-size"><a href="#"  onClick="WebOffice.Skin('yellow');">　金黄色</a></td></tr>
- 			 
- 			 </table><!--END 附加功能示例能子菜单 -->
-		  </div>
-		  </td></tr>  
-		  
-    <tr id="expendFunction" class="<%=mDisabled+mWord%>" class="test" ><td valign="middle" class="tableFather">
-		   <table class="tableAll" cellspacing='0'  style="height:30px" cellpadding='0'><tr><td class="titleStyle"> 扩展功能　　<span>+</span></td></tr></table>
-	       <div id="read9"  class="hideDiv">
-			 <table id="readT9" width="100%" cellspacing='0' cellpadding='0'><!-- 附加功能示例子菜单 -->
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.WebSavePDF();">保存为PDF </a></td></tr>
-				<tr><td class="dot-size"><a href="#"  onClick="WebOffice.WebSaveHtml();">保存为本地html</a></td></tr>
- 			 	<!--tr class="<%=mDisabled+mWord+mWPS%>"><td class="dot-size"><a href="#"  onClick="WebRunMacro();">运行宏</a></td></tr -->
- 			 </table><!--END 附加功能示例能子菜单 -->
-		  </div>
-		  </td></tr> 
-		  <tr><td>&nbsp;</td></tr>     
-        		   	<tr>
-					<td style="border: 0">&nbsp;
-					<form id="iWebOfficeForm"   method="post" action="DocumentSave.jsp" >
-					    <input type="hidden" name="RecordID" value="<%=mRecordID%>"/>
-					    <input type="hidden" name="Template" value="<%=mTemplate%>"/>
-					    <input type="hidden" id="FileType" name="FileType" value="<%=mFileType%>"/>
-					    <input type="hidden" name="EditType" value="<%=mEditType%>"/>
-					    <input type="hidden" name="HTMLPath" value="<%=mHTMLPath%>"/>
-					    <input type="hidden" id="Subject" name="Subject" value="<%=mSubject%>"/>
-					    <input type="hidden" id="Author" name="Author" value="<%=mAuthor%>"/> 
-					    <input type="hidden" name="FileDate" value="<%=mFileDate%>"/>
-                   </form></td>
-				  </tr>
-       </table>
-
+		<table id="functionTable" cellspacing='4' cellpadding='0'>
+			<tr>
+				<td style="border: 0">&nbsp;
+					<form id="iWebOfficeForm" method="post" action="DocumentSave.jsp">
+						<input type="hidden" name="RecordID" value="" />
+						<input type="hidden" name="Template" value="" />
+						<input type="hidden" id="FileType" name="FileType" value="" />
+						<input type="hidden" name="EditType" value="" />
+						<input type="hidden" name="HTMLPath" value="" />
+						<input type="hidden" id="Subject" name="Subject" value="" />
+						<input type="hidden" id="Author" name="Author" value="" />
+						<input type="hidden" name="FileDate" value="" />
+					</form>
+				</td>
+			</tr>
+		</table>
      </td>
      <td id="activeBox">        
       <table id="activeTable">
-        <!--tr id="handWriting1" class="<%=mDisabled+mWord%>">
-     	<td class="handWriting" style="width:8%">手写批注颜色:</font></td>
-		  	<td style="width:7%"><select id="PenColor">
-		  		<option value="255"  selected="selected">红色</option>
-		  		<option value="16711680"  >蓝色</option>
-		  		<option value="65535"  >黄色</option>
-		  		<option value="0"  >黑色</option>
-		  		<option value="32768"  >绿色</option>
-		  	</select></td>
-     <td class="handWriting" style="width:8%">手写批注笔宽:</td>
-		  	<td style="width:7%"><select id="PenWidth">
-		  		<option value="1">一线</option>
-		  		<option value="2">二线</option>
-		  		<option value="3">三线</option>
-		  		<option value="4" selected="selected">四线</option>
-		  		<option value="5">五线</option>
-		  		<option value="6">六线</option>
-		  		<option value="7">七线</option>
-		  		<option value="8">八线</option>
-		  	</select>
-	 </td>	 
-	 <td style="width:10%"><input type="button" value="手写签批" class="hand2" onclick="HandWriting();"/></td>
-	 <td style="width:10%"><input type="button" value="停止签批" class="hand2" onclick="WebOffice.StopHandWriting();"/></td>
-	 <td style="width:10%"><input type="button" value="返回上一次" class="hand2" onclick="WebOffice.RemoveLastWriting();"/></td>
-	 <td class="handhint" style="width:40%"></>温馨提示:鼠标右健可停止签批!</td>
-	</tr-->
         <tr>
-		<td id = "2015id" colspan="8" id="activeTd" >&nbsp;
+		<td id = "2015id" colspan="8" id="activeTd" >
 		<script src="js/iWebOffice2015.js"></script>
 		</td>
 	    </tr>
@@ -1584,7 +1492,6 @@ function OnOLECommand(OLEFlag, bCancel)
     </tr>
   </table>
  </td></tr>
- <!-- end showList -->
   
  <!-- footer -->
  <!-- <tr ><td colspan="2" height="30px"  class="footer"><table><tr><td style="text-align:center;">江西金格科技股份有限公司 版权所有</td></tr></table></td></tr> -->

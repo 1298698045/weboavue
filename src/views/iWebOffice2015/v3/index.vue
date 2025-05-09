@@ -32,9 +32,8 @@ import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 const data = reactive({
-  // iframeUrl: "https://demo.kinggrid.com/iWebOffice2015/DocumentEdit.jsp?RecordID=" + route.query.id
   iframeUrl:
-    "/iframe/iWebOffice/DocumentEdit.html?RecordID=" +
+    "/iframe/iWebOffice2015/v3/DocumentEdit.html?RecordID=" +
     route.query.id +
     "&FileType=" +
     route.query.FileType +

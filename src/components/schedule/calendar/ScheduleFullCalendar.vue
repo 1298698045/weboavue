@@ -721,18 +721,19 @@ const getQuery = () => {
         params: {
           startDateTime: props.startDateTime,
           endDateTime: props.endDateTime,
-          calendarType: "month",
+          queryType: "month",
+          calendarType: props.calendarType || "",
           queryEvents: true,
         },
       },
     ],
   };
   if (data.calendarOptions.initialView == "dayGridMonth") {
-    d.actions[0].params.calendarType = "month";
+    d.actions[0].params.queryType = "month";
   } else if (data.calendarOptions.initialView == "timeGridWeek") {
-    d.actions[0].params.calendarType = "week";
+    d.actions[0].params.queryType = "week";
   } else if (data.calendarOptions.initialView == "timeGridDay") {
-    d.actions[0].params.calendarType = "day";
+    d.actions[0].params.queryType = "day";
   }
   let obj = {
     message: JSON.stringify(d),

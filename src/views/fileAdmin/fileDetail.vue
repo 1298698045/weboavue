@@ -193,7 +193,7 @@ const getFileDetail = () => {
                             id: item.id,
                             Name: item.name,
                             viewUrl:item.viewUrl,
-                            ThumbnailUrl: item.viewUrl ? Interface.pathUrl + ':9091' + item.viewUrl : '',
+                            ThumbnailUrl: item.viewUrl ? Interface.pathUrl + item.viewUrl : '',
                             CreatedBy: item.createdByName,
                             CreatedOn: item.createdOn
                         })
@@ -212,8 +212,8 @@ const getFileDetail = () => {
                     } else {
                         item.icon = '/img/filetype/File.png';
                     }
-                    item['link'] = item.viewUrl ? Interface.pathUrl + ':9091' + item.viewUrl : '';
-                    item['ThumbnailUrl'] = item.viewUrl ? Interface.pathUrl + ':9091' + item.viewUrl : '';
+                    item['link'] = item.viewUrl ? Interface.pathUrl + item.viewUrl : '';
+                    item['ThumbnailUrl'] = item.viewUrl ? Interface.pathUrl + item.viewUrl : '';
                     item.CreatedBy = item.createdByName;
                     item.CreatedOn = item.createdOn;
                     item.Name = item.name;
@@ -271,56 +271,39 @@ const handleOpenFile = (item) => {
             downloadUrl: item.downloadUrl
         };
         data.isTxt = true;
+    } else if (
+      item.fileExtension == "docx" ||
+      item.fileExtension == "pptx" ||
+      item.fileExtension == "xlsx" ||
+      item.fileExtension == "doc" ||
+      item.fileExtension == "ppt" ||
+      item.fileExtension == "xls"
+    ) {
+      //downloadFile(item);
+      openControlViewFile(
+        item.id,
+        item.createdByName,
+        item.fileExtension,
+        item.viewUrl,
+        item.name
+      );
     } else {
-        // openControlViewFile(
-        //     item.link,
-        //     item.fileExtension,
-        //     item.viewLink,
-        //     item.name + "." + item.fileExtension
-        // );
-        handleDownLoadFile(item);
+      downloadFile(item);
     }
 };
-const handleDownLoadFile = (item) => {
-  if (item.downloadUrl) {
-    let url = item.downloadUrl;
-    window.open(url);
-  }
+//下载附件
+const downloadFile = (item) => {
+  let url = item.downloadUrl;
+  window.open(url);
 };
-//文件预览
-let KGBrowser1 = "";
-if (typeof KGBrowser != "undefined") {
-    KGBrowser1 = new KGBrowser();
-}
-console.log("KGBrowser1", KGBrowser1);
-const RunKGBrowser = (url) => {
-    var strOptions = "$skin=1$tabshow=1";
-    var search = "";
-    if (url) {
-        search = url.split("?")[1] || "";
-    }
-    console.log(search, "123123");
-    var str2 = "/jgfiles/KGBrowser/Word.aspx?" + search;
-    if (KGBrowser1 != "" && KGBrowser1 != "undefined") {
-        KGBrowser1.openWindowBrowser(
-            str2 + "$skin=0$titlecolor=f6f6f6$tabshow=1",
-            strOptions,
-            false
-        );
-    }
-};
-const openControlViewFile = (url, type, link, name) => {
-    var abc = isSupportOfficePlug();
-    if (!abc) {
-        if (
-            (url && url.indexOf("/jgfiles/samples") != -1) ||
-            (link && link.indexOf("/jgfiles/samples") != -1)
-        ) {
-            RunKGBrowser(url);
-        } else {
-        }
-    } else {
-    }
+//预览office文件
+const openControlViewFile = (id, username, type, link, name) => {
+  var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
+  var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
+  var iTop = 0; //获得窗口的垂直位置;
+  var iLeft = 0; //获得窗口的水平位置;
+  //window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username);
+  window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
 };
 </script>
 <style lang="less" scoped>

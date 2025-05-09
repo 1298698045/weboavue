@@ -141,7 +141,7 @@
                   </template>
                   <template v-if="column.key == 'fileExtension'">
                     <div class="fileItem" @click="handleOpenFile(record)">
-                      <img :src="Interface.pathUrl + ':9091' + record.icon" />
+                      <img :src="Interface.pathUrl + record.icon" />
                     </div>
                   </template>
                   <template v-if="column.key === 'name'">
@@ -174,7 +174,7 @@
                                 ? record.privilege.canDownload ||
                                 record.privilege.canAdmin
                                 : record.canAdmin == 'true')
-                            " @click="handleDownLoadFile(record)">下载</a-menu-item>
+                            " @click="downloadFile(record)">下载</a-menu-item>
 
                             <a-menu-item v-if="
                               record.type == 'folder' &&
@@ -721,7 +721,7 @@ const getQuery = () => {
             id: item.id,
             Name: item.name,
             viewUrl: item.viewUrl,
-            ThumbnailUrl: item.viewUrl ? Interface.pathUrl + ':9091' + item.viewUrl : '',
+            ThumbnailUrl: item.viewUrl ? Interface.pathUrl + item.viewUrl : '',
             CreatedBy: item.createdByName,
             CreatedOn: item.createdOn
           })
@@ -740,8 +740,8 @@ const getQuery = () => {
         } else {
           item.icon = '/img/filetype/File.png';
         }
-        item['link'] = item.viewUrl ? Interface.pathUrl + ':9091' + item.viewUrl : '';
-        item['ThumbnailUrl'] = item.viewUrl ? Interface.pathUrl + ':9091' + item.viewUrl : '';
+        item['link'] = item.viewUrl ? Interface.pathUrl + item.viewUrl : '';
+        item['ThumbnailUrl'] = item.viewUrl ? Interface.pathUrl + item.viewUrl : '';
         item.CreatedBy = item.createdByName;
         item.CreatedOn = item.createdOn;
         item.Name = item.name;
@@ -862,33 +862,6 @@ const RunKGBrowser = (url) => {
     );
   }
 };
-const openControlViewFile = (id,url, type, link, name) => {
-  // var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
-  // var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
-  // var iTop = 0; //获得窗口的垂直位置;
-  // var iLeft = 0; //获得窗口的水平位置;
-  let userInfo = window.localStorage.getItem('userInfo');
-  var userId = '';
-  var userName = '';
-  if (userInfo) {
-    userInfo = JSON.parse(userInfo);
-    userId = userInfo.userId;
-    userName = userInfo.fullName;
-  }
-  window.open("/#/lightning/r/office/view?id=" + id + "&FileType=" + type + "&FileName=" + name + "&UserName=" + userName);
-  // window.open("/#/lightning/r/office/view?id=" + id + "&FileType=" + type + "&FileName=" + name + "&UserName=" + userName, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
-  // var abc = isSupportOfficePlug();
-  // if (!abc) {
-  //   if (
-  //     (url && url.indexOf("/jgfiles/samples") != -1) ||
-  //     (link && link.indexOf("/jgfiles/samples") != -1)
-  //   ) {
-  //     RunKGBrowser(url);
-  //   } else {
-  //   }
-  // } else {
-  // }
-};
 const handleOpenFile = (item) => {
   console.log("item", item);
   if (item.type == "folder") {
@@ -936,24 +909,32 @@ const handleOpenFile = (item) => {
       item.fileExtension == "ppt" ||
       item.fileExtension == "xls"
     ) {
+      //downloadFile(item);
       openControlViewFile(
         item.id,
-        item.link,
+        item.createdByName,
         item.fileExtension,
         item.viewUrl,
         item.name
       );
-      //handleDownLoadFile(item);
     } else {
-      handleDownLoadFile(item);
+      downloadFile(item);
     }
   }
 };
-const handleDownLoadFile = (item) => {
-  if (item.downloadUrl) {
-    let url = item.downloadUrl;
-    window.open(url);
-  }
+//预览office文件
+const openControlViewFile = (id, username, type, link, name) => {
+  var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
+  var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
+  var iTop = 0; //获得窗口的垂直位置;
+  var iLeft = 0; //获得窗口的水平位置;
+  //window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username);
+  window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
+};
+//下载附件
+const downloadFile = (item) => {
+  let url = item.downloadUrl;
+  window.open(url);
 };
 const handleChild = () => {
   formRef.value.resetFields();
