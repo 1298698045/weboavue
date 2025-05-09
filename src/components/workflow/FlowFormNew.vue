@@ -13,8 +13,9 @@
                                         <span :style="setStyleText(key, colKey)">
                                             {{col.v}}
                                         </span>
-                                        <span v-if="col.p">
-                                            {{col.p.body.dataStream}}
+                                        <span v-if="col.p" style="white-space: pre-line;">
+                                            <!-- {{col.p.body.dataStream}} -->
+                                            <span v-html="col.p.body.dataStream.replace(/\r?\n/g, '<br>')"></span>
                                         </span>
                                     </template>
                                     <template v-else-if="col.field">
@@ -1162,6 +1163,7 @@
         if (data.cellData[row][col].style) {
             let styleData = data.cellData[row][col].style;
             for (let styleName in styleData) {
+                style.fontSize = "12px";
                 if (styleName == 'fs') {
                     style.fontSize = styleData[styleName] + "px";
                 }

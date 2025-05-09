@@ -11,12 +11,14 @@
                         <span class="text">{{item.properties.title}}</span>
                     </div>
                     <div class="stats-card-right">
-                        <img :src="item.properties.img.src" alt="">
+                        <div class="img-container">
+                            <img :src="item.properties.img.src" alt="">
+                        </div>
                     </div>
                 </template>
                 <template v-else>
                     <div class="stats-card-left">
-                        <div style="width: 80px;">
+                        <div class="img-container">
                             <img :src="item.properties.img.src" alt="">
                         </div>
                     </div>
@@ -131,5 +133,11 @@
                 white-space: nowrap;
             }
         }
+    }
+    .img-container{
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        overflow: hidden;
     }
 </style>
