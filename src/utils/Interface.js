@@ -507,6 +507,7 @@ const Interface = {
   CampaignSms: {
     upload: baseUrl + "/campaignsms/receiver/upload", // 短信人员导入
     send: baseUrl + "/campaignsms/message/send", // 短信发送提交
-  }
+  },
+  getFileInfo: baseUrl + "/oa/office/getFileInfo", // 获取Office预览文件信息
 };
 export default Interface;

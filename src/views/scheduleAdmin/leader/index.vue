@@ -40,7 +40,7 @@
             </div> -->
             <div class="calendarRight">
                 <ListView v-if="current == 0" :layoutName="layoutName" />
-                <CalendarVue v-if="current == 1" @openDateNew="handleOpenDateNew" />
+                <CalendarVue ref="CalendarWrap" v-if="current == 1" @openDateNew="handleOpenDateNew" />
             </div>
         </div>
         <NewSchedule v-if="isSchedule" :isShow="isSchedule" @cancel="cancelNewSchedule" />
@@ -79,6 +79,7 @@ const { proxy } = getCurrentInstance();
 import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
 const router = useRouter();
+const CalendarWrap = ref(null);
 const data = reactive({
     current: 1,
     isSchedule: false,
@@ -95,7 +96,10 @@ const data = reactive({
 const { current, isSchedule, isAddSchedule, id, paramsTime, objectTypeCode, sObjectName, layoutName } = toRefs(data);
 const handleAddSchedule = () => {
     // data.isSchedule =  true;
-    data.isAddSchedule = true;
+    // data.isAddSchedule = true;
+    nextTick(() => {
+        CalendarWrap.value.handleOpenNew();
+    })
 }
 // 关闭新建
 const cancelNewSchedule = (e) => {

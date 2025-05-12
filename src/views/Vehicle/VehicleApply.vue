@@ -8,48 +8,17 @@
                 <span class="headerTitle">车辆使用情况</span>
             </div>
             <div class="headerRight">
-                <a-button type="primary" @click="handleAddMeeting">新建</a-button>
+                <a-button type="primary" @click="handleAddVehicle">新建</a-button>
             </div>
         </div>
         <div class="calendarBody">
-            <!-- <div class="leftMenuWrapper">
-                <div class="leftTabMenu" :class="{'active':current==0}" @click="current=0">
-                    <div class="menuIcon">
-                        <i class="iconfont icon-rililiebiao"></i>
-                    </div>
-                    <div class="name">
-                        列表
-                    </div>
-                </div>
-                <div class="leftTabMenu" :class="{'active':current==1}" @click="current=1">
-                    <div class="menuIcon">
-                        <i class="iconfont icon-rili1"></i>
-                    </div>
-                    <div class="name">
-                        日历
-                    </div>
-                </div>
-                <div class="leftTabMenu" :class="{'active':current==2}" @click="current=2">
-                    <div class="menuIcon">
-                        <i class="iconfont icon-wodeshenpi"></i>
-                    </div>
-                    <div class="name">
-                        我的审批
-                    </div>
-                </div>
-            </div> -->
             <div class="calendarRight">
-                <ListView v-if="current == 0" />
-                <CalendarVue v-if="current == 1" />
-                <MyApproval v-if="current == 2" />
+                <CalendarVue ref="CalendarWrap" v-if="current == 1" />
             </div>
         </div>
-        <NewVehicle :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" />
-        <NewRepeatMeeting :isShow="isRepeatMeeting" @cancel="cancelRepeatMeeting" @selectVal="handleRepeatMeetingVal" />
     </div>
 </template>
 <script setup>
-// import "@/style/oldIcon/iconfont.css";
 import {
     ref,
     watch,
@@ -64,47 +33,23 @@ import {
     nextTick
 } from "vue";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons-vue";
-import ListView from "@/components/meeting/meetingCalendar/List.vue";
 import CalendarVue from "@/components/Vehicle/VehicleCalendar.vue";
-import MyApproval from "@/components/meeting/meetingRoom/MyApproval.vue";
-
-// 新建
-import NewVehicle from "@/components/Vehicle/NewVehicle.vue";
-// 重复会议
-import NewRepeatMeeting from "@/components/meeting/meetingCalendar/NewRepeatMeeting.vue";
 import { message } from "ant-design-vue";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
 import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
 const router = useRouter();
+const CalendarWrap = ref(null);
 const data = reactive({
     current: 1,
-    isNewMeeting: false,
-    isRepeatMeeting: false,
 });
-const { current, isNewMeeting, isRepeatMeeting } = toRefs(data);
-// 关闭新建
-const cancelNewMeeting = (e) => {
-    data.isNewMeeting = e;
-}
-const handleNewMeetingVal = (e) => {
-    data.isNewMeeting = false;
-}
-// 新建会议
-const handleAddMeeting = () => {
-    data.isNewMeeting = true;
-}
-// 新建重复会议
-const handleAddRepeatMeeting = () => {
-    data.isRepeatMeeting = true;
-}
-// 关闭重复会议弹窗
-const cancelRepeatMeeting = (e) => {
-    data.isRepeatMeeting = e;
-}
-const handleRepeatMeetingVal = (e) => {
-    data.isRepeatMeeting = false;
+const { current } = toRefs(data);
+// 新建用车申请
+const handleAddVehicle = () => {
+    nextTick(() => {
+        CalendarWrap.value.handleOpenNew();
+    })
 }
 </script>
 <style lang="less" scoped>

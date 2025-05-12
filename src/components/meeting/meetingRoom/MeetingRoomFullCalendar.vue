@@ -270,7 +270,7 @@ const props = defineProps({
   currentTime: [Object],
   startDateTime: String,
   endDateTime: String,
-  calendarType: String,
+  MeetingType: String,
   calendarView: String,
 });
 
@@ -828,7 +828,8 @@ const getQuery = () => {
           endDateTime: props.endDateTime,
           calendarType: "week",
           queryMeetings: true,
-          filterQuery: "\nResourceTypeCode\teq\t2",
+          ResourceTypeCode: "2",
+          MeetingType: props.MeetingType || "",
         },
       },
     ],

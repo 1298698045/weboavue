@@ -23,9 +23,9 @@
                 <div class="form">
                     <div class="formItem">
                         <span class="label">会议类型：</span>
-                        <a-select v-model:value="formState.type" style="width: 200px;">
-                            <a-select-option value="0">例会</a-select-option>
-                            <a-select-option value="1">学术会议</a-select-option>
+                        <a-select v-model:value="formState.type" style="width: 200px;" @change="(e)=>{formState.type=e;calendarTypeChange(calendarType);}">
+                            <a-select-option value="例会">例会</a-select-option>
+                            <a-select-option value="学术会议">学术会议</a-select-option>
                         </a-select>
                     </div>
                     <div class="calendar-selectlist">
@@ -76,12 +76,12 @@
                 <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" /> -->
                 <MeetingFullCalendar ref="FullCalendarWrap" :calendarView="calendarView" :id="meetingId"
                     :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime"
-                    :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail"
+                    :endDateTime="endTime" :MeetingType="formState.type" @handleDetail="handleDetail"
                     @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
             </div>
         </div>
         <NewMeeting :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting"
-            @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" :calendarType="formState.type" />
+            @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" :MeetingType="formState.type" />
         <NewRepeatMeeting :isShow="isRepeatMeeting" @cancel="cancelRepeatMeeting" @selectVal="handleRepeatMeetingVal" />
         <MeetingDetailModal :isShow="isMeetingDetail" v-if="isMeetingDetail" :meetingId="meetingId"
             @cancel="isMeetingDetail = false" @edit="handleOpenEdit" @handleDelete="handleDelete" />
@@ -565,6 +565,7 @@ const deleteOk = (id) => {
         message.error("删除失败！");
     });
 }
+defineExpose({ handleOpenNew });
 </script>
 <style lang="less" scoped>
 .calendarWrap {

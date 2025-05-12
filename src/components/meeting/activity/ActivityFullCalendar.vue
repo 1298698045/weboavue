@@ -228,7 +228,7 @@ const props = defineProps({
   currentTime: [Object],
   startDateTime: String,
   endDateTime: String,
-  calendarType: String,
+  ActivityType: String,
   calendarView: String,
 });
 
@@ -321,7 +321,7 @@ const data = reactive({
       //     title: "测试"
       // }
     ], //绑定展示事件
-    // 自定义会议展示内容
+    // 自定义展示内容
     eventTimeFormat: {
       hour: "numeric",
       minute: "2-digit",
@@ -379,9 +379,9 @@ const data = reactive({
     eventResize: (info) => {
       calendarDayChange2(info, "时间调整结束后触发");
     },
-    // 拖动会议触发
+    // 拖动活动触发
     eventDrop: (info) => {
-      calendarDayChange2(info, "拖动会议触发");
+      calendarDayChange2(info, "拖动活动触发");
     },
     // 切换视图时触发
     datesSet: (view) => {},
@@ -456,7 +456,7 @@ const calendarDayChange2 = (info, text) => {
   }
   if (
     (text == "事件的点击" ||
-      text == "拖动会议触发" ||
+      text == "拖动活动触发" ||
       text == "时间调整结束后触发") &&
     info.event
   ) {
@@ -496,7 +496,7 @@ const calendarDayChange2 = (info, text) => {
       }
     }
     if (
-      (text == "拖动会议触发" || text == "时间调整结束后触发") &&
+      (text == "拖动活动触发" || text == "时间调整结束后触发") &&
       info.event
     ) {
       let e = {
@@ -668,6 +668,7 @@ const getQuery = () => {
           endDateTime: props.endDateTime,
           calendarType: "month",
           queryMeetings: true,
+          ActivityType:props.ActivityType||'',
         },
       },
     ],
@@ -991,9 +992,6 @@ defineExpose({ getQuery });
   }
   :deep .fc .fc-scrollgrid {
     border: 0 !important;
-  }
-  :deep .fc .fc-scrollgrid-section-sticky > * {
-    // position: relative;
   }
   :deep .fc .fc-button:disabled {
     opacity: 0.3 !important;

@@ -16,7 +16,7 @@
         <div class="modalCenter" :style="{ height: height + 'px!important' }">
           <a-form :model="formState" ref="formRef">
             <div class="section">
-              <div class="sectionTitle">日历详细信息</div>
+              <div class="sectionTitle">基本信息</div>
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item
@@ -101,26 +101,22 @@
                 <div class="sectionItem">
                   <a-form-item
                     name="startTime"
-                    label="开始"
+                    label="开始时间"
                     :rules="[{ required: true, message: '请选择开始时间' }]"
                   >
                     <div class="timeWrap">
                       <div class="timeItem">
-                        <a-form-item name="StartDateTime" label="日期">
-                          <a-date-picker
+                        <a-date-picker
                             v-model:value="formState.StartDateTime"
                             :valueFormat="dateFormat"
                           />
-                        </a-form-item>
                       </div>
                       <div class="timeItem">
-                        <a-form-item name="StartDateTime_time" label="时间">
-                          <a-time-picker
+                        <a-time-picker
                             v-model:value="formState.StartDateTime_time"
                             format="HH:mm"
                             :valueFormat="hourFormat"
                           />
-                        </a-form-item>
                       </div>
                     </div>
                   </a-form-item>
@@ -178,25 +174,21 @@
                 <div class="sectionItem">
                   <a-form-item
                     name="endTime"
-                    label="结束"
+                    label="结束时间"
                     :rules="[{ required: true, message: '请选择结束时间' }]"
                   >
                     <div class="timeWrap">
                       <div class="timeItem">
-                        <a-form-item name="EndDateTime" label="日期">
-                          <a-date-picker
+                        <a-date-picker
                             v-model:value="formState.EndDateTime"
                             :valueFormat="dateFormat"
                           />
-                        </a-form-item>
                       </div>
                       <div class="timeItem">
-                        <a-form-item name="EndDateTime_time" label="时间">
-                          <a-time-picker
+                        <a-time-picker
                             v-model:value="formState.EndDateTime_time"
                             :valueFormat="hourFormat"
                           />
-                        </a-form-item>
                       </div>
                     </div>
                   </a-form-item>
@@ -246,7 +238,7 @@
                 </div>
               </div>
             </div>
-            <div class="section">
+            <!-- <div class="section">
               <div class="sectionTitle">提醒信息</div>
               <div class="sectionRow">
                 <div class="sectionItem">
@@ -257,7 +249,7 @@
                   </a-form-item>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="section">
               <div class="sectionTitle">备注信息</div>
               <div class="sectionRow">
@@ -326,7 +318,7 @@ const handleCancel = () => {
   emit("cancel", false);
 };
 const data = reactive({
-  title: "新建日程",
+  title: "记录电话",
   height: document.documentElement.clientHeight - 300,
   CalendarTypeList: [],
   OwningUserList: [],
@@ -528,10 +520,10 @@ const handleSubmit = () => {
           : "",
         RegardingObjectIdName: formState.RegardingObjectIdName,
         RegardingObjectId: formState.RegardingObjectId.Id,
-        ReminderTime: formState.ReminderTime,
+        //ReminderTime: formState.ReminderTime,
         BgColor: formState.BgColor,
         IsPrivate: formState.IsPrivate,
-        Reminder: formState.Reminder,
+        //Reminder: formState.Reminder,
       };
       proxy.$get(Interface.saveRecord, data).then((res) => {
         formRef.value.resetFields();
@@ -546,9 +538,6 @@ const handleSubmit = () => {
 </script>
 <style lang="less" scoped>
 @import url("@/style/modal.less");
-.ant-modal-content .modalContainer .modalCenter {
-  /* height: 500px !important; */
-}
 .section {
   .sectionTitle {
     height: 30px;
@@ -567,7 +556,10 @@ const handleSubmit = () => {
       flex: 1;
       margin-right: 20px;
       .ant-row {
-        display: block !important;
+        //display: block !important;
+        .ant-form-item-label{
+          width: 80px;
+        }
       }
     }
     .sectionItem:last-child {
@@ -617,7 +609,10 @@ const handleSubmit = () => {
 }
 .scheduleModalContainer {
   .section .sectionRow .sectionItem :deep .ant-row {
-    display: block !important;
+    //display: block !important;
+    .ant-form-item-label{
+      width: 80px;
+    }
   }
   .aselect1 {
     margin-left: 10px;
@@ -626,6 +621,9 @@ const handleSubmit = () => {
     width: 100%;
     .timeItem {
       flex: 1;
+      :deep .ant-form-item-label{
+        width:auto !important;
+      }
     }
   }
 }

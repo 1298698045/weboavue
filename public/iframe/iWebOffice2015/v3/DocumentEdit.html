@@ -49,38 +49,51 @@
 	
 </script>
 <script type="text/javascript">
-	var mServerUrl = '';
-	var mFileType='';
-	var username='';
-	var FileName='';
-	var RecordID='';
 	function getQueryString(name) {
 		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 		var r = location.search.substr(1).match(reg);
 		if (r != null) return unescape(decodeURI(r[2])); return "";
 	}
+	var mServerUrl = '';
+	var mFileType='';
+	var username='';
+	var FileName='';
+	var RecordID='';
+	var mHttpUrl='';
+	let fileInfo = window.localStorage.getItem('fileInfo');
+	if (fileInfo) {
+		fileInfo = JSON.parse(fileInfo);
+		let id = fileInfo.mRecordID;
+		if(id&&id==getQueryString('RecordID')){
+			mServerUrl = fileInfo.mServerUrl||'';
+			username=fileInfo.mAuthor||'';
+			FileName=fileInfo.mSubject||'';
+			mHttpUrl=fileInfo.mHttpUrl||'';
+			RecordID=id;
+			if(fileInfo.mFileType){
+				mFileType=(fileInfo.mFileType).indexOf('.')!=-1?fileInfo.mFileType:'.'+fileInfo.mFileType;
+			}
+		}
+	}
+	
 	function Load(){
 		WebOffice.setObj(document.getElementById('WebOffice2015'));
-		document.getElementById("Author").value=getQueryString('UserName')||'';
-		document.getElementById("Subject").value=getQueryString('FileName')||'';
-		document.getElementById("Author1").value=getQueryString('UserName')||'';
-		document.getElementById("Subject1").value=getQueryString('FileName')||'';
-
-		mFileType=getQueryString('FileType')?'.'+getQueryString('FileType'):'';
-		username=getQueryString('UserName')||'';
-		FileName=getQueryString('FileName')||'';
-	    RecordID=getQueryString('RecordID')||'';
-		mServerUrl = 'http://' + window.location.host + '/api/file/preview/';
+		document.getElementById("Author").value=username||'';
+		document.getElementById("Subject").value=FileName||'';
+		document.getElementById("Author1").value=username||'';
+		document.getElementById("Subject1").value=FileName||'';
+		// mServerUrl = 'http://' + window.location.host + '/api/file/preview/';
 		// mServerUrl='http://demo.kinggrid.com:80/iWebOffice2015/OfficeServer';
 		// mFileType='.doc';
 		// username='OA管理员';
 		// FileName='测试';
 	    // RecordID='08EADF28-7880-482F-A0E6-2CF725F635C0';
+		console.log('RecordID:',RecordID);
 		console.log('mServerUrl:',mServerUrl);
 		console.log('mFileType:',mFileType);
 		console.log('username:',username);
 		console.log('FileName:',FileName);
-		console.log('RecordID:',RecordID);
+		console.log('mHttpUrl:',mHttpUrl);
 	try{
 			WebOffice.WebUrl= mServerUrl;             //WebUrl:系统服务器路径，与服务器文件交互操作，如保存、打开文档，重要文件
 			WebOffice.RecordID=RecordID;            //RecordID:本文档记录编号

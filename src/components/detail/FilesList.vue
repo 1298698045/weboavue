@@ -443,7 +443,7 @@
         var iTop = 0; //获得窗口的垂直位置;
         var iLeft = 0; //获得窗口的水平位置;
         //window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username);
-        window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
+        window.open('/#' + link, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
     };
     const downloadFile = (item) => {
         let url = item.downloadUrl;

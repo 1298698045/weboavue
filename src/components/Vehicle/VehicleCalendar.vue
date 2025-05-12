@@ -5,9 +5,9 @@
                 <div class="form">
                     <div class="formItem">
                         <span class="label">目的地类型：</span>
-                        <a-select v-model:value="formState.type" style="width: 200px;">
-                            <!-- <a-select-option value="0">例会</a-select-option>
-                            <a-select-option value="1">学术会议</a-select-option> -->
+                        <a-select v-model:value="formState.type" style="width: 200px;" @change="(e)=>{formState.type=e;calendarTypeChange(calendarType);}">
+                            <a-select-option value="市内用车">市内用车</a-select-option>
+                            <a-select-option value="外地用车">外地用车</a-select-option>
                         </a-select>
                     </div>
                     <div class="calendar-selectlist">
@@ -48,27 +48,20 @@
                 </div>
 
                 <div class="btnOptions">
-                    <!-- <a-button type="primary" @click="handleAddMeeting">新建会议</a-button>
-                    <a-button type="primary" class="ml10" @click="handleAddRepeatMeeting">新建重复会议</a-button> -->
+                    
                 </div>
             </div>
             <div class="calendarBody" ref="contentRef">
-                <!-- <DayCalendar ref="DayCalendarWrap" v-if="calendarType==0" :currentTime="currentTime" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
-                <WeekVue ref="WeekVueWrap" v-if="calendarType==1" :week="week" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" />
-                <MonthCalendar ref="MonthCalendarWrap" v-if="calendarType==2" :width="width" :startDateTime="startTime" :endDateTime="endTime" :calendarType="formState.type" @openNew="handleOpenNew" @handleDetail="handleDetail" @openEdit="handleOpenEdit" @handleDelete="handleDelete" /> -->
                 <VehicleFullCalendar ref="FullCalendarWrap" :calendarView="calendarView"
-                    :id="meetingId" :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime"
-                    :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail"
-                    @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
+                    :id="vehicleId" :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime"
+                    :endDateTime="endTime" :DestinationTypeCode="formState.type" @handleDetail="handleDetail"
+                    @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewVehicleVal" />
             </div>
         </div>
-        <NewVehicle :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting"
-            @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" :calendarType="formState.type" />
-        <NewRepeatMeeting :isShow="isRepeatMeeting" @cancel="cancelRepeatMeeting" @selectVal="handleRepeatMeetingVal" />
-        <MeetingDetailModal :isShow="isMeetingDetail" v-if="isMeetingDetail" :meetingId="meetingId"
-            @cancel="isMeetingDetail = false" @edit="handleOpenEdit" @handleDelete="handleDelete" />
+        <NewVehicle :isShow="isNewVehicle" :vehicleId="vehicleId" v-if="isNewVehicle" @cancel="cancelNewVehicle"
+            @selectVal="handleNewVehicleVal" :paramsTime="paramsTime" :DestinationTypeCode="formState.type" />
         <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName"
-            :recordId="meetingId" :objTypeCode="objectTypeCode" :external="external" />
+            :recordId="vehicleId" :objTypeCode="objectTypeCode" :external="external" />
     </div>
 </template>
 <script setup>
@@ -98,17 +91,10 @@ dayjs.extend(calendar);
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 
-import WeekVue from "@/components/meeting/meetingRoom/WeekRoom.vue";
-import DayCalendar from "@/components/meeting/meetingRoom/DayCalendarRoom.vue";
-import MonthCalendar from "@/components/meeting/meetingRoom/MonthCalendarRoom.vue";
 import VehicleFullCalendar from "@/components/Vehicle/VehicleFullCalendar.vue";
-//import {getMeetingRoom} from "@/components/meeting/meetingRoom/MonthCalendarRoom.vue";
-// 会议详情
-import MeetingDetailModal from "@/components/meeting/MeetingDetailModal2.vue";
 // 新建
 import NewVehicle from "@/components/Vehicle/NewVehicle.vue";
 // 重复会议
-import NewRepeatMeeting from "@/components/meeting/meetingCalendar/NewRepeatMeeting.vue";
 import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import Interface from "@/utils/Interface.js";
@@ -122,7 +108,6 @@ const MonthCalendarWrap = ref(null);
 const DayCalendarWrap = ref(null);
 const WeekVueWrap = ref(null);
 onMounted(() => {
-    //console.log("contentRef",contentRef.value.clientWidth)
     data.width = document.documentElement.clientWidth;
     nextTick(() => {
         calendarTypeChange(data.calendarType);
@@ -156,8 +141,7 @@ const data = reactive({
     ],
     statusCurrent: 0,
     searchVal: "",
-    userListTree: [],
-    meetingList: {},
+    VehicleList: {},
     monthValue: dayjs(new Date()),
     calendarType: 1,
     calendarView: 'resourceTimelineWeek',
@@ -165,8 +149,7 @@ const data = reactive({
     startWeekTime: "",
     endWeekTime: "",
     week: [],
-    isNewMeeting: false,
-    isRepeatMeeting: false,
+    isNewVehicle: false,
     width: 0,
     startTime: '',
     endTime: '',
@@ -174,8 +157,7 @@ const data = reactive({
         date: "",
         time: ""
     },
-    meetingId: "",
-    isMeetingDetail: false,
+    vehicleId: "",
     objectTypeCode: '20503',
     sObjectName: 'VehicleUse',
     isDelete: false,
@@ -183,9 +165,9 @@ const data = reactive({
     external: false,
 });
 
-const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList,
-    monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, width, startTime, endTime, paramsTime,
-    meetingId, isMeetingDetail, objectTypeCode, sObjectName, isDelete, deleteDesc, external, calendarView } = toRefs(data);
+const { activeKey, statusList, statusCurrent, searchVal, VehicleList,
+    monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewVehicle, width, startTime, endTime, paramsTime,
+    vehicleId, objectTypeCode, sObjectName, isDelete, deleteDesc, external, calendarView } = toRefs(data);
 const colors = ["#3399ff", "#f0854e", "#61cc53", "#eb3d85"]
 const FullCalendarWrap = ref(null);
 const calendarTypeChange = (e) => {
@@ -228,18 +210,18 @@ const formState = reactive({
 })
 // 周/日历 点击单元格新建
 const handleOpenNew = (params) => {
-    data.meetingId = '';
+    data.vehicleId = '';
     data.paramsTime = params;
-    data.isNewMeeting = true;
+    data.isNewVehicle = true;
 }
 // 月历 点击单元格新建
 const handleSelectCalendar = (e, info) => {
-    data.meetingId = '';
+    data.vehicleId = '';
     data.paramsTime = {
         date: e.format("YYYY-MM-DD"),
         time: ""
     }
-    data.isNewMeeting = true;
+    data.isNewVehicle = true;
 }
 // 日-切换日期
 const changeTime = (e) => {
@@ -325,100 +307,15 @@ const handleNextWeek = () => {
         calendarTypeChange(data.calendarType);
     })
 }
-const handleStatus = (item, index) => {
-    data.statusCurrent = index;
-}
+
 const onSearch = (e) => {
-    data.isMeetingDetail = false;
     nextTick(() => {
         calendarTypeChange(data.calendarType);
     })
 }
-const getPeople = () => {
-    proxy.$get(Interface.meeting.userTree, {}).then(res => {
-        let list = res.returnValue.map(item => {
-            item.key = item.id;
-            item.title = item.name;
-            return item;
-        });
-        data.userListTree = list;
-    })
-}
-getPeople();
-
 
 const currentDate = ref(dayjs());
-const getListData = value => {
-    // console.log("value:", value.date());
-    // let listData;
-    // switch (value.date()) {
-    //     case 8:
-    //         listData = [
-    //             {
-    //                 type: 'warning',
-    //                 content: 'This is warning event.',
-    //             },
-    //             {
-    //                 type: 'success',
-    //                 content: 'This is usual event.',
-    //             },
-    //         ];
-    //         break;
-    //     case 10:
-    //         listData = [
-    //             {
-    //                 type: 'warning',
-    //                 content: 'This is warning event.',
-    //             },
-    //             {
-    //                 type: 'success',
-    //                 content: 'This is usual event.',
-    //             },
-    //             {
-    //                 type: 'error',
-    //                 content: 'This is error event.',
-    //             },
-    //         ];
-    //         break;
-    //     case 15:
-    //         listData = [
-    //             {
-    //                 type: 'warning',
-    //                 content: 'This is warning event',
-    //             },
-    //             {
-    //                 type: 'success',
-    //                 content: 'This is very long usual event。。....',
-    //             },
-    //             {
-    //                 type: 'error',
-    //                 content: 'This is error event 1.',
-    //             },
-    //             {
-    //                 type: 'error',
-    //                 content: 'This is error event 2.',
-    //             },
-    //             {
-    //                 type: 'error',
-    //                 content: 'This is error event 3.',
-    //             },
-    //             {
-    //                 type: 'error',
-    //                 content: 'This is error event 4.',
-    //             },
-    //         ];
-    //         break;
-    //     default:
-    // }
-    // return listData || [];
-    let date = value.date();
-    return data.meetingList[date] || [];
-};
-const getMonthData = value => {
-    if (value.month() === 8) {
-        return 1394;
-    }
-};
+
 const changeMonth = (e) => {
     data.monthValue = dayjs(e, monthFormat);
     // console.log("data.monthValue",data.monthValue.format("YYYY-MM"));
@@ -434,62 +331,18 @@ const changeMonth = (e) => {
 const getQuery = () => {
     data.startTime = dayjs(data.monthValue || new Date()).startOf("month").format("YYYY-MM-DD");
     data.endTime = dayjs(data.monthValue || new Date()).endOf('month').format('YYYY-MM-DD');
-    // proxy.$get(Interface.meeting.getall,{
-    //     startTime: startTime,
-    //     endTime: endTime,
-    //     MeetingType: "",
-    //     employeeId: "",
-    //     StatusCode: ""
-    // }).then(res=>{
-    //     let meetingItems = res.returnValue.meetings[0].meetingItems;
-    //     let obj = {};
-    //     meetingItems.forEach(item=>{
-    //         let daydate = dayjs(item.ScheduledStartDate).format('DD');
-    //         console.log("daydate",daydate);
-    //         if(!obj[daydate]){
-    //             obj[daydate] = [];
-    //         }
-    //         obj[daydate].push(item);
-    //     })
-    //     data.meetingList = obj;
-    //     console.log("obj",obj)
-    // })
 }
 getQuery();
 // 关闭新建
-const cancelNewMeeting = (e) => {
-    data.isNewMeeting = false;
+const cancelNewVehicle = (e) => {
+    data.isNewVehicle = false;
 }
-const handleNewMeetingVal = (e) => {
-    data.isNewMeeting = false;
+const handleNewVehicleVal = (e) => {
+    data.isNewVehicle = false;
     onSearch();
 }
-// 新建会议
-const handleAddMeeting = () => {
-    data.isNewMeeting = true;
-}
-// 新建重复会议
-const handleAddRepeatMeeting = () => {
-    data.isRepeatMeeting = true;
-}
-// 关闭重复会议弹窗
-const cancelRepeatMeeting = (e) => {
-    data.isRepeatMeeting = e;
-}
-const handleRepeatMeetingVal = (e) => {
-    data.isRepeatMeeting = false;
-}
-// 编辑日历会议
-const handleEditMeeting = (item, e) => {
-    data.paramsTime.date = e.format('YYYY-MM-DD');
-    data.meetingId = item.MeetingId;
-    data.isNewMeeting = true;
-}
 const handleDetail = (item, date) => {
-    data.meetingId = item.Id;
-    nextTick(() => {
-        data.isMeetingDetail = true;
-    })
+    data.vehicleId = item.Id;
 }
 // 编辑
 const handleOpenEdit = (e) => {
@@ -500,18 +353,19 @@ const handleOpenEdit = (e) => {
     if (e.paramsTime) {
         data.paramsTime = e.paramsTime
     }
-    data.meetingId = e.Id;
-    data.isNewMeeting = true;
+    data.vehicleId = e.Id;
+    data.isNewVehicle = true;
 }
 //删除
 const handleDelete = (e) => {
-    data.meetingId = e.Id;
+    data.vehicleId = e.Id;
     data.isDelete = true;
 }
 //删除关闭
 const cancelDelete = (e) => {
     data.isDelete = false;
 };
+defineExpose({ handleOpenNew });
 </script>
 <style lang="less" scoped>
 .calendarWrap {

@@ -239,8 +239,8 @@
                     <div class="formItem">
                         <span class="label">日程类型：</span>
                         <a-select v-model:value="formState.type" style="width: 200px;" @change="(e)=>{formState.type=e;calendarTypeChange(calendarType);}">
-                            <a-select-option value="0">工作安排</a-select-option>
-                            <a-select-option value="1">个人</a-select-option>
+                            <a-select-option value="工作安排">工作安排</a-select-option>
+                            <a-select-option value="个人">个人</a-select-option>
                         </a-select>
                     </div>
                     <div class="calendar-selectlist">

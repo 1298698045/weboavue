@@ -28,7 +28,7 @@
                       ]"
                     >
                         <a-select v-model:value="formState.CalendarType" style="width: 200px;">
-                            <a-select-option value="工作">工作</a-select-option>
+                            <a-select-option value="工作安排">工作安排</a-select-option>
                             <a-select-option value="个人">个人</a-select-option>
                         </a-select>
                     </a-form-item>

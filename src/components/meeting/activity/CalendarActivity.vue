@@ -5,9 +5,9 @@
                 <div class="form">
                     <div class="formItem">
                         <span class="label">活动类型：</span>
-                        <a-select v-model:value="formState.type" style="width: 200px;">
-                            <a-select-option value="0">志愿者活动</a-select-option>
-                            <a-select-option value="1">其他</a-select-option>
+                        <a-select v-model:value="formState.type" style="width: 200px;" @change="(e)=>{formState.type=e;calendarTypeChange(calendarType);}">
+                            <a-select-option value="志愿者活动">志愿者活动</a-select-option>
+                            <a-select-option value="其他">其他</a-select-option>
                         </a-select>
                     </div>
                     <div class="calendar-selectlist">
@@ -148,17 +148,17 @@
 <DayCalendar v-if="calendarType==0" :currentTime="currentTime" />
 <WeekVue v-if="calendarType==1" :week="week" /> -->
                 <ActivityFullCalendar ref="FullCalendarWrap" :calendarView="calendarView"
-                    :id="meetingId" :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime"
-                    :endDateTime="endTime" :calendarType="formState.type" @handleDetail="handleDetail"
-                    @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewMeetingVal" />
+                    :id="activityId" :currentTime="currentTime" @openNew="handleOpenNew" :startDateTime="startTime"
+                    :endDateTime="endTime" :ActivityType="formState.type" @handleDetail="handleDetail"
+                    @openEdit="handleOpenEdit" @handleDelete="handleDelete" @selectVal="handleNewActivityVal" />
             </div>
         </div>
-        <NewMeeting :isShow="isNewMeeting" :meetingId="meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting"
-            @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" :calendarType="formState.type" />
-        <MeetingDetailModal :isShow="isMeetingDetail" v-if="isMeetingDetail" :meetingId="meetingId"
+        <NewActivity :isShow="isNewActivity" :activityId="activityId" v-if="isNewActivity" @cancel="cancelNewActivity"
+            @selectVal="handleNewActivityVal" :paramsTime="paramsTime" :ActivityType="formState.type" />
+        <MeetingDetailModal :isShow="isMeetingDetail" v-if="isMeetingDetail" :activityId="activityId"
             @cancel="isMeetingDetail = false" @edit="handleOpenEdit" @handleDelete="handleDelete" />
         <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="onSearch" :sObjectName="sObjectName"
-            :recordId="meetingId" :objTypeCode="objectTypeCode" :external="external" />
+            :recordId="activityId" :objTypeCode="objectTypeCode" :external="external" />
     </div>
 </template>
 <script setup>
@@ -195,7 +195,7 @@ import ActivityFullCalendar from "@/components/meeting/activity/ActivityFullCale
 // 详情
 import MeetingDetailModal from "@/components/meeting/MeetingDetailModal2.vue";
 // 新建
-import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
+import NewActivity from "@/components/meeting/activity/NewActivity.vue";
 import Delete from "@/components/listView/Delete.vue";
 import { SearchOutlined, DeleteOutlined, RedoOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
@@ -247,7 +247,7 @@ const data = reactive({
     startWeekTime: "",
     endWeekTime: "",
     week: [],
-    isNewMeeting: false,
+    isNewActivity: false,
     isRepeatMeeting: false,
     paramsTime: {
         date: "",
@@ -255,7 +255,7 @@ const data = reactive({
         end: "",
         endDate: ""
     },
-    meetingId: "",
+    activityId: "",
     isMeetingDetail: false,
     startTime: '',
     endTime: '',
@@ -266,8 +266,8 @@ const data = reactive({
     external: false,
 });
 const { activeKey, statusList, statusCurrent, searchVal, userListTree, meetingList, 
-    monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewMeeting, isRepeatMeeting, paramsTime,
-    meetingId, isMeetingDetail, startTime, endTime, objectTypeCode, sObjectName, isDelete, deleteDesc, external, calendarView } = toRefs(data);
+    monthValue, calendarType, currentTime, startWeekTime, endWeekTime, week, isNewActivity, isRepeatMeeting, paramsTime,
+    activityId, isMeetingDetail, startTime, endTime, objectTypeCode, sObjectName, isDelete, deleteDesc, external, calendarView } = toRefs(data);
 const colors = ["#3399ff", "#f0854e", "#61cc53", "#eb3d85"]
 const FullCalendarWrap = ref(null);
 const calendarTypeChange = (e) => {
@@ -311,18 +311,18 @@ const formState = reactive({
 })
 // 周/日历 点击单元格新建
 const handleOpenNew = (params) => {
-    data.meetingId = '';
+    data.activityId = '';
     data.paramsTime = params;
-    data.isNewMeeting = true;
+    data.isNewActivity = true;
 }
 // 月历 点击单元格新建
 const handleSelectCalendar = (e, info) => {
-    data.meetingId = '';
+    data.activityId = '';
     data.paramsTime = {
         date: e.format("YYYY-MM-DD"),
         time: ""
     }
-    data.isNewMeeting = true;
+    data.isNewActivity = true;
 }
 // 日-切换日期
 const changeTime = (e) => {
@@ -479,16 +479,16 @@ const getQuery = () => {
 }
 getQuery();
 // 关闭新建
-const cancelNewMeeting = (e) => {
-    data.isNewMeeting = false;
+const cancelNewActivity = (e) => {
+    data.isNewActivity = false;
 }
-const handleNewMeetingVal = (e) => {
-    data.isNewMeeting = false;
+const handleNewActivityVal = (e) => {
+    data.isNewActivity = false;
     onSearch();
 }
 // 新建会议
 const handleAddMeeting = () => {
-    data.isNewMeeting = true;
+    data.isNewActivity = true;
 }
 // 新建重复会议
 const handleAddRepeatMeeting = () => {
@@ -504,11 +504,11 @@ const handleRepeatMeetingVal = (e) => {
 // 编辑日历会议
 const handleEditMeeting = (item, e) => {
     data.paramsTime.date = e.format('YYYY-MM-DD');
-    data.meetingId = item.MeetingId;
-    data.isNewMeeting = true;
+    data.activityId = item.activityId;
+    data.isNewActivity = true;
 }
 const handleDetail = (item, date) => {
-    data.meetingId = item.Id;
+    data.activityId = item.Id;
     nextTick(() => {
         data.isMeetingDetail = true;
     })
@@ -522,18 +522,19 @@ const handleOpenEdit = (e) => {
     if (e.paramsTime) {
         data.paramsTime = e.paramsTime
     }
-    data.meetingId = e.Id;
-    data.isNewMeeting = true;
+    data.activityId = e.Id;
+    data.isNewActivity = true;
 }
 //删除
 const handleDelete = (e) => {
-    data.meetingId = e.Id;
+    data.activityId = e.Id;
     data.isDelete = true;
 }
 //删除关闭
 const cancelDelete = (e) => {
     data.isDelete = false;
 };
+defineExpose({ handleOpenNew });
 </script>
 <style lang="less" scoped>
 .calendarWrap {

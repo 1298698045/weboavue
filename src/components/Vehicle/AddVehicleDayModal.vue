@@ -231,7 +231,7 @@ const props = defineProps({
   currentTime: String,
   startDateTime: String,
   endDateTime: String,
-  calendarType: String,
+  DestinationTypeCode: String,
   objectTypeCode: String,
 });
 
@@ -1003,5 +1003,13 @@ const handleDetailView = (id) => {
     font-size: 14px !important;
     display: flex;
   }
+}
+.fullCalendar{
+    :deep .fc-timegrid-body{
+        width: 100% !important;
+        table{
+            width: 100% !important;
+        }
+    }
 }
 </style>

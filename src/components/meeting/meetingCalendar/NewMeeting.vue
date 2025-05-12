@@ -32,7 +32,7 @@
             :objectTypeCode="objectTypeCode"
             :entityApiName="sObjectName"
             @selectVal="handleNewMeetingVal"
-            :calendarType="props.calendarType"
+            :MeetingType="props.MeetingType"
           />
           <Topics v-if="currentTab == 2" :id="props.meetingId" />
           <AttendUser
@@ -99,8 +99,8 @@ const configRef = ref();
 const props = defineProps({
   isShow: Boolean,
   paramsTime: [Object],
-  meetingId: String,
-  calendarType: String,
+  meetingId: String, 
+  MeetingType: String,
 });
 // console.log("props", props.paramsTime);
 const emit = defineEmits(["cancel", "select-val"]);

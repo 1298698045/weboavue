@@ -374,7 +374,7 @@
                               />
                             </span>
                             <span class="text">{{
-                              MeetingType || "会议类型"
+                              ActivityType || "会议类型"
                             }}</span>
                             <span class="arrowIcon">
                               <DownOutlined />
@@ -383,22 +383,24 @@
                           <template #overlay>
                             <a-menu>
                               <a-menu-item
-                                v-for="(item, index) in MeetingTypeList"
+                                v-for="(item, index) in ActivityTypeList"
                                 :key="index"
                               >
                                 <div
                                   class="menu-row"
                                   @click="
-                                    selectOption('MeetingType', item.value)
+                                    selectOption('ActivityType', item.value)
                                   "
                                   :class="{
                                     selectOptionActive:
-                                      formState.MeetingType == item.value,
+                                      formState.ActivityType == item.value,
                                   }"
                                 >
                                   <span class="icon">
                                     <template
-                                      v-if="formState.MeetingType == item.value"
+                                      v-if="
+                                        formState.ActivityType == item.value
+                                      "
                                     >
                                       <CheckOutlined />
                                     </template>
@@ -441,11 +443,7 @@
                             searchlookup('', '20034', 'RoomId');
                           }
                         "
-                        :placeholder="
-                          props.objectTypeCode == '5000'
-                            ? '请选择会议室'
-                            : '请选择车辆'
-                        "
+                        :placeholder="'请选择活动室'"
                       >
                         <template #suffixIcon></template>
                         <a-select-option
@@ -527,7 +525,7 @@
               :currentTime="formState.StartDateTime"
               :startDateTime="formState.startTime"
               :endDateTime="formState.endTime"
-              :MeetingType="formState.MeetingType || props.MeetingType"
+              :ActivityType="formState.ActivityType || props.ActivityType"
               @calendarDayChange="calendarDayChange"
               :objectTypeCode="props.objectTypeCode"
             />
@@ -595,7 +593,7 @@ import {
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import TEditor from "@/components/TEditor.vue";
-import DayCalendar from "@/components/meeting/AddMeetingDayModal.vue";
+import DayCalendar from "@/components/meeting/activity/AddActivityDayModal.vue";
 import Icon from "@/components/icon/index.vue";
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
@@ -607,7 +605,7 @@ const props = defineProps({
   objectTypeCode: String,
   id: String,
   entityApiName: String,
-  MeetingType: String,
+  ActivityType: String,
   paramsTime: [Object],
 });
 const dateFormat = "YYYY-MM-DD";
@@ -688,8 +686,8 @@ const data = reactive({
       label: "每年",
     },
   ],
-  MeetingType: "",
-  MeetingTypeList: [],
+  ActivityType: "",
+  ActivityTypeList: [],
 });
 const {
   title,
@@ -702,8 +700,8 @@ const {
   isRadioUser,
   RecurrenceType,
   RecurrenceTypeList,
-  MeetingType,
-  MeetingTypeList,
+  ActivityType,
+  ActivityTypeList,
 } = toRefs(data);
 const formState = reactive({
   RegardingObjectTypeCode: 20290,
@@ -721,7 +719,7 @@ const formState = reactive({
   Location: "",
   Description: "",
   MeetingSummary: "",
-  MeetingType: "",
+  ActivityType: "",
   RegardingObjectIdName: "",
   BgColor: "",
   IsPrivate: false,
@@ -933,7 +931,7 @@ const getPickerList = () => {
         descriptor: "",
         callingDescriptor: "UNKNOWN",
         params: {
-          objectApiName: "ActivityPointer",
+          objectApiName: "Campaign",
           recordTypeId: "",
         },
       },
@@ -951,22 +949,22 @@ const getPickerList = () => {
       res.actions[0].returnValue.picklistFieldValues
     ) {
       let picklistFieldValues = res.actions[0].returnValue.picklistFieldValues;
-      data.MeetingTypeList = picklistFieldValues.MeetingType
-        ? picklistFieldValues.MeetingType.values
+      data.ActivityTypeList = picklistFieldValues.ActivityType
+        ? picklistFieldValues.ActivityType.values
         : [
             {
-              label: "例会",
-              value: "例会",
+              label: "志愿者活动",
+              value: "志愿者活动",
             },
             {
-              label: "学术会议",
-              value: "学术会议",
+              label: "其他",
+              value: "其他",
             },
           ];
       if (!props.id) {
         selectOption(
-          "MeetingType",
-          props.MeetingType ? props.MeetingType : "例会"
+          "ActivityType",
+          props.ActivityType ? props.ActivityType : "志愿者活动"
         );
       }
     }
@@ -1085,10 +1083,10 @@ const getDetail = () => {
       //editorRef.value.content=formState.MeetingSummary;
       editorRef2.value.content = formState.Description;
       selectOption(
-        "MeetingType",
-        fields.MeetingType && fields.MeetingType.value
-          ? fields.MeetingType.value
-          : "例会"
+        "ActivityType",
+        fields.ActivityType && fields.ActivityType.value
+          ? fields.ActivityType.value
+          : "志愿者活动"
       );
       formState.IsAllDayEvent = fields.IsAllDayEvent
         ? fields.IsAllDayEvent.value
@@ -1199,7 +1197,7 @@ const handleSubmit = () => {
                   // MeetingItem_SortNumber_1:'',
                   // MeetingItem_Name_1:'',
                   // MeetingItem_ScheduledMeeting_1:'',
-                  // MeetingType:'',
+                  // ActivityType:'',
                   // StateCode:'',
                   StatusCode: 1,
                   //MeetingSummary:formState.MeetingSummary,
@@ -1210,7 +1208,7 @@ const handleSubmit = () => {
                   // HostName:'',
                   // MeetingMgrId:'',
                   OwningUser: formState.OwningUser.Id,
-                  MeetingType: formState.MeetingType,
+                  ActivityType: formState.ActivityType,
                   // MeetingService_HandleBy_1:'',
                   // MeetingItem_ApplyBy_1:'',
                   // MeetingItem_OwningBusinessUnit_1:''

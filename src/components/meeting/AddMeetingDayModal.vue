@@ -214,7 +214,7 @@
         currentTime: String,
         startDateTime:String,
         endDateTime:String,
-        calendarType:String,
+        MeetingType:String,
         objectTypeCode:String,
     })
 
@@ -473,7 +473,6 @@
                     "startDateTime": daydate,
                     "endDateTime": daydate,
                     "queryType": 'day',
-                    "calendarType": '',
                     "queryEvents": true
                 }
 
@@ -952,6 +951,14 @@
         .meetingInfoItem{
             font-size: 14px !important;
             display: flex;
+        }
+    }
+    .fullCalendar{
+        :deep .fc-timegrid-body{
+            width: 100% !important;
+            table{
+                width: 100% !important;
+            }
         }
     }
 </style>

@@ -3,9 +3,12 @@
     <div class="leftLogo">
       <Logo></Logo>
     </div>
-    <div class="header" style="flex: 1;">
+    <div class="header" style="flex: 1">
       <div class="header-top-menu" @click.stop="handleShowApp">
-        <i class="iconfont icon-yingyongzhongxin" style="margin-left: 10px;font-size: 18px;"></i>
+        <i
+          class="iconfont icon-yingyongzhongxin"
+          style="margin-left: 10px; font-size: 18px"
+        ></i>
         <span class="text">{{ moduleName }}</span>
       </div>
       <div class="header-search">
@@ -18,7 +21,13 @@
         </div>
         <div class="search-split"></div>
         <div class="search-content">
-          <input class="inp" v-model="data.searchVal" @keydown.enter="search()" placeholder="请输入关键词搜索" type="text" />
+          <input
+            class="inp"
+            v-model="data.searchVal"
+            @keydown.enter="search()"
+            placeholder="请输入关键词搜索"
+            type="text"
+          />
         </div>
         <div class="search-searchIcon" @click="clearInput()">
           <!-- <SearchOutlined style="font-size: 12px" /> -->
@@ -36,7 +45,14 @@
               <div class="action-hover-point"></div>
               <div class="popup-header">
                 <!-- <ScheduleOutlined style="font-size: 16px;color:var(--textColor)" /> -->
-                <i class="iconfont icon-kaoqin" style="font-size: 18px;color:var(--textColor);margin-right: 10px;"></i>
+                <i
+                  class="iconfont icon-kaoqin"
+                  style="
+                    font-size: 18px;
+                    color: var(--textColor);
+                    margin-right: 10px;
+                  "
+                ></i>
                 <span>2023-12-12</span>
                 <span>星期二</span>
               </div>
@@ -49,7 +65,10 @@
                       <template #dot>
                         <div>
                           <!-- <WeiboCircleOutlined style="font-size: 25px" /> -->
-                          <i class="iconfont icon-shangban" style="font-size: 25px;"></i>
+                          <i
+                            class="iconfont icon-shangban"
+                            style="font-size: 25px"
+                          ></i>
                         </div>
                       </template>
                       <p>上班时间 09:00</p>
@@ -59,7 +78,10 @@
                       <template #dot>
                         <div>
                           <!-- <WeiboCircleOutlined style="font-size: 25px" /> -->
-                          <i class="iconfont icon-xiaban" style="font-size: 25px;"></i>
+                          <i
+                            class="iconfont icon-xiaban"
+                            style="font-size: 25px"
+                          ></i>
                         </div>
                       </template>
                       <p>下班时间 18:00</p>
@@ -75,13 +97,13 @@
                 <div class="popup-footer">
                   <div class="checking" title="考勤统计">
                     <!-- <BarChartOutlined /> -->
-                    <i class="iconfont icon-tongji" style="color: #b3b3b3;"></i>
+                    <i class="iconfont icon-tongji" style="color: #b3b3b3"></i>
                     <span class="checkTitle text-elli">考勤统计</span>
                   </div>
                   <a-tooltip :overlayClassName="'header-tooltip'">
                     <template #title>当前所在考勤组：默认考勤组</template>
                     <!-- <InfoCircleOutlined style="font-size: 16px" /> -->
-                    <i class="iconfont icon-tishi" style="color: #b3b3b3;"></i>
+                    <i class="iconfont icon-tishi" style="color: #b3b3b3"></i>
                   </a-tooltip>
                 </div>
               </div>
@@ -98,96 +120,274 @@
           <!-- <MessageFilled style="font-size: 18px;" /> -->
           <a-tooltip :overlayClassName="'header-tooltip'">
             <template #title>邮箱</template>
-            <i class="iconfont icon-youjian" style="font-size: 18px;"></i>
+            <i class="iconfont icon-youjian" style="font-size: 18px"></i>
           </a-tooltip>
         </div>
-        <div class="header-toobar-plugin MessageOut" @click="handleOpenMessage" style="margin-left: 8px;">
+        <div
+          class="header-toobar-plugin MessageOut"
+          @click="handleOpenMessage"
+          style="margin-left: 8px"
+        >
           <a-tooltip :overlayClassName="'header-tooltip'">
             <template #title>消息</template>
-            <MessageFilled style="font-size: 16px;" />
+            <MessageFilled style="font-size: 16px" />
           </a-tooltip>
           <!-- <i class="iconfont icon-消息" style="font-size: 18px;"></i> -->
         </div>
-        <div class="header-toobar-plugin header-toobar-plugin-favor" style="margin-left: 8px;">
+        <div
+          class="header-toobar-plugin header-toobar-plugin-favor"
+          style="margin-left: 8px"
+        >
           <a-tooltip class="favorLeft" :overlayClassName="'header-tooltip'">
             <template #title>收藏</template>
             <StarFilled />
           </a-tooltip>
           <a-tooltip class="favorRight" :overlayClassName="'header-tooltip'">
-              <template #title>收藏夹列表</template>
-              <a-dropdown :overlayClassName="'FavorList'" :trigger="['click']">
-                        <CaretDownFilled />
-                        <template #overlay>
-                            <a-menu>
-                                <div class="action-hover-point"></div>
-                                <span class="actionLabel">我的收藏夹</span>
-                                <a-menu-item v-for="(item,index) in FavorList" :key="index">
-                                    <div class="menu-row" @click="selectFavor(item)">
-                                        <span v-if="index==0" style="background-color: #06A59A" class="actionIcon" data-aura-rendered-by="33:2958;a"><span data-aura-rendered-by="36:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="34:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/lead_120.png" alt=""></span></span>
-                                        <span v-if="index==1" style="background-color: #FF5D2D" class="actionIcon" data-aura-rendered-by="46:2958;a"><span data-aura-rendered-by="49:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="47:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/opportunity_120.png" alt=""></span></span>
-                                        <span v-if="index==2" style="background-color: #06A59A" class="actionIcon" data-aura-rendered-by="59:2958;a"><span data-aura-rendered-by="62:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="60:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/report_120.png" alt=""></span></span>
-                                        <span v-if="index==3" style="background-color: #06A59A" class="actionIcon" data-aura-rendered-by="72:2958;a"><span data-aura-rendered-by="75:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="73:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/report_120.png" alt=""></span></span>
-                                        <span v-if="index==4" style="background-color: #f77e75" class="actionIcon" data-aura-rendered-by="85:2958;a"><span data-aura-rendered-by="88:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="86:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/custom/custom15_120.png" alt=""></span></span>
-                                        <span class="menuText">
-                                          <p class="favorname">{{item.name}}</p>
-                                          <p class="favordesc">{{item.desc}}</p>
-                                        </span>
-                                    </div>
-                                </a-menu-item>
-                                <div class="favoraction" @click="handleEditFavor"><EditFilled />编辑收藏夹</div>
-                            </a-menu>
-                        </template>
-                    </a-dropdown>
-            </a-tooltip>
-        </div>
-        <div class="header-toobar-plugin header-toobar-plugin-action" style="margin-left: 8px;">
-          <a-dropdown :overlayClassName="'OverallAction'" :trigger="['click']">
-              <a-tooltip :overlayClassName="'header-tooltip'">
-                <template #title>全局操作</template>
-                <PlusSquareFilled class="OverallActionIcon" />
-              </a-tooltip>
+            <template #title>收藏夹列表</template>
+            <a-dropdown :overlayClassName="'FavorList'" :trigger="['click']">
+              <CaretDownFilled />
               <template #overlay>
-                  <a-menu>
-                      <div class="action-hover-point"></div>
-                      <span class="actionLabel">全局操作</span>
-                      <a-menu-item v-for="(item,index) in ActionList" :key="index">
-                          <div class="menu-row" @click="selectAction(item)">
-                              <span v-if="index==0" style="background-color: #06A59A" class="actionIcon" data-aura-rendered-by="33:2958;a"><span data-aura-rendered-by="36:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="34:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/log_a_call_120.png" alt=""></span></span>
-                              <span v-if="index==1" style="background-color: #CB65FF" class="actionIcon" data-aura-rendered-by="46:2958;a"><span data-aura-rendered-by="49:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="47:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_event_120.png" alt=""></span></span>
-                              <span v-if="index==2" style="background-color: #3BA755" class="actionIcon" data-aura-rendered-by="59:2958;a"><span data-aura-rendered-by="62:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="60:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_task_120.png" alt=""></span></span>
-                              <span v-if="index==3" style="background-color: #9602C7" class="actionIcon" data-aura-rendered-by="72:2958;a"><span data-aura-rendered-by="75:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="73:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_contact_120.png" alt=""></span></span>
-                              <span v-if="index==4" style="background-color: #FF5D2D" class="actionIcon" data-aura-rendered-by="85:2958;a"><span data-aura-rendered-by="88:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="86:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_opportunity_120.png" alt=""></span></span>
-                              <span v-if="index==5" style="background-color: #FF538A" class="actionIcon" data-aura-rendered-by="98:2958;a"><span data-aura-rendered-by="101:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="99:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_case_120.png" alt=""></span></span>
-                              <span v-if="index==6" style="background-color: #939393" class="actionIcon" data-aura-rendered-by="111:2958;a"><span data-aura-rendered-by="114:2958;a" class="uiImage" data-aura-class="uiImage"><img data-aura-rendered-by="112:2958;a" src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/email_120.png" alt=""></span></span>
-                              <span class="menuText">{{item.name}}</span>
-                          </div>
-                      </a-menu-item>
-                  </a-menu>
+                <a-menu>
+                  <div class="action-hover-point"></div>
+                  <span class="actionLabel">我的收藏夹</span>
+                  <a-menu-item v-for="(item, index) in FavorList" :key="index">
+                    <div class="menu-row" @click="selectFavor(item)">
+                      <span
+                        v-if="index == 0"
+                        style="background-color: #06a59a"
+                        class="actionIcon"
+                        data-aura-rendered-by="33:2958;a"
+                        ><span
+                          data-aura-rendered-by="36:2958;a"
+                          class="uiImage"
+                          data-aura-class="uiImage"
+                          ><img
+                            data-aura-rendered-by="34:2958;a"
+                            src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/lead_120.png"
+                            alt="" /></span
+                      ></span>
+                      <span
+                        v-if="index == 1"
+                        style="background-color: #ff5d2d"
+                        class="actionIcon"
+                        data-aura-rendered-by="46:2958;a"
+                        ><span
+                          data-aura-rendered-by="49:2958;a"
+                          class="uiImage"
+                          data-aura-class="uiImage"
+                          ><img
+                            data-aura-rendered-by="47:2958;a"
+                            src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/opportunity_120.png"
+                            alt="" /></span
+                      ></span>
+                      <span
+                        v-if="index == 2"
+                        style="background-color: #06a59a"
+                        class="actionIcon"
+                        data-aura-rendered-by="59:2958;a"
+                        ><span
+                          data-aura-rendered-by="62:2958;a"
+                          class="uiImage"
+                          data-aura-class="uiImage"
+                          ><img
+                            data-aura-rendered-by="60:2958;a"
+                            src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/report_120.png"
+                            alt="" /></span
+                      ></span>
+                      <span
+                        v-if="index == 3"
+                        style="background-color: #06a59a"
+                        class="actionIcon"
+                        data-aura-rendered-by="72:2958;a"
+                        ><span
+                          data-aura-rendered-by="75:2958;a"
+                          class="uiImage"
+                          data-aura-class="uiImage"
+                          ><img
+                            data-aura-rendered-by="73:2958;a"
+                            src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/report_120.png"
+                            alt="" /></span
+                      ></span>
+                      <span
+                        v-if="index == 4"
+                        style="background-color: #f77e75"
+                        class="actionIcon"
+                        data-aura-rendered-by="85:2958;a"
+                        ><span
+                          data-aura-rendered-by="88:2958;a"
+                          class="uiImage"
+                          data-aura-class="uiImage"
+                          ><img
+                            data-aura-rendered-by="86:2958;a"
+                            src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/custom/custom15_120.png"
+                            alt="" /></span
+                      ></span>
+                      <span class="menuText">
+                        <p class="favorname">{{ item.name }}</p>
+                        <p class="favordesc">{{ item.desc }}</p>
+                      </span>
+                    </div>
+                  </a-menu-item>
+                  <div class="favoraction" @click="handleEditFavor">
+                    <EditFilled />编辑收藏夹
+                  </div>
+                </a-menu>
               </template>
+            </a-dropdown>
+          </a-tooltip>
+        </div>
+        <div
+          class="header-toobar-plugin header-toobar-plugin-action"
+          style="margin-left: 8px"
+        >
+          <a-dropdown :overlayClassName="'OverallAction'" :trigger="['click']">
+            <a-tooltip :overlayClassName="'header-tooltip'">
+              <template #title>全局操作</template>
+              <PlusSquareFilled class="OverallActionIcon" />
+            </a-tooltip>
+            <template #overlay>
+              <a-menu>
+                <div class="action-hover-point"></div>
+                <span class="actionLabel">全局操作</span>
+                <a-menu-item v-for="(item, index) in ActionList" :key="index">
+                  <div class="menu-row" @click="selectAction(item)">
+                    <span
+                      v-if="index == 0"
+                      style="background-color: #06a59a"
+                      class="actionIcon"
+                      data-aura-rendered-by="33:2958;a"
+                      ><span
+                        data-aura-rendered-by="36:2958;a"
+                        class="uiImage"
+                        data-aura-class="uiImage"
+                        ><img
+                          data-aura-rendered-by="34:2958;a"
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/log_a_call_120.png"
+                          alt="" /></span
+                    ></span>
+                    <span
+                      v-if="index == 1"
+                      style="background-color: #cb65ff"
+                      class="actionIcon"
+                      data-aura-rendered-by="46:2958;a"
+                      ><span
+                        data-aura-rendered-by="49:2958;a"
+                        class="uiImage"
+                        data-aura-class="uiImage"
+                        ><img
+                          data-aura-rendered-by="47:2958;a"
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_event_120.png"
+                          alt="" /></span
+                    ></span>
+                    <span
+                      v-if="index == 2"
+                      style="background-color: #3ba755"
+                      class="actionIcon"
+                      data-aura-rendered-by="59:2958;a"
+                      ><span
+                        data-aura-rendered-by="62:2958;a"
+                        class="uiImage"
+                        data-aura-class="uiImage"
+                        ><img
+                          data-aura-rendered-by="60:2958;a"
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_task_120.png"
+                          alt="" /></span
+                    ></span>
+                    <span
+                      v-if="index == 3"
+                      style="background-color: #9602c7"
+                      class="actionIcon"
+                      data-aura-rendered-by="72:2958;a"
+                      ><span
+                        data-aura-rendered-by="75:2958;a"
+                        class="uiImage"
+                        data-aura-class="uiImage"
+                        ><img
+                          data-aura-rendered-by="73:2958;a"
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_contact_120.png"
+                          alt="" /></span
+                    ></span>
+                    <span
+                      v-if="index == 4"
+                      style="background-color: #ff5d2d"
+                      class="actionIcon"
+                      data-aura-rendered-by="85:2958;a"
+                      ><span
+                        data-aura-rendered-by="88:2958;a"
+                        class="uiImage"
+                        data-aura-class="uiImage"
+                        ><img
+                          data-aura-rendered-by="86:2958;a"
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_opportunity_120.png"
+                          alt="" /></span
+                    ></span>
+                    <span
+                      v-if="index == 5"
+                      style="background-color: #ff538a"
+                      class="actionIcon"
+                      data-aura-rendered-by="98:2958;a"
+                      ><span
+                        data-aura-rendered-by="101:2958;a"
+                        class="uiImage"
+                        data-aura-class="uiImage"
+                        ><img
+                          data-aura-rendered-by="99:2958;a"
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_case_120.png"
+                          alt="" /></span
+                    ></span>
+                    <span
+                      v-if="index == 6"
+                      style="background-color: #939393"
+                      class="actionIcon"
+                      data-aura-rendered-by="111:2958;a"
+                      ><span
+                        data-aura-rendered-by="114:2958;a"
+                        class="uiImage"
+                        data-aura-class="uiImage"
+                        ><img
+                          data-aura-rendered-by="112:2958;a"
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/email_120.png"
+                          alt="" /></span
+                    ></span>
+                    <span class="menuText">{{ item.name }}</span>
+                  </div>
+                </a-menu-item>
+              </a-menu>
+            </template>
           </a-dropdown>
         </div>
         <div class="header-toobar-plugin" @click="hanldeOpenNotice">
           <!-- <MessageFilled style="font-size: 18px;" /> -->
           <a-tooltip :overlayClassName="'header-tooltip'">
             <template #title>通知</template>
-            <i class="iconfont icon-xiaoxizhongxin" style="font-size: 18px;"></i>
+            <i class="iconfont icon-xiaoxizhongxin" style="font-size: 18px"></i>
           </a-tooltip>
         </div>
         <div class="header-info">
           <div class="avatar" @click.stop="handleOpenInfo">
-            <img class="img" :src="avatarUrl ? '/api' + avatarUrl : '/src/assets/img/user/MyResume/showEmpAvatar.png'"
-              alt="" />
+            <img
+              class="img"
+              :src="
+                avatarUrl
+                  ? '/api' + avatarUrl
+                  : '/src/assets/img/user/MyResume/showEmpAvatar.png'
+              "
+              alt=""
+            />
           </div>
-          <div class="info-name" @click.stop="handleOpenInfo">{{ currentAccountName }}</div>
+          <div class="info-name" @click.stop="handleOpenInfo">
+            {{ currentAccountName }}
+          </div>
           <div class="info-icon" @click.stop="handleOpenInfo">
             <!-- <DownOutlined style="font-size: 10px" /> -->
-            <i class="iconfont icon-xiala" style="font-size: 12px;font-weight: 400;"></i>
+            <i
+              class="iconfont icon-xiala"
+              style="font-size: 12px; font-weight: 400"
+            ></i>
           </div>
           <div class="header-info-popup" @click.stop v-if="isInfoPopup">
             <div class="action-hover-point"></div>
-            <div class="row-text">
-              主次账号切换
-            </div>
+            <div class="row-text">主次账号切换</div>
             <div class="header-account-splitter"></div>
             <!-- <div class="row-text" @click="handlePersonal">
               个人中心
@@ -197,24 +397,55 @@
               <div v-for="item in accountList" :key="item">
                 <div class="header-account-item" @click="ChangeAccount(item)">
                   <div class="header-account-item-avatar">
-                    <img class="img"
-                      :src="item.avatarUrl ? '/api' + item.avatarUrl : '/src/assets/img/user/MyResume/showEmpAvatar.png'"
-                      alt="" />
+                    <img
+                      class="img"
+                      :src="
+                        item.avatarUrl
+                          ? '/api' + item.avatarUrl
+                          : '/src/assets/img/user/MyResume/showEmpAvatar.png'
+                      "
+                      alt=""
+                    />
                   </div>
                   <div class="header-account-item-info">
-                    <span v-if="BusinessUnitId == item.BusinessUnitId" class="header-account-item-current-text">主</span>
-                    <span class="header-account-item-username" @click.stop="handleInfo">
-                      <span :title="item.FullName">{{ item.FullName }}</span><span v-if="item.UserName"
-                        :title="item.UserName">{{ item.UserName ? '/' + item.UserName : '' }}</span>
+                    <span
+                      v-if="BusinessUnitId == item.BusinessUnitId"
+                      class="header-account-item-current-text"
+                      >主</span
+                    >
+                    <span
+                      class="header-account-item-username"
+                      @click.stop="handleInfo"
+                    >
+                      <span :title="item.FullName">{{ item.FullName }}</span
+                      ><span v-if="item.UserName" :title="item.UserName">{{
+                        item.UserName ? "/" + item.UserName : ""
+                      }}</span>
                     </span>
-                    <span class="header-account-item-jobs" :title="item.jobTitle">{{ item.jobTitle }}</span><span
-                      class="header-account-item-current-icon" v-if="BusinessUnitId == item.BusinessUnitId">
+                    <span
+                      class="header-account-item-jobs"
+                      :title="item.jobTitle"
+                      >{{ item.jobTitle }}</span
+                    ><span
+                      class="header-account-item-current-icon"
+                      v-if="BusinessUnitId == item.BusinessUnitId"
+                    >
                       <CheckCircleFilled />
                     </span>
                     <br />
-                    <div class="header-account-item-deptName rowEllipsis"><span v-if="item.organizationIdName"
-                        :title="item.organizationIdName">{{ item.organizationIdName ? item.organizationIdName + '/' : ''
-                        }}</span><span :title="item.businessUnitIdName">{{ item.businessUnitIdName }}</span></div>
+                    <div class="header-account-item-deptName rowEllipsis">
+                      <span
+                        v-if="item.organizationIdName"
+                        :title="item.organizationIdName"
+                        >{{
+                          item.organizationIdName
+                            ? item.organizationIdName + "/"
+                            : ""
+                        }}</span
+                      ><span :title="item.businessUnitIdName">{{
+                        item.businessUnitIdName
+                      }}</span>
+                    </div>
                   </div>
                 </div>
                 <div class="header-account-splitter"></div>
@@ -222,11 +453,14 @@
             </div>
             <div class="header-account-seeting">
               <div class="header-account-seeting-item" @click="handlePersonal">
-                <i class="iconfont icon-gerenzhongxin" style="font-size: 18px;"></i>
+                <i
+                  class="iconfont icon-gerenzhongxin"
+                  style="font-size: 18px"
+                ></i>
                 <span class="header-account-seeting-title">应用中心</span>
               </div>
               <div class="header-account-seeting-item" @click="EditPassWord">
-                <i class="iconfont icon-xiugaimima" style="font-size: 18px;"></i>
+                <i class="iconfont icon-xiugaimima" style="font-size: 18px"></i>
                 <span class="header-account-seeting-title">密码修改</span>
               </div>
               <!-- <div class="header-account-seeting-item">
@@ -235,7 +469,7 @@
               </div> -->
               <div class="header-account-seeting-item" @click="handleloginOut">
                 <!-- <ScheduleOutlined class="icon" /> -->
-                <i class="iconfont icon-tuichu" style="font-size: 18px;"></i>
+                <i class="iconfont icon-tuichu" style="font-size: 18px"></i>
                 <span class="header-account-seeting-title">退出</span>
               </div>
             </div>
@@ -246,34 +480,148 @@
         <div class="action-hover-point"></div>
         <div class="appSearch">
           <SearchOutlined class="searchIcon" />
-          <a-input placeholder="查找应用" v-model:value="data.searchText" @change="onSearch" />
+          <a-input
+            placeholder="查找应用"
+            v-model:value="data.searchText"
+            @change="onSearch"
+          />
         </div>
         <div class="appList">
-          <div class="app_item" v-for="(item, index) in listApp" :style="{ background: item.BgColor }" :key="index"
-            @click="handleGoModule(item)">
+          <div
+            class="app_item"
+            :class="{
+              active: currentModuleName && currentModuleName == item.Label,
+            }"
+            v-for="(item, index) in listApp"
+            :style="{ background: item.BgColor }"
+            :key="index"
+            @click="handleGoModule(item)"
+          >
             <div class="appBox">
               <div class="iconBox">
-                <img :src="item.LogoUrl" alt="">
+                <img :src="item.LogoUrl" alt="" />
               </div>
               <div class="app-item-label">{{ item.Label }}</div>
             </div>
           </div>
         </div>
       </div>
-      <NoticeMessages v-if="isNotice" :isShow="isNotice" @cancel="isNotice = false" />
+      <NoticeMessages
+        v-if="isNotice"
+        :isShow="isNotice"
+        @cancel="isNotice = false"
+      />
     </div>
-    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
-      @cancel="isConfirm = false" @ok="loginOut" :id="''" />
+    <CommonConfirm
+      v-if="isConfirm"
+      :isShow="isConfirm"
+      :text="confirmText"
+      :title="confirmTitle"
+      @cancel="isConfirm = false"
+      @ok="loginOut"
+      :id="''"
+    />
+    <AddSchedule
+      :isShow="isAddSchedule"
+      :calendarType="'0'"
+      v-if="isAddSchedule"
+      @cancel="isAddSchedule = false"
+      :objectTypeCode="'4200'"
+      :entityApiName="'ActivityPointer'"
+      :id="''"
+      @selectVal="isAddSchedule = false"
+      :paramsTime="paramsTime"
+    />
+    <AddTask
+      :isShow="isAddTask"
+      :id="''"
+      v-if="isAddTask"
+      :paramsTime="paramsTime"
+      @cancel="isAddTask = false"
+      :objectTypeCode="'4200'"
+      :entityApiName="'ActivityPointer'"
+      @selectVal="isAddTask = false"
+      :calendarType="''"
+      :RegardingObjectTypeCode="''"
+      :RegardingObjectId="''"
+      :RegardingObjectIdName="''"
+      :BgColor="''"
+    />
+    <common-form-modal
+      :isShow="isCommon"
+      v-if="isCommon"
+      @cancel="isCommon = false"
+      :title="modalTitle"
+      @success="isCommon = false"
+      :id="recordId"
+      :objectTypeCode="objectTypeCode"
+      :entityApiName="sObjectName"
+    ></common-form-modal>
+    <NewMeeting
+      :isShow="isNewMeeting"
+      :meetingId="''"
+      v-if="isNewMeeting"
+      @cancel="isNewMeeting = false"
+      @selectVal="isNewMeeting = false"
+      :paramsTime="paramsTime"
+      :MeetingType="''"
+    />
+    <NewVehicle
+      :isShow="isNewVehicle"
+      :meetingId="''"
+      v-if="isNewVehicle"
+      @cancel="isNewVehicle = false"
+      @selectVal="isNewVehicle = false"
+      :paramsTime="paramsTime"
+      :VehicleType="''"
+    />
+    <RecordPhone
+      :isShow="isRecord"
+      v-if="isRecord"
+      @cancel="isRecord = false"
+      :id="''"
+      :CalendarTypeCode="''"
+      @selectVal="isRecord = false"
+    />
   </div>
 </template>
 <script setup>
 import "@/style/header.less";
-import { ref, onMounted, toRefs, reactive, createApp, watch, getCurrentInstance, defineProps, defineEmits } from "vue";
-import { DownOutlined, SearchOutlined, MessageFilled, ScheduleOutlined, WeiboCircleOutlined, BarChartOutlined, InfoCircleOutlined, CheckCircleFilled, PlusSquareFilled, StarFilled, CaretDownFilled, EditFilled } from "@ant-design/icons-vue";
+import {
+  ref,
+  onMounted,
+  toRefs,
+  reactive,
+  createApp,
+  watch,
+  getCurrentInstance,
+  defineProps,
+  defineEmits,
+} from "vue";
+import {
+  DownOutlined,
+  SearchOutlined,
+  MessageFilled,
+  ScheduleOutlined,
+  WeiboCircleOutlined,
+  BarChartOutlined,
+  InfoCircleOutlined,
+  CheckCircleFilled,
+  PlusSquareFilled,
+  StarFilled,
+  CaretDownFilled,
+  EditFilled,
+} from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
 import NoticeMessages from "@/components/NoticeMessages.vue";
 import Logo from "../header/components/logo.vue";
 import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+import AddSchedule from "@/components/schedule/AddSchedule.vue";
+import AddTask from "@/components/meeting/AddTask.vue";
+import CommonFormModal from "@/components/listView/CommonFormModal.vue";
+import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
+import NewVehicle from "@/components/Vehicle/NewVehicle.vue";
+import RecordPhone from "@/components/schedule/RecordPhone.vue";
 import { message } from "ant-design-vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -290,9 +638,9 @@ const handleShowApp = () => {
 // console.log(newVal, oldVal);
 //});
 const props = defineProps({
-  listApp: Array
+  listApp: Array,
 });
-const emit = defineEmits(['changeCode']);
+const emit = defineEmits(["changeCode"]);
 const moduleName = ref(store.state.moduleName);
 
 // watch(() => route.path,newRoute=> {
@@ -303,10 +651,13 @@ const moduleName = ref(store.state.moduleName);
 //   // moduleName.value = store.state.moduleName;
 // },{immediate:true,deep:true});
 
-
-watch(() => store.state.moduleName, (newVal, oldVal) => {
-  moduleName.value = newVal;
-}, { immediate: true });
+watch(
+  () => store.state.moduleName,
+  (newVal, oldVal) => {
+    moduleName.value = newVal;
+  },
+  { immediate: true }
+);
 
 const data = reactive({
   appList: [],
@@ -319,46 +670,95 @@ const data = reactive({
     // {FullName:'张三（演示账号）',JobTitle:'院长',DeptName:'院领导'},
     // {FullName:'李四（演示账号）',JobTitle:'科主任',DeptName:'信息科'}
   ],
-  currentAccountName: '',
-  BusinessUnitId: '',
-  userId: '',
-  avatarUrl: '',
+  currentAccountName: "",
+  BusinessUnitId: "",
+  userId: "",
+  avatarUrl: "",
   isConfirm: false,
-  confirmText: '',
-  confirmTitle: '',
-  searchText: '',
+  confirmText: "",
+  confirmTitle: "",
+  searchText: "",
   listAppAll: [],
   listApp: [],
-  ActionList:[
-    {name:'记录电话'},
-    {name:'新建事件'},
-    {name:'新建任务'},
-    {name:'新建联系人'},
-    {name:'新建业务机会'},
-    {name:'新建个案'},
-    {name:'电子邮件'}
+  ActionList: [
+    { name: "记录电话" },
+    { name: "新建事件" },
+    { name: "新建任务" },
+    { name: "新建联系人" },
+    //{ name: "新建业务机会" },
+    { name: "预约会议室" },
+    // { name: "新建个案" },
+    { name: "预约车辆" },
+    { name: "电子邮件" },
   ],
-  FavorList:[
-    {name:'任务测试',desc:'潜在客户'},
-    {name:'最近查看',desc:'业务机会'},
-    {name:'商业机会',desc:'报表'},
-    {name:'商业机会矩阵',desc:'报表'},
-    {name:'天天',desc:'员工档案'},
+  FavorList: [
+    { name: "任务测试", desc: "潜在客户" },
+    { name: "最近查看", desc: "业务机会" },
+    { name: "商业机会", desc: "报表" },
+    { name: "商业机会矩阵", desc: "报表" },
+    { name: "天天", desc: "员工档案" },
   ],
-})
-const { FavorList, ActionList, listApp, listAppAll, searchText, isConfirm, confirmText, confirmTitle, userId, appList, isInfoPopup, isNotice, appCode, currentAppName, searchVal, accountList, currentAccountName, BusinessUnitId, avatarUrl } = toRefs(data);
+  isAddSchedule: false,
+  paramsTime: {
+    date: "",
+    time: "",
+  },
+  isAddTask: false,
+  isCommon: false,
+  recordId: "",
+  objectTypeCode: "2",
+  sObjectName: "Contact",
+  modalTitle: "新建联系人",
+  isRecord: false,
+  isNewMeeting: false,
+  currentModuleName: "",
+  isNewVehicle: false,
+});
+const {
+  isNewVehicle,
+  currentModuleName,
+  isNewMeeting,
+  isRecord,
+  modalTitle,
+  isCommon,
+  recordId,
+  objectTypeCode,
+  sObjectName,
+  isAddTask,
+  paramsTime,
+  isAddSchedule,
+  FavorList,
+  ActionList,
+  listApp,
+  listAppAll,
+  searchText,
+  isConfirm,
+  confirmText,
+  confirmTitle,
+  userId,
+  appList,
+  isInfoPopup,
+  isNotice,
+  appCode,
+  currentAppName,
+  searchVal,
+  accountList,
+  currentAccountName,
+  BusinessUnitId,
+  avatarUrl,
+} = toRefs(data);
 const ChangeAccount = (item) => {
   data.isInfoPopup = false;
   data.currentAccountName = item.FullName;
   data.BusinessUnitId = item.BusinessUnitId;
   data.userId = item.UserId;
-  data.avatarUrl = item.avatarUrl || '';
+  data.avatarUrl = item.avatarUrl || "";
   switchUser(item);
-}
+};
 // proxy.$get(Interface.applist,{
 //   systemCode: 'OA'
 // }).then((res)=>{
-//   console.log("res",res) 
+//   console.log("res",res)
 //   data.appList = res.actions[0].returnValue.apps;
 //   let row = data.appList.find(item=>route.path.indexOf(item.StartUrl)!=-1);
 //   if(row){
@@ -369,47 +769,45 @@ const ChangeAccount = (item) => {
 // })
 const getCurrentApp = () => {
   let obj = {
-    actions: [{
-      id: "4105;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        appCode: data.appCode
-      }
-    }]
+    actions: [
+      {
+        id: "4105;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          appCode: data.appCode,
+        },
+      },
+    ],
   };
   let d = {
-    message: JSON.stringify(obj)
-  }
-  proxy.$post(Interface.currentApp, d).then(res => {
+    message: JSON.stringify(obj),
+  };
+  proxy.$post(Interface.currentApp, d).then((res) => {
     // console.log("res", res);
     data.appTabs = res.actions[0].returnValue.tabs;
-  })
+  });
 };
 const hanldeOpenNotice = () => {
   data.isNotice = true;
-}
+};
 const handleOpenEmail = () => {
   let url = router.resolve({
-    path: '/email/0',
+    path: "/email/0",
     name: "Email",
-    query: {
-
-    },
+    query: {},
   });
   window.open(url.href);
   //window.location.href=url.href;
-}
+};
 const handleOpenMessage = () => {
   let url = router.resolve({
-    path: '/MessageHome',
+    path: "/MessageHome",
     name: "MessageHome",
-    query: {
-
-    },
+    query: {},
   });
   window.open(url.href);
-}
+};
 //个人信息
 const handleInfo = () => {
   data.isInfoPopup = false;
@@ -417,40 +815,39 @@ const handleInfo = () => {
     path: "/workspace/PersonalInfo",
     query: {
       id: data.userId,
-    }
-  })
-}
+    },
+  });
+};
 //应用中心
 const handlePersonal = () => {
   data.isInfoPopup = false;
   router.push({
     path: "/workspace/personal/home",
     query: {
-      name: "123"
-    }
-  })
-}
+      name: "123",
+    },
+  });
+};
 //修改密码
 const EditPassWord = () => {
   data.isInfoPopup = false;
   router.push({
     path: "/workspace/ChangePassWord",
-    query: {
-    }
-  })
-}
+    query: {},
+  });
+};
 const handleloginOut = () => {
   data.isConfirm = true;
-  data.confirmText = '确定要退出登录吗？';
-  data.confirmTitle = '退出登录';
-}
+  data.confirmText = "确定要退出登录吗？";
+  data.confirmTitle = "退出登录";
+};
 const loginOut = () => {
   data.isConfirm = false;
   localStorage.clear();
-  router.push('/');
-}
+  router.push("/");
+};
 const getBusinessUnits = () => {
-  let userInfo = window.localStorage.getItem('userInfo');
+  let userInfo = window.localStorage.getItem("userInfo");
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
     data.currentAccountName = userInfo.fullName;
@@ -458,33 +855,42 @@ const getBusinessUnits = () => {
     data.accountList = [
       {
         BusinessUnitId: userInfo.businessUnitId,
-        EmployeeId: userInfo.EmployeeId || '',
+        EmployeeId: userInfo.EmployeeId || "",
         FullName: userInfo.fullName,
         OrganizationId: userInfo.organizationId,
         UserId: userInfo.userId,
         UserName: userInfo.userName,
-        avatarUrl: '/one/user/avatar/' + userInfo.userId,
-        businessUnitIdName: userInfo.businessUnitIdName || '暂无',
+        avatarUrl: "/one/user/avatar/" + userInfo.userId,
+        businessUnitIdName: userInfo.businessUnitIdName || "暂无",
         jobTitle: userInfo.JobTitle,
-        organizationIdName: userInfo.organizationIdName || '暂无',
-      }
-    ]
+        organizationIdName: userInfo.organizationIdName || "暂无",
+      },
+    ];
     data.userId = userInfo.userId;
   }
-  proxy.$post(Interface.user.getBusinessUnits, {}).then(res => {
+  proxy.$post(Interface.user.getBusinessUnits, {}).then((res) => {
     //console.log("res", res);
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.length
+    ) {
       data.accountList = res.actions[0].returnValue;
       for (var i = 0; i < data.accountList.length; i++) {
         if (data.BusinessUnitId == data.accountList[i].BusinessUnitId) {
           data.currentAccountName = data.accountList[i].FullName;
           data.userId = data.accountList[i].UserId;
           data.avatarUrl = data.accountList[i].avatarUrl;
-          window.localStorage.setItem('businessUnitName', data.accountList[i].businessUnitIdName);
+          window.localStorage.setItem(
+            "businessUnitName",
+            data.accountList[i].businessUnitIdName
+          );
         }
       }
     }
-  })
+  });
 };
 const switchUser = (item) => {
   let d = {
@@ -496,39 +902,113 @@ const switchUser = (item) => {
         params: {
           businessUnitId: item.BusinessUnitId,
           organizationId: item.OrganizationId,
-          jobTitle: item.jobTitle
-        }
-      }
-    ]
-  }
+          jobTitle: item.jobTitle,
+        },
+      },
+    ],
+  };
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(Interface.user.switchBusinessUnit, obj).then(res => {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.user.switchBusinessUnit, obj).then((res) => {
     //console.log("res", res);
-    if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].state &&
+      res.actions[0].state == "SUCCESS"
+    ) {
       message.success("切换成功！");
       localStorage.clear();
       let data = res.actions[0].returnValue;
       let token = data.token;
-      let userInfo = data.user ? JSON.stringify(data.user) : '';
-      window.localStorage.setItem('token', token);
-      window.localStorage.setItem('userInfo', userInfo);
-      store.dispatch('getModules');
+      let userInfo = data.user ? JSON.stringify(data.user) : "";
+      window.localStorage.setItem("token", token);
+      window.localStorage.setItem("userInfo", userInfo);
+      store.dispatch("getModules");
       setTimeout(function () {
         window.location.reload();
-      }, 1000)
-    }
-    else {
-      if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
+      }, 1000);
+    } else {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].state &&
+        res.actions[0].errorMessage
+      ) {
         message.success(res.actions[0].errorMessage);
-      }
-      else {
+      } else {
         message.success("切换失败！");
       }
     }
-
-  })
+  });
+};
+const handleGoModule = (item) => {
+  // console.log("item", item);
+  store.commit("setModuleName", item.Label);
+  localStorage.setItem("moduleName", item.Label);
+  data.currentModuleName = item.Label;
+  emit("changeCode", item);
+  // router.push({
+  //     path:"/"+item.Name
+  // });
+  isShow.value = false;
+};
+const handleOpenInfo = () => {
+  data.isInfoPopup = !data.isInfoPopup;
+};
+const selectAction = (item) => {
+  if (item.name == "记录电话") {
+    data.isRecord = true;
+  } else if (item.name == "新建事件") {
+    data.isAddSchedule = true;
+  } else if (item.name == "新建任务") {
+    data.isAddTask = true;
+  } else if (item.name == "新建联系人") {
+    data.isCommon = true;
+  } else if (item.name == "预约会议室") {
+    data.isNewMeeting = true;
+  } else if (item.name == "预约车辆") {
+    data.isNewVehicle = true;
+  } else if (item.name == "电子邮件") {
+    let url = router.resolve({
+      path: "/email/0",
+      name: "Email",
+      query: {
+        type: 1,
+      },
+    });
+    window.open(url.href);
+  }
+};
+const selectFavor = (item) => {};
+const handleEditFavor = () => {};
+const search = () => {
+  //window.open('https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=' + data.searchVal);
+  router.push({
+    path: "/Search/SearchResult",
+    query: {
+      searchVal: data.searchVal,
+    },
+  });
+};
+const clearInput = () => {
+  data.searchVal = "";
+  let url = router.resolve({
+    path: "/Search/SearchResult",
+    name: "SearchResult",
+    query: {
+      searchVal: data.searchVal,
+    },
+  });
+  window.location.href = url.href;
+};
+const onSearch = (e) => {
+  data.listApp = data.listAppAll.filter((item) => {
+    return item.Label.indexOf(data.searchText) != -1;
+  });
 };
 onMounted(() => {
   if (props.listApp) {
@@ -540,54 +1020,8 @@ onMounted(() => {
     isShow.value = false;
     data.isInfoPopup = false;
   });
+  data.currentModuleName = window.localStorage.getItem("moduleName") || "";
 });
-const handleGoModule = (item) => {
-  // console.log("item", item);
-  store.commit('setModuleName', item.Label);
-  localStorage.setItem("moduleName", item.Label);
-  emit("changeCode", item);
-  // router.push({
-  //     path:"/"+item.Name
-  // });
-  isShow.value = false;
-}
-const handleOpenInfo = () => {
-  data.isInfoPopup = !data.isInfoPopup;
-}
-const selectAction = (item) =>{
-  
-}
-const selectFavor = (item) =>{
-  
-}
-const handleEditFavor = () =>{
-
-}
-const search = () => {
-  //window.open('https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=' + data.searchVal);
-  router.push({
-    path: "/Search/SearchResult",
-    query: {
-      searchVal: data.searchVal
-    }
-  })
-}
-const clearInput = () => {
-  data.searchVal = '';
-  let url = router.resolve({
-    path: '/Search/SearchResult',
-    name: "SearchResult",
-    query: {
-      searchVal: data.searchVal
-    },
-  });
-  window.location.href = url.href;
-}
-const onSearch = (e) => {
-  data.listApp = data.listAppAll.filter(item => {
-    return item.Label.indexOf(data.searchText) != -1;
-  })
-}
 </script>
 <style lang="less">
 /* @import "./header.less"; */
@@ -600,7 +1034,7 @@ const onSearch = (e) => {
     border-radius: 0;
 
     &:hover {
-      background: #2866C3 !important;
+      background: #2866c3 !important;
     }
   }
 }
@@ -633,7 +1067,7 @@ const onSearch = (e) => {
 }
 
 .header-account-item-current-icon {
-  color: #1055BC;
+  color: #1055bc;
   font-size: 18px;
   position: absolute;
   top: 18px;
@@ -657,7 +1091,11 @@ const onSearch = (e) => {
   margin: 0;
 }
 
-.header .header-end .header-info-popup .header-account-item .header-account-item-avatar {
+.header
+  .header-end
+  .header-info-popup
+  .header-account-item
+  .header-account-item-avatar {
   height: 54px;
 }
 
@@ -670,24 +1108,43 @@ const onSearch = (e) => {
   right: 10px;
 }
 
-.header .header-end .header-info-popup .header-account-item .header-account-item-info {
+.header
+  .header-end
+  .header-info-popup
+  .header-account-item
+  .header-account-item-info {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.header .header-end .header-info-popup .header-account-item .header-account-item-info .header-account-item-jobs {
+.header
+  .header-end
+  .header-info-popup
+  .header-account-item
+  .header-account-item-info
+  .header-account-item-jobs {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.header .header-end .header-info-popup .header-account-item .header-account-item-info .header-account-item-username {
+.header
+  .header-end
+  .header-info-popup
+  .header-account-item
+  .header-account-item-info
+  .header-account-item-username {
   position: relative;
   top: 1px;
 }
 
-.header .header-end .header-info-popup .header-account-item .header-account-item-info .header-account-item-jobs {
+.header
+  .header-end
+  .header-info-popup
+  .header-account-item
+  .header-account-item-info
+  .header-account-item-jobs {
   position: relative;
   top: 1px;
 }
@@ -697,7 +1154,8 @@ const onSearch = (e) => {
     .app_popup {
       height: 485px;
       width: 560px;
-      box-shadow: rgba(0, 0, 0, 0.22) 0px 25.6px 57.6px 0px, rgba(0, 0, 0, 0.18) 0px 4.8px 14.4px 0px;
+      box-shadow: rgba(0, 0, 0, 0.22) 0px 25.6px 57.6px 0px,
+        rgba(0, 0, 0, 0.18) 0px 4.8px 14.4px 0px;
       left: 8px;
       top: 40px;
       border-radius: 8px;
@@ -748,7 +1206,7 @@ const onSearch = (e) => {
         }
 
         .app_item:hover {
-          box-shadow: 0 5px 16px 0 rgba(0, 0, 0, .1);
+          box-shadow: 0 5px 16px 0 rgba(0, 0, 0, 0.1);
           border-color: #f4f4f4 !important;
         }
 
@@ -763,12 +1221,12 @@ const onSearch = (e) => {
   top: 50px !important;
   left: unset !important;
   right: 170px !important;
-  .ant-dropdown-menu{
+  .ant-dropdown-menu {
     padding: 8px 2px !important;
     position: relative;
     width: 174px;
   }
-  .action-hover-point{
+  .action-hover-point {
     position: absolute;
     height: 14px;
     width: 14px;
@@ -777,21 +1235,21 @@ const onSearch = (e) => {
     top: -8px;
     right: 18px;
     z-index: 1;
-    border-top:1px solid #ccc;
-    border-left:1px solid #ccc;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
   }
-  .actionLabel{
+  .actionLabel {
     font-size: 12px;
     padding: 4px 12px;
     color: #181818;
     display: block;
   }
-  .ant-dropdown-menu-item{
+  .ant-dropdown-menu-item {
     font-size: 12px;
     line-height: 30px;
     color: #181818;
   }
-  .actionIcon{
+  .actionIcon {
     width: 24px;
     height: 24px;
     display: inline-block;
@@ -800,53 +1258,53 @@ const onSearch = (e) => {
     position: relative;
     top: 3px;
     .uiImage {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: inherit;
     }
-    img{
+    img {
       width: 16px;
       height: 16px;
     }
   }
 }
-.header-toobar-plugin{
-  .OverallActionIcon{
+.header-toobar-plugin {
+  .OverallActionIcon {
     font-size: 20px;
-    svg{
+    svg {
       border-radius: 7px;
     }
   }
 }
-.header-toobar-plugin-favor{
-   margin: 0 6px !important;
-  .favorLeft{
+.header-toobar-plugin-favor {
+  margin: 0 6px !important;
+  .favorLeft {
     border: 1px solid #ccc;
     padding: 4px 5px !important;
     margin-right: -1px;
     border-radius: 4px 0 0 4px;
     font-size: 16px;
   }
-  .favorRight{
+  .favorRight {
     border: 1px solid #ccc;
     padding: 5px 1px !important;
     border-radius: 0 4px 4px 0;
     font-size: 14px;
   }
 }
-.header-toobar-plugin-action{
+.header-toobar-plugin-action {
   margin: 0 6px 0 6px !important;
 }
 .ant-dropdown.FavorList {
   top: 52px !important;
   left: unset !important;
   right: 90px !important;
-  .ant-dropdown-menu{
+  .ant-dropdown-menu {
     position: relative;
     width: 320px;
   }
-  .action-hover-point{
+  .action-hover-point {
     position: absolute;
     height: 14px;
     width: 14px;
@@ -855,22 +1313,22 @@ const onSearch = (e) => {
     top: -8px;
     right: 135px;
     z-index: 1;
-    border-top:1px solid #ccc;
-    border-left:1px solid #ccc;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
   }
-  .actionLabel{
+  .actionLabel {
     font-size: 12px;
     padding: 12px 22px 2px;
     color: #444;
     display: block;
   }
-  .ant-dropdown-menu-item{
+  .ant-dropdown-menu-item {
     font-size: 12px;
     line-height: 30px;
     color: #181818;
     margin: 8px 10px !important;
   }
-  .actionIcon{
+  .actionIcon {
     width: 24px;
     height: 24px;
     display: inline-block;
@@ -879,31 +1337,31 @@ const onSearch = (e) => {
     position: relative;
     top: 3px;
     .uiImage {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: inherit;
     }
-    img{
+    img {
       width: 24px;
       height: 24px;
     }
   }
-  .menu-row{
+  .menu-row {
     display: flex;
     align-items: center;
-    .favorname{
+    .favorname {
       color: #181818;
       font-size: 13px;
       line-height: 20px;
     }
-    .favordesc{
+    .favordesc {
       color: #666;
       font-size: 12px;
       line-height: 18px;
     }
   }
-  .favoraction{
+  .favoraction {
     background: #f3f3f3;
     padding: 10px 18px;
     color: rgba(11, 92, 171, 1);
@@ -911,19 +1369,20 @@ const onSearch = (e) => {
     border-top: 1px solid #ccc;
     border-radius: 0 0 8px 8px;
     cursor: pointer;
-    .anticon{
+    .anticon {
       font-size: 16px;
       margin-right: 12px;
       color: rgba(11, 92, 171, 1);
     }
   }
 }
-.header .header-end .header-info-popup{
+.header .header-end .header-info-popup {
   top: 55px;
-  border-top:1px solid #d9d9d9;
+  border-top: 1px solid #d9d9d9;
   border-radius: 4px;
-  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-  .action-hover-point{
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  .action-hover-point {
     position: absolute;
     height: 14px;
     width: 14px;
@@ -932,16 +1391,16 @@ const onSearch = (e) => {
     top: -8px;
     right: 50px;
     z-index: 1;
-    border-top:1px solid #d9d9d9;
-    border-left:1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+    border-left: 1px solid #d9d9d9;
   }
-  .row-text{
+  .row-text {
     padding-bottom: 6px;
   }
 }
-.ant-popover.signPlugin{
+.ant-popover.signPlugin {
   border-radius: 4px;
-  .action-hover-point{
+  .action-hover-point {
     position: absolute;
     height: 14px;
     width: 14px;
@@ -950,14 +1409,14 @@ const onSearch = (e) => {
     top: -8px;
     right: 150px;
     z-index: 1;
-    border-top:1px solid #d9d9d9;
-    border-left:1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+    border-left: 1px solid #d9d9d9;
   }
 }
 .headerFlex .header .app_popup {
   top: 50px;
   overflow: visible;
-  .action-hover-point{
+  .action-hover-point {
     position: absolute;
     height: 14px;
     width: 14px;
@@ -966,17 +1425,36 @@ const onSearch = (e) => {
     top: -8px;
     left: 30px;
     z-index: 999;
-    border-top:1px solid #d9d9d9;
-    border-left:1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+    border-left: 1px solid #d9d9d9;
   }
-  .appList{
+  .appList {
     overflow: auto;
-    max-height: calc(~'100% - 60px');
+    max-height: calc(~"100% - 60px");
   }
 }
-.ant-tooltip.header-tooltip{
-  .ant-tooltip-inner{
+.ant-tooltip.header-tooltip {
+  .ant-tooltip-inner {
     padding: 9px 8px;
+  }
+}
+.header .app_popup .appList .app_item {
+  .iconBox {
+    width: 50px;
+    height: 50px;
+    img {
+      border-radius: 50%;
+    }
+  }
+  &:hover {
+    box-shadow: none !important;
+    border: none !important;
+    background: #f2f3f5;
+  }
+  &.active {
+    box-shadow: none;
+    border: none;
+    background: #f2f3f5;
   }
 }
 </style>

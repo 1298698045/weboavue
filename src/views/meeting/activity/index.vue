@@ -40,7 +40,7 @@
             </div> -->
             <div class="calendarRight">
                 <ListView :layoutName="layoutName" v-if="current == 0" />
-                <CalendarVue v-if="current == 1" />
+                <CalendarVue ref="CalendarWrap" v-if="current == 1" />
             </div>
         </div>
         <NewActivity :isShow="isNewActivity" @cancel="cancelNewActivity" @selectVal="handleNewActivityVal" />
@@ -74,6 +74,7 @@ import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
+const CalendarWrap = ref(null);
 const data = reactive({
     current: 1,
     isNewActivity: false,
@@ -89,7 +90,10 @@ const handleNewActivityVal = (e) => {
 }
 // 新建会议
 const handleAddActivity = () => {
-    data.isNewActivity = true;
+    //data.isNewActivity = true;
+    nextTick(() => {
+        CalendarWrap.value.handleOpenNew();
+    })
 }
 const changeRadioGroup = (e) => {
     data.current = e;

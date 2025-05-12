@@ -1,6 +1,6 @@
 <template>
-  <div class="MeetingRoomFullCalendarWrap">
-    <div ref="MeetingRoomFullCalendarRef">
+  <div class="VehicleRoomFullCalendarWrap">
+    <div ref="VehicleRoomFullCalendarRef">
       <FullCalendar
         class="fullCalendar"
         ref="fullCalendarRef"
@@ -23,28 +23,28 @@
               @confirm="openEdit(arg.event)"
               @cancel="handleDelete(arg.event)"
               :z-index="20000"
-              overlayClassName="meeting-popover"
+              overlayClassName="Vehicle-popover"
             >
               <template #icon></template>
               <template #title>
-                <div class="meetingMessageWrap">
-                  <div class="meetingHead">
-                    <div class="meetingLogo">
+                <div class="VehicleMessageWrap">
+                  <div class="VehicleHead">
+                    <div class="VehicleLogo">
                       <img :src="require('@/assets/img/meeting.png')" alt="" />
                     </div>
-                    <p class="meetingName">{{ arg.event.title }}</p>
+                    <p class="VehicleName">{{ arg.event.title }}</p>
                   </div>
-                  <div class="meetingBody">
-                    <div class="meetingInfo">
-                      <div class="meetingInfoItem">
+                  <div class="VehicleBody">
+                    <div class="VehicleInfo">
+                      <div class="VehicleInfoItem">
                         标题：
                         <span class="Subject">{{
                           arg.event.extendedProps.name
                         }}</span>
                       </div>
                     </div>
-                    <div class="meetingInfo">
-                      <div class="meetingInfoItem">
+                    <div class="VehicleInfo">
+                      <div class="VehicleInfoItem">
                         用车时间：
                         <span class="startTime">{{
                           dayjs(arg.event.start).format("YYYY-MM-DD HH:mm")
@@ -54,38 +54,38 @@
                         }}</span>
                       </div>
                     </div>
-                    <div class="meetingInfo">
-                      <div class="meetingInfoItem">
+                    <div class="VehicleInfo">
+                      <div class="VehicleInfoItem">
                         用车人：
                         <span class="OwningUserName">{{
                           arg.event.extendedProps.appUserIdName
                         }}</span>
                       </div>
-                      <div class="meetingInfoItem">
+                      <div class="VehicleInfoItem">
                         车辆名称：
                         <span class="TelePhone">{{
                           arg.event.extendedProps.vehicleIdName
                         }}</span>
                       </div>
                     </div>
-                    <div class="meetingInfo">
-                      <div class="meetingInfoItem">
+                    <div class="VehicleInfo">
+                      <div class="VehicleInfoItem">
                         开始地点：
                         <span class="Where">{{
                           arg.event.extendedProps.startFrom || ""
                         }}</span>
                       </div>
                     </div>
-                    <div class="meetingInfo">
-                      <div class="meetingInfoItem">
+                    <div class="VehicleInfo">
+                      <div class="VehicleInfoItem">
                         去往地点：
                         <span class="Where">{{
                           arg.event.extendedProps.destination || ""
                         }}</span>
                       </div>
                     </div>
-                    <div class="meetingInfo">
-                      <div class="meetingInfoItem">
+                    <div class="VehicleInfo">
+                      <div class="VehicleInfoItem">
                         审批状态：
                         <span
                           class="StatusCodeName"
@@ -125,8 +125,8 @@
                         }}</span>
                       </div>
                     </div>
-                    <div class="meetingInfo">
-                      <div class="meetingInfoItem">
+                    <div class="VehicleInfo">
+                      <div class="VehicleInfoItem">
                         用车事由：
                         <span
                           class="What"
@@ -134,7 +134,7 @@
                         ></span>
                       </div>
                     </div>
-                    <div class="meetingInfo meetingInfo1">
+                    <div class="VehicleInfo VehicleInfo1">
                       <a-button
                         type="link"
                         @click.stop="handleDetailView(arg.event.id)"
@@ -282,7 +282,7 @@ const props = defineProps({
   currentTime: [Object],
   startDateTime: String,
   endDateTime: String,
-  calendarType: String,
+  DestinationTypeCode: String,
   calendarView: String,
 });
 
@@ -382,7 +382,7 @@ const data = reactive({
       //     title: "测试"
       // }
     ], //绑定展示事件
-    // 自定义会议展示内容
+    // 自定义展示内容
     eventTimeFormat: {
       hour: "numeric",
       minute: "2-digit",
@@ -491,9 +491,9 @@ const data = reactive({
     eventResize: (info) => {
       calendarDayChange2(info, "时间调整结束后触发");
     },
-    // 拖动会议触发
+    // 拖动触发
     eventDrop: (info) => {
-      calendarDayChange2(info, "拖动会议触发");
+      calendarDayChange2(info, "拖动触发");
     },
     // 切换视图时触发
     datesSet: (view) => {},
@@ -525,10 +525,10 @@ const {
   calendarOptions,
   loading,
 } = toRefs(data);
-const MeetingRoomFullCalendarRef = ref(null);
+const VehicleRoomFullCalendarRef = ref(null);
 const fullCalendarRef = ref(null);
 onMounted(() => {
-  data.height = MeetingRoomFullCalendarRef.value.scrollHeight;
+  data.height = VehicleRoomFullCalendarRef.value.scrollHeight;
   data.currentDate = props.currentTime;
   //getQuery();
 });
@@ -570,7 +570,7 @@ const calendarDayChange2 = (info, text) => {
   // }
   if (
     (text == "事件的点击" ||
-      text == "拖动会议触发" ||
+      text == "拖动触发" ||
       text == "时间调整结束后触发") &&
     info.event
   ) {
@@ -617,7 +617,7 @@ const calendarDayChange2 = (info, text) => {
       }
     }
     if (
-      (text == "拖动会议触发" || text == "时间调整结束后触发") &&
+      (text == "拖动触发" || text == "时间调整结束后触发") &&
       info.event
     ) {
       let e = {
@@ -670,8 +670,8 @@ const openEdit2 = (e) => {
           recordId: e.Id,
           recordInput: {
             allowSaveOnDuplicate: false,
-            apiName: "MeetingRec",
-            objTypeCode: "5000",
+            apiName: "VehicleUse",
+            objTypeCode: "20503",
             fields: {
               ScheduledStart: e.paramsTime.date + " " + e.paramsTime.time,
               ScheduledEnd: e.paramsTime.endDate + " " + e.paramsTime.end,
@@ -708,7 +708,6 @@ const handleDetail = (e) => {
 };
 //详情页
 const handleDetailView = (id) => {
-  //window.open("/#/lightning/r/meeting/view?id=" + (id || ""));
   let url = router.resolve({
     path: "/lightning/r/Record/view",
     query: {
@@ -766,11 +765,7 @@ const isToDay = (time) => {
 
 //console.log("week", week);
 data.weekList = week;
-// const countTop = (row) => {
-//     let index = data.times.findIndex(item => item == row.meetingdStartTime);
-//     // console.log("index",index);
-//     return (index + 1) * 2 * 30 + "px";
-// }
+
 const countTop = (row) => {
   var time = dayjs(row.startTime).get("hour");
   let index = data.times.findIndex((item) => item.split(":")[0] == time);
@@ -803,7 +798,7 @@ const getQuery = () => {
           endDateTime: props.endDateTime,
           calendarType: "week",
           queryMeetings: true,
-          //filterQuery:'\nResourceTypeCode\teq\t1'
+          DestinationTypeCode:props.DestinationTypeCode||'',
         },
       },
     ],
@@ -918,7 +913,7 @@ const getQuery2 = (obj) => {
 defineExpose({ getQuery });
 </script>
 <style lang="less" scoped>
-.MeetingRoomFullCalendarWrap {
+.VehicleRoomFullCalendarWrap {
   width: 100%;
   height: 100%;
   .arrowIcon {
@@ -1037,12 +1032,12 @@ defineExpose({ getQuery });
     }
   }
 }
-.meetingMessageWrap {
+.VehicleMessageWrap {
   width: 300px;
-  .meetingHead {
+  .VehicleHead {
     display: flex;
     align-items: center;
-    .meetingLogo {
+    .VehicleLogo {
       width: 32px;
       height: 32px;
       background: var(--backColor);
@@ -1052,17 +1047,17 @@ defineExpose({ getQuery });
         height: 100%;
       }
     }
-    .meetingName {
+    .VehicleName {
       margin-left: 15px;
       font-size: 16px;
       font-weight: bold;
     }
   }
-  .meetingBody {
+  .VehicleBody {
     margin-top: 10px;
-    .meetingInfo {
+    .VehicleInfo {
       display: flex;
-      .meetingInfoItem {
+      .VehicleInfoItem {
         flex: 1;
         font-size: 12px;
       }
@@ -1072,7 +1067,7 @@ defineExpose({ getQuery });
     }
   }
 }
-.MeetingRoomFullCalendarWrap {
+.VehicleRoomFullCalendarWrap {
   :deep .fc .fc-toolbar-title {
     font-size: 18px;
   }
@@ -1277,13 +1272,13 @@ defineExpose({ getQuery });
     padding-left: 10px;
   }
 }
-.meetingMessageWrap {
+.VehicleMessageWrap {
   line-height: 30px !important;
   width: 360px;
-  .meetingInfo1 {
+  .VehicleInfo1 {
     margin-top: 5px;
   }
-  .meetingInfoItem {
+  .VehicleInfoItem {
     font-size: 14px !important;
     display: flex;
   }

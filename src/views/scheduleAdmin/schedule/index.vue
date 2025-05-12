@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="calendarBody">
-            <TableCalendar />
+            <TableCalendar ref="TableCalendarWrap" />
         </div>
         <NewSchedule v-if="isSchedule" :isShow="isSchedule" @cancel="cancelNewSchedule" />
         <AddSchedule v-if="isAddSchedule" :isShow="isAddSchedule" @cancel="cancelAddSchedule"
@@ -47,6 +47,7 @@ import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
+const TableCalendarWrap = ref(null);
 const data = reactive({
     current: 1,
     isSchedule: false,
@@ -65,7 +66,10 @@ const { current, isSchedule, isAddSchedule, fileParams, id, paramsTime, objectTy
 
 const handleAddSchedule = () => {
     // data.isSchedule =  true;
-    data.isAddSchedule = true;
+    // data.isAddSchedule = true;
+    nextTick(() => {
+        TableCalendarWrap.value.handleOpenNew();
+    })
 }
 const exportSchedule = () => {
 

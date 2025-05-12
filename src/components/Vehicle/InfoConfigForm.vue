@@ -1,279 +1,324 @@
 <template>
-    <div>
-        <div class="modalContainer InfoConfigForm2Container" style="top:10px;">
-            <div class="modalCenter" :style="{ height: height + 'px!important' }">
-                <div class="tabPanel">
-                    <div class="barContainer">
-                        <div class="groupContainer">
-                            <a-dropdown>
-                                <div class="groupBtn">
-                                    <span class="icon">
-                                        <ControlOutlined />
-                                    </span>
-                                    <span class="text">答复选项</span>
-                                    <span class="arrowIcon">
-                                        <DownOutlined />
-                                    </span>
-                                </div>
-                                <template #overlay>
-                                    <a-menu>
-                                        <a-menu-item>
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                    <CheckOutlined />
-                                                </span>
-                                                <span class="menuText">请求答复</span>
-                                            </div>
-                                        </a-menu-item>
-                                        <a-menu-item>
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                    <CheckOutlined />
-                                                </span>
-                                                <span class="menuText">允许转发</span>
-                                            </div>
-                                        </a-menu-item>
-                                        <a-menu-item>
-                                            <div class="menu-row">
-                                                <span class="icon"></span>
-                                                <span class="menuText">隐藏与会者列表</span>
-                                            </div>
-                                        </a-menu-item>
-                                    </a-menu>
-                                </template>
-                            </a-dropdown>
-                            <div class="ribbon">
-                                <span class="ribbon-bottom-bar-divider"></span>
-                            </div>
-                            <a-dropdown>
-                                <div class="groupBtn">
-                                    <span class="icon">
-                                        <ProjectOutlined />
-                                    </span>
-                                    <span class="text">忙碌</span>
-                                    <span class="arrowIcon">
-                                        <DownOutlined />
-                                    </span>
-                                </div>
-                                <template #overlay>
-                                    <a-menu>
-                                        <a-menu-item>
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                    <CheckOutlined />
-                                                </span>
-                                                <span class="menuText">空闲</span>
-                                            </div>
-                                        </a-menu-item>
-                                        <a-menu-item>
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                    <CheckOutlined />
-                                                </span>
-                                                <span class="menuText">在其他地方工作</span>
-                                            </div>
-                                        </a-menu-item>
-                                        <a-menu-item>
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                    <CheckOutlined />
-                                                </span>
-                                                <span class="menuText">暂定</span>
-                                            </div>
-                                        </a-menu-item>
-                                        <a-menu-item>
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                    <CheckOutlined />
-                                                </span>
-                                                <span class="menuText">忙碌</span>
-                                            </div>
-                                        </a-menu-item>
-                                        <a-menu-item>
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                    <CheckOutlined />
-                                                </span>
-                                                <span class="menuText">外出</span>
-                                            </div>
-                                        </a-menu-item>
-                                    </a-menu>
-                                </template>
-                            </a-dropdown>
-                            <a-dropdown>
-                                <div class="groupBtn">
-                                    <span class="icon">
-                                        <ClockCircleOutlined />
-                                    </span>
-                                    <span class="text">15分钟前</span>
-                                    <span class="arrowIcon">
-                                        <DownOutlined />
-                                    </span>
-                                </div>
-                                <template #overlay>
-                                    <a-menu>
-                                        <a-menu-item v-for="(item, index) in menuTimes" :key="index">
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                    <CheckOutlined />
-                                                </span>
-                                                <span class="menuText">{{ item }}</span>
-                                            </div>
-                                        </a-menu-item>
-                                    </a-menu>
-                                </template>
-                            </a-dropdown>
-                            <div class="ribbon">
-                                <span class="ribbon-bottom-bar-divider"></span>
-                            </div>
-                            <a-dropdown>
-                                <div class="groupBtn">
-                                    <span class="icon">
-                                        <TagOutlined />
-                                    </span>
-                                    <span class="text">分类</span>
-                                    <span class="arrowIcon">
-                                        <DownOutlined />
-                                    </span>
-                                </div>
-                                <template #overlay>
-                                    <a-menu>
-                                        <a-menu-item v-for="(item, index) in categoryList" :key="index">
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                    <CheckOutlined />
-                                                </span>
-                                                <span class="menuText">{{ item.label }}</span>
-                                            </div>
-                                        </a-menu-item>
-                                        <a-menu-item
-                                            style="border-top: 1px solid #e2e3e5;border-radius: 0 4px 0px 4px;">
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                </span>
-                                                <span class="menuText">新建类别</span>
-                                            </div>
-                                        </a-menu-item>
-                                        <a-menu-item
-                                            style="border-top: 1px solid #e2e3e5;border-radius: 0 4px 0px 4px;">
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                </span>
-                                                <span class="menuText">管理类别</span>
-                                            </div>
-                                        </a-menu-item>
-                                    </a-menu>
-                                </template>
-                            </a-dropdown>
-                            <div class="groupBtn">
-                                <span class="icon">
-                                    <UnlockOutlined />
-                                </span>
-                                <span class="text">私人</span>
-                            </div>
-                            <div class="ribbon">
-                                <span class="ribbon-bottom-bar-divider"></span>
-                            </div>
-                            <a-dropdown>
-                                <div class="groupBtn" style="padding: 0 4px;">
-                                    <span class="text">
-                                        <EllipsisOutlined></EllipsisOutlined>
-                                    </span>
-                                </div>
-                                <template #overlay>
-                                    <a-menu>
-                                        <a-menu-item>
-                                            <div class="menu-row">
-                                                <span class="icon">
-                                                    <CheckOutlined />
-                                                </span>
-                                                <span class="menuText">我的模板</span>
-                                            </div>
-                                        </a-menu-item>
-                                    </a-menu>
-                                </template>
-                            </a-dropdown>
-                        </div>
-                    </div>
+  <div>
+    <div class="modalContainer InfoConfigForm2Container" style="top: 10px">
+      <div class="modalCenter" :style="{ height: height + 'px!important' }">
+        <div class="tabPanel">
+          <div class="barContainer">
+            <div class="groupContainer">
+              <a-dropdown>
+                <div class="groupBtn">
+                  <span class="icon">
+                    <ControlOutlined />
+                  </span>
+                  <span class="text">答复选项</span>
+                  <span class="arrowIcon">
+                    <DownOutlined />
+                  </span>
                 </div>
-                <div class="formContent">
-                    <div class="leftForm">
-                        <div class="formWrap">
-                            <a-form :model="formState" ref="formRef">
-                                <a-form-item name="Subject">
-                                    <div class="formRow">
-                                        <div class="lIcon">
-                                            <a-button :icon="h(EditOutlined)" />
-                                        </div>
-                                        <div class="rVal">
-                                            <input type="text" v-model="formState.name" class="title"
-                                                placeholder="添加标题">
-                                        </div>
-                                        <div class="lIcon lIcon1">
-                                            <LockOutlined />
-                                        </div>
-                                    </div>
-                                </a-form-item>
-                                <a-form-item name="AppUserId">
-                                    <div class="formRow">
-                                        <div class="lIcon lIcon1">
-                                            <UserAddOutlined />
-                                        </div>
-                                        <div class="rVal">
-                                            <a-select mode="single" allowClear v-model:value="formState.AppUserId.Id"
-                                                :default-active-first-option="false" :filter-option="false" showSearch
-                                                @search="(e) => { searchlookup(e, '8', 'AppUserId'); }"
-                                                @dropdownVisibleChange="(e) => { searchlookup('', '8', 'AppUserId'); }"
-                                                :placeholder="'选择用车人'">
-                                                <template #suffixIcon></template>
-                                                <a-select-option v-for="(option, optionIdx) in AppUserId"
-                                                    :key="optionIdx" :value="option.ID">
-                                                    <a-avatar :size="37">
-                                                        <template #icon>
-                                                            <UserOutlined />
-                                                        </template>
-                                                        <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
-                                                    </a-avatar>
-                                                    {{ option.Name }}
-                                                </a-select-option>
-                                            </a-select>
-                                            <div class="selectIcon">
-                                                <SearchOutlined class="ant-select-suffix"
-                                                    @click="handleOpenLook('8', 'AppUserId')" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a-form-item>
-                                <div class="formRow" style="align-items: self-start;">
-                                    <div class="lIcon lIcon1">
-                                        <ClockCircleOutlined />
-                                    </div>
-                                    <div class="timeBox">
-                                        <div class="rowTime">
-                                            <div class="date">
-                                                <a-date-picker v-model:value="formState.StartDateTime"
-                                                    :valueFormat="dateFormat" />
-                                            </div>
-                                            <div class="time">
-                                                <a-time-picker v-model:value="formState.StartDateTime_time"
-                                                    :valueFormat="hourFormat" format="HH:mm" />
-                                            </div>
-                                            <!-- <div class="switch">
-                                                <a-switch v-model:checked="formState.IsAllDayEvent" />
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item>
+                      <div class="menu-row">
+                        <span class="icon">
+                          <CheckOutlined />
+                        </span>
+                        <span class="menuText">请求答复</span>
+                      </div>
+                    </a-menu-item>
+                    <a-menu-item>
+                      <div class="menu-row">
+                        <span class="icon">
+                          <CheckOutlined />
+                        </span>
+                        <span class="menuText">允许转发</span>
+                      </div>
+                    </a-menu-item>
+                    <a-menu-item>
+                      <div class="menu-row">
+                        <span class="icon"></span>
+                        <span class="menuText">隐藏与会者列表</span>
+                      </div>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+              <div class="ribbon">
+                <span class="ribbon-bottom-bar-divider"></span>
+              </div>
+              <a-dropdown>
+                <div class="groupBtn">
+                  <span class="icon">
+                    <ProjectOutlined />
+                  </span>
+                  <span class="text">忙碌</span>
+                  <span class="arrowIcon">
+                    <DownOutlined />
+                  </span>
+                </div>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item>
+                      <div class="menu-row">
+                        <span class="icon">
+                          <CheckOutlined />
+                        </span>
+                        <span class="menuText">空闲</span>
+                      </div>
+                    </a-menu-item>
+                    <a-menu-item>
+                      <div class="menu-row">
+                        <span class="icon">
+                          <CheckOutlined />
+                        </span>
+                        <span class="menuText">在其他地方工作</span>
+                      </div>
+                    </a-menu-item>
+                    <a-menu-item>
+                      <div class="menu-row">
+                        <span class="icon">
+                          <CheckOutlined />
+                        </span>
+                        <span class="menuText">暂定</span>
+                      </div>
+                    </a-menu-item>
+                    <a-menu-item>
+                      <div class="menu-row">
+                        <span class="icon">
+                          <CheckOutlined />
+                        </span>
+                        <span class="menuText">忙碌</span>
+                      </div>
+                    </a-menu-item>
+                    <a-menu-item>
+                      <div class="menu-row">
+                        <span class="icon">
+                          <CheckOutlined />
+                        </span>
+                        <span class="menuText">外出</span>
+                      </div>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+              <a-dropdown>
+                <div class="groupBtn">
+                  <span class="icon">
+                    <ClockCircleOutlined />
+                  </span>
+                  <span class="text">15分钟前</span>
+                  <span class="arrowIcon">
+                    <DownOutlined />
+                  </span>
+                </div>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item
+                      v-for="(item, index) in menuTimes"
+                      :key="index"
+                    >
+                      <div class="menu-row">
+                        <span class="icon">
+                          <CheckOutlined />
+                        </span>
+                        <span class="menuText">{{ item }}</span>
+                      </div>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+              <div class="ribbon">
+                <span class="ribbon-bottom-bar-divider"></span>
+              </div>
+              <a-dropdown>
+                <div class="groupBtn">
+                  <span class="icon">
+                    <TagOutlined />
+                  </span>
+                  <span class="text">分类</span>
+                  <span class="arrowIcon">
+                    <DownOutlined />
+                  </span>
+                </div>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item
+                      v-for="(item, index) in categoryList"
+                      :key="index"
+                    >
+                      <div class="menu-row">
+                        <span class="icon">
+                          <CheckOutlined />
+                        </span>
+                        <span class="menuText">{{ item.label }}</span>
+                      </div>
+                    </a-menu-item>
+                    <a-menu-item
+                      style="
+                        border-top: 1px solid #e2e3e5;
+                        border-radius: 0 4px 0px 4px;
+                      "
+                    >
+                      <div class="menu-row">
+                        <span class="icon"> </span>
+                        <span class="menuText">新建类别</span>
+                      </div>
+                    </a-menu-item>
+                    <a-menu-item
+                      style="
+                        border-top: 1px solid #e2e3e5;
+                        border-radius: 0 4px 0px 4px;
+                      "
+                    >
+                      <div class="menu-row">
+                        <span class="icon"> </span>
+                        <span class="menuText">管理类别</span>
+                      </div>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+              <div class="groupBtn">
+                <span class="icon">
+                  <UnlockOutlined />
+                </span>
+                <span class="text">私人</span>
+              </div>
+              <div class="ribbon">
+                <span class="ribbon-bottom-bar-divider"></span>
+              </div>
+              <a-dropdown>
+                <div class="groupBtn" style="padding: 0 4px">
+                  <span class="text">
+                    <EllipsisOutlined></EllipsisOutlined>
+                  </span>
+                </div>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item>
+                      <div class="menu-row">
+                        <span class="icon">
+                          <CheckOutlined />
+                        </span>
+                        <span class="menuText">我的模板</span>
+                      </div>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+            </div>
+          </div>
+        </div>
+        <div class="formContent">
+          <div class="leftForm">
+            <div class="formWrap">
+              <a-form :model="formState" ref="formRef">
+                <a-form-item name="Subject">
+                  <div class="formRow">
+                    <div class="lIcon">
+                      <a-button :icon="h(EditOutlined)" />
+                    </div>
+                    <div class="rVal">
+                      <input
+                        type="text"
+                        v-model="formState.name"
+                        class="title"
+                        placeholder="添加标题"
+                      />
+                    </div>
+                    <div class="lIcon lIcon1">
+                      <LockOutlined />
+                    </div>
+                  </div>
+                </a-form-item>
+                <a-form-item name="AppUserId">
+                  <div class="formRow">
+                    <div class="lIcon lIcon1">
+                      <UserAddOutlined />
+                    </div>
+                    <div class="rVal">
+                      <a-select
+                        mode="single"
+                        allowClear
+                        v-model:value="formState.AppUserId.Id"
+                        :default-active-first-option="false"
+                        :filter-option="false"
+                        showSearch
+                        @search="
+                          (e) => {
+                            searchlookup(e, '8', 'AppUserId');
+                          }
+                        "
+                        @dropdownVisibleChange="
+                          (e) => {
+                            searchlookup('', '8', 'AppUserId');
+                          }
+                        "
+                        :placeholder="'选择用车人'"
+                      >
+                        <template #suffixIcon></template>
+                        <a-select-option
+                          v-for="(option, optionIdx) in AppUserId"
+                          :key="optionIdx"
+                          :value="option.ID"
+                        >
+                          <a-avatar :size="37">
+                            <template #icon>
+                              <UserOutlined />
+                            </template>
+                            <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
+                          </a-avatar>
+                          {{ option.Name }}
+                        </a-select-option>
+                      </a-select>
+                      <div class="selectIcon">
+                        <SearchOutlined
+                          class="ant-select-suffix"
+                          @click="handleOpenLook('8', 'AppUserId')"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </a-form-item>
+                <div class="formRow" style="align-items: self-start">
+                  <div class="lIcon lIcon1">
+                    <ClockCircleOutlined />
+                  </div>
+                  <div class="timeBox">
+                    <div class="rowTime">
+                      <div class="date">
+                        <a-date-picker
+                          v-model:value="formState.StartDateTime"
+                          :valueFormat="dateFormat"
+                        />
+                      </div>
+                      <div class="time">
+                        <a-time-picker
+                          v-model:value="formState.StartDateTime_time"
+                          :valueFormat="hourFormat"
+                          format="HH:mm"
+                        />
+                      </div>
+                      <!-- <div class="switch">
+                                                <a-switch v-model:checked="formState.IsAllDayEvent" @change="IsAllDayEventChange" />
                                                 <span class="text">全天</span>
                                             </div> -->
-                                        </div>
-                                        <div class="rowTime">
-                                            <div class="date">
-                                                <a-date-picker v-model:value="formState.EndDateTime"
-                                                    :valueFormat="dateFormat" />
-                                            </div>
-                                            <div class="time">
-                                                <a-time-picker v-model:value="formState.EndDateTime_time"
-                                                    :valueFormat="hourFormat" format="HH:mm" />
-                                            </div>
-                                            <!-- <div class="groupContainer">
-                                                <a-dropdown>
+                    </div>
+                    <div class="rowTime">
+                      <div class="date">
+                        <a-date-picker
+                          v-model:value="formState.EndDateTime"
+                          :valueFormat="dateFormat"
+                        />
+                      </div>
+                      <div class="time">
+                        <a-time-picker
+                          v-model:value="formState.EndDateTime_time"
+                          :valueFormat="hourFormat"
+                          format="HH:mm"
+                        />
+                      </div>
+                      <div class="groupContainer">
+                        <!-- <a-dropdown>
                                                     <div class="groupBtn show">
                                                         <span class="icon">
                                                             <SyncOutlined />
@@ -301,64 +346,153 @@
                                                             </a-menu-item>
                                                         </a-menu>
                                                     </template>
-                                                </a-dropdown>
-                                            </div> -->
-                                        </div>
-                                    </div>
+                                                </a-dropdown> -->
+                        <a-dropdown>
+                          <div class="groupBtn show" style="margin-left: 0px">
+                            <span class="icon icon1">
+                              <!-- <TagOutlined /> -->
+                              <Icon
+                                name="Tag"
+                                fill="#808080"
+                                width="16"
+                                hight="20"
+                              />
+                            </span>
+                            <span class="text">{{
+                              DestinationTypeCode || "目的地类型"
+                            }}</span>
+                            <span class="arrowIcon">
+                              <DownOutlined />
+                            </span>
+                          </div>
+                          <template #overlay>
+                            <a-menu>
+                              <a-menu-item
+                                v-for="(item, index) in DestinationTypeCodeList"
+                                :key="index"
+                              >
+                                <div
+                                  class="menu-row"
+                                  @click="
+                                    selectOption(
+                                      'DestinationTypeCode',
+                                      item.value
+                                    )
+                                  "
+                                  :class="{
+                                    selectOptionActive:
+                                      formState.DestinationTypeCode ==
+                                      item.value,
+                                  }"
+                                >
+                                  <span class="icon">
+                                    <template
+                                      v-if="
+                                        formState.DestinationTypeCode ==
+                                        item.value
+                                      "
+                                    >
+                                      <CheckOutlined />
+                                    </template>
+                                  </span>
+                                  <!-- <span class="icon">
+                                                        <Icon name="Tag" fill="rgb(0, 120, 212)" width="16" hight="20" v-if="item.value*1==0" />
+                                                        <Icon name="Tag" fill="rgb(14, 122, 11)" width="16" hight="20" v-if="item.value*1==1" />
+                                                    </span> -->
+                                  <span class="menuText">{{ item.label }}</span>
                                 </div>
-                                <a-form-item name="VehicleId">
-                                    <div class="formRow">
-                                        <div class="lIcon lIcon1">
-                                            <HomeOutlined v-if="props.objectTypeCode == '5000'" />
-                                            <CarOutlined v-if="props.objectTypeCode == '20503'" />
-                                        </div>
-                                        <div class="rVal">
-                                            <a-select mode="single" allowClear v-model:value="formState.VehicleId.Id"
-                                                :default-active-first-option="false" :filter-option="false" showSearch
-                                                @search="(e) => { searchlookup(e, '20034', 'VehicleId'); }"
-                                                @dropdownVisibleChange="(e) => { searchlookup('', '20034', 'VehicleId'); }"
-                                                :placeholder="'请选择车辆'">
-                                                <template #suffixIcon></template>
-                                                <a-select-option v-for="(option, optionIdx) in VehicleId" :key="optionIdx"
-                                                    :value="option.ID">
-                                                    <a-avatar :size="37">
-                                                        <template #icon>
-                                                            <HomeOutlined v-if="props.objectTypeCode=='5000'" />
-                                                            <CarOutlined v-if="props.objectTypeCode=='20503'" />
-                                                        </template>
-                                                        <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
-                                                    </a-avatar>
-                                                    {{ option.Name }}
-                                                </a-select-option>
-                                            </a-select>
-                                            <div class="selectIcon">
-                                                <SearchOutlined class="ant-select-suffix"
-                                                    @click="handleOpenLook('20034', 'VehicleId')" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a-form-item>
-                                <a-form-item name="StartFrom">
-                                    <div class="formRow">
-                                        <div class="lIcon lIcon1">
-                                            <EnvironmentOutlined />
-                                        </div>
-                                        <div class="rVal rVal1">
-                                            <input type="text" v-model="formState.StartFrom" placeholder="开始地点">
-                                        </div>
-                                    </div>
-                                </a-form-item>
-                                <a-form-item name="Destination">
-                                    <div class="formRow">
-                                        <div class="lIcon lIcon1">
-                                            <EnvironmentOutlined />
-                                        </div>
-                                        <div class="rVal rVal1">
-                                            <input type="text" v-model="formState.Destination" placeholder="去往地点">
-                                        </div>
-                                    </div>
-                                </a-form-item>
-                                <!-- <a-form-item name="MeetingSummary">
+                              </a-menu-item>
+                            </a-menu>
+                          </template>
+                        </a-dropdown>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <a-form-item name="VehicleId">
+                  <div class="formRow">
+                    <div class="lIcon lIcon1">
+                      <HomeOutlined v-if="props.objectTypeCode == '5000'" />
+                      <CarOutlined v-if="props.objectTypeCode == '20503'" />
+                    </div>
+                    <div class="rVal">
+                      <a-select
+                        mode="single"
+                        allowClear
+                        v-model:value="formState.VehicleId.Id"
+                        :default-active-first-option="false"
+                        :filter-option="false"
+                        showSearch
+                        @search="
+                          (e) => {
+                            searchlookup(e, '20034', 'VehicleId');
+                          }
+                        "
+                        @dropdownVisibleChange="
+                          (e) => {
+                            searchlookup('', '20034', 'VehicleId');
+                          }
+                        "
+                        :placeholder="'请选择车辆'"
+                      >
+                        <template #suffixIcon></template>
+                        <a-select-option
+                          v-for="(option, optionIdx) in VehicleId"
+                          :key="optionIdx"
+                          :value="option.ID"
+                        >
+                          <a-avatar :size="37">
+                            <template #icon>
+                              <HomeOutlined
+                                v-if="props.objectTypeCode == '5000'"
+                              />
+                              <CarOutlined
+                                v-if="props.objectTypeCode == '20503'"
+                              />
+                            </template>
+                            <!-- <img :src="item.ImageUrls" alt="" class="commentAvatar" /> -->
+                          </a-avatar>
+                          {{ option.Name }}
+                        </a-select-option>
+                      </a-select>
+                      <div class="selectIcon">
+                        <SearchOutlined
+                          class="ant-select-suffix"
+                          @click="handleOpenLook('20034', 'VehicleId')"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </a-form-item>
+                <a-form-item name="StartFrom">
+                  <div class="formRow">
+                    <div class="lIcon lIcon1">
+                      <EnvironmentOutlined />
+                    </div>
+                    <div class="rVal rVal1">
+                      <input
+                        type="text"
+                        v-model="formState.StartFrom"
+                        placeholder="开始地点"
+                      />
+                    </div>
+                  </div>
+                </a-form-item>
+                <a-form-item name="Destination">
+                  <div class="formRow">
+                    <div class="lIcon lIcon1">
+                      <EnvironmentOutlined />
+                    </div>
+                    <div class="rVal rVal1">
+                      <input
+                        type="text"
+                        v-model="formState.Destination"
+                        placeholder="去往地点"
+                      />
+                    </div>
+                  </div>
+                </a-form-item>
+                <!-- <a-form-item name="MeetingSummary">
                                         <div class="formRow" style="align-items: self-start;">
                                             <div class="lIcon lIcon1">
                                                 <FormOutlined />
@@ -369,972 +503,1175 @@
                                             </div>
                                         </div>
                                     </a-form-item> -->
-                                <a-form-item name="Description">
-                                    <div class="formRow" style="align-items: self-start;">
-                                        <div class="lIcon lIcon1">
-                                            <FormOutlined />
-                                        </div>
-                                        <div class="rVal rVal2">
-                                            <TEditor ref="editorRef2" mode="middle" :placeholder="'用车事由'" :height=height2
-                                                @input="getEditorContent2" />
-                                        </div>
-                                    </div>
-                                </a-form-item>
-                            </a-form>
-                        </div>
+                <a-form-item name="Description">
+                  <div class="formRow" style="align-items: self-start">
+                    <div class="lIcon lIcon1">
+                      <FormOutlined />
                     </div>
-                    <div class="rightCalendar">
-                        <DayCalendar ref="DayCalendarWrap" :id="props.id" :currentTime="formState.StartDateTime"
-                            :startDateTime="formState.startTime" :endDateTime="formState.endTime"
-                            :calendarType="formState.CalendarType || props.calendarType"
-                            @calendarDayChange="calendarDayChange" :objectTypeCode="props.objectTypeCode" />
+                    <div class="rVal rVal2">
+                      <TEditor
+                        ref="editorRef2"
+                        mode="middle"
+                        :placeholder="'用车事由'"
+                        :height="height2"
+                        @input="getEditorContent2"
+                      />
                     </div>
-                </div>
+                  </div>
+                </a-form-item>
+              </a-form>
             </div>
+          </div>
+          <div class="rightCalendar">
+            <DayCalendar
+              ref="DayCalendarWrap"
+              :id="props.id"
+              :currentTime="formState.StartDateTime"
+              :startDateTime="formState.startTime"
+              :endDateTime="formState.endTime"
+              :DestinationTypeCode="
+                formState.DestinationTypeCode || props.DestinationTypeCode
+              "
+              @calendarDayChange="calendarDayChange"
+              :objectTypeCode="props.objectTypeCode"
+            />
+          </div>
         </div>
-        <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
+      </div>
     </div>
+    <radio-user
+      :isShow="isRadioUser"
+      @selectVal="getUserData"
+      @cancel="closeUser"
+      @ok="refreshPeople"
+    ></radio-user>
+  </div>
 </template>
 <script setup>
 import {
-    ref,
-    watch,
-    reactive,
-    toRefs,
-    onMounted,
-    getCurrentInstance,
-    onUpdated,
-    defineProps,
-    defineExpose,
-    defineEmits,
-    toRaw, h, nextTick
+  ref,
+  watch,
+  reactive,
+  toRefs,
+  onMounted,
+  getCurrentInstance,
+  onUpdated,
+  defineProps,
+  defineExpose,
+  defineEmits,
+  toRaw,
+  h,
+  nextTick,
 } from "vue";
 
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
-import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
-dayjs.locale('zh-cn');
-import calendar from 'dayjs/plugin/calendar';
-import weekday from 'dayjs/plugin/weekday';
-import localeData from 'dayjs/plugin/localeData';
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+import locale from "ant-design-vue/es/date-picker/locale/zh_CN";
+dayjs.locale("zh-cn");
+import calendar from "dayjs/plugin/calendar";
+import weekday from "dayjs/plugin/weekday";
+import localeData from "dayjs/plugin/localeData";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 dayjs.extend(calendar);
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 
 import {
-    SearchOutlined,
-    EditOutlined,
-    ClockCircleOutlined,
-    EnvironmentOutlined,
-    UserAddOutlined,
-    FormOutlined,
-    TagOutlined,
-    UnlockOutlined,
-    LockOutlined,
-    SyncOutlined,
-    ProjectOutlined,
-    ControlOutlined,
-    DownOutlined,
-    UserOutlined,
-    HomeOutlined,
-    SwapOutlined,
-    CheckOutlined,
-    EllipsisOutlined,
-    CarOutlined
+  SearchOutlined,
+  EditOutlined,
+  ClockCircleOutlined,
+  EnvironmentOutlined,
+  UserAddOutlined,
+  FormOutlined,
+  TagOutlined,
+  UnlockOutlined,
+  LockOutlined,
+  SyncOutlined,
+  ProjectOutlined,
+  ControlOutlined,
+  DownOutlined,
+  UserOutlined,
+  HomeOutlined,
+  SwapOutlined,
+  CheckOutlined,
+  EllipsisOutlined,
+  CarOutlined,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import TEditor from "@/components/TEditor.vue";
 import DayCalendar from "@/components/Vehicle/AddVehicleDayModal.vue";
+import Icon from "@/components/icon/index.vue";
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
 const { proxy } = getCurrentInstance();
 const DayCalendarWrap = ref(null);
 const labelCol = ref({ style: { width: "100px" } });
 const props = defineProps({
-    isShow: Boolean,
-    objectTypeCode: String,
-    id: String,
-    entityApiName: String,
-    calendarType: String,
-    paramsTime: [Object]
+  isShow: Boolean,
+  objectTypeCode: String,
+  id: String,
+  entityApiName: String,
+  DestinationTypeCode: String,
+  paramsTime: [Object],
 });
-const dateFormat = 'YYYY-MM-DD';
-const hourFormat = 'HH:mm'
+const dateFormat = "YYYY-MM-DD";
+const hourFormat = "HH:mm";
 const formRef = ref();
 const emit = defineEmits(["cancel", "select-val"]);
 const handleCancel = () => {
-    emit("cancel", false);
+  emit("cancel", false);
 };
 const editorRef = ref();
 const editorRef2 = ref();
 const data = reactive({
-    title: "新建",
-    height: document.documentElement.clientHeight - 165,
-    height2: document.documentElement.clientHeight - 450,
-    menuTimes: [
-        '不要提醒我', '在事件发生时', '5 分钟 钱', '30分钟 前', '1小时 前',
-        '2小时 前', '12小时 前', '1天 前', '1周 前', '添加电子邮件提醒'
-    ],
-    categoryList: [
-        {
-            value: "#ff8c00",
-            label: "橙色类别"
-        },
-        {
-            value: "#e74856",
-            label: "红色类别"
-        },
-        {
-            value: "#fff100",
-            label: "黄色类别"
-        },
-        {
-            value: "#00bcf2",
-            label: "蓝色类别"
-        },
-        {
-            value: "#47d041",
-            label: "绿色类别"
-        },
-        {
-            value: "#8764b8",
-            label: "紫色类别"
-        }
-    ],
-    AppUserId: [],
-    VehicleId: [],
-    calendarItem: {},
-    isRadioUser: false,
-    RecurrenceType: '不重复',
-    RecurrenceTypeList: [
-        {
-            value: "",
-            label: "不重复"
-        },
-        {
-            value: "day",
-            label: "每天"
-        },
-        {
-            value: "week",
-            label: "每周"
-        },
-        {
-            value: "month",
-            label: "每月"
-        },
-        {
-            value: "year",
-            label: "每年"
-        },
-    ]
+  title: "新建",
+  height: document.documentElement.clientHeight - 165,
+  height2: document.documentElement.clientHeight - 450,
+  menuTimes: [
+    "不要提醒我",
+    "在事件发生时",
+    "5 分钟 钱",
+    "30分钟 前",
+    "1小时 前",
+    "2小时 前",
+    "12小时 前",
+    "1天 前",
+    "1周 前",
+    "添加电子邮件提醒",
+  ],
+  categoryList: [
+    {
+      value: "#ff8c00",
+      label: "橙色类别",
+    },
+    {
+      value: "#e74856",
+      label: "红色类别",
+    },
+    {
+      value: "#fff100",
+      label: "黄色类别",
+    },
+    {
+      value: "#00bcf2",
+      label: "蓝色类别",
+    },
+    {
+      value: "#47d041",
+      label: "绿色类别",
+    },
+    {
+      value: "#8764b8",
+      label: "紫色类别",
+    },
+  ],
+  AppUserId: [],
+  VehicleId: [],
+  calendarItem: {},
+  isRadioUser: false,
+  RecurrenceType: "不重复",
+  RecurrenceTypeList: [
+    {
+      value: "",
+      label: "不重复",
+    },
+    {
+      value: "day",
+      label: "每天",
+    },
+    {
+      value: "week",
+      label: "每周",
+    },
+    {
+      value: "month",
+      label: "每月",
+    },
+    {
+      value: "year",
+      label: "每年",
+    },
+  ],
+  DestinationTypeCode: "",
+  DestinationTypeCodeList: [],
 });
 const {
-    title,
-    height,
-    height2,
-    menuTimes, categoryList, AppUserId, VehicleId, isRadioUser, RecurrenceType, RecurrenceTypeList
+  DestinationTypeCode,
+  DestinationTypeCodeList,
+  title,
+  height,
+  height2,
+  menuTimes,
+  categoryList,
+  AppUserId,
+  VehicleId,
+  isRadioUser,
+  RecurrenceType,
+  RecurrenceTypeList,
 } = toRefs(data);
 const formState = reactive({
-    RegardingObjectTypeCode: 20290,
-    RegardingObjectId: {},
-    name: '',
-    StartDateTime: '',
-    StartDateTime_time: '',
-    ScheduledStart: '',
-    ScheduledEnd: '',
-    EndDateTime: '',
-    EndDateTime_time: '',
-    AppUserId: {},
-    VehicleId: {},
-    IsAllDayEvent: false,
-    StartFrom: '',
-    Destination:'',
-    Description: '',
-    MeetingSummary: '',
-    CalendarType: '',
-    RegardingObjectIdName: '',
-    BgColor: '',
-    IsPrivate: false,
-    Reminder: false,
-    startTime: "",
-    endTime: "",
-    RecurrenceType: ''
+  RegardingObjectTypeCode: 20290,
+  RegardingObjectId: {},
+  name: "",
+  StartDateTime: "",
+  StartDateTime_time: "",
+  ScheduledStart: "",
+  ScheduledEnd: "",
+  EndDateTime: "",
+  EndDateTime_time: "",
+  AppUserId: {},
+  VehicleId: {},
+  IsAllDayEvent: false,
+  StartFrom: "",
+  Destination: "",
+  Description: "",
+  MeetingSummary: "",
+  DestinationTypeCode: "",
+  RegardingObjectIdName: "",
+  BgColor: "",
+  IsPrivate: false,
+  Reminder: false,
+  startTime: "",
+  endTime: "",
+  RecurrenceType: "",
 });
-if (props.paramsTime && props.paramsTime.date && props.paramsTime.time == '') {
-    formState.StartDateTime = props.paramsTime.date;
-    formState.StartDateTime_time = "08:00";
-    formState.EndDateTime_time = "09:00";
-    if (props.paramsTime.endDate) {
-        formState.EndDateTime = props.paramsTime.endDate;
-    }
-    else {
-        formState.EndDateTime = props.paramsTime.date;
-    }
+if (props.paramsTime && props.paramsTime.date && props.paramsTime.time == "") {
+  formState.StartDateTime = props.paramsTime.date;
+  formState.StartDateTime_time = "08:00";
+  formState.EndDateTime_time = "09:00";
+  if (props.paramsTime.endDate) {
+    formState.EndDateTime = props.paramsTime.endDate;
+  } else {
+    formState.EndDateTime = props.paramsTime.date;
+  }
 } else if (props.paramsTime && props.paramsTime.date && props.paramsTime.time) {
-    formState.StartDateTime = props.paramsTime.date;
-    formState.StartDateTime_time = props.paramsTime.time;
-    // if(props.paramsTime.time=='00:00'){
-    //     formState.StartDateTime_time = "08:00";
+  formState.StartDateTime = props.paramsTime.date;
+  formState.StartDateTime_time = props.paramsTime.time;
+  // if(props.paramsTime.time=='00:00'){
+  //     formState.StartDateTime_time = "08:00";
+  // }
+  if (props.paramsTime.endDate) {
+    formState.EndDateTime = props.paramsTime.endDate;
+  } else {
+    formState.EndDateTime = props.paramsTime.date;
+  }
+  if (props.paramsTime.end) {
+    formState.EndDateTime_time = props.paramsTime.end;
+    // if(props.paramsTime.end=='00:00'){
+    //     formState.EndDateTime_time = "09:00";
     // }
-    if (props.paramsTime.endDate) {
-        formState.EndDateTime = props.paramsTime.endDate;
+    if (props.paramsTime.time == "00:00" && props.paramsTime.end == "00:00") {
+      formState.StartDateTime_time = "08:00";
+      formState.EndDateTime_time = "09:00";
+      var date = new Date(formState.EndDateTime);
+      var year = date.getFullYear();
+      var month = date.getMonth();
+      var day = date.getDate();
+      formState.EndDateTime = dayjs(new Date(year, month, day - 1)).format(
+        "YYYY-MM-DD"
+      );
     }
-    else {
-        formState.EndDateTime = props.paramsTime.date;
-    }
-    if (props.paramsTime.end) {
-        formState.EndDateTime_time = props.paramsTime.end;
-        // if(props.paramsTime.end=='00:00'){
-        //     formState.EndDateTime_time = "09:00";
-        // }
-        if (props.paramsTime.time == '00:00' && props.paramsTime.end == '00:00') {
-            formState.StartDateTime_time = "08:00";
-            formState.EndDateTime_time = "09:00";
-            var date = new Date(formState.EndDateTime);
-            var year = date.getFullYear();
-            var month = date.getMonth();
-            var day = date.getDate();
-            formState.EndDateTime = (dayjs(new Date(year, month, day - 1)).format("YYYY-MM-DD"));
-        }
-    }
-    else {
-        let hour = new Date(props.paramsTime.date + ' ' + props.paramsTime.time).getHours() + 1;
-        hour = hour < 10 ? '0' + hour : hour;
-        formState.EndDateTime_time = hour + ':00';
-    }
+  } else {
+    let hour =
+      new Date(props.paramsTime.date + " " + props.paramsTime.time).getHours() +
+      1;
+    hour = hour < 10 ? "0" + hour : hour;
+    formState.EndDateTime_time = hour + ":00";
+  }
 } else {
-    formState.StartDateTime = dayjs(new Date()).startOf("day").format("YYYY-MM-DD");
-    formState.EndDateTime = dayjs(new Date()).endOf("day").format("YYYY-MM-DD");
-    let hour = (new Date()).getHours() + 1;
-    hour = hour < 10 ? '0' + hour : hour;
-    formState.StartDateTime_time = hour + ':00';
-    let hour2 = (new Date()).getHours() + 2;
-    hour2 = hour2 < 10 ? '0' + hour2 : hour2;
-    formState.EndDateTime_time = hour2 + ':00';
+  formState.StartDateTime = dayjs(new Date())
+    .startOf("day")
+    .format("YYYY-MM-DD");
+  formState.EndDateTime = dayjs(new Date()).endOf("day").format("YYYY-MM-DD");
+  let hour = new Date().getHours() + 1;
+  hour = hour < 10 ? "0" + hour : hour;
+  formState.StartDateTime_time = hour + ":00";
+  let hour2 = new Date().getHours() + 2;
+  hour2 = hour2 < 10 ? "0" + hour2 : hour2;
+  formState.EndDateTime_time = hour2 + ":00";
 }
 const getEditorContent = (e) => {
-    formState.MeetingSummary = e;
-}
-const getEditorContent2 = (e) => {
-    formState.Description = e;
-}
-watch(() => formState.StartDateTime, (newVal, oldVal) => {
-    formState.startTime = newVal + ' ' + formState.StartDateTime_time;
-    calendarGetData();
-}, { deep: true })
-watch(() => formState.StartDateTime_time, (newVal, oldVal) => {
-    formState.startTime = formState.StartDateTime + '' + newVal;
-    calendarGetData();
-}, { deep: true })
-watch(() => formState.EndDateTime, (newVal, oldVal) => {
-    formState.endTime = newVal + '' + formState.EndDateTime_time;
-    //calendarGetData();
-}, { deep: true })
-watch(() => formState.EndDateTime_time, (newVal, oldVal) => {
-    formState.endTime = formState.EndDateTime + '' + newVal;
-    calendarGetData();
-}, { deep: true })
-const uniqu = (array, name) => {
-    var arr = []
-    for (var j = 0; j < array.length; j++) {
-        if (JSON.stringify(arr).indexOf(array[j][name]) == -1) {
-            arr.push(array[j])
-        }
-    }
-    return arr
-}
-const searchlookup = (search, Lktp, fieldApiName) => {
-    // let obj = {
-    //     actions: [{
-    //         id: "6129;a",
-    //         descriptor: "",
-    //         callingDescriptor: "UNKNOWN",
-    //         params: {
-    //             objectApiName: 'MeetingRec',
-    //             fieldApiName: fieldApiName,
-    //             pageParam: 1,
-    //             pageSize: 25,
-    //             q: search,
-    //             searchType: "Recent",
-    //             targetApiName: 'SystemUser',
-    //             body: {
-    //                 sourceRecord: {
-    //                     apiName: 'MeetingRec',
-    //                     fields: {
-    //                         Id: null,
-    //                         RecordTypeId: ""
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }]
-    // }
-    // if (Lktp == '8') {
-    //     obj.actions[0].params.targetApiName = 'SystemUser';
-    // }
-    // if (Lktp == '20034') {
-    //     obj.actions[0].params.targetApiName = 'ResourceOrg';
-    // }
-    // let d = {
-    //     message: JSON.stringify(obj)
-    // }
-    // proxy.$post(Interface.lookup, d).then(res => {
-    //     let list = res.actions[0].returnValue.lookupResults.records;
-    //     let arr = [];
-    //     list.forEach(item => {
-    //         arr.push({
-    //             ID: item.fields.Id.value,
-    //             Name: item.fields.Name.value
-    //         })
-    //     });
-    //     data[fieldApiName] = data[fieldApiName].concat(arr);
-    //     data[fieldApiName] = uniqu(data[fieldApiName], 'ID');
-    // })
-
-    let filterQuery='';
-        if(search){
-            if(Lktp == '8'){
-                filterQuery="\nFullName\tcontains\t"+search;
-            }
-            else if(Lktp == '20034'){
-                filterQuery="\nName\tcontains\t"+search;
-            }
-        }
-        if(props.objectTypeCode=='20503'){
-            //filterQuery+="\nStatusCode\teq\t1";
-        }
-        let entityName='SystemUser';
-        let displayColumns='FullName,OrganizationId,BusinessUnitId,EmployeeId';
-        if (Lktp == '20034') {
-            // entityName='ResourceOrg';
-            entityName='Vehicle';
-            Lktp='20501';
-            displayColumns='Name';
-        }
-        let d = {
-            filterId: "",
-            objectTypeCode:Lktp,
-            entityName:entityName,
-            filterQuery: filterQuery,
-            page: 1,
-            rows: 10,
-            displayColumns:displayColumns
-        };
-        proxy.$get(Interface.list2, d).then(res=>{
-            var list = [];
-            if(res&&res.nodes){
-                for (var i = 0; i < res.nodes.length; i++) {
-                    var item = res.nodes[i];
-                    for(var cell in item){
-                        if(cell!='id'&&cell!='nameField'){
-                            item[cell]=girdFormatterValue(cell,item);
-                        }
-                    }
-                    item.Name=item.FullName?item.FullName:item.Name;
-                    item.ID = item.id;
-                    list.push(item)
-                }
-            }
-            data[fieldApiName] = data[fieldApiName].concat(list);
-            data[fieldApiName] = uniqu(data[fieldApiName], 'ID');
-        })
+  formState.MeetingSummary = e;
 };
-// const getPickerList = () => {
-//     proxy.$get(Interface.schedule.pickList, {
-//         objectTypeCode: 4200
-//     }).then(res => {
-//         var rows = res.actions[0].returnValue.picklistFieldValues.CalendarType;
-//         data.CalendarTypeList = rows.values;
-//     })
-// }
-// getPickerList();
+const getEditorContent2 = (e) => {
+  formState.Description = e;
+};
+watch(
+  () => formState.StartDateTime,
+  (newVal, oldVal) => {
+    formState.startTime = newVal + " " + formState.StartDateTime_time;
+    calendarGetData();
+  },
+  { deep: true }
+);
+watch(
+  () => formState.StartDateTime_time,
+  (newVal, oldVal) => {
+    formState.startTime = formState.StartDateTime + "" + newVal;
+    calendarGetData();
+  },
+  { deep: true }
+);
+watch(
+  () => formState.EndDateTime,
+  (newVal, oldVal) => {
+    formState.endTime = newVal + "" + formState.EndDateTime_time;
+    //calendarGetData();
+  },
+  { deep: true }
+);
+watch(
+  () => formState.EndDateTime_time,
+  (newVal, oldVal) => {
+    formState.endTime = formState.EndDateTime + "" + newVal;
+    calendarGetData();
+  },
+  { deep: true }
+);
+const uniqu = (array, name) => {
+  var arr = [];
+  for (var j = 0; j < array.length; j++) {
+    if (JSON.stringify(arr).indexOf(array[j][name]) == -1) {
+      arr.push(array[j]);
+    }
+  }
+  return arr;
+};
+const searchlookup = (search, Lktp, fieldApiName) => {
+  // let obj = {
+  //     actions: [{
+  //         id: "6129;a",
+  //         descriptor: "",
+  //         callingDescriptor: "UNKNOWN",
+  //         params: {
+  //             objectApiName: 'MeetingRec',
+  //             fieldApiName: fieldApiName,
+  //             pageParam: 1,
+  //             pageSize: 25,
+  //             q: search,
+  //             searchType: "Recent",
+  //             targetApiName: 'SystemUser',
+  //             body: {
+  //                 sourceRecord: {
+  //                     apiName: 'MeetingRec',
+  //                     fields: {
+  //                         Id: null,
+  //                         RecordTypeId: ""
+  //                     }
+  //                 }
+  //             }
+  //         }
+  //     }]
+  // }
+  // if (Lktp == '8') {
+  //     obj.actions[0].params.targetApiName = 'SystemUser';
+  // }
+  // if (Lktp == '20034') {
+  //     obj.actions[0].params.targetApiName = 'ResourceOrg';
+  // }
+  // let d = {
+  //     message: JSON.stringify(obj)
+  // }
+  // proxy.$post(Interface.lookup, d).then(res => {
+  //     let list = res.actions[0].returnValue.lookupResults.records;
+  //     let arr = [];
+  //     list.forEach(item => {
+  //         arr.push({
+  //             ID: item.fields.Id.value,
+  //             Name: item.fields.Name.value
+  //         })
+  //     });
+  //     data[fieldApiName] = data[fieldApiName].concat(arr);
+  //     data[fieldApiName] = uniqu(data[fieldApiName], 'ID');
+  // })
+
+  let filterQuery = "";
+  if (search) {
+    if (Lktp == "8") {
+      filterQuery = "\nFullName\tcontains\t" + search;
+    } else if (Lktp == "20034") {
+      filterQuery = "\nName\tcontains\t" + search;
+    }
+  }
+  if (props.objectTypeCode == "20503") {
+    //filterQuery+="\nStatusCode\teq\t1";
+  }
+  let entityName = "SystemUser";
+  let displayColumns = "FullName,OrganizationId,BusinessUnitId,EmployeeId";
+  if (Lktp == "20034") {
+    // entityName='ResourceOrg';
+    entityName = "Vehicle";
+    Lktp = "20501";
+    displayColumns = "Name";
+  }
+  let d = {
+    filterId: "",
+    objectTypeCode: Lktp,
+    entityName: entityName,
+    filterQuery: filterQuery,
+    page: 1,
+    rows: 10,
+    displayColumns: displayColumns,
+  };
+  proxy.$get(Interface.list2, d).then((res) => {
+    var list = [];
+    if (res && res.nodes) {
+      for (var i = 0; i < res.nodes.length; i++) {
+        var item = res.nodes[i];
+        for (var cell in item) {
+          if (cell != "id" && cell != "nameField") {
+            item[cell] = girdFormatterValue(cell, item);
+          }
+        }
+        item.Name = item.FullName ? item.FullName : item.Name;
+        item.ID = item.id;
+        list.push(item);
+      }
+    }
+    data[fieldApiName] = data[fieldApiName].concat(list);
+    data[fieldApiName] = uniqu(data[fieldApiName], "ID");
+  });
+};
+const getPickerList = () => {
+  let d = {
+    actions: [
+      {
+        id: "2320;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          objectApiName: "VehicleUse",
+          recordTypeId: "",
+        },
+      },
+    ],
+  };
+  let obj = {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.pickListValues, obj).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.picklistFieldValues
+    ) {
+      let picklistFieldValues = res.actions[0].returnValue.picklistFieldValues;
+      data.DestinationTypeCodeList = picklistFieldValues.DestinationTypeCode
+        ? picklistFieldValues.DestinationTypeCode.values
+        : [
+            {
+              label: "市内用车",
+              value: "市内用车",
+            },
+            {
+              label: "外地用车",
+              value: "外地用车",
+            },
+          ];
+      if (!props.id) {
+        selectOption(
+          "DestinationTypeCode",
+          props.DestinationTypeCode ? props.DestinationTypeCode : "市内用车"
+        );
+      }
+    }
+  });
+};
+
 const calendarGetData = () => {
-    //console.log("props1", props.paramsTime);
-    data.calendarItem = {
-        Id: props.id || '001',
-        name: formState.name,
-        Description: formState.Description,
-        AppUserIdName: formState.AppUserId ? formState.AppUserId.Name : '',
-        StartDateTime: formState.StartDateTime + ' ' + formState.StartDateTime_time,
-        EndDateTime: formState.EndDateTime + ' ' + formState.EndDateTime_time,
-        IsAllDayEvent: formState.IsAllDayEvent,
-        IsPrivate: formState.IsPrivate,
-        Where: formState.VehicleId ? formState.VehicleId.Name : (formState.StartFrom || ''),
-        sobjectType: "Event",
-        Telephone: formState.Telephone || '',
-        StatusCodeName: formState.StatusCodeName || '',
-        vehicleIdName: formState.AppUserId&&formState.AppUserId.Name?formState.AppUserId.Name:'',
-        startFrom: formState.StartFrom,
-        destination: formState.Destination,
+  //console.log("props1", props.paramsTime);
+  data.calendarItem = {
+    Id: props.id || "001",
+    name: formState.name,
+    Description: formState.Description,
+    AppUserIdName: formState.AppUserId ? formState.AppUserId.Name : "",
+    StartDateTime: formState.StartDateTime + " " + formState.StartDateTime_time,
+    EndDateTime: formState.EndDateTime + " " + formState.EndDateTime_time,
+    IsAllDayEvent: formState.IsAllDayEvent,
+    IsPrivate: formState.IsPrivate,
+    Where: formState.VehicleId
+      ? formState.VehicleId.Name
+      : formState.StartFrom || "",
+    sobjectType: "Event",
+    Telephone: formState.Telephone || "",
+    StatusCodeName: formState.StatusCodeName || "",
+    vehicleIdName:
+      formState.AppUserId && formState.AppUserId.Name
+        ? formState.AppUserId.Name
+        : "",
+    startFrom: formState.StartFrom,
+    destination: formState.Destination,
+  };
+  nextTick(() => {
+    if (
+      typeof DayCalendarWrap != "undefined" &&
+      DayCalendarWrap &&
+      DayCalendarWrap.value
+    ) {
+      DayCalendarWrap.value.getQuery(data.calendarItem);
     }
-    nextTick(() => {
-        if (typeof DayCalendarWrap != 'undefined' && DayCalendarWrap && DayCalendarWrap.value) {
-            DayCalendarWrap.value.getQuery(data.calendarItem);
-        }
-    })
-}
+  });
+};
 const calendarDayChange = (e) => {
-    formState.StartDateTime = e.date;
-    formState.StartDateTime_time = e.time;
+  formState.StartDateTime = e.date;
+  formState.StartDateTime_time = e.time;
+  formState.EndDateTime = e.date;
+  if (e.endDate) {
+    formState.EndDateTime = e.endDate;
+  } else {
     formState.EndDateTime = e.date;
-    if (e.endDate) {
-        formState.EndDateTime = e.endDate;
-    }
-    else {
-        formState.EndDateTime = e.date;
-    }
-    if (e.end) {
-        formState.EndDateTime_time = e.end;
-    }
-    else {
-        let hour = new Date(e.date + ' ' + e.time).getHours() + 1;
-        hour = hour < 10 ? '0' + hour : hour;
-        formState.EndDateTime_time = hour + ':00';
-    }
-}
-onMounted(() => {
-    data.height = document.documentElement.clientHeight - 165;
-    if (document.documentElement.clientHeight - 450 > 100) {
-        data.height2 = document.documentElement.clientHeight - 450;
-    }
-    else {
-        data.height2 = 100;
-    }
-    window.addEventListener("resize", (e) => {
-        data.height = document.documentElement.clientHeight - 165;
-        if (document.documentElement.clientHeight - 450 > 100) {
-            data.height2 = document.documentElement.clientHeight - 450;
-        }
-        else {
-            data.height2 = 100;
-        }
-    });
-});
+  }
+  if (e.end) {
+    formState.EndDateTime_time = e.end;
+  } else {
+    let hour = new Date(e.date + " " + e.time).getHours() + 1;
+    hour = hour < 10 ? "0" + hour : hour;
+    formState.EndDateTime_time = hour + ":00";
+  }
+};
 
 const getDetail = () => {
-    let d = {
-        actions: [{
-            id: "4270;a",
-            descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
-            callingDescriptor: "UNKNOWN",
-            params: {
-                recordId: props.id,
-                apiName: props.entityApiName,
-                objTypeCode: props.objectTypeCode
-            }
-        }]
-    };
-    let obj = {
-        message: JSON.stringify(d)
-    }
-    proxy.$post(Interface.detail, obj).then(res => {
-        if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
-            let fields = res.actions[0].returnValue.fields;
-            formState.StartFrom = fields.StartFrom && fields.StartFrom.value ? fields.StartFrom.value : '';
-            formState.Destination=fields.Destination && fields.Destination.value ? fields.Destination.value : '';
-            formState.name = fields.Name && fields.Name.value ? fields.Name.value : '';
-            formState.Description = fields.Description && fields.Description.value ? fields.Description.value : '';
-            formState.MeetingSummary = fields.MeetingSummary && fields.MeetingSummary.value ? fields.MeetingSummary.value : '';
-            formState.StartDateTime = fields.StartTime && fields.StartTime.value ? dayjs(fields.StartTime.value).format("YYYY-MM-DD") : '';
-            formState.StartDateTime_time = fields.StartTime && fields.StartTime.value ? dayjs(fields.StartTime.value).format("HH:mm") : '';
-            formState.EndDateTime = fields.EndTime && fields.EndTime.value ? dayjs(fields.EndTime.value).format("YYYY-MM-DD") : '';
-            formState.EndDateTime_time = fields.EndTime && fields.EndTime.value ? dayjs(fields.EndTime.value).format("HH:mm") : '';
+  let d = {
+    actions: [
+      {
+        id: "4270;a",
+        descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordId: props.id,
+          apiName: props.entityApiName,
+          objTypeCode: props.objectTypeCode,
+        },
+      },
+    ],
+  };
+  let obj = {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.detail, obj).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.fields
+    ) {
+      let fields = res.actions[0].returnValue.fields;
+      formState.StartFrom =
+        fields.StartFrom && fields.StartFrom.value
+          ? fields.StartFrom.value
+          : "";
+      formState.Destination =
+        fields.Destination && fields.Destination.value
+          ? fields.Destination.value
+          : "";
+      formState.name =
+        fields.Name && fields.Name.value ? fields.Name.value : "";
+      formState.Description =
+        fields.Description && fields.Description.value
+          ? fields.Description.value
+          : "";
+      formState.MeetingSummary =
+        fields.MeetingSummary && fields.MeetingSummary.value
+          ? fields.MeetingSummary.value
+          : "";
+      formState.StartDateTime =
+        fields.StartTime && fields.StartTime.value
+          ? dayjs(fields.StartTime.value).format("YYYY-MM-DD")
+          : "";
+      formState.StartDateTime_time =
+        fields.StartTime && fields.StartTime.value
+          ? dayjs(fields.StartTime.value).format("HH:mm")
+          : "";
+      formState.EndDateTime =
+        fields.EndTime && fields.EndTime.value
+          ? dayjs(fields.EndTime.value).format("YYYY-MM-DD")
+          : "";
+      formState.EndDateTime_time =
+        fields.EndTime && fields.EndTime.value
+          ? dayjs(fields.EndTime.value).format("HH:mm")
+          : "";
 
-            if (props.paramsTime.end && props.paramsTime.end != props.paramsTime.time) {
-                formState.StartDateTime = props.paramsTime.date;
-                formState.StartDateTime_time = props.paramsTime.time;
-                formState.EndDateTime = props.paramsTime.endDate;
-                formState.EndDateTime_time = props.paramsTime.end;
-            }
-            //editorRef.value.content=formState.MeetingSummary;
-            editorRef2.value.content = formState.Description;
-            formState.CalendarType = fields.CalendarType && fields.CalendarType.value ? fields.CalendarType.value : '';
-            formState.IsAllDayEvent = fields.IsAllDayEvent ? fields.IsAllDayEvent.value : '';
+      if (
+        props.paramsTime.end &&
+        props.paramsTime.end != props.paramsTime.time
+      ) {
+        formState.StartDateTime = props.paramsTime.date;
+        formState.StartDateTime_time = props.paramsTime.time;
+        formState.EndDateTime = props.paramsTime.endDate;
+        formState.EndDateTime_time = props.paramsTime.end;
+      }
+      //editorRef.value.content=formState.MeetingSummary;
+      editorRef2.value.content = formState.Description;
+      formState.DestinationTypeCode =
+        fields.DestinationTypeCode && fields.DestinationTypeCode.value
+          ? fields.DestinationTypeCode.value
+          : "";
+      selectOption(
+        "DestinationTypeCode",
+        fields.DestinationTypeCode && fields.DestinationTypeCode.value
+          ? fields.DestinationTypeCode.value
+          : "市内用车"
+      );
+      formState.IsAllDayEvent = fields.IsAllDayEvent
+        ? fields.IsAllDayEvent.value
+        : "";
 
-            if (fields.AppUserId && fields.AppUserId.value) {
-                let AppUserIdName = fields.AppUserId.displayValue || '';
-                let AppUserIdId = fields.AppUserId.value;
-                formState.AppUserId = { Id: AppUserIdId, Name: AppUserIdName };
-                data.AppUserId.push({
-                    ID: AppUserIdId,
-                    Name: AppUserIdName
-                });
-            }
-            searchlookup('', '8', 'AppUserId');
-
-            if (fields.VehicleId && fields.VehicleId.value) {
-                let VehicleIdName = fields.VehicleId.displayValue || '';
-                let VehicleIdValue = fields.VehicleId.value;
-                formState.VehicleId = { Id: VehicleIdValue, Name: VehicleIdName };
-                data.VehicleId.push({
-                    ID: VehicleIdValue,
-                    Name: VehicleIdName
-                });
-            }
-            formState.Telephone = fields.Telephone ? fields.Telephone.value : '';
-            formState.StatusCodeName = fields.StatusCode ? fields.StatusCode.displayValue : '';
-            searchlookup('', '20034', 'VehicleId');
-
-            calendarGetData();
-        }
-    })
-
-}
-if (props.id) {
-    data.title = '编辑';
-    getDetail();
-}
-else {
-    if (props.paramsTime && props.paramsTime.resourceId) {
-        data.VehicleId.push({
-            ID: props.paramsTime.resourceId,
-            Name: props.paramsTime.resourceName
-        });
-        formState.VehicleId.Id = props.paramsTime.resourceId;
-    }
-    let userInfo = window.localStorage.getItem('userInfo');
-    if (userInfo) {
-        userInfo = JSON.parse(userInfo);
+      if (fields.AppUserId && fields.AppUserId.value) {
+        let AppUserIdName = fields.AppUserId.displayValue || "";
+        let AppUserIdId = fields.AppUserId.value;
+        formState.AppUserId = { Id: AppUserIdId, Name: AppUserIdName };
         data.AppUserId.push({
-            ID: userInfo.userId,
-            Name: userInfo.fullName
+          ID: AppUserIdId,
+          Name: AppUserIdName,
         });
-        formState.AppUserId.Id = userInfo.userId;
+      }
+      searchlookup("", "8", "AppUserId");
+
+      if (fields.VehicleId && fields.VehicleId.value) {
+        let VehicleIdName = fields.VehicleId.displayValue || "";
+        let VehicleIdValue = fields.VehicleId.value;
+        formState.VehicleId = { Id: VehicleIdValue, Name: VehicleIdName };
+        data.VehicleId.push({
+          ID: VehicleIdValue,
+          Name: VehicleIdName,
+        });
+      }
+      formState.Telephone = fields.Telephone ? fields.Telephone.value : "";
+      formState.StatusCodeName = fields.StatusCode
+        ? fields.StatusCode.displayValue
+        : "";
+      searchlookup("", "20034", "VehicleId");
+
+      calendarGetData();
     }
-    calendarGetData();
-}
+  });
+};
 
 const handleSubmit = () => {
-    if(!formState.name){
-        message.error('请输入标题')
-        return false
+  if (!formState.name) {
+    message.error("请输入标题");
+    return false;
+  }
+  if (!formState.AppUserId.Id) {
+    message.error("请选择用车人");
+    return false;
+  }
+  if (!formState.VehicleId.Id) {
+    message.error("请选择车辆");
+    return false;
+  }
+  if (
+    formState.StartDateTime &&
+    formState.StartDateTime_time &&
+    formState.EndDateTime &&
+    formState.EndDateTime_time
+  ) {
+    let ScheduledStart =
+      formState.StartDateTime + " " + formState.StartDateTime_time;
+    let ScheduledEnd = formState.EndDateTime + " " + formState.EndDateTime_time;
+    ScheduledStart = new Date(ScheduledStart).getTime();
+    ScheduledEnd = new Date(ScheduledEnd).getTime();
+    if (ScheduledStart > ScheduledEnd) {
+      message.error("结束时间必须大于开始时间！");
+      return false;
     }
-    if(!formState.AppUserId.Id){
-        message.error('请选择用车人')
-        return false
-    }
-    if(!formState.VehicleId.Id){
-        message.error('请选择车辆')
-        return false
-    }
-    if(formState.StartDateTime&&formState.StartDateTime_time&&formState.EndDateTime&&formState.EndDateTime_time){
-        let ScheduledStart=formState.StartDateTime + ' ' + formState.StartDateTime_time;
-        let ScheduledEnd=formState.EndDateTime + ' ' + formState.EndDateTime_time;
-        ScheduledStart=(new Date(ScheduledStart)).getTime();
-        ScheduledEnd=(new Date(ScheduledEnd)).getTime();
-        if(ScheduledStart>ScheduledEnd){
-            message.error('结束时间必须大于开始时间！')
-            return false
-        }
-    }else{
-        message.error('开始、结束日期和时间必须填写完整！')
-        return false
-    }
-    formRef.value.validate().then(() => {
-        // console.log("values", formState, toRaw(formState));
-        let url = Interface.create;
-        let d = {
-            actions: [{
-                id: "2919;a",
-                descriptor: "",
-                callingDescriptor: "UNKNOWN",
-                params: {
-                    // recordId: props.id,
-                    recordInput: {
-                        allowSaveOnDuplicate: false,
-                        apiName: props.entityApiName,
-                        objTypeCode: props.objectTypeCode,
-                        fields: {
-                            Name: formState.name,
-                            StartTime: formState.StartDateTime + ' ' + formState.StartDateTime_time,
-                            EndTime: formState.EndDateTime + ' ' + formState.EndDateTime_time,
-                            StartFrom: formState.StartFrom,
-                            Destination:formState.Destination,
-                            StatusCode: 1,
-                            Description: formState.Description,
-                            VehicleId: formState.VehicleId.Id,
-                            AppUserId: formState.AppUserId.Id,
-                        }
-                    }
-                }
-            }]
-        };
-        if (props.id) {
-            url = Interface.edit;
-            d.actions[0].params.recordId = props.id;
-        }
-        let obj = {
-            message: JSON.stringify(d)
-        }
-        proxy.$post(url, obj).then((res) => {
-            message.success("保存成功！");
-            emit("select-val", '');
-            //emit("success", false);
-        });
+  } else {
+    message.error("开始、结束日期和时间必须填写完整！");
+    return false;
+  }
+  formRef.value
+    .validate()
+    .then(() => {
+      // console.log("values", formState, toRaw(formState));
+      let url = Interface.create;
+      let d = {
+        actions: [
+          {
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              // recordId: props.id,
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName: props.entityApiName,
+                objTypeCode: props.objectTypeCode,
+                fields: {
+                  Name: formState.name,
+                  StartTime:
+                    formState.StartDateTime +
+                    " " +
+                    formState.StartDateTime_time,
+                  EndTime:
+                    formState.EndDateTime + " " + formState.EndDateTime_time,
+                  StartFrom: formState.StartFrom,
+                  Destination: formState.Destination,
+                  StatusCode: 1,
+                  Description: formState.Description,
+                  VehicleId: formState.VehicleId.Id,
+                  AppUserId: formState.AppUserId.Id,
+                  DestinationTypeCode: formState.DestinationTypeCode,
+                },
+              },
+            },
+          },
+        ],
+      };
+      if (props.id) {
+        url = Interface.edit;
+        d.actions[0].params.recordId = props.id;
+      }
+      let obj = {
+        message: JSON.stringify(d),
+      };
+      proxy.$post(url, obj).then((res) => {
+        message.success("保存成功！");
+        emit("select-val", "");
+        //emit("success", false);
+      });
     })
-        .catch((err) => {
-            console.log("error", err);
-        });
+    .catch((err) => {
+      console.log("error", err);
+    });
 };
 const handleOpenLook = (Lktp, fieldApiName) => {
-    if (Lktp == '8') {
-        data.isRadioUser = true;
-    }
-}
+  if (Lktp == "8") {
+    data.isRadioUser = true;
+  }
+};
 const closeUser = (e) => {
-    data.isRadioUser = false;
+  data.isRadioUser = false;
 };
 const getUserData = (params) => {
-    //console.log("params:", params);
-    data.isRadioUser = false;
-    if (params.id) {
-        let index = data.AppUserId.findIndex(item => item.ID == params.id);
-        if (index == -1 && params.id) {
-            data.AppUserId.push({
-                ID: params.id,
-                Name: params.name
-            });
-            formState.AppUserId.Id = params.id;
-        }
-        if (index >= 0) {
-            message.error("不能重复添加！");
-        }
+  //console.log("params:", params);
+  data.isRadioUser = false;
+  if (params.id) {
+    let index = data.AppUserId.findIndex((item) => item.ID == params.id);
+    if (index == -1 && params.id) {
+      data.AppUserId.push({
+        ID: params.id,
+        Name: params.name,
+      });
+      formState.AppUserId.Id = params.id;
     }
+    if (index >= 0) {
+      message.error("不能重复添加！");
+    }
+  }
 };
-const refreshPeople = (e) => {
-
-}
+const refreshPeople = (e) => {};
 const selectOption = (name, value) => {
-    if (value != 'undefined' && value != null && value != '') {
-        formState[name] = value;
-        let index = data[name + 'List'].findIndex(item => item.value == value);
-        data[name] = (data[name + 'List'][index]).label;
+  if (value != "undefined" && value != null && value != "") {
+    formState[name] = value;
+    let index = data[name + "List"].findIndex((item) => item.value == value);
+    if (data && data[name + "List"] && data[name + "List"][index]) {
+      data[name] = data[name + "List"][index].label;
     }
-    else if (name == 'RecurrenceType' && value == '') {
-        formState[name] = value;
-        let index = data[name + 'List'].findIndex(item => item.value == value);
-        data[name] = (data[name + 'List'][index]).label;
+  } else if (name == "RecurrenceType" && value == "") {
+    formState[name] = value;
+    let index = data[name + "List"].findIndex((item) => item.value == value);
+    if (data && data[name + "List"] && data[name + "List"][index]) {
+      data[name] = data[name + "List"][index].label;
     }
-}
+  }
+};
 const clearForm = () => {
-    formRef.value.resetFields();
-}
-defineExpose({ clearForm, handleSubmit })
+  formRef.value.resetFields();
+};
+const IsAllDayEventChange = (e) => {
+  if (formState.IsAllDayEvent) {
+    (formState.StartDateTime_time = "00:00"),
+      (formState.EndDateTime_time = "23:59");
+  }
+};
+defineExpose({ clearForm, handleSubmit });
+onMounted(() => {
+  data.height = document.documentElement.clientHeight - 165;
+  if (document.documentElement.clientHeight - 450 > 100) {
+    data.height2 = document.documentElement.clientHeight - 450;
+  } else {
+    data.height2 = 100;
+  }
+  window.addEventListener("resize", (e) => {
+    data.height = document.documentElement.clientHeight - 165;
+    if (document.documentElement.clientHeight - 450 > 100) {
+      data.height2 = document.documentElement.clientHeight - 450;
+    } else {
+      data.height2 = 100;
+    }
+  });
+  getPickerList();
+  if (props.id) {
+    data.title = "编辑";
+    getDetail();
+  } else {
+    if (props.paramsTime && props.paramsTime.resourceId) {
+      data.VehicleId.push({
+        ID: props.paramsTime.resourceId,
+        Name: props.paramsTime.resourceName,
+      });
+      formState.VehicleId.Id = props.paramsTime.resourceId;
+    }
+    let userInfo = window.localStorage.getItem("userInfo");
+    if (userInfo) {
+      userInfo = JSON.parse(userInfo);
+      data.AppUserId.push({
+        ID: userInfo.userId,
+        Name: userInfo.fullName,
+      });
+      formState.AppUserId.Id = userInfo.userId;
+    }
+    calendarGetData();
+  }
+});
 </script>
 <style lang="less" scoped>
 @import url("@/style/modal.less");
 
 .section {
-    .sectionTitle {
-        height: 30px;
-        background-color: rgb(243, 242, 242);
-        line-height: 30px;
-        border-radius: 4px;
-        padding-left: 15px;
-        margin-bottom: 12px;
-        /* margin: 2rem 2rem 0.5rem 2rem; */
+  .sectionTitle {
+    height: 30px;
+    background-color: rgb(243, 242, 242);
+    line-height: 30px;
+    border-radius: 4px;
+    padding-left: 15px;
+    margin-bottom: 12px;
+    /* margin: 2rem 2rem 0.5rem 2rem; */
+  }
+
+  .sectionRow {
+    padding: 0 10px;
+    box-sizing: border-box;
+    display: flex;
+
+    .sectionItem {
+      flex: 1;
+      margin-right: 20px;
+
+      .ant-row {
+        display: block !important;
+      }
     }
 
-    .sectionRow {
-        padding: 0 10px;
-        box-sizing: border-box;
-        display: flex;
-
-        .sectionItem {
-            flex: 1;
-            margin-right: 20px;
-
-            .ant-row {
-                display: block !important;
-            }
-        }
-
-        .sectionItem:last-child {
-            margin-right: 0;
-        }
+    .sectionItem:last-child {
+      margin-right: 0;
     }
+  }
 }
 
 :where(.css-dev-only-do-not-override-kqecok).ant-picker {
-    width: 100%;
+  width: 100%;
 }
 
 .ant-form-item {
-    position: relative;
-    margin-bottom: 5px !important;
+  position: relative;
+  margin-bottom: 5px !important;
 }
 
 .selectIcon {
-    position: absolute;
-    right: 10px;
-    top: 14px;
+  position: absolute;
+  right: 10px;
+  top: 14px;
 }
 
 .timeWrap {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    .timeItem:last-child {
-        margin-left: 10px;
-    }
+  .timeItem:last-child {
+    margin-left: 10px;
+  }
 }
 
 .menuRow {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    .ant-btn {
-        border-radius: 4px 0 0 4px;
-    }
+  .ant-btn {
+    border-radius: 4px 0 0 4px;
+  }
 
-    .ant-select-show-search:where(.css-dev-only-do-not-override-kqecok).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-        border-radius: 0 4px 4px 0 !important;
-        margin-left: -1px !important;
-    }
+  .ant-select-show-search:where(
+      .css-dev-only-do-not-override-kqecok
+    ).ant-select:not(.ant-select-customize-input)
+    .ant-select-selector {
+    border-radius: 0 4px 4px 0 !important;
+    margin-left: -1px !important;
+  }
 }
 
 .selectFlex {
-    width: 100%;
-    position: relative;
+  width: 100%;
+  position: relative;
 
-    .suffixIcon {
-        position: absolute;
-        right: 5px;
-    }
+  .suffixIcon {
+    position: absolute;
+    right: 5px;
+  }
 }
 
 .tabPanel {
-    padding: 0 4px;
-    background: #fff;
-    border-radius: 4px;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.14);
+  padding: 0 4px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.14);
 
-    .barContainer {
-        display: flex;
-
-    }
+  .barContainer {
+    display: flex;
+  }
 }
 
 .groupContainer {
-    display: flex;
+  display: flex;
+  align-items: center;
+
+  .groupBtn {
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    margin: 4px 0;
+    border: 1px solid transparent;
+    padding-left: 9px;
+    border-radius: 4px;
+
+    .icon {
+      font-size: 16px;
+    }
+
+    .arrowIcon {
+      height: 12px;
+      line-height: 12px;
+      width: 12px;
+      fill: #242424;
+      margin-left: 4px;
+      margin-right: 2px;
+      font-size: 12px;
+    }
+
+    &:hover {
+      background: #fafafa;
+      color: #242424;
+      border: 1px solid #e5e5e5;
+      cursor: pointer;
+    }
+
+    &.show {
+      background: #fafafa;
+      color: #242424;
+      border: 1px solid #e5e5e5;
+      cursor: pointer;
+    }
+
+    .text {
+      line-height: 16.41px;
+      text-align: left;
+      margin-left: 4px;
+      margin-right: 2px;
+      font-weight: 400;
+      font-size: 14px;
+    }
+  }
+
+  .ribbon {
+    display: inline-flex;
+    height: 32px;
     align-items: center;
+    padding: 4px;
 
-    .groupBtn {
-        height: 32px;
-        line-height: 32px;
-        text-align: center;
-        margin: 4px 0;
-        border: 1px solid transparent;
-        padding-left: 9px;
-        border-radius: 4px;
-
-        .icon {
-            font-size: 16px;
-        }
-
-        .arrowIcon {
-            height: 12px;
-            line-height: 12px;
-            width: 12px;
-            fill: #242424;
-            margin-left: 4px;
-            margin-right: 2px;
-            font-size: 12px;
-        }
-
-        &:hover {
-            background: #fafafa;
-            color: #242424;
-            border: 1px solid #e5e5e5;
-            cursor: pointer;
-        }
-
-        &.show {
-            background: #fafafa;
-            color: #242424;
-            border: 1px solid #e5e5e5;
-            cursor: pointer;
-        }
-
-        .text {
-            line-height: 16.41px;
-            text-align: left;
-            margin-left: 4px;
-            margin-right: 2px;
-            font-weight: 400;
-            font-size: 14px;
-        }
+    .ribbon-bottom-bar-divider {
+      width: 1px;
+      height: 100%;
+      background-color: #e0e0e0;
+      border-radius: 0px;
     }
-
-    .ribbon {
-        display: inline-flex;
-        height: 32px;
-        align-items: center;
-        padding: 4px;
-
-        .ribbon-bottom-bar-divider {
-            width: 1px;
-            height: 100%;
-            background-color: #e0e0e0;
-            border-radius: 0px;
-        }
-    }
+  }
 }
 
 .menu-row {
-    display: flex;
+  display: flex;
 
-    .icon {
-        min-width: 30px;
-    }
+  .icon {
+    min-width: 30px;
+  }
 }
 
 .formContent {
-    height: calc(~"100% - 60px");
-    // height: auto;
-    margin-top: 12px;
-    display: flex;
+  height: calc(~"100% - 60px");
+  // height: auto;
+  margin-top: 12px;
+  display: flex;
 
-    .leftForm {
-        flex: 1;
-        border: 1px solid #f0f0f0;
-        background: #fff;
-        border-radius: 4px;
-        overflow: auto;
-        margin-right: 10px;
+  .leftForm {
+    flex: 1;
+    border: 1px solid #f0f0f0;
+    background: #fff;
+    border-radius: 4px;
+    overflow: auto;
+    margin-right: 10px;
 
-        .formWrap {
-            padding: 0 16px 19px 8px;
+    .formWrap {
+      padding: 0 16px 19px 8px;
 
-            input {
-                width: 100%;
-                height: 100%;
-                border: none;
-                outline: 0;
-            }
-
-            input.title {
-                font-size: 21px;
-                font-weight: 600;
-                color: #424242;
-            }
-
-            .formRow {
-                display: flex;
-                min-height: 48px;
-                align-items: center;
-
-                .lIcon {
-                    width: 32px;
-                    height: 32px;
-                    margin-right: 9px;
-                    text-align: center;
-                }
-.lIcon1{
-    padding-top: 5px;
-}
-                .rVal {
-                    flex: 1;
-                    height: 32px;
-                    border-bottom: 1px solid #e0e0e0;
-                    height: auto;
-                }
-                .rVal1 {
-                    height: 32px !important;
-                }
-                .rVal2 {
-                    border-bottom: none;
-                    margin-top: 4px;
-                }
-
-                .timeBox {
-                    display: flex;
-                        align-items: center;
-                        margin-top: 3px;
-                        margin-bottom: 6px;
-                    .rowTime {
-                        display: flex;
-                        align-items: center;
-                        margin-bottom: 10px;
-margin-right: 10px;
-                        .date {
-                            width: 142px;
-                        }
-
-                        .time {
-                            width: 98px;
-                            margin-left: 5px;
-                            margin-right: 10px;
-                        }
-
-                        .switch {
-                            display: flex;
-                            align-items: center;
-
-                            .text {
-                                padding-left: 5px;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    .rightCalendar {
-        width: 371px;
-        min-height: 250px;
+      input {
+        width: 100%;
         height: 100%;
-        border: 1px solid #f0f0f0;
-        border-radius: 4px;
+        border: none;
+        outline: 0;
+      }
+
+      input.title {
+        font-size: 21px;
+        font-weight: 600;
+        color: #424242;
+      }
+
+      .formRow {
+        display: flex;
+        min-height: 48px;
+        align-items: center;
+
+        .lIcon {
+          width: 32px;
+          height: 32px;
+          margin-right: 9px;
+          text-align: center;
+        }
+        .lIcon1 {
+          padding-top: 5px;
+        }
+        .rVal {
+          flex: 1;
+          height: 32px;
+          border-bottom: 1px solid #e0e0e0;
+          height: auto;
+        }
+        .rVal1 {
+          height: 32px !important;
+        }
+        .rVal2 {
+          border-bottom: none;
+          margin-top: 4px;
+        }
+
+        .timeBox {
+          display: flex;
+          align-items: center;
+          margin-top: 3px;
+          margin-bottom: 6px;
+          .rowTime {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            margin-right: 10px;
+            .date {
+              width: 142px;
+            }
+
+            .time {
+              width: 98px;
+              margin-left: 5px;
+              margin-right: 10px;
+            }
+
+            .switch {
+              display: flex;
+              align-items: center;
+
+              .text {
+                padding-left: 5px;
+              }
+            }
+          }
+        }
+      }
     }
+  }
+
+  .rightCalendar {
+    width: 371px;
+    min-height: 250px;
+    height: 100%;
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+  }
 }
 
-:deep .ant-select-show-search:where(.css-dev-only-do-not-override-kqecok).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-    border: none !important;
-    outline: 0 !important;
+:deep
+  .ant-select-show-search:where(
+    .css-dev-only-do-not-override-kqecok
+  ).ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  border: none !important;
+  outline: 0 !important;
 }
 
 .InfoConfigForm2Container {
-    .ant-select-selection-item-content .ant-avatar {
-        display: none !important;
-    }
-    :deep .ant-select-selector{
-        border: none !important;
-        outline: 0 !important;
-    }
-    .ant-select-selection-item .ant-avatar {
-        display: none !important;
-    }
+  .ant-select-selection-item-content .ant-avatar {
+    display: none !important;
+  }
+  :deep .ant-select-selector {
+    border: none !important;
+    outline: 0 !important;
+  }
+  .ant-select-selection-item .ant-avatar {
+    display: none !important;
+  }
 
-    .barContainer {
-        display: none;
-    }
+  .barContainer {
+    display: none;
+  }
 
-    .formContent {
-        margin-top: 0;
-        height: 100%;
-    }
-    .formContent .leftForm .formWrap .formRow{
-        min-height: 30px !important;
-    }
-    .selectIcon{
-        top:5px !important;
-    }
-    .formContent .leftForm .formWrap .formRow .timeBox .rowTime{
-        margin-bottom: 0px !important;
-    }
-    .formContent .leftForm .formWrap{
-        padding: 10px 16px 0 8px !important;
-    }
+  .formContent {
+    margin-top: 0;
+    height: 100%;
+  }
+  .formContent .leftForm .formWrap .formRow {
+    min-height: 30px !important;
+  }
+  .selectIcon {
+    top: 5px !important;
+  }
+  .formContent .leftForm .formWrap .formRow .timeBox .rowTime {
+    margin-bottom: 0px !important;
+  }
+  .formContent .leftForm .formWrap {
+    padding: 10px 16px 0 8px !important;
+  }
 }
 
 .ant-select-item-option-content .ant-avatar {
-    margin-right: 8px !important;
+  margin-right: 8px !important;
 }
-.ant-modal-wrap{
-    overflow: hidden !important;
+.ant-modal-wrap {
+  overflow: hidden !important;
+}
+.groupContainer .groupBtn {
+  .icon {
+    .anticon {
+      color: #808080;
+    }
+  }
+  .icon1 {
+    font-size: 16px;
+    position: relative;
+    top: 4px;
+  }
+  .arrowIcon{
+    position: relative;
+    top: -2px;
+  }
+  .text{
+    position: relative;
+    top: -2px;
+  }
+  &.show {
+    background: #fafafa;
+    color: #242424;
+    border: 1px solid #e5e5e5;
+    cursor: pointer;
+  }
 }
 </style>

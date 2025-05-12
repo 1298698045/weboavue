@@ -33,7 +33,7 @@
             </div> -->
             <div class="calendarRight">
                 <ListView v-if="current == 0" />
-                <CalendarVue v-if="current == 1" />
+                <CalendarVue ref="CalendarWrap" v-if="current == 1" />
             </div>
         </div>
         <NewMeeting :isShow="isNewMeeting" @cancel="cancelNewMeeting" @selectVal="handleNewMeetingVal" />
@@ -69,6 +69,7 @@ import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
+const CalendarWrap = ref(null);
 const data = reactive({
     current: 1,
     isNewMeeting: false,
@@ -84,7 +85,10 @@ const handleNewMeetingVal = (e) => {
 }
 // 新建会议
 const handleAddMeeting = () => {
-    data.isNewMeeting = true;
+    //data.isNewMeeting = true;
+    nextTick(() => {
+        CalendarWrap.value.handleOpenNew();
+    })
 }
 // 新建重复会议
 const handleAddRepeatMeeting = () => {

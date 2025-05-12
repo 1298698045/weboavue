@@ -427,7 +427,7 @@
     } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import TEditor from "@/components/TEditor.vue";
-    import DayCalendar from "@/components/schedule/AddScheduleDayModal2.vue";
+    import DayCalendar from "@/components/schedule/AddScheduleDayModal.vue";
     import Interface from "@/utils/Interface.js";
     import Icon from '@/components/icon/index.vue';
     const { proxy } = getCurrentInstance();

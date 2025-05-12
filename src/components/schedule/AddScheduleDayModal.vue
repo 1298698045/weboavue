@@ -1,6 +1,6 @@
 <template>
-    <div class="weekWrap AddScheduleDayModal">
-        <div class="weekCalendar">
+    <div class="weekWrap AddScheduleDayModal2">
+        <!-- <div class="weekCalendar">
             <div class="weekCalendarHead">
                 <div class="timeZone">
                     时间
@@ -10,7 +10,6 @@
                         <span class="arrowIcon" @click="handlePrevDay">
                             <LeftOutlined />
                         </span>
-                        <!-- <a-date-picker v-model:value="currentDate" @change="changeTime" format="YYYY-MM-DD" picker="date" /> -->
                         &nbsp;{{ currentDate }}&nbsp;
                         <span class="arrowIcon" @click="handleNextDay">
                             <RightOutlined />
@@ -82,16 +81,83 @@
                         <div class="eventList"  @click="(e)=>{calendarDayChange(e,currentDate)}" :class="{'active':isToDay(currentDate)}" :style="{height: height+'px'}">
                             <template v-for="(row,idx) in scheduleList[currentDate]" :key="idx">
                                 <div class="eventItem" :style="{top:countTop(row),height:countHeight(row)}">
-                                    <!-- <p>{{row.Subject}}</p> -->
                                     <p>{{row.StartDateTime_time}}-{{row.EndDateTime_time}}</p>
-                                    <!-- <p>{{row.CreatedByName}}</p> -->
                                 </div>
                             </template>
                         </div>
                     </div>
                 </div>
             </div>
+        </div> -->
+        <div ref="weekRef">
+            <FullCalendar class="fullCalendar" ref="fullCalendarDay" :options="calendarOptions" >
+            <template #eventContent="arg" >
+                    <div class="my-custom-event" :style="{background:arg.event.backgroundColor,color:arg.event.textColor,borderColor:arg.event.borderColor}">
+                        <a-popconfirm placement="topLeft" trigger="hover" cancelText="取消" okText="查看" @confirm="handleDetail(arg.event)" :z-index="20000">
+                                    <template #icon></template>
+                                    <template #title>
+                                        <div class="meetingMessageWrap">
+                                            <div class="meetingHead">
+                                                <div class="meetingLogo">
+                                                    <img :src="require('@/assets/img/meeting.png')" alt="">
+                                                </div>
+                                                <p class="meetingName">{{arg.event.title}}</p>
+                                            </div>
+                                            <div class="meetingBody">
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        被分配人：
+                                                        <span class="OwningUserName">{{arg.event.extendedProps.Who}}</span>
+                                                    </div>
+                                                    <div class="meetingInfoItem">
+                                                        地址：
+                                                        <span class="TelePhone">{{arg.event.extendedProps.Location || ''}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        联系电话：
+                                                        <span class="OwningUserName">{{ arg.event.extendedProps.Phone }}</span>
+                                                    </div>
+                                                    <div class="meetingInfoItem">
+                                                        分配人：
+                                                        <span class="TelePhone">{{arg.event.extendedProps.CreatedByName || ''}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        开始：
+                                                        <span class="OwningUserName">{{dayjs(arg.event.start).format("YYYY-MM-DD HH:mm")}}</span>
+                                                    </div>
+                                                    <div class="meetingInfoItem">
+                                                        结束：
+                                                        <span class="TelePhone">{{dayjs(arg.event.end).format("YYYY-MM-DD HH:mm")}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        备注：
+                                                        <span class="OwningUserName" v-html="arg.event.extendedProps.Description||''"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <a-button type="link" @click.stop="handleDetail(arg.event)">更多详细信息</a-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <div class="eventItem">
+                                        <p>{{dayjs(arg.event.start).format("HH:mm")}}-{{dayjs(arg.event.end).format("HH:mm")}}&nbsp;&nbsp;&nbsp;{{arg.event.title}}</p>
+                                        <!-- <p>{{dayjs(arg.event.start).format("HH:mm")}}-{{dayjs(arg.event.end).format("HH:mm")}}</p>
+                                        <p>{{arg.event.CreatedByName}}</p> -->
+                                    </div>
+                                </a-popconfirm>
+                    </div>
+                </template>
+            </FullCalendar>
         </div>
+        <ScheduleDetailModal :isShow="isScheduleDetail" v-if="isScheduleDetail" :id="detailId" @cancel="isScheduleDetail=false" @selectVal="handleNewScheduleVal" @handleDelete="handleDelete" @edit="handleOpenEdit" />
+        <MeetingDetailModal :isShow="isMeetingDetail" v-if="isMeetingDetail" :meetingId="detailId" @cancel="isMeetingDetail=false" @edit="handleOpenEdit" @handleDelete="handleDelete" />
     </div>
 </template>
 <script setup>
@@ -124,14 +190,24 @@
     import { SearchOutlined, DeleteOutlined,LeftOutlined,RightOutlined } from "@ant-design/icons-vue";
     import { message } from "ant-design-vue";
     import Interface from "@/utils/Interface.js";
+    
+    import FullCalendar from '@fullcalendar/vue3'
+    import dayGridPlugin from '@fullcalendar/daygrid'
+    import timeGridPlugin from '@fullcalendar/timegrid'
+    import interactionPlugin from '@fullcalendar/interaction'
+    import zhCnLocale from '@fullcalendar/core/locales/zh-cn'
+    import ScheduleDetailModal from "@/components/schedule/ScheduleDetailModal.vue";
+    import MeetingDetailModal from "@/components/meeting/MeetingDetailModal2.vue";
     const { proxy } = getCurrentInstance();
     const emit = defineEmits(['calendarDayChange']);
-
+    const colors = ["#3399ff","#f0854e","#61cc53","#eb3d85"]
     const props = defineProps({
+        id:String,
         currentTime: String,
         startDateTime:String,
         endDateTime:String,
         calendarType:String,
+        objectTypeCode:String,
     })
 
     const data = reactive({
@@ -144,18 +220,118 @@
         paramsTime: {
             date: "",
             time: ""
+        },
+        detailId:'',
+        isScheduleDetail:false,
+        isMeetingDetail:false,
+        calendarOptions:{
+            plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin], //需要加载的插件 
+            initialView: "timeGridDay", //初始视图
+            initialDate:props.currentTime,
+            height: "auto",
+            locale: zhCnLocale, //语言汉化
+            selectable: true,
+            editable: true,
+            forceEventDuration: true,
+            droppable: true,
+            // dropAccept: ".eventListItems", //可被拖进
+            dayMaxEventRows: 99, //事件最大展示列数
+            nowIndicator: true,
+            fixedWeekCount: false, //因为每月起始日是星期几不固定，导致一个月的行数会不固定，是否固定行数
+            // drop: null, //外部拖拽进的事件方法
+            handleWindowResize: true,
+            windowResizeDelay: 100,
+            allDaySlot: false, // 关闭全天选项,
+            dayMaxEvents: 6,
+            moreLinkContent: '+ 更多',
+            slotEventOverlap:false,
+            aspectRatio: 2, //宽高比
+            // 最小时间
+            slotMinTime: '06:00:00',
+            // 最大时间
+            slotMaxTime: '24:00:00',
+            slotDuration:'00:30:00',
+            slotLabelFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                meridiem: false,
+                hour12: false // 设置时间为24小时
+            },
+            selectMirror:true,
+            customButtons: {
+                myCustomButton: {
+                    text: '看板',
+                    click: function() {
+                    isWeekViewShow.value = true
+                    }
+                }
+            },
+            headerToolbar: {
+                left: "today prev next",
+                center: "title",
+                //right: "myCustomButton,dayGridMonth,timeGridWeek,timeGridDay"
+            }, //日历上方的按钮和title
+            events: [
+                // {
+                //     backgroundColor: "#1055BC",
+                //     borderColor: "#1055BC",
+                //     end: "2024-08-06 23:00:00",
+                //     id: "001",
+                //     start: "2024-08-06 22:00:00",
+                //     textColor: "#FFF",
+                //     title: "测试"
+                // }
+            ], //绑定展示事件
+            // 自定义展示内容
+              eventTimeFormat: {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: false
+                },
+            // eventContent: event => {},
+            eventDidMount: (info) => {
+                //calendarDayChange2(info,'eventDidMount');
+            },
+            //点击日期info是单元格的信息
+            dateClick: info => {
+                //calendarDayChange2(info,'点击日期');
+            },
+            //事件的点击
+            eventClick: info => {
+                calendarDayChange2(info,'事件的点击');
+            },
+            // 移动事件或者拓展事件时间触发函数 返回数组 item._context.options.events Array 当前所有事件
+            eventsSet: info => {
+                // calendarDayChange2(info,'移动事件或者拓展事件');
+            },
+            // 滑动选择时触发                                                                                                                                                                                  
+            select: info => {
+                calendarDayChange2(info,'滑动选择时触发');
+            },
+            // 时间调整结束后触发
+            eventResize: info => {
+                calendarDayChange2(info,'时间调整结束后触发');
+            },
+            // 拖动触发
+            eventDrop: info => {
+                calendarDayChange2(info,'拖动触发');
+            },
+            // 切换视图时触发
+            datesSet: view => {},
         }
     });
     watch(()=>props.currentTime,(newVal,oldVal)=>{
         data.currentDate = dayjs(newVal).format("YYYY-MM-DD");
-        console.log("data.currentDate",data.currentDate);
+        //console.log("data.currentDate",data.currentDate);
     },{deep: true, immediate: true})
     const weeks = toRaw(['周日', '周一', '周二', '周三', '周四', '周五', '周六']);
-    const { height, weekList, scheduleList, times, currentDate, paramsTime } = toRefs(data);
+    const { height, weekList, scheduleList, times, currentDate, paramsTime,calendarOptions,detailId,isScheduleDetail,isMeetingDetail } = toRefs(data);
     const weekRef = ref(null);
+    const fullCalendarDay = ref(null);
     onMounted(() => {
         data.height = weekRef.value.scrollHeight;
         data.currentDate=props.currentTime;
+        //getQuery();
     })
 
     const today = dayjs();
@@ -177,6 +353,41 @@
             time: startTime
         }
         emit("calendarDayChange", obj);
+    }
+    const calendarDayChange2 = (info,text) => {
+        console.log(text,info)
+        let start='';
+        let end='';
+        if(text=='滑动选择时触发'&&info.start){
+            start=info.start;
+            end=info.end;
+        }
+        // if(text=='移动事件或者拓展事件'&&info[0]){
+        //     start=info[0].startStr;
+        //     end=info[0].endStr;
+        // }
+        if((text=='事件的点击'||text=='拖动触发'||text=='时间调整结束后触发')&&info.event){
+            start=info.event.startStr;
+            end=info.event.endStr;
+        }
+        let startDate=dayjs(start).format("YYYY-MM-DD");
+        let endDate=dayjs(end).format("YYYY-MM-DD");
+        let startTime=dayjs(start).format("HH:mm");
+        let endTime=dayjs(end).format("HH:mm");
+        data.paramsTime.date = startDate;
+        let obj = {
+            date: startDate,
+            time: startTime,
+            end:endTime,
+            endDate:endDate,
+        }
+        // if(data.paramsTime.endDate){
+        //     obj.endDate=data.paramsTime.endDate;
+        // }
+        //console.log(start,end,obj)
+        if(start&&end){
+            emit("calendarDayChange", obj);
+        }
     }
     // 日-切换日期
     const changeTime = (e) => {
@@ -244,6 +455,129 @@
         let num = endIndex - index;
         return num * 60 + 'px';
     }
+    const getOtherData = (daydate,id) => {
+        let d = {
+            actions:[{
+                "id": "5764;a",
+                "descriptor": "",
+                "callingDescriptor": "UNKNOWN",
+                "params": {
+                    "startDateTime": daydate,
+                    "endDateTime": daydate,
+                    "queryType":'day',
+                    "calendarType": '',
+                    "queryEvents": true
+                }
+
+            }]
+        };
+        let url=Interface.schedule.list;
+        if(props.objectTypeCode=='5000'){
+            d = {
+                actions:[{
+                    "id": "5764;a",
+                    "descriptor": "",
+                    "callingDescriptor": "UNKNOWN",
+                    "params": {
+                        "startDateTime": daydate,
+                        "endDateTime": daydate,
+                        "calendarType": 'day',
+                        "queryMeetings": true
+                    }
+
+                }]
+            };
+            url=Interface.meeting.getall;
+        }
+        let obj = {
+            message: JSON.stringify(d)
+        }
+        proxy.$post(url,obj).then(res=>{
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length&&props.objectTypeCode=='4200'){
+                        let scheduleItems = res.actions[0].returnValue[0].calendarItems;
+                        let obj = {};
+                        scheduleItems.forEach((item,index)=>{
+                            let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
+                            if(!obj[daydate]){
+                                obj[daydate] = [];
+                            }
+                            item.StartDateTime=item.StartDateTime?dayjs(item.StartDateTime).format("YYYY-MM-DD HH:mm:ss"):'';
+                            item.EndDateTime=item.EndDateTime?dayjs(item.EndDateTime).format("YYYY-MM-DD HH:mm:ss"):'';
+                            obj[daydate].push(item);
+                            let remainder = index % 4;
+                            let event={
+                                id: item.Id,
+                                title: item.Subject||'',
+                                start: item.StartDateTime,
+                                end: item.EndDateTime,
+                                Who:item.Who||'11111',
+                                Location:item.Location||item.Where||'',
+                                Phone:item.Phone||'',
+                                CreatedByName:item.CreatedByName||'',
+                                Description:item.Description||item.What||'',
+                                editable:false,
+                                backgroundColor: '#aaa', // 该事件的背景颜色
+                                borderColor: '#aaa', // 该事件的边框颜色
+                                textColor: '#FFF' // 该事件的文字颜色
+                            }
+                            
+                            // data.calendarOptions.events.push(event);
+                            if(item.Id&&item.Id!==id&&(JSON.stringify(data.calendarOptions.events)).indexOf(event.id)==-1){
+                                // if(fullCalendarDay.value.getApi().view.calendar.getEventById(item.Id)){
+                                //     fullCalendarDay.value.getApi().view.calendar.getEventById(item.Id).remove();
+                                // }
+                                data.calendarOptions.events.push(event);
+                                //fullCalendarDay.value.getApi().view.calendar.addEvent(event);
+                            }
+                        })
+                        
+                        //data.scheduleList = obj;      
+            }
+            if(res&&res.actions&&res.actions[0]&&res.actions[0].returnValue&&res.actions[0].returnValue.length&&props.objectTypeCode=='5000'){
+                        let meetingItems = res.actions[0].returnValue;
+                        let obj = {};
+                        meetingItems.forEach((item,index)=>{
+                            let daydate = dayjs(item.StartDateTime).format('YYYY-MM-DD');
+                            if(!obj[daydate]){
+                                obj[daydate] = [];
+                            }
+                            item.StartDateTime=item.StartDateTime?dayjs(item.StartDateTime).format("YYYY-MM-DD HH:mm:ss"):'';
+                            item.EndDateTime=item.EndDateTime?dayjs(item.EndDateTime).format("YYYY-MM-DD HH:mm:ss"):'';
+                            obj[daydate].push(item);
+                            let remainder = index % 4;
+                            let event={
+                                id: item.Id,
+                                title: item.Subject||'',
+                                start: item.StartDateTime,
+                                end: item.EndDateTime,
+                                Who:item.Who||'',
+                                Location:item.Location||item.Where||'',
+                                Phone:item.Phone||'',
+                                CreatedByName:item.CreatedByName||'',
+                                Description:item.Description||item.What||'',
+                                editable:false,
+                                backgroundColor: '#aaa', // 该事件的背景颜色
+                                borderColor: '#aaa', // 该事件的边框颜色
+                                textColor: '#FFF' // 该事件的文字颜色
+                            }
+                            //console.log(item.Id)
+                            //data.calendarOptions.events.push(event);
+                            
+                            // data.calendarOptions.events.push(event);
+                            if(item.Id&&item.Id!==id&&(JSON.stringify(data.calendarOptions.events)).indexOf(event.id)==-1){
+                                // if(fullCalendarDay.value.getApi().view.calendar.getEventById(item.Id)){
+                                //     fullCalendarDay.value.getApi().view.calendar.getEventById(item.Id).remove();
+                                // }
+                                data.calendarOptions.events.push(event);
+                                //fullCalendarDay.value.getApi().view.calendar.addEvent(event);
+                            }
+                        })
+                        //data.meetingList = obj;
+      
+            }
+        })
+
+    }
     const getQuery = (calendarItem) => {
         if(calendarItem){}else{
             let StartDateTime = dayjs(new Date()).startOf("day").format("YYYY-MM-DD");
@@ -255,7 +589,7 @@
             hour2 = hour2 < 10 ? '0' + hour2 : hour2;
             let EndDateTime_time = hour2+':00';
             calendarItem={
-                Id:'',
+                Id:props.id?'':'001',
                 Subject: '',
                 What: '',
                 Who: '',
@@ -267,22 +601,71 @@
                 sobjectType: "Event"
             }
         }
-        let obj = {};
         let daydate = dayjs(calendarItem.StartDateTime).format('YYYY-MM-DD');
-        if(!obj[daydate]){
-            obj[daydate] = [];
-        }
-        calendarItem.StartDateTime=calendarItem.StartDateTime?dayjs(calendarItem.StartDateTime).format("YYYY-MM-DD HH:mm"):'';
-        calendarItem.EndDateTime=calendarItem.EndDateTime?dayjs(calendarItem.EndDateTime).format("YYYY-MM-DD HH:mm"):'';
+        
+        calendarItem.StartDateTime=calendarItem.StartDateTime?dayjs(calendarItem.StartDateTime).format("YYYY-MM-DD HH:mm:ss"):'';
+        calendarItem.EndDateTime=calendarItem.EndDateTime?dayjs(calendarItem.EndDateTime).format("YYYY-MM-DD HH:mm:ss"):'';
         calendarItem.StartDateTime_time=calendarItem.StartDateTime?dayjs(calendarItem.StartDateTime).format("HH:mm"):'';
         calendarItem.EndDateTime_time=calendarItem.EndDateTime?dayjs(calendarItem.EndDateTime).format("HH:mm"):'';
-        data.paramsTime.date = props.currentTime;
+        data.paramsTime.date = calendarItem.StartDateTime;
         data.paramsTime.time = calendarItem.StartDateTime_time;
-        obj[daydate].push(calendarItem);
-        data.scheduleList = obj;
+        data.paramsTime.end = calendarItem.EndDateTime_time;
+        data.paramsTime.endDate = calendarItem.EndDateTime?dayjs(calendarItem.EndDateTime).format("YYYY-MM-DD"):'';
+
+        let event={
+            id: calendarItem.Id,
+            title: calendarItem.Subject||'',
+            start: calendarItem.StartDateTime,
+            end: calendarItem.EndDateTime,
+            editable:true,
+            backgroundColor: '#1055BC', // 该事件的背景颜色
+            borderColor: '#1055BC', // 该事件的边框颜色
+            textColor: '#FFF' // 该事件的文字颜色
+        }
+        console.log(event,0)
+        nextTick(()=>{
+            if(typeof fullCalendarDay !='undefined'&&fullCalendarDay&&fullCalendarDay.value){
+                //console.log(fullCalendarDay,'fullCalendarDay');
+                // if(fullCalendarDay.value.getApi().view.calendar.getEventById('001')){
+                //     fullCalendarDay.value.getApi().view.calendar.getEventById('001').remove();
+                // }
+                // if(fullCalendarDay.value.getApi().view.calendar.getEventById(event.id)){
+                //     fullCalendarDay.value.getApi().view.calendar.getEventById(event.id).remove();
+                // }
+                //fullCalendarDay.value.getApi().view.calendar.addEvent(event);
+                if(calendarItem.Id&&(JSON.stringify(data.calendarOptions.events)).indexOf(event.id)==-1){
+                    data.calendarOptions.events.push(event);
+                }
+                //fullCalendarDay.value.getApi().gotoDate(props.currentTime);
+                setTimeout(function(){
+                    fullCalendarDay.value.getApi().gotoDate(props.currentTime);
+                },200)
+                document.getElementsByClassName('fc-prev-button')[0].title='上一天';
+                document.getElementsByClassName('fc-next-button')[0].title='下一天';
+            }
+        })
+        if(calendarItem.Id){
+            getOtherData(daydate,calendarItem.Id);
+        }
+        
     }
-    getQuery();
+    
     defineExpose({getQuery});
+    //详情
+    const handleDetail= (e) => {
+        data.detailId=e.id;
+        nextTick(()=>{
+            if(props.objectTypeCode=='5000'){
+                data.isMeetingDetail=true;
+            }
+            else if(props.objectTypeCode=='4200'){
+                data.isScheduleDetail = true;
+            }
+            else{
+                data.isScheduleDetail = true;
+            }
+        })
+    }
 </script>
 <style lang="less" scoped>
     .weekWrap {
@@ -433,6 +816,111 @@
                 :deep .ant-btn{
                     padding: 0;
                 }
+            }
+        }
+    }
+    .AddScheduleDayModal2{
+        div{
+            height: 100%;
+        }
+        :deep .fc .fc-view-harness{
+            height: calc(100% - 50px);
+            overflow: auto;
+        }
+        :deep .fc .fc-toolbar-title{
+            font-size: 17px;
+        }
+        :deep .fc .fc-button-group{
+            display: none;
+        }
+        :deep .fc .fc-toolbar.fc-header-toolbar{
+            height: 50px;
+            margin-bottom: 0;
+        }
+        :deep .fc-button {
+            position: absolute;
+        }
+        :deep .fc-header-toolbar{
+            position: relative;
+        }
+        :deep .fc-next-button{
+            top: 13px;
+            right: 100px;
+            background: #fff;
+            border: none;
+            color: #333;
+            padding: 0;
+        }
+        :deep .fc-nextYear-button{
+            top: 13px;
+            right: 80px;
+            background: #fff;
+            border: none;
+            color: #333;
+            padding: 0;
+        }
+        :deep .fc-prev-button{
+            top: 13px;
+            left: 88px;
+            background: #fff;
+            border: none;
+            color:#333;
+            padding: 0;
+        }
+        :deep .fc-prevYear-button{
+            top: 13px;
+            left: 70px;
+            background: #fff;
+            border: none;
+            color:#333;
+            padding: 0;
+        }
+        :deep .fc-today-button{
+            top: 10px;
+            left: 18px;
+            border-radius: 2px;
+            background-color: #1677ff;
+            border-color: #1677ff;
+            font-size: 14px;
+            height: 32px;
+            padding: 4px 10px;
+        }
+        :deep .fc .fc-scrollgrid-section-sticky > *{
+            // position: relative;
+            border-top: 1px solid #dedede;
+        }
+        :deep .fc .fc-button:disabled {
+            opacity: 0.3 !important;
+        }
+        :deep .fc .fc-button:not(:disabled).fc-button-active:focus,:deep .fc .fc-button:not(:disabled):active:focus{
+            box-shadow: none !important;
+        }
+        :deep .fc-button:focus,:deep .fc-button:active{
+            box-shadow: none !important;
+        }
+        :deep .fc .fc-button:not(:disabled).fc-button-active,:deep .fc .fc-button:not(:disabled):active{
+            background: #fff;
+            border: none !important;
+            color: #333;
+        }
+        :deep .fc-event-time{
+            font-size: 12px !important;
+            margin-left: 6px !important;
+        }
+        :deep .fc-event-title{
+            font-size: 12px !important;
+            margin-left: 6px !important;
+        }
+        :deep .fc-timegrid-slots colgroup{
+            background: #f0f2f6;
+        }
+        
+    }
+    .fullCalendar{
+        :deep .fc-timegrid-body{
+            width: 100% !important;
+            table{
+                width: 100% !important;
             }
         }
     }

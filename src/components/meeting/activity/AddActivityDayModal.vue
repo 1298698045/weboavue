@@ -93,7 +93,7 @@
             <FullCalendar class="fullCalendar" ref="fullCalendarDay" :options="calendarOptions" >
             <template #eventContent="arg" >
                     <div class="my-custom-event" :style="{background:arg.event.backgroundColor,color:arg.event.textColor,borderColor:arg.event.borderColor}">
-                        <a-popconfirm placement="topLeft" trigger="hover" cancelText="取消" okText="查看" @confirm="handleDetail(arg.event)" :z-index="20000">
+                        <a-popconfirm placement="topLeft" trigger="hover" cancelText="取消" okText="查看" @confirm="handleDetail(arg.event)" :z-index="20000" overlayClassName="meeting-popover">
                                     <template #icon></template>
                                     <template #title>
                                         <div class="meetingMessageWrap">
@@ -106,42 +106,50 @@
                                             <div class="meetingBody">
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
-                                                        被分配人：
-                                                        <span class="OwningUserName">{{arg.event.extendedProps.Who}}</span>
-                                                    </div>
-                                                    <div class="meetingInfoItem">
-                                                        地址：
-                                                        <span class="TelePhone">{{arg.event.extendedProps.Location || ''}}</span>
+                                                        会议主题：
+                                                        <span class="Subject">{{arg.event.extendedProps.Subject}}</span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        会议时间：
+                                                        <span class="StartDateTime">{{dayjs(arg.event.start).format("YYYY-MM-DD HH:mm")}}</span>&nbsp;&nbsp;止&nbsp;&nbsp;<span class="EndDateTime">{{dayjs(arg.event.end).format("YYYY-MM-DD HH:mm")}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        会议地点：
+                                                        <span class="Where">{{arg.event.extendedProps.Where || ''}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo">
+                                                    <div class="meetingInfoItem">
+                                                        会议召集人：
+                                                        <span class="OwningUserName">{{arg.event.extendedProps.OwningUserName}}</span>
+                                                    </div>
                                                     <div class="meetingInfoItem">
                                                         联系电话：
-                                                        <span class="OwningUserName">{{ arg.event.extendedProps.Phone }}</span>
-                                                    </div>
-                                                    <div class="meetingInfoItem">
-                                                        分配人：
-                                                        <span class="TelePhone">{{arg.event.extendedProps.CreatedByName || ''}}</span>
+                                                        <span class="TelePhone">{{ arg.event.extendedProps.Telephone }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
                                                     <div class="meetingInfoItem">
-                                                        开始：
-                                                        <span class="OwningUserName">{{dayjs(arg.event.start).format("YYYY-MM-DD HH:mm")}}</span>
-                                                    </div>
-                                                    <div class="meetingInfoItem">
-                                                        结束：
-                                                        <span class="TelePhone">{{dayjs(arg.event.end).format("YYYY-MM-DD HH:mm")}}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="meetingInfo">
-                                                    <div class="meetingInfoItem">
-                                                        备注：
-                                                        <span class="OwningUserName" v-html="arg.event.extendedProps.Description||''"></span>
+                                                        审批状态：
+                                                        <span class="StatusCodeName" v-if="arg.event.extendedProps.StatusCode=='0'" style="color:#0070d2;">{{arg.event.extendedProps.StatusCodeName || ''}}</span>
+                                                        <span class="StatusCodeName" v-else-if="arg.event.extendedProps.StatusCode=='1'" style="color:#f7aa2d;">{{arg.event.extendedProps.StatusCodeName || ''}}</span>
+                                                        <span class="StatusCodeName" v-else-if="arg.event.extendedProps.StatusCode=='3'" style="color:#31BA6A;">{{arg.event.extendedProps.StatusCodeName || ''}}</span>
+                                                        <span class="StatusCodeName" v-else-if="arg.event.extendedProps.StatusCode=='5'" style="color:#b3b3b3;">{{arg.event.extendedProps.StatusCodeName || ''}}</span>
+                                                        <span class="StatusCodeName" v-else>{{arg.event.extendedProps.StatusCodeName || ''}}</span>
                                                     </div>
                                                 </div>
                                                 <div class="meetingInfo">
-                                                    <a-button type="link" @click.stop="handleDetail(arg.event)">更多详细信息</a-button>
+                                                    <div class="meetingInfoItem">
+                                                        会议内容：
+                                                        <span class="What" v-html="arg.event.extendedProps.What||''"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="meetingInfo meetingInfo1">
+                                                    <a-button type="link" @click.stop="handleDetailView(arg.event.id)">详细信息</a-button>
                                                 </div>
                                             </div>
                                         </div>
@@ -206,7 +214,7 @@
         currentTime: String,
         startDateTime:String,
         endDateTime:String,
-        calendarType:String,
+        ActivityType:String,
         objectTypeCode:String,
     })
 
@@ -464,8 +472,7 @@
                 "params": {
                     "startDateTime": daydate,
                     "endDateTime": daydate,
-                    "queryType":'day',
-                    "calendarType": '',
+                    "queryType": 'day',
                     "queryEvents": true
                 }
 
@@ -484,7 +491,6 @@
                         "calendarType": 'day',
                         "queryMeetings": true
                     }
-
                 }]
             };
             url=Interface.meeting.getall;
@@ -510,11 +516,13 @@
                                 title: item.Subject||'',
                                 start: item.StartDateTime,
                                 end: item.EndDateTime,
-                                Who:item.Who||'11111',
-                                Location:item.Location||item.Where||'',
-                                Phone:item.Phone||'',
-                                CreatedByName:item.CreatedByName||'',
-                                Description:item.Description||item.What||'',
+                                Subject:item.Subject||'',
+                                Where:item.Where||'',
+                                OwningUserName:item.OwningUserName||'',
+                                Telephone:item.Telephone||'',
+                                StatusCodeName:item.StatusCodeName||item.statusCodeName||'',
+                                StatusCode:item.StatusCode||item.statusCode||'',
+                                What:item.What||'',
                                 editable:false,
                                 backgroundColor: '#aaa', // 该事件的背景颜色
                                 borderColor: '#aaa', // 该事件的边框颜色
@@ -550,11 +558,13 @@
                                 title: item.Subject||'',
                                 start: item.StartDateTime,
                                 end: item.EndDateTime,
-                                Who:item.Who||'',
-                                Location:item.Location||item.Where||'',
-                                Phone:item.Phone||'',
-                                CreatedByName:item.CreatedByName||'',
-                                Description:item.Description||item.What||'',
+                                Subject:item.Subject||'',
+                                Where:item.Where||'',
+                                OwningUserName:item.OwningUserName||'',
+                                Telephone:item.Telephone||'',
+                                StatusCodeName:item.StatusCodeName||item.statusCodeName||'',
+                                StatusCode:item.StatusCode||item.statusCode||'',
+                                What:item.What||'',
                                 editable:false,
                                 backgroundColor: '#aaa', // 该事件的背景颜色
                                 borderColor: '#aaa', // 该事件的边框颜色
@@ -592,9 +602,13 @@
                 Id:props.id?'':'001',
                 Subject: '',
                 What: '',
-                Who: '',
+                Where:'',
+                OwningUserName: '',
                 StartDateTime: StartDateTime+' '+StartDateTime_time,
                 EndDateTime: EndDateTime+' '+EndDateTime_time,
+                Telephone:'',
+                StatusCodeName:'',
+                StatusCode:'0',
                 IsAllDayEvent: false,
                 IsPrivate: false,
                 IsRecurrence2:false,
@@ -617,6 +631,13 @@
             title: calendarItem.Subject||'',
             start: calendarItem.StartDateTime,
             end: calendarItem.EndDateTime,
+            Subject:calendarItem.Subject||'',
+            Where:calendarItem.Where||'',
+            OwningUserName:calendarItem.OwningUserName||'',
+            Telephone:calendarItem.Telephone||'',
+            StatusCodeName:calendarItem.StatusCodeName||calendarItem.statusCodeName||'',
+            StatusCode:calendarItem.StatusCode||calendarItem.statusCode||'',
+            What:calendarItem.What||'',
             editable:true,
             backgroundColor: '#1055BC', // 该事件的背景颜色
             borderColor: '#1055BC', // 该事件的边框颜色
@@ -665,6 +686,10 @@
                 data.isScheduleDetail = true;
             }
         })
+    }
+    //详情页
+    const handleDetailView=(id)=>{
+        window.open('/#/lightning/r/meeting/view?id='+(id||''));
     }
 </script>
 <style lang="less" scoped>
@@ -915,5 +940,24 @@
             background: #f0f2f6;
         }
         
+    }
+    .meetingMessageWrap{
+        line-height: 30px !important;
+        width: 360px;
+        .meetingInfo1{
+            margin-top: 5px;
+        }
+        .meetingInfoItem{
+            font-size: 14px !important;
+            display: flex;
+        }
+    }
+    .fullCalendar{
+        :deep .fc-timegrid-body{
+            width: 100% !important;
+            table{
+                width: 100% !important;
+            }
+        }
     }
 </style>
