@@ -78,6 +78,42 @@
                 </a-select>
             </span>
         </div>
+        <div v-else-if="type == 'MC' || type == 'RBL'">
+            <span class="valText" v-if="print==1">
+                <table>
+                    <tbody>
+                        <tr v-for="(item, index) in chunkArray(field)" :key="index">
+                            <td v-for="(option, optionIdx) in item" :key="optionIdx">
+                                <span class="checkbox-img">
+                                    <img src="@/assets/img/checkbox_unchecked.gif" alt="" v-if="!list[field.id].includes(option.value)">
+                                    <img src="@/assets/img/checkbox_checked.gif" alt="" v-else>
+                                </span>
+                                {{option.label}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </span>
+            <span v-else>
+                <span class="valText"
+                    v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
+                    <table>
+                        <tbody>
+                            <tr v-for="(item, index) in chunkArray(field)" :key="index">
+                                <td v-for="(option, optionIdx) in item" :key="optionIdx">
+                                    <span class="checkbox-img">
+                                        <img src="@/assets/img/checkbox_unchecked.gif" alt="" v-if="!list[field.id].includes(option.value)">
+                                        <img src="@/assets/img/checkbox_checked.gif" alt="" v-else>
+                                    </span>
+                                    {{option.label}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </span>
+                <span v-else-if="field?.permission == 2"></span>
+            </span>
+        </div>
         <div v-else-if="type=='D'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
@@ -571,6 +607,15 @@
         let name = option.name;
         emit("suggestion", name, field)
     }
+    const chunkArray = (field) => {
+        let list = props.select[field.id] && props.select[field.id].values;
+        let cols = Number(field.cols) || 3;
+        let result = [];
+        for (let i = 0; i < list.length; i += cols) {
+            result.push(list.slice(i, i + cols));
+        }
+        return result;
+    }
 </script>
 <style lang="less" scoped>
     .filed{
@@ -582,6 +627,7 @@
         color: #333 !important;
         overflow: hidden;
         display: flex;
+        text-align: left;
         .searchLook{
             position: relative;
             .searchIcon{

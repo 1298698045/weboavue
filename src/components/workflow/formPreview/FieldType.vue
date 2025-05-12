@@ -87,6 +87,100 @@
                 </a-select>
             </span>
         </div>
+        <div v-else-if="type == 'MC'">
+            <span class="valText" v-if="print==1">
+                <table>
+                    <tbody>
+                        <tr v-for="(item, index) in chunkArray(field)" :key="index">
+                            <td v-for="(option, optionIdx) in item" :key="optionIdx">
+                                <span class="checkbox-img">
+                                    <img src="@/assets/img/checkbox_unchecked.gif" alt="" v-if="!list[field.id].includes(option.value)">
+                                    <img src="@/assets/img/checkbox_checked.gif" alt="" v-else>
+                                </span>
+                                {{option.label}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </span>
+            <span v-else>
+                <span class="valText"
+                    v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
+                    <table>
+                        <tbody>
+                            <tr v-for="(item, index) in chunkArray(field)" :key="index">
+                                <td v-for="(option, optionIdx) in item" :key="optionIdx">
+                                    <span class="checkbox-img">
+                                        <img src="@/assets/img/checkbox_unchecked.gif" alt="" v-if="!list[field.id].includes(option.value)">
+                                        <img src="@/assets/img/checkbox_checked.gif" alt="" v-else>
+                                    </span>
+                                    {{option.label}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </span>
+                <span v-else-if="field?.permission == 2"></span>
+                <a-checkbox-group v-else :disabled="disabledPermission" v-model:value="list[field.id]" style="width: 100%">
+                    <table>
+                        <tbody>
+                            <tr v-for="(item, index) in chunkArray(field)" :key="index">
+                                <td v-for="(option, optionIdx) in item" :key="optionIdx">
+                                    <a-checkbox :value="option.value">{{option.label}}</a-checkbox>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </a-checkbox-group>
+            </span>
+        </div>
+        <div v-else-if="type == 'RBL'">
+            <span class="valText" v-if="print==1">
+                <table>
+                    <tbody>
+                        <tr v-for="(item, index) in chunkArray(field)" :key="index">
+                            <td v-for="(option, optionIdx) in item" :key="optionIdx">
+                                <span class="checkbox-img">
+                                    <img src="@/assets/img/checkbox_unchecked.gif" alt="" v-if="!list[field.id].includes(option.value)">
+                                    <img src="@/assets/img/checkbox_checked.gif" alt="" v-else>
+                                </span>
+                                {{option.label}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </span>
+            <span v-else>
+                <span class="valText"
+                    v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
+                    <table>
+                        <tbody>
+                            <tr v-for="(item, index) in chunkArray(field)" :key="index">
+                                <td v-for="(option, optionIdx) in item" :key="optionIdx">
+                                    <span class="checkbox-img">
+                                        <img src="@/assets/img/checkbox_unchecked.gif" alt="" v-if="!list[field.id].includes(option.value)">
+                                        <img src="@/assets/img/checkbox_checked.gif" alt="" v-else>
+                                    </span>
+                                    {{option.label}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </span>
+                <span v-else-if="field?.permission == 2"></span>
+                <a-radio-group v-else :disabled="disabledPermission" v-model:value="list[field.id]" style="width: 100%">
+                    <table>
+                        <tbody>
+                            <tr v-for="(item, index) in chunkArray(field)" :key="index">
+                                <td v-for="(option, optionIdx) in item" :key="optionIdx">
+                                    <a-radio :value="option.value">{{option.label}}</a-radio>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </a-radio-group>
+            </span>
+        </div>
         <div v-else-if="type=='D'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
@@ -170,7 +264,7 @@
                     </div>
                 </div>
             </span>
-            <span v-else>
+            <span v-else style="text-align: left;">
                 <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
                     <!-- {{ list[field.id] }} -->
                     <div class="suggestion">
@@ -266,12 +360,12 @@
                 </a-checkbox-group>
             </a-form-item>
         </div>
-        <div v-else-if="type=='RBL'">
+        <!-- <div v-else-if="type=='RBL'">
             <a-radio-group>
                 <a-radio :value="1">Option A</a-radio>
                 <a-radio :value="2">Option B</a-radio>
             </a-radio-group>
-        </div>
+        </div> -->
         <div v-else-if="type=='Q'">
             <a-transfer v-model:target-keys="targetKeys" v-model:selected-keys="selectedKeys" :data-source="mockData"
                 :titles="['Source', 'Target']" :render="item => item.title" :disabled="disabled" @change="handleChange"
@@ -644,6 +738,10 @@
     };
 
     const handleSubmit = () => {
+        if(data.suggestionVal == ''){
+            message.error("意见不能为空！");
+            return false;
+        }
         let obj = {
             actions: [{
                 id: "2919;a",
@@ -677,7 +775,22 @@
         emit("delSuggestion", option.id);
     };
 
+    const chunkArray = (field) => {
+        let list = props.select[field.id] && props.select[field.id].values;
+        let cols = Number(field.cols) || 3;
+        let result = [];
+        for (let i = 0; i < list.length; i += cols) {
+            result.push(list.slice(i, i + cols));
+        }
+        return result;
+    }
 </script>
+<style lang="less">
+    .filed .ant-checkbox-group{
+        text-align: left;
+        display: block !important;
+    }
+</style>
 <style lang="less" scoped>
     .filed {
         padding: 5px;
@@ -688,7 +801,7 @@
         color: #333 !important;
         overflow: hidden;
         display: flex;
-
+        text-align: left;
         .searchLook {
             position: relative;
 

@@ -7,7 +7,7 @@
                         <tr v-if="isShowRow(row,key)" :style="setRowStyle(key)">
                             <template v-for="(col, colKey, colIndex) in row" :key="colIndex">
                                 <td :col="colKey" :rowspan="col.rowspan || 1" :colspan="col.colspan || 1"
-                                    v-if="isShowCell(key, colKey, col.rowspan, col) && col && col.field?.displayCategory!='RelatedList'"
+                                    v-if="isShowCell(key, colKey, col) && col && col.field?.displayCategory!='RelatedList'"
                                     :style="setStyle(key,colKey)">
                                     <template v-if="col.v || col.p">
                                         <span :style="setStyleText(key, colKey)">
@@ -318,6 +318,7 @@
                     }]
                 }
                 try {
+                    
                     if (type == 'UC' || type == 'UCS') {
                         // console.log('props.ruleLogId', props.ruleLogId);
                         // console.log('fields[key]', fields[key]);
@@ -332,7 +333,10 @@
                         // data.suggestionObj[key] = otherSuggestions;
                         data.suggestionObj[key] = fields[key];
                         console.log("data.suggestionObj", data.suggestionObj);
-                    } else {
+                    } else if (type == 'MC') {
+                        data.list[key] = JSON.parse(fields[key].value);
+                    }
+                     else {
                         data.list[key] = fields[key]?.value;
                     }
                 } catch (err) {
@@ -1049,6 +1053,9 @@
                         }
                     }
                     data.list[item.name] = "";
+                    if(item.type == 'MC'){
+                        data.list[item.name] = [];
+                    }
                 }
 
             });
@@ -1163,9 +1170,8 @@
         if (data.cellData[row][col].style) {
             let styleData = data.cellData[row][col].style;
             for (let styleName in styleData) {
-                style.fontSize = "12px";
                 if (styleName == 'fs') {
-                    style.fontSize = styleData[styleName] + "px";
+                    style.fontSize = styleData[styleName] + "pt";
                 }
                 if (styleName == 'bg') {
                     style.background = styleData[styleName]?.rgb;
@@ -1181,7 +1187,13 @@
                     style.borderBottom = '1px solid ' + b?.cl?.rgb;
                     style.borderTop = '1px solid ' + t?.cl?.rgb;
                     style.borderLeft = '1px solid ' + l?.cl?.rgb;
-                    style.borderRight = '1px solid ' + r?.cl?.rgb;
+                    // style.borderRight = '1px solid ' + r?.cl?.rgb;
+                    if (row == 1) {
+                        style.borderRight = '1px solid #fff';
+                    } else {
+                        style.borderRight = '1px solid ' + r?.cl?.rgb;
+                    }
+
 
                     style.width = '90px';
                     let layout = data.comps[Number(row)]?.layout;
@@ -1194,7 +1206,12 @@
                     if (styleData[styleName]) {
                         let { b, l, r, t } = styleData[styleName];
                         style.paddingTop = t + 'px';
-                        style.paddingRight = r + 'px';
+                        if (row == 1) {
+                            style.borderRight = '1px solid #fff';
+                        } else {
+                            style.borderRight = '1px solid ' + r?.cl?.rgb;
+                        }
+
                         style.paddingBottom = b + 'px';
                         style.paddingLeft = l + 'px';
                     }
@@ -1256,6 +1273,9 @@
         }
         // 处理合并行跳过
         if (data.cellData[key][colKey]?.skip) {
+            isBook = false;
+        }
+        if (key < data.maxRowNum && data.mergeRowKeyData[key - 1] && !col.v && !col.p && !col.field) {
             isBook = false;
         }
         return isBook;
@@ -1518,9 +1538,9 @@
         if (isP) {
             isBook = true;
         }
-        // if(empty && index < data.maxRowNum){
-        //     isBook = true;
-        // }
+        if(empty && index < data.maxRowNum){
+            isBook = true;
+        }
         return isBook;
     };
 
