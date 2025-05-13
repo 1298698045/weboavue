@@ -226,6 +226,14 @@
                 </template>
             </span>
         </div>
+        <div v-else-if="type == 'UC' || type == 'HS'">
+            <span v-if="field?.permission == 2"></span>
+            <span v-else>
+                <div class="signImg" v-if="list[field.id]">
+                    <img :src="list[field.id]" alt="">
+                </div>
+            </span>
+        </div>
         <div v-else-if="type=='B'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] ? '是' : '否' }}

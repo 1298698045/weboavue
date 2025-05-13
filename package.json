@@ -34,6 +34,7 @@
     "lunar-javascript": "^1.6.10",
     "moment": "^2.29.4",
     "qrcode": "^1.5.3",
+    "signature_pad": "^5.0.7",
     "swiper": "^11.0.4",
     "tinymce": "^7.3.0",
     "ts-loader": "^9.5.1",

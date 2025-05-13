@@ -47,6 +47,7 @@ const Interface = {
     import: baseUrl + "/aura/flow/form/entity/import", // 流程子表数据导入
     getTree: baseUrl + "/aura/workflow/Process/getTree", // 流程树
     batchNew: baseUrl + "/workflow/ProcessInstance/batchNew", // 批量发起
+    signatureUpload: baseUrl + "/one/signature/wfform/upload", // 流程用户手写签名上传
   },
   businessunitList: "/localData/user.businessunit.getlist.json",
   userInfo: "/localData/user.info.get.json",

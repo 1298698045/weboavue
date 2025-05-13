@@ -2,7 +2,7 @@
     <div class="filed" :name="field.id" :label="field.label">
         <span class="required"
             v-if="print!=1 && field?.required && field?.permission != 2 && field?.permission != 4 && stateCode != 2 && field?.permission != ''">*</span>
-        <div v-if="type=='S'">
+        <div v-if="type=='S'" class="maxWidth">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
             </span>
@@ -234,7 +234,7 @@
                     picker="month" v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
             </span>
         </div>
-        <div v-else-if="type=='X' || type=='J'">
+        <div class="maxWidth" v-else-if="type=='X' || type=='J'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
             </span>
@@ -247,7 +247,7 @@
                     :placeholder="'请输入' + field.label" :rows="2" />
             </span>
         </div>
-        <div v-else-if="type=='z' || type=='UC' || type=='UCS'">
+        <div class="maxWidth" v-else-if="type=='z' || type=='UC' || type=='UCS'">
             <span class="valText" v-if="print==1">
                 <!-- {{ list[field.id] }} -->
                 <div class="suggestion">
@@ -340,6 +340,35 @@
                 </template>
             </span>
         </div>
+        <div v-else-if="type == 'UC'">
+            <span v-if="field?.permission == 2"></span>
+            <span v-else>
+                <div class="signImg" v-if="list[field.id]">
+                    <img :src="'/api/one/signature/wfform/preview?id='+list[field.id]" alt="">
+                </div>
+            </span>
+        </div>
+        <div v-else-if="type == 'HS'">
+            <span class="valText" v-if="print==1">
+                <div class="signImg" v-if="list[field.id]">
+                    <img :src="'/api/one/signature/wfform/preview?id='+list[field.id]" alt="">
+                </div>
+            </span>
+            <span v-else style="text-align: left;">
+                <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
+                    <div class="signImg" v-if="list[field.id]">
+                        <img :src="'/api/one/signature/wfform/preview?id='+list[field.id]" alt="">
+                    </div>
+                </span>
+                <span v-else-if="field?.permission == 2"></span>
+                <span v-else>
+                    <div class="signImg" v-if="list[field.id]">
+                        <img :src="'/api/one/signature/wfform/preview?id='+list[field.id]" alt="">
+                    </div>
+                    <a-button type="link" @click="openWriteSignature(field)">手写签名</a-button>
+                </span>
+            </span>
+        </div>
         <div v-else-if="type=='B'">
             <span class="valText" v-if="print==1">
                 {{ list[field.id] ? '是' : '否' }}
@@ -422,7 +451,7 @@
                 </template>
             </a-tree-select>
         </div>
-        <div v-else>
+        <div class="maxWidth" v-else>
             <span class="valText" v-if="print==1">
                 {{ list[field.id] }}
             </span>
@@ -483,7 +512,7 @@
 
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-    const emit = defineEmits(['openlook', 'setValue', 'lookup', 'select', 'suggestion', 'loadSuggestion', 'delSuggestion', 'controller']);
+    const emit = defineEmits(['openlook', 'setValue', 'lookup', 'select', 'suggestion', 'loadSuggestion', 'delSuggestion', 'controller','opensign']);
 
     // const formState = reactive({
 
@@ -497,6 +526,10 @@
     // const changeValue = (e) => {
     //     emit('setValue', props.field.id, formState[props.field.id]);
     // };
+
+    const openWriteSignature = (field) => {
+        emit('opensign', field);
+    };
 
 
     const computedName = computed(() => {
@@ -892,5 +925,8 @@
     }
     .suggestion-item{
         text-align: left;
+    }
+    .maxWidth{
+        width: 100%;
     }
 </style>

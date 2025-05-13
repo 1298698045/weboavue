@@ -11193,6 +11193,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.npmmirror.com/signal-exit/-/signal-exit-3.0.7.tgz"
   integrity sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==
 
+signature_pad@^5.0.7:
+  version "5.0.7"
+  resolved "https://registry.npmmirror.com/signature_pad/-/signature_pad-5.0.7.tgz"
+  integrity sha512-j2C6NTZ3c99G3hvFTsg6oOWy/tmftgwIXrvsr3+99+5SuPW6OdSpo++ZUzLVNfNHYmp2Z2Al76YV/3RhS/nDJg==
+
 simple-swizzle@^0.2.2:
   version "0.2.2"
   resolved "https://registry.npmmirror.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz"

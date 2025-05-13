@@ -20,17 +20,18 @@
                   <a-form-item :name="attribute.targetValue"
                     v-if="['L', 'LT', 'DT'].includes(attribute.attributes.type) && select[attribute.targetValue]"
                     :label="attribute.label" :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请选择' + attribute.label,
-                      },
-                    ]">
-                    <a-select v-if="JSON.stringify(select[attribute.targetValue].controllerValues)=='{}'" allowClear
+                        {
+                          required: attribute.attributes.required,
+                          message: '请选择' + attribute.label,
+                        },
+                      ]">
+                    <a-select :disabled="attribute.attributes.readonly"
+                      v-if="JSON.stringify(select[attribute.targetValue].controllerValues)=='{}'" allowClear
                       v-model:value="formState[attribute.targetValue]" :placeholder="'请选择' + attribute.label"
                       @change="(e)=>Controllerchange(e, attribute.targetValue, picklistFieldMap[attribute.targetValue])">
                       <a-select-option v-for="(option, optionIdx) in select[
-                          attribute.targetValue
-                        ] && select[attribute.targetValue].values" :key="optionIdx" :value="option.value">{{
+                            attribute.targetValue
+                          ] && select[attribute.targetValue].values" :key="optionIdx" :value="option.value">{{
                         option.label }}</a-select-option>
                     </a-select>
                     <!-- mode="multiple" -->
@@ -38,126 +39,162 @@
                       v-model:value="formState[attribute.targetValue]" :placeholder="'请选择' + attribute.label"
                       @change="(e)=>Controllerchange(e, attribute.targetValue, picklistFieldMap[attribute.targetValue])">
                       <a-select-option v-for="(option, optionIdx) in select[
-                          attribute.targetValue
-                        ] && select[attribute.targetValue].values" :key="optionIdx" :value="option.value">{{
+                            attribute.targetValue
+                          ] && select[attribute.targetValue].values" :key="optionIdx" :value="option.value">{{
                         option.label }}</a-select-option>
                     </a-select>
                   </a-form-item>
                   <a-form-item :name="attribute.targetValue" v-else-if="
-                      ['O', 'Y', 'U', 'Y_MD'].includes(
-                        attribute.attributes.type
-                      )
-                    " :label="attribute.label" :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请选择' + attribute.label,
-                      },
-                    ]">
-                    <a-select :allowClear="hasSearched" v-model:value="formState[attribute.targetValue]"
-                      :default-active-first-option="false" :filter-option="false" showSearch @search="
-                        (e) => {
-                          searchlookup(e, attribute);
-                        }
-                      " @dropdownVisibleChange="
-                        (e) => {
-                          searchlookup('', attribute);
-                        }
-                      " @change="(e)=>selectLookup(e, attribute)" :placeholder="'请选择' + attribute.label">
+                        ['O', 'Y', 'U', 'Y_MD'].includes(
+                          attribute.attributes.type
+                        )
+                      " :label="attribute.label" :rules="[
+                        {
+                          required: attribute.attributes.required,
+                          message: '请选择' + attribute.label,
+                        },
+                      ]">
+                    <a-select :disabled="attribute.attributes.readonly" :allowClear="hasSearched"
+                      v-model:value="formState[attribute.targetValue]" :default-active-first-option="false"
+                      :filter-option="false" showSearch @search="
+                          (e) => {
+                            searchlookup(e, attribute);
+                          }
+                        " @dropdownVisibleChange="
+                          (e) => {
+                            searchlookup('', attribute);
+                          }
+                        " @change="(e)=>selectLookup(e, attribute)" :placeholder="'请选择' + attribute.label">
                       <a-select-option v-for="(option, optionIdx) in search[
-                          attribute.targetValue
-                        ]" :key="optionIdx" :value="option.ID">{{ option.Name }}</a-select-option>
+                            attribute.targetValue
+                          ]" :key="optionIdx" :value="option.ID">{{ option.Name }}</a-select-option>
                       <template #suffixIcon>
                         <SearchOutlined @click.stop="handleOpenLook(attribute)" />
                       </template>
                     </a-select>
                     <!-- <div class="selectIcon">
-                      <SearchOutlined
-                        class="ant-select-suffix"
-                        @click="handleOpenLook(attribute)"
-                      />
-                    </div> -->
+                        <SearchOutlined
+                          class="ant-select-suffix"
+                          @click="handleOpenLook(attribute)"
+                        />
+                      </div> -->
                     <!-- <a-button @click="handleOpenLook(attribute)">搜索</a-button> -->
                   </a-form-item>
                   <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'D'"
                     :label="attribute.label" :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请选择' + attribute.label,
-                      },
-                    ]">
-                    <a-date-picker valueFormat="YYYY-MM-DD" :placeholder="'请选择' + attribute.label"
-                      v-model:value="formState[attribute.targetValue]" />
+                        {
+                          required: attribute.attributes.required,
+                          message: '请选择' + attribute.label,
+                        },
+                      ]">
+                    <a-date-picker :disabled="attribute.attributes.readonly" valueFormat="YYYY-MM-DD"
+                      :placeholder="'请选择' + attribute.label" v-model:value="formState[attribute.targetValue]" />
+                  </a-form-item>
+                  <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'Year'"
+                    :label="attribute.label" :rules="[
+                        {
+                          required: attribute.attributes.required,
+                          message: '请选择' + attribute.label,
+                        },
+                      ]">
+                    <a-date-picker :disabled="attribute.attributes.readonly" valueFormat="YYYY" picker="year"
+                      :placeholder="'请选择' + attribute.label" v-model:value="formState[attribute.targetValue]" />
+                  </a-form-item>
+                  <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'YearMonth'"
+                    :label="attribute.label" :rules="[
+                        {
+                          required: attribute.attributes.required,
+                          message: '请选择' + attribute.label,
+                        },
+                      ]">
+                    <a-date-picker :disabled="attribute.attributes.readonly" valueFormat="MM" picker="month"
+                      :placeholder="'请选择' + attribute.label" v-model:value="formState[attribute.targetValue]" />
+                  </a-form-item>
+                  <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'Month'"
+                    :label="attribute.label" :rules="[
+                        {
+                          required: attribute.attributes.required,
+                          message: '请选择' + attribute.label,
+                        },
+                      ]">
+                    <a-select v-model:value="formState[attribute.targetValue]" :disabled="attribute.attributes.readonly">
+                      <a-select-option v-for="number in 12" :value="number" :key="number">{{ number }}</a-select-option>
+                    </a-select>
                   </a-form-item>
                   <!-- 时间类型 -->
                   <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'F'"
                     :label="attribute.label" :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请选择' + attribute.label,
-                      },
-                    ]">
+                        {
+                          required: attribute.attributes.required,
+                          message: '请选择' + attribute.label,
+                        },
+                      ]">
                     <div class="timeGroup">
                       <a-form-item class="date">
-                        <a-date-picker valueFormat="YYYY-MM-DD" :placeholder="'请选择' + attribute.label"
+                        <a-date-picker :disabled="attribute.attributes.readonly" valueFormat="YYYY-MM-DD"
+                          :placeholder="'请选择' + attribute.label"
                           v-model:value="formState[attribute.targetValue+'_obj'].date"
                           @change="(e)=>{changeGroupDate(e,attribute)}" />
                       </a-form-item>
                       <a-form-item class="time">
-                        <a-time-picker v-model:value="formState[attribute.targetValue+'_obj'].time" valueFormat="HH:mm"
-                          format="HH:mm" @change="(e)=>{changeGroupTime(e,attribute)}" />
+                        <a-time-picker :disabled="attribute.attributes.readonly"
+                          v-model:value="formState[attribute.targetValue+'_obj'].time" valueFormat="HH:mm" format="HH:mm"
+                          @change="(e)=>{changeGroupTime(e,attribute)}" />
                       </a-form-item>
                     </div>
                   </a-form-item>
                   <a-form-item :name="attribute.targetValue"
                     v-else-if="attribute.attributes.type == 'J' || attribute.attributes.type == 'X'"
                     :label="attribute.label" :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请输入' + attribute.label,
-                      },
-                    ]">
-                    <a-textarea :rows="attribute.attributes.precision || 4"
+                        {
+                          required: attribute.attributes.required,
+                          message: '请输入' + attribute.label,
+                        },
+                      ]">
+                    <a-textarea :disabled="attribute.attributes.readonly" :rows="attribute.attributes.precision || 4"
                       v-model:value="formState[attribute.targetValue]" />
                   </a-form-item>
                   <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'B'"
                     :label="attribute.label" :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请输入' + attribute.label,
-                      },
-                    ]">
-                    <a-checkbox v-model:checked="formState[attribute.targetValue]"></a-checkbox>
+                        {
+                          required: attribute.attributes.required,
+                          message: '请输入' + attribute.label,
+                        },
+                      ]">
+                    <a-checkbox :disabled="attribute.attributes.readonly"
+                      v-model:checked="formState[attribute.targetValue]"></a-checkbox>
                   </a-form-item>
                   <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'z'"
                     :label="attribute.label" :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请输入' + attribute.label,
-                      },
-                    ]">
-                    <TEditor :placeholder="'请输入' + attribute.label" :value="formState[attribute.targetValue]"
-                      @input="(e)=>inputEditor(e, attribute.targetValue)" />
+                        {
+                          required: attribute.attributes.required,
+                          message: '请输入' + attribute.label,
+                        },
+                      ]">
+                    <TEditor :disabled="attribute.attributes.readonly" :placeholder="'请输入' + attribute.label"
+                      :value="formState[attribute.targetValue]" @input="(e)=>inputEditor(e, attribute.targetValue)" />
                   </a-form-item>
                   <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'ColorPicker'"
                     :label="attribute.label" :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请选择' + attribute.label,
-                      },
-                    ]">
+                        {
+                          required: attribute.attributes.required,
+                          message: '请选择' + attribute.label,
+                        },
+                      ]">
                     <div class="colorFlex">
-                      <el-color-picker v-model="formState[attribute.targetValue]" />
-                      <a-input v-model:value="formState[attribute.targetValue]"
+                      <el-color-picker :disabled="attribute.attributes.readonly"
+                        v-model="formState[attribute.targetValue]" />
+                      <a-input :disabled="attribute.attributes.readonly" v-model:value="formState[attribute.targetValue]"
                         style="width: 82px;margin-left: 4px;"></a-input>
                     </div>
                   </a-form-item>
                   <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'ImagePicker'"
                     :label="attribute.label" :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请选择' + attribute.label,
-                      },
-                    ]">
+                        {
+                          required: attribute.attributes.required,
+                          message: '请选择' + attribute.label,
+                        },
+                      ]">
                     <div class="assets-icon-editor" :class="{'active':formState[attribute.targetValue]!=''}"
                       @click="handleOpenImg(attribute)">
                       <div class="assets-icon-editor-picicon">
@@ -173,23 +210,24 @@
                         </div>
                       </div>
                     </div>
-                    <a-input v-model:value="formState[attribute.targetValue]"></a-input>
+                    <a-input :disabled="attribute.attributes.readonly"
+                      v-model:value="formState[attribute.targetValue]"></a-input>
                   </a-form-item>
                   <a-form-item :name="attribute.targetValue" v-else :label="attribute.label" :rules="[
-                      {
-                        required: attribute.attributes.required,
-                        message: '请输入' + attribute.label,
-                      },
-                    ]">
-                    <a-input v-model:value="formState[attribute.targetValue]"></a-input>
+                        {
+                          required: attribute.attributes.required,
+                          message: '请输入' + attribute.label,
+                        },
+                      ]">
+                    <a-input :disabled="attribute.attributes.readonly"
+                      v-model:value="formState[attribute.targetValue]"></a-input>
                   </a-form-item>
                 </div>
               </div>
             </div>
           </a-form>
           <!-- <TEditor placeholder="请输入内容" /> -->
-          <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal"
-            @selectVal="handleDeptParams" />
+          <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
           <multiple-dept v-if="isMultipleDept" :isShow="isMultipleDept" @cancel="cancelDeptModal"
             @selectVal="handleDeptParams" />
           <radio-user v-if="isRadioUser" :isShow="isRadioUser" @cancel="cancelUserModal" @selectVal="handleUserParams"
