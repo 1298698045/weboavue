@@ -82,6 +82,7 @@
 	var FileName='';
 	var RecordID='';
 	var mHttpUrl='';
+    var EditType='';
 	let fileInfo = window.localStorage.getItem('fileInfo');
 	if (fileInfo) {
 		fileInfo = JSON.parse(fileInfo);
@@ -91,6 +92,7 @@
 			username=fileInfo.mAuthor||'';
 			FileName=fileInfo.mSubject||'';
 			mHttpUrl=fileInfo.mHttpUrl||'';
+            EditType=fileInfo.EditType||'1';
 			RecordID=id;
 			if(fileInfo.mFileType){
 				mFileType=(fileInfo.mFileType).indexOf('.')!=-1?fileInfo.mFileType:'.'+fileInfo.mFileType;
@@ -112,6 +114,7 @@
 		console.log('username:',username);
 		console.log('FileName:',FileName);
 		console.log('mHttpUrl:',mHttpUrl);
+        console.log('EditType:',EditType);
             try {
                 WebOfficeObj.ServerUrl = mServerUrl;
                 WebOfficeObj.SaveServlet = mServerUrl;
@@ -120,7 +123,7 @@
                 WebOfficeObj.UserName = username;            //UserName:操作用户名，痕迹保留需要
                 WebOfficeObj.FileName = FileName;            //FileName:文档名称
                 WebOfficeObj.FileType = mFileType;            //FileType:文档类型  .doc  .xls  .wps
-                WebOfficeObj.EditType = "1";           //EditType:编辑类型  方式一、方式二  <参考技术文档>  
+                WebOfficeObj.EditType = EditType;           //EditType:编辑类型  方式一、方式二  <参考技术文档>  
                 WebOfficeObj.fileSource = "1001";//1001:附件  100100:文件
                 WebOfficeObj.ShowMenu = 0;
                 WebOfficeObj.ShowToolBar = 0;

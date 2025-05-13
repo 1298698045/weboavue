@@ -146,6 +146,14 @@
             </div>
         </div>
         <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
+        <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
+        <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+        <TxtView
+        v-if="isTxt"
+        :isShow="isTxt"
+        :txtParams="txtParams"
+        @cancel="isTxt = false"
+        />
     </div>
 </template>
 <script setup>
@@ -174,6 +182,9 @@
     import Delete from "@/components/listView/Delete.vue";
     import Editor from "@/components/TEditor.vue"
     import RadioUser from "@/components/commonModal/RadioUser.vue";
+    import ImageView from "@/components/file/ImageView.vue";
+    import PdfView from "@/components/file/PdfView.vue";
+    import TxtView from "@/components/file/TxtView.vue";
     import { formTreeData,girdFormatterValue } from "@/utils/common.js";
     import { useRouter, useRoute } from "vue-router";
     //import { search } from "core-js/fn/symbol";
@@ -262,11 +273,18 @@
         headers: {
             Authorization: token,
             Token: token
-        }
+        },
+        isPhoto: false,
+        photoParams: {},
+        ImageList: [],
+        pdfParams: {},
+        isPdf: false,
+        isTxt: false,
+        txtParams: {},
     })
     const { uploadData,keyword,currentUserId,currentUserName,fileList,fileList2, headers, searchVal, groupTreeData, expandedKeys, selectedKeys, groupDataList, DeptexpandedKeys,
         deptSelectedKeys, deptTreeData, departListTree, selectConcatsList, selectGroupList, departListTree2, groupTreeData2, latelyTreeData,
-        latelyexpandedKeys, latelySelectedKeys, height,isRadioUser,defaultExpandAll,id
+        latelyexpandedKeys, latelySelectedKeys, height, isRadioUser, defaultExpandAll, id, isPhoto, photoParams, ImageList, pdfParams, isPdf, isTxt, txtParams
     } = toRefs(data);
     if(route.query.Id){
         if(route.query.type*1==1){
@@ -333,23 +351,25 @@
     const handleChange = (file) => {
         if (file.file.status == "done") {
             message.success("上传成功！");
+            console.log(file,1221)
+            if(file&&file.file&&file.file.response&&file.file.response.actions&&file.file.response.actions[0]&&file.file.response.actions[0].returnValue&&file.file.response.actions[0].returnValue[0]){
+                let size=file.file.size;
+                size=size?(size*1/1024).toFixed(2):0;
+                data.fileList2.push({
+                    id: file.file.response.actions[0].returnValue[0].attachId,
+                    uid: file.file.response.actions[0].returnValue[0].attachId,
+                    name: file.file.response.actions[0].returnValue[0].name,
+                    url: file.file.url,
+                    fileExtension:file.file.response.actions[0].returnValue[0].fileExtension,
+                    raw: file.file.originFileObj,
+                    Privilege: '',
+                    size:size+'kb',
+                    downloadUrl:file.file.response.actions[0].returnValue[0].downloadUrl,
+                    viewUrl:file.file.response.actions[0].returnValue[0].viewUrl,
+                });
+            }
+            data.fileList2=unique(data.fileList2);
         }
-        if(file&&file.file){
-            let size=file.file.size;
-            size=size?(size*1/1024).toFixed(2):0;
-            data.fileList2.push({
-                uid: file.file.uid,
-                name: file.file.name,
-                url: file.file.url,
-                fileExtension: file.file.name ? (file.file.name).split('.')[1] : '',
-                raw: file.file.originFileObj,
-                Privilege: '',
-                size:size+'kb',
-                downloadUrl:file.file.url,
-                viewUrl:file.file.url
-            });
-        }
-        data.fileList2=unique(data.fileList2);
     }
     const onSearch = (e) => {
         data.latelyexpandedKeys=[1];
@@ -946,39 +966,79 @@
     }
     //预览附件
     const handlePreviewFile= (item) => {
-        // let d = {}
-        // proxy.$post(url,d).then(res=>{
-        //     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
-                
-        //     }
-        //     else{
-        //         if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
-        //             message.success(res.actions[0].errorMessage);
-        //         }
-        //         else{
-        //             message.success("预览失败！");
-        //         }
-        //     }
-        // })
-        window.open(item.viewUrl);
+        if (
+            item.fileExtension == "jpg" ||
+            item.fileExtension == "jpeg" ||
+            item.fileExtension == "png"
+        ) {
+            let index = 0;
+            for (var i = 0; i < data.ImageList.length; i++) {
+            let ite = data.ImageList[i];
+            if (ite.id == item.id) {
+                index = i;
+            }
+            }
+            data.photoParams = {
+            id: item.id,
+            item: item,
+            imageList: data.ImageList,
+            index: index,
+            };
+            data.isPhoto = true;
+        } else if (item.fileExtension == "pdf") {
+            data.pdfParams = {
+            id: item.id,
+            name: item.name,
+            index: 0,
+            viewUrl: item.viewUrl,
+            downloadUrl: item.downloadUrl,
+            };
+            data.isPdf = true;
+        } else if (item.fileExtension == "txt") {
+            data.txtParams = {
+            name: item.name,
+            viewUrl: item.viewUrl,
+            downloadUrl: item.downloadUrl,
+            };
+            data.isTxt = true;
+        } else if (
+            item.fileExtension == "docx" ||
+            item.fileExtension == "pptx" ||
+            item.fileExtension == "xlsx" ||
+            item.fileExtension == "doc" ||
+            item.fileExtension == "ppt" ||
+            item.fileExtension == "xls"
+        ) {
+            if(item.viewUrl&&item.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
+                item.viewUrl='/lightning/r/office/view?id='+item.id;
+            }
+            if(item.fileExtension == "ppt" ||item.fileExtension == "pptx"){
+                item.viewUrl='/lightning/r/office/view2?id='+item.id;
+            }
+            openControlViewFile(
+            item.id,
+            item.createdByName,
+            item.fileExtension,
+            item.viewUrl,
+            item.name
+            );
+        } else {
+            downloadFile(item);
+        }
+    };
+    //预览office文件
+    const openControlViewFile = (id, username, type, link, name) => {
+        var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
+        var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
+        var iTop = 0; //获得窗口的垂直位置;
+        var iLeft = 0; //获得窗口的水平位置;
+        //window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username);
+        window.open('/#' + link, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
     };
     //下载附件
-    const downloadFile= (item) => {
-        // let d = {}
-        // proxy.$post(url,d).then(res=>{
-        //     if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].state=='SUCCESS'){
-                
-        //     }
-        //     else{
-        //         if(res&&res.actions&&res.actions[0]&&res.actions[0].state&&res.actions[0].errorMessage){
-        //             message.success(res.actions[0].errorMessage);
-        //         }
-        //         else{
-        //             message.success("下载失败！");
-        //         }
-        //     }
-        // })
-        window.open(item.downloadUrl);
+    const downloadFile = (item) => {
+        let url = item.downloadUrl;
+        window.open(url);
     };
     //删除附件
     const deleteFile=(item)=>{
@@ -1036,10 +1096,14 @@
                     }
                     data.fileList2[i].size=size;
                     data.fileList2[i]['uid']=item.attachId;
+                    data.fileList2[i]['id']=item.attachId;
                     data.fileList2[i]['url']=item.viewUrl;
                     data.fileList2[i]['downloadUrl']=item.downloadUrl;
                     data.fileList2[i]['viewUrl']=item.viewUrl;
                 }
+                data.ImageList = data.fileList2.filter(item => {
+                    return item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png';
+                });
             }
         })
     }

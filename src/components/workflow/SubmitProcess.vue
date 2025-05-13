@@ -315,7 +315,13 @@
 
             if(splitType!=2){
                 if(transitions && transitions.length){
-                    data.activityId = transitions[0].ToActivityId;
+                    let index = transitions.findIndex(item=>item.isMatched);
+                    // console.log("index", index);
+                    if(index != -1){
+                        data.activityId = transitions[index].ToActivityId;
+                    }else {
+                        data.activityId = transitions[0].ToActivityId;
+                    }
                     getPermission(data.activityId, 0);
                     getParticipators(0);
                 }

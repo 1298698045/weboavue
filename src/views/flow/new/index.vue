@@ -47,13 +47,24 @@
                                     <div class="flowPanelItemBd">
                                         <div class="flowRowItem" v-for="(row, idx) in item.Processes" :key="idx"
                                             @click="handleStartProcess(row)">
-                                            <div class="flowName rowEllipsis">{{ row.name }}</div>
+                                            <div class="flowName rowEllipsis">
+                                                <a-tooltip :overlayClassName="'flowRowItem-tooltip'">
+                                                    <template #title>{{ row.name }}</template>
+                                                    {{ row.name }}
+                                                </a-tooltip>
+                                            </div>
                                             <div class="collectionIcon" :class="{ 'active': row.isFavorite }"
                                                 @click.stop="handleFavorite(row)">
-                                                <a-tooltip>
+                                                <a-tooltip :overlayClassName="'flowRowItem-tooltip'">
                                                     <template #title>{{ row.isFavorite ? '取消收藏' : '收藏' }}</template>
                                                     <i class="iconfont icon-quxiaoshoucang" v-if="row.isFavorite"></i>
                                                     <i class="iconfont icon-tianjiashoucang" v-else></i>
+                                                </a-tooltip>
+                                            </div>
+                                            <div class="collectionIcon" @click.stop="handleBatchStartProcess(row)">
+                                                <a-tooltip :overlayClassName="'flowRowItem-tooltip'">
+                                                    <template #title>{{ '批量发起' }}</template>
+                                                    <i class="iconfont icon-tianjia"></i>
                                                 </a-tooltip>
                                             </div>
                                         </div>
@@ -67,14 +78,14 @@
             </div>
         </div>
         <div class="modal">
-            <a-modal v-model:open="isModal" width="550px" :maskClosable="false" @cancel="handleCancel" @ok="handleOk">
+            <a-modal v-model:open="isModal" width="550px" :style="setTop" :maskClosable="false" @cancel="handleCancel" @ok="handleOk">
                 <template #title>
                     <div>
                         新建流程事务
                     </div>
                 </template>
                 <div class="modalContainer">
-                    <div class="modalCenter" style="height:440px;">
+                    <div class="modalCenter" style="height:421px !important;">
                         <a-form ref="formRef" :label-col="labelCol" class="CreateProcess" :model="formState">
                             <div class="form-tip">请输入流程事务标题，建立事务</div>
                             <a-form-item label="流程：" name="ProcessName">
@@ -116,13 +127,21 @@
                 </template>
             </a-modal>
         </div>
+        <BatchNew
+        v-if="isBatchNew"
+        :isShow="isBatchNew"
+        :name="formState.ProcessName"
+        :row="data.rowRecord"
+        @cancel="isBatchNew = false"
+        />
     </div>
 </template>
 <script setup>
 import "@/style/flow/icon/iconfont.css";
-import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw, watch } from "vue";
+import { ref, reactive, onMounted, toRefs, getCurrentInstance, defineEmits, toRaw, watch, computed } from "vue";
 import { HeartFilled, FileTextOutlined } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
+import BatchNew from "@/components/workflow/BatchNew.vue";
 const { proxy } = getCurrentInstance();
 import { message } from "ant-design-vue";
 import { useRouter, useRoute } from "vue-router";
@@ -137,9 +156,10 @@ const data = reactive({
     activeKey: 1,
     typeIndex: "",
     userId: '',
-    colors: ['rgb(85, 210, 212)', 'rgb(55, 178, 255)', 'rgb(255, 94, 86)', 'rgb(179, 123, 250)', 'rgb(255, 198, 46)', 'rgb(255, 149, 55)', 'rgb(141, 206, 54)']
+    colors: ['rgb(85, 210, 212)', 'rgb(55, 178, 255)', 'rgb(255, 94, 86)', 'rgb(179, 123, 250)', 'rgb(255, 198, 46)', 'rgb(255, 149, 55)', 'rgb(141, 206, 54)'],
+    isBatchNew: false
 })
-const { userId, colors, searchVal, processLists, currentTab, currentTab2, rowRecord, activeKey, typeIndex } = toRefs(data);
+const { userId, colors, searchVal, processLists, currentTab, currentTab2, rowRecord, activeKey, typeIndex, isBatchNew } = toRefs(data);
 const getProcessType = () => {
     data.processLists = [];
     let obj = {
@@ -239,12 +259,19 @@ const formState = reactive({
     Description: "",
     BusinessUnitList: [],
 })
+//发起流程
 const handleStartProcess = (row) => {
     formState.ProcessName = row.name;
     data.rowRecord = row;
     //getUserInfo();
     getDeptList();
     isModal.value = true;
+}
+//批量发起
+const handleBatchStartProcess = (row) => {
+    formState.ProcessName = row.name;
+    data.rowRecord = row;
+    data.isBatchNew = true;
 }
 const handleFavorite = (row) => {
     if (!row.isFavorite) {
@@ -430,6 +457,9 @@ const scrollToAnchor = (event, item) => {
 const handleTabTypes = (item, index) => {
     data.typeIndex = index;
 };
+const setTop = computed(() => ({
+  top: `calc(50% - 290px)`,
+}));
 onMounted(() => {
     let userInfo = window.localStorage.getItem('userInfo');
     if (userInfo) {
@@ -536,7 +566,7 @@ onMounted(() => {
 
                         .collectionIcon {
                             visibility: hidden;
-
+                            margin-left: 10px;
                             &.active {
                                 visibility: visible;
                                 color: #f7ba1e;
@@ -545,6 +575,13 @@ onMounted(() => {
                             .icon-tianjiashoucang {
                                 opacity: .6;
 
+                                &:hover {
+                                    opacity: 1;
+                                }
+                            }
+                            .icon-tianjia{
+                                opacity: .6;
+                                font-size: 13px;
                                 &:hover {
                                     opacity: 1;
                                 }
@@ -606,6 +643,7 @@ onMounted(() => {
                         .flowName {
                             font-weight: normal;
                             color: #7a7a7a;
+                            font-size: 13px;
                         }
 
                         .iconfont {
@@ -641,7 +679,7 @@ onMounted(() => {
                 margin-right: 8px;
                 margin-bottom: 8px;
                 font-weight: normal;
-                font-size: 12px;
+                font-size: 14px;
             }
         }
     }
@@ -674,5 +712,10 @@ onMounted(() => {
 
 .todoListWrap {
     height: 100%;
+}
+.ant-tooltip.flowRowItem-tooltip{
+    .ant-tooltip-inner {
+    padding: 9px 8px;
+  }
 }
 </style>

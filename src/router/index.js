@@ -551,11 +551,17 @@ const staticRoutes = [
     path: "/lightning/r/office/view",
     name: "iWebOffice2015_v3",
     component: () => import("../views/iWebOffice2015/v3/index.vue"),
+    meta: {
+      name: "新版（默认）"
+    },
   },
   {
     path: "/lightning/r/office/view2",
     name: "iWebOffice2015_v5",
     component: () => import("../views/iWebOffice2015/v5/index.vue"),
+    meta: {
+      name: "旧版"
+    },
   },
 ];
 

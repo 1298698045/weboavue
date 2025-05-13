@@ -203,7 +203,7 @@
                                                 <div class="files" v-if="item.children">
                                                     <div class="fileItem" v-for="(row, idx) in item.children"
                                                         :key="row.Id" :idx="idx">
-                                                        <div class="fileItemImg" @click="openZW(row)">
+                                                        <div class="fileItemImg" @click.stop="openZW(row)">
                                                             <img :src="require('@/assets/img/filetype/doc.png')"
                                                                 v-if="row.FileExtension == 'ocx' || 
                                                             row.FileExtension == 'docx' || row.FileExtension == 'doc'" />
@@ -226,11 +226,11 @@
                                                             <img :src="require('@/assets/img/filetype/File.png')"
                                                                 v-else />
                                                         </div>
-                                                        <div class="fileItemInfo" @click="openZW(row)">
+                                                        <div class="fileItemInfo" @click.stop="openZW(row)">
                                                             <p class="name">{{row.Name}}</p>
                                                             <p class="link">
                                                                 <a href="javascript:;" v-if="attachPerm.read"
-                                                                    @click="openZW(row)">查看</a>
+                                                                    @click.stop="openZW(row)">查看</a>
                                                                 ·
                                                                 <a href="javascript:;"
                                                                     @click.stop="downloadFile(row)">下载</a>
@@ -248,7 +248,7 @@
                                                                     <a-menu>
                                                                         <a-menu-item v-if="attachPerm.read" key="1">
                                                                             <a href="javascript:;"
-                                                                                @click="openZW(row)">查看</a>
+                                                                                @click.stop="openZW(row)">查看</a>
                                                                         </a-menu-item>
                                                                         <a-menu-item v-if="attachPerm.delete" key="2">
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
@@ -302,7 +302,7 @@
                                                             <p class="name">{{item.name}}</p>
                                                             <p class="link">
                                                                 <a href="javascript:;" v-if="attachPerm.read"
-                                                                    @click="openZW(item)">查看</a>
+                                                                    @click.stop="openZW(item)">查看</a>
                                                                 ·
                                                                 <a href="javascript:;"
                                                                     @click.stop="downloadFile(item)">下载</a>
@@ -461,6 +461,12 @@
         </Jump>
         <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
         <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+        <TxtView
+        v-if="isTxt"
+        :isShow="isTxt"
+        :txtParams="txtParams"
+        @cancel="isTxt = false"
+        />
     </div>
 </template>
 <script setup>
@@ -501,7 +507,7 @@
     import Return from "@/components/workflow/Return.vue";
     import ImageView from "@/components/file/ImageView.vue";
     import PdfView from "@/components/file/PdfView.vue";
-
+    import TxtView from "@/components/file/TxtView.vue";
     import { formTreeData } from "@/utils/common.js";
 
     import { useRouter, useRoute } from "vue-router";
@@ -596,14 +602,16 @@
         replaceUploadData: {
             entityName: "WFProcessInstance",
             fileId: ""
-        }
+        },
+        isTxt: false,
+        txtParams: {},
     })
     const { isEdit, Title, objectTypeCode, sObjectName, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData,
         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID,
         processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete,
         fromActivityId, isReturn, iframeSrc, fileTotal, btnPerm, attachPerm, stateCode,
-        uploadData, headers, isPhoto, photoParams, ImageList, pdfParams, isPdf, print } = toRefs(data);
+        uploadData, headers, isPhoto, photoParams, ImageList, pdfParams, isPdf, print, isTxt, txtParams, } = toRefs(data);
 
     const changeFiles = (e) => {
         // console.log("e", e);
@@ -853,9 +861,40 @@
                 downloadUrl: row.downloadUrl
             };
             data.isPdf = true;
+        } else if (
+            row.fileExtension == "docx" ||
+            row.fileExtension == "pptx" ||
+            row.fileExtension == "xlsx" ||
+            row.fileExtension == "doc" ||
+            row.fileExtension == "ppt" ||
+            row.fileExtension == "xls"
+        ) {
+            if(row.viewUrl&&row.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
+              row.viewUrl='/lightning/r/office/view?id='+row.id;
+            }
+            if(row.fileExtension == "ppt" ||row.fileExtension == "pptx"){
+              row.viewUrl='/lightning/r/office/view2?id='+row.id;
+            }
+            openControlViewFile(
+            row.id,
+            row.createdByName,
+            row.fileExtension,
+            row.viewUrl,
+            row.name
+            );
+        } else {
+            downloadFile(row);
         }
     };
-
+    //预览office文件
+    const openControlViewFile = (id, username, type, link, name) => {
+        var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
+        var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
+        var iTop = 0; //获得窗口的垂直位置;
+        var iLeft = 0; //获得窗口的水平位置;
+        window.open('/#' + link, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
+    };
+    //下载附件
     const downloadFile = (item) => {
         let url = item.downloadUrl;
         let text = item.name || '';

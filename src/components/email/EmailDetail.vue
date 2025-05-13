@@ -138,8 +138,7 @@
                                                     <i class="iconfont icon-baocundaoyoupan"></i>
                                                 </a-button>
                                             </a-tooltip>
-                                            <a-tooltip title="预览" placement="top"
-                                                v-if="item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png' || item.fileExtension == 'pdf'">
+                                            <a-tooltip title="预览" placement="top">
                                                 <a-button class="btn square default" @click="handlePreviewFile(item)"
                                                     title="预览">
                                                     <i class="iconfont icon-yulanwenjian"></i>
@@ -559,7 +558,12 @@ const handlePreviewFile = (item) => {
       item.fileExtension == "ppt" ||
       item.fileExtension == "xls"
     ) {
-      //downloadFile(item);
+      if(item.viewUrl&&item.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
+        item.viewUrl='/lightning/r/office/view?id='+item.id;
+      }
+      if(item.fileExtension == "ppt" ||item.fileExtension == "pptx"){
+        item.viewUrl='/lightning/r/office/view2?id='+item.id;
+      }
       openControlViewFile(
         item.id,
         item.createdByName,

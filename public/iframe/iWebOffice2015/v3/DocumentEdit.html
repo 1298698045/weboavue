@@ -60,6 +60,7 @@
 	var FileName='';
 	var RecordID='';
 	var mHttpUrl='';
+	var EditType='';
 	let fileInfo = window.localStorage.getItem('fileInfo');
 	if (fileInfo) {
 		fileInfo = JSON.parse(fileInfo);
@@ -69,6 +70,7 @@
 			username=fileInfo.mAuthor||'';
 			FileName=fileInfo.mSubject||'';
 			mHttpUrl=fileInfo.mHttpUrl||'';
+			EditType=fileInfo.EditType||'1';
 			RecordID=id;
 			if(fileInfo.mFileType){
 				mFileType=(fileInfo.mFileType).indexOf('.')!=-1?fileInfo.mFileType:'.'+fileInfo.mFileType;
@@ -82,6 +84,8 @@
 		document.getElementById("Subject").value=FileName||'';
 		document.getElementById("Author1").value=username||'';
 		document.getElementById("Subject1").value=FileName||'';
+		document.getElementById("Author1").title=username||'';
+		document.getElementById("Subject1").title=FileName||'';
 		// mServerUrl = 'http://' + window.location.host + '/api/file/preview/';
 		// mServerUrl='http://demo.kinggrid.com:80/iWebOffice2015/OfficeServer';
 		// mFileType='.doc';
@@ -94,6 +98,7 @@
 		console.log('username:',username);
 		console.log('FileName:',FileName);
 		console.log('mHttpUrl:',mHttpUrl);
+		console.log('EditType:',EditType);
 	try{
 			WebOffice.WebUrl= mServerUrl;             //WebUrl:系统服务器路径，与服务器文件交互操作，如保存、打开文档，重要文件
 			WebOffice.RecordID=RecordID;            //RecordID:本文档记录编号
@@ -158,7 +163,7 @@
 			//selection.Font.Size = "16";   //字体大小
 			//selection.Font.Bold = true;  //设置粗体
 				
-				WebOffice.setEditType("1");         //EditType:编辑类型  方式一   WebOpen之后
+				WebOffice.setEditType(EditType);         //EditType:编辑类型  方式一   WebOpen之后
 			   // WebOffice.IsModify(0);                           //获取当前文档状态
 				WebOffice.VBASetUserName(WebOffice.UserName);    //设置用户名
 				

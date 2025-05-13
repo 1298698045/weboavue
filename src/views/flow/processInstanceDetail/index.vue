@@ -57,7 +57,7 @@
                         <div class="tableBox" style="width: 100%;overflow: auto;" :class="{'active':!isAside}">
                             <FlowFormNew print="1" ref="flowFormRef" v-if="processId!=''"
                                 :processId="processId" :processInstanceId="processInstanceId"
-                                :toActivityID="toActivityID" />
+                                :toActivityID="toActivityID" @attachPermission="getAttachPermission" />
                         </div>
                         <!-- <div class="reqWrap">
                             <div class="reqHead">
@@ -168,9 +168,9 @@
                                                         <div class="fileItemInfo">
                                                             <p class="name rowEllipsis">{{row.Name}}</p>
                                                             <p class="link">
-                                                                <a href="javascript:;" @click="openZW(row)">查看</a>
+                                                                <a href="javascript:;" @click.stop="openZW(row)">查看</a>
                                                                 ·
-                                                                <a href="javascript:;" @click="openZW(row)">下载</a>
+                                                                <a href="javascript:;" @click.stop="downloadFile(row)">下载</a>
                                                             </p>
                                                             <p class="time">
                                                                 <span>{{row.CreatedOn}}&nbsp;·</span>
@@ -185,7 +185,7 @@
                                                                     <a-menu>
                                                                         <a-menu-item>
                                                                             <a href="javascript:;"
-                                                                                @click="openZW(row)">查看</a>
+                                                                                @click.stop="openZW(row)">查看</a>
                                                                         </a-menu-item>
                                                                         <a-menu-item>
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
@@ -228,9 +228,9 @@
                                                         <div class="fileItemInfo">
                                                             <p class="name rowEllipsis">{{item.name}}</p>
                                                             <p class="link">
-                                                                <a href="javascript:;" @click="openZW(item)">查看</a>
+                                                                <a href="javascript:;" @click.stop="openZW(item)" v-if="attachPerm.read">查看</a>
                                                                 ·
-                                                                <a href="javascript:;" @click="openZW(item)">下载</a>
+                                                                <a href="javascript:;" @click.stop="downloadFile(item)">下载</a>
                                                             </p>
                                                             <p class="time">
                                                                 <span>{{item.createdOn}}&nbsp;·</span>
@@ -243,11 +243,11 @@
                                                                 <!-- <DownOutlined style="font-size: 12px;" /> -->
                                                                 <template #overlay>
                                                                     <a-menu>
-                                                                        <a-menu-item>
+                                                                        <a-menu-item v-if="attachPerm.read" key="1">
                                                                             <a href="javascript:;"
                                                                             @click.stop="openZW(item)">查看</a>
                                                                         </a-menu-item>
-                                                                        <a-menu-item>
+                                                                        <a-menu-item v-if="attachPerm.delete" key="2">
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
                                                                                 cancel-text="取消" @confirm="confirm"
                                                                                 @cancel="cancel">
@@ -277,7 +277,7 @@
                     <Related preview="1" :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==3">
-                    <Attachment preview="1" :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" />
+                    <Attachment preview="1" :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" :attachPerm="attachPerm" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==4">
                     <div class="detailContent">
@@ -367,6 +367,14 @@
             :processInstanceId="processInstanceId" :processInstanceName="processInstanceName"
             :fromActivityId="fromActivityId" :toActivityID="toActivityID" @update-status="updateStatus" @ok="initLoad">
         </Jump>
+        <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
+        <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+        <TxtView
+        v-if="isTxt"
+        :isShow="isTxt"
+        :txtParams="txtParams"
+        @cancel="isTxt = false"
+        />
     </div>
 </template>
 <script setup>
@@ -405,6 +413,9 @@
     import Confirm from "@/components/commonModal/Confirm.vue";
     import Delete from "@/components/listView/Delete.vue";
     import Return from "@/components/workflow/Return.vue";
+    import ImageView from "@/components/file/ImageView.vue";
+    import PdfView from "@/components/file/PdfView.vue";
+    import TxtView from "@/components/file/TxtView.vue";
     import { formTreeData } from "@/utils/common.js";
 
     import { useRouter, useRoute } from "vue-router";
@@ -476,12 +487,20 @@
         fromActivityId: "",
         isReturn: false,
         iframeSrc: "",
-        fileTotal: 0
+        fileTotal: 0,
+        isPhoto: false,
+        photoParams: {},
+        ImageList: [],
+        pdfParams: {},
+        isPdf: false,
+        isTxt: false,
+        txtParams: {},
+        attachPerm: {},
     })
     const { isEdit, Title, objectTypeCode, sObjectName, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData,
         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID,
-        processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete, fromActivityId, isReturn, iframeSrc, fileTotal } = toRefs(data);
+        processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete, fromActivityId, isReturn, iframeSrc, fileTotal, isPhoto, photoParams, ImageList, pdfParams, isPdf, isTxt, txtParams, attachPerm } = toRefs(data);
 
     const getProcessInstanceDetail = () => {
         let obj = {
@@ -658,6 +677,9 @@
                 item.size = size;
                 return item;
             });
+            data.ImageList = list.filter(item => {
+                return item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png';
+            });
             data.fileTotal = list.length;
             data.categoryFiles = formTreeData(list, 'id', 'parentId');
             console.log("data.categoryFiles:", data.categoryFiles);
@@ -668,12 +690,76 @@
 
     };
     const openZW = (row) => {
-        let url = '';
-        if (row && row.fileExtension == 'pdf') {
-            url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent('../../resources/uploadfiles' + row.viewUrl) + "";
+        // let url = '';
+        // if (row && row.fileExtension == 'pdf') {
+        //     url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent('../../resources/uploadfiles' + row.viewUrl) + "";
+        // }
+        // window.open(url);
+        let index = 0;
+        for (var i = 0; i < data.ImageList.length; i++) {
+            let item = data.ImageList[i];
+            if (item.id == row.id) {
+                index = i;
+            }
         }
-        window.open(url);
+        if (row.fileExtension == 'jpg' || row.fileExtension == 'jpeg' || row.fileExtension == 'png') {
+            data.photoParams = {
+                id: row.id,
+                item: row,
+                imageList: data.ImageList,
+                index: index
+            };
+            data.isPhoto = true;
+        } else if (row.fileExtension == 'pdf') {
+            // let url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(row.viewUrl);
+            data.pdfParams = {
+                id: row.id,
+                name: row.name,
+                index: 0,
+                viewUrl: row.viewUrl,
+                downloadUrl: row.downloadUrl
+            };
+            data.isPdf = true;
+        } else if (
+            row.fileExtension == "docx" ||
+            row.fileExtension == "pptx" ||
+            row.fileExtension == "xlsx" ||
+            row.fileExtension == "doc" ||
+            row.fileExtension == "ppt" ||
+            row.fileExtension == "xls"
+        ) {
+            if(row.viewUrl&&row.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
+              row.viewUrl='/lightning/r/office/view?id='+row.id;
+            }
+            if(row.fileExtension == "ppt" ||row.fileExtension == "pptx"){
+              row.viewUrl='/lightning/r/office/view2?id='+row.id;
+            }
+            openControlViewFile(
+            row.id,
+            row.createdByName,
+            row.fileExtension,
+            row.viewUrl,
+            row.name
+            );
+        } else {
+            downloadFile(row);
+        }
     }
+    //预览office文件
+    const openControlViewFile = (id, username, type, link, name) => {
+        var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
+        var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
+        var iTop = 0; //获得窗口的垂直位置;
+        var iLeft = 0; //获得窗口的水平位置;
+        window.open('/#' + link, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
+        return false
+    };
+    //下载附件
+    const downloadFile = (item) => {
+        let url = item.downloadUrl;
+        let text = item.name || '';
+        windowOpen(url, text);
+    };
     //保存
     const handSave = () => {
         // message.success("保存成功");
@@ -811,7 +897,10 @@
         getRuleLogData();
         // getDetail();
     }
-
+    const getAttachPermission = (e) => {
+        console.log("getAttachPermission", e);
+        data.attachPerm = e;
+    };
 </script>
 <style lang="less" scoped>
     .collapse {

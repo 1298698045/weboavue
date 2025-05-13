@@ -20,47 +20,6 @@
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item
-                    name="OwningUser"
-                    label="被分配人"
-                    :rules="[{ required: true, message: '请选择被分配人' }]"
-                  >
-                    <a-select
-                      mode="multiple"
-                      allowClear
-                      v-model:value="formState.OwningUser.Id"
-                      :default-active-first-option="false"
-                      :filter-option="false"
-                      showSearch
-                      @search="
-                        (e) => {
-                          searchlookup(e, '30020');
-                        }
-                      "
-                      @dropdownVisibleChange="
-                        (e) => {
-                          searchlookup('', '30020');
-                        }
-                      "
-                      :placeholder="'请选择被分配人'"
-                    >
-                      <template #suffixIcon></template>
-                      <a-select-option
-                        v-for="(option, optionIdx) in OwningUserList"
-                        :key="optionIdx"
-                        :value="option.ID"
-                        >{{ option.Name }}</a-select-option
-                      >
-                    </a-select>
-                    <div class="selectIcon">
-                      <SearchOutlined
-                        class="ant-select-suffix"
-                        @click="handleOpenLook(attribute)"
-                      />
-                    </div>
-                  </a-form-item>
-                </div>
-                <div class="sectionItem">
-                  <a-form-item
                     name="Subject"
                     label="主题"
                     :rules="[{ required: true, message: '请输入主题' }]"
@@ -68,8 +27,13 @@
                     <a-input v-model:value="formState.Subject"></a-input>
                   </a-form-item>
                 </div>
+                <div class="sectionItem">
+                  <a-form-item name="Phone" label="联系电话">
+                    <a-input v-model:value="formState.Phone"></a-input>
+                  </a-form-item>
+                </div>
               </div>
-              <div class="sectionRow">
+              <!-- <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="Phone" label="联系电话">
                     <a-input v-model:value="formState.Phone"></a-input>
@@ -121,8 +85,49 @@
                     </div>
                   </a-form-item>
                 </div>
-              </div>
+              </div> -->
               <div class="sectionRow">
+                <div class="sectionItem">
+                  <a-form-item
+                    name="OwningUser"
+                    label="名称"
+                    :rules="[{ required: true, message: '请选择名称' }]"
+                  >
+                    <a-select
+                      mode="multiple"
+                      allowClear
+                      v-model:value="formState.OwningUser.Id"
+                      :default-active-first-option="false"
+                      :filter-option="false"
+                      showSearch
+                      @search="
+                        (e) => {
+                          searchlookup(e, '8', 'OwningUser');
+                        }
+                      "
+                      @dropdownVisibleChange="
+                        (e) => {
+                          searchlookup('', '8', 'OwningUser');
+                        }
+                      "
+                      :placeholder="'请选择名称'"
+                    >
+                      <template #suffixIcon></template>
+                      <a-select-option
+                        v-for="(option, optionIdx) in OwningUserList"
+                        :key="optionIdx"
+                        :value="option.ID"
+                        >{{ option.Name }}</a-select-option
+                      >
+                    </a-select>
+                    <div class="selectIcon">
+                      <SearchOutlined
+                        class="ant-select-suffix"
+                        @click="handleOpenLook(attribute)"
+                      />
+                    </div>
+                  </a-form-item>
+                </div>
                 <div class="sectionItem">
                   <a-form-item name="RegardingObjectTypeCode" label="相关项">
                     <div class="menuRow">
@@ -131,16 +136,17 @@
                           <a-menu @click="handleMenu">
                             <a-menu-item
                               v-for="(item, index) in menus"
-                              :key="index"
+                              :num="index"
+                              :key="item.key"
                             >
-                              <UserOutlined />
+                              <!-- <UserOutlined /> -->
                               {{ item.name }}
                             </a-menu-item>
                           </a-menu>
                         </template>
-                        <a-button>
-                          {{ currentMenu }}
-                          <DownOutlined />
+                        <a-button :title="currentMenu">
+                          <span class="menuRowText">{{ currentMenu }}</span>
+                          <DownOutlined class="menuRowIcon" />
                         </a-button>
                       </a-dropdown>
                       <a-select
@@ -165,13 +171,14 @@
                           :value="item.ID"
                           v-for="(item, index) in lookList"
                           :key="index"
+                          :title="item.Name"
                           >{{ item.Name }}</a-select-option
                         >
                       </a-select>
                     </div>
                   </a-form-item>
                 </div>
-                <div class="sectionItem">
+                <!-- <div class="sectionItem">
                   <a-form-item
                     name="endTime"
                     label="结束时间"
@@ -192,9 +199,9 @@
                       </div>
                     </div>
                   </a-form-item>
-                </div>
+                </div> -->
               </div>
-              <div class="sectionRow">
+              <!-- <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="IsAllDayEvent" label="全天事件">
                     <a-checkbox
@@ -209,8 +216,8 @@
                     ></a-checkbox>
                   </a-form-item>
                 </div>
-              </div>
-              <div class="sectionRow">
+              </div> -->
+              <!-- <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="BgColor" label="背景色">
                     <div class="selectFlex">
@@ -236,7 +243,7 @@
                     </div>
                   </a-form-item>
                 </div>
-              </div>
+              </div> -->
             </div>
             <!-- <div class="section">
               <div class="sectionTitle">提醒信息</div>
@@ -251,14 +258,19 @@
               </div>
             </div> -->
             <div class="section">
-              <div class="sectionTitle">备注信息</div>
+              <!-- <div class="sectionTitle">备注信息</div> -->
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="Description" label="内容">
-                    <TEditor
+                  <a-form-item name="Description" label="备注">
+                    <!-- <TEditor
                       :placeholder="'请输入内容'"
                       mode="simple"
                       @input="getEditorContent"
+                    /> -->
+                    <a-textarea
+                      placeholder="请输入内容"
+                      :rows="10"
+                      v-model:value="formState.Description"
                     />
                   </a-form-item>
                 </div>
@@ -440,27 +452,136 @@ const handleMenu = (e) => {
   let item = data.menus.find((item) => item.key == e.key);
   data.currentMenu = item.name;
   data.currentKey = item.key;
+  data.lookList=[];
 };
-const getSearchLook = (val) => {
-  proxy
-    .$get(Interface.uilook, {
-      Lktp: data.currentKey,
-      lksrch: val,
-    })
-    .then((res) => {
-      data.lookList = res.listData;
-    });
+const uniqu = (array, name) => {
+  var arr = [];
+  for (var j = 0; j < array.length; j++) {
+    if (JSON.stringify(arr).indexOf(array[j][name]) == -1) {
+      arr.push(array[j]);
+    }
+  }
+  return arr;
 };
-const searchlookup = (search, Lktp) => {
-  proxy
-    .$get(Interface.uilook, {
-      Lktp: Lktp,
-      Lksrch: search,
-    })
-    .then((res) => {
-      let listData = res.listData;
-      data.OwningUserList = listData;
+const getSearchLook = (search) => {
+  let obj = {
+    actions: [
+      {
+        id: "6129;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          objectApiName: "ActivityPointer",
+          fieldApiName: "RegardingObjectId",
+          pageParam: 1,
+          pageSize: 25,
+          q: search,
+          searchType: "Recent",
+          targetApiName: "SystemUser",
+          body: {
+            sourceRecord: {
+              apiName: "ActivityPointer",
+              fields: {
+                Id: null,
+                RecordTypeId: "",
+              },
+            },
+          },
+        },
+      },
+    ],
+  };
+  if (data.currentKey == "8") {
+    obj.actions[0].params.targetApiName = "SystemUser";
+  }
+  if (data.currentKey == "5000") {
+    obj.actions[0].params.targetApiName = "MeetingRec";
+  }
+  if (data.currentKey == "20290") {
+    obj.actions[0].params.targetApiName = "Project";
+  }
+  if (data.currentKey == "122") {
+    obj.actions[0].params.targetApiName = "WFProcessInstance";
+  }
+  if (data.currentKey == "1") {
+    obj.actions[0].params.targetApiName = "Account";
+  }
+  if (data.currentKey == "2") {
+    obj.actions[0].params.targetApiName = "Contact";
+  }
+  let d = {
+    message: JSON.stringify(obj),
+  };
+  proxy.$post(Interface.lookup, d).then((res) => {
+    let list = res.actions[0].returnValue.lookupResults.records;
+    let arr = [];
+    list.forEach((item) => {
+      arr.push({
+        ID: item.fields.Id.value,
+        Name: item.fields.Name.value,
+      });
     });
+    data.lookList = data.lookList.concat(arr);
+    data.lookList = uniqu(data.lookList, "ID");
+    //console.log(data.lookList)
+  });
+};
+const searchlookup = (search, Lktp, fieldApiName) => {
+  let obj = {
+    actions: [
+      {
+        id: "6129;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          objectApiName: "ActivityPointer",
+          fieldApiName: fieldApiName,
+          pageParam: 1,
+          pageSize: 25,
+          q: search,
+          searchType: "Recent",
+          targetApiName: "SystemUser",
+          body: {
+            sourceRecord: {
+              apiName: "ActivityPointer",
+              fields: {
+                Id: null,
+                RecordTypeId: "",
+              },
+            },
+          },
+        },
+      },
+    ],
+  };
+  if (Lktp == "8") {
+    obj.actions[0].params.targetApiName = "SystemUser";
+  }
+  if (Lktp == "5000") {
+    obj.actions[0].params.targetApiName = "MeetingRec";
+  }
+  if (Lktp == "20290") {
+    obj.actions[0].params.targetApiName = "Project";
+  }
+  if (Lktp == "122") {
+    obj.actions[0].params.targetApiName = "WFProcessInstance";
+  }
+  let d = {
+    message: JSON.stringify(obj),
+  };
+  proxy.$post(Interface.lookup, d).then((res) => {
+    let list = res.actions[0].returnValue.lookupResults.records;
+    let arr = [];
+    list.forEach((item) => {
+      arr.push({
+        ID: item.fields.Id.value,
+        Name: item.fields.Name.value,
+      });
+    });
+    data[fieldApiName + "List"] = data[fieldApiName + "List"].concat(arr);
+    data[fieldApiName + "List"] = uniqu(data[fieldApiName + "List"], "ID");
+    //console.log(data[fieldApiName+'List'])
+  });
 };
 const getPickerList = () => {
   let d = {
@@ -557,7 +678,7 @@ const handleSubmit = () => {
       margin-right: 20px;
       .ant-row {
         //display: block !important;
-        .ant-form-item-label{
+        .ant-form-item-label {
           width: 80px;
         }
       }
@@ -588,8 +709,26 @@ const handleSubmit = () => {
 .menuRow {
   display: flex;
   align-items: center;
+  width: 310px;
   .ant-btn {
     border-radius: 4px 0 0 4px;
+    max-width: 100px;
+    padding-left: 10px;
+    .menuRowText {
+      width: 60px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-align: left;
+    }
+    .menuRowIcon {
+      position: relative;
+      top: -5px;
+    }
+  }
+  .aselect1 {
+    flex: 1;
+    max-width: calc(~'100% - 110px');
   }
   .ant-select-show-search:where(
       .css-dev-only-do-not-override-kqecok
@@ -610,7 +749,7 @@ const handleSubmit = () => {
 .scheduleModalContainer {
   .section .sectionRow .sectionItem :deep .ant-row {
     //display: block !important;
-    .ant-form-item-label{
+    .ant-form-item-label {
       width: 80px;
     }
   }
@@ -621,8 +760,8 @@ const handleSubmit = () => {
     width: 100%;
     .timeItem {
       flex: 1;
-      :deep .ant-form-item-label{
-        width:auto !important;
+      :deep .ant-form-item-label {
+        width: auto !important;
       }
     }
   }

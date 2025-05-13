@@ -44,6 +44,14 @@
                   <div v-if="record.SharedRights=='2'">允许查看</div>
                   <div v-if="record.SharedRights=='4'">允许查看和新建任务</div>
                 </template> -->
+            <template v-if="column.key === 'name'">
+              <div @click.stop="handlePreviewFile(record)" v-if="attachPerm.read" class="filename">
+                {{ record.name }}
+              </div>
+              <div @click.stop="handlePreviewFile(record)" v-else>
+                {{ record.name }}
+              </div>
+            </template>
             <template v-if="column.key === 'Action'">
               <div class="iconBox">
                 <div class="popup">
@@ -393,7 +401,12 @@
       item.fileExtension == "ppt" ||
       item.fileExtension == "xls"
     ) {
-      //downloadFile(item);
+      if(item.viewUrl&&item.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
+        item.viewUrl='/lightning/r/office/view?id='+item.id;
+      }
+      if(item.fileExtension == "ppt" ||item.fileExtension == "pptx"){
+        item.viewUrl='/lightning/r/office/view2?id='+item.id;
+      }
       openControlViewFile(
         item.id,
         item.createdByName,
@@ -735,7 +748,9 @@
 <style lang="less">
   .MeetingShareWrap {
     width: 100%;
-
+    .filename {
+      cursor: pointer;
+    }
     .panel {
       margin-bottom: 0;
       padding-bottom: 0;

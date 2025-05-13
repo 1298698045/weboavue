@@ -953,7 +953,6 @@
         return permission;
     }
 
-
     const loadQuery = async () => {
         data.isLoad = false;
         data.processId = props.processId;
