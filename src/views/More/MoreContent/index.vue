@@ -117,14 +117,14 @@
                 <div class="tableWrap" ref="tablelist">
                     <a-table style="height: 100%;" :scroll="{ y: tableHeight }" :dataSource="dataSource"
                         :columns="columns" :pagination="data.pagination" @change="handleTableChange">
-                        <template #bodyCell="{ column, text, record }">
+                        <template #bodyCell="{ column, record }">
                             <!-- <div v-if="column.key == 'AvatarUrl'">
                                 <img :src="record.AvatarUrl ? '/' + Interface.viewAvatar + '/Group/' + record.id : defaultImg"
                                     :on-error="defaultImg" alt="" class="group_list_avatar" />
                             </div> -->
-                            <div v-if="column.key == 'Title'">
-                                <a href="javascript:;" @click="handleDetail(record.id)"
-                                    style="color:var(--textColor);">{{ text }}</a>
+                            <div v-if="column.key == 'RegardingObjectIdName'">
+                                <a href="javascript:;" @click="handleDetail(record)"
+                                    style="color:var(--textColor);">{{ record.RegardingObjectIdName||'' }}</a>
                             </div>
                             <!-- <div v-if="column.key == 'Action'">
                                 <div class="iconBox">
@@ -209,8 +209,8 @@ const data = reactive({
         // },
         {
             title: '标题',
-            dataIndex: 'Title',
-            key: 'Title',
+            dataIndex: 'RegardingObjectIdName',
+            key: 'RegardingObjectIdName',
         },
         {
             title: '发布时间',
@@ -341,7 +341,7 @@ const getQuery = () => {
         rows: data.pagination.pageSize,
         sort: 'CreatedOn',
         order: 'desc',
-        displayColumns: 'Name,ObjectId,CreatedOn,FolderId,BusinessUnitId,CreatedBy'
+        displayColumns: 'RegardingObjectIdName,CreatedOn,FolderId,BusinessUnitId,CreatedBy'
     }
     if (data.activeKey * 1 == 1) {
         data.unreadcount = 0;
@@ -367,12 +367,10 @@ const getQuery = () => {
             for (var i = 0; i < res.nodes.length; i++) {
                 var item = res.nodes[i];
                 for (var cell in item) {
-                    if (cell != 'id' && cell != 'nameField') {
+                    if (cell != 'id' && cell != 'nameField' && cell!='viewUrl') {
                         item[cell] = girdFormatterValue(cell, item);
                     }
-                    if (cell == 'Title') {
-                        item.Name = item.Title || item.ObjectId;
-                    }
+                    
                     if (cell == 'CreatedOn') {
                         item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
                     }
@@ -403,11 +401,11 @@ const onClear = (e) => {
 const handleMenuClick = (e) => {
     console.log("e", e);
 }
-const handleDetail = (id) => {
+const handleDetail = (record) => {
     let routeData = router.resolve({
         name: 'ContentView',
         query: {
-            id: id,
+            id: record.id,
             objectTypeCode: 100201
         }
     });

@@ -9,54 +9,18 @@
       @ok="handleSubmit"
     >
       <template #title>
-        <div>批量发起事务</div>
+        <div>新建流程事务</div>
       </template>
       <div class="modalContainer">
         <div class="modalCenter" style="height: 421px !important">
-          <a-form ref="formRef" class="CreateProcess" :model="formState">
+          <a-form
+            ref="formRef"
+            class="CreateProcess"
+            :model="formState"
+          >
             <div class="form-tip">请输入流程事务标题，建立事务</div>
             <a-form-item label="流程：" name="ProcessName">
               <div class="ProcessName">{{ formState.ProcessName || "" }}</div>
-            </a-form-item>
-            <a-form-item
-              class="processUser"
-              label="用户："
-              name="UserList"
-              :rules="[{ required: true, message: '用户不能为空' }]"
-            >
-              <a-select
-                mode="multiple"
-                allowClear
-                v-model:value="formState.UserList"
-                :default-active-first-option="false"
-                :filter-option="false"
-                showSearch
-                @search="
-                  (e) => {
-                    searchlookup(e, '8', 'OwningUser');
-                  }
-                "
-                @dropdownVisibleChange="
-                  (e) => {
-                    searchlookup('', '8', 'OwningUser');
-                  }
-                "
-                :placeholder="'请选择用户'"
-              >
-                <template #suffixIcon></template>
-                <a-select-option
-                  v-for="(option, optionIdx) in OwningUserList"
-                  :key="optionIdx"
-                  :value="option.ID"
-                  >{{ option.Name }}</a-select-option
-                >
-              </a-select>
-              <div class="selectIcon">
-                <SearchOutlined
-                  class="ant-select-suffix"
-                  @click="handleOpenLook('8', 'UserList')"
-                />
-              </div>
             </a-form-item>
             <a-form-item
               name="BusinessUnitId"
@@ -65,7 +29,7 @@
             >
               <a-select v-model:value="formState.BusinessUnitId">
                 <a-select-option
-                  v-for="(item, index) in BusinessUnitList"
+                  v-for="(item, index) in formState.BusinessUnitList"
                   :key="index"
                   :value="item.BusinessUnitId"
                   >{{ item.organizationIdName }}/{{
@@ -73,6 +37,18 @@
                   }}</a-select-option
                 >
               </a-select>
+            </a-form-item>
+            <a-form-item
+              class="processTitle"
+              label="标题："
+              name="Title"
+              :rules="[{ required: true, message: '标题不能为空' }]"
+            >
+              <a-input v-model:value="formState.Title" />
+              <div class="form-tip1">
+                默认标题是 流程名称 部门名称，为了查询方便，请输入流程真实标题。
+              </div>
+              <div class="form-tip1">如收文 关于XX来文 XX科室 XX人。</div>
             </a-form-item>
             <a-form-item name="Priority" label="紧急程度：">
               <a-select v-model:value="formState.Priority">
@@ -94,12 +70,6 @@
         </div>
       </template>
     </a-modal>
-    <MultipleUsers
-      v-if="isMultipleUser"
-      :isShow="isMultipleUser"
-      @cancel="isMultipleUser = false"
-      @select="handleSelectUsers"
-    />
   </div>
 </template>
 <script setup>
@@ -132,7 +102,6 @@ import {
   EyeOutlined,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
-import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 import Interface from "@/utils/Interface.js";
 import dayjs from "dayjs";
 const { proxy } = getCurrentInstance();
@@ -149,44 +118,77 @@ const handleCancel = () => {
 const formState = reactive({
   ProcessName: "",
   BusinessUnitId: "",
+  Title: "",
   Priority: "0",
   Description: "",
-  UserList: [],
+  BusinessUnitList: [],
 });
 const token = localStorage.getItem("token");
 const data = reactive({
   height: 150,
   row: {},
   userId: "",
-  BusinessUnitList: [],
-  OwningUserList: [],
-  isMultipleUser: false,
 });
-const {
-  height,
-  row,
-  userId,
-  BusinessUnitList,
-  OwningUserList,
-  isMultipleUser,
-} = toRefs(data);
-
+const { height, row, userId } = toRefs(data);
+const getData = () => {
+  let obj = {
+    actions: [
+      {
+        id: "4270;a",
+        descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordId: props.id,
+          apiName: "Contract",
+        },
+      },
+    ],
+  };
+  let d = {
+    message: JSON.stringify(obj),
+  };
+  proxy.$post(Interface.detail, d).then((res) => {
+    let fields = res.actions[0].returnValue.fields;
+    formState.StateCode = fields.StateCode ? fields.StateCode.value : "";
+  });
+};
+const getPickerList = () => {
+  let d = {
+    actions: [
+      {
+        id: "2320;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          objectApiName: "Contract",
+          recordTypeId: "",
+        },
+      },
+    ],
+  };
+  let obj = {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.pickListValues, obj).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.picklistFieldValues
+    ) {
+      let picklistFieldValues = res.actions[0].returnValue.picklistFieldValues;
+      data.StateCodeList = picklistFieldValues.StateCode
+        ? picklistFieldValues.StateCode.values
+        : [];
+    }
+  });
+};
 const handleSubmit = () => {
   formRef.value
     .validate()
     .then(() => {
-      let startUsers = [];
-      for (var i = 0; i < formState.UserList.length; i++) {
-        for (var j = 0; j < data.OwningUserList.length; j++) {
-          if (formState.UserList[i] === data.OwningUserList[j].ID) {
-            startUsers.push({
-              userId: data.OwningUserList[j].ID,
-              name: data.OwningUserList[j].Name,
-              businessUnitId: formState.BusinessUnitId,
-            });
-          }
-        }
-      }
+      //console.log('values', formState, toRaw(formState));
       let obj = {
         actions: [
           {
@@ -196,7 +198,8 @@ const handleSubmit = () => {
             params: {
               processId: data.rowRecord.processId,
               priority: formState.Priority,
-              startUsers: startUsers,
+              name: formState.Title,
+              businessUnitId: formState.BusinessUnitId,
               description: formState.Description,
             },
           },
@@ -261,86 +264,24 @@ const getDeptList = () => {
       res.actions[0].returnValue &&
       res.actions[0].returnValue.length
     ) {
-      data.BusinessUnitList = res.actions[0].returnValue;
+      formState.BusinessUnitList = res.actions[0].returnValue;
+      for (var i = 0; i < formState.BusinessUnitList.length; i++) {
+        if (
+          formState.BusinessUnitList[i].BusinessUnitId ==
+          formState.BusinessUnitId
+        ) {
+          formState.Title =
+            data.rowRecord.name +
+            " " +
+            formState.BusinessUnitList[i].businessUnitIdName +
+            " " +
+            formState.BusinessUnitList[i].FullName +
+            " " +
+            nowtime;
+        }
+      }
     }
   });
-};
-const uniqu = (array, name) => {
-  var arr = [];
-  for (var j = 0; j < array.length; j++) {
-    if (JSON.stringify(arr).indexOf(array[j][name]) == -1) {
-      arr.push(array[j]);
-    }
-  }
-  return arr;
-};
-const searchlookup = (search, Lktp, fieldApiName) => {
-  let obj = {
-    actions: [
-      {
-        id: "6129;a",
-        descriptor: "",
-        callingDescriptor: "UNKNOWN",
-        params: {
-          objectApiName: "WFProcessInstance",
-          fieldApiName: fieldApiName,
-          pageParam: 1,
-          pageSize: 25,
-          q: search,
-          searchType: "Recent",
-          targetApiName: "SystemUser",
-          body: {
-            sourceRecord: {
-              apiName: "ActivityPointer",
-              fields: {
-                Id: null,
-                RecordTypeId: "",
-              },
-            },
-          },
-        },
-      },
-    ],
-  };
-  if (Lktp == "8") {
-    obj.actions[0].params.targetApiName = "SystemUser";
-  }
-  let d = {
-    message: JSON.stringify(obj),
-  };
-  proxy.$post(Interface.lookup, d).then((res) => {
-    let list = res.actions[0].returnValue.lookupResults.records;
-    let arr = [];
-    list.forEach((item) => {
-      arr.push({
-        ID: item.fields.Id.value,
-        Name: item.fields.Name.value,
-      });
-    });
-    data[fieldApiName + "List"] = data[fieldApiName + "List"].concat(arr);
-    data[fieldApiName + "List"] = uniqu(data[fieldApiName + "List"], "ID");
-    //console.log(data[fieldApiName+'List'])
-  });
-};
-const handleOpenLook = (sObjectType, fieldApiName) => {
-  if (sObjectType * 1 == 8) {
-    data.isMultipleUser = true;
-  }
-};
-//多选用户
-const handleSelectUsers = (params) => {
-  // console.log(params);
-  params.forEach((item) => {
-    if (JSON.stringify(formState.UserList).indexOf(item.id) == -1) {
-      formState.UserList.push(item.id);
-      data.OwningUserList.push({
-        ID: item.id,
-        Name: item.name,
-      });
-      data.OwningUserList = uniqu(data.OwningUserList, "ID");
-    }
-  });
-  data.isMultipleUser = false;
 };
 onMounted(() => {
   formState.ProcessName = props.name;
@@ -360,17 +301,7 @@ onMounted(() => {
   .ant-form-item {
     margin-bottom: 20px !important;
   }
-  .ant-form-item {
-    position: relative;
-  }
-  .selectIcon {
-    position: absolute;
-    right: 10px;
-    top: 5px;
-  }
-  .ant-picker {
-    width: 100%;
-  }
+
   .processTitle .ant-row .ant-col .ant-form-item-required {
     color: rgba(0, 0, 0, 0.88) !important;
   }

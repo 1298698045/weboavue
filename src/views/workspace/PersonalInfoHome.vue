@@ -137,6 +137,7 @@ import UpdateAvatarImage from "@/components/UpdateAvatarImage.vue";
 import Related from "@/components/commonTab/RelatedTableList.vue";
 const { proxy } = getCurrentInstance();
 const editorRef = ref();
+const PersonalInfoViewRef = ref();
 const route = useRoute();
 const router = useRouter();
 const data = reactive({
@@ -235,6 +236,8 @@ const changeTabs = (e) => {
   data.activeKey = e;
 };
 const getDetail = () => {
+  data.activeKey = 0;
+  data.title = '个人信息查看';
   // let d = {
   //   actions: [{
   //     id: "4270;a",
@@ -263,8 +266,8 @@ const getDetail = () => {
 };
 // 保存
 const handleSave = (type) => {
-  data.activeKey = 0;
-  data.title = '个人信息查看';
+  // data.activeKey = 0;
+  // data.title = '个人信息查看';
   if (PersonalInfoEditRef && PersonalInfoEditRef.value && PersonalInfoEditRef.value.handleSubmit != 'undefined' && type != 1) {
     PersonalInfoEditRef.value.handleSubmit();
   }

@@ -96,7 +96,7 @@
                     <a-select
                       mode="multiple"
                       allowClear
-                      v-model:value="formState.OwningUser.Id"
+                      v-model:value="formState.OwningUser"
                       :default-active-first-option="false"
                       :filter-option="false"
                       showSearch
@@ -123,7 +123,7 @@
                     <div class="selectIcon">
                       <SearchOutlined
                         class="ant-select-suffix"
-                        @click="handleOpenLook(attribute)"
+                        @click="handleOpenLook('8', 'OwningUser')"
                       />
                     </div>
                   </a-form-item>
@@ -286,6 +286,12 @@
         </div>
       </template>
     </a-modal>
+    <MultipleUsers
+      v-if="isMultipleUser"
+      :isShow="isMultipleUser"
+      @cancel="isMultipleUser = false"
+      @select="handleSelectUsers"
+    />
   </div>
 </template>
 <script setup>
@@ -309,7 +315,7 @@ import {
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import TEditor from "@/components/TEditor.vue";
-
+import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
 //console.log(document.documentElement.clientHeight);
@@ -382,8 +388,10 @@ const data = reactive({
     "#b67d11",
     "#b75d0d",
   ],
+  isMultipleUser: false,
 });
 const {
+  isMultipleUser,
   title,
   height,
   CalendarTypeList,
@@ -404,7 +412,7 @@ const formState = reactive({
   ScheduledEnd: "",
   EndDateTime: "",
   EndDateTime_time: "",
-  OwningUser: {},
+  OwningUser: [],
   IsAllDayEvent: false,
   Location: "",
   Description: "",
@@ -452,7 +460,7 @@ const handleMenu = (e) => {
   let item = data.menus.find((item) => item.key == e.key);
   data.currentMenu = item.name;
   data.currentKey = item.key;
-  data.lookList=[];
+  data.lookList = [];
 };
 const uniqu = (array, name) => {
   var arr = [];
@@ -615,47 +623,103 @@ const getPickerList = () => {
     }
   });
 };
+
+const handleSubmit = () => {
+  formRef.value
+    .validate()
+    .then(() => {
+      let url = Interface.create;
+        let d = {
+            actions:[{
+                id: "2919;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    // recordId: props.id,
+                    recordInput:{
+                        allowSaveOnDuplicate: false,
+                        apiName: 'ActivityPointer',
+                        objTypeCode: 4200,
+                        fields: {
+                            Subject: formState.Subject,
+                            Description: formState.Description,
+                            Phone:formState.Phone,
+                            RegardingObjectTypeCode:data.currentKey,
+                            RegardingObjectId:formState.RegardingObjectId&&formState.RegardingObjectId.Id&&formState.RegardingObjectId.Id.length?formState.RegardingObjectId.Id[0]:'',
+                            // ScheduledStart: formState.StartDateTime+' '+formState.StartDateTime_time,
+                            // ScheduledEnd: formState.EndDateTime+' '+formState.EndDateTime_time,
+                            // IsAllDayEvent: formState.IsAllDayEvent,
+                            // Reply:formState.Reply,
+                            // DisplayStatus:formState.DisplayStatus,
+                            // ReminderTime:formState.ReminderTime,
+                            // CalendarType:formState.CalendarType,
+                            // IsPrivate:formState.IsPrivate,
+                            // RecurrenceType:formState.RecurrenceType
+                        }
+                    }
+                }
+            }]
+        };
+        if(props.id){
+            url = Interface.edit;
+            d.actions[0].params.recordId = props.id;
+        }
+        else{
+            //d.actions[0].params.recordInput.fields.CalendarType=props.calendarType||'';
+            d.actions[0].params.recordInput.fields.ActivityTypeCode=4201;
+            // if(props.RegardingObjectId){
+            //     d.actions[0].params.recordInput.fields.RegardingObjectTypeCode=formState.RegardingObjectTypeCode||props.RegardingObjectTypeCode;
+            //     d.actions[0].params.recordInput.fields.RegardingObjectId=formState.RegardingObjectId.Id||props.RegardingObjectId;
+            //     d.actions[0].params.recordInput.fields.RegardingObjectIdName=formState.RegardingObjectIdName||props.RegardingObjectIdName;
+            //     d.actions[0].params.recordInput.fields.BgColor=props.BgColor;
+            // }
+        }
+        var ids=formState.OwningUser&&formState.OwningUser.length?formState.OwningUser:[];
+        if(ids&&ids.length){
+            for(var i=0;i<ids.length;i++){
+                d.actions[0].params.recordInput.fields.OwningUser=ids[i];
+                let obj = {
+                    message: JSON.stringify(d)
+                }
+                proxy.$post(url, obj).then((res) => {
+                    //if(i==ids.length-1){
+                        message.success("保存成功！");
+                    //}
+                });
+            }
+            emit("cancel", false);
+        }
+    })
+    .catch((err) => {
+      console.log("error", err);
+    });
+};
+const handleOpenLook = (sObjectType, fieldApiName) => {
+  if (sObjectType * 1 == 8) {
+    data.isMultipleUser = true;
+  }
+};
+//多选用户
+const handleSelectUsers = (params) => {
+  // console.log(params);
+  params.forEach((item) => {
+    if (JSON.stringify(formState.OwningUser).indexOf(item.id) == -1) {
+      formState.OwningUser.push(item.id);
+      data.OwningUserList.push({
+        ID: item.id,
+        Name: item.name,
+      });
+      data.OwningUserList = uniqu(data.OwningUserList, "ID");
+    }
+  });
+  data.isMultipleUser = false;
+};
 onMounted(() => {
   window.addEventListener("resize", (e) => {
     data.height = document.documentElement.clientHeight - 300;
   });
   getPickerList();
 });
-
-const handleSubmit = () => {
-  formRef.value
-    .validate()
-    .then(() => {
-      console.log("values", formState, toRaw(formState));
-      var data = {
-        Location: formState.Location,
-        Subject: formState.Subject,
-        IsAllDayEvent: formState.IsAllDayEvent,
-        Description: formState.Description,
-        ScheduledStart: formState.startTime,
-        ScheduledEnd: formState.endTime,
-        CalendarType: formState.CalendarType,
-        Phone: formState.Phone,
-        RegardingObjectTypeCode: formState.RegardingObjectTypeCode
-          ? formState.RegardingObjectTypeCode
-          : "",
-        RegardingObjectIdName: formState.RegardingObjectIdName,
-        RegardingObjectId: formState.RegardingObjectId.Id,
-        //ReminderTime: formState.ReminderTime,
-        BgColor: formState.BgColor,
-        IsPrivate: formState.IsPrivate,
-        //Reminder: formState.Reminder,
-      };
-      proxy.$get(Interface.saveRecord, data).then((res) => {
-        formRef.value.resetFields();
-        message.warning("保存成功！");
-        emit("cancel", false);
-      });
-    })
-    .catch((err) => {
-      console.log("error", err);
-    });
-};
 </script>
 <style lang="less" scoped>
 @import url("@/style/modal.less");
@@ -728,7 +792,7 @@ const handleSubmit = () => {
   }
   .aselect1 {
     flex: 1;
-    max-width: calc(~'100% - 110px');
+    max-width: calc(~"100% - 110px");
   }
   .ant-select-show-search:where(
       .css-dev-only-do-not-override-kqecok
