@@ -319,7 +319,7 @@
         }
       }
       data.listData = res.actions[0].returnValue;
-      data.ImageList = list.filter(item => {
+      data.ImageList = data.listData.filter(item => {
         return item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png';
       });
     })

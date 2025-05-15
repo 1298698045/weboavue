@@ -40,7 +40,7 @@
                                         <thead>
                                             <tr>
                                                 <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 40px;" v-if="print!=1">操作</td>
-                                                <!-- <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 30px;">序号</td> -->
+                                                <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 30px;">序号</td>
                                                 <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 30px;text-align: center;">
                                                     {{child.label}}
                                                 </td>
@@ -52,7 +52,7 @@
                                                     <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;" v-if="print!=1">
                                                         <a-checkbox :value="sub.key"></a-checkbox>
                                                     </td>
-                                                    <!-- <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">{{subIdx+1}}</td> -->
+                                                    <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;font-weight: normal;">{{subIdx+1}}</td>
                                                     <td v-for="(child, childIdx) in col.field.checkedColumns" style="border: 1px solid #5d9cec;height: 24px;">
                                                         <FieldType :type="child.type" :print="print" :field="child" :list="sub" :select="relatedObjData[col.field.id].select" :search="col.search" @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}" @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)" />
                                                     </td>

@@ -334,7 +334,7 @@
             search: data.searchVal
         }
         proxy.$post(url, d).then(res => {
-            if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue) {
+            if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
                 data.total = res.actions[0].returnValue.length || 0;
                 for (var i = 0; i < res.actions[0].returnValue.length; i++) {
                     var item = res.actions[0].returnValue[i];

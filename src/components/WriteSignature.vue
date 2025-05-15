@@ -8,9 +8,12 @@
                 </div>
             </template>
             <div class="modalContainer" ref="modelContentRef">
-                <div class="modalCenter">
+                <div class="modalCenter1">
                     <div class="signature-pad-container">
                         <canvas ref="signaturePad"></canvas>
+                    </div>
+                    <div class="signatureUrl" v-if="signImgUrl">
+                        <img :src="signImgUrl" alt="">
                     </div>
                 </div>
             </div>
@@ -38,7 +41,9 @@
     let signaturePadInstance = null;
     const props = defineProps({
         isShow: Boolean,
-    })
+        signImgUrl: String
+    });
+    console.log("signImgUrl", props.signImgUrl);
     const emit = defineEmits(['cancel', 'load']);
     const modelContentRef = ref(null);
 
@@ -52,6 +57,9 @@
         data.top = (h + 126) / 2 + 'px';
         if (signaturePad.value) {
             signaturePadInstance = new SignaturePad(signaturePad.value);
+            if(props.signImgUrl){
+                signaturePadInstance.toDataURL(props.signImgUrl);
+            }
         }
     })
     const setTop = computed(() => ({
@@ -72,7 +80,7 @@
 <style lang="less" scoped>
     @import url('@/style/modal.less');
 
-    .modalCenter {
+    .modalCenter1 {
         height: auto !important;
     }
     .signature-pad-container{
@@ -80,5 +88,8 @@
         canvas{
             border: 1px solid #333;
         }
+    }
+    .signatureUrl{
+        text-align: center;
     }
 </style>

@@ -60,12 +60,12 @@
                                                 <tr>
                                                     <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;width: 40px;"
                                                         v-if="stateCode!=2">操作</td>
-                                                    <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;width: 40px;" v-if="stateCode!=2">附件</td>
-                                                    <!-- <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 30px;">序号</td> -->
+                                                    <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;min-width: 30px;">序号</td>
                                                     <td v-for="(child, childIdx) in col.field.checkedColumns"
                                                         style="border: 1px solid #5d9cec;height: 30px;text-align: center;">
                                                         {{child.label}}
                                                     </td>
+                                                    <td style="border: 1px solid #5d9cec;height: 30px;text-align: center;width: 40px;" v-if="stateCode!=2">附件</td>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -76,10 +76,7 @@
                                                             v-if="stateCode!=2">
                                                             <a-checkbox :value="sub.key"></a-checkbox>
                                                         </td>
-                                                        <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;" v-if="stateCode!=2">
-                                                            <CloudUploadOutlined @click="handleOpenSubUpload(key, colIndex, subIdx)" />
-                                                        </td>
-                                                        <!-- <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">{{subIdx+1}}</td> -->
+                                                        <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;font-weight: normal;">{{subIdx+1}}</td>
                                                         <td v-for="(child, childIdx) in col.field.checkedColumns"
                                                             style="border: 1px solid #5d9cec;height: 24px;">
                                                             <FieldType :type="child.type" :print="print" :field="child"
@@ -89,6 +86,9 @@
                                                                 @openlook="(e)=>{handleOpenLookChildren(e, subIdx, col.field)}"
                                                                 @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)"
                                                                 :stateCode="stateCode" @controller="(e, field)=>{selectControllerChildren(e, field, col.field, sub)}" />
+                                                        </td>
+                                                        <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">
+                                                            <CloudUploadOutlined @click="handleOpenSubUpload(key, colIndex, subIdx)"  v-if="stateCode!=2 && sub.id" />
                                                         </td>
                                                     </tr>
                                                     <tr v-if="col.field.isAggregate">
@@ -129,8 +129,11 @@
         <BatchImportChild :isShow="isBatchImport" v-if="isBatchImport" :subEntityName="subEntityName"
             :forignFieldName="forignFieldName" :forignFieldValue="processInstanceId" @cancel="isBatchImport = false"
             @success="loadSubLoad"></BatchImportChild>
-        <WriteSignature v-if="isWriteSign" :isShow="isWriteSign" @cancel="isWriteSign = false" @signUrl="getSignURL"></WriteSignature>
+        <WriteSignature v-if="isWriteSign" :isShow="isWriteSign" :signImgUrl="signImgUrl" @cancel="isWriteSign = false" @signUrl="getSignURL"></WriteSignature>
         <UploadSub v-if="isUploadSub" :isShow="isUploadSub" @cancel="isUploadSub = false" @file="uploadSubFile"></UploadSub>
+        <UploadFile v-if="isUpload" :isShow="isUpload" title="子表附件" :entityName="currentSubEntityName" :id="currentSubRowId"
+            @cancel="isUpload = false"></UploadFile>
+
     </div>
 </template>
 <script setup>
@@ -160,7 +163,9 @@
     import Delete from "@/components/listView/Delete.vue";
     import BatchImportChild from "@/components/workflow/BatchImportChild.vue";
     import WriteSignature from "@/components/WriteSignature.vue";
-    import UploadSub from "@/components/workflow/UploadSub.vue";
+    import UploadSub from "@/components/workflow/UploadSub.vue"; // 新建时可以上传附件（开发中~）
+    import UploadFile from "@/components/commonModal/UploadFile.vue";
+
     import { formNodesValueObj } from "@/utils/common.js";
     import { message } from "ant-design-vue";
     const { proxy } = getCurrentInstance();
@@ -232,13 +237,18 @@
         isWriteSign: false,
         isUploadSub: false,
         recordSubCurrent: {}, // 记录当前子表
+        isUpload: false,
+        currentSubEntityName: "",
+        currentSubRowId: "",
+        signImgUrl: ""
     });
     const { entityId, layoutData, rowCount, columnCount, cellData, mergeData, rows, mergeRowColData,
         isRadioUser, isRadioDept, isLookup, fieldData, entityApiName, lookEntityApiName, lookObjectTypeCode, objectTypeCode, columns, comps, ruleId,
         processId, entityLayoutId, select, selectFixed, isLoad, entityObjectId, attributes, list, search, processInstanceId, objTypeCode, isSub,
         subRecordFieldData, relatedObjData, relatedEntityInfoList, toActivityID, deleteRelatedData,
         masterEntityPermission, relatedListEntityPermissions, maxRowNum, suggestions, isDelete, deleteDesc,
-        suggestionId, suggestionObj, isBatchImport, subEntityName, forignFieldName, picklistFieldMap, isWriteSign, isUploadSub, recordSubCurrent
+        suggestionId, suggestionObj, isBatchImport, subEntityName, forignFieldName, picklistFieldMap, isWriteSign, isUploadSub, recordSubCurrent, isUpload,
+        currentSubEntityName, currentSubRowId, signImgUrl
     } = toRefs(data);
 
     const handleSetValue = (field, value) => {
@@ -250,14 +260,21 @@
 
     // 子表上传附件
     const handleOpenSubUpload = (key, colKey, subIdx) => {
-        console.log("key, colKey, colIndex", key, colKey, subIdx);
-        console.log(data.cellData);
-        data.recordSubCurrent = { 
-            row: key,
-            col: colKey,
-            subIdx: subIdx
-        }
-        data.isUploadSub = true;
+        // console.log("key, colKey, colIndex", key, colKey, subIdx);
+        let currentSubEntityName = data.relatedObjData[data.cellData[key][colKey].field.id].relatedName;
+        let subRow = data.cellData[key][colKey].subTableData[subIdx];
+        // console.log("subRow", subRow);
+        data.currentSubEntityName = currentSubEntityName;
+        data.currentSubRowId = subRow.id;
+        data.isUpload = true;
+        // 创建时上传文件（开发中~）
+        // console.log(data.cellData);
+        // // data.recordSubCurrent = { 
+        // //     row: key,
+        // //     col: colKey,
+        // //     subIdx: subIdx
+        // // }
+        // // data.isUploadSub = true;
     };
 
     const uploadSubFile = (e) => {
@@ -365,7 +382,7 @@
                         data.suggestionObj[key] = fields[key];
                         console.log("data.suggestionObj", data.suggestionObj);
                     } else if (type == 'MC') {
-                        data.list[key] = JSON.parse(fields[key].value);
+                        data.list[key] = fields[key].value.split(',');
                     }
                      else {
                         data.list[key] = fields[key]?.value;
@@ -1371,6 +1388,7 @@
 
     const handleOpenSign = (e) => {
         console.log("sign-e", e);
+        data.signImgUrl = '/api/one/signature/wfform/preview?id=' + data.list[e.id];
         data.fieldData = e;
         data.isWriteSign = true;
     };
@@ -1611,7 +1629,7 @@
             message: JSON.stringify(obj)
         };
         proxy.$post(Interface.workflow.signatureUpload, d).then(res => {
-            data.list[data.fieldData.id] = res.actions[0].returnValue.valueId;
+            data.list[data.fieldData.id] = res.actions[0].returnValue.valueId + '&t=' + new Date().getTime();
             console.log("data.list[data.fieldData.id]", data.list[data.fieldData.id]);
             data.isWriteSign = false;
         })
@@ -1769,11 +1787,18 @@
                     dom[0].classList.remove("required");
                 }
             }
+            if(item.type == 'HS' && paramsList[item.id]){
+                console.log("paramsList[item.id]", paramsList[item.id]);
+                paramsList[item.id] = paramsList[item.id].split('&')[0];
+            }
             if (['O', 'Y', 'U', 'Y_MD'].includes(item.type) && paramsList[item.id] == '') {
                 delete paramsList[item.id];
             }
             if (item.permission == 2 || item.permission == "" || item.permission == 0 || item.permission == 4) {
                 delete paramsList[item.id];
+            }
+            if(item.type == 'MC' && Array.isArray(paramsList[item.id])){
+                paramsList[item.id] = paramsList[item.id].join(',');
             }
             // 意见
             // if(['UC','UCS'].includes(item.type)){
@@ -1782,7 +1807,6 @@
             //     }
             // }
         }
-
         if (isRequired) {
             message.error(`请输入必填项!`)
             return false;

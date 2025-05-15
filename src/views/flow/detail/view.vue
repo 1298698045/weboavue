@@ -497,7 +497,6 @@
         }
         //window.history.go(-1);
     }
-    getRelatedWork();
 
     const changeTab = () => {
 

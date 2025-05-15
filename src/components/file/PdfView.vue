@@ -8,6 +8,9 @@
                         <div class="photoName">
                             {{ pdfParams.name || '暂无' }}
                         </div>
+                        <div class="title" style="color: red;">
+                            不公开、机要、秘密、机密、绝密等不予公开的文件禁止通过任何渠道公开，并禁止通过互联网渠道以任何诸如电子档、截图、拍照等形式传播，未经允许擅自公开或传播将予严肃处理。
+                        </div>
                         <div class="photoIcons">
                             <span class="icon" title="下载" @click="handleDownload">
                                 <i class="iconfont icon-xiazai"></i>
