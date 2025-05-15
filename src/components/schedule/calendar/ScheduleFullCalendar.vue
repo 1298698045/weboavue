@@ -43,6 +43,8 @@
                           arg.event.extendedProps.Who
                         }}</span>
                       </div>
+                    </div>
+                    <div class="meetingInfo">
                       <div class="meetingInfoItem">
                         地址：
                         <span class="TelePhone">{{

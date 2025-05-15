@@ -2,7 +2,7 @@
   <div>
     <a-modal
       v-model:open="props.isShow"
-      width="550px"
+      width="900px"
       :style="setTop"
       :maskClosable="false"
       @cancel="handleCancel"
@@ -12,7 +12,7 @@
         <div>批量发起事务</div>
       </template>
       <div class="modalContainer">
-        <div class="modalCenter" style="height: 421px !important">
+        <div class="modalCenter" style="height: 580px !important">
           <a-form ref="formRef" class="CreateProcess" :model="formState">
             <div class="form-tip">请输入流程事务标题，建立事务</div>
             <a-form-item label="流程：" name="ProcessName">
@@ -20,11 +20,49 @@
             </a-form-item>
             <a-form-item
               class="processUser"
-              label="用户："
+              label="发起用户："
               name="UserList"
-              :rules="[{ required: true, message: '用户不能为空' }]"
+              :rules="[{ required: true, message: '请选择发起用户' }]"
             >
-              <a-select
+              <div class="selectBox">
+                <a-transfer
+                  v-model:target-keys="formState.UserList"
+                  v-model:selected-keys="selectedKeys"
+                  :data-source="listData3"
+                  :list-style="{
+                    width: '340px',
+                    height: '300px',
+                  }"
+                  :locale="{
+                    itemUnit: '',
+                    itemsUnit: '',
+                    notFoundContent: '列表为空',
+                    searchPlaceholder: '请输入搜索内容',
+                  }"
+                  show-search
+                  :titles="['可选用户', '已选用户']"
+                  :render="(item) => item.title"
+                  :disabled="disabled"
+                  @change="handleChange"
+                  @selectChange="handleSelectChange"
+                  @scroll="handleScroll"
+                />
+                <div class="sortBox">
+                  <a-button
+                    size="small"
+                    @click="selectedKeys.length && handleMoveUp()"
+                    :type="selectedKeys.length > 0 ? 'primary' : 'default'"
+                    ><UpOutlined
+                  /></a-button>
+                  <a-button
+                    size="small"
+                    @click="selectedKeys.length && handleMoveDown()"
+                    :type="selectedKeys.length > 0 ? 'primary' : 'default'"
+                    ><DownOutlined
+                  /></a-button>
+                </div>
+              </div>
+              <!-- <a-select
                 mode="multiple"
                 allowClear
                 v-model:value="formState.UserList"
@@ -56,9 +94,9 @@
                   class="ant-select-suffix"
                   @click="handleOpenLook('8', 'UserList')"
                 />
-              </div>
+              </div> -->
             </a-form-item>
-            <a-form-item
+            <!-- <a-form-item
               name="BusinessUnitId"
               label="创建身份："
               :rules="[{ required: true, message: '请选择发起部门' }]"
@@ -73,7 +111,7 @@
                   }}</a-select-option
                 >
               </a-select>
-            </a-form-item>
+            </a-form-item> -->
             <a-form-item name="Priority" label="紧急程度：">
               <a-select v-model:value="formState.Priority">
                 <a-select-option value="0">普通</a-select-option>
@@ -130,11 +168,16 @@ import {
   VerticalAlignBottomOutlined,
   CloseOutlined,
   EyeOutlined,
+  UpOutlined,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 import Interface from "@/utils/Interface.js";
 import dayjs from "dayjs";
+import { useRouter, useRoute } from "vue-router";
+import { girdFormatterValue } from "@/utils/common.js";
+const route = useRoute();
+const router = useRouter();
 const { proxy } = getCurrentInstance();
 const props = defineProps({
   isShow: Boolean,
@@ -154,6 +197,7 @@ const formState = reactive({
   UserList: [],
 });
 const token = localStorage.getItem("token");
+const disabled = ref(false);
 const data = reactive({
   height: 150,
   row: {},
@@ -161,29 +205,89 @@ const data = reactive({
   BusinessUnitList: [],
   OwningUserList: [],
   isMultipleUser: false,
+  listData3: [],
+  targetKeys: [],
+  selectedKeys: [],
 });
 const {
+  targetKeys,
+  selectedKeys,
   height,
   row,
   userId,
   BusinessUnitList,
   OwningUserList,
   isMultipleUser,
+  listData3,
 } = toRefs(data);
+const handleChange = (nextTargetKeys, direction, moveKeys) => {
+  // console.log("targetKeys: ", nextTargetKeys);
+  // console.log("direction: ", direction);
+  // console.log("moveKeys: ", moveKeys);
+};
+const handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+  //console.log("sourceSelectedKeys: ", sourceSelectedKeys);
+  //console.log("targetSelectedKeys: ", targetSelectedKeys);
+};
+const handleScroll = (direction, e) => {
+  //console.log("direction:", direction);
+  //console.log("target:", e.target);
+};
+
+const handleMoveUp = () => {
+  let firstSelectedIndex = formState.UserList.findIndex(
+    (item) => item == data.selectedKeys[0]
+  );
+  if (firstSelectedIndex > 0) {
+    const itemsToMove = data.selectedKeys.slice();
+    console.log("itemsToMove", itemsToMove);
+    for (const item of itemsToMove) {
+      const currentIndex = formState.UserList.indexOf(item);
+      formState.UserList.splice(currentIndex, 1);
+      formState.UserList.splice(currentIndex - 1, 0, item);
+    }
+  }
+};
+const handleMoveDown = () => {
+  const lastSelectedIndex = formState.UserList.indexOf(
+    data.selectedKeys[data.selectedKeys.length - 1]
+  );
+  if (lastSelectedIndex < formState.UserList.length - 1) {
+    const itemsToMove = data.selectedKeys.slice().reverse();
+    for (const item of itemsToMove) {
+      const currentIndex = formState.UserList.indexOf(item);
+      formState.UserList.splice(currentIndex, 1);
+      formState.UserList.splice(currentIndex + 1, 0, item);
+    }
+  }
+};
 
 const handleSubmit = () => {
   formRef.value
     .validate()
     .then(() => {
       let startUsers = [];
-      for (var i = 0; i < formState.UserList.length; i++) {
-        for (var j = 0; j < data.OwningUserList.length; j++) {
-          if (formState.UserList[i] === data.OwningUserList[j].ID) {
-            startUsers.push({
-              userId: data.OwningUserList[j].ID,
-              name: data.OwningUserList[j].Name,
-              businessUnitId: formState.BusinessUnitId,
-            });
+      // for (var i = 0; i < formState.UserList.length; i++) {
+      //   for (var j = 0; j < data.OwningUserList.length; j++) {
+      //     if (formState.UserList[i] === data.OwningUserList[j].ID) {
+      //       startUsers.push({
+      //         userId: data.OwningUserList[j].ID,
+      //         name: data.OwningUserList[j].Name,
+      //         //businessUnitId: formState.BusinessUnitId,
+      //       });
+      //     }
+      //   }
+      // }
+      if (formState.UserList && formState.UserList.length) {
+        for (var i = 0; i < formState.UserList.length; i++) {
+          let item = formState.UserList[i];
+          for (var j = 0; j < data.listData3.length; j++) {
+            if (item == data.listData3[j].id) {
+              startUsers.push({
+                userId: data.listData3[j].id,
+                name: data.listData3[j].name,
+              });
+            }
           }
         }
       }
@@ -241,7 +345,7 @@ const handleSubmit = () => {
     });
 };
 const setTop = computed(() => ({
-  top: `calc(50% - 290px)`,
+  top: `calc(50% - 360px)`,
 }));
 const getDeptList = () => {
   const now = new Date();
@@ -342,10 +446,50 @@ const handleSelectUsers = (params) => {
   });
   data.isMultipleUser = false;
 };
+const getPeople = () => {
+  data.listData3 = [];
+  let filterQuery = "";
+  proxy
+    .$post(Interface.list2, {
+      filterId: "",
+      objectTypeCode: "8",
+      entityName: "SystemUser",
+      search: "",
+      page: 1,
+      rows: 500,
+      displayColumns:
+        "FullName,UserName,EmployeeId,BusinessUnitId,OrganizationId",
+    })
+    .then((res) => {
+      if (res && res.nodes && res.nodes.length) {
+        var list = [];
+        for (var i = 0; i < res.nodes.length; i++) {
+          var item = res.nodes[i];
+          for (var cell in item) {
+            if (cell != "id" && cell != "viewUrl") {
+              item[cell] = girdFormatterValue(cell, item);
+            }
+          }
+          list.push({
+            id: item.id,
+            key: item.id,
+            name: item.FullName,
+            title:
+              item.FullName +
+              (item.UserName ? "/" + item.UserName : "") +
+              (item.EmployeeId ? "/" + item.EmployeeId : "") +
+              (item.BusinessUnitId ? "/" + item.BusinessUnitId : "") +
+              (item.OrganizationId ? "/" + item.OrganizationId : ""),
+          });
+        }
+        data.listData3 = list;
+      }
+    });
+};
 onMounted(() => {
   formState.ProcessName = props.name;
   data.rowRecord = props.row;
-  getDeptList();
+  getPeople();
 });
 </script>
 <style lang="less">
@@ -387,6 +531,12 @@ onMounted(() => {
     font-size: 12px;
     margin-bottom: 12px;
     color: #606266;
+  }
+  .sortBox {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    gap: 5px;
   }
 }
 </style>

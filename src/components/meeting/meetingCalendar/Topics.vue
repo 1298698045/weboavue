@@ -372,6 +372,7 @@ const getRelated = () => {
     listItems.MeetingItem.map((item) => {
       if (item.field == "PlanedBy") {
         item.field = "ApplyBy";
+        item.width = 180;
       }
       item.title = item.title;
       item.dataIndex = item.field;
@@ -380,17 +381,12 @@ const getRelated = () => {
       if (item.dType == "U") {
         data.search[item.field] = [];
       }
-      if (
-        item.field == "Name" ||
-        item.field == "CreatedBy" ||
-        item.field == "OwningBusinessUnit" ||
-        item.field == "ApplyBy"
-      ) {
+      if (item.field == "Name" || item.field == "CreatedBy") {
         item.required = true;
       } else {
         item.required = false;
       }
-      if (item.dType != "N") {
+      if (item.dType != "N" && item.field != "StatusCode") {
         data.columns.push(item);
       }
       return item;
@@ -547,7 +543,7 @@ const handleSave = () => {
       .validate()
       .then(() => {
         for (var i = 0; i < data.dataList.length; i++) {
-          handleSaveRow(data.dataList[i]);
+          handleSaveRow(data.dataList[i],i);
         }
       })
       .catch((err) => {
@@ -557,17 +553,17 @@ const handleSave = () => {
     message.error("请新增至少一行数据");
   }
 };
-const handleSaveRow = (item) => {
+const handleSaveRow = (item,i) => {
   let url = Interface.create;
   let fields = {
     MeetingId: props.id,
     Name: item.Name,
-    SortNumber: item.SortNumber,
+    SortNumber: i+1,
     ApplyBy: item.ApplyBy,
     OwningBusinessUnit: item.OwningBusinessUnit,
     PlanedBy: item.PlanedBy,
     ScheduledMeeting: item.ScheduledMeeting,
-    StatusCode: item.StatusCode,
+    StatusCode: item.StatusCode||0,
   };
   let d = {
     actions: [
@@ -759,7 +755,7 @@ onMounted(() => {
   :deep .ant-form-item-label {
     display: none !important;
   }
-  :deep .ant-form-item{
+  :deep .ant-form-item {
     margin-bottom: 0 !important;
   }
 }

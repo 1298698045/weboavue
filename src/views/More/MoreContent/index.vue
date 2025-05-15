@@ -472,7 +472,7 @@ const getTreeData = () => {
             }
             let response = res.actions[0].returnValue;
             formTree(response);
-            console.log("formTree", response);
+            //console.log("formTree", response);
             data.treeData = response;
             data.treeDataAll = response;
         }
@@ -572,13 +572,12 @@ const changeRightTab = (e) => {
     getQuery();
 }
 function changeHeight() {
-    let h = tablelist.value.clientHeight;
-    data.tableHeight = h - 40;
+    let h = document.documentElement.clientHeight;
+    data.tableHeight = h - 315;
     getQuery();
 }
 onMounted(() => {
-    let h = tablelist.value.clientHeight;
-    data.tableHeight = h - 40;
+    changeHeight();
     window.addEventListener('resize', changeHeight)
 })
 </script>

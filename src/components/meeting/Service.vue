@@ -387,7 +387,9 @@ const getRelated = () => {
       } else {
         item.required = false;
       }
-      data.columns.push(item);
+      if (item.field != "CreatedOn") {
+        data.columns.push(item);
+      }
       return item;
     });
   });
@@ -548,7 +550,6 @@ const handleSaveRow = (item) => {
     MeetingId: props.id,
     Name: item.Name,
     HandleBy: item.HandleBy,
-    CreatedOn: item.CreatedOn,
   };
   let d = {
     actions: [
@@ -740,7 +741,7 @@ onMounted(() => {
   :deep .ant-form-item-label {
     display: none !important;
   }
-  :deep .ant-form-item{
+  :deep .ant-form-item {
     margin-bottom: 0 !important;
   }
 }

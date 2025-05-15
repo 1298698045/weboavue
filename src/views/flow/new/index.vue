@@ -104,7 +104,7 @@
                       >
                         <a-tooltip :overlayClassName="'flowRowItem-tooltip'">
                           <template #title>{{ "批量发起" }}</template>
-                          <i class="iconfont icon-tianjia"></i>
+                          <i class="iconfont icon-yonghuming"></i>
                         </a-tooltip>
                       </div>
                     </div>
@@ -681,14 +681,15 @@ onMounted(() => {
 
               .icon-tianjiashoucang {
                 opacity: 0.6;
-
+                color: #666;
                 &:hover {
                   opacity: 1;
                 }
               }
-              .icon-tianjia {
-                opacity: 0.6;
-                font-size: 13px;
+              .icon-yonghuming {
+                opacity: 0.5;
+                color: #666;
+                font-size: 14px;
                 &:hover {
                   opacity: 1;
                 }

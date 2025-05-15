@@ -192,22 +192,19 @@
 	 }
 	 //保存文档
 	 function CallSave() {
-		$('#activeBox').hide()
 		if (!WebOffice.WebSave()) {
-			setTimeout(function(){
-				alert("保存正文失败！");
-				StatusMsg(WebOffice.Status);
-				$('#activeBox').show()
-				Load();
-			},500)
+			StatusMsg(WebOffice.Status);
+			alert("保存正文失败！");
+			// setTimeout(function(){
+			// 	Load();
+			// },500)
 			return false;
 		} else {
-			setTimeout(function(){
-				alert("保存正文成功！");
-				StatusMsg(WebOffice.Status);
-				$('#activeBox').show()
-				Load();
-			},500)
+			StatusMsg(WebOffice.Status);
+			alert("保存正文成功！");
+			// setTimeout(function(){
+			// 	Load();
+			// },500)
 		}
 	}
 	//新建文档

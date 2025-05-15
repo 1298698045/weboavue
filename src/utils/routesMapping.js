@@ -129,6 +129,7 @@ export const routesMapping = {
         //     isCommon: true
         // },
         VehicleReservation: () => import("../views/Vehicle/VehicleApply.vue"),
+        VehicleReport: () => import("../views/Vehicle/reportForms/index.vue"),
         // VehicleUse: {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true

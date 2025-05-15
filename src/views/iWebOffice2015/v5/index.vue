@@ -1,6 +1,7 @@
 <template>
   <div style="width: 100%; height: 100vh; overflow: hidden">
     <iframe
+      id="iframe"
       :src="iframeUrl"
       frameborder="0"
       style="width: 100%; height: 100%"
@@ -40,7 +41,7 @@ const { iframeUrl } = toRefs(data);
 const getFileInfo = () => {
   let d = {
     RecordID: route.query.id,
-    isAttachment: route.query.isAttachment || 1,
+    entityName: route.query.entityName || "",
   };
   proxy.$get(Interface.getFileInfo, d).then((res) => {
     if (

@@ -104,6 +104,9 @@ import {
 import { message } from "ant-design-vue";
 import Interface from "@/utils/Interface.js";
 import dayjs from "dayjs";
+import { useRouter, useRoute } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 const { proxy } = getCurrentInstance();
 const props = defineProps({
   isShow: Boolean,
@@ -208,7 +211,7 @@ const handleSubmit = () => {
       let d = {
         message: JSON.stringify(obj),
       };
-      proxy.$post(Interface.workflow.batchNew, d).then((res) => {
+      proxy.$post(Interface.workflow.new, d).then((res) => {
         if (
           res &&
           res.actions &&

@@ -352,11 +352,15 @@ const handlePreviewFile = (item) => {
     item.fileExtension == "ppt" ||
     item.fileExtension == "xls"
   ) {
-    if(item.viewUrl&&item.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
-      item.viewUrl='/lightning/r/office/view?id='+item.id;
+    if (
+      item.viewUrl &&
+      item.viewUrl.indexOf("/lightning/r/office/view") != -1
+    ) {
+    } else {
+      item.viewUrl = "/lightning/r/office/view?id=" + item.id;
     }
-    if(item.fileExtension == "ppt" ||item.fileExtension == "pptx"){
-      item.viewUrl='/lightning/r/office/view2?id='+item.id;
+    if (item.fileExtension == "ppt" || item.fileExtension == "pptx") {
+      item.viewUrl = "/lightning/r/office/view2?id=" + item.id;
     }
     openControlViewFile(
       item.id,
@@ -371,12 +375,24 @@ const handlePreviewFile = (item) => {
 };
 //预览office文件
 const openControlViewFile = (id, username, type, link, name) => {
-  var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
-  var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
+  var mhtmlHeight = window.screen.availHeight; //获得窗口的垂直位置;
+  var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置;
   var iTop = 0; //获得窗口的垂直位置;
   var iLeft = 0; //获得窗口的水平位置;
   //window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username);
-  window.open('/#' + link, '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
+  window.open(
+    "/#" + link + "&entityName=RelatedAttachment",
+    "",
+    "height=" +
+      mhtmlHeight +
+      ",width=" +
+      mhtmlWidth +
+      ",top=" +
+      iTop +
+      ",left=" +
+      iLeft +
+      ",toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no"
+  );
 };
 //下载附件
 const downloadFile = (item) => {
