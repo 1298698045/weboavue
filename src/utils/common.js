@@ -224,3 +224,18 @@ export const commonExport = (
     xhr.send(formData);
   }
 };
+
+export const addFilterCondition = (target, attribute, label, operator, value) => {
+  let obj = {
+    attribute: attribute,
+    column: attribute,
+    label: label,
+    operator: operator,
+    logical: "AND",
+    picklistValues: [],
+    isEditable: false,
+    operands: [value]
+  }
+  target.push(obj);
+  return target;
+}

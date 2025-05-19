@@ -642,6 +642,7 @@ See https://github.com/adobe-type-tools/cmap-resources
     </div> <!-- outerContainer -->
     <div id="printContainer"></div>
     <script src="/js/jquery/1.7.1/jquery.min.js"></script>
+    <script src="/js/CommonUtils.js"></script>
     <script>
         //$('#print').hide()
         //$('#download').hide()
@@ -681,6 +682,24 @@ See https://github.com/adobe-type-tools/cmap-resources
             console.log("blob", blob);
             blobToBase64(blob).then(base64 => {
                 console.log(base64);
+                let obj = {
+                    actions:[{
+                        id: "7366;a",
+                        descriptor: "",
+                        callingDescriptor: "UNKNOWN",
+                        params: {
+                            fileId: getQueryString("fileId"),
+                            pdfData: base64
+                        }
+                    }]
+                }
+                let d = {
+                    message: JSON.stringify(obj)
+                }
+                debugger
+                ajaxMethodPostData("/api/file/attachment/savepdf", d, function (res) {
+                    
+                })
             }).catch(error => {
                 console.error('转换失败:', error);
             });

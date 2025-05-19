@@ -3,7 +3,7 @@
         <div class="dModal-box">
             <div class="d-content">
                 <div class="photoWrap">
-                    <iframe :src="pdfUrl" class="pdfIframe"></iframe>
+                    <iframe :src="pdfUrl" :fileId="pdfParams.id" class="pdfIframe"></iframe>
                     <div class="photoHeadInfo">
                         <div class="photoName">
                             {{ pdfParams.name || '暂无' }}
@@ -53,9 +53,9 @@ const data = reactive({
     pdfUrl: ""
 })
 const { pdfUrl } = toRefs(data);
-
+console.log("pdfParams", props.pdfParams);
 const getPdfUrl = () => {
-    data.pdfUrl = '/pdfjs/web/viewer.html?file=' + props.pdfParams.viewUrl;
+    data.pdfUrl = '/pdfjs/web/viewer.html?file=' + props.pdfParams.viewUrl + "&fileId=" + props.pdfParams.id;
 };
 getPdfUrl();
 

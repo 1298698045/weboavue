@@ -87,7 +87,7 @@
                                                                 @lookup="(search, field)=>searchlookupChildren(search, field, col, subIdx)"
                                                                 :stateCode="stateCode" @controller="(e, field)=>{selectControllerChildren(e, field, col.field, sub)}" />
                                                         </td>
-                                                        <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;">
+                                                        <td style="border: 1px solid #5d9cec;height: 24px;text-align: center;" v-if="stateCode!=2">
                                                             <CloudUploadOutlined @click="handleOpenSubUpload(key, colIndex, subIdx)"  v-if="stateCode!=2 && sub.id" />
                                                         </td>
                                                     </tr>
@@ -95,7 +95,7 @@
                                                         <td
                                                             style="border: 1px solid #5d9cec;height: 24px;text-align: center;">
                                                             合计</td>
-                                                        <td :colspan="col.field.checkedColumns.length"
+                                                        <td :colspan="col.field.checkedColumns.length+2"
                                                             style="border: 1px solid #5d9cec;height: 24px;padding-right: 10px;text-align: right;">
                                                             <!--  v-for="(child, childIdx) in col.field.checkedColumns" -->
                                                             <span style="color: red;"
@@ -714,7 +714,10 @@
                 let Dependent = Dependents[i];
                 let textVal;
                 for (let key in select[Dependent].controllerValues) {
-                    if (val == select[Dependent].controllerValues[key]) {
+                    // if (val == select[Dependent].controllerValues[key]) {
+                    //     textVal = key;
+                    // }
+                     if (val == key) {
                         textVal = key;
                     }
                 };

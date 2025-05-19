@@ -215,6 +215,10 @@
         {
             title: "办理意见",
             field: "Description"
+        },
+        {
+            title: "留言",
+            field: "Remark"
         }
     ]);
     const gridRef = ref(null);
@@ -244,7 +248,7 @@
             objectTypeCode: '123',
             entityName: 'WFRuleLog',
             // filterQuery: '\nProcessInstanceId\teq\t' + props.processInstanceId,
-            displayColumns: 'FromActivityName,ToActivityName,StatusCode,SourceType,StateCode,ToIdentityName,ExecutorIdentityName,CreatedByName,CreatedOn,ModifiedOn,TimeCost,Deadline,IsRead,,Description',
+            displayColumns: 'FromActivityName,ToActivityName,StatusCode,SourceType,StateCode,ToIdentityName,ExecutorIdentityName,CreatedByName,CreatedOn,ModifiedOn,TimeCost,Deadline,IsRead,,Description,Remark',
             sort: 'CreatedOn',
             order: 'ASC',
             filterCondition: JSON.stringify(filterCondition.value)

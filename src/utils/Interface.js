@@ -511,5 +511,6 @@ const Interface = {
     send: baseUrl + "/campaignsms/message/send", // 短信发送提交
   },
   getFileInfo: baseUrl + "/oa/office/getFileInfo", // 获取Office预览文件信息
+  savepdf: baseUrl + "/file/attachment/savepdf", // pdf编辑保存
 };
 export default Interface;

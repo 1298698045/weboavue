@@ -21,12 +21,12 @@
             </div>
             <div class="panel-bd" v-show="activeKey==0">
                 <!-- <Dtable name="recordGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable> -->
-                <Ntable ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height"
+                <Ntable name="recordGrid" ref="gridRef" :columns="columns" :gridUrl="Interface.list2" :tableHeight="height"
                     :isCollapsed="false"></Ntable>
             </div>
             <div class="panel-bd" v-show="activeKey==1">
                 <!-- <Dtable name="browsingHistory" ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.readlogList" :tableHeight="height" :isCollapsed="isCollapsed"></Dtable>-->
-                <Ntable ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.list2" :tableHeight="height"
+                <Ntable name="browsingHistory" ref="browsingHistoryRef" :columns="columns2" :gridUrl="Interface.list2" :tableHeight="height"
                     :isCollapsed="false"></Ntable>
             </div>
         </div>
@@ -49,7 +49,7 @@
     import Ntable from "@/components/Ntable.vue";
     import { useRouter, useRoute } from "vue-router";
     import { message } from "ant-design-vue";
-    import { girdFormatterValue } from "@/utils/common.js";
+    import { girdFormatterValue, addFilterCondition } from "@/utils/common.js";
     const route = useRoute();
     const router = useRouter();
     const { proxy } = getCurrentInstance();
@@ -91,7 +91,7 @@
             field: "IsRead",
             formatter: function formatter(value, row, index) {
                 return girdFormatterValue("IsRead", row);
-              }
+            }
         }
     ]);
     var columns2 = ref([
@@ -102,21 +102,36 @@
         // },
         {
             title: "阅读人",
-            field: "CreatedBy"
+            field: "CreatedBy",
+            formatter: function formatter(value, row, index) {
+                return girdFormatterValue("CreatedBy", row);
+            }
         },
         {
             title: "阅读时间",
-            field: "ReadOn"
+            field: "ReadOn",
+            formatter: function formatter(value, row, index) {
+                return girdFormatterValue("ReadOn", row);
+            }
         },
         {
             title: "IP地址",
-            field: "IPAddr"
+            field: "IPAddr",
+            formatter: function formatter(value, row, index) {
+                return girdFormatterValue("IPAddr", row);
+            }
         },
         {
             title: "浏览器名称与版本",
-            field: "BrowserName"
+            field: "BrowserName",
+            formatter: function formatter(value, row, index) {
+                return girdFormatterValue("BrowserName", row);
+            }
         }
     ]);
+    let filterCondition = [];
+    filterCondition = addFilterCondition(filterCondition, "ProcessInstanceId", "流程实例", "eq", props.processInstanceId);
+    console.log("filterCondition", filterCondition);
     const data = reactive({
         list: [],
         list2: [],
@@ -131,10 +146,12 @@
             },
         ],
         queryParams1: {
-            filterId: '0D6089D0-05C5-4472-A802-AC4285DCF305',
+            // filterId: '0D6089D0-05C5-4472-A802-AC4285DCF305',
+            filterId: '',
             objectTypeCode: '123',
             entityName: 'WFInstanceForward',
-            filterQuery: '\nProcessInstanceId\teq\t' + props.processInstanceId,
+            // filterQuery: '\nProcessInstanceId\teq\t' + props.processInstanceId,
+            filterCondition: JSON.stringify(filterCondition),
             displayColumns: 'CreatedOn,CreatedBy,ReceiverId,IsRead',
             sort: 'CreatedOn',
             order: 'desc'
@@ -142,8 +159,9 @@
         queryParams2: {
             filterId: '',
             objectTypeCode: '2021',
-            entityName: 'RecordReadLog',
-            filterQuery: '\nObjectId\teq\t' + route.query.id,
+            entityName: 'WFProcessInstanceReadLog',
+            // filterQuery: '\nObjectId\teq\t' + route.query.id,
+            filterCondition: JSON.stringify(filterCondition),
             displayColumns: 'CreatedOn,CreatedBy,IPAddr,BrowserName,ReadOn',
             sort: 'CreatedOn',
             order: 'desc'

@@ -1,3 +1,3 @@
 export default {
-  title: "OA后台管理系统",
+  title: "协同办公系统",
 };

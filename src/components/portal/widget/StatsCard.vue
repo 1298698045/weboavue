@@ -85,9 +85,13 @@
     getQuery();
 
     const gotoPage = () => {
-        let { drillUrl } = props.item.properties;
-        const url = router.resolve({path: drillUrl});
-        window.open(url.href);
+        let { drillUrl, drillType } = props.item.properties;
+        if(drillType == 3){
+            router.push({ path: drillUrl });
+        }else if(drillType == 2){
+            const url = router.resolve({path: drillUrl});
+            window.open(url.href);
+        }
     }
 
 </script>

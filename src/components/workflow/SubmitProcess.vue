@@ -30,7 +30,7 @@
                         <div  v-if="splitType!=2" v-for="(item, parentIndex) in transitions" :key="parentIndex">
                             <a-form-item label="办理人员：" v-if="activityId == item.ToActivityId">
                                 <div class="flex">
-                                    <a-input v-model:value="item.searchVal" placeholder="请输入搜索字符"></a-input>
+                                    <a-input v-model:value="item.searchVal" @change="(e)=>{handleSearch(e, item)}" placeholder="请输入搜索字符"></a-input>
                                     <a-button type="link" @click="handleAddPeople(item, parentIndex)" v-if="item.addPeople">添加人员</a-button>
                                 </div>
                                 <div class="peopleBox">
@@ -55,7 +55,7 @@
                         <div class="collapseItem" v-if="splitType==2" v-for="(item, parentIndex) in transitions" :key="parentIndex">
                             <div class="collapseHead">
                                 <a-form-item :label="item.To.name">
-                                    <a-checkbox v-model:checked="item.isMatched"></a-checkbox>
+                                    <a-checkbox v-model:checked="item.isSelected"></a-checkbox>
                                 </a-form-item>
                                 <div class="arrow" @click="item.isCollapse=!item.isCollapse">
                                     <DownOutlined v-if="item.isCollapse" />
@@ -65,11 +65,11 @@
                             <div class="collapseBody" v-if="item.isCollapse">
                                 <a-form-item label="办理人员：">
                                     <div class="flex">
-                                        <a-input :disabled="!item.isMatched" v-model:value="item.searchVal" @change="(e)=>{handleSearch(e, item)}" placeholder="请输入搜索字符"></a-input>
-                                        <a-button :disabled="!item.isMatched" type="link" @click="item.isMatched && handleAddPeople(item, parentIndex)" v-if="item.addPeople">添加人员</a-button>
+                                        <a-input :disabled="!item.isSelected" v-model:value="item.searchVal" @change="(e)=>{handleSearch(e, item)}" placeholder="请输入搜索字符"></a-input>
+                                        <a-button :disabled="!item.isSelected" type="link" @click="item.isSelected && handleAddPeople(item, parentIndex)" v-if="item.addPeople">添加人员</a-button>
                                     </div>
                                     <div class="peopleBox">
-                                        <a-table :disabled="!item.isMatched" :row-selection="item.rowSelectionConfig" size="small" :pagination="false" :scroll="{ y: 180 }" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
+                                        <a-table :disabled="!item.isSelected" :row-selection="item.rowSelectionConfig" size="small" :pagination="false" :scroll="{ y: 180 }" style="height: 100%;" :dataSource="item.peopleList" :columns="columns">
                                             <template #bodyCell="{ column,index }">
                                                 <template v-if="column.key === 'operation'">
                                                     <span class="iconTop" @click="arrowup(item, index)">
@@ -195,6 +195,12 @@
             width: 100,
         },
         {
+            title: "机构",
+            dataIndex: "organizationIdName",
+            align: "center",
+            width: 100,
+        },
+        {
             title: '操作',
             key: 'operation',
             fixed: 'right',
@@ -231,6 +237,7 @@
         data.activityId = e.target.value;
         let index = data.listData.findIndex(item=>item.ToActivityId == data.activityId);
         getPermission(data.activityId, index);
+        getParticipators(index);
     }
 
     // 获取权限
@@ -315,15 +322,17 @@
 
             if(splitType!=2){
                 if(transitions && transitions.length){
-                    let index = transitions.findIndex(item=>item.isMatched);
+                    let index = transitions.findIndex(item=>item.isSelected);
                     // console.log("index", index);
                     if(index != -1){
                         data.activityId = transitions[index].ToActivityId;
+                        getPermission(data.activityId, index);
+                        getParticipators(index);
                     }else {
                         data.activityId = transitions[0].ToActivityId;
+                        getPermission(data.activityId, 0);
+                        getParticipators(0);
                     }
-                    getPermission(data.activityId, 0);
-                    getParticipators(0);
                 }
             }else {
                 data.listData.forEach((item,index)=>{
@@ -336,7 +345,7 @@
     getTransitions();
 
     // 获取节点办理人员
-    const getParticipators = () => {
+    const getParticipators = (index) => {
         let obj = {
             actions:[{
                 id: "4270;a",
@@ -358,7 +367,7 @@
             let list = res.actions[0].returnValue;
             let temp = [];
             list.forEach(item=>{
-                data.listData[0].selectPeoples.push(item.UserId);
+                data.listData[index].selectPeoples.push(item.UserId);
                 let obj = {
                     id: item.UserId,
                     key: item.UserId,
@@ -367,7 +376,7 @@
                 }
                 temp.push(obj);
             });
-            data.listData[0].peopleList = temp;
+            data.listData[index].peopleList = temp;
         })
     };
     
@@ -445,10 +454,10 @@
         let transitions = [];
         if(data.isFinal != 1){
             if(data.splitType==2){
-                let isNodeSelect = data.listData.some(item=>item.isMatched==true);
+                let isNodeSelect = data.listData.some(item=>item.isSelected==true);
                 if(isNodeSelect){
                     data.listData.forEach(item=>{
-                        if(item.isMatched && item.selectPeoples.length == 0){
+                        if(item.isSelected && item.selectPeoples.length == 0){
                             message.error('请选择节点下的办理人员!');
                             throw error("请选择人员!");
                         }
@@ -474,7 +483,7 @@
             // console.log("data.transitions2:", data.listData);
     
             data.listData.forEach(item=>{
-                if((item.isMatched && data.splitType == 2) || (item.ToActivityId == data.activityId && data.splitType != 2)){
+                if((item.isSelected && data.splitType == 2) || (item.ToActivityId == data.activityId && data.splitType != 2)){
     
                     const list = item.peopleList.filter(self=>{
                         return item.selectPeoples.find(row=>{
