@@ -300,13 +300,13 @@
                                                         </div>
                                                         <div class="fileItemInfo">
                                                             <p class="name">{{item.name}}</p>
-                                                            <p class="link">
+                                                            <!-- <p class="link">
                                                                 <a href="javascript:;" v-if="attachPerm.read"
                                                                     @click.stop="openZW(item)">查看</a>
                                                                 ·
                                                                 <a href="javascript:;"
                                                                     @click.stop="downloadFile(item)">下载</a>
-                                                            </p>
+                                                            </p> -->
                                                             <p class="createBy" style="color: #666;">
                                                                 {{ item.createdByName }}
                                                             </p>
@@ -866,14 +866,9 @@
             row.fileExtension == "xlsx" ||
             row.fileExtension == "doc" ||
             row.fileExtension == "ppt" ||
-            row.fileExtension == "xls"
+            row.fileExtension == "xls" || row.fileExtension == "wps"
         ) {
-            if(row.viewUrl&&row.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
-              row.viewUrl='/lightning/r/office/view?id='+row.id;
-            }
-            if(row.fileExtension == "ppt" ||row.fileExtension == "pptx"){
-              row.viewUrl='/lightning/r/office/view2?id='+row.id;
-            }
+            row.viewUrl = '/lightning/r/office/view?id=' + row.id + '&editMethod=' + data.attachPerm.filePermission;
             openControlViewFile(
             row.id,
             row.createdByName,

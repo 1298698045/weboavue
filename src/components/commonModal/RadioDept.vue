@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="props.isShow" width="800px" :maskClosable="false" @cancel="handleCancel"
+        <a-modal v-model:open="props.isShow" width="550px" :maskClosable="false" @cancel="handleCancel"
             @ok="handleSubmit">
             <template #title>
                 <div>
@@ -14,23 +14,23 @@
                         <a-tab-pane key="2" tab="按列表"></a-tab-pane>
                     </a-tabs>
                     <div class="search">
-                        <a-input placeholder="请输入关键字搜索"></a-input>
+                        <a-input placeholder="请输入关键字搜索" v-model:value="searchVal" @change="handleSearch"></a-input>
                     </div>
                 </div>
-                <div class="modalCenter" :style="{ height: height + 'px!important' }">
+                <div class="modalCenter">
                     <div class="tabContainerTree" v-if="currentTab==1">
-                        <a-tree :tree-data="deptTreeList" block-node @select="handleSelectTree">
-                            <template #title="{ text, key }">
-                                <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ text }}</span>
-                                <template v-else>{{ text }}</template>
+                        <a-tree :tree-data="deptTreeList" :selectedKeys="selectedKeys" :fieldNames="fieldNames"
+                            block-node @select="handleSelectTree">
+                            <template #title="{ name, key }">
+                                <span>{{name}}</span>
                             </template>
                         </a-tree>
                     </div>
                     <div class="tabContainerTree" v-if="currentTab==2">
-                        <a-tree :tree-data="deptList" block-node @select="handleSelectTree">
-                            <template #title="{ text, key }">
-                                <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ text }}</span>
-                                <template v-else>{{ text }}</template>
+                        <a-tree :tree-data="deptList" :fieldNames="fieldNames" :selectedKeys="selectedKeys" block-node
+                            @select="handleSelectTree">
+                            <template #title="{ name, key }">
+                                <span>{{name}}</span>
                             </template>
                         </a-tree>
                     </div>
@@ -52,7 +52,9 @@
         defineEmits
     } from "vue";
     import { message } from 'ant-design-vue';
+    import Toast from "@/utils/toast.js";
     import { SearchOutlined, DownOutlined, UserOutlined } from "@ant-design/icons-vue";
+    import { flatten } from "@/utils/common.js";
     import Interface from "@/utils/Interface.js";
     const { proxy } = getCurrentInstance();
     const labelCol = ref({ style: { width: '100px' } });
@@ -69,22 +71,30 @@
         deptTreeList: [],
         deptList: [],
         selectData: {},
-        height: document.documentElement.clientHeight - 380,
+        fieldNames: {
+            key: "id",
+            title: "name",
+            children: "children"
+        },
+        searchVal: "",
+        selectedKeys: []
     })
-    const { currentTab, deptTreeList, deptList, selectData,height } = toRefs(data);
+    const { currentTab, deptTreeList, deptList, selectData, fieldNames, searchVal, selectedKeys } = toRefs(data);
     const getTreeDept = () => {
-        proxy.$get(Interface.treeList, {
-            entity: "organizationtree",
-            search: ""
+        proxy.$get(Interface.deptTree, {
+            search: data.searchVal
         }).then(res => {
-            console.log("res", res);
-            data.deptList = res.rows;
-            let rows = res.rows;
-            data.deptTreeList = formTreeData(rows);
-            console.log("deptTreeList", data.deptTreeList)
+            let listData = res.actions[0].returnValue;
+            data.deptTreeList = listData;
+            data.deptList = flatten(listData);
+            console.log("data.deptList", data.deptList);
         })
     }
     getTreeDept();
+
+    const handleSearch = (e) => {
+        getTreeDept();
+    }
 
     const formTreeData = (list) => {
         var result = [];
@@ -107,28 +117,25 @@
         return result;
     }
 
-    const handleSelectTree = (selectedKeys,selectedNodes) => {
-        console.log("e",selectedKeys,selectedNodes);
+    const handleSelectTree = (selectedKeys, selectedNodes) => {
+        console.log("e", selectedKeys, selectedNodes);
+        data.selectedKeys = selectedKeys;
         data.selectData = {
             ID: selectedNodes.node.id,
-            Name: selectedNodes.node.text
+            Name: selectedNodes.node.name
         }
     }
     const clearData = () => {
-        data.selectData = [];
+        data.selectData = {};
+        data.selectedKeys = [];
     }
     const handleSubmit = () => {
-        if(Object.keys(data.selectData).length){
+        if (Object.keys(data.selectData).length) {
             emit("select-val", data.selectData);
-        }else {
-            message.error('请选择部门!');
+        } else {
+            Toast.error('请选择部门!');
         }
     }
-    onMounted(() => {
-        window.addEventListener("resize", (e) => {
-            data.height = document.documentElement.clientHeight - 380;
-        });
-    });
 </script>
 <style lang="less" scoped>
     @import url('@/style/modal.less');

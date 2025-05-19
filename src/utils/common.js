@@ -20,6 +20,21 @@ export const formTreeData = (list, id, pid) => {
   });
   return result;
 };
+export const flatten = (arr = []) => {
+  const list = JSON.parse(JSON.stringify(arr))
+  let result = []
+  if (!Array.isArray(list)) {
+    return result
+  }
+  list.forEach(item => {
+    result.push(item)
+    if (item.children) {
+      result = result.concat(flatten(item.children))
+      delete item.children
+    }
+  })
+  return result;
+};
 // 去重
 export const unique = (list, field) => {
   for (let i = 0; i < list.length; i++) {

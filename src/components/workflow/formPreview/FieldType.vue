@@ -247,7 +247,7 @@
                     :placeholder="'请输入' + field.label" :rows="2" />
             </span>
         </div>
-        <div class="maxWidth" v-else-if="type=='z' || type=='UC' || type=='UCS'">
+        <div class="maxWidth" v-else-if="type=='z' || type=='UCS'">
             <span class="valText" v-if="print==1">
                 <!-- {{ list[field.id] }} -->
                 <div class="suggestion">
@@ -340,7 +340,88 @@
                 </template>
             </span>
         </div>
-        <div v-else-if="type == 'UC'">
+        <div class="maxWidth" v-else-if="type=='UC'">
+            <span class="valText" v-if="print==1">
+                <div class="suggestion">
+                    <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
+                        <span v-if="sug?.Comment">
+                            <span>{{ sug.Comment }}</span>
+                            <div class="sign-info">
+                                [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </span>
+            <span v-else style="text-align: left;">
+                <span class="valText"
+                    v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
+                    <!-- {{ list[field.id] }} -->
+                    <div class="suggestion">
+                        <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
+                            <span v-if="sug?.Comment">
+                                <span>{{ sug.Comment }}</span>
+                                <div class="sign-info">
+                                    [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </span>
+                <span v-else-if="field?.permission == 2"></span>
+                <template v-else>
+                    <a-textarea :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label"
+                        :rows="4" />
+                    <div>
+                        <a-popover placement="right">
+                            <a-button type="link">选意见</a-button>
+                            <template #content>
+                                <div class="suggestionWrap">
+                                    <div class="suggestion-list">
+                                        <div class="suggestion-item" v-for="(option, optionIdx) in suggestions" :key="optionIdx"
+                                            @click="selectSuggestion(option, field)">
+                                            {{option.name}}
+                                            <span class="del-icon" @click.stop="handleDeleteSuggestion(option)">
+                                                <DeleteOutlined />
+                                            </span>
+                                            <!-- <a-popconfirm title="确认删除当前意见?" ok-text="确认" cancel-text="取消" @confirm="handleDeleteSuggestion(option)">
+                                                    </a-popconfirm> -->
+                                        </div>
+                                    </div>
+                                    <div class="suggestion-footer">
+                                        <span class="label">创建意见</span>
+                                        <div class="add-form">
+                                            <a-input class="suggestion-inp" placeholder="请输入新的意见"
+                                                v-model:value="suggestionVal"></a-input>
+                                            <a-button size="small" type="primary" @click="handleSubmit">保存</a-button>
+                                        </div>
+                                        <!-- <a-button size="small" type="primary">创建意见</a-button> -->
+                                    </div>
+                                </div>
+                            </template>
+                        </a-popover>
+                        <div>
+                            <div v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
+                                <div class="sign-info" v-if="sug.RecId == ruleLogId">
+                                    [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                </div>
+                            </div>
+                        </div>
+                        <div class="suggestion">
+                            <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
+                                <div v-if="sug.RecId != ruleLogId">
+                                    <span>{{ sug.Comment }}</span>
+                                    <div class="sign-info">
+                                        [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </span>
+        </div>
+        <div v-else-if="type == 'US'">
             <span v-if="field?.permission == 2"></span>
             <span v-else>
                 <div class="signImg" v-if="list[field.id]">

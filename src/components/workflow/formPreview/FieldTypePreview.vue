@@ -174,7 +174,7 @@
                 <a-textarea  v-else :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label" :rows="2" />
             </span>
         </div>
-        <div v-else-if="type=='z' || type=='UC' || type=='UCS'">
+        <div v-else-if="type=='z' || type=='UCS'">
             <span class="valText" v-if="print==1">
                 <!-- {{ list[field.id] }} -->
                 <div class="suggestion">
@@ -226,7 +226,55 @@
                 </template>
             </span>
         </div>
-        <div v-else-if="type == 'UC' || type == 'HS'">
+        <div v-else-if="type=='UC'">
+            <span class="valText" v-if="print==1">
+                <!-- {{ list[field.id] }} -->
+                <div class="suggestion">
+                    <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
+                        <span v-if="sug?.Comment">
+                            <span>{{ sug.Comment }}</span>
+                            <div class="sign-info">
+                                [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </span>
+            <span v-else>
+                <span class="valText" v-if="field?.permission == 4">
+                    {{ list[field.id] }}
+                </span>
+                <span v-else-if="field?.permission == 2"></span>
+                <template v-else>
+                    <a-textarea :disabled="disabledPermission" v-model:value="list[field.id]" :placeholder="'请输入' + field.label"
+                        :rows="4" />
+                    <div>
+                        <a-popover placement="right">
+                            <!-- <a-button type="link">选意见</a-button> -->
+                            <template #content>
+                                <div class="suggestionWrap">
+                                    <div class="suggestion-list">
+                                        <div class="suggestion-item" v-for="(option, optionIdx) in suggestions" :key="optionIdx"
+                                            @click="selectSuggestion(option, field)">
+                                            {{option.name}}
+                                        </div>
+                                    </div>
+                                    <div class="suggestion-footer">
+                                        <span class="label">创建意见</span>
+                                        <div class="add-form">
+                                            <a-input class="suggestion-inp" placeholder="请输入新的意见"></a-input>
+                                            <a-button size="small" type="primary">保存</a-button>
+                                        </div>
+                                        <!-- <a-button size="small" type="primary">创建意见</a-button> -->
+                                    </div>
+                                </div>
+                            </template>
+                        </a-popover>
+                    </div>
+                </template>
+            </span>
+        </div>
+        <div v-else-if="type == 'HS'">
             <span v-if="field?.permission == 2"></span>
             <span v-else>
                 <div class="signImg" v-if="list[field.id]">

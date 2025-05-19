@@ -303,7 +303,7 @@ const Interface = {
     list: "/localData/flow/entitygrid.list.json",
     steppri: "/localData/flow/process.steppri.get.json",
     savePerm: "/localData/flow/process.steppri.save.json",
-    deptTree: "/localData/flow/tree.dept.get.json",
+    // deptTree: "/localData/flow/tree.dept.get.json",
     userList: "/localData/flow/user.search.json",
     editFlowDefineDetail:
       "/localData/flow/entity.detail.get.editflowdefine.json",
