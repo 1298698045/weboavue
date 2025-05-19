@@ -133,14 +133,14 @@
             <a-button type="primary" block @click="handleLogin"
               >登录到OA</a-button
             >
-            <a
+            <!-- <a
               v-if="current == 0"
               href="javascript:;"
               style="margin-top: 15px; display: block"
               @click="handleForgot"
               >忘记密码</a
-            >
-            <div class="other-login-divider">
+            > -->
+            <div class="other-login-divider" style="margin-top: 15px; display: block">
               <span>或</span>
             </div>
             <div class="switch-account">
@@ -160,21 +160,21 @@
                 <img src="@/assets/img/sms.svg" alt="" />
                 验证码登录
               </div>
-              <div
+              <!-- <div
                 class="switch-item"
                 :class="{ active: current == 2 }"
                 @click="changeMethod(2)"
               >
                 <img src="@/assets/img/code.svg" alt="" />
                 扫码登录
-              </div>
+              </div> -->
             </div>
           </a-form>
         </div>
       </div>
     </div>
     <div class="footer">
-      <div class="footerInfo">
+      <!-- <div class="footerInfo">
         <a
           href="http://182.92.221.64:10000/download/appsdown.htm"
           target="_blank"
@@ -204,7 +204,7 @@
           target="_blank"
           >谷歌浏览器</a
         >
-      </div>
+      </div> -->
       <div class="companyName">北京凤凰世纪科技有限公司技术支持</div>
     </div>
   </div>
@@ -356,7 +356,7 @@ const buttonText = computed(() => {
   height: 100vh;
   background: url(~@/assets/img/loginbackImg.jpg) no-repeat 100% 100%;
   position: relative;
-
+  background-size: cover;
   .loginContainer {
     width: 450px;
     position: absolute;

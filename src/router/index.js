@@ -563,6 +563,14 @@ const staticRoutes = [
       name: "旧版"
     },
   },
+  {
+    path: "/lightning/r/email/view",
+    name: "EmailDetailView",
+    component: () => import("../views/email/home/index.vue"),
+    meta: {
+      name: "邮件详情"
+    },
+  },
 ];
 
 const router = createRouter({

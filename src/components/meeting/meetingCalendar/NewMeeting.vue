@@ -23,7 +23,7 @@
             <a-tab-pane key="5" tab="会议服务"></a-tab-pane>
           </a-tabs>
         </div>
-        <div class="modalCenter" :style="{ height: height + 'px' }">
+        <div class="modalCenter" :style="{ height: height + 'px !important' }">
           <ConfigForm
             v-show="props.isShow && currentTab == 1"
             ref="configRef"

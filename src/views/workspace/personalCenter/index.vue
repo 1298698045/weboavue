@@ -307,7 +307,7 @@ const getQuery = () => {
       page: 1,
       rows: 100,
       displayColumns:
-        "DisplayOrder,IsFavored,GroupId,Label,LinkUrl,Name,PictureUrl",
+        "DisplayOrder,IsFavored,GroupId,Label,LinkUrl,Name,PictureUrl,Description",
     })
     .then((res) => {
       if (res && res.nodes && res.nodes.length) {

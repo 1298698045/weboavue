@@ -14,7 +14,7 @@
         </div>
       </template>
       <div class="modalContainer AddScheduleModalContainer">
-        <div class="modalCenter" :style="{ height: height + 'px!important' }">
+        <div class="modalCenter" :style="{ height: height + 'px !important' }">
           <div class="tabPanel">
             <div class="barContainer">
               <div class="groupContainer">
@@ -676,6 +676,12 @@
       @cancel="closeUser"
       @ok="refreshPeople"
     ></radio-user>
+    <MultipleUsers
+      v-if="isMultipleUser"
+      :isShow="isMultipleUser"
+      @cancel="isMultipleUser = false"
+      @select="handleSelectUsers"
+    />
   </div>
 </template>
 <script setup>
@@ -703,6 +709,7 @@ import calendar from "dayjs/plugin/calendar";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
+import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 dayjs.extend(calendar);
 dayjs.extend(weekday);
 dayjs.extend(localeData);
@@ -859,8 +866,10 @@ const data = reactive({
   CalendarType: "",
   RecurrenceType: "不重复",
   height2: document.documentElement.clientHeight - 380,
+  isMultipleUser: false,
 });
 const {
+  isMultipleUser,
   height2,
   title,
   height,
@@ -1053,6 +1062,22 @@ const searchlookup = (search, Lktp, fieldApiName) => {
         Name: item.fields.Name.value,
       });
     });
+    if (
+      data[fieldApiName] &&
+      data[fieldApiName].length &&
+      formState[fieldApiName].Id &&
+      formState[fieldApiName].Id.length
+    ) {
+      let arr0 = [];
+      data[fieldApiName].forEach((row) => {
+        if (JSON.stringify(formState[fieldApiName].Id).indexOf(row.ID) != -1) {
+          arr0.push(row);
+        }
+      });
+      data[fieldApiName] = arr0;
+    } else {
+      data[fieldApiName] = [];
+    }
     data[fieldApiName] = data[fieldApiName].concat(arr);
     data[fieldApiName] = uniqu(data[fieldApiName], "ID");
     //console.log(data[fieldApiName])
@@ -1363,26 +1388,38 @@ const handleSubmit = () => {
 };
 const handleOpenLook = (Lktp, fieldApiName) => {
   if (Lktp == "8") {
-    data.isRadioUser = true;
+    //data.isRadioUser = true;
+    data.isMultipleUser = true;
   }
 };
 const closeUser = (e) => {
   data.isRadioUser = false;
+};
+//多选
+const handleSelectUsers = (params) => {
+  console.log("多选用户:", params);
+  let addUsers = params.map((item) => {
+    return item;
+  });
+  addUsers.forEach((item) => {
+    getUserData(item);
+  });
+  data.isMultipleUser = false;
 };
 const getUserData = (params) => {
   //console.log("params:", params);
   data.isRadioUser = false;
   if (params.id) {
     let index = data.OwningUser.findIndex((item) => item.ID == params.id);
+    formState.OwningUser.Id.push(params.id);
     if (index == -1 && params.id) {
       data.OwningUser.push({
         ID: params.id,
         Name: params.name,
       });
-      formState.OwningUser.Id.push(params.id);
     }
     if (index >= 0) {
-      message.error("不能重复添加！");
+      //message.error("不能重复添加！");
     }
   }
 };

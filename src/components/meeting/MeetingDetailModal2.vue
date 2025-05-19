@@ -8,7 +8,7 @@
                 </div>
             </template>
             <div class="modalContainer meetingModalContainer" :style="{ height: height + 'px' }">
-                <MeetingDetailContent :meetingId="props.meetingId" @handleDelete="handleDelete" />
+                <MeetingDetailContent :meetingId="props.meetingId" @handleDelete="handleDelete" @cancel="handleCancel" />
             </div>
             <template #footer>
                 <div>

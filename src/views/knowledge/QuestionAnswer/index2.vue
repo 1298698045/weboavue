@@ -1416,6 +1416,9 @@ const changeRequest = (e) => {
 }
 //预览图片
 const handlePreviewFile = (item, index) => {
+    if (item.fileExtension) {
+        item.fileExtension = item.fileExtension.replace(".", "");
+    }
     data.photoParams = {
         id: item.id,
         item: item,

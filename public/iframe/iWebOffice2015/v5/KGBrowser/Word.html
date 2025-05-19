@@ -7,6 +7,8 @@
     <script src="../js/newpolyfill.js"></script>
     <script src="../kg-chrome-plugin/extension/content_scripts.js"></script>
     <script src="../js/WebOffice.js?v=1227"></script>
+    <link rel='stylesheet' type='text/css' href='css/alert.css' />
+    <script type="text/javascript" src="js/alert.js"></script>
     <style>
         html, body {
             height: 100%;
@@ -101,6 +103,16 @@
 	}
 	
 	function Load(){
+        let TemplateList = window.localStorage.getItem('TemplateList');
+		if (TemplateList) {
+			TemplateList = JSON.parse(TemplateList);
+		}else{
+			TemplateList=[];
+		}
+		$('#dropTemplate').html('<option selected="selected" value="0">选择模板</option>');
+		for(var i=0;i<TemplateList.length;i++){
+			$('#dropTemplate').append('<option value="'+TemplateList[i].id+'">'+TemplateList[i].Name+'</option>');
+		}
 		WebOfficeObj.setObj(document.getElementById('WebOffice'));
 		// mServerUrl = 'http://' + window.location.host + '/api/file/preview/';
 		// mServerUrl='http://demo.kinggrid.com:80/iWebOffice2015/OfficeServer';
@@ -340,16 +352,13 @@
             }
         }
         function CallSave() {
-            $('#OfficeDiv').hide()
-            if (!WebOfficeObj.WebSave()) {
+           if (!WebOfficeObj.WebSave()) {
                 StatusMsg(WebOfficeObj.Status);
-                alert("保存正文失败！");
-                $('#OfficeDiv').show()
+                error("保存正文失败！");
                 return false;
             } else {
-                alert("保存正文成功！");
                 StatusMsg(WebOfficeObj.Status);
-                $('#OfficeDiv').show()
+                success("保存正文成功！");
             }
         }
         /*
@@ -412,10 +421,77 @@
             //} else {
             //    StatusMsg(WebOfficeObj.Status);
             //}
-            $('#OfficeDiv').hide();
-            $('.popup-mask').show();
-            var url = '/jgfiles/samples/OpenAndSave_Template.html?objtypecode=100105&documentid=' + getQueryString('id');
-            $('#iframe').show().attr('src', url);
+            // $('#OfficeDiv').hide();
+            // $('.popup-mask').show();
+            // var url = '/jgfiles/samples/OpenAndSave_Template.html?objtypecode=100105&documentid=' + getQueryString('id');
+            // $('#iframe').show().attr('src', url);
+        }
+        //选择模板
+        function ChangeTemplate(isindex) {
+            var Template = $("#dropTemplate").val();
+            if(Template=='0'){
+                WebOfficeObj.Template = '';
+                LoadDocument();
+            }else{
+                WebOfficeObj.Template = Template;
+                // if (!WebOfficeObj.WebUseTemplate()) {
+                //    StatusMsg(WebOfficeObj.Status);
+                //    error("加载模板失败！");
+                // } else {
+                //    StatusMsg(WebOfficeObj.Status);
+                //    success("加载模板成功！");
+                // }
+                // console.log(WebOfficeObj.Status);
+                var url = window.mHttpUrl+"/api/oa/OfficeServer/jingge";
+                var obj={
+                    OPTION:"LOADTEMPLATE",
+                    TEMPLATE:Template
+                }
+                var d={'JSON':JSON.stringify(obj)};
+                $.ajax({
+                    async: false, 
+                    cache: false, 
+                    dataType: "json",
+                    data: d,
+                    error: function (request, textStatus, errorThrown) {
+                        error("加载模板失败！");
+                    },
+                    success: function (data, textStatus) {
+                        if(data){
+                            success("加载模板成功！");
+                        }
+                    },
+                    type: "post",
+                    url: url
+                });
+            }
+        }
+        //保存模板
+        function SaveTemplate(){
+            let type=WebOfficeObj.FileType?WebOfficeObj.FileType.replace('.',''):'';
+            var url = window.mHttpUrl+"/api/oa/OfficeServer/jingge";
+            var obj={
+                OPTION:"SAVETEMPLATE",
+                templateName:WebOfficeObj.FileName,
+                fileExtension:type
+            }
+            var d={'JSON':JSON.stringify(obj)};
+            $.ajax({
+                async: false, 
+                cache: false, 
+                dataType: "json",
+                data: d,
+                error: function (request, textStatus, errorThrown) {
+                    error("保存模板失败！");
+                },
+                success: function (data, textStatus) {
+                    if(data){
+                        success("保存模板成功！");
+                    }
+                },
+                type: "post",
+                url: url
+            });
         }
         function OnLoad() {
             this.moveTo(0, 10);
@@ -486,8 +562,13 @@
                 </select>
                 <!-- <input type="button" id="RunKGBrowser" class="btn_RunKGBrowser" onclick="javascript: RunKGBrowser()"
                     value="用KGBrowser查看" /> -->
-                <input type="button" id="btnloadtemp" class="btn_shuaxin" onclick="javascript: LoadTemplate(); return false;"
-                    value="应用模板" />
+                 <!-- <input type="button" id="btnloadtemp" class="btn_shuaxin" onclick="javascript: LoadTemplate(); return false;"
+                    value="应用模板" /> -->
+                <select name="dropTemplate" id="dropTemplate" style="height: 23px;position: relative;top:-1px;" onchange="ChangeTemplate(0)">
+                    <option selected="selected" value="0">选择模板</option>
+                    <!-- <option value="Temone.doc">模板套红一</option>
+                    <option value="Temtwo.doc">模板套红二</option> -->
+                </select>
                 <input type="button" class="btn_sjbd" onclick="javascript: WebOpenSignature(); return false;"
                     value="电子签章" />
 

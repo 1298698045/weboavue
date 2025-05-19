@@ -309,6 +309,9 @@ const getQuery = () => {
 };
 //预览附件
 const handlePreviewFile = (item) => {
+  if (item.fileExtension) {
+    item.fileExtension = item.fileExtension.replace(".", "");
+  }
   if (
     item.fileExtension == "jpg" ||
     item.fileExtension == "jpeg" ||

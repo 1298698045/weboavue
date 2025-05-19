@@ -26,15 +26,29 @@
         <a-button class="ml10" @click="openFullSign(1)">大屏签退</a-button> -->
         <template v-for="(item, index) in actionList1" :key="index">
           <template v-if="Array.isArray(item)">
-            <a-button v-for="(row, idx) in item" :key="idx" type="primary" class="ml10"
-              @click="handleClickBtn(row.devNameOrId || row.apiName)">{{ row.label }}</a-button>
+            <a-button
+              v-for="(row, idx) in item"
+              :key="idx"
+              type="primary"
+              class="ml10"
+              @click="handleClickBtn(row.devNameOrId || row.apiName)"
+              >{{ row.label }}</a-button
+            >
           </template>
-          <a-button type="primary" class="ml10" @click="handleClickBtn(item.devNameOrId || item.apiName)" v-else>{{
-            item.label
-            }}</a-button>
+          <a-button
+            type="primary"
+            class="ml10"
+            @click="handleClickBtn(item.devNameOrId || item.apiName)"
+            v-else
+            >{{ item.label }}</a-button
+          >
         </template>
-        <a-dropdown :trigger="['hover']" class="ml10" :getPopupContainer="getPopupContainer"
-          v-if="actionList2 && actionList2.length">
+        <a-dropdown
+          :trigger="['hover']"
+          class="ml10"
+          :getPopupContainer="getPopupContainer"
+          v-if="actionList2 && actionList2.length"
+        >
           <span class="btn-drop">
             <UnorderedListOutlined style="color: #1d2129" />
           </span>
@@ -45,8 +59,13 @@
               <a-menu-item @click="openFullSign1"> 大屏签退 </a-menu-item>
               <a-menu-item @click="printMeetingPeoplelst0"> 打印参会人员 </a-menu-item>
               <a-menu-item @click="printMeetingPeoplelst1"> 打印未参会人员 </a-menu-item> -->
-              <a-menu-item v-for="(item, index) in actionList2" :key="index"
-                @click="handleClickBtn(item.devNameOrId || item.apiName)"> {{ item.label }} </a-menu-item>
+              <a-menu-item
+                v-for="(item, index) in actionList2"
+                :key="index"
+                @click="handleClickBtn(item.devNameOrId || item.apiName)"
+              >
+                {{ item.label }}
+              </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
@@ -55,24 +74,47 @@
     <div class="detail-scroll">
       <div class="detail-bd">
         <div class="tabContainer" v-if="activeKey == 0">
-          <Topics v-if="TopicsShow" :id="data.id" :type="'modal'" :detailData="detailData" />
+          <Topics
+            v-if="TopicsShow"
+            :id="data.id"
+            :type="'modal'"
+            :detailData="detailData"
+          />
         </div>
         <div class="tabContainer" v-if="activeKey == 1">
-          <MeetingSummary :id="data.id" :type="'modal'" :RegardingObjectName="detail.Title" />
+          <MeetingSummary
+            :id="data.id"
+            :type="'modal'"
+            :RegardingObjectName="detail.Title"
+          />
         </div>
         <div class="tabContainer" v-if="activeKey == 2">
-          <Participants ref="PersonnelLst" :load="refreshPeople" :id="data.id" :type="'modal'" />
+          <Participants
+            ref="PersonnelLst"
+            :load="refreshPeople"
+            :id="data.id"
+            :type="'modal'"
+          />
         </div>
         <div class="tabContainer" v-if="activeKey == 3">
           <MeetingResolution :id="data.id" :type="'modal'" />
         </div>
         <div class="tabContainer" v-if="activeKey == 4">
-          <Task :id="data.id" :type="'modal'" :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="'5000'" />
+          <Task
+            :id="data.id"
+            :type="'modal'"
+            :RegardingObjectIdName="detail.Title"
+            :RegardingObjectTypeCode="'5000'"
+          />
         </div>
         <div class="tabContainer containerForm" v-if="activeKey == 5">
           <div class="tableBox">
-            <DetailInfo class="DetailInfo" :id="data.id" :objectTypeCode="objectTypeCode"
-              :entityApiName="sObjectName" />
+            <DetailInfo
+              class="DetailInfo"
+              :id="data.id"
+              :objectTypeCode="objectTypeCode"
+              :entityApiName="sObjectName"
+            />
           </div>
           <!-- <div class="rightAside">
             <div class="panel">
@@ -137,28 +179,59 @@
           </div> -->
         </div>
         <div class="tabContainer" v-if="activeKey == 6">
-          <RelatedAttachment :type="'modal'" :id="data.id" :RegardingObjectIdName="detail.Title"
-            :RegardingObjectTypeCode="'5000'" :entityName="sObjectName" />
+          <RelatedAttachment
+            :type="'modal'"
+            :id="data.id"
+            :RegardingObjectIdName="detail.Title"
+            :RegardingObjectTypeCode="'5000'"
+            :entityName="sObjectName"
+          />
         </div>
         <div class="tabContainer" v-if="activeKey == 7">
-          <Comment :title="'会议讨论'" :id="data.id" :RegardingObjectTypeCode="'5000'" />
+          <Comment
+            :title="'会议讨论'"
+            :id="data.id"
+            :RegardingObjectTypeCode="'5000'"
+          />
         </div>
         <div class="tabContainer" v-if="activeKey == 8">
-          <div class="detailContent">
-          </div>
+          <div class="detailContent"></div>
         </div>
         <div class="tabContainer" v-if="activeKey == 9">
-          <MeetingShare :id="data.id" :type="'modal'" :RegardingObjectIdName="detail.Title"
-            :RegardingObjectTypeCode="'5000'" :title="'会议'" />
+          <MeetingShare
+            :id="data.id"
+            :type="'modal'"
+            :RegardingObjectIdName="detail.Title"
+            :RegardingObjectTypeCode="'5000'"
+            :title="'会议'"
+          />
         </div>
       </div>
     </div>
-    <InfoNotes v-if="isNotes" :isShow="isNotes" :id="props.meetingId" :objectTypeCode="objectTypeCode"
-      @cancel="cancelNotes" />
-    <MeetingRemind v-if="isRemind" :isShow="isRemind" :id="data.id" @cancel="cancelRemind"
-      :RegardingObjectIdName="detail.Title" :RegardingObjectTypeCode="objectTypeCode" :type="'modal'" />
-    <MeetingRelease v-if="isRelease" :isShow="isRelease" :id="data.id" @cancel="isRelease = false"
-      :RegardingObjectIdName="detail.Title" :type="'modal'" />
+    <InfoNotes
+      v-if="isNotes"
+      :isShow="isNotes"
+      :id="props.meetingId"
+      :objectTypeCode="objectTypeCode"
+      @cancel="cancelNotes"
+    />
+    <MeetingRemind
+      v-if="isRemind"
+      :isShow="isRemind"
+      :id="data.id"
+      @cancel="cancelRemind"
+      :RegardingObjectIdName="detail.Title"
+      :RegardingObjectTypeCode="objectTypeCode"
+      :type="'modal'"
+    />
+    <MeetingRelease
+      v-if="isRelease"
+      :isShow="isRelease"
+      :id="data.id"
+      @cancel="isRelease = false"
+      :RegardingObjectIdName="detail.Title"
+      :type="'modal'"
+    />
     <!-- <ChangeStatus
       v-if="isStatus"
       :isShow="isStatus"
@@ -166,13 +239,47 @@
       :objectTypeCode="objectTypeCode"
       @cancel="cancelStatus"
     /> -->
-    <InfoAddClass v-if="isAddClass" :isShow="isAddClass" :id="id" :objectTypeCode="objectTypeCode"
-      @cancel="cancelAddClass" />
-    <RadioUser v-if="isUserModal" :isShow="isUserModal" @cancel="cancelUser" @selectVal="getUserData" />
-    <NewMeeting :isShow="isNewMeeting" :meetingId="props.meetingId" v-if="isNewMeeting" @cancel="cancelNewMeeting"
-      @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
-    <DeleteModal v-if="isDelete" :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk"
-      :sObjectName="sObjectName" :recordId="props.meetingId" :objTypeCode="objectTypeCode" :external="external" />
+    <InfoAddClass
+      v-if="isAddClass"
+      :isShow="isAddClass"
+      :id="id"
+      :objectTypeCode="objectTypeCode"
+      @cancel="cancelAddClass"
+    />
+    <RadioUser
+      v-if="isUserModal"
+      :isShow="isUserModal"
+      @cancel="cancelUser"
+      @selectVal="getUserData"
+    />
+    <NewMeeting
+      :isShow="isNewMeeting"
+      :meetingId="props.meetingId"
+      v-if="isNewMeeting"
+      @cancel="cancelNewMeeting"
+      @selectVal="handleNewMeetingVal"
+      :paramsTime="paramsTime"
+    />
+    <DeleteModal
+      v-if="isDelete"
+      :isShow="isDelete"
+      :desc="deleteDesc"
+      @cancel="cancelDelete"
+      @ok="deleteOk"
+      :sObjectName="sObjectName"
+      :recordId="props.meetingId"
+      :objTypeCode="objectTypeCode"
+      :external="external"
+    />
+    <CommonConfirm
+      v-if="isConfirm"
+      :isShow="isConfirm"
+      :text="confirmText"
+      :title="confirmTitle"
+      @cancel="isConfirm = false"
+      @ok="confirmOk"
+      :id="props.meetingId"
+    />
   </div>
 </template>
 <script setup>
@@ -182,8 +289,12 @@ import {
   reactive,
   toRefs,
   onMounted,
-  getCurrentInstance, onUpdated, defineProps, defineExpose,
-  defineEmits, provide,
+  getCurrentInstance,
+  onUpdated,
+  defineProps,
+  defineExpose,
+  defineEmits,
+  provide,
   toRaw,
 } from "vue";
 import {
@@ -205,9 +316,9 @@ import RadioUser from "@/components/commonModal/RadioUser.vue";
 import DeleteModal from "@/components/listView/Delete.vue";
 import Interface from "@/utils/Interface.js";
 
-//基本信息
+// 基本信息
 import DetailInfo from "@/components/detail/DetailInfo.vue";
-//会议纪要
+// 会议纪要
 import MeetingSummary from "@/components/meeting/MeetingSummary.vue";
 // 参会人员
 import Participants from "@/components/meeting/Participants2.vue";
@@ -221,25 +332,29 @@ import Service from "@/components/meeting/Service.vue";
 import MeetingResolution from "@/components/meeting/MeetingResolution2.vue";
 // 相关讨论
 import Comment from "@/components/detail/Comment2.vue";
-//会议共享
+// 会议共享
 import MeetingShare from "@/components/share/ShareList.vue";
+// 新建、编辑会议
 import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
-//会议提醒
+// 会议提醒
 import MeetingRemind from "@/components/meeting/MeetingRemind.vue";
-//会议发布
+// 会议发布
 import MeetingRelease from "@/components/meeting/MeetingRelease.vue";
-//附件
+// 附件
 import RelatedAttachment from "@/components/commonTab/RelatedAttachment.vue";
+// 确认弹窗
+import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
+
 const { proxy } = getCurrentInstance();
 
 const route = useRoute();
 const router = useRouter();
-const emit = defineEmits(['handleDelete']);
+const emit = defineEmits(["handleDelete", "cancel"]);
 const props = defineProps({
   meetingId: {
     type: String,
-    default: ""
-  }
+    default: "",
+  },
 });
 provide("meetingId", props.meetingId);
 const PersonnelLst = ref();
@@ -264,7 +379,7 @@ const data = reactive({
       label: "详细信息",
     },
     {
-      label: '附件',
+      label: "附件",
     },
     {
       label: "会议讨论",
@@ -278,8 +393,8 @@ const data = reactive({
   ],
   activeKey: 0,
   id: route.query.id,
-  objectTypeCode: '5000',
-  sObjectName: 'MeetingRec',
+  objectTypeCode: "5000",
+  sObjectName: "MeetingRec",
   detail: {},
   isNotes: false,
   isStatus: false,
@@ -288,22 +403,28 @@ const data = reactive({
   isUserModal: false,
   fileCategorys: [],
   files: [],
-  content: '',
+  content: "",
   isDelete: false,
-  deleteDesc: '确定要删除吗？',
+  deleteDesc: "确定要删除吗？",
   external: false,
   paramsTime: {
     date: "",
-    time: ""
+    time: "",
   },
   isNewMeeting: false,
   actionList1: [],
   actionList2: [],
   detailData: {},
   TopicsShow: false,
-  isRelease: false
+  isRelease: false,
+  isConfirm: false,
+  confirmText: "",
+  confirmTitle: "",
 });
 const {
+  isConfirm,
+  confirmText,
+  confirmTitle,
   tabs,
   activeKey,
   id,
@@ -327,7 +448,7 @@ const {
   actionList1,
   actionList2,
   TopicsShow,
-  isRelease
+  isRelease,
 } = toRefs(data);
 const changeTabs = (e) => {
   data.activeKey = e;
@@ -349,22 +470,30 @@ const getDetail = () => {
   //     data.detail = res.actions[0].returnValue.record;
   //   });
   let d = {
-    actions: [{
-      id: "4270;a",
-      descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordId: props.meetingId,
-        apiName: data.sObjectName,
-        objTypeCode: data.objectTypeCode
-      }
-    }]
+    actions: [
+      {
+        id: "4270;a",
+        descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordId: props.meetingId,
+          apiName: data.sObjectName,
+          objTypeCode: data.objectTypeCode,
+        },
+      },
+    ],
   };
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(Interface.detail, obj).then(res => {
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.detail, obj).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.fields
+    ) {
       let fields = res.actions[0].returnValue.fields;
       data.detailData = fields;
       data.TopicsShow = true;
@@ -373,7 +502,7 @@ const getDetail = () => {
         data.deleteDesc = "确定要删除 " + fields.Name.value + " 吗";
       }
     }
-  })
+  });
 };
 
 // const getActions = () => {
@@ -390,24 +519,32 @@ const getDetail = () => {
 // }
 const getActions = () => {
   let obj = {
-    actions: [{
-      id: "13285;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordId: props.meetingId,
-        entityApiName: data.sObjectName,
-        sections: ["PAGE"]
-      }
-    }]
-  }
+    actions: [
+      {
+        id: "13285;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordId: props.meetingId,
+          entityApiName: data.sObjectName,
+          sections: ["PAGE"],
+        },
+      },
+    ],
+  };
   let d = {
-    message: JSON.stringify(obj)
-  }
+    message: JSON.stringify(obj),
+  };
   data.actionList1 = [];
   data.actionList2 = [];
-  proxy.$post(Interface.detailObj.actions, d).then(res => {
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.actions) {
+  proxy.$post(Interface.detailObj.actions, d).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.actions
+    ) {
       let actionList = res.actions[0].returnValue.actions;
       for (var i = 0; i < actionList.length; i++) {
         let item = actionList[i];
@@ -422,17 +559,16 @@ const getActions = () => {
         // }
         if (i <= 2) {
           data.actionList1.push(item);
-        }
-        else {
+        } else {
           data.actionList2.push(item);
         }
       }
       //let temp1 = [{ devNameOrId: 'handleEdit', label: '编辑' }, { devNameOrId: 'handleRelease', label: '发布' }, { devNameOrId: 'handleRemind', label: '提醒' }, { devNameOrId: 'handleDelete', label: '删除' }];
-      console.log('actionList1:', data.actionList1);
-      console.log('actionList2:', data.actionList2);
+      console.log("actionList1:", data.actionList1);
+      console.log("actionList2:", data.actionList2);
     }
-  })
-}
+  });
+};
 
 const getFileClass = () => {
   proxy
@@ -473,23 +609,23 @@ const changeStatus = () => {
 };
 const handleEdit = () => {
   data.isNewMeeting = true;
-}
+};
 const cancelNewMeeting = (e) => {
   data.isNewMeeting = false;
-}
+};
 const handleNewMeetingVal = (e) => {
   data.isNewMeeting = false;
   data.activeKey = 7;
   setTimeout(function () {
     data.activeKey = 0;
-  }, 10)
-}
+  }, 10);
+};
 const handleDelete = (e) => {
   //data.isDelete = true;
-  emit('handleDelete', { Id: props.meetingId });
-}
+  emit("handleDelete", { Id: props.meetingId });
+};
 const deleteOk = (e) => {
-  emit('handleDelete', { Id: props.meetingId });
+  emit("handleDelete", { Id: props.meetingId });
 };
 
 const cancelDelete = (e) => {
@@ -498,7 +634,7 @@ const cancelDelete = (e) => {
 //发布
 const handleRelease = () => {
   data.isRelease = true;
-}
+};
 
 // 预览
 const handlePreview = () => {
@@ -534,101 +670,159 @@ const getUserData = (params) => {
 
 const openFullSign = (num) => {
   //window.open('http://192.168.1.200:82/apps/meetings/dynamicSign.aspx?id=8f9c33e1-52a4-4dcd-9ade-9e95484a6f1a');
-  let link = '/Meeting/checkin/screen';
-  let name = 'CheckinScreen';
+  let link = "/Meeting/checkin/screen";
+  let name = "CheckinScreen";
   if (num * 1 == 1) {
-    link = '/Meeting/checkout/screen';
-    name = 'CheckoutScreen';
+    link = "/Meeting/checkout/screen";
+    name = "CheckoutScreen";
   }
   let url = router.resolve({
     path: link,
     name: name,
     query: {
       id: props.meetingId,
-      exitQcode: num
+      exitQcode: num,
     },
   });
   window.open(url.href);
-}
+};
 
 const printMeetingPeoplelst = (type) => {
   let url = router.resolve({
-    path: '/printMeetingPeoplelst',
+    path: "/printMeetingPeoplelst",
     name: "PrintMeetingPeoplelst",
     query: {
       id: props.meetingId,
-      type: type
+      type: type,
     },
   });
   window.open(url.href);
-}
+};
 
 const refreshPeople = (e) => {
   if (PersonnelLst.value && PersonnelLst.value.getQuery) {
     PersonnelLst.value.getQuery();
   }
-}
+};
 const handleClickBtn = (devNameOrId) => {
-  if (typeof (eval(devNameOrId)) == "function") {
+  if (typeof eval(devNameOrId) == "function") {
     var result = eval(devNameOrId + "();");
   } else {
-
   }
-}
+};
 const getPopupContainer = (triggerNode) => {
   return triggerNode.parentNode || document.body;
-}
+};
 //编辑
-const Edit =()=>{
+const Edit = () => {
   handleEdit();
-}
+};
 window.Edit = Edit;
 //删除
-const Delete =()=>{
+const Delete = () => {
   handleDelete();
-}
+};
 window.Delete = Delete;
 //发布
-const MeetingRecRelease =()=>{
+const MeetingRecRelease = () => {
   handleRelease();
-}
+};
 window.MeetingRecRelease = MeetingRecRelease;
 //提醒
-const MeetingRecRemind =()=>{
+const MeetingRecRemind = () => {
   handleRemind();
-}
+};
 window.MeetingRecRemind = MeetingRecRemind;
 //备注
-const MeetingRecNotes =()=>{
+const MeetingRecNotes = () => {
   handleNotes();
-}
+};
 window.MeetingRecNotes = MeetingRecNotes;
 //大屏签到
-const MeetingRecFullCheckIn =()=>{
+const MeetingRecFullCheckIn = () => {
   openFullSign(0);
-}
+};
 window.MeetingRecFullCheckIn = MeetingRecFullCheckIn;
 //大屏签退
-const MeetingRecFullCheckOut =()=>{
+const MeetingRecFullCheckOut = () => {
   openFullSign(1);
-}
+};
 window.MeetingRecFullCheckOut = MeetingRecFullCheckOut;
 //打印参会人员
-const MeetingRecPrintAttendPeople =()=>{
+const MeetingRecPrintAttendPeople = () => {
   printMeetingPeoplelst(0);
-}
+};
 window.MeetingRecPrintAttendPeople = MeetingRecPrintAttendPeople;
 //打印未参会人员
-const MeetingRecPrintNotAttendPeople =()=>{
+const MeetingRecPrintNotAttendPeople = () => {
   printMeetingPeoplelst(1);
-}
+};
 window.MeetingRecPrintNotAttendPeople = MeetingRecPrintNotAttendPeople;
-
+//取消会议
+const CancelMeeting = () => {
+  data.confirmTitle = "取消会议";
+  data.confirmText = "确定要取消会议吗？";
+  data.isConfirm = true;
+};
+window.CancelMeeting = CancelMeeting;
+//确认回调
+const confirmOk = (id) => {
+  data.isConfirm = false;
+  if (data.confirmTitle == "取消会议") {
+    return
+    let obj = {
+      actions: [
+        {
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            recordId: id,
+            apiName: "MeetingRec",
+            objTypeCode: 5000,
+          },
+        },
+      ],
+    };
+    let d = {
+      message: JSON.stringify(obj),
+    };
+    proxy.$post(Interface.delete, d).then((res) => {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].state == "SUCCESS"
+      ) {
+        message.success("取消成功");
+        setTimeout(function () {
+          // let reUrl = router.resolve({
+          //   path: "/lightning/o/Content/home",
+          //   query: {},
+          // });
+          // window.open(reUrl.href);
+          emit("cancel", false);
+        }, 1000);
+      } else {
+        if (
+          res &&
+          res.actions &&
+          res.actions[0] &&
+          res.actions[0].errorMessage
+        ) {
+          message.success(res.actions[0].errorMessage);
+        } else {
+          message.error("删除失败");
+        }
+      }
+    });
+  }
+};
 onMounted(() => {
   data.id = props.meetingId;
   getDetail();
   getActions();
-})
+});
 </script>
 <style lang="less" scoped>
 .meetingDetailWrap {
@@ -638,7 +832,7 @@ onMounted(() => {
   overflow: auto;
 
   .detail-header {
-    width: calc(~'100% - 45px');
+    width: calc(~"100% - 45px");
     height: 71px;
     position: fixed;
     // top: 74.5px !important;
@@ -686,7 +880,6 @@ onMounted(() => {
         margin-right: 24px !important;
       }
     }
-
   }
 
   .detail-scroll {
@@ -903,26 +1096,38 @@ onMounted(() => {
   background: #fff;
 }
 
-:where(.css-dev-only-do-not-override-kqecok).ant-collapse>.ant-collapse-item {
+:where(.css-dev-only-do-not-override-kqecok).ant-collapse > .ant-collapse-item {
   border-bottom: none !important;
   background: #f3f2f2;
   margin-bottom: 8px;
 }
 
-:deep :where(.css-dev-only-do-not-override-kqecok).ant-collapse .ant-collapse-content {
+:deep
+  :where(.css-dev-only-do-not-override-kqecok).ant-collapse
+  .ant-collapse-content {
   border-top: none !important;
 }
 
-:deep :where(.css-dev-only-do-not-override-kqecok).ant-collapse>.ant-collapse-item>.ant-collapse-header {
+:deep
+  :where(.css-dev-only-do-not-override-kqecok).ant-collapse
+  > .ant-collapse-item
+  > .ant-collapse-header {
   padding: 6px 16px !important;
 }
 
-:deep :where(.css-dev-only-do-not-override-kqecok).ant-collapse .ant-collapse-content>.ant-collapse-content-box {
+:deep
+  :where(.css-dev-only-do-not-override-kqecok).ant-collapse
+  .ant-collapse-content
+  > .ant-collapse-content-box {
   padding: 0 !important;
 }
 
-:deep :where(.css-dev-only-do-not-override-kqecok).ant-collapse>.ant-collapse-item:last-child,
-:where(.css-dev-only-do-not-override-kqecok).ant-collapse>.ant-collapse-item:last-child>.ant-collapse-header {
+:deep
+  :where(.css-dev-only-do-not-override-kqecok).ant-collapse
+  > .ant-collapse-item:last-child,
+:where(.css-dev-only-do-not-override-kqecok).ant-collapse
+  > .ant-collapse-item:last-child
+  > .ant-collapse-header {
   border-radius: 0 !important;
 }
 

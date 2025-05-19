@@ -32,12 +32,41 @@ import { message } from "ant-design-vue";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
 import { useRouter, useRoute } from "vue-router";
+import { girdFormatterValue } from "@/utils/common.js";
 const router = useRouter();
 const route = useRoute();
 const data = reactive({
   iframeUrl: "",
 });
 const { iframeUrl } = toRefs(data);
+const getTemplete = () => {
+  proxy
+    .$post(Interface.list2, {
+      //filterId: "",
+      objectTypeCode: "100112",
+      entityName: "DocumentTemplate",
+      search: "",
+      page: 1,
+      rows: 100,
+      displayColumns:"Name",
+    })
+    .then((res) => {
+      if (res && res.nodes && res.nodes.length) {
+        var list = [];
+        for (var i = 0; i < res.nodes.length; i++) {
+          var item = res.nodes[i];
+          for (var cell in item) {
+            if (cell != "id" && cell != "viewUrl") {
+              item[cell] = girdFormatterValue(cell, item);
+            }
+          }
+          list.push(item);
+        }
+        list = list ? JSON.stringify(list) : "";
+        window.localStorage.setItem("TemplateList", list);
+      }
+    });
+};
 const getFileInfo = () => {
   let d = {
     RecordID: route.query.id,
@@ -81,6 +110,7 @@ onMounted(() => {
   //   (route.query.FileName||'') +
   //   "&UserName=" +
   //   (route.query.UserName||'');
+  getTemplete();
   getFileInfo();
 });
 </script>

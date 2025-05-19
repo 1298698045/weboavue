@@ -357,6 +357,9 @@
     //   }
     // };
     // xhr.send();
+    if (item.fileExtension) {
+      item.fileExtension = item.fileExtension.replace(".", "");
+    }
     let url = '';
     if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
       // url = item.viewUrl;

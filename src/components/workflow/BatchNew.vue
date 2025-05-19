@@ -2,7 +2,7 @@
   <div>
     <a-modal
       v-model:open="props.isShow"
-      width="900px"
+      width="1000px"
       :style="setTop"
       :maskClosable="false"
       @cancel="handleCancel"
@@ -14,8 +14,7 @@
       <div class="modalContainer">
         <div class="modalCenter" style="height: 580px !important">
           <a-form ref="formRef" class="CreateProcess" :model="formState">
-            <div class="form-tip">请输入流程事务标题，建立事务</div>
-            <a-form-item label="流程：" name="ProcessName">
+            <a-form-item label="流程名称：" name="ProcessName">
               <div class="ProcessName">{{ formState.ProcessName || "" }}</div>
             </a-form-item>
             <a-form-item
@@ -30,8 +29,8 @@
                   v-model:selected-keys="selectedKeys"
                   :data-source="listData3"
                   :list-style="{
-                    width: '340px',
-                    height: '300px',
+                    width: '395px',
+                    height: '340px',
                   }"
                   :locale="{
                     itemUnit: '',
@@ -476,7 +475,7 @@ const getPeople = () => {
             name: item.FullName,
             title:
               item.FullName +
-              (item.UserName ? "/" + item.UserName : "") +
+              //(item.UserName ? "/" + item.UserName : "") +
               (item.EmployeeId ? "/" + item.EmployeeId : "") +
               (item.BusinessUnitId ? "/" + item.BusinessUnitId : "") +
               (item.OrganizationId ? "/" + item.OrganizationId : ""),
@@ -537,6 +536,11 @@ onMounted(() => {
     flex-direction: column;
     margin-left: 10px;
     gap: 5px;
+  }
+  .selectBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

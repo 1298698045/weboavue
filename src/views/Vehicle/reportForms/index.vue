@@ -1,5 +1,5 @@
 <template>
-  <div class="wrappper reportFormWrap">
+  <div class="wrappper InstaceDashboardWrap">
     <div class="headerBar">
       <div class="headerLeft">
         <div class="icon-circle-base">
@@ -25,24 +25,6 @@
       </div>
     </div>
     <div class="center">
-      <!-- <div class="panel panel-top">
-                    <div class="panel-head">
-                        <div class="panel-head-top-left">
-                            <div class="tabWrap">
-                                <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
-                                    <a-tab-pane v-for="(item, index) in tabs" :key="index">
-                                        <template #tab>
-                                            <span>{{ item.label }}</span>
-                                        </template>
-</a-tab-pane>
-</a-tabs>
-</div>
-</div>
-<div class="panel-head-top-right">
-    选择年份：&nbsp;&nbsp;<a-date-picker picker="year" @change="changeYear" :format="yearFormat" v-model:value="year" />
-</div>
-</div>
-</div> -->
       <div class="panel-all">
         <div class="panel panel-abstract">
           <div class="panel-bd">
@@ -57,17 +39,10 @@
                     name="ContractNumber"
                     style="color: #000"
                   >
-                    {{ countObj.reservTotal || 0 }}
+                    {{ countObj.vehicleCount || 0 }}
                   </div>
                   <div class="statistics-name">车辆总数</div>
                 </div>
-                <!-- <div>
-                                        <div class="countItemTitle">
-                                        会议室预约次数
-                                        </div>
-                                        <p>总预约次数：{{countObj.reservTotal}}</p>
-                                        <p>我的预约次数：{{countObj.reservMy}}</p>
-                                    </div> -->
               </li>
               <li class="countItem">
                 <div class="statistics-left">
@@ -79,9 +54,9 @@
                     name="ContractNumber"
                     style="color: #000"
                   >
-                    {{ countObj.reservMy || 0 }}
+                    {{ countObj.startCount || 0 }}
                   </div>
-                  <div class="statistics-name">预约车次</div>
+                  <div class="statistics-name">预约次数</div>
                 </div>
               </li>
               <li class="countItem">
@@ -94,26 +69,29 @@
                     name="ContractNumber"
                     style="color: #000"
                   >
-                    {{ countObj.resourceTotal || 0 }}
+                    {{ countObj.peopleCount || 0 }}
                   </div>
                   <div class="statistics-name">司机数量</div>
                 </div>
-                <!-- <div>
-                                        <div class="countItemTitle">
-                                            会议室数量
-                                        </div>
-                                        <p>会议室数量：{{countObj.resourceTotal}}</p>
-                                    </div> -->
               </li>
             </ul>
           </div>
         </div>
         <div class="panel">
           <div class="panel-head">
-            <div class="panel-title">车辆预约次数统计折线图：</div>
+            <div class="panel-title">统计图表：</div>
             <div class="panel-btn"></div>
           </div>
           <div class="room">
+            <div class="tabWrap panel-bd-tabWrap">
+              <a-tabs v-model:activeKey="activeKey" @change="changeTabs">
+                <a-tab-pane v-for="(item, index) in tabs" :key="index">
+                  <template #tab>
+                    <span>{{ item.label }}</span>
+                  </template>
+                </a-tab-pane>
+              </a-tabs>
+            </div>
             <div class="roomBody">
               <div
                 id="canvas"
@@ -125,7 +103,7 @@
         </div>
         <div class="panel">
           <div class="panel-head">
-            <div class="panel-title">车辆预约次数统计列表：</div>
+            <div class="panel-title">明细列表：</div>
             <div class="panel-btn">
               <!-- <a-button :icon="h(UndoOutlined)"></a-button> -->
               <a-button
@@ -157,7 +135,6 @@
                 </a-tab-pane>
               </a-tabs>
             </div>
-
             <div class="roomTable">
               <a-table
                 :columns="columns"
@@ -167,20 +144,20 @@
                 :pagination="false"
                 @change="handleTableChange"
               >
-                <template #bodyCell="{ column, index }">
+                <template #bodyCell="{ column, index, record }">
                   <template v-if="column.key === 'index'">
                     <div>
                       {{ index + 1 }}
                     </div>
                   </template>
-                  <!-- <template v-else>
-                                        <div>
-                                            {{ record[column.key] }}
-                                        </div>
-                                    </template> -->
+                  <template v-else>
+                    <div>
+                      {{ record[column.key] }}
+                    </div>
+                  </template>
                 </template>
               </a-table>
-              <!-- <div class="pageWrap" v-if="activeKey == 1">
+              <div class="pageWrap">
                 <a-pagination
                   show-size-changer
                   show-quick-jumper
@@ -192,7 +169,7 @@
                   :total="pagination.total"
                   :show-total="(total) => `共 ${total} 条`"
                 />
-              </div> -->
+              </div>
             </div>
           </div>
         </div>
@@ -215,7 +192,6 @@ import {
   defineExpose,
   defineEmits,
   h,
-  nextTick,
 } from "vue";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
@@ -223,8 +199,10 @@ import { girdFormatterValue } from "@/utils/common.js";
 import {
   SearchOutlined,
   UndoOutlined,
+  ClockCircleOutlined,
   InfoCircleOutlined,
-  FundProjectionScreenOutlined,
+  CheckCircleOutlined,
+  ExclamationCircleOutlined,
   UserOutlined,
   PieChartOutlined,
   CarOutlined,
@@ -313,242 +291,56 @@ const {
 } = toRefs(data);
 var columns1 = [
   {
+    title: "序号",
+    dataIndex: "index",
+    key: "index",
+    width: 80,
+  },
+  {
     title: "车辆名称",
-    dataIndex: "name",
-    key: "name",
-    width: 200,
+    dataIndex: "Name",
+    key: "Name",
   },
   {
-    title: "一月",
-    dataIndex: "january",
-    key: "january",
-    width: 80,
-  },
-  {
-    title: "二月",
-    dataIndex: "february",
-    key: "february",
-    width: 80,
-  },
-  {
-    title: "三月",
-    dataIndex: "march",
-    key: "march",
-    width: 80,
-  },
-  {
-    title: "四月",
-    dataIndex: "april",
-    key: "april",
-    width: 80,
-  },
-  {
-    title: "五月",
-    dataIndex: "may",
-    key: "may",
-    width: 80,
-  },
-  {
-    title: "六月",
-    dataIndex: "june",
-    key: "june",
-    width: 80,
-  },
-  {
-    title: "七月",
-    dataIndex: "july",
-    key: "july",
-    width: 80,
-  },
-  {
-    title: "八月",
-    dataIndex: "august",
-    key: "august",
-    width: 80,
-  },
-  {
-    title: "九月",
-    dataIndex: "september",
-    key: "september",
-    width: 80,
-  },
-  {
-    title: "十月",
-    dataIndex: "october",
-    key: "october",
-    width: 80,
-  },
-  {
-    title: "十一月",
-    dataIndex: "november",
-    key: "november",
-    width: 80,
-  },
-  {
-    title: "十二月",
-    dataIndex: "december",
-    key: "december",
-    width: 80,
+    title: "预约次数",
+    dataIndex: "StartCount",
+    key: "StartCount",
   },
 ];
 var columns2 = [
   {
+    title: "序号",
+    dataIndex: "index",
+    key: "index",
+    width: 80,
+  },
+  {
     title: "用车部门",
-    dataIndex: "name",
-    key: "name",
-    width: 200,
+    dataIndex: "Name",
+    key: "Name",
   },
   {
-    title: "一月",
-    dataIndex: "january",
-    key: "january",
-    width: 80,
-  },
-  {
-    title: "二月",
-    dataIndex: "february",
-    key: "february",
-    width: 80,
-  },
-  {
-    title: "三月",
-    dataIndex: "march",
-    key: "march",
-    width: 80,
-  },
-  {
-    title: "四月",
-    dataIndex: "april",
-    key: "april",
-    width: 80,
-  },
-  {
-    title: "五月",
-    dataIndex: "may",
-    key: "may",
-    width: 80,
-  },
-  {
-    title: "六月",
-    dataIndex: "june",
-    key: "june",
-    width: 80,
-  },
-  {
-    title: "七月",
-    dataIndex: "july",
-    key: "july",
-    width: 80,
-  },
-  {
-    title: "八月",
-    dataIndex: "august",
-    key: "august",
-    width: 80,
-  },
-  {
-    title: "九月",
-    dataIndex: "september",
-    key: "september",
-    width: 80,
-  },
-  {
-    title: "十月",
-    dataIndex: "october",
-    key: "october",
-    width: 80,
-  },
-  {
-    title: "十一月",
-    dataIndex: "november",
-    key: "november",
-    width: 80,
-  },
-  {
-    title: "十二月",
-    dataIndex: "december",
-    key: "december",
-    width: 80,
+    title: "预约次数",
+    dataIndex: "StartCount",
+    key: "StartCount",
   },
 ];
 var columns3 = [
   {
+    title: "序号",
+    dataIndex: "index",
+    key: "index",
+    width: 80,
+  },
+  {
     title: "司机姓名",
-    dataIndex: "name",
-    key: "name",
-    width: 200,
+    dataIndex: "Name",
+    key: "Name",
   },
   {
-    title: "一月",
-    dataIndex: "january",
-    key: "january",
-    width: 80,
-  },
-  {
-    title: "二月",
-    dataIndex: "february",
-    key: "february",
-    width: 80,
-  },
-  {
-    title: "三月",
-    dataIndex: "march",
-    key: "march",
-    width: 80,
-  },
-  {
-    title: "四月",
-    dataIndex: "april",
-    key: "april",
-    width: 80,
-  },
-  {
-    title: "五月",
-    dataIndex: "may",
-    key: "may",
-    width: 80,
-  },
-  {
-    title: "六月",
-    dataIndex: "june",
-    key: "june",
-    width: 80,
-  },
-  {
-    title: "七月",
-    dataIndex: "july",
-    key: "july",
-    width: 80,
-  },
-  {
-    title: "八月",
-    dataIndex: "august",
-    key: "august",
-    width: 80,
-  },
-  {
-    title: "九月",
-    dataIndex: "september",
-    key: "september",
-    width: 80,
-  },
-  {
-    title: "十月",
-    dataIndex: "october",
-    key: "october",
-    width: 80,
-  },
-  {
-    title: "十一月",
-    dataIndex: "november",
-    key: "november",
-    width: 80,
-  },
-  {
-    title: "十二月",
-    dataIndex: "december",
-    key: "december",
-    width: 80,
+    title: "预约次数",
+    dataIndex: "StartCount",
+    key: "StartCount",
   },
 ];
 const changeTabs = (e, type) => {
@@ -558,7 +350,11 @@ const changeTabs = (e, type) => {
   if (type != "pagechange") {
     data.pagination.current = 1;
   }
-  getStati(type);
+  if (type != "search") {
+    getStati();
+  } else {
+    getQuery();
+  }
   setTimeout(function () {
     data.loading = false;
   }, 500);
@@ -592,20 +388,25 @@ const getAbstract = () => {
   let obj = {
     message: JSON.stringify(d),
   };
-  proxy.$post(Interface.meetingRpt.abstract, obj).then((res) => {
+  proxy.$post(Interface.workflow.abstract, obj).then((res) => {
     if (
       res &&
       res.actions &&
       res.actions[0] &&
       res.actions[0].state == "SUCCESS"
     ) {
-      data.countObj = res.actions[0].returnValue;
+      //data.countObj = res.actions[0].returnValue;
+      data.countObj = {
+        vehicleCount: 1,
+        startCount: 39,
+        peopleCount: 5,
+      };
     } else {
       message.error("获取摘要失败！");
     }
   });
 };
-const getStati = (type) => {
+const getStati = () => {
   let d = {
     actions: [
       {
@@ -621,7 +422,7 @@ const getStati = (type) => {
   let obj = {
     message: JSON.stringify(d),
   };
-  proxy.$post(Interface.meetingRpt.stati, obj).then((res) => {
+  proxy.$post(Interface.workflow.stati, obj).then((res) => {
     if (
       res &&
       res.actions &&
@@ -630,50 +431,52 @@ const getStati = (type) => {
     ) {
       if (data.activeKey * 1 == 0) {
         data.columns = columns1;
-        getChartData();
       } else if (data.activeKey * 1 == 1) {
         data.columns = columns2;
-        if (type == "yearchange") {
-          getChartData();
-        }
-        getQuery();
       } else if (data.activeKey * 1 == 2) {
         data.columns = columns3;
-        if (type == "yearchange") {
-          getChartData();
-        }
-        getQuery();
       }
       getAbstract();
+      getQuery();
     } else {
       message.error("统计失败！");
     }
   });
 };
 const getQuery = () => {
-  let filterQuery = "\nYearMonth\teq\t" + data.year.format("YYYY");
+  let filterQuery =
+    "\nObjectTypeCode\teq\t20503\nYearNumber\teq\t" + data.year.format("YYYY");
+  if (data.activeKey * 1 == 1) {
+    filterQuery =
+      "\nObjectTypeCode\teq\t10\nYearNumber\teq\t" + data.year.format("YYYY");
+  }
+  if (data.activeKey * 1 == 2) {
+    filterQuery =
+      "\nObjectTypeCode\teq\t8\nYearNumber\teq\t" + data.year.format("YYYY");
+  }
+  filterQuery+='\nName\tneq\tnull';
   proxy
     .$post(Interface.list2, {
       filterId: "",
-      objectTypeCode: "20617",
-      entityName: "MeetingPeopleReport",
+      objectTypeCode: "20618",
+      entityName: "WFHandleReport",
       filterQuery: filterQuery,
       search: data.searchVal || "",
       page: data.pagination.current,
       rows: data.pagination.pageSize,
       // sort: '',
       // order: 'asc',
-      displayColumns: "PeopleId,JoinQty,AbsentQty,LateQty,QuitQty,LeaveQty",
+      displayColumns: "Name,StartCount",
     })
     .then((res) => {
       var list = [];
-      data.total = res.pageInfo ? res.pageInfo.total : 0;
-      data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
+      data.total = res && res.pageInfo ? res.pageInfo.total : 0;
+      data.pagination.total = res && res.pageInfo ? res.pageInfo.total : 0;
       if (res && res.nodes && res.nodes.length) {
         for (var i = 0; i < res.nodes.length; i++) {
           var item = res.nodes[i];
           for (var cell in item) {
-            if (cell != "id" && cell != "nameField") {
+            if (cell != "id" && cell != "viewUrl") {
               item[cell] = girdFormatterValue(cell, item);
             }
             if (cell == "CreatedOn") {
@@ -684,100 +487,41 @@ const getQuery = () => {
           }
           list.push(item);
         }
+      } else {
+        if (data.activeKey * 1 == 0) {
+          list = [{ id: 1, Name: "卡罗拉", StartCount: "36" }];
+        }
       }
       data.dataList = list;
+      getChartData();
     });
 };
 const getChartData = () => {
-  data.xData = [
-    "一月",
-    "二月",
-    "三月",
-    "四月",
-    "五月",
-    "六月",
-    "七月",
-    "八月",
-    "九月",
-    "十月",
-    "十一月",
-    "十二月",
+  data.xData = [];
+  data.lineData = ["预约次数"];
+  data.seriesData = [
+    {
+      type: "bar",
+      name: "预约次数",
+      barWidth: 30,
+      color: "rgb(16, 141, 239)",
+      label: {
+        show: true,
+        //rotate: 60,
+        position: "top",
+      },
+      data: [],
+    },
   ];
-  data.lineData = [];
-  data.seriesData = [];
-  proxy
-    .$get(Interface.meetingRpt.roomstat, {
-      year: data.year.format("YYYY"),
-    })
-    .then((res) => {
-      if (
-        res &&
-        res.actions &&
-        res.actions[0] &&
-        res.actions[0].returnValue &&
-        res.actions[0].returnValue.length
-      ) {
-        let resultdata = res.actions[0].returnValue;
-        let statdata = [];
-        resultdata.map((item) => {
-          if (item && item.name && item.name.indexOf("SU") != -1) {
-            statdata.push(item);
-          }
-        });
-        console.log(statdata, 111);
-        data.lineData = statdata.map((item) => {
-          return item.name;
-        });
-        data.seriesData = statdata.map((item) => {
-          item.type = "line";
-          item.label = {
-            show: true,
-            //rotate: 60,
-            position: "top",
-          };
-          item.data = [
-            item.january,
-            item.february,
-            item.march,
-            item.april,
-            item.may,
-            item.june,
-            item.july,
-            item.august,
-            item.september,
-            item.october,
-            item.november,
-            item.december,
-          ];
-          return item;
-        });
-        data.dataList = statdata.map((item) => {
-          return item;
-        });
-      }
-      loadChart();
+  if (data.dataList && data.dataList.length) {
+    data.xData = data.dataList.map((item) => {
+      return item.Name || "";
     });
-  // data.xData2 = [];
-  // data.lineData2 = [];
-  // data.seriesData2 = [];
-  // proxy.$get(Interface.meetingRpt.peoplestat, {
-  //     year: data.year.format("YYYY"),
-  // }).then(res => {
-  //     if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
-  //         let statdata = res.actions[0].returnValue;
-  //         data.xData2 = ['工号', '部门', '总预约数', '参会数量'];
-  //         data.lineData2 = ['数量'];
-  //         data.seriesData2 = statdata.map(item => {
-  //             item.type = 'line';
-  //             item.label = {
-  //                 show: true,
-  //                 position: "top",
-  //             };
-  //             item.data = [item.employeeNo, item.businessUnitIdName, item.totalQty, item.meetingQty]
-  //             return item;
-  //         })
-  //     }
-  // })
+    data.seriesData[0].data = data.dataList.map((item) => {
+      return item.StartCount || 0;
+    });
+  }
+  loadChart();
 };
 const loadChart = () => {
   var myChart;
@@ -809,8 +553,9 @@ const loadChart = () => {
     },
     xAxis: {
       type: "category",
-      boundaryGap: false,
+      //boundaryGap: false,
       data: data.xData,
+      barCategoryGap: "20%",
     },
     yAxis: {
       type: "value",
@@ -820,7 +565,7 @@ const loadChart = () => {
   option && myChart.setOption(option, true);
 };
 const onSearch = (e) => {
-  changeTabs(data.activeKey);
+  changeTabs(data.activeKey, "search");
 };
 const onClear = (e) => {
   data.searchVal = "";
@@ -944,7 +689,7 @@ onMounted(() => {
           border: 1px solid #dedede;
           font-size: 14px;
           border-radius: 4px;
-          margin-right: 20px;
+          margin-right: 15px;
           padding: 10px;
 
           .countItemTitle {
@@ -956,12 +701,16 @@ onMounted(() => {
             margin-top: 10px;
           }
         }
+
+        .countItem:last-child {
+          margin-right: 1px;
+        }
       }
 
       .room {
-        border: 1px solid #dedede;
+        //border: 1px solid #dedede;
         /* height: 300px; */
-        border-radius: 4px;
+        //border-radius: 4px;
 
         .roomHead {
           display: flex;
@@ -1051,6 +800,7 @@ onMounted(() => {
   }
 
   .headerRight {
+    //display: none;
     .panel-head-top-right {
       display: flex;
       width: 200px;
@@ -1084,6 +834,7 @@ onMounted(() => {
     .countItem {
       background: #fff;
       padding: 15px 16px !important;
+      padding-left: 18px !important;
       box-shadow: none !important;
       border: none !important;
 
@@ -1134,7 +885,7 @@ onMounted(() => {
   background: transparent;
 }
 
-.reportFormWrap {
+.InstaceDashboardWrap {
   overflow: auto;
 
   .panel-all {
@@ -1144,6 +895,10 @@ onMounted(() => {
 
   .center {
     height: auto;
+  }
+
+  .panel .panel-head {
+    margin-bottom: 10px !important;
   }
 
   .roomTable {
@@ -1168,7 +923,7 @@ onMounted(() => {
       .ant-table-tbody td {
         padding: 6.5px 16px !important;
         white-space: nowrap;
-        text-align: center;
+        text-align: left;
       }
 
       .ant-table-tbody .ant-table-measure-row td {
@@ -1178,7 +933,7 @@ onMounted(() => {
       .ant-table-thead > tr > th {
         background-color: #f7fbfe !important;
         padding: 8.5px 16px !important;
-        text-align: center;
+        text-align: left;
       }
 
       .ant-table-tbody tr:hover,
@@ -1204,7 +959,7 @@ onMounted(() => {
 
     .panel-search {
       position: absolute;
-      top: 50px;
+      top: 44px;
       right: 0px;
       display: flex;
       z-index: 1000;

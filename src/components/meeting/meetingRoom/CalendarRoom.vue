@@ -5,7 +5,7 @@
                 <div class="form">
                     <div class="formItem">
                         <span class="label">会议类型：</span>
-                        <a-select v-model:value="formState.type" style="width: 200px;" @change="(e)=>{formState.type=e;calendarTypeChange(calendarType);}">
+                        <a-select allowClear v-model:value="formState.type" style="width: 200px;" @change="(e)=>{formState.type=e;calendarTypeChange(calendarType);}">
                             <a-select-option value="例会">例会</a-select-option>
                             <a-select-option value="学术会议">学术会议</a-select-option>
                         </a-select>

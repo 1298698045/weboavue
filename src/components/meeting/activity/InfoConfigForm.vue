@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modalContainer InfoConfigForm2Container" style="top: 10px">
-      <div class="modalCenter" :style="{ height: height + 'px!important' }">
+      <div class="modalCenter" :style="{ height: height + 'px !important' }">
         <div class="tabPanel">
           <div class="barContainer">
             <div class="groupContainer">
@@ -919,6 +919,17 @@ const searchlookup = (search, Lktp, fieldApiName) => {
         list.push(item);
       }
     }
+    if (
+      data[fieldApiName] &&
+      data[fieldApiName].length &&
+      formState[fieldApiName].Id
+    ) {
+      data[fieldApiName] = [
+        data[fieldApiName].find((row) => row.ID == formState[fieldApiName].Id),
+      ];
+    } else {
+      data[fieldApiName] = [];
+    }
     data[fieldApiName] = data[fieldApiName].concat(list);
     data[fieldApiName] = uniqu(data[fieldApiName], "ID");
   });
@@ -1248,15 +1259,15 @@ const getUserData = (params) => {
   data.isRadioUser = false;
   if (params.id) {
     let index = data.OwningUser.findIndex((item) => item.ID == params.id);
+    formState.OwningUser.Id = params.id;
     if (index == -1 && params.id) {
       data.OwningUser.push({
         ID: params.id,
         Name: params.name,
       });
-      formState.OwningUser.Id = params.id;
     }
     if (index >= 0) {
-      message.error("不能重复添加！");
+      //message.error("不能重复添加！");
     }
   }
 };

@@ -532,7 +532,7 @@
       @selectVal="isAddSchedule = false"
       :paramsTime="paramsTime"
     />
-    <AddTask
+    <!-- <AddTask
       :isShow="isAddTask"
       :id="''"
       v-if="isAddTask"
@@ -546,7 +546,7 @@
       :RegardingObjectId="''"
       :RegardingObjectIdName="''"
       :BgColor="''"
-    />
+    /> -->
     <common-form-modal
       :isShow="isCommon"
       v-if="isCommon"
@@ -582,6 +582,14 @@
       :id="''"
       :CalendarTypeCode="''"
       @selectVal="isRecord = false"
+    />
+    <NewTask
+      :isShow="isAddTask"
+      v-if="isAddTask"
+      @cancel="isAddTask = false"
+      :id="''"
+      :CalendarTypeCode="''"
+      @selectVal="isAddTask = false"
     />
   </div>
 </template>
@@ -622,6 +630,7 @@ import CommonFormModal from "@/components/listView/CommonFormModal.vue";
 import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
 import NewVehicle from "@/components/Vehicle/NewVehicle.vue";
 import RecordPhone from "@/components/schedule/RecordPhone.vue";
+import NewTask from "@/components/schedule/NewTask.vue";
 import { message } from "ant-design-vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";

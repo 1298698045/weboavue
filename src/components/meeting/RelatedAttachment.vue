@@ -397,6 +397,9 @@ const openfile = (medittype, RecordID, Name) => {
 //预览附件
 const handlePreviewFile = (item) => {
   let url = '';
+  if (item.fileExtension) {
+    item.fileExtension = item.fileExtension.replace(".", "");
+  }
   if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
     // url = item.viewUrl;
     // window.open(url);

@@ -20,7 +20,7 @@
                 <a-tab-pane key="2" tab="参与人员"></a-tab-pane>
             </a-tabs>
         </div> -->
-        <div class="modalCenter" :style="{ height: height + 'px' }">
+        <div class="modalCenter" :style="{ height: height + 'px !important' }">
           <ConfigForm
             ref="configRef"
             :paramsTime="props.paramsTime"

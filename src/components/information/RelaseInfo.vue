@@ -1,22 +1,40 @@
 <template>
   <div>
-    <a-modal v-model:open="props.isShow" width="1000px" style="top:10px;" :maskClosable="false" @cancel="handleCancel"
-      @ok="handleSubmit">
+    <a-modal
+      v-model:open="props.isShow"
+      width="1000px"
+      style="top: 10px"
+      :maskClosable="false"
+      @cancel="handleCancel"
+      @ok="handleSubmit"
+    >
       <template #title>
         <div>
           {{ title }}
         </div>
       </template>
       <div class="modalContainer RelaseInfoWrap">
-        <RadioDept :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
-        <div class="modalCenter modalCenter1" :style="{ height: height + 'px!important' }" v-show="step * 1 == 0">
+        <RadioDept
+          :isShow="isRadioDept"
+          @cancel="cancelDeptModal"
+          @selectVal="handleDeptParams"
+        />
+        <div
+          class="modalCenter modalCenter1"
+          :style="{ height: height + 'px!important' }"
+          v-show="step * 1 == 0"
+        >
           <a-form :model="formState" ref="formRef">
             <div class="section">
               <div class="sectionTitle">基本信息</div>
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="name" label="发布人">
-                    <a-input v-model:value="formState.ApprovedBy" disabled class="ApprovedByName"></a-input>
+                    <a-input
+                      v-model:value="formState.ApprovedBy"
+                      disabled
+                      class="ApprovedByName"
+                    ></a-input>
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
@@ -31,34 +49,68 @@
                       </a-select>
                       <i class="iconfont icon-sousuo pointer selectIcon" @click="handleFocus"></i>
                     </div> -->
-                    <a-input v-model:value="formState.BusinessUnitId" disabled class="ApprovedByName"></a-input>
+                    <a-input
+                      v-model:value="formState.BusinessUnitId"
+                      disabled
+                      class="ApprovedByName"
+                    ></a-input>
                   </a-form-item>
                 </div>
               </div>
 
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="ApprovedOn" label="发布时间" :rules="[{ required: true, message: '请输入发布时间' }]">
-                    <a-date-picker v-model:value="formState.ApprovedOn" valueFormat="YYYY-MM-DD HH:mm:ss" show-time
-                      placeholder="发布时间" />
+                  <a-form-item
+                    name="ApprovedOn"
+                    label="发布时间"
+                    :rules="[{ required: true, message: '请输入发布时间' }]"
+                  >
+                    <a-date-picker
+                      v-model:value="formState.ApprovedOn"
+                      valueFormat="YYYY-MM-DD HH:mm:ss"
+                      show-time
+                      placeholder="发布时间"
+                    />
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
-                  <a-form-item name="StateCode" label="发布状态" :rules="[{ required: true, message: '请选择发布状态' }]">
-                    <a-select v-model:value="formState.StateCode" placeholder="请选择发布状态">
-                      <a-select-option v-for="(item, index) in StateCodeList" :value="item.value" :key="index">{{
-                        item.label
-                      }}</a-select-option>
+                  <a-form-item
+                    name="StateCode"
+                    label="发布状态"
+                    :rules="[{ required: true, message: '请选择发布状态' }]"
+                  >
+                    <a-select
+                      v-model:value="formState.StateCode"
+                      placeholder="请选择发布状态"
+                    >
+                      <a-select-option
+                        v-for="(item, index) in StateCodeList"
+                        :value="item.value"
+                        :key="index"
+                        >{{ item.label }}</a-select-option
+                      >
                     </a-select>
                   </a-form-item>
                 </div>
               </div>
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="FolderId" label="栏目" :rules="[{ required: true, message: '请选择栏目' }]">
-                    <a-tree-select v-model:value="formState.FolderId" show-search style="width: 100%"
-                      :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" placeholder="请选择栏目" allow-clear
-                      tree-default-expand-all :tree-data="treeData" tree-node-filter-prop="name">
+                  <a-form-item
+                    name="FolderId"
+                    label="栏目"
+                    :rules="[{ required: true, message: '请选择栏目' }]"
+                  >
+                    <a-tree-select
+                      v-model:value="formState.FolderId"
+                      show-search
+                      style="width: 100%"
+                      :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                      placeholder="请选择栏目"
+                      allow-clear
+                      tree-default-expand-all
+                      :tree-data="treeData"
+                      tree-node-filter-prop="name"
+                    >
                       <template #title="{ name }">
                         <span>{{ name }}</span>
                       </template>
@@ -67,9 +119,16 @@
                 </div>
                 <div class="sectionItem">
                   <a-form-item name="AttachRightCode" label="附件权限">
-                    <a-select v-model:value="formState.AttachRightCode" placeholder="请选择附件权限">
-                      <a-select-option v-for="(item, index) in AttachRightCodeList" :value="item.value" :key="index">{{
-                        item.label }}</a-select-option>
+                    <a-select
+                      v-model:value="formState.AttachRightCode"
+                      placeholder="请选择附件权限"
+                    >
+                      <a-select-option
+                        v-for="(item, index) in AttachRightCodeList"
+                        :value="item.value"
+                        :key="index"
+                        >{{ item.label }}</a-select-option
+                      >
                     </a-select>
                   </a-form-item>
                 </div>
@@ -77,7 +136,9 @@
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="IsImportant" label="重要信息">
-                    <a-checkbox v-model:checked="formState.IsImportant"></a-checkbox>
+                    <a-checkbox
+                      v-model:checked="formState.IsImportant"
+                    ></a-checkbox>
                   </a-form-item>
                 </div>
                 <div class="sectionItem">
@@ -89,31 +150,47 @@
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="IsPublic" label="查看范围">
-                    <a-checkbox v-model:checked="formState.IsPublic">所有人可以查看</a-checkbox>
+                    <a-checkbox v-model:checked="formState.IsPublic"
+                      >所有人可以查看</a-checkbox
+                    >
                   </a-form-item>
                 </div>
                 <div class="sectionItem" v-if="formState.IsTop">
                   <a-form-item name="EndTopDate" label="置顶截止">
-                    <a-date-picker v-model:value="formState.EndTopDate" valueFormat="YYYY-MM-DD HH:mm:ss" show-time
-                      placeholder="置顶截止" />
+                    <a-date-picker
+                      v-model:value="formState.EndTopDate"
+                      valueFormat="YYYY-MM-DD HH:mm:ss"
+                      show-time
+                      placeholder="置顶截止"
+                    />
                   </a-form-item>
                 </div>
               </div>
               <div class="sectionRow">
                 <div class="sectionItem">
                   <a-form-item name="KeyWords" label="移动标签">
-                    <a-checkbox-group v-model:value="formState.KeyWords" style="width: 100%">
-                      <a-checkbox :value="item" v-for="(item, index) in keywords" :key="index">{{ item }}</a-checkbox>
+                    <a-checkbox-group
+                      v-model:value="formState.KeyWords"
+                      style="width: 100%"
+                    >
+                      <a-checkbox
+                        :value="item"
+                        v-for="(item, index) in keywords"
+                        :key="index"
+                        >{{ item }}</a-checkbox
+                      >
                     </a-checkbox-group>
                   </a-form-item>
                 </div>
               </div>
-
             </div>
-
           </a-form>
         </div>
-        <div class="modalCenter" :style="{ height: height + 'px!important' }" v-show="step * 1 == 1">
+        <div
+          class="modalCenter"
+          :style="{ height: height + 'px!important' }"
+          v-show="step * 1 == 1"
+        >
           <!-- <div class="section">
             <div class="sectionTitle">图片/轮播信息</div>
             <div class="sectionRow">
@@ -134,33 +211,57 @@
               <div class="sectionItem RelaseInfoUpload">
                 <div class="uploadPanel">
                   <div class="inboxFileList">
-                    <div class="inboxFileItem" v-for="(item, index) in fileList" :key="index">
+                    <div
+                      class="inboxFileItem"
+                      v-for="(item, index) in fileList"
+                      :key="index"
+                    >
                       <div class="FileInfo">
                         <img :src="item.viewUrl" class="img" />
                         <!-- <div class="fileName rowEllipsis">
                             {{item.name}}
                           </div>
                           <div class="fileSize">{{item.size}}</div> -->
-                        <div class="fileOptionShow" :title="(item.name || '')">
+                        <div class="fileOptionShow" :title="item.name || ''">
                           <div class="btns">
                             <a-tooltip title="查看" placement="top">
-                              <a-button type="text" :icon="h(EyeOutlined)" @click="handlePreviewFile(item)"></a-button>
+                              <a-button
+                                type="text"
+                                :icon="h(EyeOutlined)"
+                                @click="handlePreviewFile(item)"
+                              ></a-button>
                             </a-tooltip>
                             <a-tooltip title="下载" placement="top">
-                              <a-button type="text" :icon="h(VerticalAlignBottomOutlined)"
-                                @click="downloadFile(item)"></a-button>
+                              <a-button
+                                type="text"
+                                :icon="h(VerticalAlignBottomOutlined)"
+                                @click="downloadFile(item)"
+                              ></a-button>
                             </a-tooltip>
                             <a-tooltip title="删除" placement="top">
-                              <a-button type="text" :icon="h(CloseOutlined)" @click="deleteFile0(item)"></a-button>
+                              <a-button
+                                type="text"
+                                :icon="h(CloseOutlined)"
+                                @click="deleteFile0(item)"
+                              ></a-button>
                             </a-tooltip>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="inboxFileItem">
-                      <a-upload-dragger accept="image/*" v-model:fileList="fileList" :headers="headers"
-                        @change="changeFiles" :data="uploadData" :action="Interface.information.uploadMedia"
-                        :showUploadList="false" multiple name="files" :before-upload="beforeUpload">
+                      <a-upload-dragger
+                        accept="image/*"
+                        v-model:fileList="fileList"
+                        :headers="headers"
+                        @change="changeFiles"
+                        :data="uploadData"
+                        :action="Interface.information.uploadMedia"
+                        :showUploadList="false"
+                        multiple
+                        name="files"
+                        :before-upload="beforeUpload"
+                      >
                         <div class="uploadRow">
                           <p class="ant-upload-drag-icon">
                             <PlusOutlined />
@@ -175,31 +276,57 @@
             </div>
           </div>
         </div>
-        <div class="modalCenter" :style="{ height: height + 'px!important' }" v-show="step * 1 == 2">
+        <div
+          class="modalCenter"
+          :style="{ height: height + 'px!important' }"
+          v-show="step * 1 == 2"
+        >
           <a-form :model="formState3" ref="formRef3" class="formRef3">
             <div class="section">
               <div class="sectionTitle">添加可查看人员</div>
               <div class="sectionRow">
                 <div class="sectionItem memberlist">
-                  <FilterQuery :FilterExpresssionList="FilterExpresssionList" @params="getFilterQuery"
-                    :entityApiName="'SystemUser'"></FilterQuery>
+                  <FilterQuery
+                    :FilterExpresssionList="FilterExpresssionList"
+                    @params="getFilterQuery"
+                    :entityApiName="'SystemUser'"
+                  ></FilterQuery>
                 </div>
               </div>
               <div class="sectionRow peopleRow">
                 <div class="sectionItem peopleItem">
                   <div class="sectionItemTitle">查询结果</div>
-                  <a-button type="primary" class="sectionItemBtn" @click="handleSearch">搜索</a-button>
-                  <a-table :columns="columns" :dataSource="peopleList" :scroll="{ y: tableHeight }"
-                    :pagination="data.pagination" @change="handleTableChange">
+                  <a-button
+                    type="primary"
+                    class="sectionItemBtn"
+                    @click="handleSearch"
+                    >搜索</a-button
+                  >
+                  <a-table
+                    :columns="columns"
+                    :dataSource="peopleList"
+                    :scroll="{ y: tableHeight }"
+                    :pagination="data.pagination"
+                    @change="handleTableChange"
+                  >
                     <template #bodyCell="{ column, index, record }">
                       <template v-if="column.key === 'index'">
                         <div>
-                          {{ data.pagination.pageSize * (data.pagination.current - 1) + index + 1 }}
+                          {{
+                            data.pagination.pageSize *
+                              (data.pagination.current - 1) +
+                            index +
+                            1
+                          }}
                         </div>
                       </template>
                       <template v-if="column.key == 'AvatarImg'">
-                        <img :src="record.AvatarImg" @error="handleImageError(record)" alt=""
-                          class="AddGroup_list_avatar" />
+                        <img
+                          :src="record.AvatarImg"
+                          @error="handleImageError(record)"
+                          alt=""
+                          class="AddGroup_list_avatar"
+                        />
                       </template>
                     </template>
                   </a-table>
@@ -216,24 +343,80 @@
       <template #footer>
         <div>
           <a-button @click="handleCancel" v-if="step == 0">取消</a-button>
-          <a-button type="primary" @click.prevent="handleSubmit" v-if="step == 0">下一步</a-button>
+          <a-button
+            type="primary"
+            @click.prevent="handleSubmit"
+            v-if="step == 0"
+            >下一步</a-button
+          >
           <a-button @click="data.step = 0" v-if="step == 1">上一步</a-button>
-          <a-button type="primary" @click="getFilterExpresssionList" v-if="step == 1">下一步</a-button>
+          <a-button
+            type="primary"
+            @click="getFilterExpresssionList"
+            v-if="step == 1"
+            >下一步</a-button
+          >
           <a-button @click="data.step = 1" v-if="step == 2">上一步</a-button>
-          <a-button type="primary" @click="saveFilterExpresssionList" v-if="step == 2">完成</a-button>
+          <a-button
+            type="primary"
+            @click="saveFilterExpresssionList"
+            v-if="step == 2"
+            >完成</a-button
+          >
         </div>
       </template>
     </a-modal>
-    <RadioDept v-if="isRadioDept" :isShow="isRadioDept" @cancel="cancelDeptModal" @selectVal="handleDeptParams" />
-    <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser"
-      @ok="refreshPeople"></radio-user>
-    <Delete v-if='isDelete' :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople"
-      :sObjectName="sObjectName" :recordId="memberId" :objTypeCode="objectTypeCode" :external="external" />
-    <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="'确定要删除吗？'" :title="'删除'" @cancel="isConfirm = false"
-      @ok="deleteFile" :id="recordId" />
-    <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
-    <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
-    <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
+    <RadioDept
+      v-if="isRadioDept"
+      :isShow="isRadioDept"
+      @cancel="cancelDeptModal"
+      @selectVal="handleDeptParams"
+    />
+    <radio-user
+      v-if="isRadioUser"
+      :isShow="isRadioUser"
+      @selectVal="getUserData"
+      @cancel="closeUser"
+      @ok="refreshPeople"
+    ></radio-user>
+    <Delete
+      v-if="isDelete"
+      :isShow="isDelete"
+      :desc="deleteDesc"
+      @cancel="cancelDelete"
+      @ok="refreshPeople"
+      :sObjectName="sObjectName"
+      :recordId="memberId"
+      :objTypeCode="objectTypeCode"
+      :external="external"
+    />
+    <CommonConfirm
+      v-if="isConfirm"
+      :isShow="isConfirm"
+      :text="'确定要删除吗？'"
+      :title="'删除'"
+      @cancel="isConfirm = false"
+      @ok="deleteFile"
+      :id="recordId"
+    />
+    <ImageView
+      v-if="isPhoto"
+      :isShow="isPhoto"
+      :photoParams="photoParams"
+      @cancel="isPhoto = false"
+    />
+    <PdfView
+      v-if="isPdf"
+      :isShow="isPdf"
+      :pdfParams="pdfParams"
+      @cancel="isPdf = false"
+    />
+    <TxtView
+      v-if="isTxt"
+      :isShow="isTxt"
+      :txtParams="txtParams"
+      @cancel="isTxt = false"
+    />
   </div>
 </template>
 <script setup>
@@ -249,7 +432,8 @@ import {
   defineExpose,
   defineEmits,
   toRaw,
-  h
+  h,
+  nextTick,
 } from "vue";
 import {
   PlusOutlined,
@@ -262,12 +446,12 @@ import {
   DeleteOutlined,
   VerticalAlignBottomOutlined,
   CloseOutlined,
-  EyeOutlined
+  EyeOutlined,
 } from "@ant-design/icons-vue";
 import { girdFormatterValue } from "@/utils/common.js";
 import { message } from "ant-design-vue";
 import Interface from "@/utils/Interface.js";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import RadioDept from "@/components/commonModal/RadioDept.vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 import Delete from "@/components/listView/Delete.vue";
@@ -288,7 +472,7 @@ const props = defineProps({
   folderPicker: String,
   objectTypeCode: [String, Number],
   id: [String, Number],
-  FolderId: String
+  FolderId: String,
 });
 const formRef = ref();
 const formRef3 = ref();
@@ -297,18 +481,18 @@ const handleCancel = () => {
   emit("cancel", false);
 };
 const formState = reactive({
-  ApprovedBy: '',
-  BusinessUnitId: '',
+  ApprovedBy: "",
+  BusinessUnitId: "",
   IsImportant: false,
   IsTop: false,
-  AttachRightCode: '',
-  EndTopDate: '',
-  ApprovedOn: '',
+  AttachRightCode: "",
+  EndTopDate: "",
+  ApprovedOn: "",
   StateCode: 1,
   KeyWords: [],
   IsPublic: false,
-  CoverDisplay: '',
-  FolderId: ''
+  CoverDisplay: "",
+  FolderId: "",
 });
 const token = localStorage.getItem("token");
 const data = reactive({
@@ -316,98 +500,98 @@ const data = reactive({
   height: document.documentElement.clientHeight - 150,
   AttachRightCodeList: [
     {
-      label: '所有',
-      value: 0
+      label: "所有",
+      value: 0,
     },
     {
-      label: '只读',
-      value: 4
+      label: "只读",
+      value: 4,
     },
     {
-      label: '可下载',
-      value: 8
-    }
+      label: "可下载",
+      value: 8,
+    },
   ],
   StateCodeList: [
     {
-      label: '草稿',
-      value: 0
+      label: "草稿",
+      value: 0,
     },
     {
-      label: '已发布',
-      value: 1
+      label: "已发布",
+      value: 1,
     },
     {
-      label: '审批不通过',
-      value: 2
-    }
+      label: "审批不通过",
+      value: 2,
+    },
   ],
   keywords: [],
   treeData: [],
   CoverDisplayList: [
     {
-      label: '标题左边',
-      value: 'LeftTitle'
+      label: "标题左边",
+      value: "LeftTitle",
     },
     {
-      label: '标题右边',
-      value: 'RightTitle'
+      label: "标题右边",
+      value: "RightTitle",
     },
     {
-      label: '标题下面大图',
-      value: 'BelowTitleBigImg'
+      label: "标题下面大图",
+      value: "BelowTitleBigImg",
     },
     {
-      label: '标题下列表',
-      value: 'BelowGrid'
+      label: "标题下列表",
+      value: "BelowGrid",
     },
     {
-      label: '标题下轮播',
-      value: 'Carousel'
-    }
+      label: "标题下轮播",
+      value: "Carousel",
+    },
   ],
   fileList: [],
   isRadioDept: false,
-  BusinessUnitId: '',
-  ApprovedBy: '',
+  BusinessUnitId: "",
+  ApprovedBy: "",
   listData: [],
   step: 0,
   search: {
     OwningUser: [],
     member: [],
-    BusinessUnitId: []
+    BusinessUnitId: [],
   },
-  recordId: '',
+  recordId: "",
   isRadioDept: false,
   isRadioUser: false,
-  objectTypeCode: '90',
-  sObjectName: 'GroupMembership',
+  objectTypeCode: "90",
+  sObjectName: "GroupMembership",
   isDelete: false,
-  deleteDesc: '确定要删除吗？',
+  deleteDesc: "确定要删除吗？",
   external: false,
   RoleCode: 0,
   RoleCodeList: [
     {
       value: 0,
-      label: '成员'
+      label: "成员",
     },
     {
       value: 2,
-      label: '管理员'
+      label: "管理员",
     },
   ],
-  memberId: '',
+  memberId: "",
   peopleList: [],
   pagination: {
     hideOnSinglePage: true,
     showSizeChanger: true,
     showQuickJumper: true,
-    total: 0,//数据总数
+    total: 0, //数据总数
     pageSize: 10,
     current: 1,
-    showTotal: ((total) => {
-      return `共${total}条`
-    })
+    showTotal: (total) => {
+      return `共${total}条`;
+    },
   },
   tableHeight: document.documentElement.clientHeight - 470,
   FilterExpresssionList: [],
@@ -416,7 +600,7 @@ const data = reactive({
   uploadData: {
     // parentId: '',
     // entityName: 'Media'
-    id: ''
+    id: "",
   },
   headers: {
     Authorization: token,
@@ -428,80 +612,114 @@ const data = reactive({
   isPdf: false,
   pdfParams: {},
   isTxt: false,
-  txtParams: {}
+  txtParams: {},
 });
 const {
-  isTxt, txtParams,
-  title, step, search, FilterExpresssionList, filterExpression, ImageList, uploadData, headers, isConfirm, isPhoto, photoParams, isPdf, pdfParams,
-  height, AttachRightCodeList, keywords, treeData, CoverDisplayList,
-  fileList, BusinessUnitId, ApprovedBy, listData, StateCodeList,
-  recordId, isRadioDept, isRadioUser, objectTypeCode, sObjectName, isDelete, deleteDesc, external, RoleCode, RoleCodeList, memberId, peopleList, pagination, tableHeight
+  isTxt,
+  txtParams,
+  title,
+  step,
+  search,
+  FilterExpresssionList,
+  filterExpression,
+  ImageList,
+  uploadData,
+  headers,
+  isConfirm,
+  isPhoto,
+  photoParams,
+  isPdf,
+  pdfParams,
+  height,
+  AttachRightCodeList,
+  keywords,
+  treeData,
+  CoverDisplayList,
+  fileList,
+  BusinessUnitId,
+  ApprovedBy,
+  listData,
+  StateCodeList,
+  recordId,
+  isRadioDept,
+  isRadioUser,
+  objectTypeCode,
+  sObjectName,
+  isDelete,
+  deleteDesc,
+  external,
+  RoleCode,
+  RoleCodeList,
+  memberId,
+  peopleList,
+  pagination,
+  tableHeight,
 } = toRefs(data);
 const AddGroup = ref();
 const formState2 = reactive({
   OwningUser: {
-    Id: '',
-    Name: ''
+    Id: "",
+    Name: "",
   },
-
 });
 const formState3 = reactive({
   member: {
-    Id: '',
-    Name: ''
+    Id: "",
+    Name: "",
   },
-
 });
 // 添加成员
 const AddPeople = () => {
-  if (formState3.member.Id) { } else {
+  if (formState3.member.Id) {
+  } else {
     message.error("请选择要添加的成员");
-    return
+    return;
   }
   let url = Interface.create;
   let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordInput: {
-          allowSaveOnDuplicate: false,
-          apiName: 'GroupMembership',
-          objTypeCode: '90',
-          fields: {
-            GroupId: props.id,
-            RegardingObjectIdName: formState3.member.Name,
-            RegardingObjectId: formState3.member.Id,
-            RoleCode: data.RoleCode,
-            RegardingObjectTypeCode: 8
-          }
-        }
-      }
-    }]
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordInput: {
+            allowSaveOnDuplicate: false,
+            apiName: "GroupMembership",
+            objTypeCode: "90",
+            fields: {
+              GroupId: props.id,
+              RegardingObjectIdName: formState3.member.Name,
+              RegardingObjectId: formState3.member.Id,
+              RoleCode: data.RoleCode,
+              RegardingObjectTypeCode: 8,
+            },
+          },
+        },
+      },
+    ],
   };
 
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(url, obj).then((res) => {
     data.isRadioUser = false;
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
       message.success("添加成功！");
       refreshPeople();
     }
-
   });
-}
+};
 const handleImageError = (record) => {
-  record.AvatarImg = '/src/assets/img/avatar.png';
+  record.AvatarImg = "/src/assets/img/avatar.png";
   return record;
 };
 const refreshPeople = (e) => {
   if (data.step == 2) {
     getQuery();
   }
-}
+};
 const closeUser = (e) => {
   data.isRadioUser = false;
 };
@@ -510,9 +728,9 @@ const getBase64 = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
-}
+};
 // const searchlookup = (searchVal, Lktp, field) => {
 //   let obj = {
 //           actions:[{
@@ -555,13 +773,12 @@ const getBase64 = (file) => {
 //       });
 // }
 const handleOpenLook = (type, name) => {
-  if (type == '10') {
+  if (type == "10") {
     data.isRadioDept = true;
-  }
-  else if (type == '8') {
+  } else if (type == "8") {
     data.isRadioUser = true;
   }
-}
+};
 // const cancelDeptModal = (e) => {
 //   data.isRadioDept = false;
 // }
@@ -591,7 +808,7 @@ const changeUserData = (e) => {
       formState3.member.Name = result[0].Name;
     }
   }
-}
+};
 const getUserData = (e) => {
   data.isRadioUser = false;
   if (e.id) {
@@ -601,32 +818,33 @@ const getUserData = (e) => {
       let result = data.search.OwningUser.filter((item) => {
         return item.ID == e.id;
       });
-      if (result && result.length) { } else {
+      if (result && result.length) {
+      } else {
         data.search.OwningUser.push({
           ID: e.id,
-          Name: e.name
-        })
+          Name: e.name,
+        });
       }
-    }
-    else {
+    } else {
       formState3.member.Id = e.id;
       formState3.member.Name = e.name;
       data.isRadioDept = false;
       let result = data.search.member.filter((item) => {
         return item.ID == e.id;
       });
-      if (result && result.length) { } else {
+      if (result && result.length) {
+      } else {
         data.search.member.push({
           ID: e.id,
-          Name: e.name
-        })
+          Name: e.name,
+        });
       }
     }
   }
 };
 const cancelDeptModal = (e) => {
   data.isRadioDept = e;
-}
+};
 const handleDeptParams = (e) => {
   //console.log("e",e);
   if (e.ID) {
@@ -636,14 +854,15 @@ const handleDeptParams = (e) => {
     let result = data.listData.filter((item) => {
       return item.ID == e.ID;
     });
-    if (result && result.length) { } else {
+    if (result && result.length) {
+    } else {
       data.listData.push({
         ID: e.ID,
-        Name: e.Name
-      })
+        Name: e.Name,
+      });
     }
   }
-}
+};
 const handleDeptParams2 = (e) => {
   //console.log("eeee",e);
   if (e) {
@@ -655,10 +874,10 @@ const handleDeptParams2 = (e) => {
       formState.BusinessUnitId = result[0].Name;
     }
   }
-}
+};
 const handleFocus = (e) => {
   data.isRadioDept = true;
-}
+};
 const getTreeData = () => {
   // proxy.$get(Interface.information.contentTree, {
   //   objectTypeCode: props.objectTypeCode
@@ -677,44 +896,44 @@ const getTreeData = () => {
   // })
   let url = Interface.content.folder.get;
   let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        //id: '00000000-0000-0000-0000-000000002000'
-      }
-    }]
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          //id: '00000000-0000-0000-0000-000000002000'
+        },
+      },
+    ],
   };
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(url, obj).then((res) => {
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
       let formTree = (list) => {
-        list.forEach(item => {
+        list.forEach((item) => {
           if (item.children) {
             formTree(item.children);
           }
           item.key = item.id;
           item.value = item.id;
-        })
-      }
+        });
+      };
       let response = res.actions[0].returnValue;
       formTree(response);
       data.treeData = response;
     }
   });
-}
+};
 getTreeData();
 
-
-
 const getTags = () => {
-  proxy.$get(Interface.information.tags, {}).then(res => {
+  proxy.$get(Interface.information.tags, {}).then((res) => {
     data.keywords = res.data;
-  })
-}
+  });
+};
 getTags();
 
 const searchlookup = (search, attribute) => {
@@ -731,45 +950,47 @@ const searchlookup = (search, attribute) => {
 };
 const searchlookup2 = () => {
   let obj = {
-    actions: [{
-      id: "6129;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        objectApiName: props.entityApiName,
-        fieldApiName: 'BusinessUnitId',
-        pageParam: 1,
-        pageSize: 25,
-        q: "",
-        searchType: "Recent",
-        targetApiName: 'BusinessUnit',
-        body: {
-          sourceRecord: {
-            apiName: props.entityApiName,
-            fields: {
-              Id: null,
-              RecordTypeId: ""
-            }
-          }
-        }
-      }
-    }]
-  }
+    actions: [
+      {
+        id: "6129;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          objectApiName: props.entityApiName,
+          fieldApiName: "BusinessUnitId",
+          pageParam: 1,
+          pageSize: 25,
+          q: "",
+          searchType: "Recent",
+          targetApiName: "BusinessUnit",
+          body: {
+            sourceRecord: {
+              apiName: props.entityApiName,
+              fields: {
+                Id: null,
+                RecordTypeId: "",
+              },
+            },
+          },
+        },
+      },
+    ],
+  };
   let d = {
-    message: JSON.stringify(obj)
-  }
+    message: JSON.stringify(obj),
+  };
   proxy.$post(Interface.lookup, d).then((res) => {
     let list = res.actions[0].returnValue.lookupResults.records;
     let arr = [];
-    list.forEach(item => {
+    list.forEach((item) => {
       arr.push({
         ID: item.fields.Id.value,
-        Name: item.fields.Name.value
-      })
+        Name: item.fields.Name.value,
+      });
     });
     data.listData = arr;
   });
-}
+};
 onMounted(() => {
   window.addEventListener("resize", (e) => {
     data.height = document.documentElement.clientHeight - 150;
@@ -783,63 +1004,101 @@ onMounted(() => {
 });
 const getDetail = () => {
   let d = {
-    actions: [{
-      id: "4270;a",
-      descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordId: props.id,
-        apiName: props.objectTypeCode == '100201' ? 'Content' : 'Notice',
-        objTypeCode: props.objectTypeCode
-      }
-    }]
+    actions: [
+      {
+        id: "4270;a",
+        descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordId: props.id,
+          apiName: props.objectTypeCode == "100201" ? "Content" : "Notice",
+          objTypeCode: props.objectTypeCode,
+        },
+      },
+    ],
   };
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(Interface.detail, obj).then(res => {
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.fields) {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.detail, obj).then((res) => {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.fields
+    ) {
       let fields = res.actions[0].returnValue.fields;
-      formState.ApprovedBy = fields.ApprovedBy ? fields.ApprovedBy.displayValue : '';
-      data.ApprovedBy = fields.ApprovedBy ? fields.ApprovedBy.value : '';
-      formState.BusinessUnitId = fields.BusinessUnitId ? fields.BusinessUnitId.displayValue : '';
-      data.BusinessUnitId = fields.BusinessUnitId ? fields.BusinessUnitId.value : '';
+      formState.ApprovedBy = fields.ApprovedBy
+        ? fields.ApprovedBy.displayValue
+        : "";
+      data.ApprovedBy = fields.ApprovedBy ? fields.ApprovedBy.value : "";
+      formState.BusinessUnitId = fields.BusinessUnitId
+        ? fields.BusinessUnitId.displayValue
+        : "";
+      data.BusinessUnitId = fields.BusinessUnitId
+        ? fields.BusinessUnitId.value
+        : "";
       if (fields.BusinessUnitId && fields.BusinessUnitId.value) {
         data.listData = [];
         data.listData.push({
           ID: fields.BusinessUnitId.value,
-          Name: fields.BusinessUnitId.displayValue
-        })
+          Name: fields.BusinessUnitId.displayValue,
+        });
       }
-      formState.IsImportant = fields.IsImportant && fields.IsImportant.value ? true : false;
-      formState.IsTop = fields.IsTop && fields.IsTop.value * 1 == 1 ? true : false;
-      formState.AttachRightCode = fields.AttachRightCode ? fields.AttachRightCode.value * 1 : 0;
+      formState.IsImportant =
+        fields.IsImportant && fields.IsImportant.value ? true : false;
+      formState.IsTop =
+        fields.IsTop && fields.IsTop.value * 1 == 1 ? true : false;
+      formState.AttachRightCode = fields.AttachRightCode
+        ? fields.AttachRightCode.value * 1
+        : 0;
       //formState.StateCode = fields.StateCode.value * 1;
-      formState.EndTopDate = fields.EndTopDate && fields.EndTopDate.value ? dayjs(fields.EndTopDate.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '';
-      formState.ApprovedOn = fields.ApprovedOn && fields.ApprovedOn.value ? dayjs(fields.ApprovedOn.value.split('.')[0]).format("YYYY-MM-DD hh:mm:ss") : '';
-      formState.KeyWords = fields.KeyWords && fields.KeyWords.value ? (fields.KeyWords.value).split(',') : [];
-      formState.IsPublic = fields.IsPublic && fields.IsPublic.value * 1 == 1 ? true : false;
-      formState.CoverDisplay = fields.CoverDisplay ? fields.CoverDisplay.value : '';
-      formState.FolderId = fields.FolderId ? fields.FolderId.value : '';
-      let userInfo = window.localStorage.getItem('userInfo');
+      formState.EndTopDate =
+        fields.EndTopDate && fields.EndTopDate.value
+          ? dayjs(fields.EndTopDate.value.split(".")[0]).format(
+              "YYYY-MM-DD hh:mm:ss"
+            )
+          : "";
+      formState.ApprovedOn =
+        fields.ApprovedOn && fields.ApprovedOn.value
+          ? dayjs(fields.ApprovedOn.value.split(".")[0]).format(
+              "YYYY-MM-DD hh:mm:ss"
+            )
+          : "";
+      formState.KeyWords =
+        fields.KeyWords && fields.KeyWords.value
+          ? fields.KeyWords.value.split(",")
+          : [];
+      formState.IsPublic =
+        fields.IsPublic && fields.IsPublic.value * 1 == 1 ? true : false;
+      formState.CoverDisplay = fields.CoverDisplay
+        ? fields.CoverDisplay.value
+        : "";
+      formState.FolderId = fields.FolderId ? fields.FolderId.value : "";
+      let userInfo = window.localStorage.getItem("userInfo");
       if (userInfo && !formState.ApprovedBy) {
         userInfo = JSON.parse(userInfo);
         var userId = userInfo.userId;
         var userName = userInfo.fullName;
         var businessUnitId = userInfo.businessUnitId;
-        var businessUnitName = window.localStorage.getItem('businessUnitName') || '';
-        if (userId == 'jackliu') {
-          userId = '2EC00CF2-A484-4136-8FEF-E2A2719C5ED6'
+        var businessUnitName =
+          window.localStorage.getItem("businessUnitName") || "";
+        if (userId == "jackliu") {
+          userId = "2EC00CF2-A484-4136-8FEF-E2A2719C5ED6";
         }
         formState.ApprovedBy = userName;
         data.ApprovedBy = userId;
         data.BusinessUnitId = businessUnitId;
         formState.BusinessUnitId = businessUnitName;
       }
-      data.filterExpression = fields.PeopleQuery && fields.PeopleQuery.value ? fields.PeopleQuery.value : '';
+      data.filterExpression =
+        fields.PeopleQuery && fields.PeopleQuery.value
+          ? fields.PeopleQuery.value
+          : "";
     }
-  })
-}
+  });
+};
 
 const handleSubmit = () => {
   //data.step = 1;
@@ -849,56 +1108,64 @@ const handleSubmit = () => {
       //console.log("values", formState, toRaw(formState));
       let url = Interface.edit;
       let d = {
-        actions: [{
-          id: "2919;a",
-          descriptor: "",
-          callingDescriptor: "UNKNOWN",
-          params: {
-            recordInput: {
-              allowSaveOnDuplicate: false,
-              apiName: 'Content',
-              objTypeCode: props.objectTypeCode,
-              fields: {
-                ApprovedBy: data.ApprovedBy,
-                BusinessUnitId: data.BusinessUnitId,
-                IsImportant: formState.IsImportant,
-                IsTop: formState.IsTop ? 1 : 0,
-                AttachRightCode: formState.AttachRightCode,
-                EndTopDate: formState.EndTopDate ? dayjs(formState.EndTopDate).format("YYYY-MM-DD hh:mm:ss") : '',
-                ApprovedOn: formState.ApprovedOn ? dayjs(formState.ApprovedOn).format("YYYY-MM-DD hh:mm:ss") : '',
-                StateCode: formState.StateCode,
-                KeyWords: formState.KeyWords.join(',') || '',
-                IsPublic: formState.IsPublic ? 1 : 0,
-                XNML: formState.IsPublic ? '所有人可查看' : '',
-                CoverDisplay: formState.CoverDisplay,
-                //Title: "",
-                FolderId: formState.FolderId
-              }
-            }
-          }
-        }]
+        actions: [
+          {
+            id: "2919;a",
+            descriptor: "",
+            callingDescriptor: "UNKNOWN",
+            params: {
+              recordInput: {
+                allowSaveOnDuplicate: false,
+                apiName: "Content",
+                objTypeCode: props.objectTypeCode,
+                fields: {
+                  ApprovedBy: data.ApprovedBy,
+                  BusinessUnitId: data.BusinessUnitId,
+                  IsImportant: formState.IsImportant,
+                  IsTop: formState.IsTop ? 1 : 0,
+                  AttachRightCode: formState.AttachRightCode,
+                  EndTopDate: formState.EndTopDate
+                    ? dayjs(formState.EndTopDate).format("YYYY-MM-DD hh:mm:ss")
+                    : "",
+                  ApprovedOn: formState.ApprovedOn
+                    ? dayjs(formState.ApprovedOn).format("YYYY-MM-DD hh:mm:ss")
+                    : "",
+                  StateCode: formState.StateCode,
+                  KeyWords: formState.KeyWords.join(",") || "",
+                  IsPublic: formState.IsPublic ? 1 : 0,
+                  XNML: formState.IsPublic ? "所有人可查看" : "",
+                  CoverDisplay: formState.CoverDisplay,
+                  //Title: "",
+                  FolderId: formState.FolderId,
+                },
+              },
+            },
+          },
+        ],
       };
       if (props.id) {
         d.actions[0].params.recordId = props.id;
       }
       let obj = {
-        message: JSON.stringify(d)
-      }
-      proxy.$post(url, obj).then(res => {
+        message: JSON.stringify(d),
+      };
+      proxy.$post(url, obj).then((res) => {
         //formRef.value.resetFields();
-        if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+        if (
+          res &&
+          res.actions &&
+          res.actions[0] &&
+          res.actions[0].returnValue
+        ) {
           props.id = res.actions[0].returnValue.id;
           data.uploadData.id = res.actions[0].returnValue.id;
           message.success("保存成功！");
           data.step = 1;
-        }
-        else {
+        } else {
           message.error("保存失败！");
         }
         //emit("cancel", false);
-
       });
-
     })
     .catch((err) => {
       console.log("error", err);
@@ -908,7 +1175,7 @@ const handleSubmit = () => {
 const handleDelete = (key) => {
   data.memberId = key;
   data.isDelete = true;
-}
+};
 //删除关闭
 const cancelDelete = (e) => {
   data.isDelete = false;
@@ -919,13 +1186,13 @@ var columns = [
     title: "序号",
     dataIndex: "index",
     key: "index",
-    width: 70
+    width: 70,
   },
   {
     title: "头像",
     dataIndex: "AvatarImg",
-    key: 'AvatarImg',
-    width: 80
+    key: "AvatarImg",
+    width: 80,
   },
   {
     title: "姓名",
@@ -948,108 +1215,118 @@ var columns = [
 const getQuery = () => {
   data.peopleList = [];
   data.pagination.total = 0;
-  let filterQuery = '';
-  let filterExpression = JSON.parse(data.filterExpression);
-  console.log(filterExpression,66666666)
+  let filterQuery = "";
+  let filterExpression = "";
+  if(data.filterExpression){
+    filterExpression = JSON.parse(data.filterExpression);
+  }
+  console.log(filterExpression, 66666666);
   if (filterExpression && filterExpression.length) {
-    filterExpression.forEach(v => {
-      if(v.operands&&v.operands.length){
-        filterQuery+='\n'+v.attribute+'\t'+v.operator+'\t'+v.operands.join(',');
+    filterExpression.forEach((v) => {
+      if (v.operands && v.operands.length && v.attribute) {
+        filterQuery +=
+          "\n" + v.attribute + "\t" + v.operator + "\t" + v.operands.join(",");
       }
     });
   }
-  proxy.$post(Interface.list2, {
-    filterId: '',
-    objectTypeCode: '8',
-    entityName: 'SystemUser',
-    filterQuery: filterQuery,
-    search: '',
-    page: data.pagination.current,
-    rows: data.pagination.pageSize,
-    sort: '',
-    order: 'ASC',
-    displayColumns: 'FullName,BusinessUnitId,EmployeeId'
-  }).then(res => {
-    var list = [];
-    data.total = res.pageInfo ? res.pageInfo.total : 0;
-    data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
-    for (var i = 0; i < res.nodes.length; i++) {
-      var item = res.nodes[i];
-      for (var cell in item) {
-        if (cell != 'id' && cell != 'nameField') {
-          item[cell] = girdFormatterValue(cell, item);
+  proxy
+    .$post(Interface.list2, {
+      filterId: "",
+      objectTypeCode: "8",
+      entityName: "SystemUser",
+      filterQuery: filterQuery,
+      search: "",
+      page: data.pagination.current,
+      rows: data.pagination.pageSize,
+      sort: "",
+      order: "ASC",
+      displayColumns: "FullName,BusinessUnitId,EmployeeId",
+    })
+    .then((res) => {
+      var list = [];
+      data.total = res.pageInfo ? res.pageInfo.total : 0;
+      data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
+      for (var i = 0; i < res.nodes.length; i++) {
+        var item = res.nodes[i];
+        for (var cell in item) {
+          if (cell != "id" && cell != "nameField") {
+            item[cell] = girdFormatterValue(cell, item);
+          }
         }
+        item["AvatarImg"] = "/api/one/user/avatar/" + item.id;
+        list.push(item);
       }
-      item['AvatarImg'] = '/api/one/user/avatar/' + item.id;
-      list.push(item)
-    }
-    data.peopleList = list;
-
-  })
-}
+      data.peopleList = list;
+    });
+};
 //改变页码
 const handleTableChange = (pag, filters, sorter) => {
   data.pagination.current = pag.current;
   getQuery();
-}
+};
 const getFilterQuery = (e) => {
-  console.log('filterExpression:', e);
+  console.log("filterExpression:", e);
   if (e) {
     data.filterExpression = e;
+  } else {
+    data.filterExpression = "";
   }
-  else {
-    data.filterExpression = '';
-  }
-}
+};
 //查询
 const handleSearch = () => {
   data.pagination.current = 1;
   getQuery();
-}
+};
 //获取人员筛选器数据
 const getFilterExpresssionList = () => {
   if (data.filterExpression) {
     let filterExpression = JSON.parse(data.filterExpression);
     if (filterExpression && filterExpression.length) {
       data.FilterExpresssionList = filterExpression;
-      data.FilterExpresssionList.forEach(v => {
-        v['operatorType'] = '';
+      data.FilterExpresssionList.forEach((v) => {
+        v["operatorType"] = "";
       });
     }
-  }
-  else {
-    data.filterExpression = '';
+  } else {
+    data.filterExpression = "";
     data.FilterExpresssionList = [];
   }
   data.step = 2;
-}
+  nextTick(() => {
+    if (data.filterExpression) {
+      getQuery();
+    }
+  });
+};
 //保存筛选器数据
 const saveFilterExpresssionList = () => {
   let url = Interface.edit;
   let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordInput: {
-          allowSaveOnDuplicate: false,
-          apiName: 'Content',
-          objTypeCode: props.objectTypeCode,
-          fields: {
-            PeopleQuery: data.filterExpression
-          }
-        }
-      }
-    }]
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordInput: {
+            allowSaveOnDuplicate: false,
+            apiName: "Content",
+            objTypeCode: props.objectTypeCode,
+            fields: {
+              PeopleQuery: data.filterExpression,
+            },
+          },
+        },
+      },
+    ],
   };
   if (props.id) {
     d.actions[0].params.recordId = props.id;
   }
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(url, obj).then((res) => {
     //formRef.value.resetFields();
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
       message.success("保存成功！");
@@ -1057,93 +1334,107 @@ const saveFilterExpresssionList = () => {
         emit("cancel", false);
         let reUrl = router.resolve({
           path: "/lightning/o/Content/home",
-          query: {
-
-          }
-        })
+          query: {},
+        });
         window.open(reUrl.href);
-      }, 1000)
-    }
-    else {
+      }, 1000);
+    } else {
       message.error("保存失败！");
     }
   });
-
-}
+};
 //获取媒体图片
 const getFiles = () => {
   data.fileList = [];
   data.ImageList = [];
   let url = Interface.information.getMedia;
   let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        pageNumber: 1,
-        pageSize: 1000,
-        contentId: props.id
-      }
-    }]
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          pageNumber: 1,
+          pageSize: 1000,
+          contentId: props.id,
+        },
+      },
+    ],
   };
   let obj = {
-    message: JSON.stringify(d)
+    message: JSON.stringify(d),
   };
-  proxy.$post(url, obj).then(res => {
+  proxy.$post(url, obj).then((res) => {
     var list = [];
     var list2 = [];
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue && res.actions[0].returnValue.rows) {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue &&
+      res.actions[0].returnValue.rows
+    ) {
       for (var i = 0; i < res.actions[0].returnValue.rows.length; i++) {
         var item = res.actions[0].returnValue.rows[i];
         let size = item.fileSize;
-        size = size ? (size * 1 / 1024).toFixed(2) : 0;
-        size = size + 'kb';
-        let name = item.name || '';
+        size = size ? ((size * 1) / 1024).toFixed(2) : 0;
+        size = size + "kb";
+        let name = item.name || "";
         if (name) {
-          name = name.replaceAll('.' + item.ext, '');
+          name = name.replaceAll("." + item.ext, "");
         }
         let ite = {
           size: size,
-          url: '/Media/' + item.valueId + '/' + name,
-          fileLocation: item.fileLocation || '',
+          url: "/Media/" + item.valueId + "/" + name,
+          fileLocation: item.fileLocation || "",
           uid: item.valueId,
           id: item.valueId,
-          downloadUrl: item.downloadUrl || '',
-          viewUrl: item.viewUrl || '',
+          downloadUrl: item.downloadUrl || "",
+          viewUrl: item.viewUrl || "",
           fileExtension: item.ext,
           fileSize: item.fileSize,
           name: item.name,
           Name: item.name,
-          CreatedOn: item.createdOn ? dayjs(item.createdOn).format("YYYY-MM-DD hh:mm") : '',
-          CreatedBy: item.createdByName || '',
+          CreatedOn: item.createdOn
+            ? dayjs(item.createdOn).format("YYYY-MM-DD hh:mm")
+            : "",
+          CreatedBy: item.createdByName || "",
         };
         list.push(ite);
-        if (item.ext == 'jpg' || item.ext == 'jpeg' || item.ext == 'png') {
+        if (item.ext == "jpg" || item.ext == "jpeg" || item.ext == "png") {
           list2.push(ite);
         }
       }
     }
     data.fileList = list;
     data.ImageList = list2;
-  })
+  });
 };
 const beforeUpload = (e) => {
   //data.uploadData.entityName = 'Media';
   //data.uploadData.id = props.id;
   console.log("beforeUpload", e);
-}
+};
 const changeFiles = (e) => {
   // console.log("e", e);
   if (e.file.status == "done") {
     message.success("上传成功！");
     getFiles();
   }
-}
+};
 //预览附件
 const handlePreviewFile = (item) => {
-  let url = '';
-  if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
+  let url = "";
+  if (item.fileExtension) {
+    item.fileExtension = item.fileExtension.replace(".", "");
+  }
+  if (
+    item.fileExtension == "jpg" ||
+    item.fileExtension == "jpeg" ||
+    item.fileExtension == "png"
+  ) {
     let index = 0;
     for (var i = 0; i < data.ImageList.length; i++) {
       let ite = data.ImageList[i];
@@ -1155,60 +1446,75 @@ const handlePreviewFile = (item) => {
       id: item.id,
       item: item,
       imageList: data.ImageList,
-      index: index
+      index: index,
     };
     data.isPhoto = true;
-  } else if (item.fileExtension == 'pdf') {
-    url = '/pdfjs/web/viewer.html?file=' + encodeURIComponent(item.viewUrl);
+  } else if (item.fileExtension == "pdf") {
+    url = "/pdfjs/web/viewer.html?file=" + encodeURIComponent(item.viewUrl);
     data.pdfParams = {
       id: item.id,
       name: item.name,
       index: 0,
       viewUrl: item.viewUrl,
-      downloadUrl: item.downloadUrl
+      downloadUrl: item.downloadUrl,
     };
     data.isPdf = true;
-  }
-  else if (item.fileExtension == 'txt') {
+  } else if (item.fileExtension == "txt") {
     data.txtParams = {
       name: item.name,
       viewUrl: item.viewUrl,
-      downloadUrl: item.downloadUrl
+      downloadUrl: item.downloadUrl,
     };
     data.isTxt = true;
   } else if (
-      item.fileExtension == "docx" ||
-      item.fileExtension == "pptx" ||
-      item.fileExtension == "xlsx" ||
-      item.fileExtension == "doc" ||
-      item.fileExtension == "ppt" ||
-      item.fileExtension == "xls"
+    item.fileExtension == "docx" ||
+    item.fileExtension == "pptx" ||
+    item.fileExtension == "xlsx" ||
+    item.fileExtension == "doc" ||
+    item.fileExtension == "ppt" ||
+    item.fileExtension == "xls"
+  ) {
+    if (
+      item.viewUrl &&
+      item.viewUrl.indexOf("/lightning/r/office/view") != -1
     ) {
-      if(item.viewUrl&&item.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
-        item.viewUrl='/lightning/r/office/view?id='+item.id;
-      }
-      if(item.fileExtension == "ppt" ||item.fileExtension == "pptx"){
-        item.viewUrl='/lightning/r/office/view2?id='+item.id;
-      }
-      openControlViewFile(
-        item.id,
-        item.createdByName,
-        item.fileExtension,
-        item.viewUrl,
-        item.name
-      );
     } else {
-      downloadFile(item);
+      item.viewUrl = "/lightning/r/office/view?id=" + item.id;
     }
+    if (item.fileExtension == "ppt" || item.fileExtension == "pptx") {
+      item.viewUrl = "/lightning/r/office/view2?id=" + item.id;
+    }
+    openControlViewFile(
+      item.id,
+      item.createdByName,
+      item.fileExtension,
+      item.viewUrl,
+      item.name
+    );
+  } else {
+    downloadFile(item);
+  }
 };
 //预览office文件
 const openControlViewFile = (id, username, type, link, name) => {
-  var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;
-  var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置; 
+  var mhtmlHeight = window.screen.availHeight; //获得窗口的垂直位置;
+  var mhtmlWidth = window.screen.availWidth; //获得窗口的水平位置;
   var iTop = 0; //获得窗口的垂直位置;
   var iLeft = 0; //获得窗口的水平位置;
   //window.open('/#' + link + "&FileType=" + type + "&FileName=" + name + "&UserName=" + username);
-  window.open('/#' + link + "&entityName=File", '', 'height=' + mhtmlHeight + ',width=' + mhtmlWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no');
+  window.open(
+    "/#" + link + "&entityName=File",
+    "",
+    "height=" +
+      mhtmlHeight +
+      ",width=" +
+      mhtmlWidth +
+      ",top=" +
+      iTop +
+      ",left=" +
+      iLeft +
+      ",toolbar=no,menubar=yes,scrollbars=no,resizable=yes, location=no,status=no"
+  );
 };
 //下载附件
 const downloadFile = (item) => {
@@ -1220,48 +1526,63 @@ const downloadFile = (item) => {
 //删除
 const deleteFile0 = (item) => {
   data.recordId = item.id;
-  data.confirmText = '确定要删除吗？'
-  data.confirmTitle = '删除'
+  data.confirmText = "确定要删除吗？";
+  data.confirmTitle = "删除";
   data.isConfirm = true;
   //data.isDelete = true;
-}
+};
 //删除附件
 const deleteFile = (id) => {
   let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordId: id,
-        apiName: 'Media',
-        objTypeCode: '20011',
-      }
-    }]
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordId: id,
+          apiName: "Media",
+          objTypeCode: "20011",
+        },
+      },
+    ],
   };
   let obj = {
-    message: JSON.stringify(d)
+    message: JSON.stringify(d),
   };
   // proxy.$post(Interface.deleteFiles, obj).then(res => {
-  proxy.$post(Interface.delete, obj).then(res => {
-    if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].state == 'SUCCESS') {
-      message.success("删除成功！");
-      data.isConfirm = false;
-      getFiles();
-    }
-    else {
-      if (res && res.actions && res.actions[0] && res.actions[0].state && res.actions[0].errorMessage) {
-        message.error(res.actions[0].errorMessage);
+  proxy
+    .$post(Interface.delete, obj)
+    .then((res) => {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].state &&
+        res.actions[0].state == "SUCCESS"
+      ) {
+        message.success("删除成功！");
+        data.isConfirm = false;
+        getFiles();
+      } else {
+        if (
+          res &&
+          res.actions &&
+          res.actions[0] &&
+          res.actions[0].state &&
+          res.actions[0].errorMessage
+        ) {
+          message.error(res.actions[0].errorMessage);
+        } else {
+          message.error("删除失败！");
+        }
       }
-      else {
-        message.error("删除失败！");
-      }
-    }
-  }).catch(err => {
-    console.log('error', err);
-    message.error("删除失败！");
-  });
-}
+    })
+    .catch((err) => {
+      console.log("error", err);
+      message.error("删除失败！");
+    });
+};
 </script>
 <style lang="less">
 @import url("@/style/modal.less");
@@ -1348,11 +1669,15 @@ const deleteFile = (id) => {
   align-items: center;
 }
 
-:where(.css-dev-only-do-not-override-kqecok).ant-upload-wrapper .ant-upload-drag p.ant-upload-drag-icon {
+:where(.css-dev-only-do-not-override-kqecok).ant-upload-wrapper
+  .ant-upload-drag
+  p.ant-upload-drag-icon {
   margin-bottom: 0 !important;
 }
 
-:where(.css-dev-only-do-not-override-kqecok).ant-upload-wrapper .ant-upload-drag .ant-upload {
+:where(.css-dev-only-do-not-override-kqecok).ant-upload-wrapper
+  .ant-upload-drag
+  .ant-upload {
   padding: 0 !important;
 }
 
@@ -1401,9 +1726,9 @@ const deleteFile = (id) => {
     color: #fff;
     opacity: 0;
     font-size: 20px;
-    background-color: rgba(0, 0, 0, .5);
-    -webkit-transition: opacity .3s;
-    transition: opacity .3s;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-transition: opacity 0.3s;
+    transition: opacity 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1472,7 +1797,7 @@ const deleteFile = (id) => {
 }
 
 .sectionItem3 {
-  display: flex
+  display: flex;
 }
 
 .sectionItem3 .ant-form-item {
@@ -1564,7 +1889,7 @@ input[aria-hidden="true"] {
           height: 155px;
           left: 0;
           top: 0;
-          background: rgba(242, 243, 245, .8);
+          background: rgba(242, 243, 245, 0.8);
           display: none;
 
           .btns {
@@ -1630,10 +1955,10 @@ input[aria-hidden="true"] {
       border-radius: 6px !important;
     }
   }
-  .deleteIcon{
+  .deleteIcon {
     padding-top: 1px;
   }
-  .filterWrap .ant-form .formItem{
+  .filterWrap .ant-form .formItem {
     margin-right: 10px;
   }
 }

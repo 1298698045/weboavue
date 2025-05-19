@@ -1,0 +1,53 @@
+.forceVisualMessageQueue {
+  position: fixed;
+  text-align: center;
+  top: 0;
+  z-index: 10000;
+}
+.toastContainer {
+  position: fixed;
+  width: 100%;
+  top: 8px !important;
+  z-index: 10000;
+  text-align: center;
+}
+.forceToastMessage {
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  background: #747474;
+  border-radius: 4px;
+  margin: 8px;
+  padding: 12px 12px 12px 24px;
+  min-width: 300px;
+  text-align: left;
+  justify-content: space-between;
+  font-size: 16px;
+}
+.forceToastMessage.success {
+  background: #2e844a;
+}
+.forceToastMessage.error {
+  background: #747474;
+}
+.leftIcon {
+  margin-right: 12px;
+}
+.leftIcon,
+.closeIcon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
+.forceActionsText {
+  flex: 1;
+}
+.svgIcon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+.closeIcon {
+  cursor: pointer;
+}

@@ -110,7 +110,7 @@
           </div>
         </div>
         <div class="tabContainer" v-if="activeKey == 3">
-          <ReadRecord ref="ReadRecordLst" :load="refreshData" :id="id" :type="'page'" />
+          <ReadRecord ref="ReadRecordLst" :load="refreshData" :id="id" :RegardingObjectIdName="detail.Title" :type="'page'" />
         </div>
         <div class="tabContainer" v-if="activeKey == 4">
           <DocShare :id="id" :type="'page'" :RegardingObjectIdName="detail.Title"

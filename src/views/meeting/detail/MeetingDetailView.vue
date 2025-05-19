@@ -174,6 +174,15 @@
       @selectVal="handleNewMeetingVal" :paramsTime="paramsTime" />
     <DeleteModal v-if="isDelete" :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="deleteOk"
       :sObjectName="sObjectName" :recordId="data.id" :objTypeCode="objectTypeCode" :external="external" />
+    <CommonConfirm
+      v-if="isConfirm"
+      :isShow="isConfirm"
+      :text="confirmText"
+      :title="confirmTitle"
+      @cancel="isConfirm = false"
+      @ok="confirmOk"
+      :id="data.id"
+    />
   </div>
 </template>
 <script setup>
@@ -206,9 +215,9 @@ import RadioUser from "@/components/commonModal/RadioUser.vue";
 import DeleteModal from "@/components/listView/Delete.vue";
 import Interface from "@/utils/Interface.js";
 
-//基本信息
+// 基本信息
 import DetailInfo from "@/components/detail/DetailInfo.vue";
-//会议纪要
+// 会议纪要
 import MeetingSummary from "@/components/meeting/MeetingSummary.vue";
 // 参会人员
 import Participants from "@/components/meeting/Participants2.vue";
@@ -222,15 +231,18 @@ import Service from "@/components/meeting/Service.vue";
 import MeetingResolution from "@/components/meeting/MeetingResolution2.vue";
 // 相关讨论
 import Comment from "@/components/detail/Comment2.vue";
-//会议共享
+// 会议共享
 import MeetingShare from "@/components/share/ShareList.vue";
+// 新建、编辑会议
 import NewMeeting from "@/components/meeting/meetingCalendar/NewMeeting.vue";
-//会议提醒
+// 会议提醒
 import MeetingRemind from "@/components/meeting/MeetingRemind.vue";
-//会议发布
+// 会议发布
 import MeetingRelease from "@/components/meeting/MeetingRelease.vue";
-//附件
+// 附件
 import RelatedAttachment from "@/components/commonTab/RelatedAttachment.vue";
+// 确认弹窗
+import CommonConfirm from "@/components/workflow/CommonConfirm.vue";
 const { proxy } = getCurrentInstance();
 
 const route = useRoute();
@@ -304,8 +316,14 @@ const data = reactive({
   detailData: {},
   TopicsShow: false,
   isRelease: false,
+  isConfirm: false,
+  confirmText: "",
+  confirmTitle: "",
 });
 const {
+  isConfirm,
+  confirmText,
+  confirmTitle,
   tabs,
   activeKey,
   id,
@@ -624,7 +642,66 @@ const MeetingRecPrintNotAttendPeople =()=>{
   printMeetingPeoplelst(1);
 }
 window.MeetingRecPrintNotAttendPeople = MeetingRecPrintNotAttendPeople;
-
+//取消会议
+const CancelMeeting =()=>{
+  data.confirmTitle = "取消会议"
+  data.confirmText = "确定要取消会议吗？";
+  data.isConfirm = true;
+}
+window.CancelMeeting = CancelMeeting;
+//确认回调
+const confirmOk = (id) => {
+  data.isConfirm = false;
+  if (data.confirmTitle == "取消会议") {
+    return
+    let obj = {
+      actions: [
+        {
+          id: "2919;a",
+          descriptor: "",
+          callingDescriptor: "UNKNOWN",
+          params: {
+            recordId: id,
+            apiName: "MeetingRec",
+            objTypeCode: 5000,
+          },
+        },
+      ],
+    };
+    let d = {
+      message: JSON.stringify(obj),
+    };
+    proxy.$post(Interface.delete, d).then((res) => {
+      if (
+        res &&
+        res.actions &&
+        res.actions[0] &&
+        res.actions[0].state == "SUCCESS"
+      ) {
+        message.success("取消成功");
+        setTimeout(function () {
+          // let reUrl = router.resolve({
+          //   path: "/lightning/o/Content/home",
+          //   query: {},
+          // });
+          // window.open(reUrl.href);
+          window.close();
+        }, 1000);
+      } else {
+        if (
+          res &&
+          res.actions &&
+          res.actions[0] &&
+          res.actions[0].errorMessage
+        ) {
+          message.success(res.actions[0].errorMessage);
+        } else {
+          message.error("删除失败");
+        }
+      }
+    });
+  }
+};
 onMounted(() => {
   data.id = route.query.id;
   window.addEventListener("resize", (e) => {

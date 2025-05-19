@@ -42,7 +42,8 @@
 })
 </script>
 <link rel='stylesheet' type='text/css' href='css/iWebProduct.css' />
-
+<link rel='stylesheet' type='text/css' href='css/alert.css' />
+<script type="text/javascript" src="js/alert.js"></script>
 <!-- 以下为2015主要方法 -->
 <script type="text/javascript">
  	var WebOffice = new WebOffice2015(); //创建WebOffice对象
@@ -79,13 +80,23 @@
 	}
 	
 	function Load(){
-		WebOffice.setObj(document.getElementById('WebOffice2015'));
 		document.getElementById("Author").value=username||'';
 		document.getElementById("Subject").value=FileName||'';
 		document.getElementById("Author1").value=username||'';
 		document.getElementById("Subject1").value=FileName||'';
 		document.getElementById("Author1").title=username||'';
 		document.getElementById("Subject1").title=FileName||'';
+		let TemplateList = window.localStorage.getItem('TemplateList');
+		if (TemplateList) {
+			TemplateList = JSON.parse(TemplateList);
+		}else{
+			TemplateList=[];
+		}
+		$('#dropTemplate').html('<option selected="selected" value="0">选择模板</option>');
+		for(var i=0;i<TemplateList.length;i++){
+			$('#dropTemplate').append('<option value="'+TemplateList[i].id+'">'+TemplateList[i].Name+'</option>');
+		}
+		WebOffice.setObj(document.getElementById('WebOffice2015'));
 		// mServerUrl = 'http://' + window.location.host + '/api/file/preview/';
 		// mServerUrl='http://demo.kinggrid.com:80/iWebOffice2015/OfficeServer';
 		// mFileType='.doc';
@@ -194,18 +205,84 @@
 	 function CallSave() {
 		if (!WebOffice.WebSave()) {
 			StatusMsg(WebOffice.Status);
-			alert("保存正文失败！");
+			error("保存正文失败！");
 			// setTimeout(function(){
 			// 	Load();
 			// },500)
 			return false;
 		} else {
 			StatusMsg(WebOffice.Status);
-			alert("保存正文成功！");
+			success("保存正文成功！");
 			// setTimeout(function(){
 			// 	Load();
 			// },500)
 		}
+	}
+	//选择模板
+	function ChangeTemplate(isindex) {
+		var Template = $("#dropTemplate").val();
+		if(Template=='0'){
+			WebOffice.Template = '';
+			Load();
+		}else{
+			WebOffice.Template = Template;
+			// if (!WebUseTemplate(Template)) {
+			// 	StatusMsg(WebOffice.Status);
+			// 	error("加载模板失败！");
+			// } else {
+			// 	StatusMsg(WebOffice.Status);
+			// 	success("加载模板成功！");
+			// }
+			 var url = window.mHttpUrl+"/api/oa/OfficeServer/jingge";
+			 var obj={
+				OPTION:"LOADTEMPLATE",
+				TEMPLATE:Template
+			 }
+			 var d={'JSON':JSON.stringify(obj)};
+			 $.ajax({
+				async: false, 
+				cache: false, 
+				dataType: "json",
+				data: d,
+				error: function (request, textStatus, errorThrown) {
+					error("加载模板失败！");
+				},
+				success: function (data, textStatus) {
+					if(data){
+						success("加载模板成功！");
+					}
+				},
+				type: "post",
+				url: url
+			});
+		}
+	}
+	//保存模板
+	function SaveTemplate(){
+		let type=WebOffice.FileType?WebOffice.FileType.replace('.',''):'';
+		var url = window.mHttpUrl+"/api/oa/OfficeServer/jingge";
+		var obj={
+			OPTION:"SAVETEMPLATE",
+			templateName:WebOffice.FileName,
+			fileExtension:type
+		}
+		var d={'JSON':JSON.stringify(obj)};
+		$.ajax({
+			async: false, 
+			cache: false, 
+			dataType: "json",
+			data: d,
+			error: function (request, textStatus, errorThrown) {
+				error("保存模板失败！");
+			},
+			success: function (data, textStatus) {
+				if(data){
+					success("保存模板成功！");
+				}
+			},
+			type: "post",
+			url: url
+		});
 	}
 	//新建文档
 	function linkDisabled(isindex) {
@@ -1450,16 +1527,22 @@ function OnOLECommand(OLEFlag, bCancel)
 	   <option value="1">Word文档</option>
 	   <option value="2">Excel文档</option>
    </select>
-	<input type="button" class="btn_input" onclick="WebUseTemplate('Temtwo.doc')" value="应用模板" />
-    <input type="button" class="btn_input" onclick="WebOffice.TextWriting()" value="电子签章" />
+	<!-- <input type="button" class="btn_input" onclick="WebUseTemplate('Temtwo.doc')" value="应用模板" /> -->
+	<select name="dropTemplate" id="dropTemplate" style="height: 23px;color:#000;cursor: pointer;" onchange="ChangeTemplate(0)">
+	   <option selected="selected" value="0">选择模板</option>
+	   <!-- <option value="Temone.doc">模板套红一</option>
+	   <option value="Temtwo.doc">模板套红二</option> -->
+   </select>
+   <input type="button" id="saveTemplate" class="btn_preserve" onclick="javascript: SaveTemplate();" value="保存模板" />
+    <input type="button" class="btn_input" onclick="WebOpenSignature()" value="电子签章" />
 	<input type="button" class="btn_input" onclick="Load()" value="刷新" />
 	<input type="button" class="btn_input" onclick="Load()" value="重新载入" />
 	<input type="button" class="btn_input" onclick="WebOffice.WebOpenPrint()" value="打印" />
 	<input type="button" class="btn_input" onclick="WebOffice.WebSaveLocal()" value="另存为本地" />
 	<input type="button" class="btn_input" onclick="WebOffice.WebSavePDF()" value="另存为本地PDF" />
-	<input type="button" class="btn_input" onclick="HandWriting()" value="文字批注" />
-	<input type="button" class="btn_input" onclick="ShowRevision(true)" value="显示痕迹">
-	<input type="button" class="btn_input" onclick="ShowRevision(false)" value="隐藏痕迹">
+	<input type="button" class="btn_input" onclick="WebOffice.TextWriting()" value="文字批注" />
+	<input type="button" class="btn_input" onclick="WebOffice.WebShow(true);" value="显示痕迹">
+	<input type="button" class="btn_input" onclick="WebOffice.WebShow(false)" value="隐藏痕迹">
 	<input type="button" class="btn_input" onclick="WebOffice.ModifyReview()" value="接受修订"/>
 	<input type="button" class="btn_input" onclick="CallSave()" value="保存" />
 	<!-- <input type="button" class="btn_input" onclick="CloseDocument()" value="关闭" /> -->

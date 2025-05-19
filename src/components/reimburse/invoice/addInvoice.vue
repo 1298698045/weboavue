@@ -408,6 +408,9 @@ const changeFiles = (e) => {
 //预览附件
 const handlePreviewFile = (item) => {
   let url = '';
+  if (item.fileExtension) {
+    item.fileExtension = item.fileExtension.replace(".", "");
+  }
   if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
     let index = 0;
     for (var i = 0; i < data.ImageList.length; i++) {

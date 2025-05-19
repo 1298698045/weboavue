@@ -74,9 +74,7 @@
         <div class="panel-title" v-if="data.IsRead == ''">全部记录</div>
         <div class="panel-title" v-if="data.IsRead == '1'">已读记录</div>
         <div class="panel-title" v-if="data.IsRead == '0'">未读记录</div>
-        <div class="panel-btn">
-          <!-- <a-button class="ml10" type="primary" @click="AddPeople">邀请参与人</a-button> -->
-        </div>
+        <div class="panel-btn"></div>
       </div>
       <div class="panel-bd panel-bd2">
         <div class="peopleHeader">
@@ -122,7 +120,9 @@
               </a-select> -->
           </div>
           <div class="rightOption">
-            <!-- <a-button class="ml10" type="primary" @click="AddPeople">邀请参与人</a-button> -->
+            <a-button class="ml10" type="primary" @click="AddPeople"
+              >添加可查看人员</a-button
+            >
             <a-button class="ml10" type="primary" @click="onSearch"
               >查询</a-button
             >
@@ -237,6 +237,12 @@
       :objTypeCode="objectTypeCode"
       :external="external"
     />
+    <MultipleUsers
+      v-if="isMultipleUser"
+      :isShow="isMultipleUser"
+      @cancel="isMultipleUser = false"
+      @select="handleSelectUsers"
+    />
   </div>
 </template>
 <script setup>
@@ -283,6 +289,7 @@ import { message } from "ant-design-vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 import RadioDept from "@/components/commonModal/RadioDept.vue";
 import Delete from "@/components/listView/Delete.vue";
+import MultipleUsers from "@/components/commonModal/MultipleUsers.vue";
 const { proxy } = getCurrentInstance();
 const PersonnelLst = ref();
 var columns = [
@@ -300,8 +307,8 @@ var columns = [
   },
   {
     title: "部门",
-    dataIndex: "BusinessUnit",
-    key: "BusinessUnit",
+    dataIndex: "BusinessUnitName",
+    key: "BusinessUnitName",
   },
   {
     title: "姓名",
@@ -332,6 +339,7 @@ var columns = [
 const props = defineProps({
   id: String,
   type: String,
+  RegardingObjectIdName: String,
 });
 
 const emit = defineEmits(["load"]);
@@ -379,9 +387,11 @@ const data = reactive({
   AllQty: 0,
   ReadedQty: 0,
   unReadQty: 0,
+  isMultipleUser: false,
 });
 const columnList = toRaw(columns);
 const {
+  isMultipleUser,
   AllQty,
   ReadedQty,
   unReadQty,
@@ -516,15 +526,22 @@ const sizeChange = (current, size) => {
   handleTableChange(current, size);
 };
 
-// 添加成员
+// 添加可查看人员
 const AddPeople = () => {
-  data.isRadioUser = true;
+  //data.isRadioUser = true;
   data.RoleCode = 0;
+  data.isMultipleUser = true;
 };
-// 添加管理员
-const AddAdmin = () => {
-  data.RoleCode = 2;
-  data.isRadioUser = true;
+//多选
+const handleSelectUsers = (params) => {
+  console.log("多选用户:", params);
+  let addUsers = params.map((item) => {
+    return item;
+  });
+  addUsers.forEach((item) => {
+    getUserData(item);
+  });
+  data.isMultipleUser = false;
 };
 const refreshPeople = (e) => {
   getQuery();
@@ -533,9 +550,9 @@ const refreshPeople = (e) => {
 const closeUser = (e) => {
   data.isRadioUser = false;
 };
-// 添加成员/管理员
+// 添加
 const getUserData = (params) => {
-  console.log("params:", params);
+  // console.log("params:", params);
   let url = Interface.create;
   let d = {
     actions: [
@@ -549,10 +566,12 @@ const getUserData = (params) => {
             apiName: data.sObjectName,
             objTypeCode: data.objectTypeCode,
             fields: {
-              MeetingId: props.id,
-              InviteeId: params.id,
+              ObjectId: props.id,
+              RegardingObjectIdName: props.RegardingObjectIdName,
+              ReaderId: params.id,
               Name: params.name,
-              StatusCode: 1,
+              BusinessUnitName: params.businessUnitIdName,
+              ObjectTypeCode: "100201",
             },
           },
         },
@@ -565,9 +584,26 @@ const getUserData = (params) => {
   };
   proxy.$post(url, obj).then((res) => {
     data.isRadioUser = false;
-    if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
+    if (
+      res &&
+      res.actions &&
+      res.actions[0] &&
+      res.actions[0].state == "SUCCESS"
+    ) {
       message.success("添加成功！");
       refreshPeople();
+    } else {
+      if (res && res.actions && res.actions[0]) {
+        if (res.actions[0].errorMessage) {
+          message.error(res.actions[0].errorMessage);
+        } else if (res.actions[0].error && res.actions[0].error[0]) {
+          message.error(res.actions[0].error[0]);
+        } else {
+          message.error("添加失败！");
+        }
+      } else {
+        message.error("添加失败！");
+      }
     }
   });
 };

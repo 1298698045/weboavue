@@ -383,6 +383,9 @@
 
     //预览附件
     const handlePreviewFile = (item) => {
+        if (item.fileExtension) {
+            item.fileExtension = item.fileExtension.replace(".", "");
+        }
         let url = '';
         if (item.fileExtension == 'jpg' || item.fileExtension == 'jpeg' || item.fileExtension == 'png') {
             let index = 0;

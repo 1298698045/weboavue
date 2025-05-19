@@ -14,7 +14,7 @@
         </div>
       </template>
       <div class="modalContainer scheduleModalContainer">
-        <div class="modalCenter" :style="{ height: '450px !important' }">
+        <div class="modalCenter" :style="{ height: '420px !important' }">
           <a-form :model="formState" ref="formRef">
             <div class="section">
               <div class="sectionRow">
@@ -28,53 +28,13 @@
                   </a-form-item>
                 </div>
               </div>
-              <!-- <div class="sectionRow">
-                <div class="sectionItem">
-                  <a-form-item
-                    name="OwningUser"
-                    label="名称"
-                    :rules="[{ required: true, message: '请选择名称' }]"
-                  >
-                    <a-select
-                      mode="multiple"
-                      allowClear
-                      v-model:value="formState.OwningUser"
-                      :default-active-first-option="false"
-                      :filter-option="false"
-                      showSearch
-                      @search="
-                        (e) => {
-                          searchlookup(e, '8', 'OwningUser');
-                        }
-                      "
-                      @dropdownVisibleChange="
-                        (e) => {
-                          searchlookup('', '8', 'OwningUser');
-                        }
-                      "
-                      :placeholder="'请选择名称'"
-                    >
-                      <template #suffixIcon></template>
-                      <a-select-option
-                        v-for="(option, optionIdx) in OwningUserList"
-                        :key="optionIdx"
-                        :value="option.ID"
-                        >{{ option.Name }}</a-select-option
-                      >
-                    </a-select>
-                    <div class="selectIcon">
-                      <SearchOutlined
-                        class="ant-select-suffix"
-                        @click="handleOpenLook('8', 'OwningUser')"
-                      />
-                    </div>
-                  </a-form-item>
-                </div>
-              </div> -->
               <div class="sectionRow">
                 <div class="sectionItem">
-                  <a-form-item name="Phone" label="电话号码">
-                    <a-input v-model:value="formState.Phone"></a-input>
+                  <a-form-item name="endTime" label="到期日期">
+                    <a-date-picker
+                      v-model:value="formState.EndDateTime"
+                      :valueFormat="dateFormat"
+                    />
                   </a-form-item>
                 </div>
               </div>
@@ -132,12 +92,99 @@
               </div>
               <div class="sectionRow">
                 <div class="sectionItem">
+                  <a-form-item
+                    name="OwningUser"
+                    label="被分配人"
+                    :rules="[{ required: true, message: '请选择被分配人' }]"
+                  >
+                    <a-select
+                      mode="multiple"
+                      allowClear
+                      v-model:value="formState.OwningUser"
+                      :default-active-first-option="false"
+                      :filter-option="false"
+                      showSearch
+                      @search="
+                        (e) => {
+                          searchlookup(e, '8', 'OwningUser');
+                        }
+                      "
+                      @dropdownVisibleChange="
+                        (e) => {
+                          searchlookup('', '8', 'OwningUser');
+                        }
+                      "
+                      :placeholder="'请选择被分配人'"
+                    >
+                      <template #suffixIcon></template>
+                      <a-select-option
+                        v-for="(option, optionIdx) in OwningUserList"
+                        :key="optionIdx"
+                        :value="option.ID"
+                        >{{ option.Name }}</a-select-option
+                      >
+                    </a-select>
+                    <div class="selectIcon">
+                      <SearchOutlined
+                        class="ant-select-suffix"
+                        @click="handleOpenLook('8', 'OwningUser')"
+                      />
+                    </div>
+                  </a-form-item>
+                </div>
+              </div>
+              <div class="sectionRow">
+                <div class="sectionItem">
+                  <a-form-item name="StateCode" label="状态">
+                    <div class="selectFlex">
+                      <a-select
+                        class="aselect"
+                        v-model:value="formState.StateCode"
+                        :default-active-first-option="false"
+                        :filter-option="false"
+                        :not-found-content="null"
+                      >
+                        <a-select-option
+                          v-for="(options, index) in StateCodeList"
+                          :key="index"
+                          :label="options.name"
+                          :value="options.statusId"
+                          :class="{
+                            selected: formState.StateCode == options.statusId,
+                          }"
+                        >
+                          <a-tag
+                            v-if="options.statusCategoryId * 1 == 1"
+                            color="default"
+                            size="mini"
+                            >{{ options.name }}</a-tag
+                          >
+                          <a-tag
+                            v-if="options.statusCategoryId * 1 == 2"
+                            color="processing"
+                            size="mini"
+                            >{{ options.name }}</a-tag
+                          >
+                          <a-tag
+                            v-if="options.statusCategoryId * 1 == 3"
+                            color="success"
+                            size="mini"
+                            >{{ options.name }}</a-tag
+                          >
+                        </a-select-option>
+                      </a-select>
+                    </div>
+                  </a-form-item>
+                </div>
+              </div>
+              <!-- <div class="sectionRow">
+                <div class="sectionItem">
                   <a-form-item name="Description" label="备注">
-                    <!-- <TEditor
+                    <TEditor
                       :placeholder="'请输入内容'"
                       mode="simple"
                       @input="getEditorContent"
-                    /> -->
+                    />
                     <a-textarea
                       placeholder="请输入内容"
                       :rows="5"
@@ -145,7 +192,7 @@
                     />
                   </a-form-item>
                 </div>
-              </div>
+              </div> -->
             </div>
           </a-form>
         </div>
@@ -208,7 +255,7 @@ const handleCancel = () => {
   emit("cancel", false);
 };
 const data = reactive({
-  title: "记录电话",
+  title: "新建任务",
   height: document.documentElement.clientHeight - 300,
   CalendarTypeList: [],
   OwningUserList: [],
@@ -261,8 +308,21 @@ const data = reactive({
     "#b75d0d",
   ],
   isMultipleUser: false,
+  StateCodeList: [
+    { statusId: "1", name: "打开", statusCategoryId: 2, iconUrl: null },
+    { statusId: "3", name: "进行中", statusCategoryId: 2, iconUrl: null },
+    { statusId: "4", name: "已重新打开", statusCategoryId: 1, iconUrl: null },
+    { statusId: "5", name: "已解决", statusCategoryId: 3, iconUrl: null },
+    { statusId: "6", name: "已关闭", statusCategoryId: 3, iconUrl: null },
+    { statusId: "10006", name: "Pending", statusCategoryId: 3, iconUrl: null },
+    { statusId: "10007", name: "已取消", statusCategoryId: 3, iconUrl: null },
+    { statusId: "10025", name: "待办", statusCategoryId: 1, iconUrl: null },
+    { statusId: "10011", name: "已完成", statusCategoryId: 3, iconUrl: null },
+    { statusId: "10050", name: "正在进行", statusCategoryId: 2, iconUrl: null },
+  ],
 });
 const {
+  StateCodeList,
   isMultipleUser,
   title,
   height,
@@ -277,7 +337,7 @@ const {
 const formState = reactive({
   RegardingObjectTypeCode: 20290,
   RegardingObjectId: {},
-  Subject: "电话",
+  Subject: "",
   StartDateTime: "",
   StartDateTime_time: "",
   ScheduledStart: "",
@@ -290,7 +350,7 @@ const formState = reactive({
   Description: "",
   CalendarType: "",
   RegardingObjectIdName: "",
-  BgColor: "",
+  StateCode: "10025",
   IsPrivate: false,
   Reminder: false,
   startTime: "",
@@ -552,7 +612,8 @@ const handleSubmit = () => {
                       ? formState.RegardingObjectId.Id
                       : "",
                   // ScheduledStart: formState.StartDateTime+' '+formState.StartDateTime_time,
-                  // ScheduledEnd: formState.EndDateTime+' '+formState.EndDateTime_time,
+                  ScheduledEnd: formState.EndDateTime,
+                  StateCode: formState.StateCode,
                   // IsAllDayEvent: formState.IsAllDayEvent,
                   // Reply:formState.Reply,
                   // DisplayStatus:formState.DisplayStatus,
@@ -642,15 +703,9 @@ const handleSelectUsers = (params) => {
   data.isMultipleUser = false;
 };
 const setTop = computed(() => ({
-  top: `calc(50% - 290px)`,
+  top: `calc(50% - 280px)`,
 }));
 onMounted(() => {
-  let userInfo = window.localStorage.getItem("userInfo");
-  if (userInfo) {
-    userInfo = JSON.parse(userInfo);
-    var userId = userInfo.userId;
-    formState.OwningUser = [userId];
-  }
   window.addEventListener("resize", (e) => {
     data.height = document.documentElement.clientHeight - 300;
   });
@@ -744,6 +799,27 @@ onMounted(() => {
   .suffixIcon {
     position: absolute;
     right: 5px;
+  }
+  // .ant-tag {
+  //   padding: 0 7px !important;
+  //   background: #f4f4f5;
+  //   color: #909399;
+  // }
+  .ant-select-item-option-content {
+    .ant-tag {
+      padding: 0 7px !important;
+      background: #f4f4f5;
+      color: #909399;
+    }
+  }
+  .ant-select-item:hover,
+  .ant-select-item.selected,
+  .ant-select-item.hover {
+    color: #606266;
+    font-weight: normal !important;
+    background-color: #ecf5ff !important;
+    border-left: 2px solid #0052cc !important;
+    padding-left: 18px !important;
   }
 }
 .scheduleModalContainer {
