@@ -204,6 +204,8 @@
 		var d = {
 			RecordID: getQueryString('id'),
 			entityName: getQueryString('entityName'),
+			editMethod:getQueryString('editMethod')||'',
+            docType:getQueryString('docType')||''
 		};
 	    $.ajax({
 			async: false, 

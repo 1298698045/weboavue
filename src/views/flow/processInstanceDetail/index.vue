@@ -728,12 +728,7 @@
             row.fileExtension == "ppt" ||
             row.fileExtension == "xls"
         ) {
-            if(row.viewUrl&&row.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
-              row.viewUrl='/lightning/r/office/view?id='+row.id;
-            }
-            if(row.fileExtension == "ppt" ||row.fileExtension == "pptx"){
-              row.viewUrl='/lightning/r/office/view2?id='+row.id;
-            }
+            item.viewUrl = "/lightning/r/office/view?id=" + item.id + "&docType=122";
             openControlViewFile(
             row.id,
             row.createdByName,

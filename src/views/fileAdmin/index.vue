@@ -909,7 +909,7 @@ const handleOpenFile = (item) => {
       item.fileExtension == "ppt" ||
       item.fileExtension == "xls" || item.fileExtension == "wps"
   ) {
-      item.viewUrl = "/lightning/r/office/view?id=" + item.id;
+      item.viewUrl = "/lightning/r/office/view?id=" + item.id + "&docType=100100";
       openControlViewFile(
         item.id,
         item.createdByName,

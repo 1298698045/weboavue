@@ -226,6 +226,8 @@
 		var d = {
 			RecordID: getQueryString('id'),
 			entityName: getQueryString('entityName'),
+            editMethod:getQueryString('editMethod')||'',
+            docType:getQueryString('docType')||''
 		};
 	    $.ajax({
 			async: false, 
@@ -730,19 +732,19 @@
             this.resizeTo(screen.availWidth, screen.availHeight);
             var docElm = document.documentElement;
             if(!docElm){ return }
-            /*W3C*/
-            if (docElm.requestFullscreen&&docElm.requestFullscreen != 'undefined') {
-                docElm.requestFullscreen();
+            // /*W3C*/
+            // if (docElm.requestFullscreen&&docElm.requestFullscreen != 'undefined') {
+            //     docElm.requestFullscreen();
                 
-            }/*FireFox */ else if (docElm.mozRequestFullScreen&&docElm.mozRequestFullScreen != 'undefined') {
-                docElm.mozRequestFullScreen();
+            // }/*FireFox */ else if (docElm.mozRequestFullScreen&&docElm.mozRequestFullScreen != 'undefined') {
+            //     docElm.mozRequestFullScreen();
                 
-            }/*Chrome等 */ else if (docElm.webkitRequestFullScreen&&docElm.webkitRequestFullScreen != 'undefined') {
-                docElm.webkitRequestFullScreen();
+            // }/*Chrome等 */ else if (docElm.webkitRequestFullScreen&&docElm.webkitRequestFullScreen != 'undefined') {
+            //     docElm.webkitRequestFullScreen();
                 
-            }/*IE11*/ else if (docElm.msRequestFullscreen&&docElm.msRequestFullscreen != 'undefined') {
-                docElm.msRequestFullscreen();
-            }
+            // }/*IE11*/ else if (docElm.msRequestFullscreen&&docElm.msRequestFullscreen != 'undefined') {
+            //     docElm.msRequestFullscreen();
+            // }
             WebOfficeObj.setObj(document.getElementById('WebOffice'));//给2015对象赋值
             Load();//避免页面加载完，控件还没有加载情况
             if (getQueryString('canDownload') == 'false') {
@@ -781,13 +783,13 @@
             str2 += "&UserName="+UserName;
             KGBrowser.openWindowBrowser(str2 + "$skin=0$titlecolor=f6f6f6$tabshow=1", strOptions, false);
         }
-        var abc = isSupportOfficePlug();
-        if (!abc) {
-            RunKGBrowser();
-            // setTimeout(function () {
-            //     parent.window.close();
-            // }, 2000);
-        }
+        // var abc = isSupportOfficePlug();
+        // if (!abc) {
+        //     RunKGBrowser();
+        //     setTimeout(function () {
+        //         parent.window.close();
+        //     }, 2000);
+        // }
     </script>
     <style>
 	.InputLine2{
