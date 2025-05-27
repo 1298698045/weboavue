@@ -23,7 +23,7 @@
               @confirm="openEdit(arg.event)"
               @cancel="handleDelete(arg.event)"
               :z-index="20000"
-              overlayClassName="Vehicle-popover"
+              overlayClassName="meeting-popover"
             >
               <template #icon></template>
               <template #title>

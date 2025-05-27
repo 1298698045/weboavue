@@ -907,14 +907,9 @@ const handleOpenFile = (item) => {
       item.fileExtension == "xlsx" ||
       item.fileExtension == "doc" ||
       item.fileExtension == "ppt" ||
-      item.fileExtension == "xls"
-    ) {
-      if(item.viewUrl&&item.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
-        item.viewUrl='/lightning/r/office/view?id='+item.id;
-      }
-      if(item.fileExtension == "ppt" ||item.fileExtension == "pptx"){
-        item.viewUrl='/lightning/r/office/view2?id='+item.id;
-      }
+      item.fileExtension == "xls" || item.fileExtension == "wps"
+  ) {
+      item.viewUrl = "/lightning/r/office/view?id=" + item.id;
       openControlViewFile(
         item.id,
         item.createdByName,

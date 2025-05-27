@@ -456,7 +456,6 @@ const handleLeftShow = () => {
 const getQuery = () => {
   let url = Interface.list2;
   let d = {
-    //filterId: "",
     objectTypeCode: "2021",
     entityName: "RecordReadLog",
     page: data.pagination.current,
@@ -469,47 +468,44 @@ const getQuery = () => {
   if (formState.Name) {
     d.search = formState.Name;
   }
+  if (data.activeKey * 1 == 1) {
+    data.unreadcount = 0;
+    d.filterCondition =
+      [{"attribute":"IsRead","column":"IsRead","label":"是否阅读","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[0]}];
+  } else if (data.activeKey * 1 == 2) {
+    d.filterCondition =
+      [{"attribute":"IsRead","column":"IsRead","label":"是否阅读","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[1]}];
+  } else {
+    
+  }
   if (
     formState.time &&
     formState.time.length &&
     formState.time[0] &&
     formState.time[1]
   ) {
-    if (d.filterQuery) {
+    if (d.filterCondition) {
     } else {
-      d.filterQuery = "";
+      d.filterCondition = [];
     }
-    d.filterQuery += "\nCreatedOn\tgt\t" + formState.time[0];
-    d.filterQuery += "\nCreatedOn\tlt\t" + formState.time[1];
+    d.filterCondition.push({"attribute":"CreatedOn","column":"CreatedOn","label":"创建时间","operator":"gt","logical":"AND","picklistValues":[],"isEditable":false,"operands":[formState.time[0]]});
+    d.filterCondition.push({"attribute":"CreatedOn","column":"CreatedOn","label":"创建时间","operator":"lt","logical":"AND","picklistValues":[],"isEditable":false,"operands":[formState.time[1]]});
   }
   if (formState.BusinessUnitId) {
-    if (d.filterQuery) {
+    if (d.filterCondition) {
     } else {
-      d.filterQuery = "";
+      d.filterCondition = [];
     }
-    d.filterQuery += "\nBusinessUnitId\teq\t" + formState.BusinessUnitId;
+    d.filterCondition.push({"attribute":"BusinessUnitId","column":"BusinessUnitId","label":"部门","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[formState.BusinessUnitId]});
   }
   if (data.SelectKey) {
-    if (d.filterQuery) {
+    if (d.filterCondition) {
     } else {
-      d.filterQuery = "";
+      d.filterCondition = [];
     }
-    d.filterQuery += "\nFolderId\teq\t" + data.SelectKey;
+    d.filterCondition.push({"attribute":"FolderId","column":"FolderId","label":"栏目","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[data.SelectKey]});
   }
-  if (data.activeKey * 1 == 1) {
-    data.unreadcount = 0;
-    //d.filterQuery += '\nReaderId\teq-userid\nIsRead\teq\t0';
-    d.filterCondition =
-      '[{"attribute":"IsRead","column":"IsRead","label":"是否阅读","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[0]}]';
-  } else if (data.activeKey * 1 == 2) {
-    //d.filterQuery += '\nReaderId\teq-userid\nIsRead\teq\ttrue';
-    d.filterCondition =
-      '[{"attribute":"IsRead","column":"IsRead","label":"是否阅读","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[1]}]';
-  } else {
-    // d.objectTypeCode = '100201';
-    // d.entityName = 'Content';
-    // d.displayColumns = 'Name,Title,CreatedOn,FolderId,BusinessUnitId,CreatedBy';
-  }
+  d.filterCondition=JSON.stringify(d.filterCondition);
   data.dataSource = [];
   data.pagination.total = 0;
   proxy.$post(url, d).then((res) => {
@@ -603,7 +599,6 @@ const cancelDelete = (e) => {
   data.isDelete = false;
 };
 const getTreeData = () => {
-  let filterQuery = "";
   data.treeData = [];
   data.treeDataAll = [];
   let url = Interface.content.folder.get;

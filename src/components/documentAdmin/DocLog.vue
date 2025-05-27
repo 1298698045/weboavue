@@ -264,38 +264,24 @@
     // });
     data.listData=[];
     data.pagination.total = 0;
-    let filterQuery='\nRegardingObjectId\teq\t'+props.id;
+    let filterCondition = '[{"attribute":"RegardingObjectId","column":"RegardingObjectId","label":"相关ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]}]';
     if(data.activeKey==0){
     }
     if(data.activeKey==1){
-      filterQuery+='\nIsRead\teq\ttrue';
+      filterCondition='[{"attribute":"RegardingObjectId","column":"RegardingObjectId","label":"相关ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]},{"attribute":"IsRead","column":"IsRead","label":"是否阅读","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[1]}]';
     }
     if(data.activeKey==2){
-      filterQuery+='\nIsPrint\teq\ttrue';
+      filterCondition='[{"attribute":"RegardingObjectId","column":"RegardingObjectId","label":"相关ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]},{"attribute":"IsPrint","column":"IsPrint","label":"是否打印","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[1]}]';
     }
     if(data.activeKey==3){
-      filterQuery+='\nIsDownload\teq\ttrue';
+      filterCondition='[{"attribute":"RegardingObjectId","column":"RegardingObjectId","label":"相关ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]},{"attribute":"IsDownload","column":"IsDownload","label":"是否下载","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[1]}]';
     }
-    // if(data.StatusCode){
-    //     filterQuery+='\nStatusCode\teq\t'+data.StatusCode;
-    // }
-    // if(data.CheckinStatus){
-    //     filterQuery+='\nCheckinStatus\teq\t'+data.CheckinStatus;
-    // }
-    // if(data.OwningBusinessUnitName){
-    //   filterQuery+='\nOwningBusinessUnitName\tcontains\t'+data.OwningBusinessUnitName;
-    // }
-    // if(data.Checkin1){
-    //   filterQuery+='\nCheckin\tge\t'+data.Checkin1;
-    // }
-    // if(data.Checkin2){
-    //   filterQuery+='\nCheckin\tle\t'+data.Checkin2;
-    // }
+    
           proxy.$post(Interface.list2, {
               filterId:'',
               objectTypeCode:data.objectTypeCode,
               entityName:data.sObjectName,
-              filterQuery:filterQuery,
+              filterCondition:filterCondition,
               search:data.searchVal||'',
               page: data.pagination.current,
               rows: data.pagination.pageSize,

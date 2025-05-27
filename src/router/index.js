@@ -55,6 +55,14 @@ const staticRoutes = [
         component: () => import("../views/home/commonHome.vue"),
       },
       {
+        path: "/lightning/home/:sObjectName",
+        name: "LightningHome",
+        meta: {
+          name: "LightningHome"
+        },
+        component: () => import("../views/home/commonHome.vue"),
+      },
+      {
         path: "/lightning/page/kb/dashboard",
         name: "DashboardHome2",
         meta: {
@@ -548,19 +556,19 @@ const staticRoutes = [
     },
   },
   {
-    path: "/lightning/r/office/view",
+    path: "/lightning/r/office/view2",
     name: "iWebOffice2015_v3",
     component: () => import("../views/iWebOffice2015/v3/index.vue"),
     meta: {
-      name: "新版（默认）"
+      name: "新版(没有kgb)"
     },
   },
   {
-    path: "/lightning/r/office/view2",
+    path: "/lightning/r/office/view",
     name: "iWebOffice2015_v5",
     component: () => import("../views/iWebOffice2015/v5/index.vue"),
     meta: {
-      name: "旧版"
+      name: "旧版(有kgb)"
     },
   },
   {

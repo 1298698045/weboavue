@@ -13,11 +13,7 @@
       </template>
       <div class="modalContainer">
         <div class="modalCenter" style="height: 421px !important">
-          <a-form
-            ref="formRef"
-            class="CreateProcess"
-            :model="formState"
-          >
+          <a-form ref="formRef" class="CreateProcess" :model="formState">
             <div class="form-tip">请输入流程事务标题，建立事务</div>
             <a-form-item label="流程：" name="ProcessName">
               <div class="ProcessName">{{ formState.ProcessName || "" }}</div>
@@ -286,6 +282,28 @@ const getDeptList = () => {
     }
   });
 };
+watch(
+  () => formState.BusinessUnitId,
+  (newVal, oldVal) => {
+    const now = new Date();
+    const nowtime = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+    if (formState.BusinessUnitList && formState.BusinessUnitList.length) {
+      for (var i = 0; i < formState.BusinessUnitList.length; i++) {
+        if (formState.BusinessUnitList[i].BusinessUnitId == newVal) {
+          formState.Title =
+            props.row.name +
+            " " +
+            formState.BusinessUnitList[i].businessUnitIdName +
+            " " +
+            formState.BusinessUnitList[i].FullName +
+            " " +
+            nowtime;
+        }
+      }
+    }
+  },
+  { immediate: true, deep: true }
+);
 onMounted(() => {
   formState.ProcessName = props.name;
   data.rowRecord = props.row;

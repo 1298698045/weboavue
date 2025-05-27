@@ -322,12 +322,12 @@ const getAccess = () => {
     //     data.listData = res.rows;
     // })
     data.listData = [];
-    let filterQuery = '\nObjectId\teq\t' + (props.id || '') + '\nObjectTypeCode\teq\t' + (props.RegardingObjectTypeCode || '');
+    let filterCondition = '[{"attribute":"ObjectId","column":"ObjectId","label":"对象ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]},{"attribute":"ObjectTypeCode","column":"ObjectTypeCode","label":"对象代码","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.RegardingObjectTypeCode+'"]}]';
     proxy.$post(Interface.list2, {
         filterId: '',
         objectTypeCode: '6061',
         entityName: 'RecordAccessControl',
-        filterQuery: filterQuery,
+        filterCondition: filterCondition,
         search: '',
         page: 1,
         rows: 100,
@@ -382,19 +382,17 @@ const getOptions = (val) => {
     }
 }
 const getUser = (e) => {
-    let filterQuery = '';
-    if (e) {
-        filterQuery = "\nFullName\tcontains\t" + e;
-    }
     let d = {
         filterId: "",
         objectTypeCode: '8',
         entityName: 'SystemUser',
-        filterQuery: filterQuery,
         page: 1,
         rows: 20,
         displayColumns: 'FullName,OrganizationId,BusinessUnitId,EmployeeId'
     };
+    if(e){
+        d.filterCondition='[{"attribute":"FullName","column":"FullName","label":"姓名","operator":"contains","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+e+'"]}]';
+    }
     proxy.$get(Interface.list2, d).then(res => {
         var list = [];
         if (res && res.nodes) {
@@ -420,19 +418,17 @@ const getUser = (e) => {
     })
 }
 const getRole = (e) => {
-    let filterQuery = '';
-    if (e) {
-        filterQuery = "\nName\tcontains\t" + e;
-    }
     let d = {
         filterId: "",
         objectTypeCode: '1036',
         entityName: 'Role',
-        filterQuery: filterQuery,
         page: 1,
         rows: 20,
         displayColumns: 'Name,RoleId'
     };
+    if(e){
+        d.filterCondition='[{"attribute":"Name","column":"Name","label":"名称","operator":"contains","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+e+'"]}]';
+    }
     proxy.$get(Interface.list2, d).then(res => {
         var list = [];
         if (res && res.nodes) {
@@ -451,19 +447,20 @@ const getRole = (e) => {
     })
 }
 const getGroup = (e) => {
-    let filterQuery = '\nIsPublic\teq\ttrue';
-    if (e) {
-        filterQuery = "\nName\tcontains\t" + e;
-    }
     let d = {
         filterId: "",
         objectTypeCode: '9',
         entityName: 'Group',
-        filterQuery: filterQuery,
         page: 1,
         rows: 20,
         displayColumns: 'Name,GroupId'
     };
+    if(e){
+        d.filterCondition='[{"attribute":"Name","column":"Name","label":"名称","operator":"contains","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+e+'"]},{"attribute":"IsPublic","column":"IsPublic","label":"是否公共","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[1]}]';
+    }
+    else{
+        d.filterCondition='[{"attribute":"IsPublic","column":"IsPublic","label":"是否公共","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[1]}]';
+    }
     proxy.$get(Interface.list2, d).then(res => {
         var list = [];
         if (res && res.nodes) {
@@ -482,19 +479,17 @@ const getGroup = (e) => {
     })
 }
 const getUnit = (e) => {
-    let filterQuery = '';
-    if (e) {
-        filterQuery = "\nName\tcontains\t" + e;
-    }
     let d = {
         filterId: "",
         objectTypeCode: '10',
         entityName: 'BusinessUnit',
-        filterQuery: filterQuery,
         page: 1,
         rows: 20,
         displayColumns: 'Name,BusinessUnitId'
     };
+    if(e){
+        d.filterCondition='[{"attribute":"Name","column":"Name","label":"名称","operator":"contains","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+e+'"]}]';
+    }
     proxy.$get(Interface.list2, d).then(res => {
         var list = [];
         if (res && res.nodes) {

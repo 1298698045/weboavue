@@ -12659,7 +12659,7 @@ const PDFViewerApplication = {
         type: "application/pdf"
       });
       downloadRequest(blob);
-      await this.downloadManager.download(blob, url, filename, options);
+      // await this.downloadManager.download(blob, url, filename, options);
     } catch {
       await this.downloadManager.downloadUrl(url, filename, options);
     }
@@ -12679,7 +12679,7 @@ const PDFViewerApplication = {
         type: "application/pdf"
       });
       downloadRequest(blob);
-      await this.downloadManager.download(blob, url, filename, options);
+      // await this.downloadManager.download(blob, url, filename, options);
     } catch (reason) {
       console.error(`Error when saving the document: ${reason.message}`);
       await this.download(options);

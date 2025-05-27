@@ -50,72 +50,246 @@
 	
 </script>
 <script type="text/javascript">
+	//获取地址参数
 	function getQueryString(name) {
 		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 		var r = location.search.substr(1).match(reg);
 		if (r != null) return unescape(decodeURI(r[2])); return "";
 	}
-	var mServerUrl = '';
-	var mFileType='';
-	var username='';
-	var FileName='';
-	var RecordID='';
-	var mHttpUrl='';
-	var EditType='';
-	let fileInfo = window.localStorage.getItem('fileInfo');
-	if (fileInfo) {
-		fileInfo = JSON.parse(fileInfo);
-		let id = fileInfo.mRecordID;
-		if(id&&id==getQueryString('RecordID')){
-			mServerUrl = fileInfo.mServerUrl||'';
-			username=fileInfo.mAuthor||'';
-			FileName=fileInfo.mSubject||'';
-			mHttpUrl=fileInfo.mHttpUrl||'';
-			EditType=fileInfo.EditType||'1';
-			RecordID=id;
-			if(fileInfo.mFileType){
-				mFileType=(fileInfo.mFileType).indexOf('.')!=-1?fileInfo.mFileType:'.'+fileInfo.mFileType;
+	//格式化node列表
+	function girdFormatterValue (key, row, nameField) {
+		let val = "";
+		let typename = row[key] && row[key].__typeName;
+		if (typename == "StatusField") {
+			val = row[key].name;
+		} else if (typename == "LookupField") {
+			val = row[key].lookupValue.displayName;
+		} else if (typename == "DateTimeField") {
+			val = row[key].dateTime;
+		} else if (typename == "UserField") {
+			val = row[key].userValue.DisplayName;
+		} else if (typename == "PicklistField") {
+			val = row[key].name || row[key].value;
+		} else if (typename == "DateField") {
+			val = row[key] && row[key].date;
+		} else if (typename == "TextField") {
+			val = row[key] && row[key].textValue;
+		} else if (typename == "CheckboxField") {
+			if (row[key] && row[key].img) {
+			// let imglink = '/src/assets' + row[key].img
+			let imglink = row[key].img;
+			val =
+				'<img style="height:18px;width:24px;margin-left:7px;" src="' +
+				imglink +
+				'">';
+			} else {
+			val = row[key] && row[key].selected;
 			}
+		} else {
+			val = row[key] && row[key].value;
+		}
+		if (nameField && nameField == key && row["viewUrl"]) {
+			val =
+			'<a style="text-decoration: none;color:#1677ff;" href="/#' +
+			row["viewUrl"] +
+			'" target="_blank">' +
+			val +
+			"</a>";
+		}
+		return val;
+	};
+	//编辑权限转换
+	function FormatEditType(type) {
+		if (type * 1 == 0) {//只读，不能复制
+			return "0,0";
+		} else if (type * 1 == 4) {//只读，可复制
+			return "4,0";
+		} else if (type * 1 == 1) {//起草编辑，无痕迹
+			return "1,0";
+		} else if (type * 1 == 2) {//编辑，有痕迹，不可修改
+			return "2,2";
+		} else if (type * 1 == 3) {//审核修订
+			return "3,1";
+		} else if (type * 1 == 20) {//打印，不显示修改痕迹
+			return "-1,1,0,0,0,0,0,0";
 		}
 	}
-	
-	function Load(){
-		document.getElementById("Author").value=username||'';
-		document.getElementById("Subject").value=FileName||'';
-		document.getElementById("Author1").value=username||'';
-		document.getElementById("Subject1").value=FileName||'';
-		document.getElementById("Author1").title=username||'';
-		document.getElementById("Subject1").title=FileName||'';
-		let TemplateList = window.localStorage.getItem('TemplateList');
-		if (TemplateList) {
-			TemplateList = JSON.parse(TemplateList);
-		}else{
-			TemplateList=[];
-		}
+	var isNewDocument=true;
+	var mAuthor='';//文档作者姓名
+	var mFileType='';
+	var mHttpUrl='';
+    var mRecordID='';
+	var mServerUrl = '';
+	var mSubject='';
+	var mTemplate='';
+	var mEditType='';
+	var docType='';
+	var UserName='';//当前登录用户姓名
+	var token = window.localStorage.getItem("token");
+	let userInfo = window.localStorage.getItem('userInfo');
+	if (userInfo) {
+		userInfo = JSON.parse(userInfo);
+		UserName = userInfo.fullName;
+	}
+	// 获取模板
+	// function getTemplete_Old () {
+	// 	$('#dropTemplate').html('<option selected="selected" value="0">选择模板</option>');
+	// 	var url = window.mHttpUrl+"/api/listview/data/getNodes";
+	// 	var d={
+	// 		objectTypeCode: "100112",
+	// 		entityName: "DocumentTemplate",
+	// 		search: "",
+	// 		page: 1,
+	// 		rows: 100,
+	// 		displayColumns:"Name",
+	// 	}
+	// 	$.ajax({
+	// 		async: false, 
+	// 		cache: false, 
+	// 		dataType: "json",
+	// 		data: d,
+	// 		beforeSend: function(request) {
+	// 			request.setRequestHeader("Authorization", token);
+	// 			request.setRequestHeader("Token", token);
+	// 		},
+	// 		error: function (request, textStatus, errorThrown) {
+	// 			error("获取模板失败！");
+	// 		},
+	// 		success: function (res, textStatus) {
+	// 			if (res && res.nodes && res.nodes.length) {
+	// 				for (var i = 0; i < res.nodes.length; i++) {
+	// 					var item = res.nodes[i];
+	// 					for (var cell in item) {
+	// 						if (cell != "id" && cell != "viewUrl") {
+	// 						item[cell] = girdFormatterValue(cell, item);
+	// 						}
+	// 					}
+	// 					$('#dropTemplate').append('<option value="'+item.id+'" title="'+item.Name+'">'+item.Name+'</option>');
+	// 				}
+	// 			}
+	// 		},
+	// 		type: "post",
+	// 		url: url
+	// 	});
+	// };
+	function getTemplete () {
 		$('#dropTemplate').html('<option selected="selected" value="0">选择模板</option>');
-		for(var i=0;i<TemplateList.length;i++){
-			$('#dropTemplate').append('<option value="'+TemplateList[i].id+'">'+TemplateList[i].Name+'</option>');
+		var url = window.mHttpUrl+"/api/oa/office/getTemplate";
+		var d={
 		}
+		$.ajax({
+			async: false, 
+			cache: false, 
+			dataType: "json",
+			data: d,
+			error: function (request, textStatus, errorThrown) {
+				error("获取模板失败！");
+			},
+			success: function (res, textStatus) {
+				if (res && res.actions && res.actions[0] && res.actions[0].returnValue && res.actions[0].returnValue.length) {
+					for (var i = 0; i < res.actions[0].returnValue.length; i++) {
+						var item = res.actions[0].returnValue[i];
+						$('#dropTemplate').append('<option value="'+item.valueId+'" title="'+item.name+'">'+item.name+'</option>');
+					}
+				}
+			},
+			type: "get",
+			url: url
+		});
+	};
+
+	//获取文件信息
+	function getFileInfo () {
+		var url = window.mHttpUrl+"/api/oa/office/getFileInfo";
+		var d = {
+			RecordID: getQueryString('id'),
+			entityName: getQueryString('entityName'),
+		};
+	    $.ajax({
+			async: false, 
+			cache: false, 
+			dataType: "json",
+			data: d,
+			beforeSend: function(request) {
+				// request.setRequestHeader("Authorization", token);
+				// request.setRequestHeader("Token", token);
+			},
+			error: function (request, textStatus, errorThrown) {
+				error("获取文件信息失败！");
+			},
+			success: function (res, textStatus) {
+				let fileInfo = res.actions[0].returnValue;
+				if (
+				res &&
+				res.actions &&
+				res.actions[0] &&
+				res.actions[0].state == "SUCCESS"
+				) {
+					let fileInfo = res.actions[0].returnValue;
+					isNewDocument=fileInfo.isNewDocument;
+					mAuthor=fileInfo.mAuthor||'';
+					if(fileInfo.mFileType){
+						mFileType=(fileInfo.mFileType).indexOf('.')!=-1?fileInfo.mFileType:'.'+fileInfo.mFileType;
+					}
+					mHttpUrl=fileInfo.mHttpUrl||'';
+                    mRecordID=fileInfo.mRecordID||'';
+					mServerUrl = fileInfo.mServerUrl||'';
+					mSubject=fileInfo.mSubject||'';
+					mTemplate=fileInfo.mTemplate||'';
+					docType=fileInfo.docType||getQueryString('docType')||'';
+					mEditType=getQueryString('editMethod')||fileInfo.mEditType||'0';
+					mEditType=FormatEditType(mEditType);
+					document.getElementById("Author").value=mAuthor||'';
+					document.getElementById("Subject").value=mSubject||'';
+					document.getElementById("Author1").value=mAuthor||'';
+					document.getElementById("Subject1").value=mSubject||'';
+					document.getElementById("Author1").title=mAuthor||'';
+					document.getElementById("Subject1").title=mSubject||'';
+					Load1();
+				} else {
+					if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
+						message.error(
+						res && res.actions && res.actions[0] && res.actions[0].errorMessage
+						);
+					} else if (res && res.actions && res.actions[0] && res.actions[0].error) {
+						message.error(
+						res && res.actions && res.actions[0] && res.actions[0].error
+						);
+					} else {
+						message.error("获取文件信息失败！");
+					}
+				}
+			},
+			type: "post",
+			url: url
+		});
+	};
+	function Load(){
+		getTemplete();
+		getFileInfo();
+	}
+	function Load1(){
 		WebOffice.setObj(document.getElementById('WebOffice2015'));
-		// mServerUrl = 'http://' + window.location.host + '/api/file/preview/';
-		// mServerUrl='http://demo.kinggrid.com:80/iWebOffice2015/OfficeServer';
-		// mFileType='.doc';
-		// username='OA管理员';
-		// FileName='测试';
-	    // RecordID='08EADF28-7880-482F-A0E6-2CF725F635C0';
-		console.log('RecordID:',RecordID);
-		console.log('mServerUrl:',mServerUrl);
+		console.log('isNewDocument:',isNewDocument);
+		console.log('mAuthor:',mAuthor);
 		console.log('mFileType:',mFileType);
-		console.log('username:',username);
-		console.log('FileName:',FileName);
 		console.log('mHttpUrl:',mHttpUrl);
-		console.log('EditType:',EditType);
+		console.log('mRecordID:',mRecordID);
+		console.log('mServerUrl:',mServerUrl);
+		console.log('mSubject:',mSubject);
+		console.log('mTemplate:',mTemplate);
+		console.log('mEditType:',mEditType);
+		console.log('UserName:',UserName);
 	try{
-			WebOffice.WebUrl= mServerUrl;             //WebUrl:系统服务器路径，与服务器文件交互操作，如保存、打开文档，重要文件
-			WebOffice.RecordID=RecordID;            //RecordID:本文档记录编号
-		    WebOffice.FileName=FileName;            //FileName:文档名称
-		    WebOffice.FileType= mFileType;            //FileType:文档类型  .doc  .xls  
-			WebOffice.UserName=username||'';            //UserName:操作用户名，痕迹保留需要
+			WebOffice.WebUrl = mServerUrl;             //WebUrl:系统服务器路径，与服务器文件交互操作，如保存、打开文档，重要文件
+			WebOffice.RecordID = mRecordID;            //RecordID:本文档记录编号
+		    WebOffice.FileName = mSubject;            //FileName:文档名称
+		    WebOffice.FileType = mFileType;            //FileType:文档类型  .doc  .xls  
+			WebOffice.UserName = UserName;            //UserName:操作用户名，痕迹保留需要
+			WebOffice.Template = mTemplate;
+			WebOffice.EditType = mEditType;
+			ShowRevision(false);
+			$('.btn_EditType').attr('disabled',true);
 		    WebOffice.AppendMenu("1","打开本地文件(&L)");    //多次给文件菜单添加
 		    WebOffice.AppendMenu("2","保存本地文件(&S)");
 			WebOffice.AppendMenu("3","-");
@@ -127,7 +301,7 @@
 		    WebOffice.Skin('purple');                          //设置皮肤：紫色
 			WebOffice.HookEnabled();
 		    WebOffice.SetCaption();
-		    WebOffice.SetUser(username);
+		    WebOffice.SetUser(UserName);
 		    
 			WebOffice.ChangeLanguage(0x804);                 //英文：0x409，简体中文(0x804)，繁体中文（台湾）(0x404)葡萄牙语0xd04
 			WebOffice.ShowOpenProgress(false);
@@ -167,14 +341,14 @@
 			
 			if(WebOffice.WebOpen()){                             //打开该文档    交互OfficeServer  调出文档OPTION="LOADFILE"
 			    
-			username = WebOffice.WebObject.ActiveDocument.Application.UserName;
-			WebOffice.UserName= username;            //UserName:操作用户名，痕迹保留需要
+			//UserName = WebOffice.WebObject.ActiveDocument.Application.UserName;
+			WebOffice.UserName= UserName;            //UserName:操作用户名，痕迹保留需要
 			//var selection = WebOffice.WebObject.ActiveDocument.Application.Selection;    //调用VBA设置默认字体
 			//selection.Font.Name= "仿宋";  //字体
 			//selection.Font.Size = "16";   //字体大小
 			//selection.Font.Bold = true;  //设置粗体
 				
-				WebOffice.setEditType(EditType);         //EditType:编辑类型  方式一   WebOpen之后
+				WebOffice.setEditType(mEditType);         //EditType:编辑类型  方式一   WebOpen之后
 			   // WebOffice.IsModify(0);                           //获取当前文档状态
 				WebOffice.VBASetUserName(WebOffice.UserName);    //设置用户名
 				
@@ -185,7 +359,26 @@
 		    }else{
 				WebOffice.CreateFile();
 			}
-			
+			if(mEditType=='1,0'||mEditType=='2,2'||mEditType=='3,1'){
+				$('.btn_EditType').removeAttr('disabled');
+				if(mEditType=='1,0'){
+					WebOffice.WebShow(false);
+				}else{
+					WebOffice.WebShow(true);
+				}
+				if(mEditType=='2,2'){
+					$('.btn_EditType3').attr('disabled',true);
+				}
+			}
+			else{
+				$('.btn_EditType').attr('disabled',true);
+				WebOffice.WebShow(false);
+			}
+			if(mEditType=='0,0'){
+				WebOffice.WebEnableCopy(0);
+			}else{
+				WebOffice.WebEnableCopy(1);
+			}
  	  }catch(e){
 		console.log(e);
 		if(WebOffice&&WebOffice.obj){
@@ -195,7 +388,7 @@
 			WebOffice.CreateFile();
 		}
  	  }
-	  //console.log(WebOffice)
+	  console.log('WebOffice:',WebOffice);
  	}
 	
 	 window.onload=function(){
@@ -221,12 +414,20 @@
 	//选择模板
 	function ChangeTemplate(isindex) {
 		var Template = $("#dropTemplate").val();
+		var TemplateName='';
+		$('#dropTemplate').find('option').each(function(index,item){
+			if($(item).attr('value')==Template){
+				$("#dropTemplate").attr('title',$(item).text());
+				TemplateName=$(item).text();
+			}
+		})
 		if(Template=='0'){
-			WebOffice.Template = '';
+			WebOffice.Template = window.mTemplate;
+			TemplateName='';
 			Load();
 		}else{
 			WebOffice.Template = Template;
-			// if (!WebUseTemplate(Template)) {
+			// if (!WebUseTemplate(TemplateName)) {
 			// 	StatusMsg(WebOffice.Status);
 			// 	error("加载模板失败！");
 			// } else {
@@ -238,23 +439,43 @@
 				OPTION:"LOADTEMPLATE",
 				TEMPLATE:Template
 			 }
-			 var d={'JSON':JSON.stringify(obj)};
-			 $.ajax({
-				async: false, 
-				cache: false, 
-				dataType: "json",
-				data: d,
-				error: function (request, textStatus, errorThrown) {
-					error("加载模板失败！");
-				},
-				success: function (data, textStatus) {
-					if(data){
+			//  var d={'JSON':JSON.stringify(obj)};
+			//  $.ajax({
+			// 	async: false, 
+			// 	cache: false, 
+			// 	dataType: "json",
+			// 	data: fd,
+			// 	error: function (request, textStatus, errorThrown) {
+			// 		error("加载模板失败！");
+			// 	},
+			// 	success: function (data, textStatus) {
+			// 		if(data){
+			// 			success("加载模板成功！");
+			// 		}
+			// 	},
+			// 	type: "post",
+			// 	url: url
+			// });
+			let formData=new FormData();
+			formData.append('JSON', JSON.stringify(obj));
+			let xhr = new XMLHttpRequest();
+			xhr.open('POST', url, true);
+			// xhr.setRequestHeader("Authorization", token);
+			// xhr.setRequestHeader("Token", token);
+			xhr.onload = function () {
+				if (xhr.status >= 200 && xhr.status < 300) {
+					if(!WebUseTemplate(TemplateName)){
+						error("加载模板失败！");
+						return false;
+					}
+					else{
 						success("加载模板成功！");
 					}
-				},
-				type: "post",
-				url: url
-			});
+				} else {
+					error("加载模板失败！");
+				}
+			};
+			xhr.send(formData);
 		}
 	}
 	//保存模板
@@ -266,23 +487,37 @@
 			templateName:WebOffice.FileName,
 			fileExtension:type
 		}
-		var d={'JSON':JSON.stringify(obj)};
-		$.ajax({
-			async: false, 
-			cache: false, 
-			dataType: "json",
-			data: d,
-			error: function (request, textStatus, errorThrown) {
+		// var d={'JSON':JSON.stringify(obj)};
+		// $.ajax({
+		// 	async: false, 
+		// 	cache: false, 
+		// 	dataType: "json",
+		// 	data: d,
+		// 	error: function (request, textStatus, errorThrown) {
+		// 		error("保存模板失败！");
+		// 	},
+		// 	success: function (data, textStatus) {
+		// 		if(data){
+		// 			success("保存模板成功！");
+		// 		}
+		// 	},
+		// 	type: "post",
+		// 	url: url
+		// });
+		let formData=new FormData();
+		formData.append('JSON', JSON.stringify(obj));
+		let xhr = new XMLHttpRequest();
+		xhr.open('POST', url, true);
+		// xhr.setRequestHeader("Authorization", token);
+		// xhr.setRequestHeader("Token", token);
+		xhr.onload = function () {
+			if (xhr.status >= 200 && xhr.status < 300) {
+				success("保存模板成功！");
+			} else {
 				error("保存模板失败！");
-			},
-			success: function (data, textStatus) {
-				if(data){
-					success("保存模板成功！");
-				}
-			},
-			type: "post",
-			url: url
-		});
+			}
+		};
+		xhr.send(formData);
 	}
 	//新建文档
 	function linkDisabled(isindex) {
@@ -320,7 +555,7 @@
 						WebOffice.Skin('purple');                          //设置皮肤：紫色
 						WebOffice.HookEnabled();
 						WebOffice.SetCaption();
-						WebOffice.SetUser(username);
+						WebOffice.SetUser(UserName);
 						
 						WebOffice.ChangeLanguage(0x804);                 //英文：0x409，简体中文(0x804)，繁体中文（台湾）(0x404)葡萄牙语0xd04
 						WebOffice.ShowOpenProgress(false);
@@ -359,7 +594,7 @@
 	function SaveDocument(){
 		//alert(WebOffice.WebSave());
 		//alert(WebOffice.obj.IsModify(1));
-		WebOffice.WebObject.ActiveDocument.Application.UserName = username;
+		WebOffice.WebObject.ActiveDocument.Application.UserName = UserName;
 	  if (WebOffice.WebSave()){    //交互OfficeServer的OPTION="SAVEFILE"
 	     document.getElementById("iWebOfficeForm").submit();
 	     //alert("222");
@@ -379,16 +614,15 @@
 	 //作用：返回列表
 	function CloseDocument(){
 		
-		/*x="浏览器将关闭，当前文档是否要保存？";
-        y=confirm(x);
-		if(y==true){
-			SaveDocument();
-			WebOffice.WebClose();
-		}else{
-			WebOffice.WebClose();
-		}*/
-	   //alert(username);
-	   WebOffice.WebObject.ActiveDocument.Application.UserName = username;
+			/*x="浏览器将关闭，当前文档是否要保存？";
+			y=confirm(x);
+			if(y==true){
+				SaveDocument();
+				WebOffice.WebClose();
+			}else{
+				WebOffice.WebClose();
+			}*/
+		WebOffice.WebObject.ActiveDocument.Application.UserName = UserName;
 	    WebOffice.WebClose();
 		//var filePathDown = WebOffice.WebObject.FileSystem.GetSpecialFolderPath(0x1a)+"\\WebOffice";
 		//var filePathUp = WebOffice.WebObject.FileSystem.GetSpecialFolderPath(0x1a)+"\\WebOffice\\Up";
@@ -1037,8 +1271,7 @@ function DocIsModify()
 	var x,y;
 	function onUnload(){
 		//SaveDocument();
-		//alert(username);
-		WebOffice.WebObject.ActiveDocument.Application.UserName = username;
+		WebOffice.WebObject.ActiveDocument.Application.UserName = UserName;
 		
 		WebOffice.WebClose();
 		/*x="浏览器将关闭，当前文档是否要保存？";
@@ -1512,6 +1745,50 @@ function OnOLECommand(OLEFlag, bCancel)
 	#WebOffice2015{
 		height: 100%;
 	}
+	select:disabled,input:disabled {
+		cursor: not-allowed !important;
+	}
+	.rightBtn input{
+        color: #fff;
+        background-color: #1677ff;
+        font-size: 14px;
+        height: 30px;
+        padding: 4px 10px;
+        line-height: 10px;
+        border-radius: 2px;
+        border: 0;
+        margin-left: 0px;
+        margin-bottom: 4px;
+		margin-top: 8px;
+    }
+    .rightBtn select{
+        background-color: #ffffff;
+        border-color: #d9d9d9;
+        color: rgba(0, 0, 0, 0.88);
+        font-size: 14px;
+        height: 30px !important;
+        padding: 4px 5px;
+        width: 90px;
+        line-height: 10px;
+        border-radius: 2px;
+        margin-left: 0px;
+        cursor: pointer;
+        position: relative !important;
+        top:0px !important;
+        text-overflow: ellipsis;
+        overflow: hidden !important;
+    }
+    .rightBtn input:hover{
+        color: #fff;
+        background-color: #4096ff;
+    }
+    .rightBtn select:disabled, .rightBtn input:disabled{
+        cursor: not-allowed;
+        border-color: #d9d9d9;
+        color: rgba(0, 0, 0, 0.25);
+        background-color: rgba(0, 0, 0, 0.04);
+        box-shadow: none;
+    }
 </style>
 </head>
 <body  style="overflow-y:hidden;overflow-x:hidden" onUnload="onUnload()">
@@ -1521,30 +1798,30 @@ function OnOLECommand(OLEFlag, bCancel)
     <span>标题：<input disabled type=text name="Subject1" id="Subject1"   onchange=" document.getElementById('Subject').value = this.value;" value="" class="InputLine2"  onblur="if(this.value.length>20){this.value='请输入主题';StatusMsg('主题不能超过50个字');}"/> </span>
 	<span>作者：<input disabled type=text onchange=" document.getElementById('Author').value = this.value;" name="Author1"  id="Author1" value="" class="InputLine2" onblur="if(this.value.length>8){this.value='体验用户';StatusMsg('作者不能超过8个字');}" /></span>
  </td>
- <td class="title title2">
-	<select name="dropOpenType" id="dropOpenType" style="height: 23px;color:#000;cursor: pointer;" onchange="linkDisabled(0)">
+ <td class="title title2 rightBtn">
+	<select name="dropOpenType" id="dropOpenType" class="btn_EditType" style="height: 23px;color:#000;cursor: pointer;" onchange="linkDisabled(0)">
 	   <option selected="selected" value="0">新建文档</option>
 	   <option value="1">Word文档</option>
 	   <option value="2">Excel文档</option>
    </select>
 	<!-- <input type="button" class="btn_input" onclick="WebUseTemplate('Temtwo.doc')" value="应用模板" /> -->
-	<select name="dropTemplate" id="dropTemplate" style="height: 23px;color:#000;cursor: pointer;" onchange="ChangeTemplate(0)">
+	<select name="dropTemplate" id="dropTemplate" class="btn_EditType" style="height: 23px;color:#000;cursor: pointer;" onchange="ChangeTemplate(0)">
 	   <option selected="selected" value="0">选择模板</option>
 	   <!-- <option value="Temone.doc">模板套红一</option>
 	   <option value="Temtwo.doc">模板套红二</option> -->
    </select>
-   <input type="button" id="saveTemplate" class="btn_preserve" onclick="javascript: SaveTemplate();" value="保存模板" />
-    <input type="button" class="btn_input" onclick="WebOpenSignature()" value="电子签章" />
-	<input type="button" class="btn_input" onclick="Load()" value="刷新" />
-	<input type="button" class="btn_input" onclick="Load()" value="重新载入" />
+   <input type="button" id="saveTemplate" class="btn_preserve btn_EditType" onclick="javascript: SaveTemplate();" value="保存模板" />
+    <input type="button" class="btn_input btn_EditType" onclick="WebOpenSignature()" value="电子签章" />
+	<input type="button" class="btn_input" onclick="Load1()" value="刷新" />
+	<input type="button" class="btn_input" onclick="Load1()" value="重新载入" />
 	<input type="button" class="btn_input" onclick="WebOffice.WebOpenPrint()" value="打印" />
 	<input type="button" class="btn_input" onclick="WebOffice.WebSaveLocal()" value="另存为本地" />
 	<input type="button" class="btn_input" onclick="WebOffice.WebSavePDF()" value="另存为本地PDF" />
-	<input type="button" class="btn_input" onclick="WebOffice.TextWriting()" value="文字批注" />
-	<input type="button" class="btn_input" onclick="WebOffice.WebShow(true);" value="显示痕迹">
-	<input type="button" class="btn_input" onclick="WebOffice.WebShow(false)" value="隐藏痕迹">
-	<input type="button" class="btn_input" onclick="WebOffice.ModifyReview()" value="接受修订"/>
-	<input type="button" class="btn_input" onclick="CallSave()" value="保存" />
+	<input type="button" class="btn_input btn_EditType" onclick="WebOffice.TextWriting()" value="文字批注" />
+	<input type="button" class="btn_input btn_EditType" onclick="WebOffice.WebShow(true);" value="显示痕迹">
+	<input type="button" class="btn_input btn_EditType" onclick="WebOffice.WebShow(false)" value="隐藏痕迹">
+	<input type="button" class="btn_input btn_EditType btn_EditType3" onclick="WebAcceptAllRevisions()" value="审核修订"/>
+	<input type="button" class="btn_input btn_EditType" onclick="CallSave()" value="保存" />
 	<!-- <input type="button" class="btn_input" onclick="CloseDocument()" value="关闭" /> -->
 </td>
  </tr> 

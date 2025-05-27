@@ -210,12 +210,12 @@
     // });
     data.listData=[];
     data.pagination.total = 0;
-    let filterQuery = '\nObjectId\teq\t' + (props.id || '')+'\nObjectTypeCode\teq\t'+(props.RegardingObjectTypeCode||'');
+    let filterCondition = '[{"attribute":"ObjectId","column":"ObjectId","label":"对象ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]},{"attribute":"ObjectTypeCode","column":"ObjectTypeCode","label":"对象代码","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.RegardingObjectTypeCode+'"]}]';
           proxy.$post(Interface.list2, {
               filterId:'',
               objectTypeCode:data.objectTypeCode,
               entityName:data.sObjectName,
-              filterQuery:filterQuery,
+              filterCondition:filterCondition,
               search:data.searchVal||'',
               page: data.pagination.current,
               rows: data.pagination.pageSize,

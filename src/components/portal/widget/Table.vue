@@ -196,7 +196,7 @@
                     border-right: 1px solid transparent;
                     border-left: 1px solid transparent;
                     color: #333333;
-                    font-size: 12px;
+                    font-size: 14px;
                     padding: 0 16px;
                     font-weight: 500;
                     border-bottom: 1px solid #f2f2f2;
@@ -208,6 +208,7 @@
         tbody{
             tr{
                 &:hover{
+                    cursor: pointer;
                     background: #f5f5f5;
                 }
                 td{
@@ -215,7 +216,7 @@
                     display: table-cell;
                     vertical-align: middle;
                     word-break: break-word;
-                    font-size: 12px;
+                    font-size: 14px;
                     color: #666;
                     font-weight: normal;
                     border-bottom: 1px solid #f2f2f2;
@@ -231,7 +232,7 @@
         }
     }
     .table-content{
-        height: calc(~"100% - 42px");
+        height: calc(100% - 42px);
         overflow: auto;
     }
     .table-grid-tfoot{
@@ -274,6 +275,7 @@
             tr{
                 &:hover{
                     background: #e9f7ff;
+                    cursor: pointer;
                 }
                 td{
                     table-layout: fixed;
@@ -361,18 +363,50 @@
         top: -1px;
         z-index: 999;
         &.active{
-            width: calc(~"100% - 10px");
+            width: calc(100% - 10px);
         }
     }
 </style>
 <style lang="less">
-    .td-span a{
+    .ebcoms-column {
+        a {
+            color: #333333 !important;
+            font-size: 14px !important;
+
+            &:hover {
+                text-decoration: underline !important;
+            }
+        }
+    }
+    /* .td-span a{
         color: #333333 !important;
         max-width: 100% !important;
         display: inline-block;
         white-space: nowrap;
         &:hover{
             color: #4d7ad8 !important;
+        }
+    } */
+    .td-span {
+        a {
+            color: #333333 !important;
+            font-size: 14px !important;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+    .light_table {
+        td {
+            a {
+                color: #333333 !important;
+                font-size: 14px !important;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
     }
 </style>

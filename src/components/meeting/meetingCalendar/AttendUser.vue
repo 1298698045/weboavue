@@ -25,7 +25,7 @@
           </a-table>
         </div>
       </div>
-      <radio-user :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
+      <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser" @ok="refreshPeople"></radio-user>
       <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople" :sObjectName="sObjectName" :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
       <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser = false"
       @select="handleSelectUsers" />
@@ -155,18 +155,12 @@
     // });
     data.listData=[];
     data.pagination.total = 0;
-    let filterQuery='\nMeetingId\teq\t'+props.id;
-    if(data.StatusCode){
-        filterQuery+='\nStatusCode\teq\t'+data.StatusCode;
-    }
-    if(data.CheckinStatus){
-        filterQuery+='\nCheckinStatus\teq\t'+data.CheckinStatus;
-    }
+    let filterCondition = '[{"attribute":"MeetingId","column":"MeetingId","label":"会议","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]}]';
           proxy.$post(Interface.list2, {
               filterId:'',
               objectTypeCode:'5002',
               entityName:'MeetingAudience',
-              filterQuery:filterQuery,
+              filterCondition:filterCondition,
               search:data.searchVal||'',
               page: data.pagination.current,
               rows: data.pagination.pageSize,
@@ -205,7 +199,7 @@
     data.pagination.current=pag.current;
     getQuery();
   }
-  getQuery();
+  
   // 添加成员
   const AddPeople = () => {
     //data.isRadioUser = true;
@@ -280,6 +274,11 @@ const handleSelectUsers = (params) => {
   });
   data.isMultipleUser = false;
 };
+  onMounted(() => {
+    if(props.id){
+      getQuery();
+    }
+  })
   defineExpose({ getQuery,PersonnelLst });
   //删除
   const handleDelete = (key) => {

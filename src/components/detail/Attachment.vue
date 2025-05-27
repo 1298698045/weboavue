@@ -55,11 +55,11 @@
             <template v-if="column.key === 'Action'">
               <div class="iconBox">
                 <div class="popup">
-                  <div class="option-item" v-if="attachPerm.read" @click.stop="handlePreviewFile(record)" :num="index">查看
+                  <div class="option-item" @click.stop="handlePreviewFile(record)" :num="index">查看
                   </div>
                   <!-- <div class="option-item" @click="handleEdit(record)" :num="index">编辑</div>   -->
-                  <div class="option-item" :num="index" @click.stop="handleRename(record)">重命名</div>
-                  <div class="option-item" v-if="attachPerm.delete" @click.stop="handleDelete(record)" :num="index">删除</div>
+                  <div class="option-item" :num="index" v-if="[1,2,3].includes(attachPerm.filePermission)" @click.stop="handleRename(record)">重命名</div>
+                  <div class="option-item" v-if="attachPerm.filePermission == 1" @click.stop="handleDelete(record)" :num="index">删除</div>
                   <div class="option-item" @click.stop="downloadFile(record)" :num="index">下载</div>
                 </div>
                 <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation"
@@ -104,7 +104,7 @@
     <CommonConfirm v-if='isConfirm' :isShow="isConfirm" :text="confirmText" :title="confirmTitle"
       @cancel="isConfirm = false" @ok="deleteFile" :id="recordId" />
     <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
-    <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+    <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" :editMethod="attachPerm.filePermission" @cancel="isPdf = false" />
     <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
     <Rename
       :isShow="isRename"
@@ -218,7 +218,6 @@
     preview: [Number, String],
     attachPerm: Object
   });
-
   const emit = defineEmits(["load"]);
   const token = localStorage.getItem("token");
   const data = reactive({
@@ -396,20 +395,8 @@
             downloadUrl: item.downloadUrl
         };
         data.isTxt = true;
-    } else if (
-      item.fileExtension == "docx" ||
-      item.fileExtension == "pptx" ||
-      item.fileExtension == "xlsx" ||
-      item.fileExtension == "doc" ||
-      item.fileExtension == "ppt" ||
-      item.fileExtension == "xls"
-    ) {
-      if(item.viewUrl&&item.viewUrl.indexOf('/lightning/r/office/view')!=-1){}else{
-        item.viewUrl='/lightning/r/office/view?id='+item.id;
-      }
-      if(item.fileExtension == "ppt" ||item.fileExtension == "pptx"){
-        item.viewUrl='/lightning/r/office/view2?id='+item.id;
-      }
+    } else if (isCaseExit(item.fileExtension)) {
+      item.viewUrl = "/lightning/r/office/view?id=" + item.id + '&editMethod=' + props.attachPerm.filePermission + "&docType=122";
       openControlViewFile(
         item.id,
         item.createdByName,
@@ -421,6 +408,11 @@
       downloadFile(item);
     }
   };
+  const isCaseExit = (fileExtension) => {
+    let currentFileExtension = fileExtension.toLowerCase();
+    let wordTypes = ["docx", "pptx", "xlsx", "doc", "ppt", "xls", "wps"];
+    return wordTypes.includes(currentFileExtension);
+  }
   //预览office文件
   const openControlViewFile = (id, username, type, link, name) => {
     var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;

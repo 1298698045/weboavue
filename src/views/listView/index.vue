@@ -8,7 +8,7 @@
                 <img class="img" :src="Interface.pathUrl+initialData?.recordThemeInfo?.iconImageURL" alt="" />
             </div>
             <div class="menu-box">
-              <div class="label">{{title}}</div>
+              <div class="label"></div>
               <div class="row">
                 <div class="triggerLinkTextAndIconWrapper" @click.stop="isFilterPicker=true">
                   <h1>{{ currentFilter.name }}</h1>

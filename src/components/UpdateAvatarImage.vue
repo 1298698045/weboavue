@@ -38,8 +38,8 @@
       </div>
       <template #footer>
         <div>
-          <a-button @click="handleCancel" class="cancelmodel">取消</a-button>
-          <a-button type="primary" @click.prevent="handleSubmit">保存</a-button>
+          <a-button @click="handleCancel" class="cancelmodel">关闭</a-button>
+          <!-- <a-button type="primary" @click.prevent="handleSubmit">保存</a-button> -->
         </div>
       </template>
     </a-modal>
@@ -84,6 +84,9 @@
   const emit = defineEmits(["cancel","load"]);
   const handleCancel = () => {
     emit("cancel", false);
+    if(data.isUpdate){
+       window.location.reload();
+    }
   };
   const formState2 = reactive({
     OwningUser: {
@@ -108,11 +111,12 @@
     fileList: [],
     file: null,
     imageUrl:'',
-    recordId:''
+    recordId:'',
+    isUpdate:false
   });
   const {
     title,
-    height, select, search,step,imageUrl,fileList,file
+    height, select, search,step,imageUrl,fileList,file,isUpdate
   } = toRefs(data);
   const formState = reactive({
     Name: '',
@@ -156,6 +160,7 @@
     }
   }
   const changeRequest=(file) => {
+      const token = localStorage.getItem("token");
       nextTick(()=>{
           if (data.file) {
             let fd = new FormData();
@@ -168,9 +173,12 @@
                 data: fd,
                 headers: {
                     'Content-type': 'multipart/form-data',
+                    // 'Authorization': token,
+                    // 'Token': token
                 },
             }).then(res=>{
                 message.success("上传成功！");
+                data.isUpdate=true;
             }).catch(err => {
                 console.log('error', err);
                 message.error("上传失败！");

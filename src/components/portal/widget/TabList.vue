@@ -3,6 +3,20 @@
         <template v-if="themeType=='modern'">
             <div class="card-header">
                 <div class="header-title">{{item.name}}</div>
+                <span class="toolbar">
+                    <ul>
+                        <li @click="getQuery()">
+                            <a href="javascript:void(0);" name="refreshbtn" title="刷新">
+                                <img src="@/assets/img/refresh_wev8.png" border="0" alt="">
+                            </a>
+                        </li>
+                        <li style="width: 34px;" @click.stop="handleMore(item)">
+                            <a href="javascript:void(0);">
+                                <img class="imgMore" src="@/assets/img/more_wev8.png" border="0" alt="" title="更多">
+                            </a>
+                        </li>
+                    </ul>
+                </span>
             </div>
             <div class="card-body">
                 <div class="tabList-wrapper">
@@ -53,17 +67,23 @@
             </div>
             <div class="card-foot"></div>
         </template>
-        <template  v-if="themeType=='default'">
+        <template v-if="themeType=='default'">
             <div class="item-default-header">
                 <span class="item-default-header-title">
                     <span class="title-font">{{item.name}}</span>
                 </span>
                 <div class="titlecontainer">
                     <div class="rc-tabs">
-                        <div class="rc-tabs-tab" :class="{active: current == tabIdx }" v-for="(tab, tabIdx) in item.tabs" @click.stop="handleItemTab(tab, tabIdx)">
-                            <div class="tab2" style="width: auto; vertical-align: top; background-size: 100% 100%; height: 32px; line-height: 32px; padding-top: 0px; position: relative;">
-                                <div style="width: 76px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: inline-block;">{{ tab.title }}</div>
-                                <div class="" style="display: inline-block; width: 12px; height: 12px; position: absolute; right: 0px; bottom: 9px;"></div>
+                        <div class="rc-tabs-tab" :class="{active: current == tabIdx }"
+                            v-for="(tab, tabIdx) in item.tabs" @click.stop="handleItemTab(tab, tabIdx)">
+                            <div class="tab2"
+                                style="width: auto; vertical-align: top; background-size: 100% 100%; height: 32px; line-height: 32px; padding-top: 0px; position: relative;">
+                                <div
+                                    style="width: 76px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: inline-block;">
+                                    {{ tab.title }}</div>
+                                <div class=""
+                                    style="display: inline-block; width: 12px; height: 12px; position: absolute; right: 0px; bottom: 9px;">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -72,12 +92,12 @@
                     <ul>
                         <li>
                             <a href="javascript:void(0);" name="refreshbtn" title="刷新">
-                                <img :src="require('@/assets/img/refresh_wev8.png')" border="0" alt="">
+                                <img src="@/assets/img/refresh_wev8.png" border="0" alt="">
                             </a>
                         </li>
-                        <li style="width: 34px;">
+                        <li style="width: 34px;" @click.stop="handleMore(item)">
                             <a href="javascript:void(0);">
-                                <img class="imgMore" :src="require('@/assets/img/more_wev8.png')" border="0" alt="" title="更多"  @click="gotoMore">
+                                <img class="imgMore" src="@/assets/img/more_wev8.png" border="0" alt="" title="更多">
                             </a>
                         </li>
                     </ul>
@@ -95,7 +115,8 @@
                 </h2>
                 <div class="tabs_default query-builder-widget-tab">
                     <ul class="fh-tabs_default__nav">
-                        <li class="fh-tabs_default__item" :class="{ active: current == tabIdx }" v-for="(tab, tabIdx) in item.tabs" @click.stop="handleItemTab(tab, tabIdx)">
+                        <li class="fh-tabs_default__item" :class="{ active: current == tabIdx }"
+                            v-for="(tab, tabIdx) in item.tabs" @click.stop="handleItemTab(tab, tabIdx)">
                             <a href="javascript:;" class="fh-tabs_default__link">
                                 <span class="tab-label">
                                     <h2 class="tab-title">{{tab.title}}</h2>
@@ -107,11 +128,29 @@
                 <div class="table-container" style="height: calc(100% - 90px);">
                     <Table :config="item.properties" :columns="columns" :themeType="themeType" :tableData="tableData" />
                 </div>
-                <div class="actions">
+                <!-- <div class="actions">
                     <span>
-                        <svg aria-hidden="true" class="btn_icon" viewBox="0 0 52 52"><path d="M48.8 2H33.3c-1 0-1.3.9-.5 1.7l4.9 4.9-9 9c-.5.5-.5 1.3 0 1.9l3.7 3.7c.5.5 1.3.5 1.9 0l9.1-9.1 4.9 4.9c.8.8 1.7.5 1.7-.5V3.1c0-.6-.6-1.1-1.2-1.1zM3.5 50h15.4c1 0 1.3-1.1.5-1.9l-4.9-5 9-9.1c.5-.5.5-1.4 0-1.9l-3.7-3.7c-.5-.5-1.3-.5-1.9 0l-9 9-5-4.9C3 31.7 2 32 2 33v15.4c0 .7.8 1.6 1.5 1.6zM50 48.8V33.3c0-1-.9-1.3-1.7-.5l-4.9 4.9-9-9c-.5-.5-1.3-.5-1.9 0l-3.7 3.7c-.5.5-.5 1.3 0 1.9l9.1 9.1-4.9 4.9c-.8.8-.5 1.7.5 1.7h15.4c.6 0 1.1-.6 1.1-1.2zM2 3.5v15.4c0 1 1.1 1.3 1.9.5l5-4.9 9.1 9c.5.5 1.4.5 1.9 0l3.7-3.7c.5-.5.5-1.3 0-1.9l-9-9 4.9-5C20.3 3 20 2 19 2H3.6C2.9 2 2 2.8 2 3.5z"></path></svg>
+                        <svg aria-hidden="true" class="btn_icon" viewBox="0 0 52 52">
+                            <path
+                                d="M48.8 2H33.3c-1 0-1.3.9-.5 1.7l4.9 4.9-9 9c-.5.5-.5 1.3 0 1.9l3.7 3.7c.5.5 1.3.5 1.9 0l9.1-9.1 4.9 4.9c.8.8 1.7.5 1.7-.5V3.1c0-.6-.6-1.1-1.2-1.1zM3.5 50h15.4c1 0 1.3-1.1.5-1.9l-4.9-5 9-9.1c.5-.5.5-1.4 0-1.9l-3.7-3.7c-.5-.5-1.3-.5-1.9 0l-9 9-5-4.9C3 31.7 2 32 2 33v15.4c0 .7.8 1.6 1.5 1.6zM50 48.8V33.3c0-1-.9-1.3-1.7-.5l-4.9 4.9-9-9c-.5-.5-1.3-.5-1.9 0l-3.7 3.7c-.5.5-.5 1.3 0 1.9l9.1 9.1-4.9 4.9c-.8.8-.5 1.7.5 1.7h15.4c.6 0 1.1-.6 1.1-1.2zM2 3.5v15.4c0 1 1.1 1.3 1.9.5l5-4.9 9.1 9c.5.5 1.4.5 1.9 0l3.7-3.7c.5-.5.5-1.3 0-1.9l-9-9 4.9-5C20.3 3 20 2 19 2H3.6C2.9 2 2 2.8 2 3.5z">
+                            </path>
+                        </svg>
                     </span>
-                </div>
+                </div> -->
+                <span class="actions">
+                    <ul>
+                        <li @click="getQuery()">
+                            <a href="javascript:void(0);" name="refreshbtn" title="刷新">
+                                <img src="@/assets/img/refresh_wev8.png" border="0" alt="">
+                            </a>
+                        </li>
+                        <li style="width: 34px;" @click.stop="handleMore(item)">
+                            <a href="javascript:void(0);">
+                                <img class="imgMore" src="@/assets/img/more_wev8.png" border="0" alt="" title="更多">
+                            </a>
+                        </li>
+                    </ul>
+                </span>
             </div>
         </template>
     </div>
@@ -197,6 +236,15 @@
         const url = router.resolve({path: moreUrl});
         window.open(url.href);
     }
+    const handleMore = (item) => {
+        // console.log("item", item);
+        // console.log("store.tabListCurrent", store.tabListCurrent);
+        let { moreUrl } = item.tabs[store.tabListCurrent]?.properties;
+        const url = router.resolve({
+            path: moreUrl
+        });
+        window.open(url.href);
+    };
 
 </script>
 <style lang="less" scoped>

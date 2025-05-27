@@ -1215,33 +1215,22 @@ var columns = [
 const getQuery = () => {
   data.peopleList = [];
   data.pagination.total = 0;
-  let filterQuery = "";
-  let filterExpression = "";
-  if(data.filterExpression){
-    filterExpression = JSON.parse(data.filterExpression);
-  }
-  console.log(filterExpression, 66666666);
-  if (filterExpression && filterExpression.length) {
-    filterExpression.forEach((v) => {
-      if (v.operands && v.operands.length && v.attribute) {
-        filterQuery +=
-          "\n" + v.attribute + "\t" + v.operator + "\t" + v.operands.join(",");
-      }
-    });
-  }
-  proxy
-    .$post(Interface.list2, {
+  let d={
       filterId: "",
       objectTypeCode: "8",
       entityName: "SystemUser",
-      filterQuery: filterQuery,
       search: "",
       page: data.pagination.current,
       rows: data.pagination.pageSize,
       sort: "",
       order: "ASC",
       displayColumns: "FullName,BusinessUnitId,EmployeeId",
-    })
+  }
+  if(data.filterExpression){
+    d.filterCondition=data.filterExpression;
+  }
+  proxy
+    .$post(Interface.list2, d)
     .then((res) => {
       var list = [];
       data.total = res.pageInfo ? res.pageInfo.total : 0;
@@ -1472,18 +1461,9 @@ const handlePreviewFile = (item) => {
     item.fileExtension == "xlsx" ||
     item.fileExtension == "doc" ||
     item.fileExtension == "ppt" ||
-    item.fileExtension == "xls"
+    item.fileExtension == "xls" || item.fileExtension == "wps"
   ) {
-    if (
-      item.viewUrl &&
-      item.viewUrl.indexOf("/lightning/r/office/view") != -1
-    ) {
-    } else {
-      item.viewUrl = "/lightning/r/office/view?id=" + item.id;
-    }
-    if (item.fileExtension == "ppt" || item.fileExtension == "pptx") {
-      item.viewUrl = "/lightning/r/office/view2?id=" + item.id;
-    }
+    item.viewUrl = "/lightning/r/office/view?id=" + item.id;
     openControlViewFile(
       item.id,
       item.createdByName,

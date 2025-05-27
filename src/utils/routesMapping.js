@@ -158,11 +158,8 @@ export const routesMapping = {
         DutyshiftNurse: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
         DutyshiftLeaderAgent: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
         DeptDutyShift: () => import("../views/Dutyshift/DutyshiftAdmin/index.vue"),
+        DutyShiftSearch: () => import("../views/Dutyshift/DutyShiftSearch/index.vue"),
         // WorkshiftDeptDutyshiftQuery: {
-        //     component: () => import("../views/listView/index.vue"),
-        //     isCommon: true
-        // },
-        // DutyShiftSearch: {
         //     component: () => import("../views/listView/index.vue"),
         //     isCommon: true
         // },

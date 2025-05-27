@@ -1589,7 +1589,8 @@
         /* overflow: auto; */
         background: #fff;
         .formTable{
-            width: 95%;
+            width: 100%;
+            /* width: 95%; */
             /* min-height: calc(100vh - 130px); */
             /* margin: 65px auto; */
             display: flex;

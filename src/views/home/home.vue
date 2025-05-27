@@ -45,7 +45,9 @@
     });
 
     const { layoutData, isFullScreen, themeType, dashboardId } = toRefs(data);
-
+    watch(() => store.state.themeType, (newVal, oldVal) => {
+        data.themeType = newVal;
+    }, { deep: true })
     data.dashboardId = route.query.id;
     const handleStorageEvent = (event) => {
         if (event.key === 'REFRESH_LIST') {

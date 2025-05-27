@@ -618,18 +618,6 @@
         refreshScheduleVal();
     };
 
-    const getPeople = () => {
-        proxy.$get(Interface.meeting.userTree, {}).then(res => {
-            let list = res.returnValue.map(item => {
-                item.key = item.id;
-                item.title = item.name;
-                return item;
-            });
-            data.userListTree = list;
-            data.userListTreeAll = list;
-        })
-    }
-    //getPeople();
     const getCalendarList= (CalendarsData) => {
         data.CalendarsData=CalendarsData;
         if(data.CalendarsData&&data.CalendarsData.length){

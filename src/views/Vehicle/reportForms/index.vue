@@ -19,7 +19,7 @@
           <a-range-picker
             v-model:value="dateRange"
             @change="changeYear"
-            :format="'YYYY-MM-DD'"
+            :value-format="'YYYY-MM-DD'"
           />
         </div>
       </div>
@@ -54,7 +54,7 @@
                     name="ContractNumber"
                     style="color: #000"
                   >
-                    {{ countObj.startCount || 0 }}
+                    {{ countObj.reservationCount || 0 }}
                   </div>
                   <div class="statistics-name">预约次数</div>
                 </div>
@@ -69,7 +69,7 @@
                     name="ContractNumber"
                     style="color: #000"
                   >
-                    {{ countObj.peopleCount || 0 }}
+                    {{ countObj.driverCount || 0 }}
                   </div>
                   <div class="statistics-name">司机数量</div>
                 </div>
@@ -303,8 +303,8 @@ var columns1 = [
   },
   {
     title: "预约次数",
-    dataIndex: "StartCount",
-    key: "StartCount",
+    dataIndex: "reservationCount",
+    key: "reservationCount",
   },
 ];
 var columns2 = [
@@ -321,8 +321,8 @@ var columns2 = [
   },
   {
     title: "预约次数",
-    dataIndex: "StartCount",
-    key: "StartCount",
+    dataIndex: "reservationCount",
+    key: "reservationCount",
   },
 ];
 var columns3 = [
@@ -339,8 +339,8 @@ var columns3 = [
   },
   {
     title: "预约次数",
-    dataIndex: "StartCount",
-    key: "StartCount",
+    dataIndex: "reservationCount",
+    key: "reservationCount",
   },
 ];
 const changeTabs = (e, type) => {
@@ -380,7 +380,9 @@ const getAbstract = () => {
         descriptor: "",
         callingDescriptor: "UNKNOWN",
         params: {
-          year: data.year.format("YYYY"),
+          //year: data.year.format("YYYY"),
+          startTime: data.StartDate,
+          endTime: data.EndDate,
         },
       },
     ],
@@ -388,33 +390,77 @@ const getAbstract = () => {
   let obj = {
     message: JSON.stringify(d),
   };
-  proxy.$post(Interface.workflow.abstract, obj).then((res) => {
+  proxy.$post(Interface.vehicle.abstract, obj).then((res) => {
     if (
       res &&
       res.actions &&
       res.actions[0] &&
       res.actions[0].state == "SUCCESS"
     ) {
-      //data.countObj = res.actions[0].returnValue;
-      data.countObj = {
-        vehicleCount: 1,
-        startCount: 39,
-        peopleCount: 5,
-      };
+      data.countObj = res.actions[0].returnValue;
     } else {
       message.error("获取摘要失败！");
     }
   });
 };
 const getStati = () => {
+  if (data.activeKey * 1 == 0) {
+    data.columns = columns1;
+  } else if (data.activeKey * 1 == 1) {
+    data.columns = columns2;
+  } else if (data.activeKey * 1 == 2) {
+    data.columns = columns3;
+  }
+  getAbstract();
+  getQuery();
+  // let d = {
+  //   actions: [
+  //     {
+  //       id: "4270;a",
+  //       descriptor: "",
+  //       callingDescriptor: "UNKNOWN",
+  //       params: {
+  //         year: data.year.format("YYYY"),
+  //       },
+  //     },
+  //   ],
+  // };
+  // let obj = {
+  //   message: JSON.stringify(d),
+  // };
+  // proxy.$post(Interface.workflow.stati, obj).then((res) => {
+  //   if (
+  //     res &&
+  //     res.actions &&
+  //     res.actions[0] &&
+  //     res.actions[0].state == "SUCCESS"
+  //   ) {
+  //     if (data.activeKey * 1 == 0) {
+  //       data.columns = columns1;
+  //     } else if (data.activeKey * 1 == 1) {
+  //       data.columns = columns2;
+  //     } else if (data.activeKey * 1 == 2) {
+  //       data.columns = columns3;
+  //     }
+  //     getAbstract();
+  //     getQuery();
+  //   } else {
+  //     message.error("统计失败！");
+  //   }
+  // });
+};
+const getQuery = () => {
   let d = {
     actions: [
       {
-        id: "4270;a",
+        id: "2919;a",
         descriptor: "",
         callingDescriptor: "UNKNOWN",
         params: {
-          year: data.year.format("YYYY"),
+          search: data.searchVal || "",
+          startTime: data.StartDate || "",
+          endTime: data.EndDate || "",
+          category: data.activeKey * 1 + 1,
         },
       },
     ],
@@ -422,79 +468,28 @@ const getStati = () => {
   let obj = {
     message: JSON.stringify(d),
   };
-  proxy.$post(Interface.workflow.stati, obj).then((res) => {
+  let list=[];
+  proxy.$post(Interface.vehicle.getSummary, obj).then((res) => {
     if (
       res &&
       res.actions &&
       res.actions[0] &&
       res.actions[0].state == "SUCCESS"
     ) {
-      if (data.activeKey * 1 == 0) {
-        data.columns = columns1;
-      } else if (data.activeKey * 1 == 1) {
-        data.columns = columns2;
-      } else if (data.activeKey * 1 == 2) {
-        data.columns = columns3;
+      for (var i = 0; i < res.actions[0].returnValue.length; i++) {
+        var item = res.actions[0].returnValue[i];
+        list.push({
+          id: i + 1,
+          Name: item.name || "",
+          reservationCount: item.count || 0,
+        });
       }
-      getAbstract();
-      getQuery();
     } else {
-      message.error("统计失败！");
+      message.error("获取统计数据失败！");
     }
+    data.dataList = list;
+    getChartData();
   });
-};
-const getQuery = () => {
-  let filterQuery =
-    "\nObjectTypeCode\teq\t20503\nYearNumber\teq\t" + data.year.format("YYYY");
-  if (data.activeKey * 1 == 1) {
-    filterQuery =
-      "\nObjectTypeCode\teq\t10\nYearNumber\teq\t" + data.year.format("YYYY");
-  }
-  if (data.activeKey * 1 == 2) {
-    filterQuery =
-      "\nObjectTypeCode\teq\t8\nYearNumber\teq\t" + data.year.format("YYYY");
-  }
-  filterQuery+='\nName\tneq\tnull';
-  proxy
-    .$post(Interface.list2, {
-      filterId: "",
-      objectTypeCode: "20618",
-      entityName: "WFHandleReport",
-      filterQuery: filterQuery,
-      search: data.searchVal || "",
-      page: data.pagination.current,
-      rows: data.pagination.pageSize,
-      // sort: '',
-      // order: 'asc',
-      displayColumns: "Name,StartCount",
-    })
-    .then((res) => {
-      var list = [];
-      data.total = res && res.pageInfo ? res.pageInfo.total : 0;
-      data.pagination.total = res && res.pageInfo ? res.pageInfo.total : 0;
-      if (res && res.nodes && res.nodes.length) {
-        for (var i = 0; i < res.nodes.length; i++) {
-          var item = res.nodes[i];
-          for (var cell in item) {
-            if (cell != "id" && cell != "viewUrl") {
-              item[cell] = girdFormatterValue(cell, item);
-            }
-            if (cell == "CreatedOn") {
-              item[cell] = item[cell]
-                ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm")
-                : "";
-            }
-          }
-          list.push(item);
-        }
-      } else {
-        if (data.activeKey * 1 == 0) {
-          list = [{ id: 1, Name: "卡罗拉", StartCount: "36" }];
-        }
-      }
-      data.dataList = list;
-      getChartData();
-    });
 };
 const getChartData = () => {
   data.xData = [];
@@ -518,7 +513,7 @@ const getChartData = () => {
       return item.Name || "";
     });
     data.seriesData[0].data = data.dataList.map((item) => {
-      return item.StartCount || 0;
+      return item.reservationCount || 0;
     });
   }
   loadChart();
@@ -583,6 +578,14 @@ const sizeChange = (current, size) => {
 };
 
 onMounted(() => {
+  let currentDate=new Date();
+  let firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  let lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  let StartDate = `${firstDayOfMonth.getFullYear()}-${(firstDayOfMonth.getMonth() + 1).toString().padStart(2, '0')}-${firstDayOfMonth.getDate().toString().padStart(2, '0')}`;
+  let EndDate= `${lastDayOfMonth.getFullYear()}-${(lastDayOfMonth.getMonth() + 1).toString().padStart(2, '0')}-${lastDayOfMonth.getDate().toString().padStart(2, '0')}`;
+  data.dateRange=[StartDate,EndDate];
+  data.StartDate = StartDate;
+  data.EndDate= EndDate;
   changeTabs(data.activeKey);
 });
 </script>

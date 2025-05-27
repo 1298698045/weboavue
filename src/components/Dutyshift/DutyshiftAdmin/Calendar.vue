@@ -369,19 +369,7 @@
             calendarTypeChange(data.calendarType);
         })
     }
-    const getPeople = () => {
-        proxy.$get(Interface.meeting.userTree, {}).then(res => {
-            let list = res.returnValue.map(item => {
-                item.key = item.id;
-                item.title = item.name;
-                return item;
-            });
-            data.userListTree = list;
-        })
-    }
-    getPeople();
-
-
+    
     const currentDate = ref(dayjs());
     const getListData = value => {
         // console.log("value:", value.date());

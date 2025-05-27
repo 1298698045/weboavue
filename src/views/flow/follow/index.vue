@@ -430,12 +430,10 @@ let data = reactive({
     {
       label: "全部",
       count: "",
-      filterquery: "",
     },
     {
       label: "我的关注",
       count: "",
-      filterquery: "\nCreatedBy\teq-userid",
     },
   ],
   tabs: [],
@@ -445,7 +443,6 @@ let data = reactive({
     filterId: "",
     objectTypeCode: "137",
     entityName: "WFProcessInstanceFavorite",
-    filterQuery: "",
     //displayColumns:'ProcessInstanceId,SystemUserId,TransactTimes,SourceType,RoleCode,IsFollow,FollowedOn,FollowLabel,IsFavorite,ReadOn,CreatedOn,CreatedBy,IsRead',
     sort: "CreatedOn",
     order: "desc",
@@ -463,7 +460,6 @@ let data = reactive({
   isCountersign: false,
   isRelease: false,
   ProcessInstanceId: "",
-  formSearchFilterquery: "",
   SearchFields: [],
   isDelete: false,
   deleteDesc: "确定要删除该事务吗？",
@@ -549,10 +545,7 @@ const handleSearch = (obj) => {
     sort: "CreatedOn",
     order: "desc",
   };
-  // data.formSearchFilterquery=filterquery;
-  // if(filterquery){
-  //   data.queryParams.filterQuery+=filterquery;
-  // }
+  
   if (obj) {
     data.hightSearchParams = obj;
     if (data.hightSearchParams) {
@@ -568,7 +561,7 @@ const handleSearch = (obj) => {
     data.hightSearchParams = {};
   }
   if (data.treeId) {
-    data.queryParams.filterQuery = "\nProcessId\tin\t" + data.treeId;
+    data.queryParams.filterCondition = '[{"attribute":"ProcessId","column":"ProcessId","label":"流程名称","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.treeId+'"]}]';
   }
   gridRef.value.loadGrid(data.queryParams);
 };
@@ -686,7 +679,6 @@ const getTabs = () => {
         list.forEach((item) => {
           item.label = item.title;
           item.filterId = item.filter.filterId;
-          item.filterquery = item.filterquery || "";
         });
         data.tabs = list;
       } else {
@@ -955,9 +947,7 @@ const changeTab = (e) => {
   let filterColumnsList = data.tabs[e].filterableColumns;
   data.SearchFields = filterColumnsList;
   data.queryParams.filterId = data.tabs[e].filterId || "";
-  // if(data.formSearchFilterquery){
-  //   data.queryParams.filterQuery+=data.formSearchFilterquery;
-  // }
+  
   if (data.hightSearchParams) {
     if (data.hightSearchParams.search) {
       data.queryParams.search = data.hightSearchParams.search;
@@ -967,7 +957,7 @@ const changeTab = (e) => {
     }
   }
   if (data.treeId) {
-    data.queryParams.filterQuery = "\nProcessId\tin\t" + data.treeId;
+    data.queryParams.filterCondition = '[{"attribute":"ProcessId","column":"ProcessId","label":"流程名称","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.treeId+'"]}]';
   }
   getColumns(data.queryParams.filterId);
 };

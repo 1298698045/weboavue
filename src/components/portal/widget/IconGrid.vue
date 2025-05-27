@@ -2,6 +2,20 @@
     <div class="cardItem widgetItem" :class="themeType">
         <div class="card-header" v-if="themeType=='modern'">
             <div class="header-title">{{item.name}}</div>
+            <span class="toolbar">
+                <ul>
+                    <li @click="getQuery()">
+                        <a href="javascript:void(0);" name="refreshbtn" title="刷新">
+                            <img src="@/assets/img/refresh_wev8.png" border="0" alt="">
+                        </a>
+                    </li>
+                    <li style="width: 34px;" @click.stop="handleMore(item)">
+                        <a href="javascript:void(0);">
+                            <img class="imgMore" src="@/assets/img/more_wev8.png" border="0" alt="" title="更多">
+                        </a>
+                    </li>
+                </ul>
+            </span>
         </div>
         <div class="item-default-header" v-if="themeType=='default'">
             <span class="item-default-header-title">
@@ -11,12 +25,12 @@
                 <ul>
                     <li>
                         <a href="javascript:void(0);" name="refreshbtn" title="刷新">
-                            <img :src="require('@/assets/img/refresh_wev8.png')" border="0" alt="">
+                            <img src="@/assets/img/refresh_wev8.png" border="0" alt="">
                         </a>
                     </li>
-                    <li style="width: 34px;">
+                    <li style="width: 34px;" @click.stop="handleMore(item)">
                         <a href="javascript:void(0);">
-                            <img class="imgMore" :src="require('@/assets/img/more_wev8.png')" border="0" alt="" title="更多" @click="gotoMore">
+                            <img class="imgMore" src="@/assets/img/more_wev8.png" border="0" alt="" title="更多">
                         </a>
                     </li>
                 </ul>
@@ -30,30 +44,50 @@
                 </h2>
                 <div class="table-container" style="height: calc(100% - 90px);overflow-y: auto">
                     <div class="quick-wrapper">
-                        <div class="quick-item" v-for="(item, index) in listData" :key="index" @click="handleDetail(item)">
+                        <div class="quick-item" v-for="item in listData" :key="index" @click="handleDetail(item)">
                             <div class="quick-item-content">
                                 <div class="quick-item-icon">
                                     <img :src="item.icon" alt="">
                                 </div>
                                 <div class="quick-item-name rowEllipsis">
                                     <!-- 供应商考核 -->
-                                     <div v-html="item.label"></div>
+                                    <div v-html="item.label"></div>
                                 </div>
                             </div>
                         </div>
+                        <div class="fake_item"></div>
+                        <div class="fake_item"></div>
                     </div>
                 </div>
-                <div class="actions">
+                <!-- <div class="actions">
                     <span>
-                        <svg aria-hidden="true" class="btn_icon" viewBox="0 0 52 52"><path d="M48.8 2H33.3c-1 0-1.3.9-.5 1.7l4.9 4.9-9 9c-.5.5-.5 1.3 0 1.9l3.7 3.7c.5.5 1.3.5 1.9 0l9.1-9.1 4.9 4.9c.8.8 1.7.5 1.7-.5V3.1c0-.6-.6-1.1-1.2-1.1zM3.5 50h15.4c1 0 1.3-1.1.5-1.9l-4.9-5 9-9.1c.5-.5.5-1.4 0-1.9l-3.7-3.7c-.5-.5-1.3-.5-1.9 0l-9 9-5-4.9C3 31.7 2 32 2 33v15.4c0 .7.8 1.6 1.5 1.6zM50 48.8V33.3c0-1-.9-1.3-1.7-.5l-4.9 4.9-9-9c-.5-.5-1.3-.5-1.9 0l-3.7 3.7c-.5.5-.5 1.3 0 1.9l9.1 9.1-4.9 4.9c-.8.8-.5 1.7.5 1.7h15.4c.6 0 1.1-.6 1.1-1.2zM2 3.5v15.4c0 1 1.1 1.3 1.9.5l5-4.9 9.1 9c.5.5 1.4.5 1.9 0l3.7-3.7c.5-.5.5-1.3 0-1.9l-9-9 4.9-5C20.3 3 20 2 19 2H3.6C2.9 2 2 2.8 2 3.5z"></path></svg>
+                        <svg aria-hidden="true" class="btn_icon" viewBox="0 0 52 52">
+                            <path
+                                d="M48.8 2H33.3c-1 0-1.3.9-.5 1.7l4.9 4.9-9 9c-.5.5-.5 1.3 0 1.9l3.7 3.7c.5.5 1.3.5 1.9 0l9.1-9.1 4.9 4.9c.8.8 1.7.5 1.7-.5V3.1c0-.6-.6-1.1-1.2-1.1zM3.5 50h15.4c1 0 1.3-1.1.5-1.9l-4.9-5 9-9.1c.5-.5.5-1.4 0-1.9l-3.7-3.7c-.5-.5-1.3-.5-1.9 0l-9 9-5-4.9C3 31.7 2 32 2 33v15.4c0 .7.8 1.6 1.5 1.6zM50 48.8V33.3c0-1-.9-1.3-1.7-.5l-4.9 4.9-9-9c-.5-.5-1.3-.5-1.9 0l-3.7 3.7c-.5.5-.5 1.3 0 1.9l9.1 9.1-4.9 4.9c-.8.8-.5 1.7.5 1.7h15.4c.6 0 1.1-.6 1.1-1.2zM2 3.5v15.4c0 1 1.1 1.3 1.9.5l5-4.9 9.1 9c.5.5 1.4.5 1.9 0l3.7-3.7c.5-.5.5-1.3 0-1.9l-9-9 4.9-5C20.3 3 20 2 19 2H3.6C2.9 2 2 2.8 2 3.5z">
+                            </path>
+                        </svg>
                     </span>
-                </div>
+                </div> -->
+                <span class="actions">
+                    <ul>
+                        <li @click="getQuery()">
+                            <a href="javascript:void(0);" name="refreshbtn" title="刷新">
+                                <img src="@/assets/img/refresh_wev8.png" border="0" alt="">
+                            </a>
+                        </li>
+                        <li style="width: 34px;" @click.stop="handleMore(item)">
+                            <a href="javascript:void(0);">
+                                <img class="imgMore" src="@/assets/img/more_wev8.png" border="0" alt="" title="更多">
+                            </a>
+                        </li>
+                    </ul>
+                </span>
             </div>
         </template>
         <template v-else>
             <div class="card-body">
                 <div class="quick-wrapper">
-                    <div class="quick-item" v-for="(item, index) in listData" :key="index" @click="handleDetail(item)">
+                    <div class="quick-item" v-for="item in listData" :key="index" @click="handleDetail(item)">
                         <div class="quick-item-content">
                             <div class="quick-item-icon">
                                 <img :src="item.icon" alt="">
@@ -63,6 +97,8 @@
                             </div>
                         </div>
                     </div>
+                    <div class="fake_item"></div>
+                    <div class="fake_item"></div>
                 </div>
             </div>
             <div class="card-foot"></div>
@@ -124,7 +160,13 @@
         const url = router.resolve({path: item.url});
         window.open(url.href);
     }
-
+    const handleMore = (item) => {
+        let { moreUrl } = item.properties;
+        const url = router.resolve({
+            path: moreUrl
+        });
+        window.open(url.href);
+    };
 
 </script>
 <style lang="less" scoped>
@@ -133,9 +175,10 @@
     .quick-wrapper{
         display: flex;
         flex-wrap: wrap;
+        justify-content: space-between;
         .quick-item{
             position: relative;
-            flex-basis: calc(25% - 10px);
+            flex-basis: 25%;
             height: 105px;
             padding: 0;
             background: #fff;
@@ -174,6 +217,10 @@
                 }
             }
             
+        }
+        .fake_item{
+            height: 0;
+            flex: 1 1 25%;
         }
     }
 </style>

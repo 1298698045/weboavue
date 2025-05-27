@@ -136,8 +136,8 @@ const handleSubmit = () => {
             descriptor: "",
             callingDescriptor: "UNKNOWN",
             params: {
-              NoRepeat: formState.NoRepeat,
-              IsInherit: formState.IsInherit,
+              NoRepeat: formState.NoRepeat?1:0,
+              IsInherit: formState.IsInherit?1:0,
               ParentId: formState.ParentId,
               Name: formState.Name,
               DisplayOrder: formState.DisplayOrder,
@@ -155,8 +155,8 @@ const handleSubmit = () => {
             fields: {
               Name: formState.Name,
               ModifiedBy: data.userId,
-              NoRepeat: formState.NoRepeat,
-              IsInherit: formState.IsInherit,
+              NoRepeat: formState.NoRepeat?1:0,
+              IsInherit: formState.IsInherit?1:0,
               ParentId: formState.ParentId,
               DisplayOrder: formState.DisplayOrder,
             },

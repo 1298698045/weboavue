@@ -10,8 +10,11 @@
                 </div> -->
         <div class="hello">您好！</div>
         <div class="use-wifi">欢迎使用协同办公</div>
-        <div class="tips" v-if="route.query.t * 1 == 1 || 1" style="color: red">
+        <div class="tips" v-if="route.query.t * 1 == 1" style="color: red">
           用户已注销!
+        </div>
+        <div class="error" style="color: red" v-if="formState.errorText">
+          {{formState.errorText}}
         </div>
         <div class="loginCenter">
           <a-form
@@ -252,6 +255,7 @@ const formState = reactive({
   captureId: "",
   phone: "",
   smsCode: "",
+  errorText: ""
 });
 const phoneRegex = /^1[3-9]\d{9}$/;
 const current = ref(0);
@@ -306,14 +310,16 @@ const handleLogin = () => {
               let userInfo = res.user ? JSON.stringify(res.user) : "";
               window.localStorage.setItem("token", token);
               window.localStorage.setItem("userInfo", userInfo);
-              Toast.success(res.msg || "登录成功！");
+              // Toast.success(res.msg || "登录成功！");
               store.dispatch("getModules");
               // router.push('/lightning/o/workspace/home');
             } else {
               if (res && res.msg) {
-                Toast.error("登录失败," + res.msg);
+                // Toast.error("登录失败," + res.msg);
+                formState.errorText = res.msg;
               } else {
-                Toast.error("登录失败！");
+                // Toast.error("登录失败！");
+                formState.errorText = "登录失败!";
               }
               changeValidate();
             }

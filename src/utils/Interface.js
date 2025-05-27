@@ -1,6 +1,6 @@
 const baseUrl = "api";
 const Interface = {
-  pathUrl: "http://192.168.1.200:9091",
+  pathUrl: "",
   // 待办事务
   todoList: {
     treedata: "/localData/treedata.json",
@@ -196,6 +196,8 @@ const Interface = {
   },
   vehicle: {
     calendarList: baseUrl + "/ui.vehicle.components/getAllCalendars",//车辆日历
+    abstract: baseUrl + "/vehicle/report/abstract",//车辆报表摘要
+    getSummary: baseUrl + "/vehicle/report/getSummary",//车辆报表统计数据
   },
   file: {
     list: "/localData/fileAdmin/file.files.search.json",
@@ -511,6 +513,5 @@ const Interface = {
     send: baseUrl + "/campaignsms/message/send", // 短信发送提交
   },
   getFileInfo: baseUrl + "/oa/office/getFileInfo", // 获取Office预览文件信息
-  savepdf: baseUrl + "/file/attachment/savepdf", // pdf编辑保存
 };
 export default Interface;

@@ -684,13 +684,13 @@ const sizeChange = (current, size) => {
 //获取知识地图子目录
 const getKnowledgeMapData = () => {
   data.listData = [];
-  let filterQuery = "\nParentSubject\teq\t" + data.id;
+  let filterCondition = '[{"attribute":"ParentSubject","column":"ParentSubject","label":"父主题","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.id+'"]}]';
   proxy
     .$post(Interface.list2, {
       filterId: "",
       objectTypeCode: data.objectTypeCode,
       entityName: data.sObjectName,
-      filterQuery: filterQuery,
+      filterCondition: filterCondition,
       search: "",
       page: data.pagination.current,
       rows: data.pagination.pageSize,
@@ -722,13 +722,13 @@ const getKnowledgeMapData = () => {
 };
 //获取知识地图子目录下的知识文章
 const getKnowledgeMapDetailData = (id) => {
-  let filterQuery = "\nSubjectId\teq\t" + id;
+  let filterCondition = '[{"attribute":"SubjectId","column":"SubjectId","label":"主题","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+id+'"]}]';
   proxy
     .$post(Interface.list2, {
       filterId: "",
       objectTypeCode: "100311",
       entityName: "KbSubjectContent",
-      filterQuery: filterQuery,
+      filterCondition: filterCondition,
       search: "",
       page: 1,
       rows: 100,

@@ -1026,7 +1026,7 @@ const getInboxList = () => {
       filterId: "",
       objectTypeCode: "20021",
       entityName: "MailInbox",
-      filterQuery: "\nLabeld\teq\t" + data.folderId,
+      filterCondition: '[{"attribute":"Labeld","column":"Labeld","label":"标签名称","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.folderId+'"]}]',
       search: data.searchText,
       page: data.keyIndex,
       rows: data.pageSize,
@@ -1101,7 +1101,7 @@ const getMyFolder = () => {
     filterId: "",
     objectTypeCode: "20609",
     entityName: "MailLabel",
-    filterQuery: "\nCreatedBy\teq-userid",
+    filterCondition: '[{"attribute":"CreatedBy","column":"CreatedBy","label":"创建人","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.currentUserId+'"]}]',
     search: "",
     page: 1,
     rows: 100,
@@ -1762,7 +1762,6 @@ const getUserInfo = (id) => {
   });
 };
 onMounted(() => {
-  getMyFolder();
   let userInfo = window.localStorage.getItem("userInfo");
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
@@ -1770,6 +1769,7 @@ onMounted(() => {
     data.currentUserName = userInfo.fullName;
     getUserInfo(userInfo.userId);
   }
+  getMyFolder();
   if (route.query.type) {
     openWriteEmail();
   } else {

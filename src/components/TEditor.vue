@@ -19,6 +19,9 @@ import Interface from "@/utils/Interface.js";
 const emit = defineEmits(["input"]);
 const height = ref(null);
 const editorRef = ref();
+import { useRouter, useRoute } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 const index = ref(1);
 const props = defineProps({
   value: {
@@ -97,7 +100,7 @@ import 'tinymce/plugins/pagebreak'
 import tinymce from "tinymce/tinymce";
 
 const DefaultToolBar = 'undo redo removeformat bold italic Alignleft Aligncenter Alignright Alignjustify lineheight forecolor backcolor bullist numlist link image table blocks fontsize fontfamily';
-const DocToolBar = 'code newdocument Preview Print | bold italic Underline Strikethrough | blocks fontfamily fontsize | lineheight forecolor backcolor | Cut Copy Paste | undo redo | bullist numlist | Increaseindent Decreaseindent | Alignleft Aligncenter Alignright Alignjustify | removeformat Find replace Selectall | link anchor | table Emoticons Special pagebreak fullscreen | media image';
+const DocToolBar = 'code Preview Print | bold italic Underline Strikethrough | blocks fontfamily fontsize | lineheight forecolor backcolor | Cut Copy Paste | undo redo | bullist numlist | Increaseindent Decreaseindent | Alignleft Aligncenter Alignright Alignjustify | removeformat Find replace Selectall | link anchor | table Emoticons Special pagebreak fullscreen image';
 const ChatterToolBar = 'bold italic Underline Strikethrough removeformat bullist numlist forecolor backcolor';
 const initializeEditor = () => {
   return reactive({
@@ -122,7 +125,7 @@ const initializeEditor = () => {
     menubar: props.mode == 'simple' ? 'edit custom' : '',
     line_height_formats: '1 1.1 1.2 1.3 1.4 1.5 2 28pt 30pt 31pt 32pt',
     // 设置插件
-    plugins: "codesample lists advlist pagebreak link autolink charmap media emoticons anchor fullscreen preview code searchreplace table visualblocks wordcount insertdatetime",
+    plugins: "codesample lists advlist pagebreak link autolink charmap media emoticons anchor fullscreen preview code searchreplace table visualblocks wordcount insertdatetime image",
     placeholder: props.placeholder,
     statusbar: false,
     promotion: false,
@@ -131,6 +134,7 @@ const initializeEditor = () => {
     //images_upload_url: Interface.information.uploadMedia,
     paste_data_images: true,
     contextmenu: 'copy paste',
+    automatic_uploads:false,
     images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       const token = localStorage.getItem("token");
@@ -148,12 +152,18 @@ const initializeEditor = () => {
           reject('HTTP Error: ' + xhr.status);
           return;
         }
+        if (xhr.status == 200) {
+          let res=JSON.parse(xhr.responseText);
+          //console.log(res,123);
+          resolve(res.actions[0].returnValue[0].viewUrl);
+        }
         const json = JSON.parse(xhr.responseText);
         if (!json) {
           reject('Invalid JSON: ' + xhr.responseText);
           return;
         }
-        resolve(json.location);
+        //console.log(json.location,456);
+        //resolve(json.location);
       };
       xhr.onerror = () => {
         reject('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
@@ -162,7 +172,7 @@ const initializeEditor = () => {
       xhr.setRequestHeader("Token", token);
       const formData = new FormData();
       formData.append('files', blobInfo.blob(), blobInfo.filename());
-      formData.append('id', props.id);
+      formData.append('id', route.query.id);
       xhr.send(formData);
     }),
     paste_preprocess(editor, args) {

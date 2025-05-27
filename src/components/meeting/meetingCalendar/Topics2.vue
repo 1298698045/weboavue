@@ -275,27 +275,12 @@ const getQuery = () => {
   getAttachsPeople();
   data.listData = [];
   data.pagination.total = 0;
-  let filterQuery = '\nMeetingId\teq\t' + props.id;
-  if (data.StatusCode) {
-    filterQuery += '\nStatusCode\teq\t' + data.StatusCode;
-  }
-  if (data.CheckinStatus) {
-    filterQuery += '\nCheckinStatus\teq\t' + data.CheckinStatus;
-  }
-  if (data.OwningBusinessUnitName) {
-    filterQuery += '\nOwningBusinessUnitName\tcontains\t' + data.OwningBusinessUnitName;
-  }
-  if (data.Checkin1) {
-    filterQuery += '\nCheckin\tge\t' + data.Checkin1;
-  }
-  if (data.Checkin2) {
-    filterQuery += '\nCheckin\tle\t' + data.Checkin2;
-  }
+  let filterCondition = '[{"attribute":"MeetingId","column":"MeetingId","label":"会议","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]}]';
   proxy.$post(Interface.list2, {
     filterId: '',
     objectTypeCode: data.objectTypeCode,
     entityName: data.sObjectName,
-    filterQuery: filterQuery,
+    filterCondition: filterCondition,
     search: data.searchVal || '',
     page: data.pagination.current,
     rows: data.pagination.pageSize,
@@ -328,12 +313,12 @@ const getQuery = () => {
 };
 //获取数据
 const getAttachsPeople = () => {
-  let filterQuery = '\nMeetingId\teq\t' + props.id;
+  let filterCondition = '[{"attribute":"MeetingId","column":"MeetingId","label":"会议","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]}]';
   proxy.$post(Interface.list2, {
     filterId: '',
     objectTypeCode: '5002',
     entityName: 'MeetingAudience',
-    filterQuery: filterQuery,
+    filterCondition: filterCondition,
     search: '',
     page: 1,
     rows: 100,
@@ -392,7 +377,7 @@ const handleTableChange = (page, pageSize) => {
 const sizeChange = (current, size) => {
   handleTableChange(current, size)
 }
-getQuery();
+
 // 添加成员
 const AddNew = () => {
   data.isRadioUser = true;
@@ -567,6 +552,9 @@ onMounted(() => {
       data.height = h - 295;
     }
   });
+  if(props.id){
+    getQuery();
+  }
 })
 
 </script>

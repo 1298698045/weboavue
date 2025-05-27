@@ -98,7 +98,7 @@
                     </div>
                 </div>
             </div> -->
-          <div class="tableBox" v-html="data.TemplateContent"></div>
+          <div class="tableBox tableBoxHtml" v-html="data.TemplateContent"></div>
         </div>
         <div class="tabContainer" v-if="activeKey == 1">
           <RelatedAttachment :id="id" :type="'page'" :RegardingObjectIdName="detail.Title"
@@ -344,13 +344,13 @@ const getDetail = () => {
       let fields = res.actions[0].returnValue.fields;
       data.detail.Title = fields.Title.value;
       //data.content=fields.ContentBody.value;
-      data.detail.ApprovedOn = fields.ApprovedOn.value ? dayjs(fields.ApprovedOn.value).format("YYYY-MM-DD HH:mm") : '';
-      data.detail.FolderIdName = fields.FolderId.displayValue;
-      data.detail.BusinessUnitIdName = fields.BusinessUnitId.displayValue;
-      data.detail.ApprovedByName = fields.ApprovedBy.displayValue;
-      data.detail.StateCodeName = fields.StateCode.displayValue;
-      data.detail.ReadCount = fields.ReadCount.value;
-      data.detail.LikeCount = fields.LikeCount.value || 0;
+      data.detail.ApprovedOn = fields.ApprovedOn&&fields.ApprovedOn.value ? dayjs(fields.ApprovedOn.value).format("YYYY-MM-DD HH:mm") : '';
+      data.detail.FolderIdName = fields.FolderId&&fields.FolderId.displayValue?fields.FolderId.displayValue:'';
+      data.detail.BusinessUnitIdName = fields.BusinessUnitId&&fields.BusinessUnitId.displayValue?fields.BusinessUnitId.displayValue:'';
+      //data.detail.ApprovedByName = fields.ApprovedBy.displayValue;
+      //data.detail.StateCodeName = fields.StateCode.displayValue;
+      data.detail.ReadCount = fields.ReadCount&&fields.ReadCount.value?fields.ReadCount.value:0;
+      data.detail.LikeCount = fields.LikeCount&&fields.LikeCount.value?fields.LikeCount.value:0;
       data.detail.ModifiedBy = fields.ModifiedBy.displayValue;
       data.detail.ModifiedOn = fields.ModifiedOn.value ? dayjs(fields.ModifiedOn.value).format("YYYY-MM-DD HH:mm") : '';
     }
@@ -360,12 +360,12 @@ const getDetail = () => {
 const getLike = () => {
   data.likeQty = 0;
   data.isLike = false;
-  let filterQuery = '\ContentId\teq\t' + data.id + '\nRegardingObjectTypeCode\teq\t100201';
+  let filterCondition='[{"attribute":"RegardingObjectTypeCode","column":"RegardingObjectTypeCode","label":"相关对象代码","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["100201"]},{"attribute":"ContentId","column":"ContentId","label":"内容","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.id+'"]}]';
   proxy.$post(Interface.list2, {
     filterId: '',
     objectTypeCode: '100206',
     entityName: 'ContentLikes',
-    filterQuery: filterQuery,
+    filterCondition: filterCondition,
     search: '',
     page: 1,
     rows: 100,
@@ -464,10 +464,15 @@ const setLike = () => {
   }
 }
 //html反转义
-const htmlDecode = (input) => {
-  var e = document.createElement('div');
-  e.innerHTML = input;
-  return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+// const htmlDecode = (input) => {
+//   var e = document.createElement('div');
+//   e.innerHTML = input;
+//   return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+// }
+function htmlDecode(input) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(input, 'text/html');
+    return doc.documentElement.textContent;
 }
 const getContentView = () => {
   data.TemplateContent = '';
@@ -832,7 +837,12 @@ onMounted(() => {
   height: 100vh;
   background: #f0f2f6;
   overflow: hidden;
-
+  .tableBoxHtml{
+    :deep p img{
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
   .preview-header {
     width: 100%;
     height: 74px;

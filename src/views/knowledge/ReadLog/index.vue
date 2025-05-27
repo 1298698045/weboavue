@@ -239,12 +239,12 @@ getTreeData()
 const getFavorite = () => {
   gData.value = [];
   gDataAll.value = [];
-  let filterQuery = '\nObjectTypeCode\teq\t5080\nOwningUser\teq\t' + data.userId;
+  let filterCondition='[{"attribute":"ObjectTypeCode","column":"ObjectTypeCode","label":"对象代码","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["5080"]},{"attribute":"CreatedBy","column":"CreatedBy","label":"创建人","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.userId+'"]}]';
   proxy.$post(Interface.list2, {
     filterId: '',
     objectTypeCode: '6060',
     entityName: '',
-    filterQuery: filterQuery,
+    filterCondition: filterCondition,
     search: '',
     page: 1,
     rows: 100,
@@ -281,12 +281,12 @@ const getFavorite = () => {
 //收藏选中目录
 const setFavor = (id, name, isFavor) => {
   if (id) {
-    let filterQuery = '\nObjectId\teq\t' + id + '\nOwningUser\teq\t' + data.userId;
+    let filterCondition='[{"attribute":"ObjectId","column":"ObjectId","label":"对象ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+id+'"]},{"attribute":"CreatedBy","column":"CreatedBy","label":"创建人","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.userId+'"]}]';
     proxy.$post(Interface.list2, {
       filterId: '',
       objectTypeCode: '6060',
       entityName: 'P9f',
-      filterQuery: filterQuery,
+      filterCondition: filterCondition,
       search: '',
       page: 1,
       rows: 10,
@@ -388,7 +388,6 @@ let data = reactive({
     children: 'children', title: 'name', key: 'id'
   },
   activeKey: 0,
-  filterQuery: '',
   isModal: false,
   isCirculation: false,
   isNew: false,
@@ -546,7 +545,6 @@ function changeHeight(h) {
 }
 const handleSearch = (obj) => {
   data.pagination.current = 1;
-  //data.filterQuery=filterQuery;
   if (obj) {
     data.hightSearchParams = obj;
   }

@@ -3,14 +3,15 @@
         <div class="dModal-box">
             <div class="d-content">
                 <div class="photoWrap">
-                    <iframe :src="pdfUrl" :fileId="pdfParams.id" class="pdfIframe"></iframe>
+                    <iframe :src="pdfUrl" :fileId="pdfParams.id" :editMethod="editMethod" class="pdfIframe"></iframe>
+                    <div class="title" style="color: red;position: absolute;top: 2px;text-align: center;width: 100%;">
+                        不公开、机要、秘密、机密、绝密等不予公开的文件禁止通过任何渠道公开，并禁止通过互联网渠道以任何诸如电子档、截图、拍照等形式传播，未经允许擅自公开或传播将予严肃处理。
+                    </div>
                     <div class="photoHeadInfo">
                         <div class="photoName">
                             {{ pdfParams.name || '暂无' }}
                         </div>
-                        <div class="title" style="color: red;">
-                            不公开、机要、秘密、机密、绝密等不予公开的文件禁止通过任何渠道公开，并禁止通过互联网渠道以任何诸如电子档、截图、拍照等形式传播，未经允许擅自公开或传播将予严肃处理。
-                        </div>
+                        
                         <div class="photoIcons">
                             <span class="icon" title="下载" @click="handleDownload">
                                 <i class="iconfont icon-xiazai"></i>
@@ -42,18 +43,34 @@ import {
 } from "vue";
 const emit = defineEmits(["cancel"]);
 import { message } from "ant-design-vue";
+import Toast from "@/utils/toast.js";
 import Interface from "@/utils/Interface.js";
 const { proxy } = getCurrentInstance();
 const labelCol = ref({ style: { width: "100px" } });
 const props = defineProps({
     isShow: Boolean,
-    pdfParams: Object
+    pdfParams: Object,
+    editMethod: String
 });
+console.log("editMethod", props.editMethod);
 const data = reactive({
     pdfUrl: ""
 })
 const { pdfUrl } = toRefs(data);
 console.log("pdfParams", props.pdfParams);
+
+
+onMounted(()=>{
+    window.addEventListener("message", (event)=>{
+        console.log("event", event);
+        if(event.data == 'success'){
+            Toast("保存成功！");
+        }else if(event.data == 'error'){
+            Toast.error("保存失败！");
+        }
+    })
+})
+
 const getPdfUrl = () => {
     data.pdfUrl = '/pdfjs/web/viewer.html?file=' + props.pdfParams.viewUrl + "&fileId=" + props.pdfParams.id;
 };

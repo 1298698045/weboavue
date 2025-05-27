@@ -235,7 +235,7 @@ const columns2 = [
 const changeTabs = (e) => {
   data.activeKey = e;
 };
-const getDetail = () => {
+const getDetail = (type) => {
   data.activeKey = 0;
   data.title = '个人信息查看';
   // let d = {

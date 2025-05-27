@@ -274,13 +274,11 @@ const gDataAll = ref([]);
 const getTreeData = () => {
   gData.value = [];
   gDataAll.value = [];
-  let filterQuery = "";
   proxy
     .$post(Interface.list2, {
       filterId: "",
       objectTypeCode: "100310",
       entityName: "KbSubject",
-      filterQuery: filterQuery,
       search: "",
       page: 1,
       rows: 100,
@@ -330,14 +328,13 @@ getTreeData();
 const getFavorite = () => {
   gData.value = [];
   gDataAll.value = [];
-  let filterQuery =
-    "\nObjectTypeCode\teq\t5080\nOwningUser\teq\t" + data.userId;
+  let filterCondition='[{"attribute":"ObjectTypeCode","column":"ObjectTypeCode","label":"对象代码","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["5080"]},{"attribute":"CreatedBy","column":"CreatedBy","label":"创建人","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.userId+'"]}]';
   proxy
     .$post(Interface.list2, {
       filterId: "",
       objectTypeCode: "6060",
       entityName: "",
-      filterQuery: filterQuery,
+      filterCondition: filterCondition,
       search: "",
       page: 1,
       rows: 100,
@@ -375,14 +372,13 @@ const getFavorite = () => {
 //收藏选中目录
 const setFavor = (id, name, isFavor) => {
   if (id) {
-    let filterQuery =
-      "\nObjectId\teq\t" + id + "\nOwningUser\teq\t" + data.userId;
+    let filterCondition='[{"attribute":"ObjectId","column":"ObjectId","label":"对象ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+id+'"]},{"attribute":"CreatedBy","column":"CreatedBy","label":"创建人","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.userId+'"]}]';
     proxy
       .$post(Interface.list2, {
         filterId: "",
         objectTypeCode: "6060",
         entityName: "P9f",
-        filterQuery: filterQuery,
+        filterCondition: filterCondition,
         search: "",
         page: 1,
         rows: 10,
@@ -528,7 +524,6 @@ let data = reactive({
     filterId: "",
     objectTypeCode: "100311",
     entityName: "KbSubjectContent",
-    filterQuery: "\nCreatedBy\teq-userid",
     displayColumns:
       "Name,ContentId,SubjectId,DisplayOrder,CreatedBy,CreatedOn,ModifiedBy,ModifiedOn",
     sort: "DisplayOrder",
@@ -740,14 +735,14 @@ const tofolder = (id, name) => {
   CreatedBreadCrumb(id);
   data.FolderList = [];
   data.FileList = [];
-  let filterQuery = "";
+  let filterCondition = "";
   if (id) {
-    filterQuery = "\nParentSubject\teq\t" + id;
+    filterCondition = '[{"attribute":"ParentSubject","column":"ParentSubject","label":"父主题","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+id+'"]}]';
     data.SelectKey = id;
     data.SelectName = name;
     expandedKeys.value = [id];
   } else {
-    filterQuery = "\nParentSubject\tnull";
+    filterCondition = '[{"attribute":"ParentSubject","column":"ParentSubject","label":"父主题","operator":"null","logical":"AND","picklistValues":[],"isEditable":false,"operands":[]}]';
     data.ParentSubject = "";
     data.SelectKey = "";
   }
@@ -756,7 +751,7 @@ const tofolder = (id, name) => {
       filterId: "",
       objectTypeCode: "100310",
       entityName: "KbSubject",
-      filterQuery: filterQuery,
+      filterCondition: filterCondition,
       search: "",
       page: 1,
       rows: 100,
@@ -792,13 +787,13 @@ const tofolder = (id, name) => {
 };
 const getArticle = (id) => {
   data.FileList = [];
-  let filterQuery = "\nSubjectId\teq\t" + id;
+  let filterCondition = '[{"attribute":"SubjectId","column":"SubjectId","label":"主题","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+id+'"]}]';
   proxy
     .$post(Interface.list2, {
       filterId: "",
       objectTypeCode: "100311",
       entityName: "KbSubjectContent",
-      filterQuery: filterQuery,
+      filterCondition: filterCondition,
       search: "",
       page: 1,
       rows: 100,
@@ -845,6 +840,7 @@ onMounted(() => {
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
     data.userId = userInfo.userId;
+    data.queryParams.filterCondition = '[{"attribute":"CreatedBy","column":"CreatedBy","label":"创建人","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.userId+'"]}]';
   }
   window.addEventListener("resize", changeHeight);
   tofolder("", "");

@@ -44,6 +44,11 @@ See https://github.com/adobe-type-tools/cmap-resources
         .ant-popover.SignaturePop.css-f7vrd6.css-f7vrd6.ant-popover-placement-bottom {
             z-index: 10000 !important;
         }
+        .downloadButton{
+            outline: none !important;
+            font-size: 14px !important;
+            margin-top: 4px;
+        }
     </style>
     <script src="/pdfjs/web/viewer.mjs" type="module"></script>
     <script src="/pdfjs/web/pdfjs-annotation-extension/pdfjs-annotation-extension.js" type="module"></script>
@@ -411,10 +416,11 @@ See https://github.com/adobe-type-tools/cmap-resources
                                 <span data-l10n-id="pdfjs-print-button-label">Print</span>
                             </button>
 
-                            <button id="download" class="toolbarButton hiddenMediumView" title="Save" tabindex="42"
+                            <!-- <button id="download" class="toolbarButton hiddenMediumView" title="Save" tabindex="42"
                                 data-l10n-id="pdfjs-save-button">
                                 <span data-l10n-id="pdfjs-save-button-label">Save</span>
-                            </button>
+                            </button> -->
+                            <button id="download" class="downloadButton">保存</button>
 
                             <div class="verticalToolbarSeparator hiddenMediumView"></div>
 
@@ -646,6 +652,7 @@ See https://github.com/adobe-type-tools/cmap-resources
     <script>
         //$('#print').hide()
         //$('#download').hide()
+        
         function keydown() {
             if (event.ctrlKey) {
                 alert("禁止按Ctrl键!");
@@ -696,13 +703,27 @@ See https://github.com/adobe-type-tools/cmap-resources
                 let d = {
                     message: JSON.stringify(obj)
                 }
-                debugger
                 ajaxMethodPostData("/api/file/attachment/savepdf", d, function (res) {
-                    
+                    if(res && res.actions && res.actions[0].state == 'SUCCESS'){
+                        window.parent.postMessage('success');
+                    }else {
+                        window.parent.postMessage('error');
+                    }
                 })
             }).catch(error => {
                 console.error('转换失败:', error);
             });
+        }
+        window.onload = function(){
+            let editMethod = parent.$("iframe").attr("editMethod");
+            editMethod = Number(editMethod);
+            if (![1, 2, 3].includes(editMethod)) {
+                $(".CustomToolbar").hide();
+                $("#toolbarContainer").height(32);
+                $(".PdfjsAnnotationExtension #sidebarContainer").attr("style", "top: 32px !important");
+                $(".PdfjsAnnotationExtension #viewerContainer").attr("style", "top: 32px !important");
+                $("#download").hide();
+            }
         }
     </script>
 </body>

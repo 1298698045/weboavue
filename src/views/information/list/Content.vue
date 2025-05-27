@@ -257,13 +257,13 @@ const gDataAll = ref([]);
 const getFavorite = () => {
   gData.value = [];
   gDataAll.value = [];
-  let filterQuery = "\nObjectTypeCode\teq\t5080\nCreatedBy\teq\t" + data.userId;
+  let filterCondition='[{"attribute":"ObjectTypeCode","column":"ObjectTypeCode","label":"对象代码","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["5080"]},{"attribute":"CreatedBy","column":"CreatedBy","label":"创建人","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.userId+'"]}]';
   proxy
     .$post(Interface.list2, {
       filterId: "",
       objectTypeCode: "6060",
       entityName: "",
-      filterQuery: filterQuery,
+      filterCondition: filterCondition,
       search: "",
       page: 1,
       rows: 100,
@@ -301,14 +301,13 @@ const getFavorite = () => {
 //收藏选中目录
 const setFavor = (id, name, isFavor) => {
   if (data.leftTreeTop == "全部目录") {
-    let filterQuery =
-      "\nObjectId\teq\t" + id + "\nCreatedBy\teq\t" + data.userId;
+    let filterCondition='[{"attribute":"ObjectId","column":"ObjectId","label":"对象ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+id+'"]},{"attribute":"CreatedBy","column":"CreatedBy","label":"创建人","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.userId+'"]}]';
     proxy
       .$post(Interface.list2, {
         filterId: "",
         objectTypeCode: "6060",
         entityName: "P9f",
-        filterQuery: filterQuery,
+        filterCondition: filterCondition,
         search: "",
         page: 1,
         rows: 10,
@@ -448,7 +447,6 @@ let data = reactive({
     filterId: "",
     objectTypeCode: "100201",
     entityName: "Content",
-    //filterQuery: "\nCreatedBy\teq-userid",
     //displayColumns:"Title,FolderId,StateCode,BusinessUnitId,ReadCount,ApprovedBy,ApprovedOn,CreatedBy,CreatedOn,ModifiedBy,ModifiedOn",
     sort: 'CreatedOn',
     order: 'desc'
@@ -678,7 +676,6 @@ const handleSearch = (obj) => {
     entityName: "Content",
     sort: 'CreatedOn',
     order: 'desc'
-    //filterQuery: "\nCreatedBy\teq-userid",
     //displayColumns:"Title,FolderId,StateCode,BusinessUnitId,ReadCount,ApprovedBy,ApprovedOn,CreatedBy,CreatedOn,ModifiedBy,ModifiedOn",
   };
   
@@ -697,7 +694,7 @@ const handleSearch = (obj) => {
     data.hightSearchParams = {}
   }
   if (data.SelectKey) {
-    data.queryParams.filterQuery = "\nFolderId\teq\t" + data.SelectKey;
+    data.queryParams.filterCondition='[{"attribute":"FolderId","column":"FolderId","label":"栏目","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.SelectKey+'"]}]';
   }
   gridRef.value.loadGrid(data.queryParams);
 };
@@ -996,7 +993,6 @@ const getTabs = () => {
       list.forEach(item => {
         item.label = item.title;
         item.filterId = item.filter.filterId;
-        item.filterquery = item.filterquery || '';
       })
       data.tabs = list;
     }
@@ -1018,7 +1014,6 @@ const changeTab = (e) => {
     entityName: "Content",
     sort: 'CreatedOn',
     order: 'desc'
-    //filterQuery: "\nCreatedBy\teq-userid",
     //displayColumns:"Title,FolderId,StateCode,BusinessUnitId,ReadCount,ApprovedBy,ApprovedOn,CreatedBy,CreatedOn,ModifiedBy,ModifiedOn",
   };
   let filterColumnsList = (data.tabs)[e].filterableColumns;
@@ -1033,7 +1028,7 @@ const changeTab = (e) => {
     }
   }
   if (data.SelectKey) {
-    data.queryParams.filterQuery = "\nFolderId\teq\t" + data.SelectKey;
+    data.queryParams.filterCondition='[{"attribute":"FolderId","column":"FolderId","label":"栏目","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.SelectKey+'"]}]';
   }
   getColumns(data.queryParams.filterId);
 };

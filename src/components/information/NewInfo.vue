@@ -226,7 +226,6 @@ const getTemplateList = () => {
     filterId: "",
     objectTypeCode: 5081,
     entityName: "ContentViewTemplate",
-    filterQuery: "",
     page: 1,
     rows: 100,
     displayColumns: "Name",

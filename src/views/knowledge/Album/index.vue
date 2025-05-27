@@ -779,14 +779,7 @@ const handleDepth = (item) => {
 const getQuery = () => {
   data.isChangeName = false;
   data.loading = true;
-  // let filterQuery='\nParentId\teq\t10010000-0000-0000-0000-000000000011';
-  // if(data.selectedKeys[0]=='owner'){
-  //     filterQuery='\nOwningUser\teq-userid';
-  // }else if(data.selectedKeys[0]=='join'){
-  //     filterQuery='';
-  // }else if(data.selectedKeys[0]=='public'){
-  //     filterQuery='\nIsPublic\teq\ttrue';
-  // }
+  
   data.FolderList = [];
   data.FileList = [];
   data.pagination.total = 0;
@@ -805,15 +798,11 @@ const getQuery = () => {
     }, 500);
     return;
   }
-  let filterQuery = "";
   if (data.folderId) {
-    //filterQuery='\nParentId\teq\t'+data.folderId;
     getFile();
     return;
   }
-  // if(data.searchVal){
-  //     filterQuery='\nName\tcontains\t'+data.searchVal;
-  // }
+
   let d = {
     actions: [
       {
@@ -824,7 +813,6 @@ const getQuery = () => {
           pageSize: data.pagination.pageSize,
           pageNumber: data.pagination.current,
           search: data.searchVal || "",
-          filterQuery: filterQuery,
           sort: "SortNumber",
           order: "ASC",
         },
@@ -872,7 +860,6 @@ const getQuery = () => {
   //     filterId:'',
   //     objectTypeCode:'100200',
   //     entityName:'ItemTree',
-  //     filterQuery:filterQuery,
   //     search:data.searchVal||'',
   //     page: data.pagination.current,
   //     rows: data.pagination.pageSize,
@@ -975,7 +962,7 @@ const getFile = () => {
       filterId: "",
       objectTypeCode: "100100",
       entityName: "File",
-      filterQuery: "\nDeletionStateCode\teq\ttrue",
+      filterCondition: '[{"attribute":"DeletionStateCode","column":"DeletionStateCode","label":"删除状态","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[1]}]',
       search: data.searchVal || "",
       page: data.pagination.current,
       rows: data.pagination.pageSize,

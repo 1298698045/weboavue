@@ -880,17 +880,6 @@ const searchlookup = (search, Lktp, fieldApiName) => {
   //     data[fieldApiName] = uniqu(data[fieldApiName], 'ID');
   // })
 
-  let filterQuery = "";
-  if (search) {
-    if (Lktp == "8") {
-      filterQuery = "\nFullName\tcontains\t" + search;
-    } else if (Lktp == "20034") {
-      filterQuery = "\nName\tcontains\t" + search;
-    }
-  }
-  if (props.objectTypeCode == "20503") {
-    filterQuery += "\nResourceTypeCode\teq\t1";
-  }
   let entityName = "SystemUser";
   let displayColumns = "FullName,OrganizationId,BusinessUnitId,EmployeeId";
   if (Lktp == "20034") {
@@ -898,15 +887,24 @@ const searchlookup = (search, Lktp, fieldApiName) => {
     displayColumns = "Name";
   }
   let d = {
-    filterId: "",
+    //filterId: "",
     objectTypeCode: Lktp,
     entityName: entityName,
-    filterQuery: filterQuery,
     page: 1,
     rows: 10,
     displayColumns: displayColumns,
   };
-  proxy.$get(Interface.list2, d).then((res) => {
+  if (search) {
+    if (Lktp == "8") {
+      d.filterCondition = '[{"attribute":"FullName","column":"FullName","label":"姓名","operator":"contains","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+search+'"]}]';
+    } else if (Lktp == "20034") {
+      d.filterCondition = '[{"attribute":"Name","column":"Name","label":"名称","operator":"contains","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+search+'"]}]';
+    }
+  }
+  if (props.objectTypeCode == "20503") {
+    d.filterCondition = '[{"attribute":"ResourceTypeCode","column":"ResourceTypeCode","label":"类型","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[1]}]';
+  }
+  proxy.$post(Interface.list2, d).then((res) => {
     var list = [];
     if (res && res.nodes) {
       for (var i = 0; i < res.nodes.length; i++) {

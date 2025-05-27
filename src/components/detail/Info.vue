@@ -3,14 +3,16 @@
         <div class="status-card-wapper">
             <div class="status-card" :class="{'active':currentTab==0}" @click="handleTab(0)">
                 <div class="icon">
+                    <img src="@/assets/flow/flow_type5.jpg" alt="">
                 </div>
                 <div class="status-card-info">
-                    <p style="font-size: 26px;">4</p>
+                    <p style="font-size: 26px;color: rgb(58, 200, 210);">4</p>
                     <p style="font-size: 12px; color: rgb(91, 91, 91);">总人次</p>
                 </div>
             </div>
             <div class="status-card" :class="{'active':currentTab==1}" @click="handleTab(1)">
                 <div class="icon">
+                    <img src="@/assets/flow/flow_type4.jpg" alt="">
                 </div>
                 <div class="status-card-info">
                     <p style="font-size: 26px;color: #8dc139;">4</p>
@@ -19,6 +21,7 @@
             </div>
             <div class="status-card" :class="{'active':currentTab==2}" @click="handleTab(2)">
                 <div class="icon">
+                    <img src="@/assets/flow/flow_type2.jpg" alt="">
                 </div>
                 <div class="status-card-info">
                     <p style="font-size: 26px; color: #b37bf8;">4</p>
@@ -27,6 +30,7 @@
             </div>
             <div class="status-card" :class="{'active':currentTab==3}" @click="handleTab(3)">
                 <div class="icon">
+                    <img src="@/assets/flow/flow_type3.jpg" alt="">
                 </div>
                 <div class="status-card-info">
                     <p style="font-size: 26px; color: #009bff;">4</p>
@@ -35,6 +39,7 @@
             </div>
             <div class="status-card" :class="{'active':currentTab==4}" @click="handleTab(4)">
                 <div class="icon">
+                    <img src="@/assets/flow/flow_type1.jpg" alt="">
                 </div>
                 <div class="status-card-info">
                     <p style="font-size: 26px;color: #ff1924;">4</p>
@@ -592,9 +597,10 @@
 
         .panel1 {
             margin-left: 20px;
-            width: 33%;
+            width: 24%;
             margin-bottom: 0;
             position: relative;
+            padding: 20px 10px;
         }
 
         .panel2 {
@@ -606,7 +612,7 @@
             min-height: 100px;
             height: auto;
             margin-top: 45px;
-            margin-left: 35%;
+            margin-left: 10%;
 
             :deep .ant-timeline .ant-timeline-item-tail {
                 border-inline-start: 2px solid #E4E7ED;
@@ -624,7 +630,7 @@
         }
 
         .timelinetime {
-            font-size: 14px;
+            /* font-size: 14px;
             position: absolute;
             left: -196px;
             top: -6px;
@@ -632,7 +638,10 @@
             width: 140px;
             line-height: 20px;
             text-align: right;
-            margin-top: 8px;
+            margin-top: 8px; */
+            font-size: 14px;
+            margin-left: 16px;
+            color: #8393b0;
         }
     }
 
@@ -739,10 +748,11 @@
             }
 
             .icon {
-                width: 50px;
-                height: 50px;
-                background: red;
+                width: 60px;
+                height: 60px;
+                /* background: red; */
                 border-radius: 50%;
+                overflow: hidden;
 
                 img {
                     width: 100%;
@@ -768,5 +778,8 @@
                 margin-right: 10px;
             }
         }
+    }
+    .panel1 .ant-timeline-item-content{
+        top: -18px;
     }
 </style>

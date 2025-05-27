@@ -178,8 +178,6 @@ let data = reactive({
     filterId: '',
     objectTypeCode: '4400',
     entityName: 'Campaign',
-    filterQuery: '',
-    //filterQuery:'\nCreatedBy\teq-userid',
     //displayColumns:'',
     sort: 'CreatedOn',
     order: 'desc'
@@ -189,7 +187,6 @@ let data = reactive({
   searchVal: "",
   treeId: "",
   id: "",
-  formSearchFilterquery: "",
   SearchFields: [],
   isAddSchedule: false,
   isNewMeeting: false,
@@ -260,10 +257,7 @@ const handleSearch = (obj) => {
     sort: 'CreatedOn',
     order: 'desc'
   };
-  // data.formSearchFilterquery = filterquery;
-  // if (filterquery) {
-  //   data.queryParams.filterQuery += filterquery;
-  // }
+  
   if (obj) {
     data.hightSearchParams = obj;
     if (data.hightSearchParams) {
@@ -279,7 +273,7 @@ const handleSearch = (obj) => {
     data.hightSearchParams = {}
   }
   if (data.treeId) {
-    data.queryParams.filterQuery = '\nOwningBusinessUnit\tin\t' + data.treeId;
+    data.queryParams.filterCondition = '[{"attribute":"OwningBusinessUnit","column":"OwningBusinessUnit","label":"部门","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.treeId+'"]}]';
   }
   gridRef.value.loadGrid(data.queryParams);
 }
@@ -347,7 +341,6 @@ const getTabs = () => {
       list.forEach(item => {
         item.label = item.title;
         item.filterId = item.filter.filterId;
-        item.filterquery = item.filterquery || '';
       })
       data.tabs = list;
     }
@@ -394,9 +387,7 @@ const changeTab = (e) => {
   let filterColumnsList = (data.tabs)[e].filterableColumns;
   data.SearchFields = filterColumnsList;
   data.queryParams.filterId = data.tabs[e].filterId || '';
-  // if (data.formSearchFilterquery) {
-  //   data.queryParams.filterQuery += data.formSearchFilterquery;
-  // }
+  
   if (data.hightSearchParams) {
     if (data.hightSearchParams.search) {
       data.queryParams.search = data.hightSearchParams.search;
@@ -406,7 +397,7 @@ const changeTab = (e) => {
     }
   }
   if (data.treeId) {
-    data.queryParams.filterQuery = '\nOwningBusinessUnit\tin\t' + data.treeId;
+    data.queryParams.filterCondition = '[{"attribute":"OwningBusinessUnit","column":"OwningBusinessUnit","label":"部门","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+data.treeId+'"]}]';
   }
   getColumns(data.queryParams.filterId);
 }

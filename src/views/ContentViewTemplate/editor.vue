@@ -446,13 +446,13 @@ const SelectField = (item) => {
 const getFieldList = () => {
   data.FieldList = [];
   data.FieldListAll = [];
-  let filterQuery = "\nEntityId\teq\tbbda8bc8-3e50-48ec-a4a8-68c86a5bd81a";
+  let filterCondition = '[{"attribute":"EntityId","column":"EntityId","label":"对象ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["bbda8bc8-3e50-48ec-a4a8-68c86a5bd81a"]}]';
   proxy
     .$post(Interface.list2, {
       filterId: "",
       objectTypeCode: "100001",
       entityName: "Attribute",
-      filterQuery: filterQuery,
+      filterCondition: filterCondition,
       search: "",
       page: 1,
       rows: 100,

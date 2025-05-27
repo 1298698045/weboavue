@@ -74,7 +74,7 @@
         <div class="detail-bd">
           <div class="tabContainer containerForm" v-if="activeKey == 0">
             <div class="tableBox">
-                <Editor v-if="isEditor" :mode="'doc'" placeholder="" ref="editorRef" :height="height" @input="getContent" :value="id" />
+                <Editor v-if="isEditor" :mode="'doc'" placeholder="" ref="editorRef" :height="height" @input="getContent" :id="id" />
                 <div class="tableBox-Bottom">
                     <div class="tableBox-Bottom-Btn" @click="addDoc">
                         <span class="tableBox-Bottom-Btn-Icon">
@@ -521,9 +521,6 @@ if(route.query.objectTypeCode=='100201'){
       message.error("标题不能为空！");
       return false
     }
-        if(DetailInfoEditRef&&DetailInfoEditRef.value&&DetailInfoEditRef.value.handleSubmit!='undefined'&&type!=1){
-            DetailInfoEditRef.value.handleSubmit();
-        }
         let url=Interface.edit;
         let d = {
         actions:[{
@@ -597,6 +594,9 @@ if(route.query.objectTypeCode=='100201'){
             else{
                 message.success("保存失败！");
             }
+          }
+          if(DetailInfoEditRef&&DetailInfoEditRef.value&&DetailInfoEditRef.value.handleSubmit!='undefined'&&type!=1){
+              DetailInfoEditRef.value.handleSubmit();
           }
         });
     }

@@ -37,6 +37,7 @@
                     <a-select
                       v-if="JSON.stringify(select[attribute.targetValue].controllerValues)=='{}'"
                       allowClear
+                      :disabled="attribute.attributes.readonly"
                       v-model:value="formState[attribute.targetValue]"
                       :placeholder="'请选择' + attribute.label"
                       @change="(e)=>Controllerchange(e, attribute.targetValue, picklistFieldMap[attribute.targetValue])"
@@ -53,6 +54,7 @@
                     <a-select
                       v-if="JSON.stringify(select[attribute.targetValue].controllerValues)!='{}'"
                       allowClear
+                      :disabled="attribute.attributes.readonly"
                       v-model:value="formState[attribute.targetValue]"
                       :placeholder="'请选择' + attribute.label"
                       @change="(e)=>Controllerchange(e, attribute.targetValue, picklistFieldMap[attribute.targetValue])"
@@ -87,6 +89,7 @@
                       v-model:value="formState[attribute.targetValue]"
                       :default-active-first-option="false"
                       :filter-option="false"
+                      :disabled="attribute.attributes.readonly"
                       showSearch
                       @search="
                         (e) => {
@@ -133,6 +136,7 @@
                       valueFormat="YYYY-MM-DD"
                       :placeholder="'请选择' + attribute.label"
                       v-model:value="formState[attribute.targetValue]"
+                      :disabled="attribute.attributes.readonly"
                     />
                   </a-form-item>
                   <!-- 时间类型 -->
@@ -145,11 +149,11 @@
                     ]">
                       <div class="timeGroup" v-if="formState[attribute.targetValue+'_obj']">
                           <a-form-item class="date">
-                              <a-date-picker valueFormat="YYYY-MM-DD" :placeholder="'请选择' + attribute.label"
+                              <a-date-picker valueFormat="YYYY-MM-DD" :placeholder="'请选择' + attribute.label" :disabled="attribute.attributes.readonly"
                               v-model:value="formState[attribute.targetValue+'_obj'].date" @change="(e)=>{changeGroupDate(e,attribute)}" />
                           </a-form-item>
                           <a-form-item class="time">
-                              <a-time-picker v-model:value="formState[attribute.targetValue+'_obj'].time" valueFormat="HH:mm" format="HH:mm" @change="(e)=>{changeGroupTime(e,attribute)}" />
+                              <a-time-picker :disabled="attribute.attributes.readonly" v-model:value="formState[attribute.targetValue+'_obj'].time" valueFormat="HH:mm" format="HH:mm" @change="(e)=>{changeGroupTime(e,attribute)}" />
                           </a-form-item>
                       </div>
                   </a-form-item>
@@ -167,6 +171,7 @@
                     <a-textarea
                       :rows="4"
                       v-model:value="formState[attribute.targetValue]"
+                      :disabled="attribute.attributes.readonly"
                     />
                   </a-form-item>
                   <a-form-item :name="attribute.targetValue" v-else-if="attribute.attributes.type == 'B'"
@@ -178,7 +183,7 @@
                       },
                     ]"
                   >
-                      <a-checkbox v-model:checked="formState[attribute.targetValue]"></a-checkbox>
+                      <a-checkbox :disabled="attribute.attributes.readonly" v-model:checked="formState[attribute.targetValue]"></a-checkbox>
                   </a-form-item>
                   <a-form-item
                     :name="attribute.targetValue"
@@ -192,7 +197,7 @@
                     ]"
                   >
                     <a-input
-                      v-model:value="formState[attribute.targetValue]"
+                      v-model:value="formState[attribute.targetValue]" :disabled="attribute.attributes.readonly"
                     ></a-input>
                   </a-form-item>
                 </div>
@@ -221,6 +226,12 @@
           ></radio-user>
           <Lookup-filter v-if="isLookup" :isShow="isLookup" :field="localId" :entityApiName="entityApiName" :lookEntityApiName="lookEntityApiName" :objectTypeCode="sObjectType" @cancel="isLookup=false" @select="handleSelectData"></Lookup-filter>
           <!-- <multiple-user :isShow="isMultipleUser" @cancel="cancelMuUserModal"  @selectVal="handleMuUserParams" /> -->
+           <SelectImages
+          v-if="isImageModal"
+          :isShow="isImageModal"
+          @cancel="isImageModal = false"
+          @selectImg="handleSetImg"
+        />
         </div>
       </div>
     </div>
@@ -249,7 +260,7 @@ import MultipleDept from "@/components/commonModal/MultipleDept.vue";
 import RadioUser from "@/components/commonModal/RadioUser.vue";
 import MultipleUser from "@/components/commonModal/MultipleUser.vue";
 import LookupFilter from "@/components/commonModal/LookupFilter.vue";
-
+import SelectImages from "@/components/commonModal/SelectImages.vue";
 import { message } from "ant-design-vue";
 
 import TEditor from "@/components/TEditor.vue";
@@ -292,12 +303,14 @@ const data = reactive({
   recordObj: {}, // 记录当前点击的数据
   picklistFieldMap: {}, // 依赖字段关联关系
   selectFixed: {}, // select 固定不变的数据
-  lookEntityApiName: ""
+  lookEntityApiName: "",
+  isImageModal:false
 });
 if(props.title){
   data.title = props.title;
 }
 const {
+  isImageModal,
   title,
   layoutList,
   list,
@@ -444,7 +457,7 @@ const getPickerList = () => {
     message: JSON.stringify(d)
   }
   proxy.$post(Interface.pickListValues, obj).then((res) => {
-    let picklistFieldValues = res.actions[0].returnValue;
+    let picklistFieldValues = res.actions[0].returnValue.picklistFieldValues;
     data.selectFixed = JSON.parse(JSON.stringify(picklistFieldValues));
     data.select = picklistFieldValues;
     // let picklistFieldMap = res.actions[0].returnValue.picklistFieldMap;
@@ -781,6 +794,9 @@ const changeGroupDate = (e, attribute) => {
 const changeGroupTime = (e, attribute) => {
     formState[attribute.localId] = formState[attribute.localId+'_obj'].date +' ' + e;
 }
+const handleSetImg = (params) => {
+  formState[data.localId] = Interface.pathUrl + params.url;
+};
 defineExpose({handleSubmit,getData})
 </script>
 <style lang="less">

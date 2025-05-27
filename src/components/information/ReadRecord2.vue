@@ -422,32 +422,26 @@ const getQuery = () => {
   // });
   data.listData = [];
   data.pagination.total = 0;
-  let filterQuery = "\nObjectId\teq\t" + props.id;
+  let filterCondition = [{"attribute":"ObjectId","column":"ObjectId","label":"对象ID","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[props.id]}];
   if (data.IsRead != "") {
-    filterQuery += "\nIsRead\teq\t" + (data.IsRead == "1" ? true : false);
+    filterCondition.push({"attribute":"IsRead","column":"IsRead","label":"是否阅读","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":[data.IsRead*1]});
   }
-  // if(data.StatusCode){
-  //     filterQuery+='\nStatusCode\teq\t'+data.StatusCode;
-  // }
-  // if(data.CheckinStatus){
-  //     filterQuery+='\nCheckinStatus\teq\t'+data.CheckinStatus;
-  // }
-
   if (data.BusinessUnitName) {
-    filterQuery += "\nBusinessUnitName\tcontains\t" + data.BusinessUnitName;
+    filterCondition.push({"attribute":"BusinessUnitName","column":"BusinessUnitName","label":"部门名称","operator":"contains","logical":"AND","picklistValues":[],"isEditable":false,"operands":[data.BusinessUnitName]});
   }
   if (data.Checkin1) {
-    filterQuery += "\nReadOn\tge\t" + data.Checkin1;
+    filterCondition.push({"attribute":"ReadOn","column":"ReadOn","label":"阅读时间","operator":"ge","logical":"AND","picklistValues":[],"isEditable":false,"operands":[data.Checkin1]});
   }
   if (data.Checkin2) {
-    filterQuery += "\nReadOn\tle\t" + data.Checkin2;
+    filterCondition.push({"attribute":"ReadOn","column":"ReadOn","label":"阅读时间","operator":"le","logical":"AND","picklistValues":[],"isEditable":false,"operands":[data.Checkin2]});
   }
+  filterCondition=JSON.stringify(filterCondition);
   proxy
     .$post(Interface.list2, {
       filterId: "",
       objectTypeCode: data.objectTypeCode,
       entityName: data.sObjectName,
-      filterQuery: filterQuery,
+      filterCondition: filterCondition,
       search: data.searchVal || "",
       page: data.pagination.current,
       rows: data.pagination.pageSize,

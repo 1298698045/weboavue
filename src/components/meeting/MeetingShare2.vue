@@ -209,27 +209,12 @@
     // });
     data.listData=[];
     data.pagination.total = 0;
-    let filterQuery='\nCalendarId\teq\t'+props.id;
-    if(data.StatusCode){
-        filterQuery+='\nStatusCode\teq\t'+data.StatusCode;
-    }
-    if(data.CheckinStatus){
-        filterQuery+='\nCheckinStatus\teq\t'+data.CheckinStatus;
-    }
-    if(data.OwningBusinessUnitName){
-      filterQuery+='\nOwningBusinessUnitName\tcontains\t'+data.OwningBusinessUnitName;
-    }
-    if(data.Checkin1){
-      filterQuery+='\nCheckin\tge\t'+data.Checkin1;
-    }
-    if(data.Checkin2){
-      filterQuery+='\nCheckin\tle\t'+data.Checkin2;
-    }
+    let filterCondition = '[{"attribute":"CalendarId","column":"CalendarId","label":"日历","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]}]';
           proxy.$post(Interface.list2, {
               filterId:'',
               objectTypeCode:data.objectTypeCode,
               entityName:data.sObjectName,
-              filterQuery:filterQuery,
+              filterCondition:filterCondition,
               search:data.searchVal||'',
               page: data.pagination.current,
               rows: data.pagination.pageSize,

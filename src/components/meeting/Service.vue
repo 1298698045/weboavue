@@ -412,13 +412,13 @@ const handleAddRow = () => {
 };
 //获取数据
 const getData = () => {
-  let filterQuery = "\nMeetingId\teq\t" + props.id;
+  let filterCondition = '[{"attribute":"MeetingId","column":"MeetingId","label":"会议","operator":"eq","logical":"AND","picklistValues":[],"isEditable":false,"operands":["'+props.id+'"]}]';
   proxy
     .$post(Interface.list2, {
       filterId: "",
       objectTypeCode: "5006",
       entityName: "MeetingServiceBase",
-      filterQuery: filterQuery,
+      filterCondition: filterCondition,
       search: "",
       page: 1,
       rows: 100,
@@ -707,7 +707,9 @@ onMounted(() => {
     };
   }
   getRelated();
-  getData();
+  if(props.id){
+    getData();
+  }
 });
 </script>
 <style lang="less" scoped>

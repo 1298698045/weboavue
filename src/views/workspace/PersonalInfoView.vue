@@ -17,7 +17,7 @@
                       />
                     </div>
                     <div class="hrm-my-card-basicInfo-left-imgwrap-op">
-                      <div class="ant-col-6">
+                      <!-- <div class="ant-col-6">
                         <div
                           class="hrm-my-card-basicInfo-icon-circle"
                           @click="handleOpenMessage"
@@ -25,7 +25,7 @@
                         >
                           <MessageFilled />
                         </div>
-                      </div>
+                      </div> -->
                       <div class="ant-col-6">
                         <div
                           class="hrm-my-card-basicInfo-icon-circle"

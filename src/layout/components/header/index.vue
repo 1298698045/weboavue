@@ -11,11 +11,10 @@
         ></i>
         <span class="text">{{ moduleName }}</span>
       </div>
-      <div class="header-search">
+      <!-- <div class="header-search">
         <div class="search-type">
           <span class="search-type-name">全搜</span>
           <span class="search-type-icon">
-            <!-- <DownOutlined style="font-size: 10px" /> -->
             <i class="iconfont icon-xiala" style="font-size: 10px"></i>
           </span>
         </div>
@@ -30,21 +29,18 @@
           />
         </div>
         <div class="search-searchIcon" @click="clearInput()">
-          <!-- <SearchOutlined style="font-size: 12px" /> -->
           <i class="iconfont icon-guanbi" style="font-size: 10px"></i>
         </div>
         <div class="search-searchIcon">
-          <!-- <SearchOutlined style="font-size: 12px" /> -->
           <i class="iconfont icon-sousuo" style="font-size: 12px"></i>
         </div>
-      </div>
+      </div> -->
       <div class="header-end">
-        <div class="header-toobar-plugin signPlugin">
+        <!-- <div class="header-toobar-plugin signPlugin">
           <a-popover overlayClassName="signPlugin" trigger="click">
             <template #title>
               <div class="action-hover-point"></div>
               <div class="popup-header">
-                <!-- <ScheduleOutlined style="font-size: 16px;color:var(--textColor)" /> -->
                 <i
                   class="iconfont icon-kaoqin"
                   style="
@@ -64,7 +60,6 @@
                     <a-timeline-item>
                       <template #dot>
                         <div>
-                          <!-- <WeiboCircleOutlined style="font-size: 25px" /> -->
                           <i
                             class="iconfont icon-shangban"
                             style="font-size: 25px"
@@ -77,7 +72,6 @@
                     <a-timeline-item>
                       <template #dot>
                         <div>
-                          <!-- <WeiboCircleOutlined style="font-size: 25px" /> -->
                           <i
                             class="iconfont icon-xiaban"
                             style="font-size: 25px"
@@ -96,34 +90,30 @@
                 </div>
                 <div class="popup-footer">
                   <div class="checking" title="考勤统计">
-                    <!-- <BarChartOutlined /> -->
                     <i class="iconfont icon-tongji" style="color: #b3b3b3"></i>
                     <span class="checkTitle text-elli">考勤统计</span>
                   </div>
                   <a-tooltip :overlayClassName="'header-tooltip'">
                     <template #title>当前所在考勤组：默认考勤组</template>
-                    <!-- <InfoCircleOutlined style="font-size: 16px" /> -->
                     <i class="iconfont icon-tishi" style="color: #b3b3b3"></i>
                   </a-tooltip>
                 </div>
               </div>
             </template>
-            <!-- <ScheduleOutlined style="font-size: 16px" /> -->
             <a-tooltip :overlayClassName="'header-tooltip'">
               <template #title>考勤打卡</template>
               <i class="iconfont icon-kaoqin" style="font-size: 16px"></i>
               <span>考勤</span>
             </a-tooltip>
           </a-popover>
-        </div>
+        </div> -->
         <div class="header-toobar-plugin" @click="handleOpenEmail">
-          <!-- <MessageFilled style="font-size: 18px;" /> -->
           <a-tooltip :overlayClassName="'header-tooltip'">
             <template #title>邮箱</template>
             <i class="iconfont icon-youjian" style="font-size: 18px"></i>
           </a-tooltip>
         </div>
-        <div
+        <!-- <div
           class="header-toobar-plugin MessageOut"
           @click="handleOpenMessage"
           style="margin-left: 8px"
@@ -132,11 +122,10 @@
             <template #title>消息</template>
             <MessageFilled style="font-size: 16px" />
           </a-tooltip>
-          <!-- <i class="iconfont icon-消息" style="font-size: 18px;"></i> -->
-        </div>
-        <div
+        </div> -->
+        <!-- <div
           class="header-toobar-plugin header-toobar-plugin-favor"
-          style="margin-left: 8px"
+          style="margin-left: 8px;"
         >
           <a-tooltip class="favorLeft" :overlayClassName="'header-tooltip'">
             <template #title>收藏</template>
@@ -156,13 +145,13 @@
                         v-if="index == 0"
                         style="background-color: #06a59a"
                         class="actionIcon"
-                        data-aura-rendered-by="33:2958;a"
+                        
                         ><span
-                          data-aura-rendered-by="36:2958;a"
+                          
                           class="uiImage"
                           data-aura-class="uiImage"
                           ><img
-                            data-aura-rendered-by="34:2958;a"
+                            
                             src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/lead_120.png"
                             alt="" /></span
                       ></span>
@@ -170,13 +159,13 @@
                         v-if="index == 1"
                         style="background-color: #ff5d2d"
                         class="actionIcon"
-                        data-aura-rendered-by="46:2958;a"
+                        
                         ><span
-                          data-aura-rendered-by="49:2958;a"
+                          
                           class="uiImage"
                           data-aura-class="uiImage"
                           ><img
-                            data-aura-rendered-by="47:2958;a"
+                            
                             src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/opportunity_120.png"
                             alt="" /></span
                       ></span>
@@ -184,13 +173,12 @@
                         v-if="index == 2"
                         style="background-color: #06a59a"
                         class="actionIcon"
-                        data-aura-rendered-by="59:2958;a"
+                        
                         ><span
-                          data-aura-rendered-by="62:2958;a"
+                          
                           class="uiImage"
                           data-aura-class="uiImage"
                           ><img
-                            data-aura-rendered-by="60:2958;a"
                             src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/report_120.png"
                             alt="" /></span
                       ></span>
@@ -198,13 +186,13 @@
                         v-if="index == 3"
                         style="background-color: #06a59a"
                         class="actionIcon"
-                        data-aura-rendered-by="72:2958;a"
+                        
                         ><span
-                          data-aura-rendered-by="75:2958;a"
+                          
                           class="uiImage"
                           data-aura-class="uiImage"
                           ><img
-                            data-aura-rendered-by="73:2958;a"
+                            
                             src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/standard/report_120.png"
                             alt="" /></span
                       ></span>
@@ -212,13 +200,13 @@
                         v-if="index == 4"
                         style="background-color: #f77e75"
                         class="actionIcon"
-                        data-aura-rendered-by="85:2958;a"
+                        
                         ><span
-                          data-aura-rendered-by="88:2958;a"
+                          
                           class="uiImage"
                           data-aura-class="uiImage"
                           ><img
-                            data-aura-rendered-by="86:2958;a"
+                            
                             src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/custom/custom15_120.png"
                             alt="" /></span
                       ></span>
@@ -235,12 +223,12 @@
               </template>
             </a-dropdown>
           </a-tooltip>
-        </div>
+        </div> -->
         <div
           class="header-toobar-plugin header-toobar-plugin-action"
           style="margin-left: 8px"
         >
-          <a-dropdown :overlayClassName="'OverallAction'" :trigger="['click']">
+          <a-dropdown :overlayClassName="'OverallAction'" :trigger="['click']" placement="bottom">
             <a-tooltip :overlayClassName="'header-tooltip'">
               <template #title>全局操作</template>
               <PlusSquareFilled class="OverallActionIcon" />
@@ -253,99 +241,112 @@
                   <div class="menu-row" @click="selectAction(item)">
                     <span
                       v-if="index == 0"
-                      style="background-color: #06a59a"
+                      style="background-color: #0079de"
                       class="actionIcon"
-                      data-aura-rendered-by="33:2958;a"
+                      
                       ><span
-                        data-aura-rendered-by="36:2958;a"
+                        
                         class="uiImage"
                         data-aura-class="uiImage"
                         ><img
-                          data-aura-rendered-by="34:2958;a"
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/log_a_call_120.png"
+                          style="width: 14px;height: 14px;"
+                          
+                          src="/src/assets/img/rightMenu/morenliucheng.png"
                           alt="" /></span
                     ></span>
                     <span
                       v-if="index == 1"
-                      style="background-color: #cb65ff"
+                      style="background-color: #06a59a"
                       class="actionIcon"
-                      data-aura-rendered-by="46:2958;a"
+                      
                       ><span
-                        data-aura-rendered-by="49:2958;a"
+                        
                         class="uiImage"
                         data-aura-class="uiImage"
                         ><img
-                          data-aura-rendered-by="47:2958;a"
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_event_120.png"
+                          
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/log_a_call_120.png"
                           alt="" /></span
                     ></span>
                     <span
                       v-if="index == 2"
-                      style="background-color: #3ba755"
+                      style="background-color: #cb65ff"
                       class="actionIcon"
-                      data-aura-rendered-by="59:2958;a"
+                      
                       ><span
-                        data-aura-rendered-by="62:2958;a"
+                        
                         class="uiImage"
                         data-aura-class="uiImage"
                         ><img
-                          data-aura-rendered-by="60:2958;a"
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_task_120.png"
+                          
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_event_120.png"
                           alt="" /></span
                     ></span>
                     <span
                       v-if="index == 3"
-                      style="background-color: #9602c7"
+                      style="background-color: #3ba755"
                       class="actionIcon"
-                      data-aura-rendered-by="72:2958;a"
+                      
                       ><span
-                        data-aura-rendered-by="75:2958;a"
+                        
                         class="uiImage"
                         data-aura-class="uiImage"
                         ><img
-                          data-aura-rendered-by="73:2958;a"
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_contact_120.png"
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_task_120.png"
                           alt="" /></span
                     ></span>
                     <span
                       v-if="index == 4"
-                      style="background-color: #ff5d2d"
+                      style="background-color: #9602c7"
                       class="actionIcon"
-                      data-aura-rendered-by="85:2958;a"
+                      
                       ><span
-                        data-aura-rendered-by="88:2958;a"
+                        
                         class="uiImage"
                         data-aura-class="uiImage"
                         ><img
-                          data-aura-rendered-by="86:2958;a"
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_opportunity_120.png"
+                          
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_contact_120.png"
                           alt="" /></span
                     ></span>
                     <span
                       v-if="index == 5"
-                      style="background-color: #ff538a"
+                      style="background-color: #ff5d2d"
                       class="actionIcon"
-                      data-aura-rendered-by="98:2958;a"
+                      
                       ><span
-                        data-aura-rendered-by="101:2958;a"
+                        
                         class="uiImage"
                         data-aura-class="uiImage"
                         ><img
-                          data-aura-rendered-by="99:2958;a"
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_case_120.png"
+                          
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_opportunity_120.png"
                           alt="" /></span
                     ></span>
                     <span
                       v-if="index == 6"
-                      style="background-color: #939393"
+                      style="background-color: #ff538a"
                       class="actionIcon"
-                      data-aura-rendered-by="111:2958;a"
+                      
                       ><span
-                        data-aura-rendered-by="114:2958;a"
+                        
                         class="uiImage"
                         data-aura-class="uiImage"
                         ><img
-                          data-aura-rendered-by="112:2958;a"
+                          
+                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_case_120.png"
+                          alt="" /></span
+                    ></span>
+                    <span
+                      v-if="index == 7"
+                      style="background-color: #939393"
+                      class="actionIcon"
+                      
+                      ><span
+                        
+                        class="uiImage"
+                        data-aura-class="uiImage"
+                        ><img
                           src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/email_120.png"
                           alt="" /></span
                     ></span>
@@ -357,7 +358,6 @@
           </a-dropdown>
         </div>
         <div class="header-toobar-plugin" @click="hanldeOpenNotice">
-          <!-- <MessageFilled style="font-size: 18px;" /> -->
           <a-tooltip :overlayClassName="'header-tooltip'">
             <template #title>通知</template>
             <i class="iconfont icon-xiaoxizhongxin" style="font-size: 18px"></i>
@@ -379,7 +379,6 @@
             {{ currentAccountName }}
           </div>
           <div class="info-icon" @click.stop="handleOpenInfo">
-            <!-- <DownOutlined style="font-size: 10px" /> -->
             <i
               class="iconfont icon-xiala"
               style="font-size: 12px; font-weight: 400"
@@ -387,7 +386,7 @@
           </div>
           <div class="header-info-popup" @click.stop v-if="isInfoPopup">
             <div class="action-hover-point"></div>
-            <div class="row-text">主次账号切换</div>
+            <div class="row-text">身份切换</div>
             <div class="header-account-splitter"></div>
             <!-- <div class="row-text" @click="handlePersonal">
               个人中心
@@ -407,58 +406,37 @@
                       alt=""
                     />
                   </div>
-                  <div class="header-account-item-info">
-                    <span
+                  <div class="header-account-item-info" >
+                    <!-- <span
                       v-if="BusinessUnitId == item.BusinessUnitId"
                       class="header-account-item-current-text"
-                      >主</span
-                    >
-                    <span
-                      class="header-account-item-username"
-                      @click.stop="handleInfo"
-                    >
-                      <span :title="item.FullName">{{ item.FullName }}</span
-                      ><span v-if="item.UserName" :title="item.UserName">{{
-                        item.UserName ? "/" + item.UserName : ""
-                      }}</span>
-                    </span>
-                    <span
-                      class="header-account-item-jobs"
-                      :title="item.jobTitle"
-                      >{{ item.jobTitle }}</span
-                    ><span
-                      class="header-account-item-current-icon"
-                      v-if="BusinessUnitId == item.BusinessUnitId"
-                    >
-                      <CheckCircleFilled />
-                    </span>
-                    <br />
-                    <div class="header-account-item-deptName rowEllipsis">
-                      <span
-                        v-if="item.organizationIdName"
-                        :title="item.organizationIdName"
-                        >{{
-                          item.organizationIdName
-                            ? item.organizationIdName + "/"
-                            : ""
-                        }}</span
-                      ><span :title="item.businessUnitIdName">{{
-                        item.businessUnitIdName
-                      }}</span>
-                    </div>
+                      >主</span> -->
+                      <div :title="item.FullName+(item.UserName?'/'+item.UserName:'')+(item.jobTitle?'/'+item.jobTitle:'')">
+                        <span class="header-account-item-username" @click.stop="handleInfo">
+                          <span>{{ item.FullName }}</span>
+                          <span v-if="item.UserName">{{item.UserName ? "/" + item.UserName : ""}}</span>
+                        </span>
+                        <span class="header-account-item-jobs">{{ item.jobTitle }}</span>
+                        <span class="header-account-item-current-icon" v-if="BusinessUnitId == item.BusinessUnitId">
+                          <CheckCircleFilled />
+                        </span>
+                      </div>
+                      <div class="header-account-item-deptName rowEllipsis" :title="item.businessUnitIdName+(item.organizationIdName?'/'+item.organizationIdName:'')" >
+                          <span>{{item.businessUnitIdName}}{{ item.businessUnitIdName&&item.organizationIdName?'/':'' }}{{item.organizationIdName}}</span>
+                      </div>
                   </div>
                 </div>
                 <div class="header-account-splitter"></div>
               </div>
             </div>
             <div class="header-account-seeting">
-              <div class="header-account-seeting-item" @click="handlePersonal">
+              <!-- <div class="header-account-seeting-item" @click="handlePersonal">
                 <i
                   class="iconfont icon-gerenzhongxin"
                   style="font-size: 18px"
                 ></i>
                 <span class="header-account-seeting-title">应用中心</span>
-              </div>
+              </div> -->
               <div class="header-account-seeting-item" @click="EditPassWord">
                 <i class="iconfont icon-xiugaimima" style="font-size: 18px"></i>
                 <span class="header-account-seeting-title">密码修改</span>
@@ -468,7 +446,6 @@
                 <span class="header-account-seeting-title">主题中心</span>
               </div> -->
               <div class="header-account-seeting-item" @click="handleloginOut">
-                <!-- <ScheduleOutlined class="icon" /> -->
                 <i class="iconfont icon-tuichu" style="font-size: 18px"></i>
                 <span class="header-account-seeting-title">退出</span>
               </div>
@@ -502,6 +479,24 @@
                 <img :src="item.LogoUrl" alt="" />
               </div>
               <div class="app-item-label">{{ item.Label }}</div>
+            </div>
+          </div>
+          <div
+            class="app_item app_more"
+            :class="{
+              active: currentModuleName && currentModuleName == '更多应用',
+            }"
+            key="-1"
+            @click="handleMoreApp()"
+          >
+            <div class="appBox">
+              <div class="iconBox">
+                <img
+                  :src="'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNMjQuODA3OSAyLjk1Mzg2QzIzLjUzODcgMS42ODQ2NSAyMS40ODA5IDEuNjg0NjUgMjAuMjExNyAyLjk1Mzg2TDE2Ljk5OSA2LjE2NjU3QzE2Ljk1NDcgNC40MTAxOSAxNS41MTcgMi45OTk5NyAxMy43NSAyLjk5OTk3SDYuMjVDNC40NTUwNyAyLjk5OTk3IDMgNC40NTUwNCAzIDYuMjQ5OTdWMjUuNzVDMyAyNy41NDQ5IDQuNDU1MDcgMjkgNi4yNSAyOUwyNS43NSAyOUMyNy41NDQ5IDI5IDI5IDI3LjU0NDkgMjkgMjUuNzVWMTguMjVDMjkgMTYuNDg1OCAyNy41OTQ0IDE1LjA0OTkgMjUuODQyIDE1LjAwMTJMMjkuMDUwNSAxMS43OTI3QzMwLjMxOTcgMTAuNTIzNSAzMC4zMTk3IDguNDY1NyAyOS4wNTA1IDcuMTk2NUwyNC44MDc5IDIuOTUzODZaTTE5LjE3NjMgMTVIMTdWMTIuODIzN0wxOS4xNzYzIDE1Wk0yMS42MjU5IDQuMzY4MDdDMjIuMTE0IDMuODc5OTEgMjIuOTA1NSAzLjg3OTkxIDIzLjM5MzYgNC4zNjgwN0wyNy42MzYzIDguNjEwNzFDMjguMTI0NCA5LjA5ODg3IDI4LjEyNDQgOS44OTAzMiAyNy42MzYzIDEwLjM3ODVMMjMuMzkzNiAxNC42MjExQzIyLjkwNTUgMTUuMTA5MyAyMi4xMTQgMTUuMTA5MyAyMS42MjU5IDE0LjYyMTFMMTcuMzgzMiAxMC4zNzg1QzE2Ljg5NTEgOS44OTAzMiAxNi44OTUxIDkuMDk4ODcgMTcuMzgzMiA4LjYxMDcxTDIxLjYyNTkgNC4zNjgwN1pNMTUgNi4yNDk5N1YxNUg1VjYuMjQ5OTdDNSA1LjU1OTYxIDUuNTU5NjQgNC45OTk5NyA2LjI1IDQuOTk5OTdIMTMuNzVDMTQuNDQwNCA0Ljk5OTk3IDE1IDUuNTU5NjEgMTUgNi4yNDk5N1pNNSAyNS43NVYxN0gxNVYyN0g2LjI1QzUuNTU5NjQgMjcgNSAyNi40NDAzIDUgMjUuNzVaTTE3IDE3SDI1Ljc1QzI2LjQ0MDQgMTcgMjcgMTcuNTU5NiAyNyAxOC4yNVYyNS43NUMyNyAyNi40NDAzIDI2LjQ0MDQgMjcgMjUuNzUgMjdIMTdWMTdaIiBmaWxsPSIjNjE2MTYxIi8+Cjwvc3ZnPgo='"
+                  alt=""
+                />
+              </div>
+              <div class="app-item-label">更多应用</div>
             </div>
           </div>
         </div>
@@ -605,6 +600,7 @@ import {
   getCurrentInstance,
   defineProps,
   defineEmits,
+  nextTick,
 } from "vue";
 import {
   DownOutlined,
@@ -680,6 +676,7 @@ const data = reactive({
     // {FullName:'李四（演示账号）',JobTitle:'科主任',DeptName:'信息科'}
   ],
   currentAccountName: "",
+  currentUserName: "",
   BusinessUnitId: "",
   userId: "",
   avatarUrl: "",
@@ -690,6 +687,7 @@ const data = reactive({
   listAppAll: [],
   listApp: [],
   ActionList: [
+    { name: "新建流程" },
     { name: "记录电话" },
     { name: "新建事件" },
     { name: "新建任务" },
@@ -753,12 +751,14 @@ const {
   searchVal,
   accountList,
   currentAccountName,
+  currentUserName,
   BusinessUnitId,
   avatarUrl,
 } = toRefs(data);
 const ChangeAccount = (item) => {
   data.isInfoPopup = false;
   data.currentAccountName = item.FullName;
+  data.currentUserName = item.UserName;
   data.BusinessUnitId = item.BusinessUnitId;
   data.userId = item.UserId;
   data.avatarUrl = item.avatarUrl || "";
@@ -860,6 +860,7 @@ const getBusinessUnits = () => {
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
     data.currentAccountName = userInfo.fullName;
+    data.currentUserName = userInfo.userName;
     data.BusinessUnitId = userInfo.businessUnitId;
     data.accountList = [
       {
@@ -890,6 +891,7 @@ const getBusinessUnits = () => {
       for (var i = 0; i < data.accountList.length; i++) {
         if (data.BusinessUnitId == data.accountList[i].BusinessUnitId) {
           data.currentAccountName = data.accountList[i].FullName;
+          data.currentUserName = data.accountList[i].UserName;
           data.userId = data.accountList[i].UserId;
           data.avatarUrl = data.accountList[i].avatarUrl;
           window.localStorage.setItem(
@@ -930,9 +932,11 @@ const switchUser = (item) => {
     ) {
       message.success("切换成功！");
       localStorage.clear();
-      let data = res.actions[0].returnValue;
-      let token = data.token;
-      let userInfo = data.user ? JSON.stringify(data.user) : "";
+      let result = res.actions[0].returnValue;
+      let token = result.token;
+      result.user.fullName=result.user.fullName||data.currentAccountName;
+      result.user.userName=result.user.userName||data.currentUserName;
+      let userInfo = result.user ? JSON.stringify(result.user) : "";
       window.localStorage.setItem("token", token);
       window.localStorage.setItem("userInfo", userInfo);
       store.dispatch("getModules");
@@ -965,11 +969,22 @@ const handleGoModule = (item) => {
   // });
   isShow.value = false;
 };
+const handleMoreApp = () => {
+  data.currentModuleName = "更多应用";
+  isShow.value = false;
+  handlePersonal();
+};
 const handleOpenInfo = () => {
   data.isInfoPopup = !data.isInfoPopup;
 };
 const selectAction = (item) => {
-  if (item.name == "记录电话") {
+  if (item.name == "新建流程") {
+    router.push({
+      path: "/workflow/o/instance/add",
+      query: {
+      },
+    });
+  } else if (item.name == "记录电话") {
     data.isRecord = true;
   } else if (item.name == "新建事件") {
     data.isAddSchedule = true;
@@ -1019,6 +1034,31 @@ const onSearch = (e) => {
     return item.Label.indexOf(data.searchText) != -1;
   });
 };
+watch(
+  () => route,
+  (newRoute) => {
+    //console.log("newRoute111", newRoute);
+    if (newRoute && newRoute.meta && newRoute.meta.label) {
+      nextTick(() => {
+        if (
+          $(".headerLeft .headerTitle") &&
+          $(".headerLeft .headerTitle").length
+        ) {
+          $(".headerLeft .headerTitle").html(newRoute.meta.label);
+        }
+        $(document).ready(function () {
+          if (
+            $(".headerTop .leftAll .menu-box .label") &&
+            $(".headerTop .leftAll .menu-box .label").length
+          ) {
+            $(".headerTop .leftAll .menu-box .label").html(newRoute.meta.label);
+          }
+        });
+      });
+    }
+  },
+  { immediate: true, deep: true }
+);
 onMounted(() => {
   if (props.listApp) {
     data.listApp = props.listApp;
@@ -1030,6 +1070,9 @@ onMounted(() => {
     data.isInfoPopup = false;
   });
   data.currentModuleName = window.localStorage.getItem("moduleName") || "";
+  if (route.path == "/workspace/personal/home") {
+    data.currentModuleName = "更多应用";
+  }
 });
 </script>
 <style lang="less">
@@ -1228,8 +1271,8 @@ onMounted(() => {
 }
 .ant-dropdown.OverallAction {
   top: 50px !important;
-  left: unset !important;
-  right: 170px !important;
+  //left: unset !important;
+  //right: 170px !important;
   .ant-dropdown-menu {
     padding: 8px 2px !important;
     position: relative;
@@ -1242,7 +1285,7 @@ onMounted(() => {
     background-color: #fff;
     transform: rotate(45deg);
     top: -8px;
-    right: 18px;
+    right: 77px;
     z-index: 1;
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
@@ -1447,23 +1490,37 @@ onMounted(() => {
     padding: 9px 8px;
   }
 }
-.header .app_popup .appList .app_item {
-  .iconBox {
-    width: 50px;
-    height: 50px;
-    img {
-      border-radius: 50%;
+.header .app_popup .appList {
+  .app_item {
+    .iconBox {
+      width: 50px;
+      height: 50px;
+      img {
+        border-radius: 50%;
+      }
+    }
+    &:hover {
+      box-shadow: none !important;
+      border: none !important;
+      background: #f2f3f5;
+    }
+    &.active {
+      box-shadow: none;
+      border: none;
+      background: #f2f3f5;
     }
   }
-  &:hover {
-    box-shadow: none !important;
-    border: none !important;
-    background: #f2f3f5;
-  }
-  &.active {
-    box-shadow: none;
-    border: none;
-    background: #f2f3f5;
+  .app_more {
+    .iconBox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 0;
+      }
+    }
   }
 }
 </style>

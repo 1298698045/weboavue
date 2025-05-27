@@ -228,13 +228,13 @@
                                                         </div>
                                                         <div class="fileItemInfo" @click.stop="openZW(row)">
                                                             <p class="name">{{row.Name}}</p>
-                                                            <p class="link">
+                                                            <!-- <p class="link">
                                                                 <a href="javascript:;" v-if="attachPerm.read"
                                                                     @click.stop="openZW(row)">查看</a>
                                                                 ·
                                                                 <a href="javascript:;"
                                                                     @click.stop="downloadFile(row)">下载</a>
-                                                            </p>
+                                                            </p> -->
                                                             <p class="time">
                                                                 <span>{{row.CreatedOn}}&nbsp;·</span>
                                                                 &nbsp;
@@ -250,13 +250,16 @@
                                                                             <a href="javascript:;"
                                                                                 @click.stop="openZW(row)">查看</a>
                                                                         </a-menu-item>
-                                                                        <a-menu-item v-if="attachPerm.delete" key="2">
+                                                                        <a-menu-item key="5">
+                                                                            <a href="javascript:;" @click.stop="downloadFile(item)">下载</a>
+                                                                        </a-menu-item>
+                                                                        <a-menu-item v-if="attachPerm.filePermission == 1" key="2">
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
                                                                                 cancel-text="取消">
                                                                                 <a href="javascript:;">删除</a>
                                                                             </a-popconfirm>
                                                                         </a-menu-item>
-                                                                        <a-menu-item v-if="attachPerm.add" key="3">
+                                                                        <a-menu-item v-if="[1,2,3].includes(attachPerm.filePermission)" key="3">
                                                                             <a-upload name="files" :headers="headers"
                                                                                 v-model:file-list="fileList"
                                                                                 :data="{entityName: 'WFProcessInstance',fileId: item.id}"
@@ -266,6 +269,9 @@
                                                                                 <a href="javascript:;"
                                                                                     style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
                                                                             </a-upload>
+                                                                        </a-menu-item>
+                                                                        <a-menu-item key="4">
+                                                                            <a href="javascript:;">打印</a>
                                                                         </a-menu-item>
                                                                     </a-menu>
                                                                 </template>
@@ -321,17 +327,20 @@
                                                                 <DownOutlined style="font-size: 12px;" />
                                                                 <template #overlay>
                                                                     <a-menu style="width: 120px;">
-                                                                        <a-menu-item v-if="attachPerm.read" key="1">
+                                                                        <a-menu-item key="1">
                                                                             <a href="javascript:;"
                                                                                 @click.stop="openZW(item)">查看</a>
                                                                         </a-menu-item>
-                                                                        <a-menu-item v-if="attachPerm.delete" key="2">
+                                                                        <a-menu-item key="5">
+                                                                            <a href="javascript:;" @click.stop="downloadFile(item)">下载</a>
+                                                                        </a-menu-item>
+                                                                        <a-menu-item v-if="attachPerm.filePermission == 1" key="2">
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
                                                                                 cancel-text="取消">
                                                                                 <a href="javascript:;">删除</a>
                                                                             </a-popconfirm>
                                                                         </a-menu-item>
-                                                                        <a-menu-item v-if="attachPerm.add" key="3">
+                                                                        <a-menu-item v-if="[1,2,3].includes(attachPerm.filePermission)" key="3">
                                                                             <a-upload name="files" :headers="headers"
                                                                                 v-model:file-list="fileList"
                                                                                 :data="{entityName: 'WFProcessInstance',fileId: item.id}"
@@ -341,6 +350,9 @@
                                                                                 <a href="javascript:;"
                                                                                     style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
                                                                             </a-upload>
+                                                                        </a-menu-item>
+                                                                        <a-menu-item key="4">
+                                                                            <a href="javascript:;">打印</a>
                                                                         </a-menu-item>
                                                                     </a-menu>
                                                                 </template>
@@ -460,7 +472,7 @@
             @ok="updateProcess">
         </Jump>
         <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
-        <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
+        <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" :editMethod="attachPerm.filePermission" @cancel="isPdf = false" />
         <TxtView
         v-if="isTxt"
         :isShow="isTxt"
@@ -605,13 +617,14 @@
         },
         isTxt: false,
         txtParams: {},
+        attachPermission: {}
     })
     const { isEdit, Title, objectTypeCode, sObjectName, tabs, activeKey, isProcess, isRejection, ProcessData, RejectionData,
         isCirculation, isModal, isUrging, categoryFiles, isAside, reqIndex, id, fileList, isRelateInstance, lookEntityApiName, lookObjectTypeCode, lookEntityType,
         pageCurrent, ruleLogId, processId, processInstanceId, toActivityID,
         processInstanceName, isCountersign, isJump, isConfirm, revokeDesc, isDelete,
         fromActivityId, isReturn, iframeSrc, fileTotal, btnPerm, attachPerm, stateCode,
-        uploadData, headers, isPhoto, photoParams, ImageList, pdfParams, isPdf, print, isTxt, txtParams, } = toRefs(data);
+        uploadData, headers, isPhoto, photoParams, ImageList, pdfParams, isPdf, print, isTxt, txtParams, attachPermission } = toRefs(data);
 
     const changeFiles = (e) => {
         // console.log("e", e);
@@ -652,6 +665,29 @@
         });
     };
     getRuleLogData();
+
+    const getPermission = async () => {
+        let obj = {
+            actions: [{
+                id: "562;a",
+                descriptor: "",
+                callingDescriptor: "UNKNOWN",
+                params: {
+                    processId: data.processId,
+                    activityId: data.toActivityID
+                }
+            }]
+        };
+
+        let d = {
+            message: JSON.stringify(obj)
+        }
+        let res = await proxy.$post(Interface.workflow.getPermission, d);
+        // console.log("permission-res", res);
+        let permission = res.actions[0].returnValue;
+        let { masterEntityPermission, relatedListEntityPermissions, flowPermission, attachPermission } = permission;
+        data.attachPermission = attachPermission;
+    }
 
 
     const detailTitleInputDom = ref(null);
@@ -860,15 +896,8 @@
                 downloadUrl: row.downloadUrl
             };
             data.isPdf = true;
-        } else if (
-            row.fileExtension == "docx" ||
-            row.fileExtension == "pptx" ||
-            row.fileExtension == "xlsx" ||
-            row.fileExtension == "doc" ||
-            row.fileExtension == "ppt" ||
-            row.fileExtension == "xls" || row.fileExtension == "wps"
-        ) {
-            row.viewUrl = '/lightning/r/office/view?id=' + row.id + '&editMethod=' + data.attachPerm.filePermission;
+        } else if (isCaseExit(row.fileExtension)) {
+            row.viewUrl = '/lightning/r/office/view?id=' + row.id + '&editMethod=' + data.attachPerm.filePermission + "&docType=122";
             openControlViewFile(
             row.id,
             row.createdByName,
@@ -880,6 +909,11 @@
             downloadFile(row);
         }
     };
+    const isCaseExit = (fileExtension) => {
+        let currentFileExtension = fileExtension.toLowerCase();
+        let wordTypes = ["docx", "pptx", "xlsx", "doc", "ppt", "xls", "wps"];
+        return wordTypes.includes(currentFileExtension);
+    }
     //预览office文件
     const openControlViewFile = (id, username, type, link, name) => {
         var mhtmlHeight = window.screen.availHeight;//获得窗口的垂直位置;

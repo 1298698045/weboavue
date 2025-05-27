@@ -94,16 +94,13 @@ const data = reactive({
 const { height,listData,loading,searchVal} = toRefs(data);
 const getQuery = () => {
   data.listData=[];
-  let filterQuery='\nParentSubject\tnull';
-  if(data.searchVal){
-    filterQuery+='\nName\tcontains\t'+data.searchVal;
-  }
+  let filterCondition='[{"attribute":"ParentSubject","column":"ParentSubject","label":"父主题","operator":"null","logical":"AND","picklistValues":[],"isEditable":false,"operands":[]}]';
   proxy.$post(Interface.list2, {
       filterId:'',
       objectTypeCode:'100310',
       entityName:'KbSubject',
-      filterQuery:filterQuery,
-      search:'',
+      filterCondition:filterCondition,
+      search:data.searchVal||'',
       page: 1,
       rows: 100,
       sort:'DisplayOrder',
