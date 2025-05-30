@@ -170,13 +170,33 @@
     const handleDetail = (item) => {
         console.log("config", props.config);
         console.log(item);
-        const url = router.resolve({
-            path: props.config.detailUrl,
-            query: {
+        let isParams = props.config.detailUrl.indexOf('?');
+        if (isParams != -1) {
+            let params = props.config.detailUrl.split("?")[1];
+            let arrParams = params.split("&");
+            let d = {
                 id: item.LIST_RECORD_ID
-            }
-        });
-        window.open(url.href);
+            };
+            arrParams.forEach(item => {
+                let strArr = item.split("=");
+                let key = strArr[0];
+                let value = strArr[1];
+                d[key] = value;
+            });
+            const url = router.resolve({
+                path: props.config.detailUrl,
+                query: d
+            });
+            window.open(url.href);
+        } else {
+            const url = router.resolve({
+                path: props.config.detailUrl,
+                query: {
+                    id: item.LIST_RECORD_ID
+                }
+            });
+            window.open(url.href);
+        }
     }
 
 </script>

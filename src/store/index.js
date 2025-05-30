@@ -250,7 +250,8 @@ export default createStore({
         commit('setModuleName', modules[0].Label);
         commit('setAppCode', modules[0].AppCode);
         // router.push(modules[0].tabs[0].navAction.url);
-        router.push('/lightning/home/Workspace');
+        let jumpUrl = modules[0].tabs[0].navAction.url;
+        router.push(jumpUrl);
         // router.push("/workflow/o/instance/add");
       }
     },
