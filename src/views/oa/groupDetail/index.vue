@@ -500,7 +500,7 @@ const getDetail = () => {
               data.detail=fields;
               let url=fields.AvatarUrl&&fields.AvatarUrl.value?fields.AvatarUrl.value:'';
               if(url){
-                data.AvatarUrl='/'+Interface.viewAvatar+'/Group/'+data.recordId;
+                data.AvatarUrl='/'+Interface.viewAvatar+'/Group/'+data.recordId+"&t="+(new Date()).getTime();
               }
               else{
                 data.AvatarUrl=require('@/assets/img/avatar-r.png');

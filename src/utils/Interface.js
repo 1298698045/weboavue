@@ -464,8 +464,8 @@ const Interface = {
     submit: baseUrl + "/weibo/poll/submit", //发布投票
     response: baseUrl + "/weibo/poll/response", //投票提交
   },
-  uploadAvatar: baseUrl + "/avatar/upload", //通用头像上传
-  viewAvatar: baseUrl + "/avatar", //头像查看
+  uploadAvatar: baseUrl + "/aura/avatar/upload", //通用头像上传
+  viewAvatar: baseUrl + "/aura/avatar", //通用头像查看
   uploadFiles: baseUrl + "/file/attachment/upload", //通用附件上传
   replaceFiles: baseUrl + "/file/attachment/replace",
   getFiles: baseUrl + "/file/attachment/getFiles", //通用获取附件
@@ -513,5 +513,6 @@ const Interface = {
     send: baseUrl + "/campaignsms/message/send", // 短信发送提交
   },
   getFileInfo: baseUrl + "/oa/office/getFileInfo", // 获取Office预览文件信息
+  saveAvatar: baseUrl + "/aura/avatar/crop", // 头像保存
 };
 export default Interface;

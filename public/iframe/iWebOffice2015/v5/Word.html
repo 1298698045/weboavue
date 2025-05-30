@@ -79,6 +79,29 @@
 		var r = location.search.substr(1).match(reg);
 		if (r != null) return unescape(decodeURI(r[2])); return "";
 	}
+    //KGB查看
+    var KGBrowser = new KGBrowser();
+    function RunKGBrowser() {
+        $('#OfficeDiv').css({'visibility':'hidden'});
+        var userInfo = window.localStorage.getItem('userInfo');
+        var userId = '';
+        var organizationId = '';
+        if (userInfo) {
+            userInfo = JSON.parse(userInfo);
+            userId = userInfo.userId;
+            organizationId = userInfo.organizationId;
+        }
+        var strOptions = '$skin=1$tabshow=1';
+        var str2 = "/iframe/iWebOffice2015/v5/KGBrowser/Word.html?id=" + getQueryString('id') + "&entityName=" + getQueryString('entityName');
+        if (getQueryString('editMethod')) {
+            str2 += "&editMethod=" + getQueryString('editMethod');
+        }
+        if(getQueryString('docType')){
+            str2 += "&docType=" + getQueryString('docType');
+        }
+        str2 += "&UserName="+UserName;
+        KGBrowser.openWindowBrowser(str2 + "$skin=0$titlecolor=f6f6f6$tabshow=1", strOptions, false);
+    }
     //格式化node列表
     function girdFormatterValue (key, row, nameField) {
 		var val = "";
@@ -267,7 +290,16 @@
 					document.getElementById("Subject1").value=mSubject||'';
 					document.getElementById("Author1").title=mAuthor||'';
 					document.getElementById("Subject1").title=mSubject||'';
-					Load1();
+                    var abc = isSupportOfficePlug();
+                    if (!abc) {
+                        $('#OfficeDiv').remove();
+                        RunKGBrowser();
+                        setTimeout(function () {
+                            parent.window.close();
+                        }, 5000);
+                    }else{
+                        Load1();
+                    }
 				} else {
 					if (res && res.actions && res.actions[0] && res.actions[0].errorMessage) {
 						message.error(
@@ -759,37 +791,6 @@
         /*
     北京凤凰世纪科技有限公司[仅限内部员工专用];V5.0S0xGAAEAAAAAAAAAEAAAAIMBAACQAQAALAAAAMwNaMDVIUJTwKbIHfh6Dyw6UqnO3L3x1duLNL/06AbnJHG78tIhcw1Q0xtWK613nMQ1vSbADMkY1mDx36KoakOXzAseMGCq+/bqlPy/6Ao12ca/TxwC1If7O4yqD2qNm8k8+VWonlZ4E2PucKlIoebkTHcOTbBLXO9D2XYbnNVcReMvWN7upwkDFw/naoQu4SB51e+hkfdvvE3WX4yaNZYPmWPc5rQeaFJHXah32V811dwTStoFSlXanE7bjxg9oWVlgC/NHrmJkBSyWgit0k3h9s6xHewXBrHYK8g3lXDWkkwE99/Mxskc2KU71syusBcYvQuHcM4W3OMK80Rj25eQGUc7w7dMuy5n/moC9Z66XTH4NTyu/XsZ09T0YF1+75I6cbYRVBKr4N/Z2abNlBIQLlC8j+Zs8a2RKk9yxAd5Nnbx9tzkYrJV+g19EsMcQDXND0w4vTKv4quPZvihkQ6A780kzXDCIwSC7U3ZjCbL4rLtqs6aM3MctdjxqNDDkfaYLG+v0xvzNWir6ZBCWSJvlUNfB73flsOZ/zB/fbSB
     */
-    </script>
-    <script type="text/javascript">
-        var KGBrowser = new KGBrowser();
-        function RunKGBrowser() {
-            $('#OfficeDiv').css({'visibility':'hidden'});
-            var userInfo = window.localStorage.getItem('userInfo');
-            var userId = '';
-            var organizationId = '';
-            if (userInfo) {
-                userInfo = JSON.parse(userInfo);
-                userId = userInfo.userId;
-                organizationId = userInfo.organizationId;
-            }
-            var strOptions = '$skin=1$tabshow=1';
-            var str2 = "/iframe/iWebOffice2015/v5/KGBrowser/Word.html?id=" + getQueryString('id') + "&entityName=" + getQueryString('entityName');
-            if (getQueryString('editMethod')) {
-                str2 += "&editMethod=" + getQueryString('editMethod');
-            }
-            if(getQueryString('docType')){
-                str2 += "&docType=" + getQueryString('docType');
-            }
-            str2 += "&UserName="+UserName;
-            KGBrowser.openWindowBrowser(str2 + "$skin=0$titlecolor=f6f6f6$tabshow=1", strOptions, false);
-        }
-        // var abc = isSupportOfficePlug();
-        // if (!abc) {
-        //     RunKGBrowser();
-        //     setTimeout(function () {
-        //         parent.window.close();
-        //     }, 2000);
-        // }
     </script>
     <style>
 	.InputLine2{

@@ -39,7 +39,7 @@
                         <!-- <a-button class="ml10" type="primary">新建</a-button> -->
                     </div>
                 </div>
-                <div class="tableWrap" ref="tablelist">
+                <div class="tableWrap groupList" ref="tablelist">
                     <a-table style="height: 100%;" :scroll="{ y: tableHeight }" :dataSource="dataSource"
                         :columns="columns" :pagination="data.pagination" @change="handleTableChange">
                         <template #bodyCell="{ column, text, record }">
@@ -54,9 +54,9 @@
                             <div v-if="column.key == 'Action'">
                                 <div class="iconBox">
                                     <div class="popup">
-                                        <div class="option-item" @click="handleDetail(record.id)" :num="index">查看</div>
-                                        <div class="option-item" @click="handleEdit(record.id)" :num="index">编辑</div>
-                                        <div class="option-item" @click="handleDelete(record.id)" :num="index">删除</div>
+                                        <div class="option-item" @click="handleDetail(record.id)">查看</div>
+                                        <div class="option-item" @click="handleEdit(record.id)">编辑</div>
+                                        <div class="option-item" @click="handleDelete(record.id)">删除</div>
                                     </div>
                                     <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none"
                                         role="presentation" data-v-69a58868="">
@@ -270,7 +270,7 @@ const getQuery = () => {
                         item[cell] = item[cell] ? dayjs(item[cell]).format("YYYY-MM-DD HH:mm") : '';
                     }
                 }
-                item.AvatarUrl = '/api/avatar/Group/' + (item.id || item.groupId);
+                item.AvatarUrl = "/" + Interface.viewAvatar + "/Group/" + (item.id || item.groupId);
                 list.push(item)
             }
         }
@@ -278,7 +278,7 @@ const getQuery = () => {
             data.pagination.total = res.actions[0].returnValue.length || 0;
             for (var i = 0; i < res.actions[0].returnValue.length; i++) {
                 var item = res.actions[0].returnValue[i];
-                item.AvatarUrl = '/api/avatar/Group/' + (item.id || item.groupId);
+                item.AvatarUrl = "/" + Interface.viewAvatar + "/Group/" + (item.id || item.groupId);
                 item.id = item.groupId;
                 item.Name = item.name;
                 item.Quantity = item.quantity;
@@ -345,8 +345,10 @@ const handleImageError = (record) => {
     return record;
 };
 onMounted(() => {
-    let h = tablelist.value.clientHeight;
-    data.tableHeight = h - 80;
+    data.tableHeight = document.documentElement.clientHeight - 330;
+    window.addEventListener("resize", (e) => {
+        data.tableHeight = document.documentElement.clientHeight - 330;
+    });
 })
 </script>
 <style lang="less" scoped>
@@ -360,8 +362,8 @@ onMounted(() => {
         margin: 20px 0;
     }
 
-    .tableWrap {
-        height: calc(~"100% - 80px");
+    .tableWrap.groupList {
+        height: calc(~"100% - 122px");
     }
 }
 
