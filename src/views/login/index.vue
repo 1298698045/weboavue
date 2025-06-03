@@ -155,14 +155,14 @@
                 <img src="@/assets/img/password.svg" alt="" />
                 密码登录
               </div>
-              <div
+              <!-- <div
                 class="switch-item"
                 :class="{ active: current == 1 }"
                 @click="changeMethod(1)"
               >
                 <img src="@/assets/img/sms.svg" alt="" />
                 验证码登录
-              </div>
+              </div> -->
               <!-- <div
                 class="switch-item"
                 :class="{ active: current == 2 }"
@@ -383,7 +383,8 @@ const buttonText = computed(() => {
 
     .loginContent {
       width: 450px;
-      min-height: 596px;
+      // min-height: 596px;
+      min-height: 566px;
       box-shadow: 0px 1px 12px 0px rgba(0, 0, 0, 0.2);
       border-radius: 10px;
       /* padding: 0 0 30px 0; */

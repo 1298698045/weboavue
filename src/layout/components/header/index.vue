@@ -376,7 +376,8 @@
             />
           </div>
           <div class="info-name" @click.stop="handleOpenInfo">
-            {{ currentAccountName }}
+            <div class="info-name-top">{{ currentAccountName }}</div>
+            <div class="info-name-bottom">{{ currentAccountDeptName }}</div>
           </div>
           <div class="info-icon" @click.stop="handleOpenInfo">
             <i
@@ -676,6 +677,7 @@ const data = reactive({
     // {FullName:'李四（演示账号）',JobTitle:'科主任',DeptName:'信息科'}
   ],
   currentAccountName: "",
+  currentAccountDeptName:'',
   currentUserName: "",
   BusinessUnitId: "",
   userId: "",
@@ -751,6 +753,7 @@ const {
   searchVal,
   accountList,
   currentAccountName,
+  currentAccountDeptName,
   currentUserName,
   BusinessUnitId,
   avatarUrl,
@@ -760,6 +763,7 @@ const ChangeAccount = (item) => {
   data.currentAccountName = item.FullName;
   data.currentUserName = item.UserName;
   data.BusinessUnitId = item.BusinessUnitId;
+  data.currentAccountDeptName=item.businessUnitIdName,
   data.userId = item.UserId;
   data.avatarUrl = item.avatarUrl || "";
   switchUser(item);
@@ -860,6 +864,7 @@ const getBusinessUnits = () => {
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
     data.currentAccountName = userInfo.fullName;
+    data.currentAccountDeptName=userInfo.businessUnitIdName,
     data.currentUserName = userInfo.userName;
     data.BusinessUnitId = userInfo.businessUnitId;
     data.accountList = [
@@ -891,6 +896,7 @@ const getBusinessUnits = () => {
       for (var i = 0; i < data.accountList.length; i++) {
         if (data.BusinessUnitId == data.accountList[i].BusinessUnitId) {
           data.currentAccountName = data.accountList[i].FullName;
+          data.currentAccountDeptName=data.accountList[i].businessUnitIdName;
           data.currentUserName = data.accountList[i].UserName;
           data.userId = data.accountList[i].UserId;
           data.avatarUrl = data.accountList[i].avatarUrl;
@@ -936,6 +942,7 @@ const switchUser = (item) => {
       let token = result.token;
       result.user.fullName=result.user.fullName||data.currentAccountName;
       result.user.userName=result.user.userName||data.currentUserName;
+      result.businessUnitIdName=result.user.businessUnitIdName||data.currentAccountDeptName;
       let userInfo = result.user ? JSON.stringify(result.user) : "";
       window.localStorage.setItem("token", token);
       window.localStorage.setItem("userInfo", userInfo);
@@ -1520,6 +1527,15 @@ onMounted(() => {
         height: 40px;
         border-radius: 0;
       }
+    }
+  }
+}
+.header-info{
+  .info-name{
+    .info-name-bottom{
+      color: #909090 !important;
+      font-size: 11px !important;
+      margin-top: 3px;
     }
   }
 }
