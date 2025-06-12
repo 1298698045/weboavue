@@ -14,7 +14,7 @@
           用户已注销!
         </div>
         <div class="error" style="color: red" v-if="formState.errorText">
-          {{formState.errorText}}
+          {{ formState.errorText }}
         </div>
         <div class="loginCenter">
           <a-form
@@ -43,7 +43,7 @@
               >
                 <a-input
                   v-model:value="formState.password"
-                  type="password"
+                  :type="isShowPassWord ? 'text' : 'password'"
                   placeholder="密码"
                   allow-clear
                 >
@@ -51,6 +51,18 @@
                     <LockOutlined />
                   </template>
                 </a-input>
+                <div class="isShowPassWordIcon">
+                  <EyeOutlined
+                    v-if="isShowPassWord"
+                    @click="isShowPassWordChange(false)"
+                    title="点击隐藏密码"
+                  />
+                  <EyeInvisibleOutlined
+                    v-if="!isShowPassWord"
+                    @click="isShowPassWordChange(true)"
+                    title="点击显示密码"
+                  />
+                </div>
               </a-form-item>
               <a-form-item
                 name="captureId"
@@ -143,7 +155,10 @@
               @click="handleForgot"
               >忘记密码</a
             > -->
-            <div class="other-login-divider" style="margin-top: 15px; display: block">
+            <div
+              class="other-login-divider"
+              style="margin-top: 15px; display: block"
+            >
               <span>或</span>
             </div>
             <div class="switch-account">
@@ -235,6 +250,8 @@ import {
   UserOutlined,
   LockOutlined,
   CheckCircleOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
 } from "@ant-design/icons-vue";
 const { proxy } = getCurrentInstance();
 import { message } from "ant-design-vue";
@@ -255,18 +272,21 @@ const formState = reactive({
   captureId: "",
   phone: "",
   smsCode: "",
-  errorText: ""
+  errorText: "",
 });
 const phoneRegex = /^1[3-9]\d{9}$/;
 const current = ref(0);
 const isSendCode = ref(false);
 const countdown = ref(180);
 let timer = null;
-
+const isShowPassWord = ref(false);
 const validateImg = ref(require("@/assets/img/twoDimensionalStats-thumb.png"));
 const captchaId = ref();
 const changeValidate = () => {
   getValidate();
+};
+const isShowPassWordChange = (e) => {
+  isShowPassWord.value = e;
 };
 const changeMethod = (e) => {
   current.value = e;
@@ -468,6 +488,16 @@ const buttonText = computed(() => {
       padding-top: 10px;
       color: #999;
     }
+  }
+  .ant-form-item-control-input-content{
+    position: relative;
+  }
+  .isShowPassWordIcon{
+    position: absolute;
+    right: -27px;
+    top: 7px;
+    font-size: 17px;
+    color: #333;
   }
 }
 

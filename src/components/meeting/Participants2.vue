@@ -6,10 +6,16 @@
           <div class="ant-card-body">
             <div class="statistics-left">
               <div class="statistics-name">总人数</div>
-              <div class="statistics-count" name="ContractNumber" style="color: #108def;">{{ PeopleQty || 0 }}</div>
+              <div
+                class="statistics-count"
+                name="ContractNumber"
+                style="color: #108def"
+              >
+                {{ PeopleQty || 0 }}
+              </div>
             </div>
             <div class="statistics-right">
-              <InfoCircleOutlined style="color: #108def;" />
+              <InfoCircleOutlined style="color: #108def" />
             </div>
           </div>
         </div>
@@ -18,11 +24,16 @@
           <div class="ant-card-body">
             <div class="statistics-left">
               <div class="statistics-name">接受</div>
-              <div class="statistics-count" name="ContractNumber" style="color: rgb(141, 193, 57);">{{ AcceptQty || 0 }}
+              <div
+                class="statistics-count"
+                name="ContractNumber"
+                style="color: rgb(141, 193, 57)"
+              >
+                {{ AcceptQty || 0 }}
               </div>
             </div>
             <div class="statistics-right">
-              <CheckCircleOutlined style="color: rgb(141, 193, 57);" />
+              <CheckCircleOutlined style="color: rgb(141, 193, 57)" />
             </div>
           </div>
         </div>
@@ -31,11 +42,16 @@
           <div class="ant-card-body">
             <div class="statistics-left">
               <div class="statistics-name">拒绝</div>
-              <div class="statistics-count" name="ContractNumber" style="color: rgb(255, 25, 36);">{{ RejectQty || 0 }}
+              <div
+                class="statistics-count"
+                name="ContractNumber"
+                style="color: rgb(255, 25, 36)"
+              >
+                {{ RejectQty || 0 }}
               </div>
             </div>
             <div class="statistics-right">
-              <CloseCircleOutlined style="color: rgb(255, 25, 36);" />
+              <CloseCircleOutlined style="color: rgb(255, 25, 36)" />
             </div>
           </div>
         </div>
@@ -44,11 +60,16 @@
           <div class="ant-card-body">
             <div class="statistics-left">
               <div class="statistics-name">签到</div>
-              <div class="statistics-count" name="ContractNumber" style="color: rgb(58, 200, 210);">{{ JoinQty || 0 }}
+              <div
+                class="statistics-count"
+                name="ContractNumber"
+                style="color: rgb(58, 200, 210)"
+              >
+                {{ JoinQty || 0 }}
               </div>
             </div>
             <div class="statistics-right">
-              <ExclamationCircleOutlined style="color: rgb(58, 200, 210);" />
+              <ExclamationCircleOutlined style="color: rgb(58, 200, 210)" />
             </div>
           </div>
         </div>
@@ -57,12 +78,16 @@
           <div class="ant-card-body">
             <div class="statistics-left">
               <div class="statistics-name">签退</div>
-              <div class="statistics-count" name="ContractNumber" style="color: rgb(179, 123, 248);">{{ SignoffQty || 0
-                }}
+              <div
+                class="statistics-count"
+                name="ContractNumber"
+                style="color: rgb(179, 123, 248)"
+              >
+                {{ SignoffQty || 0 }}
               </div>
             </div>
             <div class="statistics-right">
-              <IssuesCloseOutlined style="color: rgb(179, 123, 248);" />
+              <IssuesCloseOutlined style="color: rgb(179, 123, 248)" />
             </div>
           </div>
         </div>
@@ -71,10 +96,16 @@
           <div class="ant-card-body">
             <div class="statistics-left">
               <div class="statistics-name">请假</div>
-              <div class="statistics-count" name="ContractNumber" style="color: orangered;">{{ DayoffQty || 0 }}</div>
+              <div
+                class="statistics-count"
+                name="ContractNumber"
+                style="color: orangered"
+              >
+                {{ DayoffQty || 0 }}
+              </div>
             </div>
             <div class="statistics-right">
-              <ClockCircleOutlined style="color: orangered;" />
+              <ClockCircleOutlined style="color: orangered" />
             </div>
           </div>
         </div>
@@ -84,7 +115,9 @@
       <div class="panel-head">
         <div class="panel-title">参会人员</div>
         <div class="panel-btn">
-          <a-button class="ml10" type="primary" @click="AddPeople">邀请参与人</a-button>
+          <a-button class="ml10" type="primary" @click="AddPeople"
+            >邀请参与人</a-button
+          >
         </div>
       </div>
       <div class="tabWrap panel-bd-tabWrap">
@@ -99,30 +132,69 @@
       <div class="panel-bd panel-bd2">
         <div class="peopleHeader">
           <div class="left">
-            <a-input v-if="activeKey * 1 == 0" v-model:value="OwningBusinessUnitName" placeholder="部门"
-              class="searchitem" @search="onSearch"></a-input>
-            <a-input v-model:value="searchVal" placeholder="姓名" class="searchitem" @search="onSearch"></a-input>
-            <a-select v-model:value="StatusCode" placeholder="接受状态" class="searchitem" v-if="activeKey * 1 == 0">
+            <a-input
+              v-if="activeKey * 1 == 0"
+              v-model:value="OwningBusinessUnitName"
+              placeholder="部门"
+              class="searchitem"
+              @search="onSearch"
+            ></a-input>
+            <a-input
+              v-model:value="searchVal"
+              placeholder="姓名"
+              class="searchitem"
+              @search="onSearch"
+            ></a-input>
+            <a-select
+              v-model:value="StatusCode"
+              placeholder="接受状态"
+              class="searchitem"
+              v-if="activeKey * 1 == 0"
+            >
               <a-select-option value="">全部</a-select-option>
               <a-select-option value="0">未接受</a-select-option>
               <a-select-option value="1">已接受</a-select-option>
               <a-select-option value="2">已拒绝</a-select-option>
             </a-select>
-            <a-select v-model:value="CheckinStatus" placeholder="签到状态" class="searchitem" v-if="activeKey * 1 == 0">
+            <a-select
+              v-model:value="CheckinStatus"
+              placeholder="签到状态"
+              class="searchitem"
+              v-if="activeKey * 1 == 0"
+            >
               <a-select-option value="">全部</a-select-option>
               <a-select-option value="1">未签到</a-select-option>
               <a-select-option value="2">已签到</a-select-option>
             </a-select>
-            <a-select v-model:value="ClockType" placeholder="打卡类型" class="searchitem" v-if="activeKey * 1 == 1">
+            <a-select
+              v-model:value="ClockType"
+              placeholder="打卡类型"
+              class="searchitem"
+              v-if="activeKey * 1 == 1"
+            >
               <a-select-option value="">全部</a-select-option>
               <a-select-option value="1">签到</a-select-option>
               <a-select-option value="2">会议中签到</a-select-option>
               <a-select-option value="3">签退</a-select-option>
             </a-select>
             <!-- <a-date-picker show-time autoclear valueFormat="YYYY-MM-DD HH:mm" placeholder="打卡时间" v-model:value="CreatedOn" v-if="activeKey*1==1"></a-date-picker> -->
-            <a-range-picker show-time class="radiusNone" valueFormat="YYYY-MM-DD HH:mm:ss"
-              @change="(e) => { changeRangeDate(e) }" v-if="activeKey * 1 == 1" />
-            <a-select v-model:value="IsLate" placeholder="是否迟到" class="searchitem" v-if="activeKey * 1 == 0">
+            <a-range-picker
+              show-time
+              class="radiusNone"
+              valueFormat="YYYY-MM-DD HH:mm:ss"
+              @change="
+                (e) => {
+                  changeRangeDate(e);
+                }
+              "
+              v-if="activeKey * 1 == 1"
+            />
+            <a-select
+              v-model:value="IsLate"
+              placeholder="是否迟到"
+              class="searchitem"
+              v-if="activeKey * 1 == 0"
+            >
               <a-select-option value="">全部</a-select-option>
               <a-select-option value="0">否</a-select-option>
               <a-select-option value="1">是</a-select-option>
@@ -130,13 +202,24 @@
           </div>
           <div class="rightOption">
             <!-- <a-button class="ml10" type="primary" @click="AddPeople">邀请参与人</a-button> -->
-            <a-button class="ml10" type="primary" @click="onSearch">查询</a-button>
-            <a-button class="ml10" type="default" @click="onClear">重置</a-button>
-            <a-button class="ml10" type="default" @click="onExport">导出</a-button>
+            <a-button class="ml10" type="primary" @click="onSearch"
+              >查询</a-button
+            >
+            <a-button class="ml10" type="default" @click="onClear"
+              >重置</a-button
+            >
+            <a-button class="ml10" type="default" @click="onExport"
+              >导出</a-button
+            >
           </div>
         </div>
-        <a-table :columns="columns" :dataSource="listData" :scroll="{ y: tableHeight }" :pagination="false"
-          @change="handleTableChange">
+        <a-table
+          :columns="columns"
+          :dataSource="listData"
+          :scroll="{ y: tableHeight }"
+          :pagination="false"
+          @change="handleTableChange"
+        >
           <template #bodyCell="{ column, index, record }">
             <template v-if="column.key === 'index'">
               <div>
@@ -147,12 +230,28 @@
               <div class="iconBox">
                 <div class="popup">
                   <!-- <div class="option-item" @click="handleEdit(record.id)" :num="index">编辑</div>   -->
-                  <div class="option-item" @click="handleDelete(record.id)" :num="index">删除</div>
+                  <div
+                    class="option-item"
+                    @click="handleDelete(record.id)"
+                    :num="index"
+                  >
+                    删除
+                  </div>
                 </div>
-                <svg class="moreaction" width="15" height="20" viewBox="0 0 520 520" fill="none" role="presentation"
-                  data-v-69a58868="">
-                  <path d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z" fill="#747474"
-                    data-v-69a58868=""></path>
+                <svg
+                  class="moreaction"
+                  width="15"
+                  height="20"
+                  viewBox="0 0 520 520"
+                  fill="none"
+                  role="presentation"
+                  data-v-69a58868=""
+                >
+                  <path
+                    d="M83 140h354c10 0 17 13 9 22L273 374c-6 8-19 8-25 0L73 162c-7-9-1-22 10-22z"
+                    fill="#747474"
+                    data-v-69a58868=""
+                  ></path>
                 </svg>
               </div>
               <!-- <a-button type="text" size="small" @click="handleDelete(record.id)" :num="index">删除</a-button> -->
@@ -161,7 +260,7 @@
               <div v-if="record.ClockType * 1 == 1">签到</div>
               <div v-else-if="record.ClockType * 1 == 2">会议中签到</div>
               <div v-else-if="record.ClockType * 1 == 3">签退</div>
-              <div v-else>{{ record.ClockType || '' }}</div>
+              <div v-else>{{ record.ClockType || "" }}</div>
             </template>
             <!-- <template v-if="column.key === 'sort'">
                 <div class="sortIcon">
@@ -172,20 +271,50 @@
           </template>
         </a-table>
         <div class="pageWrap">
-          <a-pagination show-size-changer show-quick-jumper :pageSizeOptions="['10', '20', '50', '80', '100']"
-            :pageSize="pagination.pageSize" @showSizeChange="sizeChange" @change="handleTableChange"
-            v-model:current="pagination.current" :total="pagination.total" :show-total="total => `共 ${total} 条`" />
+          <a-pagination
+            show-size-changer
+            show-quick-jumper
+            :pageSizeOptions="['10', '20', '50', '80', '100']"
+            :pageSize="pagination.pageSize"
+            @showSizeChange="sizeChange"
+            @change="handleTableChange"
+            v-model:current="pagination.current"
+            :total="pagination.total"
+            :show-total="(total) => `共 ${total} 条`"
+          />
         </div>
       </div>
     </div>
-    <radio-user v-if="isRadioUser" :isShow="isRadioUser" @selectVal="getUserData" @cancel="closeUser"
-      @ok="refreshPeople"></radio-user>
-    <radio-dept v-if="isRadioDept" :isShow="isRadioDept" @selectVal="handleDeptParams" @cancel="cancelDeptModal"
-      @ok="refreshPeople"></radio-dept>
-    <Delete :isShow="isDelete" :desc="deleteDesc" @cancel="cancelDelete" @ok="refreshPeople" :sObjectName="sObjectName"
-      :recordId="recordId" :objTypeCode="objectTypeCode" :external="external" />
-      <MultipleUsers v-if="isMultipleUser" :isShow="isMultipleUser" @cancel="isMultipleUser = false"
-      @select="handleSelectUsers" />
+    <radio-user
+      v-if="isRadioUser"
+      :isShow="isRadioUser"
+      @selectVal="getUserData"
+      @cancel="closeUser"
+      @ok="refreshPeople"
+    ></radio-user>
+    <radio-dept
+      v-if="isRadioDept"
+      :isShow="isRadioDept"
+      @selectVal="handleDeptParams"
+      @cancel="cancelDeptModal"
+      @ok="refreshPeople"
+    ></radio-dept>
+    <Delete
+      :isShow="isDelete"
+      :desc="deleteDesc"
+      @cancel="cancelDelete"
+      @ok="refreshPeople"
+      :sObjectName="sObjectName"
+      :recordId="recordId"
+      :objTypeCode="objectTypeCode"
+      :external="external"
+    />
+    <MultipleUsers
+      v-if="isMultipleUser"
+      :isShow="isMultipleUser"
+      @cancel="isMultipleUser = false"
+      @select="handleSelectUsers"
+    />
   </div>
 </template>
 <script setup>
@@ -201,7 +330,7 @@ import {
   defineEmits,
   defineExpose,
   defineProps,
-  h
+  h,
 } from "vue";
 import {
   SwapLeftOutlined,
@@ -213,7 +342,7 @@ import {
   InfoCircleOutlined,
   ExclamationCircleOutlined,
   IssuesCloseOutlined,
-  ClockCircleOutlined
+  ClockCircleOutlined,
 } from "@ant-design/icons-vue";
 import Interface from "@/utils/Interface.js";
 import { girdFormatterValue } from "@/utils/common.js";
@@ -237,42 +366,42 @@ var columns0 = [
   {
     title: "部门",
     dataIndex: "OwningBusinessUnit",
-    key: "OwningBusinessUnit"
+    key: "OwningBusinessUnit",
   },
   {
     title: "姓名",
     dataIndex: "InviteeId",
-    key: "InviteeId"
+    key: "InviteeId",
   },
   {
     title: "签到时间",
     dataIndex: "Checkin",
-    key: "Checkin"
+    key: "Checkin",
   },
   {
     title: "签到地址",
     dataIndex: "Location",
-    key: "Location"
+    key: "Location",
   },
   {
     title: "迟到时长",
     dataIndex: "LateMinutes",
-    key: "LateMinutes"
+    key: "LateMinutes",
   },
   {
     title: "签退时间",
     dataIndex: "Checkout",
-    key: "Checkout"
+    key: "Checkout",
   },
   {
     title: "接受状态",
     dataIndex: "StatusCode",
-    key: "StatusCode"
+    key: "StatusCode",
   },
   {
     title: "拒绝原因",
     dataIndex: "Description",
-    key: "Description"
+    key: "Description",
   },
   {
     title: "操作",
@@ -290,37 +419,37 @@ var columns1 = [
   {
     title: "姓名",
     dataIndex: "CreatedBy",
-    key: "CreatedBy"
+    key: "CreatedBy",
   },
   {
     title: "打卡类型",
     dataIndex: "ClockType",
-    key: "ClockType"
+    key: "ClockType",
   },
   {
     title: "打卡时间",
     dataIndex: "CreatedOn",
-    key: "CreatedOn"
+    key: "CreatedOn",
   },
   {
     title: "打卡地址",
     dataIndex: "Location",
-    key: "Location"
+    key: "Location",
   },
   {
     title: "标志建筑",
     dataIndex: "BuildingName",
-    key: "BuildingName"
+    key: "BuildingName",
   },
   {
     title: "经度",
     dataIndex: "Latitude",
-    key: "Latitude"
+    key: "Latitude",
   },
   {
     title: "纬度",
     dataIndex: "Longitude",
-    key: "Longitude"
+    key: "Longitude",
   },
   // {
   //   title: "操作",
@@ -330,14 +459,14 @@ var columns1 = [
 ];
 const props = defineProps({
   id: String,
-  type: String
+  type: String,
 });
 
 const emit = defineEmits(["load"]);
 
 const data = reactive({
   list: [],
-  MeetingName: '',
+  MeetingName: "",
   selectedRowKeys: [],
   loading: false,
   listData: [],
@@ -351,22 +480,22 @@ const data = reactive({
     hideOnSinglePage: false,
     showSizeChanger: true,
     showQuickJumper: true,
-    total: 0,//数据总数
+    total: 0, //数据总数
     pageSize: 10,
     current: 1,
-    pageSizeOptions: ['10', '20', '50', '100'],
+    pageSizeOptions: ["10", "20", "50", "100"],
     defaultPageSize: 10,
-    showTotal: ((total) => {
-      return `共${total}条`
-    })
+    showTotal: (total) => {
+      return `共${total}条`;
+    },
   },
   total: 0,
   tableHeight: 0,
-  recordId: '',
-  objectTypeCode: '5002',
-  sObjectName: 'MeetingAudience',
+  recordId: "",
+  objectTypeCode: "5002",
+  sObjectName: "MeetingAudience",
   isDelete: false,
-  deleteDesc: '确定要删除吗？',
+  deleteDesc: "确定要删除吗？",
   external: false,
   CheckinStatus: null,
   StatusCode: null,
@@ -393,10 +522,44 @@ const data = reactive({
   columns: columns0,
   ClockType: null,
   CreatedOn: null,
-  isMultipleUser:false
+  isMultipleUser: false,
 });
 //const columnList = toRaw(columns);
-const { isMultipleUser,MeetingName, ClockType, CreatedOn, columns, tabs, activeKey, listData, PeopleQty, AcceptQty, JoinQty, SignoffQty, RejectQty, DayoffQty, height, searchVal, OwningBusinessUnitName, pagination, tableHeight, recordId, objectTypeCode, sObjectName, isDelete, deleteDesc, external, isRadioUser, CheckinStatus, StatusCode, Checkin, Checkin1, Checkin2, isRadioDept, IsLate } = toRefs(data);
+const {
+  isMultipleUser,
+  MeetingName,
+  ClockType,
+  CreatedOn,
+  columns,
+  tabs,
+  activeKey,
+  listData,
+  PeopleQty,
+  AcceptQty,
+  JoinQty,
+  SignoffQty,
+  RejectQty,
+  DayoffQty,
+  height,
+  searchVal,
+  OwningBusinessUnitName,
+  pagination,
+  tableHeight,
+  recordId,
+  objectTypeCode,
+  sObjectName,
+  isDelete,
+  deleteDesc,
+  external,
+  isRadioUser,
+  CheckinStatus,
+  StatusCode,
+  Checkin,
+  Checkin1,
+  Checkin2,
+  isRadioDept,
+  IsLate,
+} = toRefs(data);
 const changeTabs = (e) => {
   data.activeKey = e;
   data.pagination.current = 1;
@@ -405,74 +568,155 @@ const changeTabs = (e) => {
 const getQuery = () => {
   data.listData = [];
   data.pagination.total = 0;
-  let filterQuery = '\nMeetingId\teq\t' + props.id;
-  let displayColumns = 'OwningBusinessUnit,InviteeId,Checkin,Location,LateMinutes,Checkout,StatusCode,Description';
+  let filterCondition = [
+    {
+      attribute: "MeetingId",
+      column: "MeetingId",
+      label: "会议",
+      operator: "eq",
+      logical: "AND",
+      picklistValues: [],
+      isEditable: false,
+      operands: [props.id],
+    },
+  ];
+  let displayColumns =
+    "OwningBusinessUnit,InviteeId,Checkin,Location,LateMinutes,Checkout,StatusCode,Description";
   data.columns = columns0;
-  data.objectTypeCode = '5002';
-  data.sObjectName = 'MeetingAudience';
+  data.objectTypeCode = "5002";
+  data.sObjectName = "MeetingAudience";
   if (data.activeKey * 1 == 1) {
-    filterQuery = '\nRegardingObjectId\teq\t' + props.id;
-    displayColumns = 'CreatedBy,ClockType,CreatedOn,Location,BuildingName,Latitude,Longitude';
+    filterCondition = [
+      {
+        attribute: "RegardingObjectId",
+        column: "RegardingObjectId",
+        label: "相关对象ID",
+        operator: "eq",
+        logical: "AND",
+        picklistValues: [],
+        isEditable: false,
+        operands: [props.id],
+      },
+    ];
+    displayColumns =
+      "CreatedBy,ClockType,CreatedOn,Location,BuildingName,Latitude,Longitude";
     data.columns = columns1;
-    data.objectTypeCode = '5010';
-    data.sObjectName = 'ActivityClockRecord';
+    data.objectTypeCode = "5010";
+    data.sObjectName = "ActivityClockRecord";
     if (data.ClockType) {
-      filterQuery += '\nClockType\teq\t' + data.ClockType;
+      filterCondition.push({
+        attribute: "ClockType",
+        column: "ClockType",
+        label: "",
+        operator: "eq",
+        logical: "AND",
+        picklistValues: [],
+        isEditable: false,
+        operands: [data.ClockType],
+      });
     }
     if (data.CreatedOn) {
-      filterQuery += '\nCreatedOn\tbetween\t' + data.CreatedOn;
+      filterCondition.push({
+        attribute: "CreatedOn",
+        column: "CreatedOn",
+        label: "",
+        operator: "eq",
+        logical: "AND",
+        picklistValues: [],
+        isEditable: false,
+        operands: [data.CreatedOn],
+      });
     }
-  }
-  else {
+  } else {
     if (data.StatusCode) {
-      filterQuery += '\nStatusCode\teq\t' + data.StatusCode;
+      filterCondition.push({
+        attribute: "StatusCode",
+        column: "StatusCode",
+        label: "",
+        operator: "eq",
+        logical: "AND",
+        picklistValues: [],
+        isEditable: false,
+        operands: [data.StatusCode],
+      });
     }
     if (data.CheckinStatus) {
-      filterQuery += '\nCheckinStatus\teq\t' + data.CheckinStatus;
+      filterCondition.push({
+        attribute: "CheckinStatus",
+        column: "CheckinStatus",
+        label: "",
+        operator: "eq",
+        logical: "AND",
+        picklistValues: [],
+        isEditable: false,
+        operands: [data.CheckinStatus],
+      });
     }
     if (data.OwningBusinessUnitName) {
-      filterQuery += '\nOwningBusinessUnitName\tcontains\t' + data.OwningBusinessUnitName;
+      filterCondition.push({
+        attribute: "OwningBusinessUnitName",
+        column: "OwningBusinessUnitName",
+        label: "",
+        operator: "contains",
+        logical: "AND",
+        picklistValues: [],
+        isEditable: false,
+        operands: [data.OwningBusinessUnitName],
+      });
     }
     if (data.IsLate) {
-      filterQuery += '\nCheckin\tge\t' + data.IsLate;
+      filterCondition.push({
+        attribute: "Checkin",
+        column: "Checkin",
+        label: "",
+        operator: "eq",
+        logical: "AND",
+        picklistValues: [],
+        isEditable: false,
+        operands: [data.IsLate],
+      });
     }
   }
-  proxy.$post(Interface.list2, {
-    filterId: '',
+  let d = {
+    filterId: "",
     objectTypeCode: data.objectTypeCode,
     entityName: data.sObjectName,
-    filterQuery: filterQuery,
-    search: data.searchVal || '',
+    search: data.searchVal || "",
     page: data.pagination.current,
     rows: data.pagination.pageSize,
-    sort: 'ModifiedOn',
-    order: 'desc',
-    displayColumns: displayColumns
-  }).then(res => {
+    sort: "ModifiedOn",
+    order: "desc",
+    displayColumns: displayColumns,
+  };
+  if (filterCondition && filterCondition.length) {
+    d.filterCondition = JSON.stringify(filterCondition);
+  }
+  proxy.$post(Interface.list2, d).then((res) => {
     var list = [];
     data.total = res.pageInfo ? res.pageInfo.total : 0;
     data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
     //console.log(pagination)
-    for (var i = 0; i < res.nodes.length; i++) {
-      var item = res.nodes[i];
-      for (var cell in item) {
-        if (cell != 'id' && cell != 'nameField') {
-          item[cell] = girdFormatterValue(cell, item);
+    if (res && res.nodes) {
+      for (var i = 0; i < res.nodes.length; i++) {
+        var item = res.nodes[i];
+        for (var cell in item) {
+          if (cell != "id" && cell != "nameField") {
+            item[cell] = girdFormatterValue(cell, item);
+          }
         }
+        list.push(item);
       }
-      list.push(item)
     }
     data.listData = list;
-
-  })
+  });
 };
 const onSearch = (e) => {
   data.pagination.current = 1;
   getQuery();
 };
 const onClear = (e) => {
-  data.searchVal = '';
-  data.OwningBusinessUnitName = '';
+  data.searchVal = "";
+  data.OwningBusinessUnitName = "";
   data.StatusCode = null;
   data.CheckinStatus = null;
   data.Checkin = null;
@@ -484,16 +728,16 @@ const onClear = (e) => {
 const windowOpen = (url, fileName) => {
   var xhr = new XMLHttpRequest();
   // var fileName = window.fileName + typeName; // 文件名称
-  xhr.open('POST', url, true);
-  xhr.responseType = 'blob';
+  xhr.open("POST", url, true);
+  xhr.responseType = "blob";
 
   //xhr.setRequestHeader('Authorization', window.localStorage.getItem('token'));
   //xhr.setRequestHeader('token', window.localStorage.getItem('token'));
   xhr.onload = function (res) {
     if (this.status === 200) {
-      var type = xhr.getResponseHeader('Content-Type');
+      var type = xhr.getResponseHeader("Content-Type");
       var blob = new Blob([this.response], { type: type });
-      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+      if (typeof window.navigator.msSaveBlob !== "undefined") {
         /*
          * For IE
          * >=IE10
@@ -506,8 +750,8 @@ const windowOpen = (url, fileName) => {
         var URL = window.URL || window.webkitURL;
         var objectUrl = URL.createObjectURL(blob);
         if (fileName) {
-          var a = document.createElement('a');
-          if (typeof a.download === 'undefined') {
+          var a = document.createElement("a");
+          if (typeof a.download === "undefined") {
             window.location = objectUrl;
           } else {
             a.href = objectUrl;
@@ -521,59 +765,58 @@ const windowOpen = (url, fileName) => {
         }
       }
     }
-  }
+  };
   xhr.send();
-}
+};
 
 const onExport = () => {
-  let url = Interface.meeting.audienceDataExport + '?meetingId=' + props.id;
-  let text = data.MeetingName + '_参会人员.xls';
+  let url = Interface.meeting.audienceDataExport + "?meetingId=" + props.id;
+  let text = data.MeetingName + "_参会人员.xls";
   if (data.activeKey * 1 == 1) {
-    url = Interface.meeting.checkinRecordExport + '?meetingId=' + props.id;
-    text = data.MeetingName + '_打卡记录.xls';
+    url = Interface.meeting.checkinRecordExport + "?meetingId=" + props.id;
+    text = data.MeetingName + "_打卡记录.xls";
   }
   windowOpen(url, text);
-}
+};
 const changeRangeDate = (e) => {
   //console.log("e",e,item);
   if (e && e.length) {
     //data.Checkin=e.join(',');
-    data.CreatedOn = e.join(',');
+    data.CreatedOn = e.join(",");
     data.Checkin1 = e[0];
     data.Checkin2 = e[1];
-  }
-  else {
+  } else {
     //data.Checkin='';
-    data.CreatedOn = '';
+    data.CreatedOn = "";
   }
-}
+};
 //改变页码
 const handleTableChange = (page, pageSize) => {
   //data.pagination.current=page.current;
   data.pagination.current = page;
   data.pagination.pageSize = pageSize;
   getQuery();
-}
+};
 const sizeChange = (current, size) => {
-  handleTableChange(current, size)
-}
+  handleTableChange(current, size);
+};
 getQuery();
 // 添加成员
 const AddPeople = () => {
   //data.isRadioUser = true;
   data.RoleCode = 0;
-  data.isMultipleUser=true;
-}
+  data.isMultipleUser = true;
+};
 // 添加管理员
 const AddAdmin = () => {
   data.RoleCode = 2;
   //data.isRadioUser = true;
-  data.isMultipleUser=true;
+  data.isMultipleUser = true;
 };
 const refreshPeople = (e) => {
   getQuery();
   emit("load", "");
-}
+};
 const closeUser = (e) => {
   data.isRadioUser = false;
 };
@@ -582,38 +825,38 @@ const getUserData = (params) => {
   console.log("params:", params);
   let url = Interface.create;
   let d = {
-    actions: [{
-      id: "2919;a",
-      descriptor: "",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordInput: {
-          allowSaveOnDuplicate: false,
-          apiName: 'MeetingAudience',
-          objTypeCode: '5002',
-          fields: {
-            MeetingId: props.id,
-            InviteeId: params.id,
-            Name: params.name,
-            StatusCode: 0
-          }
-        }
-      }
-    }]
+    actions: [
+      {
+        id: "2919;a",
+        descriptor: "",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordInput: {
+            allowSaveOnDuplicate: false,
+            apiName: "MeetingAudience",
+            objTypeCode: "5002",
+            fields: {
+              MeetingId: props.id,
+              InviteeId: params.id,
+              Name: params.name,
+              StatusCode: 0,
+            },
+          },
+        },
+      },
+    ],
   };
 
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(url, obj).then(res => {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(url, obj).then((res) => {
     data.isRadioUser = false;
     if (res && res.actions && res.actions[0] && res.actions[0].returnValue) {
       message.success("添加成功！");
       refreshPeople();
     }
-
   });
-
 };
 const cancelDeptModal = (params) => {
   data.isRadioDept = params;
@@ -624,11 +867,11 @@ const handleDeptParams = (params) => {
 //多选
 const handleSelectUsers = (params) => {
   // console.log("多选用户:", params);
-  let addUsers = params.map(item => {
+  let addUsers = params.map((item) => {
     item.key = item.id;
     return item;
-  })
-  addUsers.forEach(item => {
+  });
+  addUsers.forEach((item) => {
     getUserData(item);
   });
   data.isMultipleUser = false;
@@ -638,31 +881,33 @@ defineExpose({ getQuery, PersonnelLst });
 const handleDelete = (key) => {
   data.recordId = key;
   data.isDelete = true;
-}
+};
 //删除关闭
 const cancelDelete = (e) => {
   data.isDelete = false;
 };
 const getDetail = () => {
   let d = {
-    actions: [{
-      id: "4270;a",
-      descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
-      callingDescriptor: "UNKNOWN",
-      params: {
-        recordId: props.id,
-        apiName: 'MeetingRec',
-        objTypeCode: 5000
-      }
-    }]
+    actions: [
+      {
+        id: "4270;a",
+        descriptor: "aura://RecordUiController/ACTION$getRecordWithFields",
+        callingDescriptor: "UNKNOWN",
+        params: {
+          recordId: props.id,
+          apiName: "MeetingRec",
+          objTypeCode: 5000,
+        },
+      },
+    ],
   };
   let obj = {
-    message: JSON.stringify(d)
-  }
-  proxy.$post(Interface.detail, obj).then(res => {
+    message: JSON.stringify(d),
+  };
+  proxy.$post(Interface.detail, obj).then((res) => {
     if (res && res.actions && res.actions[0]) {
       let record = res.actions[0].returnValue.fields;
-      data.MeetingName = record.Name ? record.Name.value : '';
+      data.MeetingName = record.Name ? record.Name.value : "";
       data.PeopleQty = record.PeopleQty ? record.PeopleQty.value : 0;
       data.AcceptQty = record.AcceptQty ? record.AcceptQty.value : 0;
       data.RejectQty = record.RejectQty ? record.RejectQty.value : 0;
@@ -670,14 +915,13 @@ const getDetail = () => {
       data.SignoffQty = record.SignoffQty ? record.SignoffQty.value : 0;
       data.DayoffQty = record.DayoffQty ? record.DayoffQty.value : 0;
     }
-  })
-
-}
+  });
+};
 onMounted(() => {
   let h = document.documentElement.clientHeight;
   data.tableHeight = h - 490;
   data.height = h - 215;
-  if (props.type == 'modal') {
+  if (props.type == "modal") {
     data.tableHeight = h - 660;
     data.height = h - 385;
   }
@@ -685,13 +929,13 @@ onMounted(() => {
     let h = document.documentElement.clientHeight;
     data.tableHeight = h - 490;
     data.height = h - 215;
-    if (props.type == 'modal') {
+    if (props.type == "modal") {
       data.tableHeight = h - 660;
       data.height = h - 385;
     }
   });
   getDetail();
-})
+});
 </script>
 <style lang="less">
 .ParticipantsWrap {
@@ -813,7 +1057,7 @@ body .ant-table-measure-row td {
   padding: 0 !important;
 }
 
-body .ant-table-wrapper .ant-table-thead>tr>th {
+body .ant-table-wrapper .ant-table-thead > tr > th {
   background-color: #f7fbfe !important;
   padding: 8.5px 16px !important;
 }
@@ -880,14 +1124,15 @@ body .ant-table-tbody tr:nth-child(even) {
 
 :where(.css-dev-only-do-not-override-kqecok).ant-table-wrapper,
 :where(.css-dev-only-do-not-override-kqecok).ant-spin-nested-loading,
-:where(.css-dev-only-do-not-override-kqecok).ant-spin-nested-loading .ant-spin-container,
+:where(.css-dev-only-do-not-override-kqecok).ant-spin-nested-loading
+  .ant-spin-container,
 :where(.css-dev-only-do-not-override-kqecok).ant-table-wrapper .ant-table,
-:where(.css-dev-only-do-not-override-kqecok).ant-table-wrapper .ant-table-container {
+:where(.css-dev-only-do-not-override-kqecok).ant-table-wrapper
+  .ant-table-container {
   height: 100% !important;
 }
 
 .ParticipantsWrap {
-
   .ant-table-wrapper,
   .ant-spin-nested-loading,
   .ant-spin-nested-loading .ant-spin-container,
@@ -898,7 +1143,7 @@ body .ant-table-tbody tr:nth-child(even) {
 }
 
 .ParticipantsWrap .panel-bd2 {
-  height: calc(~'100% - 205px') !important;
+  height: calc(~"100% - 205px") !important;
 }
 
 .ParticipantsWrap .ant-table-body {
@@ -937,7 +1182,7 @@ body .ant-table-tbody tr:nth-child(even) {
 
       .statistics-left {
         float: right !important;
-        width: calc(~'100% - 80px') !important;
+        width: calc(~"100% - 80px") !important;
       }
 
       .statistics-name {

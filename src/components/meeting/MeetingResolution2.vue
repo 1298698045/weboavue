@@ -328,52 +328,108 @@ const getQuery = () => {
   // });
   data.listData = [];
   data.pagination.total = 0;
-  let filterQuery = "\nMeetingId\teq\t" + props.id;
+  let filterCondition = [
+    {
+      attribute: "MeetingId",
+      column: "MeetingId",
+      label: "会议",
+      operator: "eq",
+      logical: "AND",
+      picklistValues: [],
+      isEditable: false,
+      operands: [props.id],
+    },
+  ];
   if (data.StatusCode) {
-    filterQuery += "\nStatusCode\teq\t" + data.StatusCode;
+    filterCondition.push({
+      attribute: "StatusCode",
+      column: "StatusCode",
+      label: "",
+      operator: "eq",
+      logical: "AND",
+      picklistValues: [],
+      isEditable: false,
+      operands: [data.StatusCode],
+    });
   }
   if (data.CheckinStatus) {
-    filterQuery += "\nCheckinStatus\teq\t" + data.CheckinStatus;
+    filterCondition.push({
+      attribute: "CheckinStatus",
+      column: "CheckinStatus",
+      label: "",
+      operator: "eq",
+      logical: "AND",
+      picklistValues: [],
+      isEditable: false,
+      operands: [data.CheckinStatus],
+    });
   }
   if (data.OwningBusinessUnitName) {
-    filterQuery +=
-      "\nOwningBusinessUnitName\tcontains\t" + data.OwningBusinessUnitName;
+    filterCondition.push({
+      attribute: "OwningBusinessUnitName",
+      column: "OwningBusinessUnitName",
+      label: "",
+      operator: "contains",
+      logical: "AND",
+      picklistValues: [],
+      isEditable: false,
+      operands: [data.OwningBusinessUnitName],
+    });
   }
   if (data.Checkin1) {
-    filterQuery += "\nCheckin\tge\t" + data.Checkin1;
+    filterCondition.push({
+      attribute: "Checkin",
+      column: "Checkin",
+      label: "",
+      operator: "ge",
+      logical: "AND",
+      picklistValues: [],
+      isEditable: false,
+      operands: [data.Checkin],
+    });
   }
   if (data.Checkin2) {
-    filterQuery += "\nCheckin\tle\t" + data.Checkin2;
-  }
-  proxy
-    .$post(Interface.list2, {
-      filterId: "",
-      objectTypeCode: data.objectTypeCode,
-      entityName: data.sObjectName,
-      filterQuery: filterQuery,
-      search: data.searchVal || "",
-      page: data.pagination.current,
-      rows: data.pagination.pageSize,
-      sort: "CreatedOn",
-      order: "asc",
-      displayColumns: "Name,Description,Votes,CreatedOn",
-    })
-    .then((res) => {
-      var list = [];
-      data.total = res.pageInfo ? res.pageInfo.total : 0;
-      data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
-      //console.log(pagination)
-      for (var i = 0; i < res.nodes.length; i++) {
-        var item = res.nodes[i];
-        for (var cell in item) {
-          if (cell != "id" && cell != "nameField") {
-            item[cell] = girdFormatterValue(cell, item);
-          }
-        }
-        list.push(item);
-      }
-      data.listData = list;
+    filterCondition.push({
+      attribute: "Checkin",
+      column: "Checkin",
+      label: "",
+      operator: "le",
+      logical: "AND",
+      picklistValues: [],
+      isEditable: false,
+      operands: [data.Checkin],
     });
+  }
+  let d = {
+    filterId: "",
+    objectTypeCode: data.objectTypeCode,
+    entityName: data.sObjectName,
+    search: data.searchVal || "",
+    page: data.pagination.current,
+    rows: data.pagination.pageSize,
+    sort: "CreatedOn",
+    order: "asc",
+    displayColumns: "Name,Description,Votes,CreatedOn",
+  };
+  if (filterCondition && filterCondition.length) {
+    d.filterCondition = JSON.stringify(filterCondition);
+  }
+  proxy.$post(Interface.list2, d).then((res) => {
+    var list = [];
+    data.total = res.pageInfo ? res.pageInfo.total : 0;
+    data.pagination.total = res.pageInfo ? res.pageInfo.total : 0;
+    //console.log(pagination)
+    for (var i = 0; i < res.nodes.length; i++) {
+      var item = res.nodes[i];
+      for (var cell in item) {
+        if (cell != "id" && cell != "nameField") {
+          item[cell] = girdFormatterValue(cell, item);
+        }
+      }
+      list.push(item);
+    }
+    data.listData = list;
+  });
 };
 const onSearch = (e) => {
   getQuery();
