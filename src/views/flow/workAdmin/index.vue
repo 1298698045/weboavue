@@ -903,7 +903,7 @@ const revokeFlow = () => {
   });
 };
 //结束
-const handleFinish = (ruleLogId, ProcessInstanceId, ProcessId) => {
+const handleFinish = (ruleLogId, ProcessId, ProcessInstanceId) => {
   data.confirmType = "end";
   data.ProcessInstanceId = ProcessInstanceId;
   data.ruleLogId = ruleLogId;

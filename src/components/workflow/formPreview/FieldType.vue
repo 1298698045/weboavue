@@ -73,11 +73,13 @@
         </div>
         <div v-else-if="type=='L' || type=='LT' || type=='DT'">
             <span class="valText" v-if="print==1">
-                {{ list[field.id] }}
+                <!-- {{ list[field.id] }} -->
+                  {{ pickerLabel }}
             </span>
             <span v-else>
                 <span class="valText" v-if="field?.permission == 4 || field?.permission == '' || stateCode == 2 || field?.permission == 0">
-                    {{ list[field.id] }}
+                    <!-- {{ list[field.id] }} -->
+                    {{ pickerLabel }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
                 <a-select v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;"
@@ -898,6 +900,12 @@
         }
         return result;
     }
+
+    const pickerLabel = computed(()=>{
+        let list = props.select[props.field.id].values;
+        let row = list.find(item=>item.value == props.list[props.field.id]);
+        return row.label || '';
+    })
 </script>
 <style lang="less">
     .filed .ant-checkbox-group{
