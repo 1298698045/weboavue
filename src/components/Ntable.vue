@@ -17,11 +17,17 @@ const props = defineProps({
   singleSelect: Boolean
 })
 watch(() => props.isCollapsed, (newVal, oldVal) => {
-  $("#" + props.name).datagrid("reload");
+  let $grid = $('#' + props.name);
+  if ($grid && $grid.length && $grid.data("datagrid")) {
+    $("#" + props.name).datagrid("reload");
+  }
 })
 watch(() => props.columns, (newVal, oldVal) => {
   nextTick(() => {
-    $('#' + props.name).datagrid('resize');
+    let $grid = $('#' + props.name);
+    if ($grid && $grid.length && $grid.data("datagrid")) {
+      $('#' + props.name).datagrid('resize');
+    }
   })
 }, { deep: true })
 const loadGrid = (queryParams) => {
@@ -70,10 +76,16 @@ const loadGrid = (queryParams) => {
     striped: false,
     rownumbers: true,
     onLoadSuccess: function () {
-      $('#' + props.name).datagrid('resize', { height: height });
+      let $grid = $('#' + props.name);
+      if($grid && $grid.length && $grid.data("datagrid")){
+        $('#' + props.name).datagrid('resize', { height: height });
+      }
     },
     onLoadError: function () {
-      $('#' + props.name).datagrid('loadData', { total: 0, rows: [] });
+      let $grid = $('#' + props.name);
+      if($grid && $grid.length && $grid.data("datagrid")){
+        $('#' + props.name).datagrid('loadData', { total: 0, rows: [] });
+      }
     },
   });
 }
@@ -130,4 +142,29 @@ defineExpose({ loadGrid, getCheckList, clearCheckList })
 td[field="Action"] .datagrid-cell {
   overflow: initial !important;
 }
+</style>
+<style>
+  /* 解决样式冲突问题 */
+  .todo-content {
+    width: 100% !important;
+  }
+
+  .todoList .wea-header {
+    width: 100% !important;
+  }
+  .todoList .wea-header .wea-tab{
+      width: 100% !important;
+  }
+  .wea-left-tree-search{
+    width: 100% !important;
+  }
+  .todo-content .ant-row{
+    width: 100% !important;
+  }
+  .iconBox{
+    max-width: 40px !important;
+  }
+  .iconBox .moreaction{
+    width: 18px !important;
+  }
 </style>

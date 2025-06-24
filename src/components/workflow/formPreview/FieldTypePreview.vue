@@ -135,7 +135,7 @@
                     {{ list[field.id] }}
                 </span>
                 <span v-else-if="field?.permission == 2"></span>
-                <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" valueFormat="YYYY-MM-DD hh:mm:ss" show-time v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
+                <a-date-picker v-else :disabled="disabledPermission" style="min-width: 150px;width: 100%;" valueFormat="YYYY-MM-DD HH:mm:ss" show-time v-model:value="list[field.id]" :placeholder="'请选择' + field.label" />
             </span>
         </div>
         <div v-else-if="type=='Year'">
@@ -181,11 +181,11 @@
                     <div class="suggestion-item" v-for="(sug, sugIdx) in suggestionObj[field.id]" :key="sugIdx">
                         <span v-if="sug?.Comment">
                             <span>{{ sug.Comment }}</span>
-                            <div class="signImg">
+                            <div class="signImg" v-if="field.ShowSignature">
                                 <img :src="Interface.pathUrl+sug.sinatureUrl" alt="">
                             </div>
                             <div class="sign-info">
-                                [ {{sug.FullName}} {{ sug.DeptName }} {{sug.CreateTime}} ]
+                                [ {{sug.FullName}} <span v-if="field.ShowDept">{{ sug.DeptName }}</span> <span v-if="field.ShowApproveTime">{{sug.CreateTime}}</span> ]
                             </div>
                         </span>
                     </div>
@@ -219,7 +219,7 @@
                                 </div>
                             </template>
                         </a-popover>
-                        <div class="signImg">
+                        <div class="signImg" v-if="field.ShowSignature">
                             <img src="@/assets/img/sign.png" alt="">
                         </div>
                     </div>

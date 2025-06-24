@@ -1041,31 +1041,6 @@ const onSearch = (e) => {
     return item.Label.indexOf(data.searchText) != -1;
   });
 };
-watch(
-  () => route,
-  (newRoute) => {
-    //console.log("newRoute111", newRoute);
-    if (newRoute && newRoute.meta && newRoute.meta.label) {
-      nextTick(() => {
-        if (
-          $(".headerLeft .headerTitle") &&
-          $(".headerLeft .headerTitle").length
-        ) {
-          $(".headerLeft .headerTitle").html(newRoute.meta.label);
-        }
-        $(document).ready(function () {
-          if (
-            $(".headerTop .leftAll .menu-box .label") &&
-            $(".headerTop .leftAll .menu-box .label").length
-          ) {
-            $(".headerTop .leftAll .menu-box .label").html(newRoute.meta.label);
-          }
-        });
-      });
-    }
-  },
-  { immediate: true, deep: true }
-);
 onMounted(() => {
   if (props.listApp) {
     data.listApp = props.listApp;

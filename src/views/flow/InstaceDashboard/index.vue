@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <div class="center">
+    <div class="InstaceCenter">
       <div class="panel-all">
         <div class="panel panel-abstract">
           <div class="panel-bd">
@@ -758,7 +758,7 @@ onMounted(() => {
     }
   }
 
-  .center {
+  .InstaceCenter {
     height: calc(~"100% - 52px");
     background: #fff;
     padding: 10px;
@@ -909,7 +909,7 @@ onMounted(() => {
   }
 }
 
-.wrappper .center {
+.wrappper .InstaceCenter {
   background: transparent;
   padding: 0px 10px 0 10px;
 }
@@ -970,7 +970,7 @@ onMounted(() => {
   padding-top: 15px;
 }
 
-.wrappper .center .panel .room .roomHead .roomTitle {
+.wrappper .InstaceCenter .panel .room .roomHead .roomTitle {
   width: 80px;
   background: transparent;
 }

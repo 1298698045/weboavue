@@ -8,7 +8,7 @@
             alt=""
           />
         </div>
-        <span class="headerTitle">草稿</span>
+        <span class="headerTitle">草稿箱</span>
       </div>
       <div class="headerRight todo-head-right">
         <a-button class="ml10" @click="batchDelete">批量删除</a-button>

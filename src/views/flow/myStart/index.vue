@@ -8,7 +8,7 @@
             alt=""
           />
         </div>
-        <span class="headerTitle">我的发起</span>
+        <span class="headerTitle">我的请求</span>
       </div>
       <div class="headerRight todo-head-right">
         <a-button type="primary" class="ml10" @click="handleFavor"

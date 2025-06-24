@@ -1059,9 +1059,9 @@
         if(data.cellData[key][colKey]?.skip){
             isBook = false;
         }
-        if (key < data.maxRowNum && data.mergeRowKeyData[key - 1] && !col.v && !col.p && !col.field) {
-            isBook = false;
-        }
+        // if (key < data.maxRowNum && data.mergeRowKeyData[key - 1] && !col.v && !col.p && !col.field) {
+        //     isBook = false;
+        // }
         return isBook;
     }
 
