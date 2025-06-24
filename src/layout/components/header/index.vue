@@ -265,7 +265,7 @@
                         data-aura-class="uiImage"
                         ><img
                           
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/log_a_call_120.png"
+                          src="/src/assets/img/overallaction/log_a_call_120.png"
                           alt="" /></span
                     ></span>
                     <span
@@ -279,7 +279,7 @@
                         data-aura-class="uiImage"
                         ><img
                           
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_event_120.png"
+                          src="/src/assets/img/overallaction/new_event_120.png"
                           alt="" /></span
                     ></span>
                     <span
@@ -292,7 +292,7 @@
                         class="uiImage"
                         data-aura-class="uiImage"
                         ><img
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_task_120.png"
+                          src="/src/assets/img/overallaction/new_task_120.png"
                           alt="" /></span
                     ></span>
                     <span
@@ -306,7 +306,7 @@
                         data-aura-class="uiImage"
                         ><img
                           
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_contact_120.png"
+                          src="/src/assets/img/overallaction/new_contact_120.png"
                           alt="" /></span
                     ></span>
                     <span
@@ -320,7 +320,7 @@
                         data-aura-class="uiImage"
                         ><img
                           
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_opportunity_120.png"
+                          src="/src/assets/img/overallaction/new_opportunity_120.png"
                           alt="" /></span
                     ></span>
                     <span
@@ -334,7 +334,7 @@
                         data-aura-class="uiImage"
                         ><img
                           
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/new_case_120.png"
+                          src="/src/assets/img/overallaction/new_case_120.png"
                           alt="" /></span
                     ></span>
                     <span
@@ -347,7 +347,7 @@
                         class="uiImage"
                         data-aura-class="uiImage"
                         ><img
-                          src="https://d90000000yvhgeay-dev-ed.my.salesforce.com/img/icon/t4v35/action/email_120.png"
+                          src="/src/assets/img/overallaction/email_120.png"
                           alt="" /></span
                     ></span>
                     <span class="menuText">{{ item.name }}</span>
@@ -1477,6 +1477,7 @@ onMounted(() => {
     .iconBox {
       width: 50px;
       height: 50px;
+      max-width: 100% !important;
       img {
         border-radius: 50%;
       }
