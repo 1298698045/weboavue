@@ -27,7 +27,7 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons-vue";
 import ListView from "@/components/meeting/meetingCalendar/List.vue";
-import CalendarVue from "@/components/Dutyshift/DutyshiftAdmin/Calendar.vue";
+import CalendarVue from "@/components/Dutyshift/DeptShiftAdmin/Calendar.vue";
 import { message } from "ant-design-vue";
 
 // 新建
@@ -70,7 +70,7 @@ onMounted(() => {
   }, 1000);
 });
 const getData = () => {
-  data.pageTitle = route.query.name;
+  //data.pageTitle = route.query.name;
 };
 // 关闭新建
 const cancelNewMeeting = (e) => {

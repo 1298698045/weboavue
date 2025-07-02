@@ -8,14 +8,32 @@
         <span class="headerTitle">{{ pageTitle || "" }}</span>
       </div>
       <div class="headerRight">
-        <a-button type="primary" class="ml10" @click="handleSubmit"
+        <!-- <a-button type="primary" class="ml10" @click="handleSubmit"
           >提交</a-button
-        >
+        > -->
         <a-button type="primary" class="ml10" @click="handlePrint"
           >打印</a-button
         >
       </div>
     </div>
+    <!-- <div class="wea-header">
+      <div class="wea-tab">
+        <a-tabs v-model:activeKey="activeKey" @change="changeTab">
+          <a-tab-pane
+            v-for="(item, index) in data.tabs"
+            :key="item.id"
+            :num="index"
+          >
+            <template #tab>
+              <span>
+                {{ item.label }}
+              </span>
+            </template>
+          </a-tab-pane>
+        </a-tabs>
+        <div class="tabsBtn"></div>
+      </div>
+    </div> -->
     <div class="calendarBody">
       <div class="calendarLeft">
         <CalendarVue
@@ -123,7 +141,7 @@ import {
   CaretDownOutlined,
 } from "@ant-design/icons-vue";
 import ListView from "@/components/meeting/meetingCalendar/List.vue";
-import CalendarVue from "@/components/Dutyshift/DutyshiftAdmin/Calendar.vue";
+import CalendarVue from "@/components/Dutyshift/DeptShiftAdmin/Calendar.vue";
 import { message } from "ant-design-vue";
 
 import Interface from "@/utils/Interface.js";
@@ -135,7 +153,7 @@ const router = useRouter();
 const data = reactive({
   current: 1,
   searchVal: "",
-  pageTitle: "",
+  pageTitle: "部门值班",
   isshowCalendar: true,
   pageTime: "",
   tableHeight: "",
@@ -146,9 +164,21 @@ const data = reactive({
   },
   SelectKey: "",
   SelectName: "",
-  SelectPeopleObj: {},
+  SelectPeopleObj: {
+    BusinessUnitId:''
+  },
+  activeKey: "",
+  tabs: [
+    {
+      label: "全部",
+      count: "",
+      id: "",
+    },
+  ],
 });
 const {
+  tabs,
+  activeKey,
   SelectPeopleObj,
   SelectKey,
   SelectName,
@@ -176,9 +206,10 @@ const onSelect = (keys, { node }) => {
     data.SelectKey = node.id;
     data.SelectName = node.name;
     data.SelectPeopleObj = {
-      id:node.EmployeeId || "",
-      name:node.name||'',
-      telephone:node.telephone,
+      id: node.EmployeeId || "",
+      name: node.name || "",
+      telephone: node.telephone,
+      BusinessUnitId:data.activeKey
     };
   }
 };
@@ -191,11 +222,42 @@ const onSelect2 = (keys, { node }) => {
     data.SelectKey = node.id;
     data.SelectName = node.name;
     data.SelectPeopleObj = {
-      id:node.id || "",
-      name:node.name||'',
-      telephone:node.telephone,
+      id: node.id || "",
+      name: node.name || "",
+      telephone: node.telephone,
+      BusinessUnitId:data.activeKey
     };
   }
+};
+const getTabs = () => {
+  data.tabs = [];
+  let d = {
+    entityName: "BusinessUnit",
+    displayColumns: "Name",
+    page: 1,
+    rows: 100,
+  };
+  proxy.$post(Interface.list2, d).then((res) => {
+    var list = [];
+    if (res?.nodes?.length) {
+      for (var i = 0; i < res.nodes.length; i++) {
+        var item = res.nodes[i];
+        for (var cell in item) {
+          if (cell != "id" && cell != "viewUrl") {
+            item[cell] = girdFormatterValue(cell, item);
+          }
+        }
+        item.label = item.Name;
+        list.push(item);
+      }
+    }
+    data.tabs = list;
+    getData();
+  });
+};
+const changeTab = (e) => {
+  data.activeKey = e;
+  getData();
 };
 function changeHeight(h) {
   let contentHeight = document.documentElement.clientHeight;
@@ -305,7 +367,7 @@ const loadGroupNode = (treeNode) => {
             item.key = item.id;
             item.isLeaf = true;
             item.name = item.Name || item.EmployeeIdName;
-            item.telephone=item.TelePhone;
+            item.telephone = item.TelePhone;
             if (item.name) {
               list.push(item);
             }
@@ -382,7 +444,7 @@ const searchTreeData = () => {
             text: null,
             value: item.id,
             isLeaf: true,
-            telephone:item.MobileNumber,
+            telephone: item.MobileNumber,
           });
         }
       }
@@ -409,15 +471,6 @@ watch(
 );
 const getData = () => {
   //data.pageTitle = route.meta.name;
-  if (route.query.type * 1 == 1) {
-    data.pageTitle = "院领导值班";
-  } else if (route.query.type * 1 == 2) {
-    data.pageTitle = "行政总值班";
-  } else if (route.query.type * 1 == 3) {
-    data.pageTitle = "医疗值班";
-  } else if (route.query.type * 1 == 4) {
-    data.pageTitle = "护理值班";
-  }
 };
 const refreshTime = (e) => {
   data.pageTime = e;
@@ -431,13 +484,13 @@ const handleSubmit = () => {
 //打印
 const handlePrint = () => {
   let url = router.resolve({
-    path: "/printDutyShift",
-    name: "PrintDutyShift",
+    path: "/printDeptShift",
+    name: "PrintDeptShift",
     query: {
       name: data.pageTitle,
       type: "print",
       time: data.pageTime,
-      categoryId:route.query.categoryId
+      categoryId: route.query.categoryId,
     },
   });
   window.open(url.href);
@@ -447,9 +500,12 @@ onMounted(() => {
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
     data.userId = userInfo.userId;
+    data.activeKey = userInfo.businessUnitId;
+    data.SelectPeopleObj.BusinessUnitId=userInfo.businessUnitId;
   }
   window.addEventListener("resize", changeHeight);
   getTreeData();
+  //getTabs();
   getData();
 });
 </script>
@@ -457,10 +513,32 @@ onMounted(() => {
 .wrappper {
   width: 100%;
   height: 100%;
+  .wea-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    //border-bottom: 1px solid #eaeaea;
+    padding-right: 0;
+    //border: 0 !important;
+    background: #fff;
+    border-bottom: 1px solid #eaeaea;
+    overflow-x: auto;
+    .wea-tab {
+      height: 45px !important;
+
+      :deep .ant-tabs-nav::before {
+        display: none;
+      }
+    }
+    .wea-tab :deep .ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
+      height: 45px !important;
+    }
+  }
   .calendarBody {
     display: flex;
     height: calc(~"100% - 52px");
     position: relative;
+
     .leftMenuWrapper {
       min-width: 115px;
       width: 115px;

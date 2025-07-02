@@ -1021,9 +1021,9 @@
         if(data.cellData[row][col].style){
             let styleData = data.cellData[row][col].style;
             for(let styleName in styleData){
-                if(styleName == 'ul'){
+                if (styleName == 'ul' && styleData[styleName] && styleData[styleName] != null) {
                     let { cl, s } = styleData[styleName];
-                    if(s == 1){
+                    if (s == 1) {
                         style.borderBottom = "1px solid " + cl.rgb;
                     }
                 }

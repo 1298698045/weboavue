@@ -55,9 +55,9 @@
                 <div class="tabContainer containerForm" v-if="activeKey==0" style="padding: 24px 0 24px 24px;">
                     <div class="leftContent" :class="{'active':!isAside}">
                         <div class="tableBox" style="width: 100%;overflow: auto;" :class="{'active':!isAside}">
-                            <FlowFormNew print="1" ref="flowFormRef" v-if="processId!=''"
-                                :processId="processId" :processInstanceId="processInstanceId"
-                                :toActivityID="toActivityID" @attachPermission="getAttachPermission" />
+                            <FlowFormNew print="1" ref="flowFormRef" v-if="processId!=''" :processId="processId"
+                                :processInstanceId="processInstanceId" :toActivityID="toActivityID"
+                                @attachPermission="getAttachPermission" />
                         </div>
                         <!-- <div class="reqWrap">
                             <div class="reqHead">
@@ -111,16 +111,49 @@
                         <div class="arrowIcon rightIcon" v-if="isAside" @click="isAside=false"></div>
                         <div class="arrowIcon leftIcon" v-else @click="isAside=true"></div>
                         <div v-if="isAside" class="asideScroll">
+                            <!-- <div class="panel">
+                                                    <div class="panel-head">
+                                                        <div class="panel-title">
+                                                            相关事务
+                                                        </div>
+                                                        <div class="panel-btn">
+                                                            <a-button type="text" size="small" @click="addRelateInstance">添加关联</a-button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel-bd">
+                                                        <div class="relevantList">
+                                                            <div class="empty" v-if="relatedList.length==0">
+                                                                <div>
+                                                                    <img :src="require('@/assets/img/empty.png')" alt="">
+                                                                    <p class="emptyDesc">当前暂无数据</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="relevantItem" v-for="(item,index) in relatedList" :key="index">
+                                                                <div class="relevantTitle">{{item.Name}}</div>
+                                                                <div class="relevantTimerInfo">{{item.CreatedOn}} {{item.CreatedByName}}</div>
+                                                                <a-popconfirm title="是否确定要删除？"
+                                                                    ok-text="确定"
+                                                                    cancel-text="取消"
+                                                                    @confirm="confirm"
+                                                                    @cancel="cancel">
+                                                                    <DeleteOutlined />
+                                                                </a-popconfirm>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
                             <div class="panel">
                                 <div class="panel-head">
                                     <div class="panel-title">
                                         附件 ({{ fileTotal }})
                                     </div>
-                                    <!-- <div class="panel-btn">
-                                        <a-upload v-model:file-list="fileList" action="#" :showUploadList="false">
+                                    <div class="panel-btn" v-if="attachPerm.add">
+                                        <a-upload name="files" :headers="headers" v-model:file-list="fileList"
+                                            :data="uploadData" :action="Interface.uploadFiles" :showUploadList="false"
+                                            @change="changeFiles">
                                             <a-button type="text" size="small">上传文件</a-button>
                                         </a-upload>
-                                    </div> -->
+                                    </div>
                                 </div>
                                 <div class="panel-bd">
                                     <div class="collapse">
@@ -140,18 +173,18 @@
                                             </div>
                                             <div class="collapseBd">
                                                 <div class="files" v-if="item.children">
-                                                    <div class="fileItem" v-for="(row, idx) in item.children" :key="row.Id"
-                                                        :idx="idx" @click.stop="openZW(row)">
-                                                        <div class="fileItemImg">
+                                                    <div class="fileItem" v-for="(row, idx) in item.children"
+                                                        :key="row.Id" :idx="idx">
+                                                        <div class="fileItemImg" @click.stop="openZW(row)">
                                                             <img :src="require('@/assets/img/filetype/doc.png')"
                                                                 v-if="row.FileExtension == 'ocx' || 
-                                                            row.FileExtension == 'docx' || row.FileExtension == 'doc'" />
+                                                                                row.FileExtension == 'docx' || row.FileExtension == 'doc'" />
                                                             <img :src="require('@/assets/img/filetype/rar.png')"
                                                                 v-else-if="row.FileExtension == 'rar' || 
-                                                            row.FileExtension == 'zip'" />
+                                                                                row.FileExtension == 'zip'" />
                                                             <img :src="require('@/assets/img/filetype/Excel.png')"
                                                                 v-else-if="row.FileExtension == 'xlsx' || 
-                                                            row.FileExtension == 'xls'" />
+                                                                                row.FileExtension == 'xls'" />
                                                             <img :src="require('@/assets/img/filetype/pdf.png')"
                                                                 v-else-if="row.FileExtension == 'pdf'" />
                                                             <img :src="require('@/assets/img/filetype/TXT.png')"
@@ -165,13 +198,15 @@
                                                             <img :src="require('@/assets/img/filetype/File.png')"
                                                                 v-else />
                                                         </div>
-                                                        <div class="fileItemInfo">
-                                                            <p class="name rowEllipsis">{{row.Name}}</p>
-                                                            <p class="link">
-                                                                <a href="javascript:;" @click.stop="openZW(row)">查看</a>
-                                                                ·
-                                                                <a href="javascript:;" @click.stop="downloadFile(row)">下载</a>
-                                                            </p>
+                                                        <div class="fileItemInfo" @click.stop="openZW(row)">
+                                                            <p class="name">{{row.Name}}</p>
+                                                            <!-- <p class="link">
+                                                                                    <a href="javascript:;" v-if="attachPerm.read"
+                                                                                        @click.stop="openZW(row)">查看</a>
+                                                                                    ·
+                                                                                    <a href="javascript:;"
+                                                                                        @click.stop="downloadFile(row)">下载</a>
+                                                                                </p> -->
                                                             <p class="time">
                                                                 <span>{{row.CreatedOn}}&nbsp;·</span>
                                                                 &nbsp;
@@ -180,20 +215,41 @@
                                                         </div>
                                                         <div class="iconOpera">
                                                             <a-dropdown trigger="click">
-                                                                <DownOutlined style="font-size: 12px;" />
+                                                                <DownOutlined style="font-size: 12px;" @click.stop />
                                                                 <template #overlay>
                                                                     <a-menu>
-                                                                        <a-menu-item>
+                                                                        <a-menu-item v-if="attachPerm.read" key="1">
                                                                             <a href="javascript:;"
                                                                                 @click.stop="openZW(row)">查看</a>
                                                                         </a-menu-item>
-                                                                        <a-menu-item>
+                                                                        <a-menu-item key="5">
+                                                                            <a href="javascript:;"
+                                                                                @click.stop="downloadFile(item)">下载</a>
+                                                                        </a-menu-item>
+                                                                        <a-menu-item
+                                                                            v-if="attachPerm.filePermission == 1"
+                                                                            key="2">
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
-                                                                                cancel-text="取消" @confirm="confirm"
-                                                                                @cancel="cancel">
+                                                                                cancel-text="取消">
                                                                                 <a href="javascript:;">删除</a>
                                                                             </a-popconfirm>
                                                                         </a-menu-item>
+                                                                        <a-menu-item
+                                                                            v-if="[1,2,3].includes(attachPerm.filePermission)"
+                                                                            key="3">
+                                                                            <a-upload name="files" :headers="headers"
+                                                                                v-model:file-list="fileList"
+                                                                                :data="{entityName: 'WFProcessInstance',fileId: item.id}"
+                                                                                :action="Interface.replaceFiles"
+                                                                                :showUploadList="false"
+                                                                                @change="changeFiles">
+                                                                                <a href="javascript:;"
+                                                                                    style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
+                                                                            </a-upload>
+                                                                        </a-menu-item>
+                                                                        <!-- <a-menu-item key="4">
+                                                                            <a href="javascript:;">打印</a>
+                                                                        </a-menu-item> -->
                                                                     </a-menu>
                                                                 </template>
                                                             </a-dropdown>
@@ -205,13 +261,13 @@
                                                         <div class="fileItemImg">
                                                             <img :src="require('@/assets/img/filetype/doc.png')"
                                                                 v-if="item.fileExtension == 'ocx' || 
-                                                            item.fileExtension == 'docx' || item.fileExtension == 'doc'" />
+                                                                                item.fileExtension == 'docx' || item.fileExtension == 'doc'" />
                                                             <img :src="require('@/assets/img/filetype/rar.png')"
                                                                 v-else-if="item.fileExtension == 'rar' || 
-                                                            item.fileExtension == 'zip'" />
+                                                                                item.fileExtension == 'zip'" />
                                                             <img :src="require('@/assets/img/filetype/Excel.png')"
                                                                 v-else-if="item.fileExtension == 'xlsx' || 
-                                                            item.fileExtension == 'xls'" />
+                                                                                item.fileExtension == 'xls'" />
                                                             <img :src="require('@/assets/img/filetype/pdf.png')"
                                                                 v-else-if="item.fileExtension == 'pdf'" />
                                                             <img :src="require('@/assets/img/filetype/TXT.png')"
@@ -226,11 +282,16 @@
                                                                 v-else />
                                                         </div>
                                                         <div class="fileItemInfo">
-                                                            <p class="name rowEllipsis">{{item.name}}</p>
-                                                            <p class="link">
-                                                                <a href="javascript:;" @click.stop="openZW(item)" v-if="attachPerm.read">查看</a>
-                                                                ·
-                                                                <a href="javascript:;" @click.stop="downloadFile(item)">下载</a>
+                                                            <p class="name">{{item.name}}</p>
+                                                            <!-- <p class="link">
+                                                                                    <a href="javascript:;" v-if="attachPerm.read"
+                                                                                        @click.stop="openZW(item)">查看</a>
+                                                                                    ·
+                                                                                    <a href="javascript:;"
+                                                                                        @click.stop="downloadFile(item)">下载</a>
+                                                                                </p> -->
+                                                            <p class="createBy" style="color: #666;">
+                                                                {{ item.createdByName }}
                                                             </p>
                                                             <p class="time">
                                                                 <span>{{item.createdOn}}&nbsp;·</span>
@@ -238,22 +299,43 @@
                                                                 <span>{{item.size}}</span>
                                                             </p>
                                                         </div>
-                                                        <div class="iconOpera">
+                                                        <div class="iconOpera" @click.stop>
                                                             <a-dropdown trigger="click">
-                                                                <!-- <DownOutlined style="font-size: 12px;" /> -->
+                                                                <DownOutlined style="font-size: 12px;" />
                                                                 <template #overlay>
-                                                                    <a-menu>
-                                                                        <a-menu-item v-if="attachPerm.read" key="1">
+                                                                    <a-menu style="width: 120px;">
+                                                                        <a-menu-item key="1">
                                                                             <a href="javascript:;"
-                                                                            @click.stop="openZW(item)">查看</a>
+                                                                                @click.stop="openZW(item)">查看</a>
                                                                         </a-menu-item>
-                                                                        <a-menu-item v-if="attachPerm.delete" key="2">
+                                                                        <a-menu-item key="5">
+                                                                            <a href="javascript:;"
+                                                                                @click.stop="downloadFile(item)">下载</a>
+                                                                        </a-menu-item>
+                                                                        <a-menu-item
+                                                                            v-if="attachPerm.filePermission == 1"
+                                                                            key="2">
                                                                             <a-popconfirm title="是否确定要删除？" ok-text="确定"
-                                                                                cancel-text="取消" @confirm="confirm"
-                                                                                @cancel="cancel">
+                                                                                cancel-text="取消">
                                                                                 <a href="javascript:;">删除</a>
                                                                             </a-popconfirm>
                                                                         </a-menu-item>
+                                                                        <a-menu-item
+                                                                            v-if="[1,2,3].includes(attachPerm.filePermission)"
+                                                                            key="3">
+                                                                            <a-upload name="files" :headers="headers"
+                                                                                v-model:file-list="fileList"
+                                                                                :data="{entityName: 'WFProcessInstance',fileId: item.id}"
+                                                                                :action="Interface.replaceFiles"
+                                                                                :showUploadList="false"
+                                                                                @change="changeFiles">
+                                                                                <a href="javascript:;"
+                                                                                    style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
+                                                                            </a-upload>
+                                                                        </a-menu-item>
+                                                                        <!-- <a-menu-item key="4">
+                                                                            <a href="javascript:;">打印</a>
+                                                                        </a-menu-item> -->
                                                                     </a-menu>
                                                                 </template>
                                                             </a-dropdown>
@@ -274,15 +356,17 @@
                     </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey==2">
-                    <Related preview="1" :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" />
+                    <Related preview="1" :id="id" :processInstanceId="processInstanceId"
+                        @addRelateInstance="addRelateInstance" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==3">
-                    <Attachment preview="1" :id="id" :processInstanceId="processInstanceId" @addRelateInstance="addRelateInstance" :attachPerm="attachPerm" />
+                    <Attachment preview="1" :id="id" :processInstanceId="processInstanceId"
+                        @addRelateInstance="addRelateInstance" :attachPerm="attachPerm" />
                 </div>
                 <div class="tabContainer" v-if="activeKey==4">
                     <div class="detailContent">
-                        <DetailInfo class="DetailInfo" :id="id"  :processInstanceId="processInstanceId" :objectTypeCode="objectTypeCode"
-                            :entityApiName="sObjectName" />
+                        <DetailInfo class="DetailInfo" :id="id" :processInstanceId="processInstanceId"
+                            :objectTypeCode="objectTypeCode" :entityApiName="sObjectName" />
                     </div>
                 </div>
                 <div class="tabContainer" v-if="activeKey==5">
@@ -369,12 +453,7 @@
         </Jump>
         <ImageView v-if="isPhoto" :isShow="isPhoto" :photoParams="photoParams" @cancel="isPhoto = false" />
         <PdfView v-if="isPdf" :isShow="isPdf" :pdfParams="pdfParams" @cancel="isPdf = false" />
-        <TxtView
-        v-if="isTxt"
-        :isShow="isTxt"
-        :txtParams="txtParams"
-        @cancel="isTxt = false"
-        />
+        <TxtView v-if="isTxt" :isShow="isTxt" :txtParams="txtParams" @cancel="isTxt = false" />
     </div>
 </template>
 <script setup>
@@ -670,7 +749,7 @@
             parentId: data.processInstanceId
         }).then(res => {
             // data.categoryFiles = res.actions[0].returnValue;
-            let list = res.actions[0].returnValue.map(item=>{
+            let list = res.actions[0].returnValue.map(item => {
                 let size = item.fileSize;
                 size = size ? (size * 1 / 1024).toFixed(2) : 0;
                 size = size + 'kb';
@@ -720,25 +799,23 @@
                 downloadUrl: row.downloadUrl
             };
             data.isPdf = true;
-        } else if (
-            row.fileExtension == "docx" ||
-            row.fileExtension == "pptx" ||
-            row.fileExtension == "xlsx" ||
-            row.fileExtension == "doc" ||
-            row.fileExtension == "ppt" ||
-            row.fileExtension == "xls"
-        ) {
-            item.viewUrl = "/lightning/r/office/view?id=" + item.id + "&docType=122";
+        } else if (isCaseExit(row.fileExtension)) {
+            row.viewUrl = '/lightning/r/office/view?id=' + row.id + '&editMethod=' + data.attachPerm.filePermission + "&docType=122";
             openControlViewFile(
-            row.id,
-            row.createdByName,
-            row.fileExtension,
-            row.viewUrl,
-            row.name
+                row.id,
+                row.createdByName,
+                row.fileExtension,
+                row.viewUrl,
+                row.name
             );
         } else {
             downloadFile(row);
         }
+    };
+    const isCaseExit = (fileExtension) => {
+        let currentFileExtension = fileExtension.toLowerCase();
+        let wordTypes = ["docx", "pptx", "xlsx", "doc", "ppt", "xls", "wps"];
+        return wordTypes.includes(currentFileExtension);
     }
     //预览office文件
     const openControlViewFile = (id, username, type, link, name) => {
@@ -753,7 +830,7 @@
     const downloadFile = (item) => {
         let url = item.downloadUrl;
         let text = item.name || '';
-        windowOpen(url, text);
+        window.open(url, text);
     };
     //保存
     const handSave = () => {
@@ -778,32 +855,32 @@
     //关联事务选中
     const handleSelectLook = (e) => {
         let RelateInstanceId = e.id;
-        if(e.ProcessInstanceId2){
+        if (e.ProcessInstanceId2) {
             RelateInstanceId = e.ProcessInstanceId2;
         };
         let obj = {
-            actions:[{
+            actions: [{
                 id: "2919;a",
                 descriptor: "",
                 callingDescriptor: "UNKNOWN",
                 params: {
-                  recordInput: {
-                    allowSaveOnDuplicate: false,
-                    apiName: 'WFProcessInstanceRelated',
-                    objTypeCode: 128,
-                    fields: {
-                        ProcessInstanceId: data.processInstanceId,
-                        RelateInstanceId: RelateInstanceId
+                    recordInput: {
+                        allowSaveOnDuplicate: false,
+                        apiName: 'WFProcessInstanceRelated',
+                        objTypeCode: 128,
+                        fields: {
+                            ProcessInstanceId: data.processInstanceId,
+                            RelateInstanceId: RelateInstanceId
+                        }
                     }
-                  }
                 }
             }]
         };
         let d = {
             message: JSON.stringify(obj)
         };
-        proxy.$post(Interface.create, d).then(res=>{
-            if(res && res.actions && res.actions[0].state == 'SUCCESS'){
+        proxy.$post(Interface.create, d).then(res => {
+            if (res && res.actions && res.actions[0].state == 'SUCCESS') {
                 message.success("添加关联成功!");
                 data.isRelateInstance = false;
             }
@@ -931,6 +1008,7 @@
                             width: 40px;
                             height: 40px;
                             min-width: 40px;
+
                             img {
                                 width: 100%;
                                 height: 100%;
@@ -942,6 +1020,7 @@
                             font-size: 14px;
                             margin-left: 10px;
                             width: calc(100% - 80px);
+
                             .link {
                                 a {
                                     color: #3399ff;

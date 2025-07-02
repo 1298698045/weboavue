@@ -5,7 +5,7 @@
         <div class="icon-circle-base">
           <img :src="require('@/assets/img/rightMenu/hetong.png')" alt="" />
         </div>
-        <span class="headerTitle">总值班查询</span>
+        <span class="headerTitle">部门值班查询</span>
       </div>
       <div class="headerRight">
         <!-- <a-button type="primary" class="ml10" @click="handleNew">新建权限</a-button> -->
@@ -16,7 +16,40 @@
         <a-col span="24" class="wea-left-right-layout-right">
           <div style="height: 100%" ref="contentRef">
             <!-- <HighSearch @update-height="changeHeight" @search="handleSearch" :entityApiName="sObjectName"></HighSearch> -->
-             <div class="DutyShiftSearchHeader">
+            <div class="DutyShiftSearchHeader">
+              <div class="formItem" style="position: absolute">
+                <span class="label">科室类别：</span>
+                <a-select
+                  placeholder="请选择"
+                  allowClear
+                  v-model:value="CategoryCode"
+                  style="width: 150px"
+                  @change="
+                    (e) => {
+                      CategoryCode = e;
+                      getDeptList();
+                    }
+                  "
+                >
+                  <a-select-option value="">全部</a-select-option>
+                  <a-select-option value="1">管理</a-select-option>
+                  <a-select-option value="2">医疗</a-select-option>
+                  <a-select-option value="3">医技</a-select-option>
+                  <a-select-option value="4">护理</a-select-option>
+                  <a-select-option value="5">医辅</a-select-option>
+                  <a-select-option value="7">其他</a-select-option>
+                </a-select>
+              </div>
+              <div class="formItem" style="position: absolute; left: 250px">
+                <span class="label">部门：</span>
+                <a-input
+                  placeholder="请选择"
+                  v-model:value="deptName"
+                  :title="deptName"
+                  style="width: 150px; border-radius: 4px !important"
+                  @click="openMultiDept"
+                />
+              </div>
               <div class="form">
                 <div class="formItem ml10 pickerTime">
                   <span class="arrowIcon" @click="handlePrevWeek">
@@ -51,8 +84,8 @@
                 <a-button
                   class="ml10"
                   :icon="h(RedoOutlined)"
-                  @click="getQuery"
-                  title="刷新"
+                  @click="reSetData"
+                  title="重置"
                 ></a-button>
               </div>
               <div class="btnOptions"></div>
@@ -60,7 +93,11 @@
             <div class="wea-header">
               <div class="wea-tab">
                 <a-tabs v-model:activeKey="activeKey" @change="changeTab">
-                  <a-tab-pane v-for="(item, index) in data.tabs" :key="index">
+                  <a-tab-pane
+                    v-for="(item, index) in data.tabs"
+                    :key="item.id"
+                    :num="index"
+                  >
                     <template #tab>
                       <span>
                         {{ item.label }}
@@ -78,7 +115,7 @@
               </div>
               <a-table
                 v-if="dataSource.length"
-                style="height: 100%"
+                style="height: 100%;"
                 :scroll="{ y: tableHeight }"
                 :dataSource="dataSource"
                 :columns="columns"
@@ -139,6 +176,7 @@
                   <template
                     v-if="
                       column.key != 'Action' &&
+                      column.key != 'Name' &&
                       column.key != 'index' &&
                       column.key != 'checked' &&
                       column.key != 'WorkDay' &&
@@ -148,9 +186,9 @@
                     <div
                       class="dutyShiftCell"
                       :class="{
-                        state0: record['state'] == 0,
-                        state1: record['state'] == 1,
-                        state2: record['state'] == 2,
+                        state0: column['state'] == 0,
+                        state1: column['state'] == 1,
+                        state2: column['state'] == 2,
                       }"
                     >
                       <div
@@ -172,6 +210,19 @@
                   </template>
                 </template>
               </a-table>
+              <!-- <div class="pageWrap">
+                <a-pagination
+                  show-size-changer
+                  show-quick-jumper
+                  :pageSizeOptions="pagination.pageSizeOptions"
+                  :pageSize="pagination.pageSize"
+                  @showSizeChange="sizeChange"
+                  @change="handleTableChange"
+                  v-model:current="pagination.current"
+                  :total="pagination.total"
+                  :show-total="(total) => `共 ${total} 条`"
+                />
+              </div> -->
             </div>
           </div>
         </a-col>
@@ -208,6 +259,12 @@
       @cancel="isConfirm = false"
       @ok="isConfirm = false"
       :id="CheckList"
+    />
+    <multiple-dept
+      v-if="isMultipleDept"
+      :isShow="isMultipleDept"
+      @cancel="isMultipleDept = false"
+      @selectVal="handleDeptParams"
     />
   </div>
 </template>
@@ -248,6 +305,7 @@ import { message } from "ant-design-vue";
 import HighSearch from "@/components/HighSearch.vue";
 import { useRouter, useRoute } from "vue-router";
 import { girdFormatterValue } from "@/utils/common.js";
+import MultipleDept from "@/components/commonModal/MultipleDept.vue";
 const route = useRoute();
 const router = useRouter();
 import CommonFormModal from "@/components/listView/CommonFormModal.vue";
@@ -265,7 +323,7 @@ let data = reactive({
     title: "name",
     key: "id",
   },
-  activeKey: 0,
+  activeKey: "",
   isModal: false,
   isCirculation: false,
   isNew: false,
@@ -293,13 +351,16 @@ let data = reactive({
     hideOnSinglePage: false,
     showSizeChanger: true,
     showQuickJumper: true,
-    total: 0, //数据总数
+    total: 0,
     pageSize: 20,
     current: 1,
+    pageSizeOptions: ["10", "20", "50", "100", "200"],
+    defaultPageSize: 10,
     showTotal: (total) => {
       return `共${total}条`;
     },
   },
+  total: 0,
   columns: [
     // {
     //   title: "序号",
@@ -361,7 +422,6 @@ let data = reactive({
   startWeekTime: "",
   endWeekTime: "",
   week: [],
-  organizationId: "",
   tabs: [
     {
       label: "全部",
@@ -370,14 +430,23 @@ let data = reactive({
     },
   ],
   ShiftTypeList: [],
+  DeptList: [],
+  isMultipleDept: false,
+  CategoryCode: null,
+  deptName: "",
+  deptIds: [],
 });
 const handleCollapsed = () => {
   data.isCollapsed = !data.isCollapsed;
 };
 const {
+  CategoryCode,
+  deptName,
+  deptIds,
+  isMultipleDept,
+  total,
   ShiftTypeList,
   tabs,
-  organizationId,
   currentTime,
   startWeekTime,
   endWeekTime,
@@ -411,6 +480,7 @@ const {
   value,
   searchVal,
   SearchFields,
+  DeptList,
 } = toRefs(data);
 const contentRef = ref(null);
 const gridRef = ref(null);
@@ -429,7 +499,9 @@ const handleSearch = (obj) => {
   }
   getQuery();
 };
-
+const openMultiDept = () => {
+  data.isMultipleDept = true;
+};
 const handleDelete = (id) => {
   data.relatedObjectAttributeValue = {};
   data.relatedObjectAttributeName = "";
@@ -439,16 +511,26 @@ const handleDelete = (id) => {
   data.isDelete = true;
 };
 const refreshData = (e) => {
-  getQuery();
+  data.pagination.current = 1;
+  nextTick(() => {
+    //getQuery();
+    getDeptList();
+  });
+};
+const reSetData = (e) => {
+  data.pagination.current = 1;
+  data.deptIds=[];
+  data.deptName='';
+  data.CategoryCode=null;
+  nextTick(() => {
+    //getQuery();
+    getDeptList();
+  });
 };
 const cancelDelete = (e) => {
   data.isDelete = false;
 };
-//改变页码
-const handleTableChange = (pag, filters, sorter) => {
-  data.pagination.current = pag.current;
-  getQuery();
-};
+
 const getTabs = () => {
   data.tabs = [];
   let d = {
@@ -470,51 +552,75 @@ const getTabs = () => {
       }
     }
     data.tabs = list;
-    getColumns();
+    getDeptList();
   });
 };
-const getColumns = () => {
-  data.columns = [
-    {
-      title: "值班日期",
-      dataIndex: "WorkDay",
-      key: "WorkDay",
-      width: 100,
-    },
-  ];
+const getDeptList = () => {
+  data.DeptList = [];
+  let filterCondition = [];
+  filterCondition.push({
+    attribute: "OrganizationId",
+    column: "OrganizationId",
+    label: "",
+    operator: "eq",
+    logical: "AND",
+    picklistValues: [],
+    isEditable: false,
+    operands: [data.activeKey],
+  });
+  if (data.deptName) {
+    filterCondition.push({
+      attribute: "Name",
+      column: "Name",
+      label: "",
+      operator: "in",
+      logical: "AND",
+      picklistValues: [],
+      isEditable: false,
+      operands: data.deptName.split(","),
+    });
+  }
+  if (data.CategoryCode) {
+    filterCondition.push({
+      attribute: "CategoryCode",
+      column: "CategoryCode",
+      label: "",
+      operator: "eq",
+      logical: "AND",
+      picklistValues: [],
+      isEditable: false,
+      operands: [data.CategoryCode],
+    });
+  }
+  filterCondition = JSON.stringify(filterCondition);
   let d = {
-    actions: [
-      {
-        id: "2320;a",
-        descriptor: "",
-        callingDescriptor: "UNKNOWN",
-        params: {
-          objectApiName: "HRAttendWatchShiftOrgDay",
-          recordTypeId: "",
-        },
-      },
-    ],
+    entityName: "BusinessUnit",
+    displayColumns: "Name",
+    filterCondition: filterCondition,
+    // page: data.pagination.current,
+    // rows: data.pagination.pageSize,
+    page: 1,
+    rows: 1000,
   };
-  let obj = {
-    message: JSON.stringify(d),
-  };
-  proxy.$post(Interface.pickListValues, obj).then((res) => {
-    if (res?.actions?.[0]?.returnValue?.picklistFieldValues) {
-      let picklistFieldValues = res.actions[0].returnValue.picklistFieldValues;
-      let columns = picklistFieldValues.WatchType
-        ? picklistFieldValues.WatchType.values
-        : [];
-      if (columns && columns.length) {
-        for (var i = 0; i < columns.length; i++) {
-          data.columns.push({
-            title: columns[i].label,
-            dataIndex: "columns" + columns[i].value,
-            key: "columns" + columns[i].value,
-            width: 200,
-          });
+  data.total = 0;
+  data.pagination.total = 0;
+  proxy.$post(Interface.list2, d).then((res) => {
+    var list = [];
+    if (res?.nodes?.length) {
+      data.total = res.totalCount || 0;
+      data.pagination.total = res.totalCount || 0;
+      for (var i = 0; i < res.nodes.length; i++) {
+        var item = res.nodes[i];
+        for (var cell in item) {
+          if (cell != "id" && cell != "viewUrl") {
+            item[cell] = girdFormatterValue(cell, item);
+          }
         }
+        item.label = item.Name;
+        list.push(item);
       }
     }
+    data.DeptList = list;
     getQuery();
   });
 };
@@ -526,801 +632,126 @@ const getWeekDay = (num) => {
   let result = dayjs(new Date(year, month, day + num)).format("YYYY-MM-DD");
   return result;
 };
-const getQuery = () => {
-  // data.dataSource = [
-  //   {
-  //     DutyShiftDate: "2025-05-16",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-17",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-18",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-19",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-20",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-21",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-22",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-23",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-24",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-25",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-26",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-27",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-28",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-29",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-30",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     DutyShiftDate: "2025-05-31",
-  //     Leader: [
-  //       {
-  //         EmployeeIdName: "许海波",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //     XZ: [
-  //       {
-  //         EmployeeIdName: "骆安庆",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "毛志良",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     YL: [
-  //       {
-  //         EmployeeIdName: "毛齐彬",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "王金峰",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     HL: [
-  //       {
-  //         EmployeeIdName: "虞洁芳",
-  //         WorkShiftIdName: "白班",
-  //       },
-  //       {
-  //         EmployeeIdName: "许旭黎",
-  //         WorkShiftIdName: "晚班",
-  //       },
-  //     ],
-  //     CSZX: [
-  //       {
-  //         EmployeeIdName: "姜亚奇",
-  //         WorkShiftIdName: "全天",
-  //       },
-  //     ],
-  //   },
-  // ];
-
-  let organizationId = "";
-  if (data.tabs && data.tabs.length) {
-    organizationId = data.tabs[data.activeKey].id || "";
+const handleDeptParams = (params) => {
+  console.log("deptData", params);
+  data.isMultipleDept = false;
+  if (params.length) {
+    data.deptName = "";
+    params.forEach((ite, idx) => {
+      data.deptIds.push(ite.id);
+      data.deptName += data.deptName ? "," + ite.text : ite.text;
+    });
+  } else {
+    data.deptName = "";
+    data.deptIds = [];
   }
+  getDeptList();
+};
+const getQuery = () => {
+  data.columns = [
+    {
+      title: "部门名称",
+      dataIndex: "Name",
+      key: "Name",
+      width: 200,
+    },
+  ];
+
   let d = {
-    actions: [
-      {
-        id: "5764;a",
-        descriptor: "",
-        callingDescriptor: "UNKNOWN",
-        params: {
-          startDate: dayjs(data.startWeekTime).format("YYYY-MM-DD"),
-          endDate: dayjs(data.endWeekTime).format("YYYY-MM-DD"),
-          calendarType: "week",
-          organizationId: organizationId,
-        },
-      },
-    ],
+    entityName: "HRAttendWatchShiftDeptDay",
+    displayColumns:
+      "WorkDay,EmployeeId,Telphone,ShiftType,BusinessUnitId,Description,ShiftName,WorkShiftId",
   };
-  let obj = {
-    message: JSON.stringify(d),
-  };
+  let filterCondition = [];
+  filterCondition.push({
+    attribute: "WorkDay",
+    column: "WorkDay",
+    label: "",
+    operator: "ge",
+    logical: "AND",
+    picklistValues: [],
+    isEditable: false,
+    operands: [dayjs(data.startWeekTime).format("YYYY-MM-DD")],
+  });
+  filterCondition.push({
+    attribute: "WorkDay",
+    column: "WorkDay",
+    label: "",
+    operator: "le",
+    logical: "AND",
+    picklistValues: [],
+    isEditable: false,
+    operands: [dayjs(data.endWeekTime).format("YYYY-MM-DD")],
+  });
+  d.filterCondition = JSON.stringify(filterCondition);
+
+  // if (data.calendarOptions.initialView == "dayGridMonth") {
+  //   d.actions[0].params.calendarType = "month";
+  // } else if (data.calendarOptions.initialView == "timeGridWeek") {
+  //   d.actions[0].params.calendarType = "week";
+  // } else if (data.calendarOptions.initialView == "timeGridDay") {
+  //   d.actions[0].params.calendarType = "day";
+  // }
+  // let obj = {
+  //   message: JSON.stringify(d),
+  // };
   let today = dayjs(new Date()).format("YYYY-MM-DD");
   data.dataSource = [];
-  data.pagination.total = 0;
   for (var i = 0; i < 7; i++) {
-    let ite = {};
-    for (var j = 0; j < data.columns.length; j++) {
-      if (data.columns[j].key == "WorkDay") {
-        ite[data.columns[j].key] = getWeekDay(i);
-        if (new Date(ite.WorkDay).getTime() == new Date(today).getTime()) {
-          ite.state = 1;
-        } else if (
-          new Date(ite.WorkDay).getTime() < new Date(today).getTime()
-        ) {
-          ite.state = 0;
-        } else if (
-          new Date(ite.WorkDay).getTime() > new Date(today).getTime()
-        ) {
-          ite.state = 2;
-        }
-      } else {
-        ite[data.columns[j].key] = [];
-      }
+    let WorkDay = getWeekDay(i);
+    let ite = {
+      title: WorkDay,
+      dataIndex: "columns" + WorkDay,
+      key: "columns" + WorkDay,
+      width: 200,
+    };
+    if (new Date(WorkDay).getTime() == new Date(today).getTime()) {
+      ite.state = 1;
+    } else if (new Date(WorkDay).getTime() < new Date(today).getTime()) {
+      ite.state = 0;
+    } else if (new Date(WorkDay).getTime() > new Date(today).getTime()) {
+      ite.state = 2;
     }
+    data.columns.push(ite);
+  }
+  for (var j = 0; j < data.DeptList.length; j++) {
+    let ite = {};
+
+    for (var i = 0; i < 7; i++) {
+      ite["columns" + getWeekDay(i)] = [];
+    }
+    ite["Name"] = data.DeptList[j].Name;
+    ite["id"] = data.DeptList[j].id;
     data.dataSource.push(ite);
   }
-  proxy.$post(Interface.DutyShift.getDateShifts, obj).then((res) => {
-    let list = [];
-    if (res?.actions?.[0]?.returnValue?.length) {
-      list = res.actions[0].returnValue;
-      list.forEach((ite, idx) => {
-        ite.workDay = dayjs(ite.workDay).format("YYYY-MM-DD");
-        data.dataSource.forEach((item, index) => {
-          if (item.WorkDay == ite.workDay) {
-            ite.items.forEach((item2, index2) => {
-              if (!data.dataSource[index]["columns" + item2.watchType]) {
-                data.dataSource[index]["columns" + item2.watchType] = [];
-              }
-              data.dataSource[index]["columns" + item2.watchType].push({
-                EmployeeIdName: item2.employeeIdName,
-                WorkShiftIdName: data.ShiftTypeList[item2.shiftType * 1 - 1]
-                  ? data.ShiftTypeList[item2.shiftType * 1 - 1].label
-                  : "",
-                TelePhone: item2.telephone,
-              });
-            });
+
+  proxy.$post(Interface.list2, d).then((res) => {
+    if (res && res.nodes && res.nodes.length) {
+      for (var i = 0; i < res.nodes.length; i++) {
+        var item = res.nodes[i];
+        for (var cell in item) {
+          if (cell != "id" && cell != "viewUrl" && cell != "BusinessUnitId") {
+            item[cell] = girdFormatterValue(cell, item);
+          }
+          if (cell == "BusinessUnitId") {
+            let cellt = item[cell];
+            item[cell] =
+              cellt && cellt.lookupValue ? cellt.lookupValue.value : "";
+            item[cell + "Name"] =
+              cellt && cellt.lookupValue ? cellt.lookupValue.displayName : "";
+          }
+        }
+        data.dataSource.forEach((ite, idx) => {
+          if (item.BusinessUnitId == ite.id) {
+            let result = {
+              EmployeeIdName: item.EmployeeId,
+              WorkShiftIdName: item.ShiftName,
+              TelePhone: item.Telphone,
+            };
+            data.dataSource[idx]["columns" + item.WorkDay].push(result);
           }
         });
-      });
-      console.log(data.dataSource);
+      }
     }
   });
 };
@@ -1356,8 +787,10 @@ const backNowTime = () => {
   data.week = week0;
   data.startWeekTime = dayjs(week0[0]).format("YYYY-MM-DD");
   data.endWeekTime = dayjs(week0[week0.length - 1]).format("YYYY-MM-DD");
+  data.pagination.current = 1;
   nextTick(() => {
-    getQuery();
+    //getQuery();
+    getDeptList();
   });
 };
 
@@ -1372,12 +805,16 @@ watch(
 // 周-切换日期
 const changeStartTime = (e) => {
   nextTick(() => {
-    getQuery();
+    data.pagination.current = 1;
+    //getQuery();
+    getDeptList();
   });
 };
 const changeEndTime = (e) => {
   nextTick(() => {
-    getQuery();
+    data.pagination.current = 1;
+    //getQuery();
+    getDeptList();
   });
 };
 // 周-上周
@@ -1392,8 +829,10 @@ const handlePrevWeek = () => {
   }
   //console.log("temp",temp);
   data.week = temp;
+  data.pagination.current = 1;
   nextTick(() => {
-    getQuery();
+    //getQuery();
+    getDeptList();
   });
 };
 // 周-下周
@@ -1407,14 +846,17 @@ const handleNextWeek = () => {
     temp.push(time);
   }
   data.week = temp;
+  data.pagination.current = 1;
   nextTick(() => {
-    getQuery();
+    //getQuery();
+    getDeptList();
   });
 };
 const changeTab = (e) => {
+  data.pagination.current = 1;
   data.activeKey = e;
-  data.organizationId = data.tabs[e].id;
-  getQuery();
+  //getQuery();
+  getDeptList();
 };
 const getPickerList = () => {
   let d = {
@@ -1448,16 +890,26 @@ const getPickerList = () => {
     }
   });
 };
+//改变页码
+const handleTableChange = (page, pageSize) => {
+  data.pagination.current = page;
+  data.pagination.pageSize = pageSize;
+  getDeptList();
+};
+const sizeChange = (current, size) => {
+  handleTableChange(current, size);
+};
 onMounted(() => {
   let userInfo = window.localStorage.getItem("userInfo");
   if (userInfo) {
     userInfo = JSON.parse(userInfo);
     data.userId = userInfo.userId;
+    data.activeKey = userInfo.organizationId;
   }
   data.pagination.current = 1;
   changeHeight();
   window.addEventListener("resize", changeHeight);
-  getPickerList();
+  //getPickerList();
   getTabs();
 });
 </script>
@@ -1859,7 +1311,7 @@ onMounted(() => {
   }
 
   .tableWrap {
-    height: calc(~"100% - 108px");
+    height: calc(~"100% - 100px");
     :deep .ant-table-cell {
       text-align: center;
     }
@@ -2100,5 +1552,30 @@ onMounted(() => {
 
 input[aria-hidden="true"] {
   display: none !important;
+}
+.pageWrap {
+  text-align: right;
+  padding: 15px;
+
+  .ant-pagination {
+    .ant-pagination-item {
+      border: 1px solid #d9d9d9 !important;
+    }
+
+    .ant-pagination-item:hover {
+      border: 1px solid #1677ff !important;
+      background: #1677ff;
+    }
+
+    .ant-pagination-item-active,
+    .ant-pagination-item-active:hover {
+      border: 1px solid #1677ff !important;
+      background: #1677ff !important;
+
+      a {
+        color: #fff;
+      }
+    }
+  }
 }
 </style>

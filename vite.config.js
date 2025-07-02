@@ -17,6 +17,11 @@ export default defineConfig({
     port: 3001,
     open: true,
     proxy: {
+      '/api/attendance': {
+        target: 'http://192.168.1.200:9092/api/attendance',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/attendance/, ''),
+      },
       '/api': {
         target: 'http://192.168.1.200:9091/api',
         changeOrigin: true,

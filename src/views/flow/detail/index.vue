@@ -270,9 +270,9 @@
                                                                                     style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
                                                                             </a-upload>
                                                                         </a-menu-item>
-                                                                        <a-menu-item key="4">
+                                                                        <!-- <a-menu-item key="4">
                                                                             <a href="javascript:;">打印</a>
-                                                                        </a-menu-item>
+                                                                        </a-menu-item> -->
                                                                     </a-menu>
                                                                 </template>
                                                             </a-dropdown>
@@ -351,9 +351,9 @@
                                                                                     style="width: 120px; color: #1D2129; display: inline-block;">替换</a>
                                                                             </a-upload>
                                                                         </a-menu-item>
-                                                                        <a-menu-item key="4">
+                                                                        <!-- <a-menu-item key="4">
                                                                             <a href="javascript:;">打印</a>
-                                                                        </a-menu-item>
+                                                                        </a-menu-item> -->
                                                                     </a-menu>
                                                                 </template>
                                                             </a-dropdown>
@@ -926,7 +926,7 @@
     const downloadFile = (item) => {
         let url = item.downloadUrl;
         let text = item.name || '';
-        windowOpen(url, text);
+        window.open(url, text);
     };
     const windowOpen = (url, fileName) => {
         var xhr = new XMLHttpRequest();

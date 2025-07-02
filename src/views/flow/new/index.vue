@@ -77,7 +77,7 @@
                       @click="handleStartProcess(row)"
                     >
                       <div class="flowName rowEllipsis">
-                        <a-tooltip :overlayClassName="'flowRowItem-tooltip'">
+                        <a-tooltip :overlayClassName="'flowRowItem-tooltip'" placement="right">
                           <template #title>{{ row.name }}</template>
                           {{ row.name }}
                         </a-tooltip>
@@ -573,6 +573,9 @@ onMounted(() => {
 .ant-tooltip.flowRowItem-tooltip {
   .ant-tooltip-inner {
     padding: 9px 8px !important;
+  }
+  &:hover{
+    display: none;
   }
 }
 </style>
